@@ -1,0 +1,184 @@
+﻿.flexx {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    white-space: nowrap;
+    margin-top: 20%;
+}
+
+.labl {
+    margin-right: 5px;
+    margin-bottom: 0;
+    flex: 1 1 auto;
+}
+
+.Wid {
+    width: 90% !important;
+}
+
+.pad {
+    padding-top: 14px !important;
+}
+
+.MarTop {
+    margin-top: 9% !important;
+}
+
+#tblHistory tr td {
+    width: 200px;
+}
+
+.widthtbl tr td {
+    padding: 2px;
+}
+
+.main textarea {
+    width: 94%;
+    height: 60px;
+    margin-left: -5px;
+}
+
+tr, td {
+    border: none !important;
+}
+
+
+
+
+.image-container {
+    background-color: #D9D9D9;
+    padding: 20px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.forcolor li a:hover {
+    color: #FFC000 !important;
+}
+
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.formrgn {
+    margin-top: 15px;
+}
+
+.top {
+    margin-top: 11px;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.mtt {
+    margin-top: 2px !important
+}
+
+.color {
+    color: white !important;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 1060px;
+        margin: 30px auto;
+    }
+}
+
+#tblCheckboxex tr td {
+    width: 200px !important;
+}
+
+#tblHistory tr td {
+    width: 200px;
+}
+
+
+
+
+
+.table tr:nth-child(even) {
+}
+
+.table th {
+    display: none;
+    border: 1px solid #FFF;
+    background-color: #438eb9;
+    color: #FFF;
+    padding: 1em;
+}
+
+.table thead th {
+    display: table-cell;
+}
+
+@media (min-width: 480px) {
+    .table th:nth-child(2) span {
+        display: block;
+    }
+
+    .table th:nth-child(2):after {
+        display: none;
+    }
+}
+
+.table td {
+    display: block;
+    word-wrap: break-word;
+    max-width: 7em;
+}
+
+    .table td:first-child {
+        display: table-cell;
+        border-right: 1px solid #D9E4E6;
+    }
+
+@media (min-width: 480px) {
+    .table td {
+        border: 1px solid #D9E4E6;
+    }
+}
+
+.table th, .table td {
+    margin: .5em 1em;
+}
+
+@media (min-width: 480px) {
+    .table th, .table td {
+        display: table-cell;
+        padding: 1em;
+    }
+}
+
+
+.mgTab {
+    padding-left: 100px;
+}
+
+.mg {
+    padding-left: 30px;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+.top2 {
+    margin-top:26px !important;
+}

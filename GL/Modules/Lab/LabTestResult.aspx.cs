@@ -1,0 +1,1354 @@
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing.Printing;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.Services;
+using System.Web.Script.Serialization;
+using System.Web.Script.Services;
+
+namespace PMS
+{
+    public partial class LabTestResult : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+            if (!Page.IsPostBack)
+            {
+
+            }
+        }
+
+        public class TesttList
+        {
+            public int Patient_ID { get; set; }
+            public List<TesttListDetails> test_list { get; set; }
+        }
+
+        public class TesttListDetails
+        {
+            public string TestDID { get; set; }
+            public string Value { get; set; }
+            public string Diagnosis { get; set; }
+            public string Notes { get; set; }
+        }
+        public void btnRefresh_Click(Object sender, EventArgs e)
+        {
+
+        }
+        public void buttonimageuploadNotes_Click(Object sender, EventArgs e)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var count = Request.Files.Count;
+            //var detail_ID = Session["id"].ToString();
+            var detail_ID = session_obejct.Value;
+            if (fileUploadMultiple.HasFile)
+            {
+                for (int i = 0; i < Request.Files.Count; i++)
+                {
+                    HttpPostedFile fileUpload = Request.Files[i];
+
+                    Test_Image image = new Test_Image();
+                    int imageNo = Convert.ToInt32(DBClass.getField("Select isnull(Max(Image_No),0) + 1 from Test_Image where Lab_Test_Detail_ID = " + detail_ID + ""));
+
+                    string fname = HttpContext.Current.Server.MapPath("LabTestImg/" + imageNo + "-" + detail_ID + ".png");
+
+                    string image_Path = "LabTestImg/" + imageNo + "-" + detail_ID + ".png";
+
+                    if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(image_Path)))
+                    {
+                        // file exist
+                        string savePath = HttpContext.Current.Server.MapPath(image_Path);
+                        System.IO.File.Delete(savePath);
+                        string sql = "delete from Test_Image where Image_path ='" + image_Path + "'";
+                        DBClass.executeNonQueryWithoutBegin(sql);
+                    }
+
+
+                    fileUpload.SaveAs(fname);
+                    image.Image_No = imageNo;
+                    image.Image_path = image_Path;
+                    image.Lab_Test_Detail_ID = Convert.ToInt32(detail_ID);
+                    db.Test_Images.InsertOnSubmit(image);
+                    db.SubmitChanges();
+                }
+
+            }
+        }
+        [WebMethod]
+        public static string PendingResultList()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var TableData = db.sp_GetPenidngResult_List().ToList();
+            return (new JavaScriptSerializer().Serialize(TableData));
+
+
+        }
+        [WebMethod]
+        public static string SaveGroupTest(int Lab_ID, List<GroupTestDetails> TesttDetails)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                foreach (var item in TesttDetails)
+                {
+                    Lab_Test_Detail labtest = (from t in db.Lab_Test_Details
+                                               where t.Lab_Test_Detail_ID == int.Parse(item.lab_test_Detail_id)
+                                               && t.Bill_Details_ID == Convert.ToInt32(item.BillDetailID)
+                                               select t).FirstOrDefault();
+                    labtest.Test_Template = item.fixed_values;
+                    labtest.Result_Value = item.result_type;
+                    labtest.Test_Value = item.value_type;
+                    labtest.Growth_Type = item.Growthtype;
+                    labtest.Organism_Type = item.OrganismType;
+                    labtest.Master_Remarks = item.Master_Remarks;
+                    labtest.Is_Result = true;
+                    labtest.Created_Time = DateTime.Now;
+                    labtest.Test_Status = "Created";
+                    db.SubmitChanges();
+                }
+                return "Successfull";
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "";
+        }
+        public class GroupTest
+        {
+            // public int Patient_ID { get; set; }
+            public List<GroupTestDetails> group_list { get; set; }
+        }
+        public class GroupTestDetails
+        {
+            public string lab_test_Detail_id { get; set; }
+            public string fixed_values { get; set; }
+            public string value_type { get; set; }
+            public string result_type { get; set; }
+            public string Growthtype { get; set; }
+            public string OrganismType { get; set; }
+            public string Master_Remarks { get; set; }
+            public int BillDetailID { get; set; }
+        }
+        [WebMethod]
+        public static string SaveTestDetail(string valuetype, string valueofTemplate, string Lab_ID, string testDetailID, string CatID, string resultVal, string GrowthType, string GrowthTypeInfo, string OrganismType, string Master_Remarks, string Levels)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            Lab_Test_Detail test = (from t in db.Lab_Test_Details
+                                    where t.Lab_Test_Detail_ID == int.Parse(testDetailID)
+                                    select t).FirstOrDefault();
+            test.Test_Template = valueofTemplate;
+            test.Result_Value = resultVal;
+            test.Test_Value = valuetype;
+            test.Growth_Type = GrowthType;
+            test.Organism_Type = OrganismType;
+            test.Growth_Type_Info = GrowthTypeInfo;
+            test.Master_Remarks = Master_Remarks;
+            test.Is_Result = true;
+            test.Test_Status = "Created";
+            test.Levels = Levels;
+            test.Created_Time = DateTime.Now;
+            test.Test_Collected_By = AppConfig.UserName;
+            db.SubmitChanges();
+
+            return "Successfull";
+        }
+
+        private class Organism_List
+        {
+            public string OrgName;
+            public string OrgValue;
+            public int LabID;
+        }
+
+        [WebMethod]
+        public static string SaveTestImages(string TestDetailID, string filename, int TestID, string ParentTransactionType, int Parent_Transaction_Type_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            Test_Image image = new Test_Image();
+            image.Lab_Test_Detail_ID = Convert.ToInt32(TestDetailID);
+            //image.Patient_ID = Patient_ID;
+            image.Test_ID = TestID;
+            image.Image_path = filename.ToString();
+            image.Parent_Transaction_Type_ID = Convert.ToInt32(Parent_Transaction_Type_ID);
+            image.Parent_Transaction_Type = ParentTransactionType;
+
+            db.Test_Images.InsertOnSubmit(image);
+            db.SubmitChanges();
+            return "Successfull";
+        }
+        [WebMethod]
+        public static string SaveOrganismList(string[][] Organism_List, int Lab_test_ID, int bill_detailid)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                string Query = "delete from Result_Organism where Lab_test_id='" + Lab_test_ID + "' and bill_detail_id='" + bill_detailid + "'";
+                DBClass.executeNonQueryWithoutBegin(Query);
+                if (Organism_List.Length > 0)
+                {
+                    for (int i = 0; i < Organism_List.Length; i++)
+                    {
+                        Result_Organism org = new Result_Organism();
+                        var Organism_Name = Organism_List[i][0];
+                        org.Organism_Value = Organism_List[i][1];
+                        org.Organism_Name_Case2 = Organism_List[i][2];
+                        org.Organism_Name_Case3 = Organism_List[i][3];
+                        org.Organism_Name_Header = Organism_List[i][4];
+                        org.Organism_Name_Case2_Header = Organism_List[i][5];
+                        org.Organism_Name_Case3_Header = Organism_List[i][6];
+                        org.Lab_Test_ID = Convert.ToInt32(Organism_List[i][7]);
+                        org.Test_ID = Convert.ToInt32(Organism_List[i][8]);
+                        //var datavalueId = Convert.ToInt32(DBClass
+                        //    .getField("select Datavalue_ID from DataValues where DataValue_Description ='"
+                        //    + Organism_Name + "' and ValueSet_ID = 3131"));
+                        var datavalueId = Convert.ToInt32(DBClass
+                           .getField("select Datavalue_ID from DataValues where DataValue_Description LIKE '%"
+                           + Organism_Name + "%' and ValueSet_ID = 2115"));
+                        org.Organism_Name = Organism_Name;
+                        org.Organism_Datavalue_ID = datavalueId;
+                        org.bill_detail_id = bill_detailid;
+                        //org.LabTestDetailID = labTestDetailID;
+                        db.Result_Organisms.InsertOnSubmit(org);
+                        db.SubmitChanges();
+                    }
+                }
+                else
+                {
+                    Result_Organism org = new Result_Organism();
+                    org.Lab_Test_ID = Lab_test_ID;
+                    org.bill_detail_id = bill_detailid;
+                    //org.LabTestDetailID = labTestDetailID;
+                    db.Result_Organisms.InsertOnSubmit(org);
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            return "";
+        }
+        //[WebMethod]
+        //public static string LoadOrganismList(int LabID, int globalTestId, int billDetailID)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        List<Result_Organism> lis = new List<Result_Organism>();
+        //        var List = (from org in db.Result_Organisms
+        //                    where org.Lab_Test_ID == LabID && org.bill_detail_id == billDetailID
+        //                    select new
+        //                    {
+        //                        org.Organism_Name,
+        //                        org.Organism_Value,
+        //                        org.Organism_Name_Case2,
+        //                        org.Organism_Name_Case3,
+        //                        org.Organism_Name_Header,
+        //                        org.Organism_Name_Case2_Header,
+        //                        org.Organism_Name_Case3_Header,
+        //                        org.Test_ID
+
+        //                    }).ToList();
+        //        if (List.Count == 0 || List[0].Test_ID == null)
+        //        {
+        //            List.Clear();
+        //        }
+        //        return (new JavaScriptSerializer()).Serialize(List);
+        //    }
+        //    return "";
+        //}
+        [WebMethod]
+        public static string LoadOrganismList(int LabID, int globalTestId, int billDetailID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                List<Result_Organism> lis = new List<Result_Organism>();
+                var List = (from org in db.Result_Organisms
+                            where org.Lab_Test_ID == LabID
+                            && org.bill_detail_id == billDetailID
+                            select new
+                            {
+                                org.Organism_Name,
+                                org.Organism_Value,
+                                org.Organism_Name_Case2,
+                                org.Organism_Name_Case3,
+                                org.Organism_Name_Header,
+                                org.Organism_Name_Case2_Header,
+                                org.Organism_Name_Case3_Header,
+                                org.Test_ID
+
+                            }).ToList();
+                if (List.Count == 0 || List[0].Test_ID == null)
+                {
+                    List.Clear();
+                }
+                return (new JavaScriptSerializer()).Serialize(List);
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string RejectTestDetail(int Lab_ID, string TesttDetails)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var TesttDetailsID = js.Deserialize<TesttList>(TesttDetails);
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                string chkEditRights = DBClass.getField("select dbo.GetApprovalRights('AllowPatientApprove','" + AppConfig.UserID + "')");
+                if (Convert.ToBoolean(chkEditRights) == true)
+                {
+                    foreach (var test in TesttDetailsID.test_list)
+                    {
+                        Lab_Test_Detail labtest = (from t in db.Lab_Test_Details
+                                                   where t.Lab_Test_Detail_ID == int.Parse(test.TestDID)
+                                                   select t).FirstOrDefault();
+
+                        labtest.Result_ID = "0";
+                        labtest.UnApproved_By = AppConfig.UserID;
+                        labtest.UnApproved_Time = DateTime.Now;
+                        labtest.isApproved = null;
+                        labtest.Approved_By = null;
+                        //labtest.Is_Result = true;
+                        db.SubmitChanges();
+                    }
+                    return "Reject Successfull";
+                }
+                else
+                {
+                    return "You have no Rights to Reject Test";
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return "Not Successfull";
+        }
+        [WebMethod]
+        public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var TesttDetailsID = js.Deserialize<TesttList>(TesttDetails);
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                //string chkEditRights = DBClass.getField("select dbo.GetApprovalRights('AllowPatientApprove','" + AppConfig.UserID + "')");
+                //if (Convert.ToBoolean(chkEditRights) == true)
+                //{
+                foreach (var test in TesttDetailsID.test_list)
+                {
+                    Lab_Test_Detail labtest = (from t in db.Lab_Test_Details
+                                               where t.Lab_Test_Detail_ID == int.Parse(test.TestDID)
+                                               select t).FirstOrDefault();
+
+                    //  labtest.Test_Value = test.Value;
+                    labtest.Result_ID = "0";
+                    labtest.Approved_By = AppConfig.UserID;
+                    labtest.Approved_Time = DateTime.Now;
+                    labtest.isApproved = true;
+                    labtest.Is_Result = true;
+                    var PR = (from tbl in db.Lab_Test_Details
+                              where tbl.Recieved_ID == test.TestDID && tbl.Is_Result == false
+                              select tbl).FirstOrDefault();
+                    if (PR != null)
+                    {
+                        PR.Is_Result = true;
+                        db.SubmitChanges();
+                    }
+                    db.SubmitChanges();
+                }
+                return "Successfull";
+                //}
+                //else
+                //{
+                //    return "You have no Rights to Approve Test";
+                //}
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "";
+        }
+        [WebMethod]
+        public static string DeleteImage(string imagSrc)
+        {
+            string imageFilePath = HttpContext.Current.Server.MapPath(imagSrc);
+
+
+            System.IO.File.Delete(imageFilePath);
+            string splitedImageFilePAth = imagSrc.Split('/')[1];
+            //string sql ="delete from Test_Image where Image_path ='" + splitedImageFilePAth;
+            string sql = "delete from Test_Image where Image_path like '%" + splitedImageFilePAth + "%'";
+            DBClass.executeNonQueryWithoutBegin(sql);
+            return "Success";
+        }
+        [WebMethod]
+        public static string getResultValues(int testidd)
+        {
+            string valuesList = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var resultValueList = (from p in db.Lab_Test_Multiple_Values where p.Test_ID == testidd select p.Value).ToList();
+                if (resultValueList != null)
+                {
+                    valuesList = (new JavaScriptSerializer().Serialize(resultValueList));
+                }
+            }
+
+            return valuesList;
+        }
+
+        [WebMethod]
+        public static string ApproveTestDetail(string TestDetailID, string TestValue, string Template, string Diagnosis, string Notes)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            Lab_Test_Detail test = (from t in db.Lab_Test_Details
+                                    where t.Lab_Test_Detail_ID == int.Parse(TestDetailID)
+                                    select t).FirstOrDefault();
+            if (test == null)
+            {
+                test = (from t in db.Lab_Test_Details
+                        where t.Lab_Test_ID == int.Parse(TestDetailID)
+                        select t).FirstOrDefault();
+
+            }
+            var ee = HttpContext.Current.Server.HtmlEncode(Template);
+
+            // test.Test_Value = TestValue;
+            //  test.Test_Template = Template;
+            test.Diagnosis = Diagnosis;
+            test.Notes = Notes;
+            test.Result_ID = "0";
+            test.Is_Result = true;
+            test.Approved_By = AppConfig.UserID;
+            test.Approved_Time = DateTime.Now;
+            test.isApproved = true;
+            db.SubmitChanges();
+            var dd = test.Lab_Test_Detail_ID;
+            var P = (from tbl in db.Lab_Test_Details
+                     where tbl.Recieved_ID == TestDetailID
+                     select tbl).FirstOrDefault();
+            if (P != null)
+            {
+                P.Is_Result = true;
+                db.SubmitChanges();
+            }
+            return "Successfull";
+        }
+
+        [WebMethod]
+        public static string LoadimagesDetail(string TestDetailID, string single)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            string folderPath = DBClass.getField("Select Segment3 from Sys_Parms where Name like '%Images Folder Path%'");
+            var data = (from td in db.Test_Images
+
+                        where td.Lab_Test_Detail_ID == int.Parse(TestDetailID)
+                        select new
+                        {
+                            Image_path = td.Image_path.Replace("~/", string.Empty).Contains("LabTestImg") == true ? td.Image_path.Replace("~/", string.Empty) : "LabTestImg/" + td.Image_path.Replace("~/", string.Empty),
+                            td.Lab_Test_Detail_ID,
+                            Single = single
+                        }).ToList();
+            if (data.Count != 0)
+            {
+
+
+            }
+            return (new JavaScriptSerializer().Serialize(data));
+        }
+
+        public class TestDetail
+        {
+
+            public string Approved_By;
+            public int Parent_Transaction_Type_ID;
+            public string Parent_Transaction_Type;
+            public string TestName;
+            public string Department;
+            public string Test_Template;
+            public string Main;
+            public string Result_ID;
+            public bool Is_Result;
+            public string Result_Value;
+            public string Image_path;
+            public string Group;
+            public bool? Status;
+            public string ValueType;
+            public string Template;
+            public string Diagnosiss;
+            public string notes;
+            public string Test_Values;
+            public int Test_ID;
+            public string isApproved;
+            public string GrowthType;
+            public string OrganismType;
+
+
+        }
+        [WebMethod]
+        //Pop up show Single Test
+        public static string GetTestDetail(string TestDetailID, string LabID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var patientGender = (from p in db.Sample_Masters where p.Patient_ID == (from l in db.Laboratory_Tests where l.Lab_Test_ID == Convert.ToInt32(LabID) select l.Patient_ID).FirstOrDefault() select p.patient_type_range).FirstOrDefault();
+            //if (patientGender == "F")
+            //{ patientGender = "2"; }
+            //else if (patientGender == "M")
+            //{ patientGender = "1"; }
+            //else if (patientGender == "C")
+            //{ patientGender = "3"; }
+            List<string> listObj = new List<string>();
+
+            var data = (from td in db.Lab_Test_Details
+                        join t in db.Lab_Tests
+                        on td.Test_ID equals t.Test_ID
+                        //join tv in db.Test_Values
+                        //on t.Test_ID equals tv.Test_ID
+                        where td.Lab_Test_Detail_ID == int.Parse(TestDetailID)
+                        select new
+                        {
+                            TestName = t.Test_Name,
+                            Department = db.GetDataValueName("Test Departments", t.Group_Department),
+                            Main = db.GetDataValueName("Main Test Departments", t.Main_Department),
+                            Group = db.GetDataValueName("Test Groups", t.Group_Category),
+                            Status = td.Status,
+                            //Is_Result = td.Is_Result == null ? false : true,
+                            Is_Result = td.Is_Result,
+                            Is_Cultural = t.Is_Cultural,
+                            //Test_ID = td.Test_ID,
+                            Diagnosis = td.Diagnosis,
+                            Notes = td.Notes,
+                            td.Result_Value,
+                            Ranges = (from v in db.Test_Values where v.Test_ID == t.Test_ID && v.Patient_Type == patientGender select v.Start_Range + " - " + v.End_Range).FirstOrDefault(),
+
+                            AllRange = (from v in db.Test_Values where v.Test_ID == t.Test_ID && v.Patient_Type == "6" select v.Start_Range + " - " + v.End_Range).FirstOrDefault(),
+                            //  td.Test_Template,
+                            Test_Template = td.Is_Result == true ? td.Test_Template : t.Fixed_Value,
+                            t.Result_Type_Value,
+                            t.Result_Type_Fixed,
+                            t.Result_Type_List,
+                            td.Test_Value,
+                            td.Master_Remarks,
+                            // Test_Value = string.Empty,
+                            //Test_Value = td.Is_Result == true ? td.Test_Value : (from v in db.Test_Values where v.Test_ID == t.Test_ID && v.Patient_Type == patientGender select v.Start_Range + " - " + v.End_Range).FirstOrDefault(),
+                            Fixed_Value = td.Is_Result == true ? td.Test_Template : t.Fixed_Value,
+                            //td.Bill_Details_ID,
+                            td.Growth_Type,
+                            td.Organism_Type,
+                            td.Levels,
+                            t.Result_Type_Image,
+                            Is_Approve = td.isApproved == null ? false : true,
+                            //tv.Start_Range,
+                            //tv.End_Range
+
+                            // td.
+
+                        }).ToList();
+
+            listObj.Add(data[0].TestName); //0
+            listObj.Add(data[0].Department);  //1
+            listObj.Add(data[0].Main); //2
+            listObj.Add(data[0].Group); //3
+            listObj.Add(data[0].Status.ToString()); //4
+            listObj.Add(data[0].Is_Result.ToString()); //5
+            listObj.Add(data[0].Diagnosis); //6
+            listObj.Add(data[0].Notes); //7
+            listObj.Add(data[0].Result_Value); //8
+            listObj.Add(data[0].Test_Template); //9
+            listObj.Add(data[0].Result_Type_Value.ToString()); //10
+            listObj.Add(data[0].Result_Type_Fixed.ToString()); //11
+            listObj.Add(data[0].Result_Type_List.ToString()); //12
+            listObj.Add(data[0].Test_Value); //13
+            listObj.Add(data[0].Fixed_Value); //14
+            listObj.Add(data[0].Growth_Type); //15
+            listObj.Add(data[0].Organism_Type); //16
+            listObj.Add(data[0].Master_Remarks);  // 17
+            listObj.Add(data[0].Is_Cultural.ToString()); //18
+            listObj.Add(data[0].Ranges);//19
+            listObj.Add(data[0].AllRange);//20
+
+            var Test_ID = db.Lab_Test_Details.Where(m => m.Lab_Test_Detail_ID == Convert.ToInt32(TestDetailID)).Select(m => m.Test_ID).FirstOrDefault();
+
+            listObj.Add(Test_ID.ToString()); //13
+
+            var Value_Type = db.Lab_Tests.Where(m => m.Test_ID == Test_ID).Select(m => m.Value_Type).FirstOrDefault();
+            var Check_Level = db.Lab_Tests.Where(x => x.Test_ID == Test_ID).Select(m => m.Chk_Levels).FirstOrDefault();
+
+            listObj.Add(Value_Type); //14
+            listObj.Add(Check_Level.ToString());//21
+            //var d = "APProve";
+            //listObj.Add(d); //22
+            listObj.Add(data[0].Is_Approve.ToString()); //22
+
+            //listObj.Add(Check_Level.ToString());//21
+            listObj.Add(data[0].Levels);
+            listObj.Add(data[0].Result_Type_Image.ToString());
+            //var d1 = "result";
+            //listObj.Add(d1); //22
+            listObj.Add(data[0].Is_Result.ToString()); //28
+            return (new JavaScriptSerializer().Serialize(listObj));
+        }
+
+
+        public class TestValues
+        {
+            public string Value_Type { get; set; }
+            public string Fixed_Value { get; set; }
+            public string Start_Range { get; set; }
+            public string End_Range { get; set; }
+            public string Patient_Type { get; set; }
+            public string Test_Name { get; set; }
+            public string Department { get; set; }
+            public string Main { get; set; }
+            public string Group { get; set; }
+            public string Status { get; set; }
+            public string Test_ID { get; set; }
+            //public string Test_Name { get; set; }
+
+        }
+        [WebMethod]
+        //Pop up show in case of group test
+        public static string LoadTestCatogry(int LabID, string CatID, int billDetailID)
+        {
+            string returnData = string.Empty;
+            bool isSingleGroupTest = false;
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var patientGender = (from p in db.Sample_Masters where p.Patient_ID == (from l in db.Laboratory_Tests where l.Lab_Test_ID == LabID select l.Patient_ID).FirstOrDefault() select p.patient_type_range).FirstOrDefault();
+                //if (patientGender == "F")
+                //{ patientGender = "2"; }
+                //else if (patientGender == "M")
+                //{ patientGender = "1"; }
+                //else if (patientGender == "C")
+                //{ patientGender = "3"; }
+
+                var categoryFromBill = DBClass.getField("select Category_ID from Ar_Billing_Details where Bill_Details_ID = " + billDetailID + "").ToString();
+                var isGroup = DBClass.getField("select Is_Group_Category from Ar_Billing_Details where Bill_Details_ID = " + billDetailID + "").ToString();
+                if (categoryFromBill == string.Empty)
+                {
+                    CatID = "0";
+                }
+
+                var DataValue_Name = db.DataValues.Where(m => m.DataValue_ID.Equals(CatID)).Select(m => m.DataValue_Name).FirstOrDefault();
+                if (DataValue_Name == null)
+                {
+                    DataValue_Name = db.Lab_Tests.Where(x => x.Test_ID.Equals(CatID)).Select(x => x.Group_Category).FirstOrDefault();
+                    if (DataValue_Name != null)
+                        isSingleGroupTest = true;
+                }
+                if (isGroup == Convert.ToString(true))
+                {
+                    if (!CatID.Equals("0"))
+                    {
+                        var inPatmedicineList = (from pm in db.Lab_Test_Details
+                                                 join t in db.Lab_Tests
+                                                 on pm.Test_ID equals t.Test_ID
+                                                 join b in db.Ar_Billing_Details
+                                                 on pm.Bill_Details_ID equals b.Bill_Details_ID
+                                                 where b.Is_Group_Category == true && t.Group_Category == DataValue_Name && pm.Lab_Test_ID == LabID && pm.Bill_Details_ID == billDetailID
+                                                 orderby t.Group_Order
+                                                 select new
+                                                 {
+                                                     pm.Lab_Test_ID,
+                                                     pm.Test_ID,
+                                                     t.Test_Name,
+                                                     Lab_Test_Detail_ID = (from lbd in db.Lab_Test_Details where lbd.Lab_Test_ID == Convert.ToInt32(LabID) && lbd.Test_ID == pm.Test_ID && lbd.Bill_Details_ID == billDetailID select lbd.Lab_Test_Detail_ID).FirstOrDefault(),
+                                                     Ranges = (from v in db.Test_Values where v.Test_ID == t.Test_ID && v.Patient_Type == patientGender select v.Start_Range + " - " + v.End_Range).FirstOrDefault(),
+
+                                                     AllRange = (from v in db.Test_Values
+                                                                 where v.Test_ID == t.Test_ID
+                                                                 && v.Patient_Type == "6"
+                                                                 select v.Start_Range + " - " + v.End_Range)
+                                                                 .FirstOrDefault(),
+
+                                                     //Test_Value = string.Empty,
+                                                     pm.Test_Value,
+                                                     pm.Is_Result,
+                                                     pm.Levels,
+                                                     pm.Approved_By,
+                                                     pm.Test_Template,
+                                                     Group_CategoryName = db.GetDataValueName("Test Groups", t.Group_Category),
+                                                     Group_Department = db.GetDataValueName("Test Departments", t.Group_Department),
+                                                     Main_Department = db.GetDataValueName("Main Test Departments", t.Main_Department),
+                                                     pm.Status,
+                                                     pm.isApproved,
+                                                     pm.Diagnosis,
+                                                     pm.Notes,
+                                                     isSingleGroupTest = isSingleGroupTest,
+                                                     Fixed_Value = pm.Is_Result == true ? pm.Test_Template : t.Fixed_Value,
+                                                     t.Value_Type,
+                                                     t.Result_Type_Fixed,
+                                                     t.Result_Type_List,
+                                                     t.Result_Type_Value,
+                                                     pm.Result_Value,
+                                                     pm.Growth_Type,
+                                                     pm.Organism_Type,
+                                                     pm.Master_Remarks,
+                                                     b.Bill_Details_ID,
+
+                                                     //tv.Start_Range,
+                                                     //tv.End_Range,
+                                                     resultValueList = (from p in db.Lab_Test_Multiple_Values where p.Test_ID == t.Test_ID select p.Value).ToList(),
+                                                     FixedValue = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.Fixed_Value).FirstOrDefault(),
+                                                     Resultvalue = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.Result_Value).FirstOrDefault(),
+                                                     ListValue = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.List_Value).FirstOrDefault(),
+                                                     ReqImage = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.Required_Value).FirstOrDefault(),
+                                                     Is_Approve = pm.isApproved == null ? false : true
+                                                 }).ToList();
+
+                        returnData = (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+                    }
+                }
+                else
+                {
+                    //var groupTestSingleTestID = DBClass.getField("select Item_ID from Ar_Billing_Details where Bill_Details_ID = " + billDetailID + "").ToString();
+                    var groupTestSingleTestID = (from b in db.Ar_Billing_Details where b.Bill_Details_ID == billDetailID select b.Item_ID).FirstOrDefault();
+                    var inPatmedicineList = (from pm in db.Lab_Test_Details
+                                             join t in db.Lab_Tests
+                                             on pm.Test_ID equals t.Test_ID
+                                             join b in db.Ar_Billing_Details
+                                            on pm.Bill_Details_ID equals b.Bill_Details_ID
+                                             //join tv in db.Test_Values
+                                             //on t.Test_ID equals tv.Test_ID
+                                             where pm.Bill_Details_ID == billDetailID
+                                             && b.Is_Group_Category == false
+                                             && pm.Lab_Test_ID == LabID
+                                             && pm.Test_ID.Equals(groupTestSingleTestID)
+                                             select new
+                                             {
+                                                 pm.Lab_Test_ID,
+                                                 pm.Test_ID,
+                                                 t.Test_Name,
+                                                 //t.Fixed_Value,
+                                                 Lab_Test_Detail_ID = (from lbd in db.Lab_Test_Details
+                                                                       where lbd.Lab_Test_ID == Convert.ToInt32(LabID) && lbd.Bill_Details_ID == billDetailID
+                                                                       && lbd.Test_ID == pm.Test_ID
+                                                                       select lbd.Lab_Test_Detail_ID).FirstOrDefault(),
+                                                 Ranges = (from v in db.Test_Values
+                                                           where v.Test_ID == t.Test_ID
+                                                           && v.Patient_Type == patientGender
+                                                           select v.Start_Range + " - " + v.End_Range).FirstOrDefault(),
+                                                 AllRange = (from v in db.Test_Values
+                                                             where v.Test_ID == t.Test_ID
+                                                             && v.Patient_Type == "6"
+                                                             select v.Start_Range + " - " + v.End_Range).FirstOrDefault(),
+                                                 //Test_Value = string.Empty,
+                                                 pm.Test_Value,
+                                                 pm.Is_Result,
+                                                 pm.Approved_By,
+                                                 pm.Test_Template,
+                                                 Group_CategoryName = db.GetDataValueName("Test Groups", t.Group_Category),
+                                                 Group_Department = db.GetDataValueName("Test Departments", t.Group_Department),
+                                                 Main_Department = db.GetDataValueName("Main Test Departments", t.Main_Department),
+                                                 pm.Status,
+                                                 pm.isApproved,
+                                                 pm.Diagnosis,
+                                                 pm.Notes,
+                                                 isSingleGroupTest = isSingleGroupTest,
+                                                 Fixed_Value = pm.Is_Result == true ? pm.Test_Template : t.Fixed_Value,
+                                                 t.Value_Type,
+                                                 t.Result_Type_Fixed,
+                                                 t.Result_Type_List,
+                                                 t.Result_Type_Value,
+                                                 pm.Result_Value,
+                                                 pm.Growth_Type,
+                                                 pm.Organism_Type,
+                                                 pm.Master_Remarks,
+                                                 b.Bill_Details_ID,
+                                                 //tv.Start_Range,
+                                                 //tv.End_Range,
+                                                 resultValueList = (from p in db.Lab_Test_Multiple_Values
+                                                                    where p.Test_ID == t.Test_ID
+                                                                    select p.Value).ToList(),
+                                                 FixedValue = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.Fixed_Value).FirstOrDefault(),
+                                                 Resultvalue = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.Result_Value).FirstOrDefault(),
+                                                 ListValue = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.List_Value).FirstOrDefault(),
+                                                 ReqImage = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.Required_Value).FirstOrDefault(),
+                                                 Is_Approve = pm.isApproved == null ? false : true
+                                             }).ToList();
+
+                    returnData = (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+                }
+            }
+            return returnData;
+        }
+
+        [WebMethod]
+        public static string GetSubTestIDs(string Group_Category)
+        {
+            string ListOfSubTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + Group_Category + "')");
+
+            return ListOfSubTestIDs;
+        }
+
+
+        [WebMethod]
+        public static Detail GetDetail(string PatientID)
+        {
+
+            int Patien_No = Convert.ToInt32(PatientID);
+            Detail pt = new Detail();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            Patient pat = new Patient();
+            pat = (from tbl in db.Patients
+                   where tbl.Patient_ID == Patien_No
+                   select tbl).FirstOrDefault();
+            if (pat != null)
+            {
+
+                pt.Name = pat.Full_Name;
+                pt.Gender = pat.Gender;
+                pt.Age = pat.Age_years.ToString();
+                if (pat.Entry_Date.HasValue)
+                    pt.Entry_Date = pat.Entry_Date.ToString();
+                // pt.Address = pat.Permanent_Address;
+                pt.Mobile = pat.Mobile1;
+                pt.Patient_Category = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
+                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+                return pt;
+            }
+            else
+                return pt;
+        }
+        public class Test
+        {
+            public string Lab_Test_Detail_ID { get; set; }
+            public DateTime Date { get; set; }
+            public string Remark { get; set; }
+            public string Lab_Test_ID { get; set; }
+            public string patient_ID { get; set; }
+            public string Test_ID { get; set; }
+            public string Test_Name { get; set; }
+            public string Group_Department { get; set; }
+            public string DepartmentName { get; set; }
+            public string Group_Category { get; set; }
+            public string GroupName { get; set; }
+            public string Rotation_ID { get; set; }
+            public string Rotation { get; set; }
+            public string GroupCategory_ID { get; set; }
+            public string Unit { get; set; }
+            public string Unit_Name { get; set; }
+            public string ValueType { get; set; }
+            public bool Status { get; set; }
+            public string ImagePath { get; set; }
+            public string Result_ID { get; set; }
+            public string Parent_Transaction_Type { get; set; }
+            public int Parent_Transaction_Type_ID { get; set; }
+            public bool Is_Result { get; set; }
+            public bool Emergancy { get; set; }
+            public string ListOfTestIDs { get; set; }
+            public string Bill_Details_ID { get; set; }
+            // public string ListOfTestID { get; set; }
+            // public string DataValue_ID { get; set; }
+            // public string DataValue_Name { get; set; }
+            // public string DataValue_Description { get; set; }
+
+            public string Rejected_Reason { get; set; }
+
+            public string Report_Colum { get; set; }
+            public string Service_Date { get; set; }
+
+            public bool Is_Approve { get; set; }
+        }
+
+        [WebMethod]
+        public static string GetLabDetailByBill_id(string Patient_ID, int Bill_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var patientNo = (from p in db.Patients where p.Patient_ID == Convert.ToInt32(Patient_ID) select p.Patient_No).FirstOrDefault();
+            var patientIDs = (from p in db.Patients where p.Patient_No == patientNo select p.Patient_ID).ToList();
+            //Individual Tests
+            var data = (from lt in db.Laboratory_Tests
+                        join ltd in db.Lab_Test_Details
+                        on lt.Lab_Test_ID equals ltd.Lab_Test_ID
+
+                        join tdef in db.Lab_Tests
+                        on ltd.Test_ID equals tdef.Test_ID
+
+                        join pa in db.Patients
+                        on lt.Patient_ID equals pa.Patient_ID
+
+                        join bd in db.Ar_Billing_Details
+                        on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                        join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID
+
+                        where ar.Bill_ID == (Bill_ID == 0 ? ar.Bill_ID : Bill_ID)
+
+                        //join bd in db.Ar_Billing_Details
+                        //on ltd.BillDetailID equals bd.Bill_Details_ID
+
+                        //lt.Patient_ID == (Patient_ID == "0" ? lt.Patient_ID : int.Parse(Patient_ID))
+                        //&& 
+                        //lt.Lab_Test_ID == (LabTestID == 0 ? lt.Lab_Test_ID : LabTestID)
+                        //&& pa.Patient_No == patientNo
+                        && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
+
+                        /*tdef.Group_Category.Trim() == string.Empty &&*/
+                        && bd.Is_Group_Category == false
+                        select new
+                        {
+                            lt.Parent_Transaction_Type,
+                            lt.Parent_Transaction_Type_ID,
+                            lt.Lab_Test_ID,
+                            tdef.Test_ID,
+                            ltd.Lab_Test_Detail_ID,
+                            tdef.Test_Name,
+                            ltd.Rotation_ID,
+                            ltd.Emergancy,
+                            ltd.L_R_Rotation_ID,
+                            tdef.Group_Category,
+                            DepartmentName = (db.GetDataValueName("Main Test Departments", tdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments", tdef.Main_Department)),
+                            GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
+                            Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
+                            Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
+                            tdef.Value_Type,
+                            Status = ltd.Status == null ? false : true,
+                            ltd.Image_path,
+                            ltd.Is_Result,
+                            ltd.Bill_Details_ID,
+                            ltd.Rejected_Reason,
+                            tdef.Report_Colum,
+                            bd.Service_Date,
+                            ltd.isApproved,
+                            lt.Patient_ID
+                        }).ToList();
+
+            List<Test> AlltestList = new List<Test>();
+            List<Test> AlltestListRefined = new List<Test>();
+            //Populate Test in list (Single Test)
+            foreach (var item in data)
+            {
+                Test test = new Test();
+                test.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+                //test.Date = (DateTime)item.Date;
+                // test.Remark = item.Remark;
+                test.Lab_Test_ID = item.Lab_Test_ID.ToString();
+                test.Test_ID = item.Test_ID.ToString();
+                test.Test_Name = item.Test_Name;
+                test.DepartmentName = item.DepartmentName;
+                test.Group_Category = item.Group_Category;
+                test.GroupName = item.GroupName;
+                if (item.Is_Result != null)
+                {
+                    test.Is_Result = (bool)item.Is_Result;
+                }
+                else
+                {
+                    test.Is_Result = false;
+                }
+                if (item.Emergancy != null)
+                {
+
+                    test.Emergancy = (bool)item.Emergancy;
+                }
+                else
+                {
+                    test.Emergancy = false;
+                }
+                if (item.isApproved != null)
+                {
+                    test.Is_Approve = (bool)item.isApproved;
+                }
+                else
+                {
+                    test.Is_Approve = false;
+                }
+                test.Rotation_ID = item.Rotation_ID;
+                test.Rotation = item.Rotation;
+                test.patient_ID = item.Patient_ID.ToString();
+                // test.GroupCategory_ID = item.GroupCategory_ID;
+                //test.Unit = item.Unit;
+                test.Unit_Name = item.Unit_Name;
+                test.ValueType = item.Value_Type;
+                test.Status = (bool)item.Status;
+                //test.Result_ID = item.Result_ID;
+                test.Parent_Transaction_Type = item.Parent_Transaction_Type;
+                test.Parent_Transaction_Type_ID = Convert.ToInt32(item.Parent_Transaction_Type_ID);
+                test.Bill_Details_ID = item.Bill_Details_ID.ToString();
+                test.Rejected_Reason = item.Rejected_Reason;
+                test.Report_Colum = item.Report_Colum;
+                test.Service_Date = item.Service_Date.ToString();
+                AlltestList.Add(test);
+            }
+
+            AlltestListRefined = AlltestList;
+            //For Group Tests
+            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], bd.Bill_Details_ID,ld.Rejected_Reason,bd.Service_Date,isnull(ld.isApproved,'') as IsApproved,ltm.patient_ID,isnull(ld.Is_Result,'') as [Is_Result] from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Ar_Billings ar where bd.Bill_Details_ID = ld.Bill_Details_ID and ar.Bill_ID=bd.Bill_ID and bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = (case when " + Patient_ID + " = 0 then ld.Patient_ID else " + Patient_ID + " end) and lt.Test_ID = ld.Test_ID /*and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID and ar.Bill_ID = (case when " + Bill_ID + " = 0 then ar.Bill_ID else " + Bill_ID + " end)");
+
+            foreach (DataRow item in GroupTest.Rows)
+            {
+                Test TestObj = new Test()
+                {
+                    //DataValue_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
+                    // DataValue_Name = item[1] == DBNull.Value ? "" : item[1].ToString(),
+                    Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
+                    Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(),
+                    Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
+                    Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
+                    Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
+                    Bill_Details_ID = item[5] == DBNull.Value ? "" : item[5].ToString(),
+                    Is_Result = Convert.ToBoolean(item[9] == DBNull.Value ? "" : item[9]),
+                    Rejected_Reason = item[6] == DBNull.Value ? "" : item[6].ToString(),
+                    Service_Date = item[7] == DBNull.Value ? "" : item[7].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[8] == DBNull.Value ? "" : item[8]),
+                    patient_ID = Convert.ToString(item[9] == DBNull.Value ? "" : item[9]),
+
+                };
+
+                TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
+
+                AlltestListRefined.Add(TestObj);
+            }
+            return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
+        }
+
+
+        [WebMethod]
+        public static string GetLabDetail(string Patient_ID, int LabTestID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var patientNo = (from p in db.Patients where p.Patient_ID == Convert.ToInt32(Patient_ID) select p.Patient_No).FirstOrDefault();
+            var patientIDs = (from p in db.Patients where p.Patient_No == patientNo select p.Patient_ID).ToList();
+            //Individual Tests
+            var data = (from lt in db.Laboratory_Tests
+                        join ltd in db.Lab_Test_Details
+                        on lt.Lab_Test_ID equals ltd.Lab_Test_ID
+                        join tdef in db.Lab_Tests
+                        on ltd.Test_ID equals tdef.Test_ID
+                        join pa in db.Patients
+                        on lt.Patient_ID equals pa.Patient_ID
+                        join bd in db.Ar_Billing_Details
+                        on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+
+                        //join bd in db.Ar_Billing_Details
+                        //on ltd.BillDetailID equals bd.Bill_Details_ID
+                        where
+                        //lt.Patient_ID == (Patient_ID == "0" ? lt.Patient_ID : int.Parse(Patient_ID))
+                        //&& 
+                        lt.Lab_Test_ID == (LabTestID == 0 ? lt.Lab_Test_ID : LabTestID)
+                        && pa.Patient_No == patientNo
+                        && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
+
+                        /*tdef.Group_Category.Trim() == string.Empty &&*/
+                        && bd.Is_Group_Category == false
+                        select new
+                        {
+                            lt.Parent_Transaction_Type,
+                            lt.Parent_Transaction_Type_ID,
+                            lt.Lab_Test_ID,
+                            tdef.Test_ID,
+                            ltd.Lab_Test_Detail_ID,
+                            tdef.Test_Name,
+                            ltd.Rotation_ID,
+                            ltd.Emergancy,
+                            ltd.L_R_Rotation_ID,
+                            tdef.Group_Category,
+                            DepartmentName = (db.GetDataValueName("Main Test Departments", tdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments", tdef.Main_Department)),
+                            GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
+                            Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
+                            Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
+                            tdef.Value_Type,
+                            Status = ltd.Status == null ? false : true,
+                            ltd.Image_path,
+                            ltd.Is_Result,
+                            ltd.Bill_Details_ID,
+                            ltd.Rejected_Reason,
+                            tdef.Report_Colum,
+                            bd.Service_Date,
+                            ltd.isApproved,
+                            lt.Patient_ID
+
+                        }).ToList();
+
+            List<Test> AlltestList = new List<Test>();
+            List<Test> AlltestListRefined = new List<Test>();
+            //Populate Test in list (Single Test)
+            foreach (var item in data)
+            {
+                Test test = new Test();
+                test.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+                //test.Date = (DateTime)item.Date;
+                // test.Remark = item.Remark;
+                test.Lab_Test_ID = item.Lab_Test_ID.ToString();
+                test.Test_ID = item.Test_ID.ToString();
+                test.Test_Name = item.Test_Name;
+                test.DepartmentName = item.DepartmentName;
+                test.Group_Category = item.Group_Category;
+                test.GroupName = item.GroupName;
+                if (item.Is_Result != null)
+                {
+                    test.Is_Result = (bool)item.Is_Result;
+                }
+                else
+                {
+                    test.Is_Result = false;
+                }
+                if (item.Emergancy != null)
+                {
+
+                    test.Emergancy = (bool)item.Emergancy;
+                }
+                else
+                {
+                    test.Emergancy = false;
+                }
+                test.Rotation_ID = item.Rotation_ID;
+                test.Rotation = item.Rotation;
+                // test.GroupCategory_ID = item.GroupCategory_ID;
+                //test.Unit = item.Unit;
+                test.Unit_Name = item.Unit_Name;
+                test.ValueType = item.Value_Type;
+                test.Status = (bool)item.Status;
+                //test.Result_ID = item.Result_ID;
+                test.Parent_Transaction_Type = item.Parent_Transaction_Type;
+                test.Parent_Transaction_Type_ID = Convert.ToInt32(item.Parent_Transaction_Type_ID);
+                test.Bill_Details_ID = item.Bill_Details_ID.ToString();
+                test.Rejected_Reason = item.Rejected_Reason;
+                test.Report_Colum = item.Report_Colum;
+                test.Service_Date = item.Service_Date.ToString();
+                test.patient_ID = item.Patient_ID.ToString();
+                if (item.isApproved != null)
+                {
+                    test.Is_Approve = (bool)item.isApproved;
+                }
+                else
+                {
+                    test.Is_Approve = false;
+                }
+                AlltestList.Add(test);
+            }
+
+            AlltestListRefined = AlltestList;
+            //For Group Tests
+            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], bd.Bill_Details_ID,ld.Is_Result,ld.Rejected_Reason,bd.Service_Date ,isnull(ld.isApproved,'') as IsApproved,ltm.patient_ID from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd where bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = (case when " + Patient_ID + " = 0 then ld.Patient_ID else " + Patient_ID + " end) and lt.Test_ID = ld.Test_ID /*and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID and ltm.Lab_Test_ID = (case when " + LabTestID + " = 0 then ltm.Lab_Test_ID else " + LabTestID + " end)");
+            //DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], bd.Bill_Details_ID,ld.Is_Result,ld.Rejected_Reason,bd.Service_Date ,isnull(ld.isApproved, '') as IsApproved from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Patients p where p.Patient_ID = ld.Patient_ID and bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category, 0) = 1 and p.Patient_No = 44090 and lt.Test_ID = ld.Test_ID /*and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID and ltm.Lab_Test_ID = (case when 0 = 0 then ltm.Lab_Test_ID else 0 end)");
+            foreach (DataRow item in GroupTest.Rows)
+            {
+                Test TestObj = new Test()
+                {
+                    //DataValue_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
+                    // DataValue_Name = item[1] == DBNull.Value ? "" : item[1].ToString(),
+                    Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
+                    Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(),
+                    Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
+                    Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
+                    Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
+                    Bill_Details_ID = item[5] == DBNull.Value ? "" : item[5].ToString(),
+                    Is_Result = Convert.ToBoolean(item[6] == DBNull.Value ? "" : item[6]),
+                    Rejected_Reason = item[7] == DBNull.Value ? "" : item[7].ToString(),
+                    Service_Date = item[8] == DBNull.Value ? "" : item[8].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[9] == DBNull.Value ? "" : item[9]),
+                    patient_ID = Convert.ToString(item[10] == DBNull.Value ? "" : item[10]),
+
+
+                };
+
+                TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
+
+                AlltestListRefined.Add(TestObj);
+            }
+            return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
+        }
+
+
+        public class TestDetailsForOPDrpt
+        {
+            public string Lab_Test_Detail_ID { get; set; }
+            public DateTime Date { get; set; }
+            public string Remark { get; set; }
+            public string Lab_Test_ID { get; set; }
+            public string Test_ID { get; set; }
+            public string Test_Name { get; set; }
+            public string Group_Department { get; set; }
+            public string DepartmentName { get; set; }
+            public string Group_Category { get; set; }
+            public string GroupName { get; set; }
+            public string Rotation_ID { get; set; }
+            public string Rotation { get; set; }
+            public string GroupCategory_ID { get; set; }
+            public string Unit { get; set; }
+            public string Unit_Name { get; set; }
+            public string ValueType { get; set; }
+            public bool Status { get; set; }
+            public string ImagePath { get; set; }
+            public string Result_ID { get; set; }
+            public string Parent_Transaction_Type { get; set; }
+            public int Parent_Transaction_Type_ID { get; set; }
+            public bool Is_Result { get; set; }
+        }
+        [WebMethod]
+        public static string fillGrowthTypes()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var d = (from st in db.DataValues where st.ValueSet_ID == 2114 select new { st.DataValue_Name, st.DataValue_Description }).ToList();
+                data = new JavaScriptSerializer().Serialize(d);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string fillGrowthInfos()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Growth Information"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string FillOrganismType()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var d = (from st in db.DataValues where st.ValueSet_ID == 2115 select new { st.DataValue_Name, st.DataValue_Description }).ToList();
+                data = new JavaScriptSerializer().Serialize(d);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static Detail GetDetailUsingBillID(string Bill_ID)
+        {
+            int BillID = Convert.ToInt32(Bill_ID);
+            Detail pt = new Detail();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            Patient pat = new Patient();
+            pat = (from l in db.Ar_Billings
+                   join p in db.Patients
+                   on l.Patient_ID equals p.Patient_ID
+                   where l.Bill_ID == BillID
+                   select p).FirstOrDefault();
+            if (pat != null)
+            {
+                pt.Patient_No = Convert.ToInt32(pat.Patient_ID).ToString();
+                pt.Name = pat.Full_Name;
+                pt.Gender = pat.Gender;
+                pt.Age = pat.Age_years.ToString();
+                if (pat.Entry_Date.HasValue)
+                    pt.Entry_Date = pat.Entry_Date.ToString();
+                //  pt.Address = pat.Permanent_Address;
+                pt.Mobile = pat.Mobile1;
+                pt.Patient_Category = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
+                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+                return pt;
+            }
+            else
+                return pt;
+        }
+        [WebMethod]
+        public static Detail GetDetailUsingLabID(string Lab_ID)
+        {
+
+            int LabID = Convert.ToInt32(Lab_ID);
+            Detail pt = new Detail();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            Patient pat = new Patient();
+
+            pat = (from l in db.Laboratory_Tests
+                   join p in db.Patients
+                   on l.Patient_ID equals p.Patient_ID
+                   where l.Lab_Test_ID == LabID
+                   select p).FirstOrDefault();
+
+            if (pat != null)
+            {
+                pt.Patient_No = Convert.ToInt32(pat.Patient_ID).ToString();
+                pt.Name = pat.Full_Name;
+                pt.Gender = pat.Gender;
+                pt.Age = pat.Age_years.ToString();
+                if (pat.Entry_Date.HasValue)
+                    pt.Entry_Date = pat.Entry_Date.ToString();
+                //  pt.Address = pat.Permanent_Address;
+                pt.Mobile = pat.Mobile1;
+                pt.Patient_Category = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
+                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+                return pt;
+            }
+            else
+                return pt;
+        }
+
+        public class Detail
+        {
+            public string Name;
+            public string Gender;
+            public string Age;
+            public string Mobile;
+            public string Address;
+            public string Entry_Date;
+            public string Patient_Category;
+            public string Patient_No;
+        }
+        //[WebMethod]
+        //public static string fill_extra_test(int testID)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //     var data = (from t in db.Lab_Test_Multiple_Values 
+        //                  where t.Test_ID==Convert.ToInt32(testID)
+        //      select new { t.Test_ID, t.Value}).ToList();
+
+        //     return (new JavaScriptSerializer()).Serialize(data);
+        //}
+
+        [WebMethod]
+        public static string FillUltrasound_level(string valID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var result = (from i in db.UltraSoundLevels
+                          where i.Levels == valID
+                          select i.FixValues).FirstOrDefault();
+
+            return (new JavaScriptSerializer().Serialize(result));
+        }
+        [WebMethod]
+        public static string GetAll_UltraSoundLevel()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Ultrasound level"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Response.Redirect(Request.RawUrl);
+        }
+    }
+}

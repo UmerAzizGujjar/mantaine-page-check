@@ -1,0 +1,122 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Script.Services;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace PMS.Inventory
+{
+    public partial class GRNView : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+        [WebMethod]
+        public static bool isDeleteAllow()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            bool value = Convert.ToBoolean(DBClass.getField("select  isnull(AllowPatientDelete,0) from aspnet_users where username='" + AppConfig.UserName + "'"));
+            return value;
+
+        }
+
+        [WebMethod]
+        public static bool DeleteRecord(string GRNID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            SqlTransaction tranObj = null;
+            SqlConnection con = new SqlConnection(DBClass.ConnectionString());
+            con.Open();
+            tranObj = con.BeginTransaction();
+            try
+            {
+                var GRN_Id = (from itm in db.GRN_Masters
+                              where (itm.GRN_ID == int.Parse(GRNID))
+                              select itm.GRN_ID).FirstOrDefault();
+                if (GRN_Id != 0)
+                {
+
+                    DBClass.exectueQuery("Update GRN_Master set Status='Cancelled',IsDeleted=1,Deleted_By='" + AppConfig.UserID + "',Deleted_Time=GetDate() where GRN_ID =" + GRN_Id, tranObj, con);
+                    tranObj.Commit();
+                }
+                else
+                {
+                    tranObj.Rollback();
+                    return false;
+                }
+            }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+            catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+            {
+                if (tranObj != null)
+                    tranObj.Rollback();
+                return false;
+            }
+            return true;
+        }
+        [WebMethod]
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        {
+            try
+            {
+                using (var _dbContext = new DataBaseDataContext())
+                {
+                    string userId = HttpContext.Current.Session["UserId"].ToString();
+
+                    var Total_GRNS = _dbContext.GRN_Masters.Count();
+                    var GRNS = from GRN in _dbContext.GRN_Masters
+                               where
+                                    ((GRN.GRN_Num.ToString().Contains(searchValue) || GRN.Remarks.ToString().Contains(searchValue) || _dbContext.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(GRN.VendorId)).Select(po => po.Vendor_Name).FirstOrDefault().ToString().Contains(searchValue) || GRN.Status.Contains(searchValue) || _dbContext.GetPONumberagainstGRNID(GRN.GRN_ID).Contains(searchValue) || _dbContext.GetIGPNumberagainstGRNID(GRN.GRN_ID).Contains(searchValue)))
+                                  select new
+                                  {
+                                      GRN_ID = GRN.GRN_ID,
+                                      GRN_Num = GRN.GRN_Num,
+                                      Remarks = GRN.Remarks,
+                                      Approved_Date = GRN.Approved_Date,
+                                      Vendor_Name = _dbContext.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(GRN.VendorId)).Select(po => po.Vendor_Name).FirstOrDefault().ToString(),
+                                      Status = GRN.Status,
+                                      po_Number = _dbContext.GetPONumberagainstGRNID(GRN.GRN_ID),
+                                      Igp_Number = _dbContext.GetIGPNumberagainstGRNID(GRN.GRN_ID),
+                                  };
+
+                    var FilteredCount = GRNS.Count();
+                    switch (sortColumn)
+                    {
+                        case "GRN_Num":
+                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.GRN_Num) : GRNS.OrderByDescending(a => a.GRN_Num);
+                            break;
+                        case "po_Number":
+                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(b => b.po_Number) : GRNS.OrderByDescending(a => a.po_Number);
+                            break;
+                        case "Remarks":
+                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.Remarks) : GRNS.OrderByDescending(a => a.Remarks);
+                            break;
+                        case "Igp_Number":
+                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.Igp_Number) : GRNS.OrderByDescending(a => a.Igp_Number);
+                            break;
+                        default:
+                            GRNS = GRNS.OrderBy(a => a.GRN_Num);
+                            break;
+                    }
+
+                    var GRNLIST = GRNS.Skip(start).Take(length).ToList();
+
+                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_GRNS, data = GRNLIST };
+                    return jsonData;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching GRN list", ex);
+            }
+        }
+    }
+}

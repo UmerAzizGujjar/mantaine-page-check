@@ -1,0 +1,22 @@
+#dvSummary {
+ 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.left-right-margin {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+
+.margin {
+    margin-left:-3%;
+}
+
+
+.custom-modal-width {
+    max-width: 90% !important;
+    margin: auto !important;
+}

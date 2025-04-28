@@ -1,0 +1,150 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ComparativeStatementVendorView.aspx.cs" Inherits="PMS.AP.ComparativeStatementVendorView" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+ <link href="../../wwwroot/css/tablestyle.css" rel="stylesheet" />
+    <script type="text/javascript">    
+        $(document).ready(function () {
+            LoadPage();
+        });
+
+        function Edit(ID) {
+            window.location.href = "ComparativeStatementVendor.aspx?CM_ID=" + ID + "";
+        }
+        function AutoPO(ID) {
+            debugger
+            var CSID = ID;
+            PageMethods.AutoPO(CSID, function (Tests) {
+                debugger
+                var message = JSON.parse(Tests);
+                if (message[0].Column1 != "" || message[0].Column1 != null) {
+                    location.reload();
+                }
+            });
+        }
+
+
+
+        function LoadPage() {
+            $("#tblResult").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": function (data, callback, settings) {
+                    $.ajax({
+                        type: "POST",
+                        url: "ComparativeStatementVendorView.aspx/ViewList",
+                        data: JSON.stringify({
+                            draw: data.draw,
+                            start: data.start,
+                            length: data.length,
+                            sortColumn: data.columns[data.order[0].column].name,
+                            sortColumnDirection: data.order[0].dir,
+                            searchValue: data.search.value
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            callback({
+                                draw: response.d.draw,
+                                recordsTotal: response.d.recordsTotal,
+                                recordsFiltered: response.d.recordsFiltered,
+                                data: response.d.data
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                },
+                "columns": [
+                    { "data": "CSVENID", "visible": false },
+                    { "data": "CSVENNO" },
+                    {
+                        "data": "CSVENDATE",
+                        "render": function (data, type, row) {
+                            return moment(data).format('D-MMM-YYYY'); 
+                        },
+                        "width": "11%"
+                    },
+                    { "data": "CSVENVALIDITY", width:"10%" },
+                    { "data": "CSVENREMARKS" },
+                    { "data": "PoStatus" },
+                    {
+                        "render": function (data, type, row) {
+                            debugger;
+                            var btnPoVisible = '';
+                            var res = '<a class="editListBtn" href="#" onclick="Edit(' + row.CSVENID + ')" ' +
+                                'style="border-radius: 4px; margin-right: 4px;  color: white; padding: 5px 8px;"><i ' +
+                                'style="color:white !important;" class="fa fa-pencil"></i></a>';
+                            if (row.CSVENSTATUS == "Created") {
+                                btnPoVisible = 'style="display:none;"';
+                            }
+                           
+                            if (row.CSVENSTATUS == "Approved" && row.IsAuto == true) {
+                                btnPoVisible = 'style="display:none;"';
+                            }
+                            if (row.CSVENSTATUS == "Cancelled") {
+                                btnPoVisible = 'style="display:none;"';
+                            }
+                            var create = '<a href="#" class="editListBtn" onclick="AutoPO(' + row.CSVENID + ')" ' + btnPoVisible + ' style = "border-radius: 4px;width:100%; background-color: #438eb9 ; color: White; padding: 4px 11px 4px 11px;" id = "btnPo' + (row + 1) + '" > Create PO</a >';
+                            var result = res + create;
+                            return result;
+                        }, width:"14%"
+                    }
+                ],
+                "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#tblResult_length');
+                    var lengthDropdown = document.querySelector('#tblResult_length select');
+                    var label = document.querySelector('#tblResult_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    } else {
+                        console.log("Length dropdown, label, or container not found");
+                    }
+                }
+            });
+        }
+
+     
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+     <div class="row">
+    <div class="col-lg-2 col-md-4 col-sm-12" style="margin-bottom:1%">
+        <input type="button" class="btn btn-primry" id="aadnew" style="margin-left:-15px" value="Add New" onclick="location.href='ComparativeStatementVendor.aspx';" />
+    </div>
+    </div>
+    <div class="row">
+    <div class="table-container">
+                <table class="table table-responsive table-hover table-bordered" id="tblResult">
+                    <thead>
+                        <tr>
+                            <th>CSID</th>
+                            <th>CS#</th>
+                            <th>CS Date</th>
+                            <th>CS Validity</th>
+                            <th>Remarks</th>
+                            <th>Status</th>
+                            <th>Action</th>                    
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+    </div>
+        </div>
+</asp:Content>

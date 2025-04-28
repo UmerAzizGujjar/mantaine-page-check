@@ -1,0 +1,176 @@
+﻿#tbltest p {
+    margin: 0px 0px 4px !important;
+    overflow: scroll;
+    height: 40px;
+}
+
+#scrollid {
+    height: 40px;
+    width: 607px;
+    background-color: cadetblue;
+    padding: 5px;
+    padding-bottom: 0px;
+    border: 1px solid black;
+    margin: 10px;
+    overflow: scroll;
+}
+
+[contenteditable=true]:empty:not(:focus):before {
+    content: attr(data-text);
+}
+
+bgcolor {
+    color: red;
+}
+
+fieldset {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+legend {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+    margin-bottom: 0px;
+}
+
+.table {
+    margin: 1em 0;
+    width: 100%;
+    overflow: hidden;
+    background: #FFF;
+    color: #024457;
+    border: 1px solid #167F92;
+}
+
+    .table tr {
+        border: 1px solid #D9E4E6;
+    }
+
+        .table tr:nth-child(even) {
+            background-color: #EAF3F3;
+        }
+
+    .table th {
+        display: none;
+        border: 1px solid #FFF;
+        background-color: #438eb9;
+        color: #FFF;
+        padding: 1em;
+    }
+
+    .table thead th {
+        display: table-cell;
+        text-align: center;
+    }
+
+@media (min-width: 480px) {
+    .table th:nth-child(2) span {
+        display: block;
+    }
+
+    .table th:nth-child(2):after {
+        display: none;
+    }
+}
+
+.table td {
+    display: block;
+    word-wrap: break-word;
+    max-width: 7em;
+}
+
+    .table td:first-child {
+        display: table-cell;
+        text-align: center;
+        border-right: 1px solid #D9E4E6;
+    }
+
+@media (min-width: 480px) {
+    .table td {
+        border: 1px solid #D9E4E6;
+    }
+}
+
+.table th, .table td {
+    text-align: center;
+    margin: .5em 1em;
+}
+
+@media (min-width: 480px) {
+    .table th, .table td {
+        display: table-cell;
+        padding: 0em;
+    }
+}
+
+#test_id {
+    width: 60px !important;
+    text-align: center;
+    font-weight: bold;
+}
+
+.ErrorAlert {
+    border: 1px solid red !important;
+}
+
+
+
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 230px !important;
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.image-container {
+    background-color: #D9D9D9;
+    padding: 20px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.mtt {
+    margin-top: 2px !important
+}
+
+.top {
+    margin-top: 4px;
+}
+
+.formrgn {
+    margin-top: 15px;
+}
+
+.detail {
+    margin-top: 3%;
+}
+
+
+.modal-body input[type="text"] {
+    height: 25px;
+}
+
+.test-table {
+    width: 100%;
+}
+
+    .test-table tr td {
+        padding: 5px;
+    }

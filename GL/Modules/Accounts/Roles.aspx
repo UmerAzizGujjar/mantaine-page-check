@@ -1,0 +1,201 @@
+﻿<%@ Page Title="User's Roles" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Roles.aspx.cs" Inherits="PMS.Account.Roles" Theme="Default_Theme" %>
+
+<%@ Register Src="~/LookupControl.ascx" TagName="LookupControl" TagPrefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
+     input[type="checkbox"] {
+    width: 20% !important;
+}
+  
+
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript">
+
+        $(document).ready(function (){
+            //fillDepts();
+        });
+
+        function fillDepts() {
+
+            PageMethods.FillDepts(function (data) {
+                var parsedData = JSON.parse(data);
+                var options = '<option value="">Please Select</option>';
+                $.each(parsedData, function (key, value) {
+                    options += '<option value=' + value.DataValue_Name + '> ' + value.DataValue_Description + '</option>';
+                });
+
+                $('#ddlDepartment').html(options);
+
+            }, function (exec) { alert(exec.getmessage()); })
+        }
+
+        //************************** Treeview Parent-Child check behaviour ****************************// 
+        function OnTreeClick(evt) {          
+            var src = window.event != window.undefined ? window.event.srcElement : evt.target;
+            var isChkBoxClick = (src.tagName.toLowerCase() == "input" && src.type == "checkbox");
+            if (isChkBoxClick) {
+                var parentTable = GetParentByTagName("table", src);
+                var nxtSibling = parentTable.nextSibling;
+                if (nxtSibling && nxtSibling.nodeType == 1)//check if nxt sibling is not null & is an element node
+                {
+                    if (nxtSibling.tagName.toLowerCase() == "div") //if node has children
+                    {
+                        //check or uncheck children at all levels
+                        CheckUncheckChildren(parentTable.nextSibling, src.checked);
+                    }
+                }
+                //check or uncheck parents at all levels
+                CheckUncheckParents(src, src.checked);
+            }
+        }
+        function CheckUncheckChildren(childContainer, check) {
+            var childChkBoxes = childContainer.getElementsByTagName("input");
+            
+           // childChkBoxes[0].parentNode.checked = check;
+            var childChkBoxCount = childChkBoxes.length;
+            for (var i = 0; i < childChkBoxCount; i++) {
+                childChkBoxes[i].checked = check;
+            }
+        }
+        function CheckUncheckParents(srcChild, check) {
+            console.log(srcChild);
+            var parentDiv = GetParentByTagName("div", srcChild);
+            var parentNodeTable = parentDiv.previousSibling;
+            //srcChild.parentNode.checked = true;
+            
+            if (parentNodeTable) {
+                var checkUncheckSwitch;
+
+                if (check) //checkbox checked
+                {
+                    var isAllSiblingsChecked = AreAllSiblingsChecked(srcChild);
+                    if (isAllSiblingsChecked)
+                        checkUncheckSwitch = true;
+                    else
+                        checkUncheckSwitch = false; //do not need to check parent if any child is not checked
+                }
+                else //checkbox unchecked
+                {
+                    //checkUncheckSwitch = false;
+                    checkUncheckSwitch = true;
+                }
+
+                var inpElemsInParentTable = parentNodeTable.getElementsByTagName("input");
+                if (inpElemsInParentTable.length > 0) {
+                    var parentNodeChkBox = inpElemsInParentTable[0];
+                    parentNodeChkBox.checked = checkUncheckSwitch;
+                    //do the same recursively
+                    CheckUncheckParents(parentNodeChkBox, checkUncheckSwitch);
+                }
+            }
+        }
+        function AreAllSiblingsChecked(chkBox) {
+            var parentDiv = GetParentByTagName("div", chkBox);
+            var childCount = parentDiv.childNodes.length;
+            for (var i = 0; i < childCount; i++) {
+                if (parentDiv.childNodes[i].nodeType == 1) //check if the child node is an element node
+                {
+                    if (parentDiv.childNodes[i].tagName.toLowerCase() == "table") {
+                        var prevChkBox = parentDiv.childNodes[i].getElementsByTagName("input")[0];
+                        //if any of sibling nodes are not checked, return false
+                        if (prevChkBox.checked) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        //utility function to get the container of an element by tagname
+        function GetParentByTagName(parentTagName, childElementObj) {
+            var parent = childElementObj.parentNode;
+            while (parent.tagName.toLowerCase() != parentTagName.toLowerCase()) {
+                parent = parent.parentNode;
+            }
+            return parent;
+        }
+    </script>
+    <script type="text/javascript">
+        //validate form input controls                
+        function fn_init() {
+            $("#aspnetForm").validate({
+                rules: {
+                    <%=txtRoleName.UniqueID %>: {
+                        required: true
+                    }                    
+                }
+            });
+         
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_initializeRequest(onEachRequest);
+        }
+
+        function onEachRequest(sender, args) {
+            if ($("#aspnetForm").valid() == false) {
+                args.set_cancel(true);
+            }
+        }         
+        function _valid(){
+            var p = Sys.WebForms.PageRequestManager.getInstance();
+            p.add_initializeRequest(onOtherRequest);
+        }
+        function onOtherRequest(sender, args) {
+            args.set_cancel(false);
+        }            
+    </script>
+
+    <fieldset>
+        <legend>Define User Roles</legend>
+        <table style="padding: 20px; width:80% ">
+            <tr>
+                <td>
+                    <asp:Label ID="Label3" Text="Role ID" runat="server" />
+                </td>
+                <td>
+                    <asp:TextBox ID="txtRoleId" Text="(New)" runat="server" Enabled="False" />
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <asp:Label ID="Label1" Text="Role Name *" runat="server" />
+                </td>
+                <td>
+                    <asp:TextBox ID="txtRoleName" Text="" runat="server" />
+                    <asp:HiddenField ID="hdfOldRoleName" runat="server" />
+                </td>
+                <td>
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Role Name is required" ControlToValidate="txtRoleName"></asp:RequiredFieldValidator>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <asp:Label ID="Label2" Text="Department" runat="server" />
+                    &nbsp
+                </td>
+                <td>                    
+                    <asp:DropDownList runat="server" style="width:100% !important" ID="ddlDepartment" AppendDataBoundItems="true" ClientIDMode="Static" CausesValidation="false" ></asp:DropDownList>
+                </td>
+            </tr>
+         
+        </table>
+        <div class="row">
+            <div class="col-lg-1 col-md-4 col-sm-6">
+                        <asp:Button Text="Back" CssClass="btn btn-gray" ID="btnBack" PostBackUrl="~/Modules/Accounts/RolesView.aspx" CausesValidation="false" runat="server" />
+            </div>   
+            <div class="col-lg-1 col-md-4 col-sm-6">
+                  <asp:Button ID="btnSave" CssClass="btn btn-primry"  runat="server" Text="Save" OnClick="btnSave_Click"  />
+            </div>
+        </div>
+        <fieldset>
+            <legend>Menu Rights</legend>
+            <asp:TreeView ID="tvMenus" runat="server" ShowLines="True"  ExpandDepth="0" 
+                LineImagesFolder="~/TreeLineImages" ShowCheckBoxes="All" onclick="OnTreeClick(event)">
+            </asp:TreeView>
+        </fieldset>
+        <asp:Label ID="lblMessage" runat="server" />
+    </fieldset>
+
+</asp:Content>

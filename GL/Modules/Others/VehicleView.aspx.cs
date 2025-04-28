@@ -1,0 +1,65 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+
+namespace PMS
+{
+    public partial class VehicleView : System.Web.UI.Page
+    {
+        protected override void OnInit(EventArgs e)
+        {
+            if (Session["Company_ID"] != null)
+            {
+                base.OnInit(e);
+                string qury = "SELECT VID, V_Code, VIN, Reg_No, Reg_State, Engine_No, V_Type, Total_Seats, Make, Model, Color, V_Image FROM Vehicles";
+                sqlList.SelectCommand = qury;
+                this.sqlList.ConnectionString = DBClass.ConnectionString();
+            }
+            else
+            {
+                Session.Abandon();
+                Response.Redirect("~/Account/Login.aspx", true);
+            }
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void whdgList_ItemCommand(object sender, Infragistics.Web.UI.GridControls.HandleCommandEventArgs e)
+        {
+            if (e.CommandName == "Remove")
+            {
+                SqlTransaction tranObj = null;
+                SqlConnection con = new SqlConnection(DBClass.ConnectionString());
+                con.Open();
+                tranObj = con.BeginTransaction();
+                try
+                {
+                    bool rowDeleted = DBClass.exectueQuery("Delete Vehicles Where VID =" + Convert.ToInt32(e.CommandArgument) + "", tranObj, con);
+                    if (rowDeleted)
+                    {
+                        Response.Redirect(Request.RawUrl, false);
+                        upList.Update();
+                    }
+                    tranObj.Commit();
+                }
+                catch (Exception exc)
+                {
+                    if (tranObj != null)
+                        tranObj.Rollback();
+                    throw new Exception(exc.Message);
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+        }
+    }
+}

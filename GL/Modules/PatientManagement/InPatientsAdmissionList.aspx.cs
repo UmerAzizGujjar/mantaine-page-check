@@ -1,0 +1,170 @@
+﻿using PMS.Modules.PatientManagement;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace PMS
+{
+    public partial class InPatientsAdmissionList : System.Web.UI.Page
+    {
+
+        DataBaseDataContext db = new DataBaseDataContext();
+        static string FilePath = "";
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+        public class Result
+        {
+            public string Referring_Doctor;
+            public string Refer_To_Hospital;
+            public string Discharge_Recommended;
+            public string Admission_Date;
+            public string Expected_Discharge_Date;
+            public string Full_Name;
+            public string Father_Name;
+            public string NIC;
+            public string Patient_ID;
+            public string Patient_Type;
+            public string Department;
+            public string Age_years;
+            public string Patient_No;
+            public string In_Patient_ID;
+            public string Discharge_On;
+            public int allowDelete;
+            public int allowEdit;
+        }
+
+        public static string GetQoute()
+        {
+            return @"""";
+        }
+        [WebMethod]
+        public static string DeleteRecord(int InPatientID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            // Get Patient ID
+            var patID = (int)(from tbl in db.In_Patients
+                              where tbl.In_Patient_ID == InPatientID
+                              select tbl.Patient_ID).FirstOrDefault();
+
+            var ipdid = InPatientID;
+
+            // Check if patient has pending billing
+            var patbill = (from tbl in db.Ar_Billings
+                           where tbl.Patient_ID == patID && (tbl.isCancel ?? false) == false
+                           select tbl).FirstOrDefault();
+
+            // Check discharge status
+            var wardcheck = (from tbl in db.Ward_Allocations
+                             where tbl.InPatient_ID == Convert.ToString((int)ipdid)
+                             orderby tbl.Ward_Allocation_ID descending
+                             select tbl.IsDischarge).FirstOrDefault();
+
+            if (wardcheck == false)
+            {
+                return "DischargePending";
+            }
+
+            if (patbill != null)
+            {
+                return "BillingPending";
+            }
+
+            var user = AppConfig.UserID.ToString();
+
+            // Perform cancellation and deletion if all checks pass
+            SqlTransaction tranObj = null;
+            SqlConnection con = new SqlConnection(DBClass.ConnectionString());
+            con.Open();
+            tranObj = con.BeginTransaction();
+
+            try
+            {
+                bool rowUpdated = DBClass.exectueQuery(
+                    "UPDATE In_Patient SET is_cancel = 1, cancel_by = '" + user + "' WHERE In_Patient_ID = " + InPatientID + "; " +
+                    "DELETE FROM Ward_Allocation WHERE InPatient_ID = " + InPatientID,
+                    tranObj,
+                    con
+                );
+
+                tranObj.Commit();
+                return "Delete";
+            }
+            catch (Exception exc)
+            {
+                if (tranObj != null)
+                    tranObj.Rollback();
+                throw new Exception(exc.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+
+
+        [WebMethod]
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        {
+            try
+            {
+                using (var _dbContext = new DataBaseDataContext())
+                {
+                    string userId = HttpContext.Current.Session["UserId"].ToString();
+
+                    var Total_Patients = _dbContext.In_Patients.Count();
+                    var IN_Monitoring = from P in _dbContext.Reg_patients
+                                        join IP in _dbContext.In_Patients on P.pat_id equals IP.Patient_ID
+                                        where IP.Discharge_On == null && (IP.is_cancel ?? false) == false
+                                        &&
+                                         ((IP.In_Patient_ID.ToString().Contains(searchValue) || P.mr_no_sequence.Contains(searchValue) || P.Full_Name.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", IP.Department).Contains(searchValue)))
+                                        select new
+                                        {
+                                            In_Patient_ID = IP.In_Patient_ID,
+                                            Admission_Date = IP.Admission_Date,
+                                            mr_no_sequence = P.mr_no_sequence,
+                                            Full_Name = P.Full_Name,
+                                            Father_Name = P.Father_Name,
+                                            Department = _dbContext.GetDataValueName("Patient Main Category", IP.Department),
+                                            Discharge_ON = IP.Discharge_On,
+                                        };
+
+                    var FilteredCount = IN_Monitoring.Count();
+                    switch (sortColumn)
+                    {
+                        case "In_Patient_ID":
+                            IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(a => a.In_Patient_ID) : IN_Monitoring.OrderByDescending(a => a.In_Patient_ID);
+                            break;
+                        case "mr_no_sequence":
+                            IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(b => b.mr_no_sequence) : IN_Monitoring.OrderByDescending(a => a.mr_no_sequence);
+                            break;
+                        case "Admission_Date":
+                            IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(b => b.Admission_Date) : IN_Monitoring.OrderByDescending(a => a.Admission_Date);
+                            break;
+                        default:
+                            IN_Monitoring = IN_Monitoring.OrderByDescending(a => a.In_Patient_ID);
+                            break;
+                    }
+
+                    var patientList = IN_Monitoring.Skip(start).Take(length).ToList();
+
+                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Patients, data = patientList };
+                    return jsonData;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching patient list", ex);
+            }
+        }
+    }
+}

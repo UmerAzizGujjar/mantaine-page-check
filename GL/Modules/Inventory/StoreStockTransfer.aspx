@@ -1,0 +1,848 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StoreStockTransfer.aspx.cs" Inherits="PMS.Inventory.StoreStockTransfer" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+
+
+
+    <script type="text/javascript">
+        var stID = "";
+        var wareHouses = [];
+        function InitStock() {
+        }
+        function getstockdetailnum() {
+            debugger;
+            var itemid = $("#txtItemCode").val().toString().split('-')[0];
+            var wareHousefrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
+            var date = $("#StockTransferDate").val();
+            var batcNo = $('#batchnoddl :selected').text();
+            debugger;
+            if (itemid != "" && wareHousefrom != "" && date != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "StoreStockTransfer.aspx/PerformBatchNoSearch",
+                    data: JSON.stringify({
+                        'ItemId': itemid,
+                        'batchNo': batcNo,
+                        'dateTime': date,
+                        'wareHouse': wareHousefrom,
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        $("#Textstock").val(response.d);
+                    },
+                    error: function (msg) {
+                        alert("Could not load available stock");
+                    }
+                });
+                return true;
+            }
+            else if (itmCode == "")
+                alert("Please provide Item code");
+            else if (wareHousefrom == "")
+                alert("Please provide warehouse from");
+            else if (date == "")
+                alert("Please provide date");
+            else
+                alert("Please provide batch number");
+            return false;
+        }
+        var _gloabal = '';
+        function fillbatchno(itemid) {
+            debugger;
+            var warehouse = $('#ctl00_MainContent_Select_wareHouseFrom').val();
+            var transferdate = $('#StockTransferDate').val();
+            if (warehouse == "0") {
+                alert('Please Select WareHouse From');
+                $('#txtItemCode').tokenInput('clear');
+                $("#batchnoddl").empty();
+                $("#txttrnsfer_qty").val('');
+                $("#Textquantity").val('');
+                $("#Textstock").val('');
+                return false;
+            }
+            if (transferdate == '' || transferdate == null) {
+                alert('Please Enter Stock Transfer Date');
+            }
+            debugger;
+            var optionsVen = '';
+            PageMethods.getbatchno(itemid, warehouse, transferdate, function (Tests) {
+                debugger
+                var data = JSON.parse(Tests);
+                if (data.Batch_No == "") {
+                    getstockdetailnum();
+                }
+                optionsVen = '<option value="0">Please Select</option>';
+                debugger;
+                $.each(JSON.parse(Tests), function (key, value) {
+                    debugger;
+                    if (value.Batch_No == "Non-Batch" && value.IsBatch == 0) {
+                    }
+                    else {
+                        optionsVen += '<option value="' + value.Batch_No + '" >' + value.Batch_No + '</option>';
+                    }
+                });
+                _gloabal = optionsVen;
+                $('#batchnoddl').html(_gloabal);
+            });
+            loadStock($("#txtItemCode").val());
+        }
+
+        function PrintStoreTransfer() {
+            debugger;
+            var stID = '<% =Request.QueryString["stID"] %>';
+            var locationInfo = window.location;
+            var url = "/ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
+            }
+            window.open(url, '_blank');
+        }
+        function GetWareHouseByBranch(b) {
+            debugger;
+            var optionsPO = '<option value="0">Please Select</option>';
+            var BranchId;
+            BranchId = b.value;
+            if (BranchId == undefined) {
+                BranchId = b;
+            }
+            var user_id = '<% =AppConfig.UserID %>';
+            PageMethods.GetWHByBranchId(BranchId, user_id, function (res) {
+                debugger;
+                var b = JSON.parse(res);
+                amountonedit = $('#ctl00_MainContent_txtAmount').val();
+                debugger;
+                $.each(b, function (key, value) {
+                    optionsPO += '<option value="' + value.Id + '" >' + value.name + '</option>';
+                })
+                debugger;
+                $("#ctl00_MainContent_Select_wareHouseFrom option").remove();
+                $('#ctl00_MainContent_Select_wareHouseFrom').html(optionsPO);
+                $("#ctl00_MainContent_Select_wareHouseFrom option").val(function (idx, val) {
+                    $(this).siblings('[value="' + val + '"]').remove();
+                    return val;
+                });
+            });
+        }
+        function GetWareHouseByBranchtooo(b) {
+            debugger;
+            var optionsPO = '<option value="0">Please Select</option>';
+            var BranchId;
+            BranchId = b.value;
+            if (BranchId == undefined) {
+                BranchId = b;
+            }
+            var user_id = '<% =AppConfig.UserID %>';
+            PageMethods.GetWHByBranchIdtoooo(BranchId, user_id, function (res) {
+                debugger;
+                var b = JSON.parse(res);
+                amountonedit = $('#ctl00_MainContent_txtAmount').val();
+                debugger;
+                $.each(b, function (key, value) {
+                    optionsPO += '<option value="' + value.Id + '" >' + value.name + '</option>';
+                })
+                debugger;
+                $("#ctl00_MainContent_Select_wareHouseTo option").remove();
+                $('#ctl00_MainContent_Select_wareHouseTo').html(optionsPO);
+                $("#ctl00_MainContent_Select_wareHouseTo option").val(function (idx, val) {
+                    $(this).siblings('[value="' + val + '"]').remove();
+                    return val;
+                });
+            });
+        }
+        $(document).ready(function () {
+            debugger;
+            UserRights();
+            $("#lblstatus").hide();
+            $("#txtstatus_trnsfer").hide();
+            $("#ctl00_MainContent_Select_wareHouseFrom option").each(function () {
+                wareHouses.push({ 'Value': $(this).val(), 'Name': $(this).text() });
+            });
+            $('select').select2();
+            loadtokenInputsDefaultPRNo();
+            if (window.location.href.indexOf("stID") != -1) {
+                stID = '<% =Request.QueryString["stID"] %>';
+                var stNo = '<% =Request.QueryString["stN"] %>';
+                if (typeof (stID) != 'undefined' && stID != "") {
+                    getFillStock(stID);
+                }
+            }
+            else {
+                $("#btnUpdate").hide();
+            }
+            var currentDate = new Date();
+            var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
+            $("#StockTransferDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+            $("#StockTransferDate").attr('disabled', true);
+            $("#BtnAdd").click(function () {
+                addItemRow();
+            });
+            $("#Textquantity").bind('keypress', function (e) {
+                if (e.which == 13) {
+                    if ($("#Textquantity").val().trim() != "" && (/^[0-9]/.test($("#Textquantity").val())))
+                        $("#BtnAdd").trigger('click');
+                }
+            });
+            $("#btnSave").click(function () {
+                if ($("#stocktable tbody tr").length > 0)
+                    AddStockMain();
+                else
+                    alert("Items not found.");
+            });
+            $("#btnUpdate").click(function () {
+                AddStockDetails(true);
+            });
+        });
+
+        function UserRights() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "StoreStockTransfer.aspx/UserEntryRights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var hasRights = response.d;
+                    debugger;
+                    if (hasRights) {
+                        debugger;
+                        $('#btnSave').show();
+                    } else {
+                        $('#btnSave').hide();
+                    }
+                },
+                failure: function (response) {
+                    alert("Failed to retrieve user rights.");
+                }
+            });
+        }
+        function fillStockTrans(data) {
+            if (typeof (data.d) != 'undefined') {
+                $("#ctl00_MainContent_txtStock_No").val(data.d[0].stockTransferNo);
+                $("#StockTransferDate").val($.datepicker.formatDate('dd M yy', new Date(parseInt(data.d[0].stockTransferDate.substring(6, 19)))));
+                $("#Remarks").val(data.d[0].remarks);
+                $("#txtstatus_trnsfer").val(data.d[0].Transfer_Status);
+                debugger;
+                setTimeout(function () {
+                    $('#ctl00_MainContent_Select_wareHouseFrom').val(data.d[0].wareHouseFrom);
+                    $('#ctl00_MainContent_Select_wareHouseFrom').trigger('change');
+                    $('#ctl00_MainContent_Select_wareHouseTo').val(data.d[0].wareHouseTo);
+                    $('#ctl00_MainContent_Select_wareHouseTo').trigger('change');
+                }, 1500);
+
+                var checkstat = $("#txtstatus_trnsfer").val();
+                if (checkstat == 'Approved') {
+                    $("#lbltransit").hide();
+                    $("#txttrnsfer_qty").hide();
+                    $("#lblstatus").show();
+                    $("#txtstatus_trnsfer").show();
+                    $("#btnSave").hide();
+                    
+                }
+                if (checkstat == 'Created' || checkstat == null || checkstat == '') {
+                    
+                }
+                $("#stocktable tbody").empty();
+                $.each(data.d, function (i) {
+                    if (i > 0)
+                        $("#stocktable tbody").append("<tr id='" + data.d[i].itemCode + "^" + data.d[i].batchNo + "^" + data.d[i].quantity + "^" + data.d[i].expiryDate + "'>" +
+                            "<td class='dn'><label class='srNo'>" + data.d[i].itemCode + data.d[i].batchNo + "</label></td>" +
+                            "<td class=combat>" + data.d[i].itemCode + "</td><td class=combat>" + data.d[i].batchNo + "</td>" +
+                            "<td class=combat>" + data.d[i].description + "</td><td class='stkAvbl combat'>" + data.d[i].stockAvailable + "</td><td class=combat><span class='val'>" + data.d[i].quantity + "</span><input class ='editQnty dn' type='text' value='" + data.d[i].quantity + "' /></td>" +
+                            "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + data.d[0].stockTransferNo + "'>Delete</a></span><span class='dn' id='" + data.d[i].batchNo + "'><img src='/images/loading.gif' /></span></td></tr>"
+                        );
+                });
+                $("#StockTransferDate").attr('disabled', true);
+                debugger;
+                $('#ctl00_MainContent_Select_wareHouseFrom').attr('disabled', true);
+                $('#ctl00_MainContent_Select_wareHouseTo').attr('disabled', true);
+                calculatequantity();
+                CommonActions(data);
+            }
+        }
+        function calculatequantity() {
+            debugger;
+            var totalquantity = 0;
+            $.each($('#stocktable tbody tr'), function (key, value) {
+                var quanty = $($(value).find('td')[5]).text();
+                totalquantity += parseFloat(quanty);
+                debugger;
+                $('#txttrnsfer_qty').val(totalquantity);
+            });
+        }
+        function httpGet(theUrl) {
+            var xmlHttp = null;
+            xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", theUrl, false);
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
+        }
+        function CommonActions(data) {
+            var stkID = -1;
+            if (typeof (data) != 'undefined')
+                stkID = (data.d != null && !$.isEmptyObject(data.d)) ? data.d[0].stockTransferId : -1;
+            $("#stocktable").find(".editQuantity").bind('click', function () {
+                abcload(this);
+                $(this).parent().parent().prev().find(".val").hide();
+                $(this).parent().parent().prev().find(".editQnty").removeClass('dn');
+            });
+            $('.editQnty').bind('keypress', function (e) {
+                if (e.which == 13) {
+                    debugger;
+                    var stock = $(this).parent().parent().find('.stkAvbl').text();
+                    stock = (typeof (stock) != 'undefined' && stock != "") ? parseInt(stock) : 0;
+                    var qty = (typeof ($(this).val()) != 'undefined' && $(this).val() != "") ? parseInt($(this).val()) : 0;
+                    if (stock >= qty && qty > 0) {
+                        $(this).addClass('dn');
+                        $(this).prev().text($(this).val()).show();
+                    }
+                    else if (qty > 0)
+                        alert("Quantity must be less than from available Stock.");
+                    else
+                        alert("Quantity must be greater than zero.");
+                }
+            });
+            $("#stocktable").find(".deleteStkItem").bind('click', function () {
+                debugger;
+
+                var checkstats = $("#txtstatus_trnsfer").val();
+                if (checkstats == 'Approved') {
+                    alert('Cannot Delete Approved STN');
+                    return false;
+                }
+                if (typeof (data) != 'undefined') {
+                    var id = $(this).closest("tr").attr('id');
+                    var stn = $(this).attr('rel');
+                    stkID = (data.d != null && !$.isEmptyObject(data.d)) ? data.d[0].stockTransferId : -1;
+                    if (typeof (id) != 'undefined' && typeof (stn) != 'undefined' && typeof (stkID) != 'undefined' && id != "" && stn != "")
+                        deleteStockItem(id, stn, stkID);
+                    $(this).closest('tr').remove();
+                }
+                else
+                    $(this).closest('tr').remove();
+                var findrow = stocktablebody.rows.length;
+                debugger;
+                if (findrow == 0) {
+                    $('#ctl00_MainContent_Select_wareHouseFrom').attr('disabled', false);
+                    $('#ctl00_MainContent_Select_wareHouseTo').attr('disabled', false);
+                }
+                $("#txttrnsfer_qty").val('');
+                $("#Textquantity").val('');
+                $("#Textstock").val('');
+                $('#txtItemCode').tokenInput('clear');
+                $("#Remarks").val('');
+                $("#batchnoddl").empty();
+            });
+            return stkID;
+        }
+        function deleteStockItem(id, stn, stkID) {
+            if (!confirm('Are you sure you want to delete ?'))
+                return;
+            debugger;
+            var ids = id.split('^');
+            var itmCode = ids[0];
+            var batch = ids[1];
+            $.ajax({
+                url: "StoreStockTransfer.aspx/DeleteStockItem",
+                data: JSON.stringify({
+                    'itemcode': itmCode,
+                    'batch': batch,
+                    'stn': stn,
+                    'stId': stkID,
+                }),
+                dataType: "json",
+                type: "Post",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    alert('Successfully Deleted.');
+                    $("#" + id).remove();
+                },
+                error: function (msg) {
+                    alert("Could not deleted.");
+                }
+            });
+        }
+        function addItemRow() {
+            debugger;
+            var item = $("#txtItemCode").val();
+            var itmCode = item.split('-')[0];
+            var wareHousefrom = "";
+            var wareHouseTo = "";
+            if ($("#btnUpdate").css("display") == "none") {
+                wareHousefrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
+                wareHouseTo = $("#ctl00_MainContent_Select_wareHouseTo").val();
+            }
+            else {
+                $.when(findValWare($("#ctl00_MainContent_Select_wareHouseFrom option:selected").text())).done(function (data) {
+                    $("#ctl00_MainContent_Select_wareHouseFrom").val(data);
+                    wareHousefrom = data;
+                });
+                $.when(findValWare($("#ctl00_MainContent_Select_wareHouseTo option:selected").text())).done(function (val) {
+                    $("#ctl00_MainContent_Select_wareHouseTo").val(val);
+                    wareHouseTo = val;
+                });
+            }
+            if (wareHouseTo == "0") {
+                alert('Please Select WareHouse To');
+                return false;
+            }
+            var batcNo = $("#batchnoddl :selected").text();
+            if (batcNo == "Please Select") {
+                batcNo = '';
+            }
+            var quantity = parseInt(($("#Textquantity").val() != "") ? $("#Textquantity").val() : 0);
+            var stock = $("#Textstock").val();
+            var stkNo = $("#ctl00_MainContent_txtStock_No").val();
+            var itemCodeDescription = item.split('-')[1];
+            var parseStock = parseInt(stock);
+            var concat = itmCode + batcNo;
+            var expDate = $("#expiry").val();
+            var find = false;
+            if (parseStock < 0) {
+                alert("Stock Must be Greater then Zero");
+                return false;
+            }
+            debugger;
+            if (itmCode.trim() != "") {
+                $.each($("#stocktable").find('tbody').find('tr'), function (index) {
+                    var srNo = $(this).find($('.srNo')).text();
+                    if (srNo == concat) {
+                        alert("Item already exist.")
+                        find = true;
+                    }
+                });
+                if (!find) {
+                    if ((quantity <= parseStock) && (quantity > 0)) {
+                        if (wareHousefrom.indexOf(wareHouseTo) == -1) {
+                            var html = "";
+                            if ($("#btnUpdate").css("display") != "none") {
+                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td><td class=combat><span class='val'>" + quantity + "</span><input class ='editQnty dn' type='text' value='" + quantity + "' /></td>" +
+                                    "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + stkNo + "'>Delete</a></span><span class='dn' id='" + batcNo + "'><img src='/images/loading.gif' /></span></td>";
+                            }
+                            else {
+                                html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td>" + "<td class=combat>" + quantity + "</td><td><a class='deleteStkItem'>Delete</a></td>";
+                            }
+                            $("#stocktable tbody").append("<tr id='" + itmCode + "^" + batcNo + "^" + quantity + "^" + expDate + "'><td class='dn'><label class='srNo'>" + itmCode + batcNo + "</label></td><td class=combat>" +
+                                itmCode + "</td> <td class=combat>" +
+                                batcNo + "</td>" + html + "</tr>"
+                            );
+                            $('#ctl00_MainContent_Select_wareHouseFrom').attr('disabled', true);
+                            $('#ctl00_MainContent_Select_wareHouseTo').attr('disabled', true);
+                            $("#StockTransferDate").attr('disabled', true);
+                            calculatequantity();
+                            CommonActions();
+                            $("#Textquantity").val('');
+                            $("#Textstock").val('');
+                            $('#txtItemCode').tokenInput('clear');
+                            $("#Remarks").val('');
+                            $("#batchnoddl").empty();
+                        }
+                        else {
+                            alert("Ware house must not be same.");
+                            $("#ctl00_MainContent_Select_wareHouseTo").val(0);
+                            $("#ctl00_MainContent_Select_wareHouseTo").trigger('change');
+                            return false;
+                        }
+                    }
+                    else {
+                        $("#Textquantity").val(0);
+                        alert("Quantity must be less than Stock and Greater then Zero");
+                        return false;
+                    }
+                }
+            }
+            else
+                alert("Please provide required fields.");
+            return false;
+        }
+        function AddStockMain() {
+            debugger;
+            var stockNo = 0;
+            var stockDate = $("#StockTransferDate").val();
+            var wareHouseFrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
+            var wareHouseTo = $("#ctl00_MainContent_Select_wareHouseTo").val();
+            var stnStatus = "Created";
+            var trsnfrstatus = $('#txtstatus_trnsfer').val();
+            var remarks = $("#Remarks").val();
+            $.ajax({
+                url: "StoreStockTransfer.aspx/AddStockMain",
+                data: '{"stockTransferNo":"' + stockNo + '", "stockTransferDate":"' + stockDate + '","wareHouseFrom":"' + wareHouseFrom + '","wareHouseTo":"' + wareHouseTo + '","stnStatus":"' + stnStatus + '","remarks":"' + remarks + '","trsnfrstatus":"' + trsnfrstatus + '"}',
+                dataType: "json",
+                type: "Post",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    AddStockDetails();
+                },
+                error: function (msg) {
+                    alert("Error while inserting data");
+                }
+            });
+        }
+        function AddStockDetails(isUpdate) {
+            debugger;
+            var details = {};
+            var detailAry = [];
+            var findInvalid = false;
+            var actionUrl = "AddStockDetails";
+            var stockID = -1;
+            if (isUpdate) {
+                actionUrl = "UpdateStockDetails";
+                stockID = (typeof (stID) != 'undefined' && stID != "") ? stID : -1;
+            }
+            $.each($("#stocktable").find('tbody').find('tr'), function (index) {
+                var itemCode = $(this).attr("id").split('^')[0];
+                var batchNo = $(this).attr("id").split('^')[1];
+                var quantity = parseInt($(this).attr("id").split('^')[2]);
+                var expiry = $(this).attr("id").split('^')[3];
+                if (isUpdate)
+                    quantity = (typeof ($(this).find('.val').text()) != 'undefined' && $(this).find('.val').text() != "") ? parseInt($(this).find('.val').text()) : -1;
+                var stock = /^[0-9]/.test($(this).find('.stkAvbl').text()) ? parseInt($(this).find('.stkAvbl').text()) : -1;
+                debugger;
+                if (stock >= quantity) {
+                    details = {};
+                    details.itemCode = itemCode;
+                    details.batchNo = batchNo;
+                    details.quantity = quantity;
+                    details.stockTransferId = stockID;
+                    details.expiryDate = expiry;
+                    detailAry.push(details);
+                }
+                else {
+                    findInvalid = true;
+                    alert("Data could not be added due to Item Code = " + itemCode + ". \nQuatity must be less than from Stock !");
+                }
+            });
+            if (!findInvalid) {
+                $.ajax({
+                    url: "StoreStockTransfer.aspx/" + actionUrl,
+                    data: JSON.stringify({
+                        'stk': detailAry
+                    }),
+                    dataType: "json",
+                    type: "Post",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        if (typeof (data.d) != 'undefined') {
+                            if (data.d.toString().toLowerCase().indexOf("error") != -1)
+                                alert("Data could not be saved.");
+                            else {
+                                alert("Data Successfully saved.");
+                                window.location = "StoreStockTransferView.aspx";
+                               
+                            }
+                        }
+                    },
+                    error: function (msg) {
+                        alert("Error while inserting data");
+                    }
+                });
+            }
+        }
+        function loadstockTransferNo() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "StoreStockTransfer.aspx/GetMax",
+                data: {},
+                dataType: "json",
+                success: function (data) {
+                    $("#ctl00_MainContent_txtStock_No").val(data.d);
+                },
+                error: function (msg) {
+                    debugger;
+                    alert("Could not load Stock transfer number");
+                }
+            });
+        }
+        function loadStock(item) {
+            debugger;
+            var itmCode = item.split('-')[0];
+            var wareHousefrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
+            var date = $("#StockTransferDate").val();
+            var batcNo = $("#batchnoddl :selected").text();
+            debugger;
+            if (itmCode != "" && wareHousefrom != "" && date != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "StoreStockTransfer.aspx/GetStock",
+                    data: JSON.stringify({
+                        'itemCode': itmCode,
+                        'batchNo': batcNo,
+                        'dateTime': date,
+                        'wareHouse': wareHousefrom,
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#Textstock").val(response.d.stockAvailable);
+                    },
+                    error: function (msg) {
+                        alert("Could not load available stock");
+                    }
+                });
+                return true;
+            }
+
+            else if (itmCode == "")
+                alert("Please provide Item code");
+            else if (wareHousefrom == "")
+                alert("Please provide warehouse from");
+            else if (date == "")
+                alert("Please provide date");
+            else {
+                return true;
+            }
+            return false;
+        }
+        function LoadBatchNoDetail() {
+            debugger;
+            var itemid = $("#txtItemCode").val().toString().split('-')[0];
+            var warehouse = $("#ctl00_MainContent_Select_wareHouseFrom").val();
+            if (itemid.trim() != "") {
+                PageMethods.PerformBatchNoSearch(itemid, warehouse, function (data) {
+                    var rows = "";
+                    debugger;
+                    for (var i = 0; i < data.length; i++) {
+                        debugger;
+                        if (data[i].Batch_Balance != 0.00) {
+                            $("#Textstock").val(Number(data[i].Batch_Balance));
+                        }
+                    }
+                    $('#Textquantity').focus();
+                });
+            }
+        }
+        function loadtokenInputsDefaultPRNo() {
+            debugger
+            $('#txtItemCode').tokenInput("../../json.aspx?Table=INV_Items",
+                {
+                    tokenLimit: 1,
+                    onAdd: function (item) {
+                        try {
+                            $("#txtItemCode").val(item.name);
+                            var itmid = item.id;
+                            fillbatchno(itmid);
+                        }
+                        catch (err) {
+                            alert(err.message);
+                        }
+                    }
+                });
+        }
+        function appendBatch(anchor) {
+            var row = $(anchor).parents('tr')[0];
+            var bethNo = $($(row).find('td')[1]).text();
+            var expiry = $($(row).find('td')[2]).text();
+            var Balnce = $($(row).find('td')[3]).text();
+            $("#Textbatchno").val(bethNo);
+            $("#Textstock").val(Number(Balnce));
+            $("#expiry").val(expiry);
+            $('#POItemsModel').modal('hide');
+        }
+        function getFillStock(stID) {
+            $("#btnSave").hide();
+            $("#btnUpdate").show();
+            $(".actionClm").show();
+            $("#ctl00_lbl2").text("Add / Update Stock");
+            $.ajax({
+                url: "StoreStockTransfer.aspx/FillStockdetails",
+                data: JSON.stringify({
+                    'Stock_Transfer_ID': stID,
+                }),
+                dataType: "json",
+                type: "Post",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data != null && !$.isEmptyObject(data))
+                        fillStockTrans(data);
+                },
+                error: function (msg) {
+                    alert("Error while inserting data");
+                }
+            });
+        }
+        function findValWare(name) {
+            var vals = "";
+            $.map(wareHouses, function (e) {
+                if (e.Name == name)
+                    return vals = e.Value;
+            });
+            return vals;
+        }
+        
+        function abcload(anchorTag) {
+            debugger;
+            var row = $(anchorTag).parents('tr')[0];
+            var itemcode = $($(row).find('td')[1]).text();
+            var qty = $($(row).find('td')[5]).text();
+            $('#txtItemCode').tokenInput('clear');
+            var tokenData = httpGet("../json.aspx?Table=INV_Items_STN&q=" + itemcode);
+            $('#txtItemCode').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
+            $('#Textquantity').val(qty);
+            $(row).remove();
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <label for="stockno" style="font-weight: bold">Stock no:  </label>
+            <input class="form-control" type="text" id="txtStock_No" value="New" runat="server" readonly="readonly" />
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <label for="StockTransferDate">Date: </label>
+            <input class="form-control" type="text" id="StockTransferDate" />
+        </div>
+
+
+
+   
+        <div class="col-lg-3 col-md-6 col-sm-12">
+
+            <label for="Whf">Ware House From:</label>
+            <asp:DropDownList ID="Select_wareHouseFrom" class="form-select" runat="server"></asp:DropDownList>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <label id="lbltransit">In Transit:</label>
+            <label id="lblstatus">Status:</label>
+            <input class="form-control" type="text" id="txtstatus_trnsfer" name="txtstatus_trnsfer" readonly="readonly" />
+            <input class="form-control" type="text" id="txttrnsfer_qty" name="txttrnsfer_qty" readonly="readonly" />
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            
+                <label for="WHt">Ware House To:</label>
+           
+                <asp:DropDownList class="form-select" ID="Select_wareHouseTo" runat="server"></asp:DropDownList>
+            </div>
+        
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            
+                <label for="ItemCode">Item Code : </label>
+            
+                <input class="form-control" type="text" id="txtItemCode" />
+            
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            
+                <label for="BatchNo">Batch No:</label>
+            
+                <select id="batchnoddl" name="batchnoddl"></select>
+            
+        </div>
+
+
+
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <label for="Quantity">Quantity : </label>
+            <input class="form-control" type="text" id="Textquantity" />
+        </div>
+        </div>
+
+
+        <div class="row">
+        <div class="col-lg-3 col-md-8 col-sm-12">
+            <label for="Stock">Stock :</label>
+             <input class="form-control" type="text" id="Textstock" readonly="readonly" />
+            
+        </div>
+        <div class="col-lg-1 col-md-2 col-sm-4">           
+            <input id="BtnAdd" class="btn btn-primry" type="button" value="+" style="margin-top:25px" />               
+        </div>
+        
+       <div class="col-lg-8 col-md-12 col-sm-12">
+            <label for="Remarks">Remarks :</label>
+            <input class="form-control" type="text" id="Remarks" />
+            <input id="btnUpdate" type="button" value="Update" />
+        </div>
+        
+    </div>
+
+
+    <input type="hidden" id="expiry" />
+   
+        <div class="row">
+            <div class="table-responsive">
+    <table class="table" id="stocktable">
+        <thead>
+            <tr>
+                <th class='dn'>Sr#</th>
+                <th style="text-align: center; padding-left: 0px; padding-right: 0px;">
+                   Item Code
+                </th>
+                <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Batch No</th>
+                <th style="text-align: center;">Description</th>
+                <th style="text-align: center;">Stock</th>
+                <th style="text-align: center;">Quantity</th>
+                <th class="actionClm" style="text-align: center">Action</th>
+            </tr>
+        </thead>
+        <tbody id="stocktablebody"></tbody>
+    </table>
+                </div>
+            </div>
+       
+
+    <div class="row">
+         <div class="col-lg-8">
+             <div class="row">
+                 <div class="col-lg-2 col-md-4 col-sm-12">
+                     <input id="btnSave" class="btn btn-primry" type="button" value="Save" />
+                 </div>
+                 <div class="col-lg-2 col-md-4 col-sm-12">
+                     <input type="button" class="btn btn-yellow" value="New" onclick="window.open('StoreStockTransfer.aspx')" />
+                 </div>
+                 <div class="col-lg-2 col-md-4 col-sm-12">
+                     <input type="button" value="View" class="btn-gray" onclick="window.location.href ='StoreStockTransferView.aspx'" />
+                 </div>
+                  <div class="col-lg-2 col-md-2 col-sm-3">
+                    <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintStoreTransfer()" value="Print" />
+                </div>
+             </div>
+        </div>
+    </div>
+    <div id="POItemsModel" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
+                <div class="modal-header">
+                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add PO Items</h4>
+                </div>
+                <input type="hidden" id="txthiddentr" name="txthidddentr" />
+                <div style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
+                    <table class="table" style="width: 953px; height: 146px !important; height: auto; overflow: scroll;" id="tblPOItemstModelTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 32px;"></th>
+                                <th>Batch No </th>
+                                <th>Expiry Date </th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="PoItem" name="PoItem" value="Done" onclick="appendBatch()" />
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>

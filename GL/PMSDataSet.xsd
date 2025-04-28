@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PMSDataSet" targetNamespace="http://tempuri.org/PMSDataSet.xsd" xmlns:mstns="http://tempuri.org/PMSDataSet.xsd" xmlns="http://tempuri.org/PMSDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="conString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="conString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.PMS.Properties.Settings.GlobalReference.Default.conString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="vw_GL_VouchersTableAdapter" GeneratorDataComponentClassName="vw_GL_VouchersTableAdapter" Name="vw_GL_Vouchers" UserDataComponentName="vw_GL_VouchersTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="conString (Settings)" DbObjectName="PMS.dbo.vw_GL_Vouchers" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT Voucher_Type, Voucher_Name, Reference_Field_Name, Voucher_ID, Voucher_No, Voucher_Date, Voucher_Status, Created_By, Creation_Time, Updated_By, Update_Time, Approved_By, Approved_Time, Serial_No, Account_ID, Narration, Cheque_No, Cheque_Date, DR, CR, Realization_Date, Account_Code, Account_Name, Active, Cash, Bank, Remarks FROM dbo.vw_GL_Vouchers</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Voucher_Type" DataSetColumn="Voucher_Type" />
+              <Mapping SourceColumn="Voucher_Name" DataSetColumn="Voucher_Name" />
+              <Mapping SourceColumn="Reference_Field_Name" DataSetColumn="Reference_Field_Name" />
+              <Mapping SourceColumn="Voucher_ID" DataSetColumn="Voucher_ID" />
+              <Mapping SourceColumn="Voucher_No" DataSetColumn="Voucher_No" />
+              <Mapping SourceColumn="Voucher_Date" DataSetColumn="Voucher_Date" />
+              <Mapping SourceColumn="Voucher_Status" DataSetColumn="Voucher_Status" />
+              <Mapping SourceColumn="Created_By" DataSetColumn="Created_By" />
+              <Mapping SourceColumn="Creation_Time" DataSetColumn="Creation_Time" />
+              <Mapping SourceColumn="Updated_By" DataSetColumn="Updated_By" />
+              <Mapping SourceColumn="Update_Time" DataSetColumn="Update_Time" />
+              <Mapping SourceColumn="Approved_By" DataSetColumn="Approved_By" />
+              <Mapping SourceColumn="Approved_Time" DataSetColumn="Approved_Time" />
+              <Mapping SourceColumn="Serial_No" DataSetColumn="Serial_No" />
+              <Mapping SourceColumn="Account_ID" DataSetColumn="Account_ID" />
+              <Mapping SourceColumn="Narration" DataSetColumn="Narration" />
+              <Mapping SourceColumn="Cheque_No" DataSetColumn="Cheque_No" />
+              <Mapping SourceColumn="Cheque_Date" DataSetColumn="Cheque_Date" />
+              <Mapping SourceColumn="DR" DataSetColumn="DR" />
+              <Mapping SourceColumn="CR" DataSetColumn="CR" />
+              <Mapping SourceColumn="Realization_Date" DataSetColumn="Realization_Date" />
+              <Mapping SourceColumn="Account_Code" DataSetColumn="Account_Code" />
+              <Mapping SourceColumn="Account_Name" DataSetColumn="Account_Name" />
+              <Mapping SourceColumn="Active" DataSetColumn="Active" />
+              <Mapping SourceColumn="Cash" DataSetColumn="Cash" />
+              <Mapping SourceColumn="Bank" DataSetColumn="Bank" />
+              <Mapping SourceColumn="Remarks" DataSetColumn="Remarks" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="PMSDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="PMSDataSet" msprop:Generator_UserDSName="PMSDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vw_GL_Vouchers" msprop:Generator_TableClassName="vw_GL_VouchersDataTable" msprop:Generator_TableVarName="tablevw_GL_Vouchers" msprop:Generator_RowChangedName="vw_GL_VouchersRowChanged" msprop:Generator_TablePropName="vw_GL_Vouchers" msprop:Generator_RowDeletingName="vw_GL_VouchersRowDeleting" msprop:Generator_RowChangingName="vw_GL_VouchersRowChanging" msprop:Generator_RowEvHandlerName="vw_GL_VouchersRowChangeEventHandler" msprop:Generator_RowDeletedName="vw_GL_VouchersRowDeleted" msprop:Generator_RowClassName="vw_GL_VouchersRow" msprop:Generator_UserTableName="vw_GL_Vouchers" msprop:Generator_RowEvArgName="vw_GL_VouchersRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Voucher_Type" msprop:Generator_ColumnVarNameInTable="columnVoucher_Type" msprop:Generator_ColumnPropNameInRow="Voucher_Type" msprop:Generator_ColumnPropNameInTable="Voucher_TypeColumn" msprop:Generator_UserColumnName="Voucher_Type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="3" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Voucher_Name" msprop:Generator_ColumnVarNameInTable="columnVoucher_Name" msprop:Generator_ColumnPropNameInRow="Voucher_Name" msprop:Generator_ColumnPropNameInTable="Voucher_NameColumn" msprop:Generator_UserColumnName="Voucher_Name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Reference_Field_Name" msprop:Generator_ColumnVarNameInTable="columnReference_Field_Name" msprop:Generator_ColumnPropNameInRow="Reference_Field_Name" msprop:Generator_ColumnPropNameInTable="Reference_Field_NameColumn" msprop:Generator_UserColumnName="Reference_Field_Name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Voucher_ID" msprop:Generator_ColumnVarNameInTable="columnVoucher_ID" msprop:Generator_ColumnPropNameInRow="Voucher_ID" msprop:Generator_ColumnPropNameInTable="Voucher_IDColumn" msprop:Generator_UserColumnName="Voucher_ID" type="xs:long" />
+              <xs:element name="Voucher_No" msprop:Generator_ColumnVarNameInTable="columnVoucher_No" msprop:Generator_ColumnPropNameInRow="Voucher_No" msprop:Generator_ColumnPropNameInTable="Voucher_NoColumn" msprop:Generator_UserColumnName="Voucher_No" type="xs:int" />
+              <xs:element name="Voucher_Date" msprop:Generator_ColumnVarNameInTable="columnVoucher_Date" msprop:Generator_ColumnPropNameInRow="Voucher_Date" msprop:Generator_ColumnPropNameInTable="Voucher_DateColumn" msprop:Generator_UserColumnName="Voucher_Date" type="xs:dateTime" />
+              <xs:element name="Voucher_Status" msprop:Generator_ColumnVarNameInTable="columnVoucher_Status" msprop:Generator_ColumnPropNameInRow="Voucher_Status" msprop:Generator_ColumnPropNameInTable="Voucher_StatusColumn" msprop:Generator_UserColumnName="Voucher_Status">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Created_By" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Generator_ColumnVarNameInTable="columnCreated_By" msprop:Generator_ColumnPropNameInRow="Created_By" msprop:Generator_ColumnPropNameInTable="Created_ByColumn" msprop:Generator_UserColumnName="Created_By" type="xs:string" minOccurs="0" />
+              <xs:element name="Creation_Time" msprop:Generator_ColumnVarNameInTable="columnCreation_Time" msprop:Generator_ColumnPropNameInRow="Creation_Time" msprop:Generator_ColumnPropNameInTable="Creation_TimeColumn" msprop:Generator_UserColumnName="Creation_Time" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Updated_By" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Generator_ColumnVarNameInTable="columnUpdated_By" msprop:Generator_ColumnPropNameInRow="Updated_By" msprop:Generator_ColumnPropNameInTable="Updated_ByColumn" msprop:Generator_UserColumnName="Updated_By" type="xs:string" minOccurs="0" />
+              <xs:element name="Update_Time" msprop:Generator_ColumnVarNameInTable="columnUpdate_Time" msprop:Generator_ColumnPropNameInRow="Update_Time" msprop:Generator_ColumnPropNameInTable="Update_TimeColumn" msprop:Generator_UserColumnName="Update_Time" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Approved_By" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Generator_ColumnVarNameInTable="columnApproved_By" msprop:Generator_ColumnPropNameInRow="Approved_By" msprop:Generator_ColumnPropNameInTable="Approved_ByColumn" msprop:Generator_UserColumnName="Approved_By" type="xs:string" minOccurs="0" />
+              <xs:element name="Approved_Time" msprop:Generator_ColumnVarNameInTable="columnApproved_Time" msprop:Generator_ColumnPropNameInRow="Approved_Time" msprop:Generator_ColumnPropNameInTable="Approved_TimeColumn" msprop:Generator_UserColumnName="Approved_Time" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Serial_No" msprop:Generator_ColumnVarNameInTable="columnSerial_No" msprop:Generator_ColumnPropNameInRow="Serial_No" msprop:Generator_ColumnPropNameInTable="Serial_NoColumn" msprop:Generator_UserColumnName="Serial_No" type="xs:int" minOccurs="0" />
+              <xs:element name="Account_ID" msprop:Generator_ColumnVarNameInTable="columnAccount_ID" msprop:Generator_ColumnPropNameInRow="Account_ID" msprop:Generator_ColumnPropNameInTable="Account_IDColumn" msprop:Generator_UserColumnName="Account_ID" type="xs:int" />
+              <xs:element name="Narration" msprop:Generator_ColumnVarNameInTable="columnNarration" msprop:Generator_ColumnPropNameInRow="Narration" msprop:Generator_ColumnPropNameInTable="NarrationColumn" msprop:Generator_UserColumnName="Narration" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="150" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Cheque_No" msprop:Generator_ColumnVarNameInTable="columnCheque_No" msprop:Generator_ColumnPropNameInRow="Cheque_No" msprop:Generator_ColumnPropNameInTable="Cheque_NoColumn" msprop:Generator_UserColumnName="Cheque_No" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="150" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Cheque_Date" msprop:Generator_ColumnVarNameInTable="columnCheque_Date" msprop:Generator_ColumnPropNameInRow="Cheque_Date" msprop:Generator_ColumnPropNameInTable="Cheque_DateColumn" msprop:Generator_UserColumnName="Cheque_Date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="DR" msprop:Generator_ColumnVarNameInTable="columnDR" msprop:Generator_ColumnPropNameInRow="DR" msprop:Generator_ColumnPropNameInTable="DRColumn" msprop:Generator_UserColumnName="DR" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CR" msprop:Generator_ColumnVarNameInTable="columnCR" msprop:Generator_ColumnPropNameInRow="CR" msprop:Generator_ColumnPropNameInTable="CRColumn" msprop:Generator_UserColumnName="CR" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Realization_Date" msprop:Generator_ColumnVarNameInTable="columnRealization_Date" msprop:Generator_ColumnPropNameInRow="Realization_Date" msprop:Generator_ColumnPropNameInTable="Realization_DateColumn" msprop:Generator_UserColumnName="Realization_Date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Account_Code" msprop:Generator_ColumnVarNameInTable="columnAccount_Code" msprop:Generator_ColumnPropNameInRow="Account_Code" msprop:Generator_ColumnPropNameInTable="Account_CodeColumn" msprop:Generator_UserColumnName="Account_Code">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Account_Name" msprop:Generator_ColumnVarNameInTable="columnAccount_Name" msprop:Generator_ColumnPropNameInRow="Account_Name" msprop:Generator_ColumnPropNameInTable="Account_NameColumn" msprop:Generator_UserColumnName="Account_Name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Active" msprop:Generator_ColumnVarNameInTable="columnActive" msprop:Generator_ColumnPropNameInRow="Active" msprop:Generator_ColumnPropNameInTable="ActiveColumn" msprop:Generator_UserColumnName="Active" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Cash" msprop:Generator_ColumnVarNameInTable="columnCash" msprop:Generator_ColumnPropNameInRow="Cash" msprop:Generator_ColumnPropNameInTable="CashColumn" msprop:Generator_UserColumnName="Cash" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Bank" msprop:Generator_ColumnVarNameInTable="columnBank" msprop:Generator_ColumnPropNameInRow="Bank" msprop:Generator_ColumnPropNameInTable="BankColumn" msprop:Generator_UserColumnName="Bank" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Remarks" msprop:Generator_ColumnVarNameInTable="columnRemarks" msprop:Generator_ColumnPropNameInRow="Remarks" msprop:Generator_ColumnPropNameInTable="RemarksColumn" msprop:Generator_UserColumnName="Remarks" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="150" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

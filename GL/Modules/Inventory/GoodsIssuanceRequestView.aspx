@@ -1,0 +1,152 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceRequestView.aspx.cs" Inherits="PMS.Inventory.GoodsIssuanceRequestView" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/css/tablestyle.css" rel="stylesheet" />
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ctl00_lblMessage').hide();
+            LoadPage();
+
+        });
+
+
+        function Print(id) {
+            debugger;
+            var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=MaterialIssueRequestList&ReportTitle=Material IssueRequest List&MIRId=' + id;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+
+                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=MaterialIssueRequestList&ReportTitle=Material IssueRequest List&MIRId=' + id;
+            }
+            window.open(url, '_blank');
+        }
+
+        function Edit(ID) {
+            window.location.href = "GoodsIssuanceRequest.aspx?ID=" + ID;
+
+        }
+
+        function LoadPage() {
+            $("#tblResult").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": function (data, callback, settings) {
+                    $.ajax({
+                        type: "POST",
+                        url: "GoodsIssuanceRequestView.aspx/ViewList",
+                        data: JSON.stringify({
+                            draw: data.draw,
+                            start: data.start,
+                            length: data.length,
+                            sortColumn: data.columns[data.order[0].column].name,
+                            sortColumnDirection: data.order[0].dir,
+                            searchValue: data.search.value
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            callback({
+                                draw: response.d.draw,
+                                recordsTotal: response.d.recordsTotal,
+                                recordsFiltered: response.d.recordsFiltered,
+                                data: response.d.data
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                },
+                "columns": [
+                    { "data": "MaterialRequest_Id" ,"visible": false, },
+                    { "data": "Request_No","name": "Request_No" },
+                    {
+                        "data": "Priority",
+                        "render": function (data, type, full) {
+                            var Priority = full.Priority;
+                            if (Priority == 1) {
+                                Priority = "High";
+                            } else {
+                                Priority = "Low";
+                            }
+                            return Priority;
+                        }
+                    },
+                    { "data": "Department" },
+                    { "data": "Remarks" },
+                    {
+                        "data": "CreatedBY",
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            $(td).css('text-align', 'left');
+                        }
+                    },
+                    { "data": "Status" },
+                    {
+                        "render": function (data, type, full) {
+                            var res = ' <a href="#"  class="editListBtn" onclick="Edit(' + full.MaterialRequest_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i>';
+                            var print = '<a style = "border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href = "#" onclick = "Print(' + full.MaterialRequest_Id + ')" id = "btnprint" ><i class="fa fa-print"style="color:white !important;"></i></a >';
+                            var result = res + print;
+                            return result;
+                        }
+                    }
+                ],
+                "rowCallback": function (row, data, index) {
+                    if (data.Status === "Approved") {
+                        $(row).css('background-color', '#ABEBC6');
+                    }
+                },
+                "initComplete": function (settings, json) {
+                    var lengthDropdown = document.querySelector('#tblResult_length select');
+                    var label = document.querySelector('#tblResult_length label');
+                    if (lengthDropdown && label) {
+                        label.innerHTML = 'Show entries ';
+                        label.appendChild(lengthDropdown);
+                    } else {
+                        console.log("Length dropdown or label not found");
+                    }
+                }
+            });
+        }
+
+
+
+    </script>
+
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-12" style="margin-bottom:1%">
+                <input type="button" class="btn btn-primry" id="aadnew" value="Add New" onclick="location.href='GoodsIssuanceRequest.aspx';"  />
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="table  table-hover table-bordered" style="width: 100%" id="tblResult">
+                <thead id="ihead">
+                    <tr>
+                        <th>MaterialRequest_Id</th>
+                        <th>Request_No</th>
+                        <th>Pirority</th>
+                        <th>Department</th>
+                        <th>Remarks</th>
+                        <th>Request BY</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="ibody">
+                </tbody>
+            </table>
+        </div>
+   
+
+</asp:Content>

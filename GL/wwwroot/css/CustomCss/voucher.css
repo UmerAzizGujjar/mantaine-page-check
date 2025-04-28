@@ -1,0 +1,15 @@
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 240px !important;
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}

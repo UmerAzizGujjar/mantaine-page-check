@@ -1,0 +1,254 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace PMS.Inventory
+{
+    public partial class GoodsIssuanceReturn : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+        }      
+
+        [WebMethod]
+        public static String getMIR()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());         
+            var result = db.sp_GetMIR();
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        [WebMethod]
+        public static string LoadItemBatches(int itemID, string WareHouse)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var data = db.spGetItemsPending_Batches(itemID, WareHouse, DateTime.Now.Date).ToList();
+            return (new JavaScriptSerializer()).Serialize(data);
+        }
+
+        [WebMethod]
+        public static string getStoreIssueByID(string MIR_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            int MIRid = Convert.ToInt32(MIR_id);
+            var detail = db.sp_GetMIRDetailByMIRID(MIRid).ToList();
+            return (new JavaScriptSerializer()).Serialize(detail);
+        }
+        [WebMethod]
+        public static decimal GetStock(string itemCode, string batchNo, string wareHouse)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            int ItemId = Convert.ToInt32(DBClass.getField("select Item_ID from INV_Items where Item_ID='" + itemCode + "'"));
+            decimal st = (decimal)db.GetItemBatchStock(ItemId, batchNo, wareHouse);
+            return st;
+        }
+        [WebMethod]
+        public static int Save(string btnSave, string AllItemDetail)
+        {
+            string store_issue_id = "";
+            Store_Issue si = new Store_Issue();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            JavaScriptSerializer oJS = new JavaScriptSerializer();
+            var record = oJS.Deserialize<StoreIssue>(AllItemDetail);
+            var lstItem = (from t in db.Store_Issues
+                           where t.Store_Issue_Id == int.Parse(record.StoreIssue_id)
+                           select t).FirstOrDefault();
+            if (btnSave == "Update")
+            {
+                lstItem.Company_Id = AppConfig.Company_ID.ToString();
+                lstItem.Organization_Id = record.inventory_id;
+                lstItem.Department_Id = record.department_id;
+                lstItem.Update_Time = DateTime.Now;
+                lstItem.Updated_By = AppConfig.UserID;
+                lstItem.Store_Issue_No = Convert.ToInt32(record.Store_Issue_No);
+                db.SubmitChanges();
+                store_issue_id = record.StoreIssue_id;
+            }
+            else
+            {
+                si.Company_Id = AppConfig.Company_ID.ToString();
+                si.Organization_Id = record.inventory_id;
+                si.Department_Id = record.department_id;
+                si.Created_Time = DateTime.Now;
+                si.Created_by = AppConfig.UserID;
+                si.Store_Issue_No = DBClass.GetNewNumber("Store_Issue_No", "Store_Issue", "");
+                si.Status = "Created";
+                db.Store_Issues.InsertOnSubmit(si);
+                db.SubmitChanges();
+                store_issue_id = si.Store_Issue_Id.ToString();
+            }
+            if (btnSave == "Update")
+            {
+                List<Store_Issue_Detail> lstItemDetails = db.Store_Issue_Details.Where(t => t.Store_Issue_Id == int.Parse(store_issue_id)).ToList();
+                db.Store_Issue_Details.DeleteAllOnSubmit(lstItemDetails);
+                db.SubmitChanges();
+            }
+            foreach (var item in record.ItemList)
+            {
+                Store_Issue_Detail sid = new Store_Issue_Detail();
+                sid.MIR_Detail_Id = Convert.ToInt32(item.mirDetailId);
+                sid.Store_Issue_Id = int.Parse(store_issue_id);
+                sid.Item_Id = Convert.ToInt32(item.ItemId);
+                sid.MIR_Id = Convert.ToInt32(item.mir_id);
+                sid.MIR_Qty = Convert.ToDecimal(item.Qty);
+                sid.Issue_Qty = Convert.ToDecimal(item.IssueQty);
+                sid.Balance_Qty = Convert.ToDecimal(item.BalanceQty);
+                sid.Store_Stock = item.StoreStock;
+                sid.Department = item.Department;
+                sid.Remarks = item.Remarks;
+                sid.BatchNum = item.BatchNum;
+                db.Store_Issue_Details.InsertOnSubmit(sid);
+                db.SubmitChanges();
+            }
+            return int.Parse(store_issue_id);
+        }
+        [WebMethod]
+        public static string LoadMaster(string SI_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = db.Store_Issues.Where(x => x.Store_Issue_Id.Equals(SI_ID));
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+        [WebMethod]
+        public static string LoadDetail(string SI_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from data in db.Store_Issue_Details.Where(x => x.Store_Issue_Id.Equals(SI_ID))
+                         select new
+                         {
+                             Mir_Date = DBClass.getField("select Replace(convert(varchar, MIRDate, 106), ' ','-') from MaterialIssueRequest where MaterialRequest_Id=" + data.MIR_Id),
+                             data.MIR_Detail_Id,
+                             data.Balance_Qty,
+                             data.Department,
+                             data.Issue_Qty,
+                             data.Item_Id,
+                             data.MIR_Id,
+                             data.MIR_Qty,
+                             data.Remarks,
+                             data.Store_Issue_Detail_Id,
+                             data.Store_Issue_Id,
+                             Store_Stock = DBClass.getField("Select dbo.GetItemBatchStock(" + data.Item_Id + ", '','')"),
+                             data.BatchNum,
+                             Item_code = DBClass.getField("select Item_Code from inv_items where Item_Id=" + data.Item_Id),
+                             Unit = (from st in db.Store_Issue_Details join item in db.INV_Items on st.Item_Id equals item.Item_ID
+                                     select db.GetDataValueName("UOM", item.Unit)).FirstOrDefault(),
+                             Description = DBClass.getField("select Description from inv_items where Item_Id=" + data.Item_Id),
+                             IsBatch = DBClass.getField("select IsBatch from inv_items where Item_Id=" + data.Item_Id),
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+        [WebMethod]
+        public static string CheckBatch(string Item_code, string batchNum, string invOrg)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            string query = DBClass.getMedicineBatchBalance(batchNum, Item_code, invOrg).ToString();
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+       
+        [WebMethod]
+        public static string LoadDepartments()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Department"
+                         select new
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+
+                         }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+        [WebMethod]
+        public static string LoadOrganizations()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Ware House"
+                         select new
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+
+                         }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+        [WebMethod]
+        public static string LoadEmployees()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from data in db.HR_Employees
+                         where data.IsDoctor == false
+                         select new
+                         {
+                             data.Emp_ID,
+                             data.Emp_Name
+
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+        [WebMethod]
+        public static string LoadCompanies()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from data in db.sys_Companies select new { data.Company_ID, data.Company_Name }).ToList();
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+        [WebMethod]
+        public static string GetNewSINNo()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var SIN_No = DBClass.GetNewNumber("Store_Issue_No", "Store_Issue", "");
+            return SIN_No.ToString();
+        }
+        public class StoreIssue
+        {
+            public string StoreIssue_id { get; set; }
+            public string comapny_id { get; set; }
+            public string FixAssestNo { get; set; }
+            public string inventory_id { get; set; }
+            public string department_id { get; set; }
+            public string Store_Issue_No { get; set; }
+            public List<StoreIssueDetail> ItemList { get; set; }
+        }
+        public class StoreIssueDetail
+        {
+            public string mirDetailId { get; set; }
+            public string ItemId { get; set; }
+            public string mir_id { get; set; }
+            public string Unit { get; set; }
+            public string Qty { get; set; }
+            public string IssueQty { get; set; }
+            public string BalanceQty { get; set; }
+            public string StoreStock { get; set; }
+            public string Department { get; set; }
+            public string Remarks { get; set; }
+            public string BatchNum { get; set; }
+        }
+
+        [WebMethod]
+        public static string ApproveSIN(string SINId, Guid user_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.spApproveStore_Issue(Convert.ToInt32(SINId), user_id);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
+        public static string UnApproveSIN(string SINId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.spUnApproveSIN(Convert.ToInt32(SINId));
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+    }
+}

@@ -1,0 +1,463 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace PMS.Inventory
+{
+    public partial class AddPurchaseInvoice : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            HyperLink1.Visible = false;
+            if (!IsPostBack)
+            {
+                if (Request.QueryString["ID"] != null)
+                {
+                    DataBaseDataContext db = new DataBaseDataContext();
+                    var getID = Request.QueryString["ID"];
+                    var gettype = (from a in db.Purchase_Invoice_Masters where a.PurchaseInvoiceId == Convert.ToInt32(getID) select a.FilePath).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(gettype))
+                    {
+                        HyperLink1.NavigateUrl = gettype;
+                        HyperLink1.Visible = true;
+                    }
+
+                }
+            }
+        }
+
+        [WebMethod]
+        public static string Loadadvancepaymentdetail(int Inv_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_LoadAdvancePaymentforPurchaseInvoice(Inv_ID);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
+        public static string loadadvanceamount(string ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var decription = (from i in db.Advance_Payments
+                              where i.Advance_ID == Convert.ToInt32(ID)
+                              select new
+                              {
+                                  i.Advance_Amount,
+                                  i.Paid_Amount,
+                                  i.WithHoldTax_Amount,
+                              }).ToList();
+            return (new JavaScriptSerializer()).Serialize(decription);
+        }
+        [WebMethod]
+        public static bool UserEntryRights()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var uid = AppConfig.UserID;
+                var hasEntryRights = db.Sys_Inv_OrignatorTempelate_Masters
+                                  .Join(db.Sys_Inv_OrignatorTempelate_Detail_Forms,
+                                        SATM => SATM.OrignatorTempelate_ID,
+                                        SATDF => SATDF.OrignatorTempelate_ID,
+                                        (SATM, SATDF) => new { SATM, SATDF })
+                                  .Join(db.Sys_Inv_OrignatorTempelate_Details,
+                                        temp => temp.SATM.OrignatorTempelate_ID,
+                                        SATDO => SATDO.OrignatorTempelate_ID,
+                                        (temp, SATDO) => new { temp.SATM, temp.SATDF, SATDO })
+                                  .Any(temp => temp.SATM.IsActive == true && temp.SATM.IsDeleted == false && temp.SATDF.FormId == 10 && temp.SATDO.UserId == uid);
+
+                return hasEntryRights;
+            }
+        }
+        [WebMethod]
+        public static bool UserUnApproveEntryRights()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var userPermissions = (from data in db.aspnet_Users
+                                       where data.UserId == AppConfig.UserID
+                                       select new
+                                       {
+                                           data.IsInventoryUnApprove
+                                       }).FirstOrDefault();
+                bool UnApproveRight = userPermissions?.IsInventoryUnApprove ?? false;
+                return UnApproveRight;
+            }
+        }
+        [WebMethod]
+        public static string loadadvancedetail(string venid)
+        {
+            string result = string.Empty;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemsList = (from a in db.Advance_Payments
+                             where a.Vendor_ID == Convert.ToInt32(venid)
+                             select new
+                             {
+                                 a.Advance_ID,
+                                 a.Advance_No,
+                             }).ToList();
+            if (itemsList != null)
+            {
+                result = (new JavaScriptSerializer()).Serialize(itemsList);
+            }
+            return result;
+        }
+        [WebMethod]
+        public static string getwtaxtype()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from a in db.Sales_Taxes
+                         select new
+                         {
+                             a.Sales_Tax_ID,
+                             a.Sales_Tax_Perc,
+                         }).ToList();
+            string data = string.Empty;
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+        [WebMethod]
+        public static string GetNewInvoiceNo()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var GRN_No = DBClass.GetNewNumber("InvoiceNum", "Purchase_Invoice_Master", "");
+            return GRN_No.ToString();
+        }
+        [WebMethod]
+        public static string GetDepartments()
+
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            string data = string.Empty;
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Department" || v.ValueSet_Description == "Invoice Type" ||
+                         v.ValueSet_Description == "Currency"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                             Type = v.ValueSet_Description == "Department" ? "Dept" : v.ValueSet_Description == "Invoice Type" ? "InvTyp" : v.ValueSet_Description == "Currency" ? "Cur" : "ComTyp"
+                         }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+        private class ddlListItems
+        {
+            public string DataValueName;
+            public string DataValueDescription;
+            public string Type;
+        }
+        [WebMethod]
+        public static string getVendorDDLlist()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var listItems = db.sp_LoadVendorPurchase();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+        [WebMethod]
+        public static string getGRNDetailByVendorId(string vendorId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var listPurchaseDetails = db.sp_GetGRNDetailByVendorId(Convert.ToInt32(vendorId)).ToList();
+            return (new JavaScriptSerializer()).Serialize(listPurchaseDetails);
+        }
+        [WebMethod]
+        public static int SaveInvoice(string btnSave, string AllItemDetail)
+        {
+            string InvoiceId = "";
+            Purchase_Invoice_Master PO = new Purchase_Invoice_Master();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            JavaScriptSerializer oJS = new JavaScriptSerializer();
+
+            var record = oJS.Deserialize<MasterInoviceList>(AllItemDetail);
+            var count = record.ItemList2.Count;
+            int x = 1;
+            var lstItem = (from t in db.Purchase_Invoice_Masters
+                           where t.InvoiceNum == int.Parse(record.InvoiceNum)
+                           select t).FirstOrDefault();
+            if (btnSave == "Update")
+            {
+                lstItem.InvoiceNum = Convert.ToInt64(record.InvoiceNum);
+                lstItem.InvoiceTypeId = record.InvoiceType;
+                lstItem.UpdatedDate = DateTime.Now;
+                lstItem.UpdatedBy = AppConfig.UserID;
+                lstItem.VendorId = record.VendorId;
+                lstItem.RefInvoiceNum = record.RefInvoiceNum;
+                lstItem.InvoiceDate = Convert.ToDateTime(record.InvoiceDate);
+                lstItem.Company_ID = AppConfig.Company_ID;
+                lstItem.AccountingDate = Convert.ToDateTime(record.InvoiceDate);
+                lstItem.DueDate = Convert.ToDateTime(record.DueDate);
+                lstItem.CurrencyId = record.Currency;
+                lstItem.SalTaxInvocieNum = record.SalTaxInvoiceNum;
+                if (record.disc_amount != "")
+                {
+                    lstItem.Discount_Amount = Convert.ToDecimal(record.disc_amount);
+                }
+                if (record.ExRate != "")
+                {
+                    lstItem.ExRate = Convert.ToDecimal(record.ExRate);
+                }
+                if (record.totaladvanceadjusted != "")
+                {
+                    lstItem.Total_Advance_Adjusted = Convert.ToDecimal(record.totaladvanceadjusted);
+                }
+                if (record.totalinvoiceamount != "")
+                {
+                    lstItem.Total_Invoice_Amount = Convert.ToDecimal(record.totalinvoiceamount);
+                }
+                if (record.totalnetamount != "")
+                {
+                    lstItem.Net_Amount = Convert.ToDecimal(record.totalnetamount);
+                }
+                lstItem.Remarks = record.Remarks;
+                lstItem.ExDate = Convert.ToDateTime(record.ExDate);
+                db.SubmitChanges();
+                InvoiceId = lstItem.PurchaseInvoiceId.ToString();
+            }
+            else
+            {
+                PO.InvoiceNum = Convert.ToInt64(record.InvoiceNum);
+                PO.InvoiceTypeId = record.InvoiceType;
+                PO.UpdatedDate = DateTime.Now;
+                PO.UpdatedBy = AppConfig.UserID;
+                PO.VendorId = record.VendorId;
+                PO.RefInvoiceNum = record.RefInvoiceNum;
+                PO.SalTaxInvocieNum = record.SalTaxInvoiceNum;
+                PO.InvoiceDate = Convert.ToDateTime(record.InvoiceDate);
+                PO.Company_ID = AppConfig.Company_ID;
+                PO.AccountingDate = Convert.ToDateTime(record.InvoiceDate);
+                PO.DueDate = Convert.ToDateTime(record.DueDate);
+                PO.CurrencyId = record.Currency;
+                if (record.disc_amount != "")
+                {
+                    PO.Discount_Amount = Convert.ToDecimal(record.disc_amount);
+                }
+                if (record.ExRate != "")
+                {
+                    PO.ExRate = Convert.ToDecimal(record.ExRate);
+                }
+                if (record.totaladvanceadjusted != "")
+                {
+                    PO.Total_Advance_Adjusted = Convert.ToDecimal(record.totaladvanceadjusted);
+                }
+                if (record.totalinvoiceamount != "")
+                {
+                    PO.Total_Invoice_Amount = Convert.ToDecimal(record.totalinvoiceamount);
+                }
+                if (record.totalnetamount != "")
+                {
+                    PO.Net_Amount = Convert.ToDecimal(record.totalnetamount);
+                }
+                PO.Remarks = record.Remarks;
+                PO.ExDate = Convert.ToDateTime(record.ExDate);
+                PO.CreatedDate = DateTime.Now;
+                PO.CreatedBy = AppConfig.UserID;
+                PO.Company_ID = AppConfig.Company_ID;
+                PO.Status = "Created";
+                db.Purchase_Invoice_Masters.InsertOnSubmit(PO);
+                db.SubmitChanges();
+                InvoiceId = PO.PurchaseInvoiceId.ToString();
+            }
+            ///**********Deleting Previous details**************/
+            if (btnSave == "Update")
+            {
+                List<Purchase_Invoice_Detail> lstPurchaseInvocieDetails = db.Purchase_Invoice_Details.Where(t => t.PurchaseInvoiceId == int.Parse(InvoiceId)).ToList();
+                db.Purchase_Invoice_Details.DeleteAllOnSubmit(lstPurchaseInvocieDetails);
+                db.SubmitChanges();
+            }
+            foreach (var Invoiceitem in record.ItemList)
+            {
+                Purchase_Invoice_Detail ltd = new Purchase_Invoice_Detail();
+                ltd.PurchaseInvoiceId = Convert.ToInt64(InvoiceId);
+                ltd.ItemId = Convert.ToInt32(Invoiceitem.ItemId);
+                ltd.Qty = Convert.ToDecimal(Invoiceitem.Qty);
+                ltd.Rate = Convert.ToDecimal(Invoiceitem.Rate);
+                ltd.GRN_detail_Id = Convert.ToInt32(Invoiceitem.GRNDetailId);
+                ltd.GRN_ID = Convert.ToInt32(Invoiceitem.GRNId);
+                ltd.Amount = Convert.ToDecimal(Invoiceitem.TotalAmount);
+                ltd.TotalAmount = Convert.ToDecimal(Invoiceitem.Amount);
+                ltd.Stax_ID = Convert.ToInt32(Invoiceitem.staxid);
+                ltd.Stax_Amount = Convert.ToDecimal(Invoiceitem.staxperc);
+                ltd.DiscPer = Convert.ToDecimal(Invoiceitem.DiscPer);
+                ltd.DiscAmt = Convert.ToDecimal(Invoiceitem.DiscAmt);
+                ltd.Adv_Po_ID = Invoiceitem.AdvigpagainstPo;
+                db.Purchase_Invoice_Details.InsertOnSubmit(ltd);
+                db.SubmitChanges();
+            }
+            if (btnSave == "Update")
+            {
+                foreach (var a in record.ItemList2)
+                {
+                    var asd = (from t in db.Advance_Payments
+                               where t.Advance_ID == int.Parse(a.advpaymentid)
+                               select t.Advance_Amount).FirstOrDefault();
+
+                    var asd2 = (from t in db.Advance_Payments
+                                where t.Advance_ID == int.Parse(a.advpaymentid)
+                                select t).FirstOrDefault();
+
+                    var ppp = (from t in db.Advance_Payment_Purchase_Invoices
+                               where t.PurchaseInvoiceId == int.Parse(InvoiceId) && t.AdvancePayment_ID == Convert.ToInt32(a.advpaymentid)
+
+                               select t.Advance_Adjusted).FirstOrDefault();
+
+                    var yyy = ppp + asd;
+                    asd2.Advance_Amount = yyy;
+                    db.SubmitChanges();
+                    var xyz = (from t in db.Advance_Payment_Purchase_Invoices
+                               where t.PurchaseInvoiceId == int.Parse(InvoiceId) && t.AdvancePayment_ID == Convert.ToInt32(a.advpaymentid)
+                               select t).FirstOrDefault();
+
+                    xyz.AdvancePayment_ID = Convert.ToInt32(a.advpaymentid);
+                    xyz.AdvancePayment_No = Convert.ToInt32(a.advpaymentno);
+                    xyz.Advance_Adjusted = Convert.ToDecimal(a.advadjusted);
+                    xyz.PurchaseInvoiceId = Convert.ToInt32(InvoiceId);
+                    db.SubmitChanges();
+                    var rrr = (from t in db.Advance_Payments
+                               where t.Advance_ID == int.Parse(a.advpaymentid)
+                               select t).FirstOrDefault();
+                    var adddd = rrr.Advance_Amount;
+                    var lesssss = adddd - Convert.ToDecimal(a.advadjusted);
+                    rrr.Advance_Amount = lesssss;
+                    db.SubmitChanges();
+                }
+            }
+            else
+            {
+                foreach (var a in record.ItemList2)
+                {
+                    Advance_Payment_Purchase_Invoice abc = new Advance_Payment_Purchase_Invoice();
+                    abc.AdvancePayment_ID = Convert.ToInt32(a.advpaymentid);
+                    abc.AdvancePayment_No = Convert.ToInt32(a.advpaymentno);
+                    abc.Advance_Adjusted = Convert.ToDecimal(a.advadjusted);
+                    abc.PurchaseInvoiceId = Convert.ToInt32(InvoiceId);
+                    db.Advance_Payment_Purchase_Invoices.InsertOnSubmit(abc);
+                    db.SubmitChanges();
+                    var asd = (from t in db.Advance_Payments
+                               where t.Advance_ID == int.Parse(a.advpaymentid)
+                               select t).FirstOrDefault();
+                    var adddd = asd.Advance_Amount;
+                    var lesssss = adddd - Convert.ToDecimal(a.advadjusted);
+                    asd.Advance_Amount = lesssss;
+                    db.SubmitChanges();
+                }
+            }
+           
+            return int.Parse(InvoiceId);
+        }
+        [WebMethod]
+        public static string LoadInvoiceHeaderDetail(int Inv_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Header = (from m in db.Purchase_Invoice_Masters
+                          where m.PurchaseInvoiceId == Inv_ID
+                          select new
+                          {
+                              m.InvoiceNum,
+                              m.InvoiceTypeId,
+                              m.RefInvoiceNum,
+                              m.VendorId,
+                              m.SalTaxInvocieNum,
+                              m.InvoiceDate,
+                              m.AccountingDate,
+                              m.DueDate,
+                              m.CurrencyId,
+                              m.ExRate,
+                              m.Remarks,
+                              m.ExDate,
+                              m.Status,
+                              m.Total_Advance_Adjusted,
+                              m.Total_Invoice_Amount,
+                              m.Net_Amount,
+                              m.Discount_Amount,
+                              Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.VendorId)).Select(po => po.Vendor_Name),
+                          }).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Header);
+        }
+        [WebMethod]
+        public static string LoadInvocieDetail(int Inv_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_LoadPurchaseDetailInvoice(Inv_ID);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
+        public static string ApprovePurchaseInvoice(string InvId)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.spApprovePurchase(Convert.ToInt32(InvId), user_id);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
+        public static string UnApprovePurchaseInvoice(string InvId)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.spUnApprovePurchase(Convert.ToInt32(InvId),Convert.ToString(user_id));
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        public class MasterInoviceList
+        {
+            public string InvoiceType { get; set; }
+            public string InvoiceDate { get; set; }
+            public string InvoiceNum { get; set; }
+            public string VendorId { get; set; }
+            public string RefInvoiceNum { get; set; }
+            public string SalTaxInvoiceNum { get; set; }
+            public string AccountingDate { get; set; }
+            public string DueDate { get; set; }
+            public string CurrencyId { get; set; }
+            public string Branch { get; set; }
+            public string ExRate { get; set; }
+            public string Remarks { get; set; }
+            public string ExDate { get; set; }
+            public string Purchase_Date { get; set; }
+            public string Currency { get; set; }
+            public string totalinvoiceamount { get; set; }
+            public string totaladvanceadjusted { get; set; }
+            public string totalnetamount { get; set; }
+            public string disc_amount { get; set; }
+            public List<InoiceDetailList> ItemList { get; set; }
+            public List<InoiceDetailList2> ItemList2 { get; set; }
+            public List<InoiceDetailList3> ItemList3 { get; set; }
+        }
+        public class InoiceDetailList
+        {
+            public string ItemId { get; set; }
+            public string GRNId { get; set; }
+            public string GRNDetailId { get; set; }
+            public string PurchAseInvoiceId { get; set; }
+            public string Rate { get; set; }
+            public string Qty { get; set; }
+            public string staxperc { get; set; }
+            public string staxid { get; set; }
+            public string DiscAmt { get; set; }
+            public string DiscPer { get; set; }
+            public string TotalAmount { get; set; }
+            public string Amount { get; set; }
+            public int AdvigpagainstPo { get; set; }
+        }
+
+        public class InoiceDetailList2
+        {
+            public string advpaymentno { get; set; }
+            public string advpaymentid { get; set; }
+            public string advadjusted { get; set; }
+        }
+
+        public class InoiceDetailList3
+        {
+            public string ddl_glcode { get; set; }
+            public string accounting_descrip { get; set; }
+            public string accounting_qty { get; set; }
+            public string accounting_rate { get; set; }
+            public string accounting_amount { get; set; }
+        }
+    }
+}
