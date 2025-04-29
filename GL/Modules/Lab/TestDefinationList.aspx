@@ -44,13 +44,13 @@
                     });
                 },
                 "columns": [
-                    { "data": "Test_ID", "name": "Test_ID", visible: false, "width": "0%" },                   
-                    { "data": "Test_Name", "name": "Test_Name" },
-                    { "data": "Main_Department", "name": "Main_Department" },
-                    { "data": "Group_Category", "name": "Group_Category" },
-                    { "data": "Group_Department", "name": "Group_Department" },
-                    { "data": "Unit", "name": "Unit" },
-                    { "data": "Active", "name": "Active" },
+                    { "data": "Test_ID", "name": "Test_ID", visible: false, "width": "0%" },
+                    { "data": "Test_Name", "name": "Test_Name", "orderable": true },
+                    { "data": "Main_Department", "name": "Main_Department", "orderable": false },
+                    { "data": "Group_Category", "name": "Group_Category", "orderable": false },
+                    { "data": "Group_Department", "name": "Group_Department", "orderable": false },
+                    { "data": "Unit", "name": "Unit", "orderable": false },
+                    { "data": "Active", "name": "Active", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -60,7 +60,7 @@
                             var result;
                             result = res + Delete + print;
                             return result;
-                        }, "width": "13%"
+                        }, "width": "13%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

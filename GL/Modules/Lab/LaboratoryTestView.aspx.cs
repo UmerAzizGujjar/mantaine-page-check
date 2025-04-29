@@ -84,20 +84,14 @@ namespace PMS
                     var FilteredCount = Tests.Count();
                     switch (sortColumn)
                     {
-                        case "Patient_ID":
-                            Tests = sortColumnDirection == "asc" ? Tests.OrderBy(a => a.Patient_ID) : Tests.OrderByDescending(a => a.Patient_ID);
-                            break;
                         case "Lab_Test_ID":
                             Tests = sortColumnDirection == "asc" ? Tests.OrderBy(a => a.Lab_Test_ID) : Tests.OrderByDescending(a => a.Lab_Test_ID);
                             break;
                         case "mr_no_sequence":
                             Tests = sortColumnDirection == "asc" ? Tests.OrderBy(b => b.mr_no_sequence) : Tests.OrderByDescending(a => a.mr_no_sequence);
                             break;
-                        case "Created_Time":
-                            Tests = sortColumnDirection == "asc" ? Tests.OrderBy(a => a.Created_Time) : Tests.OrderByDescending(a => a.Created_Time);
-                            break;
                         default:
-                            Tests = Tests.OrderBy(a => a.mr_no_sequence);
+                            Tests = Tests.OrderByDescending(a => a.Lab_Test_ID);
                             break;
                     }
 

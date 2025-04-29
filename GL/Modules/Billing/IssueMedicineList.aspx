@@ -62,13 +62,13 @@
                             var date = full.Invoice_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "15%"
+                        }, "width": "8%", "orderable": true
                     },
-                    { "data": "BillNo", "width": "10%" }, 
-                    { "data": "Customer_Name", "width": "15%", },
-                    { "data": "Patient_ID", "name": "Patient_ID", "width": "10%" },                    
-                    { "data": "Referred_By_value", "width": "10%", },
-                    { "data": "Received_Amount", "width": "10%", },
+                    { "data": "BillNo", "width": "10%", "orderable": false }, 
+                    { "data": "Customer_Name", "width": "10%", "orderable": false },
+                    { "data": "Patient_ID", "name": "Patient_ID", "width": "8%", "orderable": true },                    
+                    { "data": "Referred_By_value", "width": "10%", "orderable": false },
+                    { "data": "Received_Amount", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -77,7 +77,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "8%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

@@ -47,11 +47,11 @@
                 },
                 "columns": [
                     { "data": "Item_ID", "visible": false, "width": "0%" },
-                    { "data": "Item_Code", "name": "Item_Code", "width": "12%" },
-                    { "data": "Description", "width": "20%" },
-                    { "data": "Unit", "width": "15%" },
-                    { "data": "Sale_Rate", "width": "20%" },
-                    { "data": "Service", "width": "15%" },
+                    { "data": "Item_Code", "name": "Item_Code", "width": "12%", "orderable": true },
+                    { "data": "Description", "width": "20%", "orderable": false },
+                    { "data": "Unit", "width": "15%", "orderable": false },
+                    { "data": "Sale_Rate", "width": "15%", "orderable": false },
+                    { "data": "Service", "width": "15%", "orderable": false },
 
                    
                     {
@@ -63,7 +63,7 @@
                             var result;
                             result = res + Del;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

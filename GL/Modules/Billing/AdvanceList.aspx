@@ -84,7 +84,7 @@
                     },
                     "columns": [
                         { "data": "Advance_ID", "visible": false, "width": "0%" },
-                        { "data": "MrNo", "name": "MrNo", "width": "10%" },
+                        { "data": "MrNo", "name": "MrNo", "width": "10%", "orderable": true },
                         {
                             "data": "Advance_Date", "name": "Advance_Date",
                             "render": function (data, type, full) {
@@ -92,10 +92,10 @@
                                 var date = full.Advance_Date;
                                 date = moment(date).format('DD-MMM-YYYY');
                                 return date;
-                            }, "width": "15%"
+                            }, "width": "15%", "orderable": true
                         },
-                        { "data": "Advance_Amount", "width": "15%", className: "text-right" },
-                        { "data": "Remarks", "width": "25%", },
+                        { "data": "Advance_Amount", "width": "15%", className: "text-right", "orderable": false },
+                        { "data": "Remarks", "width": "25%", "orderable": false },
 
 
                         {
@@ -108,7 +108,7 @@
                                 var result;
                                 result = res + Del;
                                 return result;
-                            }, "width": "10%"
+                            }, "width": "10%", "orderable": false
                         }
                     ],
                     "initComplete": function (settings, json) {

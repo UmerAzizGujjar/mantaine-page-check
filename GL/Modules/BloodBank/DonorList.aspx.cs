@@ -82,8 +82,8 @@ namespace PMS
                         case "mr_no_sequence":
                             Donors = sortColumnDirection == "asc" ? Donors.OrderBy(a => a.mr_no_sequence) : Donors.OrderByDescending(a => a.mr_no_sequence);
                             break;
-                        case "Donor_Name":
-                            Donors = sortColumnDirection == "asc" ? Donors.OrderBy(a => a.Donor_Name) : Donors.OrderByDescending(a => a.Donor_Name);
+                        case "D_Date":
+                            Donors = sortColumnDirection == "asc" ? Donors.OrderBy(a => a.D_Date) : Donors.OrderByDescending(a => a.D_Date);
                             break;
                         default:
                             Donors = Donors.OrderByDescending(a => a.Donor_Id);

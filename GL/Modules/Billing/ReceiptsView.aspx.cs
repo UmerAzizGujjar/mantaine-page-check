@@ -187,17 +187,14 @@ namespace PMS
                     var FilteredCount = Receipts.Count();
                     switch (sortColumn)
                     {
-                        case "Receipt_ID":
-                            Receipts = sortColumnDirection == "asc" ? Receipts.OrderBy(a => a.Receipt_ID) : Receipts.OrderByDescending(a => a.Receipt_ID);
+                        case "Receipt_Date":
+                            Receipts = sortColumnDirection == "asc" ? Receipts.OrderBy(a => a.Receipt_Date) : Receipts.OrderByDescending(a => a.Receipt_Date);
                             break;
                         case "Receipt_No":
                             Receipts = sortColumnDirection == "asc" ? Receipts.OrderBy(b => b.Receipt_No) : Receipts.OrderByDescending(a => a.Receipt_No);
                             break;
-                        case "mr_no_sequence":
-                            Receipts = sortColumnDirection == "asc" ? Receipts.OrderBy(a => a.mr_no_sequence) : Receipts.OrderByDescending(a => a.mr_no_sequence);
-                            break;
                         default:
-                            Receipts = Receipts.OrderBy(a => a.Receipt_No);
+                            Receipts = Receipts.OrderByDescending(a => a.Receipt_No);
                             break;
                     }
 

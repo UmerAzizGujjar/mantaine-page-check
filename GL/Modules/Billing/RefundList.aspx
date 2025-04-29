@@ -68,8 +68,8 @@
                     },
                     "columns": [
                         { "data": "Refund_ID", "visible": false, "width": "0%" },
-                        { "data": "Bill_ID", "name": "Bill_ID", "width": "10%" },
-                        { "data": "Bill_No", "width": "10%" },
+                        { "data": "Bill_ID", "name": "Bill_ID", "width": "10%", "orderable": true },
+                        { "data": "Bill_No", "width": "10%", "orderable": false },
                         {
                             "data": "Refund_Date", "name": "Refund_Date",
                             "render": function (data, type, full) {
@@ -77,11 +77,11 @@
                                 var date = full.Refund_Date;
                                 date = moment(date).format('DD-MMM-YYYY');
                                 return date;
-                            }, "width": "15%"
+                            }, "width": "15%", "orderable": true
                         },
-                        { "data": "Refund_Amount", "width": "15%", className: "text-right" },
-                        { "data": "MrNo", "name": "MrNo", "width": "15%" },
-                        { "data": "Remarks", "width": "25%", },
+                        { "data": "Refund_Amount", "width": "15%", className: "text-right", "orderable": false },
+                        { "data": "MrNo", "name": "MrNo", "width": "15%", "orderable": false },
+                        { "data": "Remarks", "width": "25%", "orderable": false },
 
 
                         {
@@ -93,7 +93,7 @@
                                 var result;
                                 result = res + Del;
                                 return result;
-                            }, "width": "10%"
+                            }, "width": "10%", "orderable": false
                         }
                     ],
                     "initComplete": function (settings, json) {

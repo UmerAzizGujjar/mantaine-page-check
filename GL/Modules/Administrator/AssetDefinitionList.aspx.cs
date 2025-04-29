@@ -59,13 +59,10 @@ namespace PMS
                     switch (sortColumn)
                     {
                         case "AssetCategory":
-                            Asset_Definition = sortColumnDirection == "asc" ? Asset_Definition.OrderBy(a => a.AssetCategory) : Asset_Definition.OrderByDescending(a => a.AssetCategory);
+                            Asset_Definition = sortColumnDirection == "asc" ? Asset_Definition.OrderBy(a => a.AssetCategory): Asset_Definition.OrderByDescending(a => a.AssetCategory);
                             break;
                         case "AssetSubCategory":
                             Asset_Definition = sortColumnDirection == "asc" ? Asset_Definition.OrderBy(a => a.AssetSubCategory) : Asset_Definition.OrderByDescending(a => a.AssetSubCategory);
-                            break;
-                        case "Location":
-                            Asset_Definition = sortColumnDirection == "asc" ? Asset_Definition.OrderBy(a => a.Location) : Asset_Definition.OrderByDescending(a => a.Location);
                             break;
                         default:
                             Asset_Definition = Asset_Definition.OrderByDescending(a => a.Asset_Definition_Id);

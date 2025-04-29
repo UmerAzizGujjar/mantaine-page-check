@@ -49,13 +49,13 @@
                 },
                 "columns": [
                     { "data": "Blood_ID", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "Blood_Group", "name": "Blood_Group", "width": "10%", "orderable": false },
-                    { "data": "RH_Type", "name": "RH_Type", "width": "10%", "orderable": false },
-                    { "data": "Empty_Bag_Status", "name": "Empty_Bag_Status", "width": "10%", "orderable": false },
-                    { "data": "Bag_No", "name": "Bag_No", "width": "10%", "orderable": false },
-                    { "data": "Patient_Name", "name": "Patient_Name", "width": "10%", "orderable": false },
-                    { "data": "Mrno", "name": "Mrno", "width": "10%", "orderable": false },
-                    { "data": "No_Of_Bags", "name": "No_Of_Bags", "width": "10%", "orderable": true },
+                    { "data": "Blood_Group", "name": "Blood_Group", "width": "5%", "orderable": false },
+                    { "data": "RH_Type", "name": "RH_Type", "width": "5%", "orderable": false },
+                    { "data": "Empty_Bag_Status", "name": "Empty_Bag_Status", "width": "8%", "orderable": false },
+                    { "data": "Bag_No", "name": "Bag_No", "width": "5%", "orderable": false },
+                    { "data": "Patient_Name", "name": "Patient_Name", "width": "11%", "orderable": false },
+                    { "data": "Mrno", "name": "Mrno", "width": "8%", "orderable": true },
+                    { "data": "No_Of_Bags", "name": "No_Of_Bags", "width": "5%", "orderable": false },
                     {
                         "data": "Receiving_Date", "name": "Receiving_Date",
                         "render": function (data, type, full) {
@@ -63,7 +63,7 @@
                             var date = full.Receiving_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "8%", "orderable": true
                     },
                     {
                         "data": "Blood_Issuance_Date_Time", "name": "Blood_Issuance_Date_Time",
@@ -72,7 +72,7 @@
                             var date = full.Blood_Issuance_Date_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     },
                     {
                         "data": "Expiry_Date", "name": "Expiry_Date",
@@ -81,7 +81,7 @@
                             var date = full.Expiry_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "8%", "orderable": false
                     },
                     {
                         render: function (data, type, full) {

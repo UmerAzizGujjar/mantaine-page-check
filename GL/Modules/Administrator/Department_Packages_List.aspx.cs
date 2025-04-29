@@ -29,14 +29,10 @@ namespace PMS.Modules.Inventory
                                     a.Package_Name,
                                     a.Duration,
                                     a.Remarks,
-                                    DepartmentIds = (from p in _dbContext.ValueSets
-                                                     join dpck in _dbContext.Department_Packages_Detail_Rates
-                                                     on a.Dep_Packages_ID equals dpck.Dep_Pakages_Id
-                                                     join d in _dbContext.DataValues
-                                                     on p.ValueSet_ID equals d.ValueSet_ID
-                                                     where p.ValueSet_Description == "Patient Main Category"
-                                                     && d.DataValue_Name == dpck.Department_Id
-                                                     select d.DataValue_Description).Distinct().ToList()
+                                    DepartmentIds = (from p in _dbContext.ValueSets join dpck in _dbContext.Department_Packages_Detail_Rates
+                                                     on a.Dep_Packages_ID equals dpck.Dep_Pakages_Id join d in _dbContext.DataValues
+                                                     on p.ValueSet_ID equals d.ValueSet_ID where p.ValueSet_Description == "Patient Main Category"
+                                                     && d.DataValue_Name == dpck.Department_Id select d.DataValue_Description).Distinct().ToList()
                                 };
                     var data = query.ToList();
 
@@ -56,9 +52,6 @@ namespace PMS.Modules.Inventory
                     {
                         case "Package_ID":
                             filteredData = sortColumnDirection == "asc" ? filteredData.OrderBy(a => a.Package_ID).ToList() : filteredData.OrderByDescending(a => a.Package_ID).ToList();
-                            break;
-                        case "Department":
-                            filteredData = sortColumnDirection == "asc" ? filteredData.OrderBy(a => a.Department).ToList() : filteredData.OrderByDescending(a => a.Department).ToList();
                             break;
                         case "Package_name":
                             filteredData = sortColumnDirection == "asc" ? filteredData.OrderBy(a => a.Package_name).ToList() : filteredData.OrderByDescending(a => a.Package_name).ToList();

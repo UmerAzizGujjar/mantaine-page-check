@@ -47,8 +47,8 @@
                     });
                 },
                 "columns": [
-                    { "data": "Receipt_ID", "visible": false, "width": "0%" },                   
-                    { "data": "Receipt_No", "name": "Receipt_No", "width": "10%" },
+                    { "data": "Receipt_ID", "visible": false, "width": "0%" },
+                    { "data": "Receipt_No", "name": "Receipt_No", "width": "8%", "orderable": true },
                     {
                         "data": "Receipt_Date", "name": "Receipt_Date",
                         "render": function (data, type, full) {
@@ -56,13 +56,13 @@
                             var date = full.Receipt_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "8%", "orderable": true
                     },
-                    { "data": "Remarks", "width": "25%" },
-                    { "data": "Receipt_Amount", "width": "8%" },
-                    
-                    { "data": "mr_no_sequence", "width": "12%" },
-                    { "data": "Full_Name", "width": "15%" },            
+                    { "data": "Remarks", "width": "15%", "orderable": false },
+                    { "data": "Receipt_Amount", "width": "8%", "orderable": false },
+
+                    { "data": "mr_no_sequence", "width": "12%", "orderable": false },
+                    { "data": "Full_Name", "width": "14%", "orderable": false },            
                     {
                         "data": "Creation_Date", "name": "Creation_Date",
                         "render": function (data, type, full) {
@@ -70,10 +70,10 @@
                             var date = full.Creation_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "25%"
+                        }, "width": "10%", "orderable": false
                     },
 
-                    { "data": "UserName", "width": "15%" },
+                    { "data": "UserName", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -83,7 +83,7 @@
                             var result;
                             result = res + Del;
                             return result;
-                        }, "width": "100%"
+                        }, "width": "8%", "orderable": false
                     }
 
                 ],

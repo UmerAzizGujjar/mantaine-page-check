@@ -50,10 +50,10 @@
                 },
                 "columns": [
                     { "data": "Blood_Division_Id", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "Donor_No", "name": "Donor_No", "width": "10%", "orderable": false },
+                    { "data": "Donor_No", "name": "Donor_No", "width": "10%", "orderable": true },
                     { "data": "donor_name", "name": "donor_name", "width": "10%", "orderable": false },
                     { "data": "Bag_Number", "name": "Bag_Number", "width": "10%", "orderable": false },
-                    { "data": "Whole_Blood", "name": "Whole_Blood", "width": "10%", "orderable": true },
+                    { "data": "Whole_Blood", "name": "Whole_Blood", "width": "10%", "orderable": false },
 
 
 
@@ -64,7 +64,7 @@
                             var date = full.WholeBlood_Expiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": true
                     },
                     {
                         "data": "PCVExpiry", "name": "PCVExpiry",
@@ -73,7 +73,7 @@
                             var date = full.PCVExpiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%","orderable": true
                     },
                     {
                         "data": "FFPsExpiry", "name": "FFPsExpiry",
@@ -82,7 +82,7 @@
                             var date = full.FFPsExpiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     },
                     {
                         "data": "Platelets_Expiry", "name": "Platelets_Expiry",
@@ -91,7 +91,7 @@
                             var date = full.Platelets_Expiry;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "6%"
+                        }, "width": "6%", "orderable": false
                     },
                     {
                         render: function (data, type, full) {

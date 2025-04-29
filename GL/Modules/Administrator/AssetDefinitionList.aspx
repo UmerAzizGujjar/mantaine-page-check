@@ -82,10 +82,10 @@
                 "columns": [
                     { "data": "Asset_Definition_Id", "visible": false, "width": "0%" },
                     { "data": null, "orderable": false, "width": "8%" },
-                    { "data": "AssetCategory", "name": "AssetCategory", "width": "20%" },
-                    { "data": "AssetSubCategory", "name": "AssetSubCategory", "width": "20%" },
-                    { "data": "Location", "name": "Location", "width": "15%" },
-                    { "data": "Item_Description", "name": "Item_Description", "width": "15%" },
+                    { "data": "AssetCategory", "name": "AssetCategory", "width": "20%", "orderable": true },
+                    { "data": "AssetSubCategory", "name": "AssetSubCategory", "width": "20%", "orderable": true },
+                    { "data": "Location", "name": "Location", "width": "15%", "orderable": false },
+                    { "data": "Item_Description", "name": "Item_Description", "width": "15%","orderable": false },
 
                     {
                         render: function (data, type, full) {
@@ -96,7 +96,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
                 ],
                 "createdRow": function (row, data, dataIndex) {

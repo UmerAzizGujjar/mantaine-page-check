@@ -49,7 +49,7 @@
                 },
                 "columns": [
                     { "data": "Bill_ID", "visible": false, "width": "0%" },
-                    { "data": "Bill_No", "name": "Bill_No", "width": "10%" },
+                    { "data": "Bill_No", "name": "Bill_No", "width": "5%", "orderable": true },
                     {
                         "data": "Bill_Date", "name": "Bill_Date",
                         "render": function (data, type, full) {
@@ -57,17 +57,17 @@
                             var date = full.Bill_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "7%", "orderable": true
                     },
-                    { "data": "MrNo", "name": "MrNo", "width": "8%" },
-                    { "data": "Full_Name", "width": "13%" },
-                    { "data": "Total_Amount", "width": "10%" },
-                    { "data": "Discount_Percentage", "width": "10%" },
-                    { "data": "Discount_Amount", "width": "9%" },
-                    { "data": "Net_Amount", "width": "10%"  },
-                    { "data": "Received_Amount", "name": "Received_Amount", "width": "10%" },
-                    { "data": "Balance_Amount", "width": "13%"  },
-                    { "data": "Operator", "width": "12%" },
+                    { "data": "MrNo", "name": "MrNo", "width": "8%", "orderable": true },
+                    { "data": "Full_Name", "width": "13%", "orderable": false },
+                    { "data": "Total_Amount", "width": "7%", "orderable": false },
+                    { "data": "Discount_Percentage", "width": "10%", "orderable": false },
+                    { "data": "Discount_Amount", "width": "9%", "orderable": false },
+                    { "data": "Net_Amount", "width": "8%", "orderable": false  },
+                    { "data": "Received_Amount", "name": "Received_Amount", "width": "10%", "orderable": false },
+                    { "data": "Balance_Amount", "width": "8%", "orderable": false },
+                    { "data": "Operator", "width": "9%", "orderable": false },
                     
                     {
                         render: function (data, type, full) {
@@ -78,7 +78,7 @@
                             var result;
                             result = res + Del;
                             return result;
-                        }, "width": "15%"
+                        }, "width": "18%", "orderable": false
                     }
 
                 ],
