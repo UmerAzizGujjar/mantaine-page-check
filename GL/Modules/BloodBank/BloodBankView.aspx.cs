@@ -52,6 +52,9 @@ namespace PMS
                         case "Mrno":
                             Blood_Bank = sortColumnDirection == "asc" ? Blood_Bank.OrderBy(a => a.Mrno) : Blood_Bank.OrderByDescending(a => a.Mrno);
                             break;
+                        case "Receiving_Date":
+                            Blood_Bank = sortColumnDirection == "asc" ? Blood_Bank.OrderBy(a => a.Receiving_Date) : Blood_Bank.OrderByDescending(a => a.Receiving_Date);
+                            break;
                         default:
                             Blood_Bank = Blood_Bank.OrderByDescending(a => a.Blood_ID);
                             break;

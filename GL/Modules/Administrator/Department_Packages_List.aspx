@@ -45,11 +45,11 @@
                 });
             },
             "columns": [
-                { "data": "Package_ID", "name": "Package_ID"},
-                { "data": "Package_name", "name":"Package_name"},
-                { "data": "Department", "name": "Companyname"},                
-                { "data": "Duration"},
-                { "data": "Remarks"},                
+                { "data": "Package_ID", "name": "Package_ID", "orderable": true },
+                { "data": "Package_name", "name": "Package_name", "orderable": true },
+                { "data": "Department", "name": "Companyname" , "orderable": false },                
+                { "data": "Duration", "orderable": false },
+                { "data": "Remarks", "orderable": false },                
                 {
                     render: function (data, type, full) {
                         debugger;
@@ -57,7 +57,7 @@
                         var result;
                         result = res;
                         return result;
-                    }
+                    }, "orderable": false
                 }
             ],
             "initComplete": function (settings, json) {
@@ -102,7 +102,6 @@
         <table id="example" class="table table-hover table-bordered" style="width:100% !important">
             <thead>
                 <tr>
-                    <th style="display: none; width: 0%;">Pat ID</th>
                     <th>Package Id</th>
                     <th>Package Name</th>
                     <th>Department</th>

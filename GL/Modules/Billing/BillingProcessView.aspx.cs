@@ -166,14 +166,14 @@ namespace PMS
                         case "Bill_No":
                             Billing = sortColumnDirection == "asc" ? Billing.OrderBy(a => a.Bill_No) : Billing.OrderByDescending(a => a.Bill_No);
                             break;
-                        case "Creation_Date":
+                        case "Bill_Date":
                             Billing = sortColumnDirection == "asc" ? Billing.OrderBy(b => b.Bill_Date) : Billing.OrderByDescending(a => a.Bill_Date);
                             break;
                         case "MrNo":
                             Billing = sortColumnDirection == "asc" ? Billing.OrderBy(a => a.MrNo) : Billing.OrderByDescending(a => a.MrNo);
                             break;
                         default:
-                            Billing = Billing.OrderBy(a => a.Bill_No); 
+                            Billing = Billing.OrderByDescending(a => a.Bill_No); 
                             break;
                     }
 

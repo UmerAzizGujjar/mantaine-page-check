@@ -46,10 +46,10 @@
                 });
             },
             "columns": [
-                { "data": "Lab_Test_ID",visible :false, "width": "0%" },
-                { "data": "Lab_Test_ID", "name": "Lab_Test_ID",  "width": "10%" },
-                { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%" },
-                { "data": "Full_Name", "width": "20%", },              
+                { "data": "Lab_Test_ID", visible: false, "width": "0%" },
+                { "data": "Lab_Test_ID", "name": "Lab_Test_ID", "width": "10%", "orderable": true },
+                { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%", "orderable": true },
+                { "data": "Full_Name", "width": "20%", "orderable": false },              
                 {
                     "data": "Created_Time", "name": "Created_Time",
                     "render": function (data, type, full) {
@@ -57,7 +57,7 @@
                         var date = full.Created_Time;
                         date = moment(date).format('DD-MMM-YYYY');
                         return date;
-                    }, "width": "10%"
+                    }, "width": "10%","orderable": false
                 },
                 
                 {
@@ -69,7 +69,7 @@
                         var result;
                         result = res;
                         return result;
-                    }, "width": "10%"
+                    }, "width": "10%", "orderable": false
                 }
             ],
             "initComplete": function (settings, json) {

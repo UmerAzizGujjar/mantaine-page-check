@@ -62,14 +62,11 @@ namespace PMS
                         case "mr_no_sequence":
                             Operation = sortColumnDirection == "asc" ? Operation.OrderBy(a => a.mr_no_sequence) : Operation.OrderByDescending(a => a.mr_no_sequence);
                             break;
-                        case "DoctorName":
+                        case "Created_Time":
                             Operation = sortColumnDirection == "asc" ? Operation.OrderBy(a => a.Created_Time) : Operation.OrderByDescending(a => a.Created_Time);
                             break;
-                        case "ProcedureName":
-                            Operation = sortColumnDirection == "asc" ? Operation.OrderBy(a => a.ProcedureName) : Operation.OrderByDescending(a => a.ProcedureName);
-                            break;
                         default:
-                            Operation = Operation.OrderBy(a => a.Operation_Booking_ID); 
+                            Operation = Operation.OrderByDescending(a => a.Operation_Booking_ID); 
                             break;
                     }
 

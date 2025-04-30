@@ -5248,18 +5248,18 @@
               
       
         <div class="row" id="dvSummary">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label style="margin-top:11%" >Total Doctor Share</label>
                 </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtTotalDoctorShare" style="height: 30px; text-align: right; font-size: 22px;margin-top:5%" disabled="disabled" />
+                <input type="text" id="txtTotalDoctorShare" style="height: 30px; text-align: right; font-size: 22px;margin-top:9%" disabled="disabled" />
             </div>
         </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Previous Paid</label>
                 </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5268,8 +5268,8 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Previous Balance</label>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5277,8 +5277,8 @@
             </div>
             </div>
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Total Payable: </label>
                 </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5286,8 +5286,8 @@
                 </div>
         </div>
          <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-             <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+             <div class="col-lg-2 col-md-4 col-sm-6">
                  <label>Over and Above </label>
                  </div>
              <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5296,8 +5296,8 @@
              </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label class="summary-label">Discount :</label>
             </div>
             <div class="col-lg-3 col-md-8 col-sm-12 discount-section">
@@ -5308,8 +5308,8 @@
             </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Net Payable:  </label>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5318,8 +5318,8 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>C. In Hand</label>
                 </div>
             <div class="col-lg-1 col-md-3 col-sm-4">
@@ -5331,8 +5331,8 @@
         </div>
 
          <div class="row">
-             <div class="col-lg-7 col-md-8 col-sm-9"></div>
-             <div class="col-lg-1 col-md-4 col-sm-6">
+             <div class="col-lg-6 col-md-8 col-sm-9"></div>
+             <div class="col-lg-2 col-md-4 col-sm-6">
                  <label>Bank Amt</label>
                  </div>
              <div class="col-lg-1 col-md-4 col-sm-6">
@@ -5344,8 +5344,8 @@
              </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Amount Received:</label>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5354,8 +5354,8 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Advance Amount</label>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
@@ -5364,9 +5364,9 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-7 col-md-8 col-sm-9"></div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <label>Balance:  </label>
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label>Balance: </label>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="text" id="txtBalances" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />

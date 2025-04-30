@@ -57,17 +57,12 @@ namespace PMS
                     var FilteredCount = Items.Count();
                     switch (sortColumn)
                     {
-                        case "In_Patient_ID":
-                            Items = sortColumnDirection == "asc" ? Items.OrderBy(a => a.Item_ID) : Items.OrderByDescending(a => a.Item_ID);
-                            break;
+                        
                         case "Item_Code":
                             Items = sortColumnDirection == "asc" ? Items.OrderBy(b => b.Item_Code) : Items.OrderByDescending(a => a.Item_Code);
                             break;
-                        case "Discharge_On":
-                            Items = sortColumnDirection == "asc" ? Items.OrderBy(a => a.Sale_Rate) : Items.OrderByDescending(a => a.Sale_Rate);
-                            break;
                         default:
-                            Items = Items.OrderBy(a => a.Item_ID);
+                            Items = Items.OrderByDescending(a => a.Item_ID);
                             break;
                     }
 

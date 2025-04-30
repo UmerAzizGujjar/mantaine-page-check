@@ -95,6 +95,12 @@ namespace PMS
                         case "Donor_No":
                             Blood_Division = sortColumnDirection == "asc" ? Blood_Division.OrderBy(a => a.Donor_No) : Blood_Division.OrderByDescending(a => a.Donor_No);
                             break;
+                        case "WholeBlood_Expiry":
+                            Blood_Division = sortColumnDirection == "asc" ? Blood_Division.OrderBy(a => a.WholeBlood_Expiry) : Blood_Division.OrderByDescending(a => a.WholeBlood_Expiry);
+                            break;
+                        case "PCVExpiry":
+                            Blood_Division = sortColumnDirection == "asc" ? Blood_Division.OrderBy(a => a.PCVExpiry) : Blood_Division.OrderByDescending(a => a.PCVExpiry);
+                            break;
                         default:
                             Blood_Division = Blood_Division.OrderByDescending(a => a.Blood_Division_Id);
                             break;

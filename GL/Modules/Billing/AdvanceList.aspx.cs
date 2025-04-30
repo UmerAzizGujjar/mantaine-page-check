@@ -96,9 +96,6 @@ namespace PMS
                     var FilteredCount = Advances.Count();
                     switch (sortColumn)
                     {
-                        case "Advance_ID":
-                            Advances = sortColumnDirection == "asc" ? Advances.OrderBy(a => a.Advance_ID) : Advances.OrderByDescending(a => a.Advance_ID);
-                            break;
                         case "Advance_Date":
                             Advances = sortColumnDirection == "asc" ? Advances.OrderBy(b => b.Advance_Date) : Advances.OrderByDescending(a => a.Advance_Date);
                             break;
@@ -106,7 +103,7 @@ namespace PMS
                             Advances = sortColumnDirection == "asc" ? Advances.OrderBy(a => a.MrNo) : Advances.OrderByDescending(a => a.MrNo);
                            break;
                         default:
-                            Advances = Advances.OrderBy(a => a.Advance_ID);
+                            Advances = Advances.OrderByDescending(a => a.Advance_ID);
                             break;
                     }
 

@@ -79,20 +79,14 @@ namespace PMS
                     var FilteredCount = Refunds.Count();
                     switch (sortColumn)
                     {
-                        case "Refund_ID":
-                            Refunds = sortColumnDirection == "asc" ? Refunds.OrderBy(a => a.Refund_ID) : Refunds.OrderByDescending(a => a.Refund_ID);
-                            break;
                         case "Bill_ID":
-                            Refunds = sortColumnDirection == "asc" ? Refunds.OrderBy(b => b.Bill_ID) : Refunds.OrderByDescending(a => a.Bill_ID);
+                            Refunds = sortColumnDirection == "asc" ? Refunds.OrderBy(a => a.Bill_ID) : Refunds.OrderByDescending(a => a.Bill_ID);
                             break;
-                        case "Bill_No":
-                            Refunds = sortColumnDirection == "asc" ? Refunds.OrderBy(a => a.Bill_No) : Refunds.OrderByDescending(a => a.Bill_No);
-                            break;
-                        case "MrNo":
-                            Refunds = sortColumnDirection == "asc" ? Refunds.OrderBy(a => a.MrNo) : Refunds.OrderByDescending(a => a.MrNo);
+                        case "Refund_Date":
+                            Refunds = sortColumnDirection == "asc" ? Refunds.OrderBy(a => a.Refund_Date) : Refunds.OrderByDescending(a => a.Refund_Date);
                             break;
                         default:
-                            Refunds = Refunds.OrderBy(a => a.Bill_ID);
+                            Refunds = Refunds.OrderByDescending(a => a.Refund_ID);
                             break;
                     }
 

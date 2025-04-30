@@ -32,14 +32,14 @@ namespace PMS
                                         where (AB.IsPharmacy == true &&
                                             ((AB.Customer_Name.ToString().Contains(searchValue) || AB.Referred_By_value.ToString().Contains(searchValue) || AB.Received_Amount.ToString().Contains(searchValue))))
 
-
                                         select new
                                         {
-                                            BillNo = AB.Invoice_No + "-" + AB.Invoice_Date + "-" + AB.Invoice_Date,
+                                            BillNo = AB.Invoice_No + "-" + AB.Invoice_Date ,
                                             Invoice_Date = AB.Invoice_Date,
                                             Customer_Name = AB.Customer_Name,
                                             Referred_By_value = AB.Referred_By_value,
-                                            Patient_ID = AB.Patient_ID,
+                                            Patient_ID = (from rg in _dbContext.Reg_patients join p in _dbContext.Patients on rg.pat_id equals p.Reg_PatId
+                                                          where p.Patient_ID == AB.Patient_ID orderby rg.mr_no_sequence select rg.mr_no_sequence).FirstOrDefault(),
                                             Received_Amount = AB.Received_Amount,
                                             Bill_ID = AB.Bill_ID,
                                         };
@@ -47,9 +47,7 @@ namespace PMS
                     var FilteredCount = IssueMedicine.Count();
                     switch (sortColumn)
                     {
-                        case "Bill_ID":
-                            IssueMedicine = sortColumnDirection == "asc" ? IssueMedicine.OrderBy(a => a.Bill_ID) : IssueMedicine.OrderByDescending(a => a.Bill_ID);
-                            break;
+                        
                         case "Patient_ID":
                             IssueMedicine = sortColumnDirection == "asc" ? IssueMedicine.OrderBy(b => b.Patient_ID) : IssueMedicine.OrderByDescending(a => a.Patient_ID);
                             break;
@@ -57,7 +55,7 @@ namespace PMS
                             IssueMedicine = sortColumnDirection == "asc" ? IssueMedicine.OrderBy(a => a.Invoice_Date) : IssueMedicine.OrderByDescending(a => a.Invoice_Date);
                             break;
                         default:
-                            IssueMedicine = IssueMedicine.OrderBy(a => a.Bill_ID);
+                            IssueMedicine = IssueMedicine.OrderByDescending(a => a.Bill_ID);
                             break;
                     }
 

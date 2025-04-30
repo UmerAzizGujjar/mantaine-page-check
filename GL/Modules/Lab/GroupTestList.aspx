@@ -47,12 +47,12 @@
                          { "data": "DataValue_ID", "name": "DataValue_ID", visible: false, "width": "0%" },
                          {
                              "data": null,
-                             "width": "10%",
+                             "width": "10%", "orderable": false,
                              render: function (data, type, row, meta) {
                                  return meta.row + meta.settings._iDisplayStart + 1;
                              }
                          },
-                         { "data": "DataValue_Description", "name": "DataValue_Description" },                        
+                         { "data": "DataValue_Description", "name": "DataValue_Description", "orderable": true },                        
                          {
                              render: function (data, type, full) {
                                  debugger;
@@ -62,7 +62,7 @@
                                  var result;
                                  result = res;
                                  return result;
-                             }, "width": "5%"
+                             }, "width": "5%", "orderable": false
                          }
                      ],
                      "initComplete": function (settings, json) {

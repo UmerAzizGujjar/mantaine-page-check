@@ -29,17 +29,10 @@ namespace PMS.Modules.Inventory
                                     a.Package_Name,
                                     a.Duration,
                                     a.Remarks,
-                                    DoctorIds = (from p in _dbContext.HR_Employees
-                                                 join dpck in _dbContext.Doctor_Packages_Detail_Rates
-                                                 on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
-                                                 where p.Emp_ID == Convert.ToInt32(dpck.Doctor_Id)
-                                                 select p.Emp_Name).ToList(),
-                                    DepartmentIds = (from p in _dbContext.ValueSets
-                                                     join dpck in _dbContext.Doctor_Packages_Detail_Rates
-                                                     on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
-                                                     join d in _dbContext.DataValues
-                                                     on p.ValueSet_ID equals d.ValueSet_ID
-                                                     where p.ValueSet_Description == "Patient Main Category" && d.DataValue_Name == dpck.Department_Id
+                                    DoctorIds = (from p in _dbContext.HR_Employees join dpck in _dbContext.Doctor_Packages_Detail_Rates on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
+                                                 where p.Emp_ID == Convert.ToInt32(dpck.Doctor_Id) select p.Emp_Name).ToList(),
+                                    DepartmentIds = (from p in _dbContext.ValueSets join dpck in _dbContext.Doctor_Packages_Detail_Rates on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
+                                                     join d in _dbContext.DataValues on p.ValueSet_ID equals d.ValueSet_ID where p.ValueSet_Description == "Patient Main Category" && d.DataValue_Name == dpck.Department_Id
                                                      select d.DataValue_Description).ToList()
                                 };
 
@@ -65,12 +58,6 @@ namespace PMS.Modules.Inventory
                             break;
                         case "Doctorname":
                             filteredData = sortColumnDirection == "asc" ? filteredData.OrderBy(a => a.Doctorname).ToList() : filteredData.OrderByDescending(a => a.Doctorname).ToList();
-                            break;
-                        case "Package_name":
-                            filteredData = sortColumnDirection == "asc" ? filteredData.OrderBy(a => a.Package_name).ToList() : filteredData.OrderByDescending(a => a.Package_name).ToList();
-                            break;
-                        case "Department":
-                            filteredData = sortColumnDirection == "asc" ? filteredData.OrderBy(a => a.Department).ToList() : filteredData.OrderByDescending(a => a.Department).ToList();
                             break;
                         default:
                             filteredData = filteredData.OrderByDescending(a => a.Package_ID).ToList();

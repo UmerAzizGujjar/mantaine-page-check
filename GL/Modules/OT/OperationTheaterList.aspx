@@ -55,12 +55,12 @@
                 },
                 "columns": [
                     { "data": "Operation_Booking_ID", "visible": false, "width": "0%" },
-                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "5%" },
-                    { "data": "Full_Name", "width": "10%" },
-                    { "data": "DoctorName", "width": "10%" },
-                    { "data": "ProcedureName", "width": "15%" },
-                    { "data": "Mobile", "width": "10%" },
-                    { "data": "Department", "width": "10%" },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "5%", "orderable": true },
+                    { "data": "Full_Name", "width": "10%", "orderable": false },
+                    { "data": "DoctorName", "width": "10%", "orderable": false },
+                    { "data": "ProcedureName", "width": "15%", "orderable": false },
+                    { "data": "Mobile", "width": "10%", "orderable": false },
+                    { "data": "Department", "width": "10%", "orderable": false },
                     {
                         "data": "Created_Time", "name": "Created_Time",
                         "render": function (data, type, full) {
@@ -68,7 +68,7 @@
                             var date = full.Created_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": true
                     },
                     {
                         render: function (data, type, full) {

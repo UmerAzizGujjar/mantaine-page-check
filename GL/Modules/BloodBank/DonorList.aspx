@@ -62,7 +62,7 @@
                             var date = full.D_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": true
                     },
                     { "data": "Donor_Address", "name": "Donor_Address", "width": "10%", "orderable": false },
                     { "data": "D_Cell", "name": "D_Cell", "width": "10%", "orderable": false },
