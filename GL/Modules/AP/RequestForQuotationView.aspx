@@ -87,26 +87,26 @@
                 },
                 "columns": [
                     { "data": "RFQID", "visible": false },
-                    { "data": "RFQNo","name": "RFQNo" },
+                    { "data": "RFQNo", "name": "RFQNo", "orderable": true },
                     {
-                        "data": "Date",
+                        "data": "Date", "name":"Date",
                         "render": function (data, type, full) {
                             var date = full.Date;
                             date = moment(date).format(' D-MMM-YYYY');
                             return date;
-                        }
+                        }, "orderable": true
                     },
-                    { "data": "VendorName" },
-                    { "data": "RefNo" },
-                    { "data": "Remarks" },
-                    { "data": "Status" },
+                    { "data": "VendorName", "orderable": false },
+                    { "data": "RefNo", "orderable": false },
+                    { "data": "Remarks", "orderable": false },
+                    { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.RFQID + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
                             var print = '<a style = "border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href = "#" onclick = "Print(' + full.RFQID + ')" id = "btnprint" ><i class="fa fa-print"style="color:white !important;"></i></a >';
                             var result = res + print;
                             return result;
-                        }
+                        }, "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

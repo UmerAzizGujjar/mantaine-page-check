@@ -32,6 +32,7 @@ namespace PMS.Modules.Administrator
                               {
                                   Asset_Ret_ID = a.Asset_Ret_ID,
                                   Asset_id = b.Asset_id,
+                                  Asset_Name = b.Asset_Name,
                                   TransNo = a.TransNo,
                                   AssetValue = b.AssetValue,
                                   created_time = a.created_time,
@@ -40,7 +41,7 @@ namespace PMS.Modules.Administrator
                     var FilteredCount = dep.Count();
                     switch (sortColumn)
                     {
-                        case "Created_time":
+                        case "created_time":
                             dep = sortColumnDirection == "asc" ? dep.OrderBy(a => a.created_time) : dep.OrderByDescending(a => a.created_time);
                             break;
 

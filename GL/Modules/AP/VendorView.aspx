@@ -50,12 +50,12 @@
                 },
                 "columns": [
                     { "data": "Vendor_ID", "visible": false, "width": "0%" },
-                    { "data": "Vendor_Name", "name": "Vendor_Name", "width": "15%" },
-                    { "data": "Contact_Person", "width": "15%" },                  
-                    { "data": "Vendor_Phone1", "width": "11%"},
-                    { "data": "Vendor_Address", "width": "25%" },
-                    { "data": "City", "width": "10%", },
-                    { "data": "Vendor_NTN", "width": "10%", },
+                    { "data": "Vendor_Name", "name": "Vendor_Name", "width": "15%", "orderable": true },
+                    { "data": "Contact_Person", "width": "15%", "orderable": false },                  
+                    { "data": "Vendor_Phone1", "width": "11%", "orderable": false },
+                    { "data": "Vendor_Address", "width": "25%", "orderable": false },
+                    { "data": "City", "width": "10%", "orderable": false },
+                    { "data": "Vendor_NTN", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -65,7 +65,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "5%"
+                        }, "width": "5%", "orderable": false
                     }
 
                 ],

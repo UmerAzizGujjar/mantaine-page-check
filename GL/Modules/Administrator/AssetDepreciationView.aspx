@@ -46,18 +46,18 @@
                 },
                 "columns": [
                     { "data": "Asset_Dep_ID", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "Asset_description", "name": "Asset_description", "width": "12%", "orderable": true },
+                    { "data": "Asset_description", "name": "Asset_description", "width": "12%", "orderable": false },
                     { "data": "Trans_type", "width": "15%", "orderable": false },
-                    { "data": "Dep_Cost", "name": "Age_years", "width": "8%", "orderable": true },
+                    { "data": "Dep_Cost", "name": "Dep_Cost", "width": "8%", "orderable": false },
                     { "data": "Depereciation_Amount_charge", "width": "15%", "orderable": false },
                     {
-                        "data": "created_time", "name": "Created_Time",
+                        "data": "created_time", "name": "created_time",
                         "render": function (data, type, full) {
                             debugger;
-                            var date = full.Created_Time;
+                            var date = full.created_time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": true
                     },
                     {
                         render: function (data, type, full) {

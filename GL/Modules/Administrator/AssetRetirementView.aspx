@@ -46,16 +46,15 @@
                 },
                 "columns": [
                     { "data": "Asset_Ret_ID", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "Asset_id", "name": "Asset_id", "width": "12%", "orderable": true },
-                              
+                    { "data": "Asset_Name", "name": "Asset_Name", "width": "12%", "orderable": false },
                     {
                         "data": "created_time", "name": "created_time",
                         "render": function (data, type, full) {
                             debugger;
-                            var date = full.Created_Time;
+                            var date = full.created_time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": true
                     },
                     {
                         render: function (data, type, full) {

@@ -91,26 +91,12 @@ namespace PMS.AP
                     var FilteredCount = Vendors.Count();
                     switch (sortColumn)
                     {
-                        case "Vendor_ID":
-                            Vendors = sortColumnDirection == "asc" ? Vendors.OrderBy(a => a.Vendor_ID) : Vendors.OrderByDescending(a => a.Vendor_ID);
-                            break;
-                        case "Vendor_Phone1":
-                            Vendors = sortColumnDirection == "asc" ? Vendors.OrderBy(b => b.Vendor_Phone1) : Vendors.OrderByDescending(a => a.Vendor_Phone1);
-                            break;
+
                         case "Vendor_Name":
                             Vendors = sortColumnDirection == "asc" ? Vendors.OrderBy(b => b.Vendor_Name) : Vendors.OrderByDescending(a => a.Vendor_Name);
                             break;
-                        case "Contact_Person":
-                            Vendors = sortColumnDirection == "asc" ? Vendors.OrderBy(b => b.Contact_Person) : Vendors.OrderByDescending(a => a.Contact_Person);
-                            break;
-                        case "City":
-                            Vendors = sortColumnDirection == "asc" ? Vendors.OrderBy(b => b.City) : Vendors.OrderByDescending(a => a.City);
-                            break;
-                        case "Vendor_NTN":
-                            Vendors = sortColumnDirection == "asc" ? Vendors.OrderBy(b => b.Vendor_NTN) : Vendors.OrderByDescending(a => a.Vendor_NTN);
-                            break;
                         default:
-                            Vendors = Vendors.OrderBy(a => a.Vendor_ID);
+                            Vendors = Vendors.OrderByDescending(a => a.Vendor_ID);
                             break;
                     }
 
