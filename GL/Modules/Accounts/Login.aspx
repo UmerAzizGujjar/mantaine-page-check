@@ -118,18 +118,20 @@
             transition: 0.5s;
             background-size: 200% auto;
             color: white;            
-            box-shadow: 0 0 20px #eee;
+            box-shadow: 0 0 20px #fff;
             border-radius: 14px !important;
             display: block;
-            width: 100% !important;
+            width: 50% !important;
             height:40px;
-             /*margin-left: 99px;*/
+             margin-left: 70px;
           }
 
           #ctl00_MainContent_UserLogin_LoginButton:hover {
            background-position: right center; /* change the direction of the change here */
             color: #fff;
             text-decoration: none;
+            border:1px solid aliceblue !important;
+
           }
           .h2 {
               color:#438eb9 ;
@@ -174,7 +176,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <asp:TextBox ID="UserName" runat="server" autocomplete="off" CssClass="textEntry" Style="border: 1px solid gray;margin-top:10px;width:100% !important;border-radius:12px !important;height:40px"></asp:TextBox>
+                                        <asp:TextBox ID="UserName" runat="server" autocomplete="off" CssClass="textEntry" Style="border: 1px solid #6baee9 !important;margin-top:10px;width:100% !important;border-radius:12px !important;height:40px"></asp:TextBox>
                                         <p id="ErrorUserName"></p>
                                         <asp:RequiredFieldValidator ID="UserNameRequired" runat="server" ControlToValidate="UserName"
                                             CssClass="" ErrorMessage="UserName is required." ToolTip="User Name is required." ValidationGroup="LoginUserValidationGroup" Display="Dynamic" EnableClientScript="false"></asp:RequiredFieldValidator>
@@ -188,7 +190,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <asp:TextBox ID="Password" autocomplete="off" Style="border: 1px solid gray;margin-top: 10px;width:100% !important;border-radius:12px !important;height:40px" runat="server" CssClass="passwordEntry" TextMode="Password"></asp:TextBox><br />
+                                        <asp:TextBox ID="Password" autocomplete="off" Style="border: 1px solid #6baee9 !important;margin-top: 10px;width:100% !important;border-radius:12px !important;height:40px" runat="server" CssClass="passwordEntry" TextMode="Password"></asp:TextBox><br />
                                         <p id="ErrorPassword"></p>
                                         <asp:RequiredFieldValidator ID="PasswordRequired" runat="server" ControlToValidate="Password"
                                             CssClass="" ErrorMessage="Password is required." ToolTip="Password is required."
@@ -203,7 +205,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <asp:DropDownList runat="server" Style="border: 1px solid gray;width:100% !important;border-radius:12px !important;height:40px" ID="ddlCompany" AppendDataBoundItems="true">
+                                        <asp:DropDownList runat="server" Style="border: 1px solid #6baee9 !important;width:100% !important;border-radius:12px !important;height:40px" ID="ddlCompany" AppendDataBoundItems="true">
                                         </asp:DropDownList>
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ErrorMessage="Company is required." Text="*"
                                             ControlToValidate="ddlCompany" runat="server" ValidationGroup="LoginUserValidationGroup" ToolTip="Company is required." InitialValue="0" />

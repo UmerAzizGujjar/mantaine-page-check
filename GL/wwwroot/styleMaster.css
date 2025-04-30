@@ -222,7 +222,7 @@ input {
     }
 
 .table th {
-    background-color: black !important;
+    background-color: #438eb9 !important;
     color: lightgrey;
 }
 
@@ -233,7 +233,7 @@ input {
     color: #707070;
     font-weight: normal;
     background-repeat: repeat-x;
-    background-image: linear-gradient(to bottom, #fd494a 0, #881414 100%) !important;
+    background-image: linear-gradient(to bottom, #438eb9 0, #2e6362 100%) !important;
     color: whitesmoke;
     background-attachment: scroll;
 }
@@ -6283,13 +6283,13 @@ button.btn:active {
 
     /* Hover effect */
     .btn-primry:hover, .btn-primary:hover {
-        background-color: #d88c2c !important; /* Slightly darker orange */
+        background-color: #175c83 !important; /* Slightly darker orange */
         box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3) !important;
     }
 
     /* Active state */
     .btn-primry:active, .open .btn-primary.dropdown-toggle {
-        background-color: #c97b1e !important; /* Even darker orange for pressed effect */
+        background-color: #175c83 !important; /* Even darker orange for pressed effect */
         box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
     }
 
