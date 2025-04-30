@@ -5,7 +5,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
     .billing-section {
-    border: 2px solid #ffc000; 
+    border: 2px solid aliceblue !important; 
     border-radius: 7px;
     transition: border-color 0.3s ease;
 }

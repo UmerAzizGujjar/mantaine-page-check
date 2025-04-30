@@ -264,7 +264,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 		background-color: #FDC303 !important /*{fcHover}*/;
 	}
 .ui-state-hover a, .ui-state-hover a:hover { color: #212121/*{fcHover}*/; text-decoration: none; }
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 2px solid #ffc000;}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 2px solid aliceblue;}
 /*.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #212121*//*{fcActive}*//*; text-decoration: none; }
 .ui-widget :active { outline: none; }*/
 

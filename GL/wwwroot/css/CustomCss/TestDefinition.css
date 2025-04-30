@@ -182,6 +182,6 @@ legend {
     }
 
     #tabs ul li.ui-tabs-active a {
-        border-bottom: 1px solid #ffc000 !important;
+        border-bottom: 1px solid aliceblue !important;
         color: white !important;
     }

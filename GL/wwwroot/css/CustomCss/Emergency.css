@@ -181,12 +181,12 @@ div.token-input-dropdown {
             padding: 10px;
             border: none;
       }
-#tabs ul li a:hover {
-                color: #FFC000 !important;
-  }
+    #tabs ul li a:hover {
+        color: aliceblue !important;
+    }
 
 #tabs ul li.ui-tabs-active a {
-            border-bottom: 2px solid #ffc000 !important;
+            border-bottom: 2px solid aliceblue !important;
             color: white !important;
         }
 
