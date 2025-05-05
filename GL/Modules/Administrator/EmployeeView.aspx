@@ -67,12 +67,12 @@
                 },
                 "columns": [
                     { "data": "Emp_id", "visible": false, "width": "0%" },
-                    { "data": "Emp_No", "name": "Emp_No", width: "12%" },
-                    { "data": "Emp_Name", },
-                    { "data": "Department", },
-                    { "data": "Designation", },
-                    { "data": "Mobile1", },
-                    { "data": "Email", },
+                    { "data": "Emp_No", "name": "Emp_No", width: "12%", "orderable": true },
+                    { "data": "Emp_Name", "name": "Emp_Name", "orderable": true },
+                    { "data": "Department", "orderable": false },
+                    { "data": "Designation", "orderable": false },
+                    { "data": "Mobile1", "orderable": false },
+                    { "data": "Email", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -82,7 +82,7 @@
                             var result;
                             result = res + Delete;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

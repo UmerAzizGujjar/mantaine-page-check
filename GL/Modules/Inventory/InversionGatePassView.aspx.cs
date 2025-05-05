@@ -38,7 +38,6 @@ namespace PMS.Inventory
                               {
                                   Igp_Id = Igp.Igp_Id,
                                   Igp_num = Igp.Igp_num,
-                                  //VendorName = DBClass.getField("Select Vendor_Name from AP_Vendors where Vendor_ID =" + Igp.Vendor),
                                   VendorName = V.Vendor_Name,
                                   PONum = _dbContext.GetPONum(Igp.Igp_Id),
                                   BilityNum = Igp.BilityNum,
@@ -61,20 +60,11 @@ namespace PMS.Inventory
                         case "Igp_num":
                             IGP = sortColumnDirection == "asc" ? IGP.OrderBy(a => a.Igp_num) : IGP.OrderByDescending(a => a.Igp_num);
                             break;
-                        case "Igp_date":
-                            IGP = sortColumnDirection == "asc" ? IGP.OrderBy(b => b.Igp_date) : IGP.OrderByDescending(a => a.Igp_date);
-                            break;
                         case "PONum":
                             IGP = sortColumnDirection == "asc" ? IGP.OrderBy(b => b.PONum) : IGP.OrderByDescending(a => a.PONum);
                             break;
-                        case "BilityNum":
-                            IGP = sortColumnDirection == "asc" ? IGP.OrderBy(b => b.BilityNum) : IGP.OrderByDescending(a => a.BilityNum);
-                            break;
-                        case "VehicleNum":
-                            IGP = sortColumnDirection == "asc" ? IGP.OrderBy(b => b.VehicleNum) : IGP.OrderByDescending(a => a.VehicleNum);
-                            break;
                         default:
-                            IGP = IGP.OrderBy(a => a.Igp_num);
+                            IGP = IGP.OrderByDescending(a => a.Igp_Id);
                             break;
                     }
 

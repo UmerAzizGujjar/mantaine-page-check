@@ -61,17 +61,17 @@
                 },
                 "columns": [
                     { "data": "CSVENID", "visible": false },
-                    { "data": "CSVENNO" },
+                    { "data": "CSVENNO", "name": "CSVENNO", "orderable": true },
                     {
                         "data": "CSVENDATE",
                         "render": function (data, type, row) {
                             return moment(data).format('D-MMM-YYYY'); 
                         },
-                        "width": "11%"
+                        "width": "11%", "name": "CSVENDATE", "orderable": true
                     },
-                    { "data": "CSVENVALIDITY", width:"10%" },
-                    { "data": "CSVENREMARKS" },
-                    { "data": "PoStatus" },
+                    { "data": "CSVENVALIDITY", width: "10%", "orderable": false },
+                    { "data": "CSVENREMARKS", "orderable": false },
+                    { "data": "PoStatus", "orderable": false },
                     {
                         "render": function (data, type, row) {
                             debugger;
@@ -92,7 +92,7 @@
                             var create = '<a href="#" class="editListBtn" onclick="AutoPO(' + row.CSVENID + ')" ' + btnPoVisible + ' style = "border-radius: 4px;width:100%; background-color: #438eb9 ; color: White; padding: 4px 11px 4px 11px;" id = "btnPo' + (row + 1) + '" > Create PO</a >';
                             var result = res + create;
                             return result;
-                        }, width:"14%"
+                        }, width: "14%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

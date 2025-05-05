@@ -49,6 +49,9 @@ namespace PMS
                         case "Medicine_Name":
                             tmp = sortColumnDirection == "asc" ? tmp.OrderBy(a => a.MedicineName) : tmp.OrderByDescending(a => a.MedicineName);
                             break;
+                        case "ItemCode":
+                            tmp = sortColumnDirection == "asc" ? tmp.OrderBy(a => a.ItemCode) : tmp.OrderByDescending(a => a.ItemCode);
+                            break;
 
                     }
 

@@ -88,20 +88,20 @@
                 },
                 "columns": [
                     { "data": "Igp_Id", "visible": false },
-                    { "data": "Igp_num", "name": "Igp_num" },
+                    { "data": "Igp_num", "name": "Igp_num","orderable": true },
                     {
                         "data": "Igp_date",
                         "render": function (data, type, full) {
                             var date = full.Igp_date;
                             date = moment(date).format(' D-MMM-YYYY');
                             return date;
-                        }
+                        }, "orderable": false
                     },
-                    { "data": "VendorName" },
-                    { "data": "PONum" },
-                    { "data": "Remarks" },
-                    { "data": "Status" },
-                    { "data": "Inspec_Status" },
+                    { "data": "VendorName", "orderable": false },
+                    { "data": "PONum", "name": "PONum", "orderable": true },
+                    { "data": "Remarks", "orderable": false },
+                    { "data": "Status", "orderable": false },
+                    { "data": "Inspec_Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             var inspecstatus = full.Inspec_Status != null ? full.Inspec_Status : "";
@@ -118,7 +118,7 @@
                            
 
                             return actionButtons;
-                        }, "width": "15%"
+                        }, "width": "15%", "orderable": false
                     },
                     {
                         "render": function (data, type, full) {
@@ -134,8 +134,8 @@
                             }                           
                             var grnbtn = '<a href="#" id="viewgrn' + full.Igp_Id + '" ' + viewGRNVisible + ' onclick="EditGRN(' + full.Grn_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px 4px 11px;">View</a>';
 
-                            return  grnbtn;
-                        }
+                            return grnbtn;
+                        }, "orderable": false
                     }
                 ],
                      "rowCallback": function (row, data, index) {                  

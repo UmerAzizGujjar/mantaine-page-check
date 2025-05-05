@@ -72,12 +72,12 @@
                 },
                 "columns": [
                     { "data": "Panel_ID", "name": "Panel_ID", "visible": false, "width": "0%" },
-                    { "data": "Company_Name", },
-                    { "data": "No_Of_Employees",  },
-                    { "data": "Email",  },
-                    { "data": "Contact_No", },
-                    { "data": "Address",},
-                    { "data": "Discount",  },
+                    { "data": "Company_Name", "orderable": false },
+                    { "data": "No_Of_Employees", "name": "No_Of_Employees", "orderable": true },
+                    { "data": "Email", "orderable": false },
+                    { "data": "Contact_No", "orderable": false },
+                    { "data": "Address", "orderable": false },
+                    { "data": "Discount", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -87,7 +87,7 @@
                             var result;
                             result = res + Delete;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

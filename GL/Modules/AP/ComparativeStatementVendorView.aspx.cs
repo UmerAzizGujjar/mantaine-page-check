@@ -104,8 +104,8 @@ namespace PMS.AP
                         case "CSVENNO":
                             Vendor_Master = sortColumnDirection == "asc" ? Vendor_Master.OrderBy(a => a.CSVENNO) : Vendor_Master.OrderByDescending(a => a.CSVENNO);
                             break;
-                        case "CSVENVALIDITY":
-                            Vendor_Master = sortColumnDirection == "asc" ? Vendor_Master.OrderBy(b => b.CSVENVALIDITY) : Vendor_Master.OrderByDescending(a => a.CSVENVALIDITY);
+                        case "CSVENDATE":
+                            Vendor_Master = sortColumnDirection == "asc" ? Vendor_Master.OrderBy(b => b.CSVENDATE) : Vendor_Master.OrderByDescending(a => a.CSVENDATE);
                             break;
                         default:
                             Vendor_Master = Vendor_Master.OrderByDescending(a => a.CSVENID);

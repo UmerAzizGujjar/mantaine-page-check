@@ -47,9 +47,6 @@ namespace PMS.Inventory
                         case "Doc_name":
                             agrement = sortColumnDirection == "asc" ? agrement.OrderBy(a => a.Doc_name) : agrement.OrderByDescending(a => a.Doc_name);
                             break;
-                        case "Doc_Account":
-                            agrement = sortColumnDirection == "asc" ? agrement.OrderBy(a => a.Doc_Account) : agrement.OrderByDescending(a => a.Doc_Account);
-                            break;
                         default:
                             agrement = agrement.OrderByDescending(a => a.doc_id);
                             break;

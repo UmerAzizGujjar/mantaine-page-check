@@ -57,7 +57,7 @@ namespace PMS
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching patient list", ex);
+                throw new Exception("Error fetching Student list", ex);
             }
         }
 

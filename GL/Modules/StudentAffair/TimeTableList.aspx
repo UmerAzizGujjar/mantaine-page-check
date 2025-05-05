@@ -51,9 +51,9 @@
                     "columns": [
                         { "data": "St_id", "visible": false, "width": "0%" },
                         { "data": null, "orderable": false, "width": "10%" },
-                        { "data": "Classname", "name": "Classname", "width": "15%" },
-                        { "data": "ProgramName", "name": "ProgramName", "width": "15%" },
-                        { "data": "WeekName", "name": "WeekName", "width": "15%" },
+                        { "data": "Classname", "name": "Classname", "width": "15%", "orderable": true },
+                        { "data": "ProgramName", "name": "ProgramName", "width": "15%", "orderable": false },
+                        { "data": "WeekName", "name": "WeekName", "width": "15%", "orderable": false },
                         {
                             "data": null,  
                             "name": "DateRange",
@@ -63,7 +63,7 @@
                                 var lastDate = moment(full.LastDate).format('DD-MMM-YYYY');
                                 return firstDate + ' - ' + lastDate; 
                             },
-                            "width": "30%"
+                            "width": "30%", "orderable": false
                         },
                         {
                             render: function (data, type, full) {
@@ -74,7 +74,7 @@
                                 var result;
                                 result = res + Del;
                                 return result;
-                            }, "width": "100%"
+                            }, "width": "100%", "orderable": false
                         }
                     ],
                     "initComplete": function (settings, json) {

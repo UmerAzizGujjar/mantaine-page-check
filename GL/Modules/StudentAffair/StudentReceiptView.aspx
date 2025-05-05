@@ -53,7 +53,7 @@
                      },
                      "columns": [
                          { "data": "Student_Receipt_ID", "visible": false, "width": "0%" },
-                         { "data": "Student_Receipt_No", "width": "10%" },
+                         { "data": "Student_Receipt_No", "name":"Student_Receipt_No", "width": "10%", "orderable": true },
                          {
                              "data": "Student_Receipt_Date", "name": "Student_Receipt_Date",
                              "render": function (data, type, full) {
@@ -61,13 +61,13 @@
                                  var date = full.Student_Receipt_Date;
                                  date = moment(date).format('DD-MMM-YYYY');
                                  return date;
-                             }, "width": "15%"
-                          },
-                         { "data": "Student_ID", "width": "10%", },
-                         { "data": "Status", "width": "10%", },
-                         { "data": "RollNo", "width": "10%", },
-                         { "data": "Balance", "width": "10%", },
-                         { "data": "Remarks", "width": "10%", },
+                             }, "width": "15%", "orderable": false
+                         },
+                         { "data": "Student_ID","name":"Student_ID", "width": "10%", "orderable": true },
+                         { "data": "Status", "width": "10%", "orderable": false },
+                         { "data": "RollNo", "width": "10%", "orderable": false },
+                         { "data": "Balance", "width": "10%", "orderable": false },
+                         { "data": "Remarks", "width": "10%", "orderable": false },
                          {
                              render: function (data, type, full) {
                                  debugger;
@@ -77,7 +77,7 @@
                                  var result;
                                  result = res + Del;
                                  return result;
-                             }, "width": "10%"
+                             }, "width": "10%", "orderable": false
                          }
                      ],
                      "initComplete": function (settings, json) {

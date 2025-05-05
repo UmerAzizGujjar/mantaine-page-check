@@ -69,7 +69,7 @@
                 "columns": [
                     { "data": "POID", "visible": false, "width": "0%" },
                     { "data": null, "orderable": false, "width": "10%" },
-                    { "data": "PONo", "name": "PONo", "width": "10%" },
+                    { "data": "PONo", "name": "PONo", "width": "10%", "orderable": true },
                     {
                         "data": "Date",
                         "render": function (data, type, full) {
@@ -77,12 +77,12 @@
                             var date = full.Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     },
-                    { "data": "RefNo", "width": "15%" },
-                    { "data": "VendorName", "width": "20%" },
-                    { "data": "PO_Amount", "width": "15%",className:"text-right" },
-                    { "data": "Status", "width": "10%" },
+                    { "data": "RefNo", "width": "15%", "orderable": true },
+                    { "data": "VendorName", "width": "20%", "orderable": false },
+                    { "data": "PO_Amount", "width": "15%", className: "text-right", "orderable": false },
+                    { "data": "Status", "width": "10%", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             debugger;
@@ -91,7 +91,7 @@
                             var result;
                             result = res + print;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
                 ],
                 "rowCallback": function (row, data, index) {

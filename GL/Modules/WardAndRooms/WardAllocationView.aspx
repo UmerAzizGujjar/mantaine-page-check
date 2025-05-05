@@ -44,10 +44,10 @@
           },
           "columns": [
               { "data": "Ward_Allocation_ID", "name": "Ward_Allocation_ID", visible: false, "width": "0%" },
-              { "data": "Ward_No", "name": "Ward_No" },
-              { "data": "Full_Name", "name": "Full_Name" },
-              { "data": "Ward", },
-              { "data": "Bed_No_Assigned", },
+              { "data": "Ward_No", "name": "Ward_No", "orderable": true },
+              { "data": "Full_Name", "name": "Full_Name", "orderable": false },
+              { "data": "Ward", "orderable": false },
+              { "data": "Bed_No_Assigned","name":"Bed_No_Assigned","orderable":true },
               {
                   "data": "From_TimeDate", "name": "From_TimeDate",
                   "render": function (data, type, full) {
@@ -55,7 +55,7 @@
                       var date = full.From_TimeDate;
                       date = moment(date).format('DD-MMM-YYYY');
                       return date;
-                  }, "width": "15%"
+                  }, "width": "15%", "orderable": false
               },
               {
                   "data": "To_TimeDate", "name": "To_TimeDate",
@@ -64,7 +64,7 @@
                       var date = full.To_TimeDate;
                       date = moment(date).format('DD-MMM-YYYY');
                       return date;
-                  }, "width": "15%"
+                  }, "width": "15%", "orderable": false
               },
               {
                   render: function (data, type, full) {
@@ -74,7 +74,7 @@
                       var result;
                       result = res + Delete;
                       return result;
-                  }, "width": "10%"
+                  }, "width": "10%", "orderable": false
               }
           ],
           "initComplete": function (settings, json) {

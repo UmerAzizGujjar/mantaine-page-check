@@ -48,7 +48,7 @@
                 },
                 "columns": [
                     { "data": "Challan_ID", "visible": false, "width": "0%" },
-                    { "data": "Challan_No", "width": "10%", },
+                    { "data": "Challan_No", "name": "Challan_No", "width": "10%", "orderable": true },
                     {
                         "data": "IssueDate", "name": "IssueDate",
                         "render": function (data, type, full) {
@@ -56,7 +56,7 @@
                             var date = full.IssueDate;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "15%"
+                        }, "width": "15%", "orderable": false
                     },
                     {
                         "data": "DueDate", "name": "DueDate",
@@ -65,12 +65,12 @@
                             var date = full.DueDate;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "15%"
+                        }, "width": "15%", "orderable": false
                     },
-                    
-                    { "data": "Seq_Challan_No", "width": "10%", },
-                    { "data": "RollNo", "width": "10%", },
-                    { "data": "StudentName", "width": "10%", },
+
+                    { "data": "Seq_Challan_No", "width": "10%", "orderable": false },
+                    { "data": "RollNo","name":"RollNo", "width": "10%", "orderable": true },
+                    { "data": "StudentName", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -82,7 +82,7 @@
                             var result;
                             result = res + Del;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

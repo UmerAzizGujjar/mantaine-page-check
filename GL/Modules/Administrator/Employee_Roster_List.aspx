@@ -54,8 +54,8 @@
                 },
                 "columns": [
                     { "data": "RousterID", "visible": false, "width": "0%" },
-                    { "data": "Month", width: "12%" },
-                    { "data": "Doctor_Id", },
+                    { "data": "Month", width: "12%", "name": "Month", "orderable": true },
+                    { "data": "Doctor_Id", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -65,7 +65,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

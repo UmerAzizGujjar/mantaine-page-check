@@ -96,14 +96,11 @@ namespace PMS.Inventory
                         case "po_Number":
                             GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(b => b.po_Number) : GRNS.OrderByDescending(a => a.po_Number);
                             break;
-                        case "Remarks":
-                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.Remarks) : GRNS.OrderByDescending(a => a.Remarks);
-                            break;
                         case "Igp_Number":
                             GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.Igp_Number) : GRNS.OrderByDescending(a => a.Igp_Number);
                             break;
                         default:
-                            GRNS = GRNS.OrderBy(a => a.GRN_Num);
+                            GRNS = GRNS.OrderByDescending(a => a.GRN_ID);
                             break;
                     }
 

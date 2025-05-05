@@ -47,7 +47,7 @@ namespace PMS
                             Panels = sortColumnDirection == "asc" ? Panels.OrderBy(a => a.No_Of_Employees) : Panels.OrderByDescending(a => a.No_Of_Employees);
                             break;
                         default:
-                            Panels = Panels.OrderByDescending(a => a.No_Of_Employees);
+                            Panels = Panels.OrderByDescending(a => a.Panel_ID);
                             break;
                     }
 

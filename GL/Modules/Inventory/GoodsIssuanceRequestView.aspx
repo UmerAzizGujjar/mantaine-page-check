@@ -68,8 +68,8 @@
                     });
                 },
                 "columns": [
-                    { "data": "MaterialRequest_Id" ,"visible": false, },
-                    { "data": "Request_No","name": "Request_No" },
+                    { "data": "MaterialRequest_Id", "visible": false, },
+                    { "data": "Request_No", "name": "Request_No", "orderable": true },
                     {
                         "data": "Priority",
                         "render": function (data, type, full) {
@@ -80,24 +80,24 @@
                                 Priority = "Low";
                             }
                             return Priority;
-                        }
+                        }, "orderable": true
                     },
-                    { "data": "Department" },
-                    { "data": "Remarks" },
+                    { "data": "Department", "orderable": false },
+                    { "data": "Remarks", "orderable": false },
                     {
                         "data": "CreatedBY",
                         "createdCell": function (td, cellData, rowData, row, col) {
                             $(td).css('text-align', 'left');
-                        }
+                        }, "orderable": false
                     },
-                    { "data": "Status" },
+                    { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             var res = ' <a href="#"  class="editListBtn" onclick="Edit(' + full.MaterialRequest_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i>';
                             var print = '<a style = "border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href = "#" onclick = "Print(' + full.MaterialRequest_Id + ')" id = "btnprint" ><i class="fa fa-print"style="color:white !important;"></i></a >';
                             var result = res + print;
                             return result;
-                        }
+                        }, "orderable": false
                     }
                 ],
                 "rowCallback": function (row, data, index) {

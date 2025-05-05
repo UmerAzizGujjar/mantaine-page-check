@@ -48,9 +48,8 @@
                 },
                 "columns": [
                     { "data": "UserId", visible: false },
-                    { "data": "UserName", },
-                    { "data": "Email", },
-                   /* { "data": "RoleName", },*/
+                    { "data": "UserName", "name": "UserName", "orderable": true },
+                    { "data": "Email", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -60,7 +59,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

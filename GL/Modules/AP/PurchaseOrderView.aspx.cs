@@ -48,17 +48,8 @@ namespace PMS
                         case "PONo":
                             PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(a => a.PONo) : PurchaseOreder.OrderByDescending(a => a.PONo);
                             break;
-                        case "Date":
-                            PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(b => b.Date) : PurchaseOreder.OrderByDescending(a => a.Date);
-                            break;
                         case "RefNo":
                             PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(b => b.RefNo) : PurchaseOreder.OrderByDescending(a => a.RefNo);
-                            break;                       
-                        case "PO_Amount":
-                            PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(b => b.PO_Amount) : PurchaseOreder.OrderByDescending(a => a.PO_Amount);
-                            break;
-                        case "Status":
-                            PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(b => b.Status) : PurchaseOreder.OrderByDescending(a => a.Status);
                             break;
                         default:
                             PurchaseOreder = PurchaseOreder.OrderByDescending(a => a.PONo);

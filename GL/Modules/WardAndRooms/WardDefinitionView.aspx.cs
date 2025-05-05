@@ -47,7 +47,9 @@ namespace PMS
                         case "Ward_No":
                             ward = sortColumnDirection == "asc" ? ward.OrderBy(a => a.Ward_No) : ward.OrderByDescending(a => a.Ward_No);
                             break;
-
+                        default:
+                            ward = ward.OrderByDescending(a => a.Ward_ID);
+                            break;
                     }
 
 

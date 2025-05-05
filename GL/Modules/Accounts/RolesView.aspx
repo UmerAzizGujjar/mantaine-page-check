@@ -46,9 +46,9 @@
                     });
                 },
                 "columns": [
-                    { "data": "RoleId","name":"RoleId" ,"visible": false, "width": "0%" },
-                    { "data": "RoleName", width: "20%" },
-                    { "data": "Description", width:"20%" },
+                    { "data": "RoleId", "name": "RoleId", "visible": false, "width": "0%" },
+                    { "data": "RoleName", "name": "RoleName", width: "20%", "orderable": true },
+                    { "data": "Description", width: "20%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -58,7 +58,7 @@
                             var result;
                             result = res + Delete;
                             return result;
-                        }, "width": "5%"
+                        }, "width": "5%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

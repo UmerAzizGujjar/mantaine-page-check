@@ -69,14 +69,14 @@ namespace PMS
                     var FilteredCount = Ward.Count();
                     switch (sortColumn)
                     {
-                        case "Full_Name":
-                            Ward = sortColumnDirection == "asc" ? Ward.OrderBy(a => a.Ward_ID) : Ward.OrderByDescending(a => a.Full_Name);
+                        case "Ward_No":
+                            Ward = sortColumnDirection == "asc" ? Ward.OrderBy(a => a.Ward_No) : Ward.OrderByDescending(a => a.Ward_No);
                             break;
                         case "Bed_No_Assigned":
                             Ward = sortColumnDirection == "asc" ? Ward.OrderBy(b => b.Bed_No_Assigned) : Ward.OrderByDescending(a => a.Bed_No_Assigned);
                             break;
                         default:
-                            Ward = Ward.OrderBy(a => a.Ward_No);
+                            Ward = Ward.OrderByDescending(a => a.Ward_Allocation_ID);
                             break;
                     }
 

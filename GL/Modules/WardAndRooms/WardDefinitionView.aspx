@@ -48,10 +48,10 @@
                 },
                 "columns": [
                     { "data": "Ward_ID", visible: false },
-                    { "data": "Ward_No", },
-                    { "data": "Ward_Type", },
-                    { "data": "Department", },
-                    { "data": "No_Of_Beds", }, 
+                    { "data": "Ward_No", "name": "Ward_No", "orderable": true },
+                    { "data": "Ward_Type", "orderable": false },
+                    { "data": "Department", "orderable": false },
+                    { "data": "No_Of_Beds", "orderable": false }, 
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -61,7 +61,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

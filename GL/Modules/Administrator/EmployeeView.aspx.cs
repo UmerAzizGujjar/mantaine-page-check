@@ -82,9 +82,6 @@ namespace PMS
                         case "Emp_Name":
                             Employees = sortColumnDirection == "asc" ? Employees.OrderBy(a => a.Emp_Name) : Employees.OrderByDescending(a => a.Emp_Name);
                             break;
-                        case "Department":
-                            Employees = sortColumnDirection == "asc" ? Employees.OrderBy(a => a.Department) : Employees.OrderByDescending(a => a.Department);
-                            break;
                         default:
                             Employees = Employees.OrderByDescending(a => a.Emp_No); 
                             break;

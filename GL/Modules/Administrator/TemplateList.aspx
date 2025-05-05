@@ -48,13 +48,13 @@
                     });
                 },
                 "columns": [
-                    { "data": "ItemCode", },
-                    { "data": "MedicineName", },
-                    { "data": "Frequency", },
-                    { "data": "Oral", },
-                    { "data": "DosageFrom", },
-                    { "data": "Dosage_Qty", },
-                    { "data": "AttendingParamedical_Staff", },
+                    { "data": "ItemCode", "name": "ItemCode", "orderable": true },
+                    { "data": "MedicineName", "name": "MedicineName", "orderable": true },
+                    { "data": "Frequency", "orderable": false },
+                    { "data": "Oral", "orderable": false },
+                    { "data": "DosageFrom", "orderable": false },
+                    { "data": "Dosage_Qty", "orderable": false },
+                    { "data": "AttendingParamedical_Staff", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -64,7 +64,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

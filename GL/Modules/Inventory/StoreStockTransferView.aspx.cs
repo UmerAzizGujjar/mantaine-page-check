@@ -18,32 +18,6 @@ namespace PMS.Inventory
 
         }
 
-
-
-        //[WebMethod]
-        //public static string ViewList()
-        //{
-        //    string result = string.Empty;
-
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var query = (from a in db.Stock_Transfers
-        //                     select new
-        //                     {
-        //                         a.Stock_Transfer_ID,
-        //                         a.Stock_Transfer_No,
-        //                         a.Stock_Transfer_Date,
-        //                         WareHouseFrom = db.GetDataValueName("Ware House", a.Ware_House_From),
-        //                         WareHouseTo = db.GetDataValueName("Ware House", a.Ware_House_To),
-        //                         a.Remarks,
-        //                         a.STN_Status,
-        //                         a.Status,
-        //                         a.Transfer_Status
-        //                     }).ToList();
-        //        result = (new JavaScriptSerializer()).Serialize(query).ToString();
-        //    }
-        //    return result;
-        //}
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {

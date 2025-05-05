@@ -68,11 +68,11 @@ namespace PMS
                     var FilteredCount = Menu.Count();
                     switch (sortColumn)
                     {
-                        case "Order_By":
-                            Menu = sortColumnDirection == "asc" ? Menu.OrderBy(a => a.Order_By) : Menu.OrderByDescending(a => a.Order_By);
+                        case "Menu_Name":
+                            Menu = sortColumnDirection == "asc" ? Menu.OrderBy(a => a.Menu_Name) : Menu.OrderByDescending(a => a.Menu_Name);
                             break;
                         default:
-                            Menu = Menu.OrderByDescending(a => a.Order_By);
+                            Menu = Menu.OrderByDescending(a => a.Menu_ID);
                             break;
                     }
 

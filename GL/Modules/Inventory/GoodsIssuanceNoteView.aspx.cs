@@ -54,11 +54,11 @@ namespace PMS
                         case "Store_Issue_No":
                             StoreIssues = sortColumnDirection == "asc" ? StoreIssues.OrderBy(a => a.Store_Issue_No) : StoreIssues.OrderByDescending(a => a.Store_Issue_No);
                             break;
-                        case "Department":
-                            StoreIssues = sortColumnDirection == "asc" ? StoreIssues.OrderBy(b => b.Department) : StoreIssues.OrderByDescending(a => a.Department);
+                        case "Created_Time":
+                            StoreIssues = sortColumnDirection == "asc" ? StoreIssues.OrderBy(b => b.Created_Time) : StoreIssues.OrderByDescending(a => a.Created_Time);
                             break;                      
                         default:
-                            StoreIssues = StoreIssues.OrderBy(a => a.Store_Issue_No);
+                            StoreIssues = StoreIssues.OrderByDescending(a => a.Store_Issue_Id);
                             break;
                     }
 
