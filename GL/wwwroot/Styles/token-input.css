@@ -19,6 +19,7 @@ ul.token-input-list {
 
 ul.token-input-list li {
     list-style-type: none;
+    width:100% !important;
 }
 
 ul.token-input-list li input {

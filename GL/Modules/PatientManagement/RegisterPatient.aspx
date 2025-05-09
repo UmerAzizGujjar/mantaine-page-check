@@ -2,6 +2,96 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/css/CustomCss/Toaster.css" rel="stylesheet" />
     <script src="../../wwwroot/CustomJs/RegPatient.js" type="text/javascript"></script>
+    <style type="text/css">
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid gray;
+        }
+
+        h5.section-title {
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+
+        h5.section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            height: 22px;
+            width: 4px;
+            background-color: #007bff;
+            border-radius: 2px;
+        }
+
+      
+
+        .form-floating input,
+        .form-floating select {
+            border: none;
+            border-bottom: 2px solid #ccc;
+            padding: 0.45rem 0.75rem;
+            transition: all 0.3s ease;
+            background: transparent;
+            outline: none;
+        }
+
+        .form-floating input:focus,
+        .form-floating select:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+
+        .span_txt {
+            color: #d63031;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .btn-custom {
+            border-radius: 8px;
+            padding: 0.5rem 1.2rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .row + .row {
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .card-body .row > div {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+
       <script type="text/javascript">
      $(document).ready(function () {
          var reg_id = '<%= Request.QueryString["Reg_id"] %>'
@@ -41,129 +131,145 @@
       </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <input type="hidden" id="hdfPatient_ID" />
-    <input type="hidden" id="hdn_regid" />
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="txt_Mrno">MR No</label>
-            <input type="text" id="txt_Mrno" class="form-control" disabled />
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <label for="ddl_name">Name<span style="color: red;">*</span></label>
-            <select id="ddl_name" class="form-control">
-                <option value="Mr.">Mr.</option>
-                <option value="Mrs.">Mrs.</option>
-                <option value="Ms.">Ms.</option>
-                <option value="B/O.">B/O.</option>
-            </select>
-
-        </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <label></label>
-            <input name="dob" style="margin-top: 6px" type="text" id="txt_name" class="form-control" />
-            <span id="firstname-error" class="span_txt" style="display: none;">Please Enter First Name</span>
-
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
-            <select id="ddlRelation" class="form-control">
-                <option value="S/O">S/O</option>
-                <option value="W/O">W/O</option>
-                <option value="D/O">D/O</option>
-            </select>
-        </div>
-        <div class="col-lg-2 col-md-6 col-sm-12">
-            <label></label>
-            <input type="text" style="margin-top: 6px" id="txt_relation" class="form-control" />
-            <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <label for="PrefixAge">Age/DOB<span style="color: red;">*</span></label>
-            <select id="PrefixAge" class="form-control">
-                <option value="Year">Year</option>
-                <option value="Month">Month</option>
-                <option value="Day">Day</option>
-            </select>
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <label></label>
-            <input type="text" style="margin-top: 7px" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12">
-            <label></label>
-            <input type="text" id="txtAge_yearss" style="margin-top: 7px" class="form-control" placeholder="dd mmyy" />
-            <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
-        </div>
-    </div>
-   
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="ddl_Gender">Gender</label>
-            <select id="ddl_Gender" class="form-control"></select>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="ddl_status">Marital Status</label>
-            <select id="ddl_status" class="form-control"></select>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
-            <input type="text" id="txt_mobile" class="form-control" />
-            <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="ddl_bloodGroup">Blood Group</label>
-            <select id="ddl_bloodGroup" class="form-control"></select>
-        </div>
-
-    </div>
-
-    <div class="row">            
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="txt_cnic">CNIC</label>
-            <input type="text" id="txt_cnic" class="form-control" />
-        </div>
-        <div class="col-lg-3 colmd-4 col-sm-6">
-            <label>Country</label>
-            <select id="ddlCountry" class="form-control"></select>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label for="ddlstate">Province</label>
-            <select id="ddlstate" class="form-control"></select>
-        </div>
-        <div class="col-lg-3 colmd-4 col-sm-6">
-            <label for="txtcity">City</label>
-            <select id="txtcity" class="form-control"></select>
+    <!-- Patient Details Section -->
+    <div class="card">
+        <input type="hidden" id="hdfPatient_ID" />
+        <input type="hidden" id="hdn_regid" />
+        <div class="row">
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label for="txt_Mrno">MR No</label>
+                <input type="text" id="txt_Mrno" class="form-control" disabled />
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                <label for="ddl_name">Name<span style="color: red;">*</span></label>
+                <select id="ddl_name" class="form-control">
+                    <option value="Mr.">Mr.</option>
+                    <option value="Mrs.">Mrs.</option>
+                    <option value="Ms.">Ms.</option>
+                    <option value="B/O.">B/O.</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label></label>
+                <input name="dob" style="margin-top: 6px" type="text" id="txt_name" class="form-control" />
+                <span id="firstname-error" class="span_txt" style="display: none;">Please Enter First Name</span>
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
+                <select id="ddlRelation" class="form-control">
+                    <option value="S/O">S/O</option>
+                    <option value="W/O">W/O</option>
+                    <option value="D/O">D/O</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label></label>
+                <input type="text" style="margin-top: 6px" id="txt_relation" class="form-control" />
+                <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                <label for="PrefixAge">Age/DOB<span style="color: red;">*</span></label>
+                <select id="PrefixAge" class="form-control">
+                    <option value="Year">Year</option>
+                    <option value="Month">Month</option>
+                    <option value="Day">Day</option>
+                </select>
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                <label></label>
+                <input type="text" style="margin-top: 7px" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                <label></label>
+                <input type="text" id="txtAge_yearss" style="margin-top: 7px" class="form-control" placeholder="dd mmyy" />
+                <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
+            </div>
         </div>
     </div>
 
-
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-    <label for="txtarea">Area</label>
-    <select id="txtarea" class="form-control"></select>
-</div> 
-        <div class="col-lg-9 col-md-12 col-sm-12">
-            <label for="txt_Address">Address<span style="color: red;">*</span></label>
-            <input type="text" style="height: 34px !important" id="txt_Address" class="form-control" />
-            <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
+    <!-- Personal Info Section -->
+    <div class="card">
+        <h2 class="section-title">Personal Information</h2>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label for="ddl_Gender">Gender</label>
+                <select id="ddl_Gender" class="form-control"></select>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label for="ddl_status">Marital Status</label>
+                <select id="ddl_status" class="form-control"></select>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
+                <input type="text" id="txt_mobile" class="form-control" />
+                <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label for="ddl_bloodGroup">Blood Group</label>
+                <select id="ddl_bloodGroup" class="form-control"></select>
+            </div>
         </div>
-    </div>
-  <div class="row">
-  <div class =" col-lg-8">
-      <div class="row">
-          <div class="col-lg-2 col-md-3 col-sm-3 text-center">
-              <input type="button" id="SavePatient_Data" class="btn-primry" onclick="SavePatient();" value="Save&Print" />
-          </div>
-          <div class="col-lg-2 col-md-2 col-sm-3 text-center">
-              <input type="button" id="btnlist" class="btn-gray" onclick="window.location = 'RegList.aspx'" value="View" />
-          </div>
-
-          <div class="col-lg-2 col-md-2 col-sm-3">
-              <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintReceipt()" value="Print" />
-          </div>
-      </div>
-  </div>
-   
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+    <label for="txt_cnic">CNIC</label>
+    <input type="text" id="txt_cnic" class="form-control" />
 </div>
+
+        </div>
+    </div>
+
+    <!-- Address & Location Section -->
+    <div class="card">
+        <h2 class="section-title">Address & Location</h2>
+        <div class="row">
+            
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label>Country</label>
+                <select id="ddlCountry" class="form-control"></select>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label for="ddlstate">Province</label>
+                <select id="ddlstate" class="form-control"></select>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label for="txtcity">City</label>
+                <select id="txtcity" class="form-control"></select>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label for="txtarea">Area</label>
+                <select id="txtarea" class="form-control"></select>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-9 col-md-12 col-sm-12">
+                <label for="txt_Address">Address<span style="color: red;">*</span></label>
+                <input type="text"  id="txt_Address" class="form-control" />
+                <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Section -->
+    <%--<div class="card">--%>
+        <%--<h2 class="section-title">Actions</h2>--%>
+        <div class="row">
+            <div class=" col-lg-8">
+                <div class="row">
+                    <div class="col-lg-2 col-md-3 col-sm-3 text-center">
+                        <input type="button" id="SavePatient_Data" class="btn-primry" onclick="SavePatient();" value="Save&Print" />
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 text-center">
+                        <input type="button" id="btnlist" class="btn-gray" onclick="window.location = 'RegList.aspx'" value="View" />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-3">
+                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintReceipt()" value="Print" />
+                    </div>
+                </div>
+            </div>
+        </div>
+<%--    </div>--%>
+
 
 </asp:Content>

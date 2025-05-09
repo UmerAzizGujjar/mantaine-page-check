@@ -9102,6 +9102,7 @@ input[disabled] {
 
     input[disabled]:hover {
         border-color: #d5d5d5 !important;
+       background-color: #438eb9 !important;
     }
 
 input[readonly] {

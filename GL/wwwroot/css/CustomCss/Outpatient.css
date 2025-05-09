@@ -1,10 +1,6 @@
 
 
 
-#tblPendingPatients {
-    width: 100%;
-    border-collapse: collapse;
-}
 
 #tblVitalParametersHistory {
     width: 100%;
@@ -374,9 +370,9 @@ ul.token-input-list {
    /* width: 225px !important;*/
    width:100% !important;
 }
-#token-input-ctl00_MainContent_txtPatNO {
+/*#token-input-ctl00_MainContent_txtPatNO {
     width: 200px !important;
-}
+}*/
 .patient-image {
     width: 100px;
     height: 100px;
@@ -492,3 +488,9 @@ ul.token-input-list {
     width: 50%;
     overflow: hidden;
 }
+
+
+.mm {
+    margin-left:0% !important;
+}
+

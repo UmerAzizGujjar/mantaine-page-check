@@ -4,13 +4,21 @@
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
+ <style type="text/css">
         .buttonDisabled {
             opacity: 0.65;
+            width:201px !important;
+            height:40px;
+            border-radius:10px;
+            margin-left:3px;
         }
 
             .buttonDisabled:hover {
                 cursor: not-allowed;
+            }
+
+            .Wdth {
+                width:200px !important;
             }
     </style>
     <script type="text/javascript">
@@ -87,7 +95,7 @@
                             </fieldset>
                         </ContentTemplate>
                         <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="btnEditSave" EventName="Click" />
+                            <asp:AsyncPostBackTrigger ControlID="btnEditSave"  EventName="Click" />
                             <asp:AsyncPostBackTrigger ControlID="btnDelete" EventName="Click" />
                             <asp:AsyncPostBackTrigger ControlID="btnCancel" EventName="Click" />
                         </Triggers>
@@ -111,9 +119,10 @@
                                                     <asp:Label ID="Label1" runat="server" Text="Account Code:" />
                                                 </td>
                                                 <td class="insertCol2">
-                                                    <asp:TextBox ID="txtParent_Code" runat="server" ReadOnly="True" />
+                                                    <asp:TextBox ID="txtParent_Code" CssClass="Wdth" runat="server"  ReadOnly="True" />
+
                                                     -
-                                                    <asp:TextBox ID="txtAccount_Code" runat="server" />
+                                                    <asp:TextBox ID="txtAccount_Code" CssClass="Wdth" runat="server" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -135,8 +144,8 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="popupButtonWraper" style="padding-left: 167px">
-                                    <asp:Button ID="btnEditSave" Width="201" runat="server" CssClass="btn btn-primary" Text="Update" OnClick="btnEditSave_Click" />&nbsp;
+                                <div class="popupButtonWraper">
+                                    <asp:Button ID="btnEditSave" Width="201"  runat="server" CssClass="btn btn-primry" Text="Update" OnClick="btnEditSave_Click" />&nbsp;
                                     <asp:Button ID="btnEditCancel" runat="server" Visible="false" Text="Cancel" CssClass="popupButton"
                                         OnClick="btnEditCancel_Click" OnClientClick="return enableAllNodes()" ClientIDMode="Static" />
                                     <br />
@@ -174,21 +183,21 @@
                                             </tr>
                                             <tr>
                                                 <td style="width: 187px;">
-                                                    <asp:Button ID="btnAdd" CssClass="btn btn-primry" Width="172" Text="Add Sibling" runat="server" OnClick="btnAdd_Click" ClientIDMode="Static" OnClientClick="disableAllNodes();" />
+                                                    <asp:Button ID="btnAdd" CssClass="btn btn-primry"  Text="Add Sibling" runat="server" OnClick="btnAdd_Click" ClientIDMode="Static" OnClientClick="disableAllNodes();" />
                                                 </td>
                                                 <td style="width: 187px;">
-                                                    <asp:Button ID="btnAddChild" CssClass="btn btn-primry" Width="172" runat="server" Text="Add Child" OnClick="btnAddChild_Click" ClientIDMode="Static" OnClientClick="disableAllNodes();" />
+                                                    <asp:Button ID="btnAddChild" CssClass="btn btn-primry" runat="server" Text="Add Child" OnClick="btnAddChild_Click" ClientIDMode="Static" OnClientClick="disableAllNodes();" />
                                                 </td>
                                                 <td style="display: none;">
                                                     <asp:Button ID="btnEditAccount" CssClass="btn btn-primry" runat="server" Text="Edit"
                                                         OnClick="btnEditAccount_Click" />
                                                 </td>
                                                 <td style="width: 187px;">
-                                                    <asp:Button ID="btnDelete" CssClass="btn btn-primry" Width="172" runat="server" Text="Delete"
+                                                    <asp:Button ID="btnDelete" CssClass="btn btn-primry"  runat="server" Text="Delete"
                                                         OnClick="btnDelete_Click" OnClientClick="javascript:return confirm('Are you sure, You want to delete this account?');" />
                                                 </td>
                                                 <td style="width: 187px;">
-                                                    <asp:Button ID="btnCancel" CssClass="btn btn-primry" runat="server" Text="Cancel" SkinID="btnAutoWidth" OnClick="btnCancel_Click" />
+                                                    <asp:Button ID="btnCancel" CssClass="btn btn-primry" Style="margin-left:5px" runat="server" Text="Cancel" SkinID="btnAutoWidth" OnClick="btnCancel_Click" />
                                                 </td>
                                             </tr>
                                         </table>
