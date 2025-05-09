@@ -132,15 +132,17 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <!-- Patient Details Section -->
+    <div class="row">
+        <div class="col-lg-11 col-md-10 col-sm-12">
     <div class="card">
         <input type="hidden" id="hdfPatient_ID" />
         <input type="hidden" id="hdn_regid" />
         <div class="row">
-            <div class="col-lg-2 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="txt_Mrno">MR No</label>
                 <input type="text" id="txt_Mrno" class="form-control" disabled />
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="ddl_name">Name<span style="color: red;">*</span></label>
                 <select id="ddl_name" class="form-control">
                     <option value="Mr.">Mr.</option>
@@ -149,12 +151,12 @@
                     <option value="B/O.">B/O.</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-9">
                 <label></label>
                 <input name="dob" style="margin-top: 6px" type="text" id="txt_name" class="form-control" />
                 <span id="firstname-error" class="span_txt" style="display: none;">Please Enter First Name</span>
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
                 <select id="ddlRelation" class="form-control">
                     <option value="S/O">S/O</option>
@@ -162,12 +164,12 @@
                     <option value="D/O">D/O</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-9">
                 <label></label>
                 <input type="text" style="margin-top: 6px" id="txt_relation" class="form-control" />
                 <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="PrefixAge">Age/DOB<span style="color: red;">*</span></label>
                 <select id="PrefixAge" class="form-control">
                     <option value="Year">Year</option>
@@ -175,84 +177,65 @@
                     <option value="Day">Day</option>
                 </select>
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
                 <input type="text" style="margin-top: 7px" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
             </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
                 <input type="text" id="txtAge_yearss" style="margin-top: 7px" class="form-control" placeholder="dd mmyy" />
                 <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
             </div>
         </div>
-    </div>
-
-    <!-- Personal Info Section -->
-    <div class="card">
-        <h2 class="section-title">Personal Information</h2>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label for="ddl_Gender">Gender</label>
-                <select id="ddl_Gender" class="form-control"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label for="ddl_status">Marital Status</label>
-                <select id="ddl_status" class="form-control"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
-                <input type="text" id="txt_mobile" class="form-control" />
-                <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label for="ddl_bloodGroup">Blood Group</label>
-                <select id="ddl_bloodGroup" class="form-control"></select>
-            </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-6 col-sm-9">
+            <label for="ddl_Gender">Gender</label>
+            <select id="ddl_Gender" class="form-control"></select>
         </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-    <label for="txt_cnic">CNIC</label>
-    <input type="text" id="txt_cnic" class="form-control" />
-</div>
-
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="ddl_status">Marital Status</label>
+            <select id="ddl_status" class="form-control"></select>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
+            <input type="text" id="txt_mobile" class="form-control" />
+            <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="ddl_bloodGroup">Blood Group</label>
+            <select id="ddl_bloodGroup" class="form-control"></select>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="txt_cnic">CNIC</label>
+            <input type="text" id="txt_cnic" class="form-control" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label>Country</label>
+            <select id="ddlCountry" class="form-control"></select>
         </div>
     </div>
-
-    <!-- Address & Location Section -->
-    <div class="card">
-        <h2 class="section-title">Address & Location</h2>
-        <div class="row">
-            
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label>Country</label>
-                <select id="ddlCountry" class="form-control"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label for="ddlstate">Province</label>
-                <select id="ddlstate" class="form-control"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label for="txtcity">City</label>
-                <select id="txtcity" class="form-control"></select>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label for="txtarea">Area</label>
-                <select id="txtarea" class="form-control"></select>
-            </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="ddlstate">Province</label>
+            <select id="ddlstate" class="form-control"></select>
         </div>
-
-        <div class="row mt-3">
-            <div class="col-lg-9 col-md-12 col-sm-12">
-                <label for="txt_Address">Address<span style="color: red;">*</span></label>
-                <input type="text"  id="txt_Address" class="form-control" />
-                <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
-            </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="txtcity">City</label>
+            <select id="txtcity" class="form-control"></select>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="txtarea">Area</label>
+            <select id="txtarea" class="form-control"></select>
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <label for="txt_Address">Address<span style="color: red;">*</span></label>
+            <input type="text" id="txt_Address" class="form-control" />
+            <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
         </div>
     </div>
-
-    <!-- Actions Section -->
-    <%--<div class="card">--%>
-        <%--<h2 class="section-title">Actions</h2>--%>
+    </div>
+    </div>
+        </div>
         <div class="row">
             <div class=" col-lg-8">
                 <div class="row">
@@ -269,7 +252,6 @@
                 </div>
             </div>
         </div>
-<%--    </div>--%>
 
 
 </asp:Content>
