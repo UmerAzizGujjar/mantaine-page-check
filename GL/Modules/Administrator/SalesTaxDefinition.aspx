@@ -64,8 +64,8 @@
                         '<td style="display:none"><input style="width: 165px !important;" type=text id="Description_Payable' + (key + 1) + '" readonly="readonly" name="Description_Payable"  value="' + value.Description_Payable + '"/></td>' +
                         '<td><select style="width: 175px !important;" id="Account_Code_Recvable' + (key + 1) + '" name="Account_Code_Recvable" readonly="readonly" onchange="loadrecvablaccountegl(this)" >' + _global_receiveable + '</select></td>' +
                         '<td><input style="width: 165px !important;" type=text id="Description_Recvable' + (key + 1) + '" readonly="readonly" name="Description_Recvable"  value="' + value.Description_Recvable + '" /></td>' +
-                        '<td><input type="checkbox" id="chk_STWH' + (key + 1) + '" name="chk_STWH" ' + chk_STWH_checked + ' /></td>' +
-                        '<td><input type="checkbox" id="chk_Active' + (key + 1) + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
+                        '<td><input type="checkbox" style="margin-left:-30px" id="chk_STWH' + (key + 1) + '" name="chk_STWH" ' + chk_STWH_checked + ' /></td>' +
+                        '<td><input type="checkbox" style="margin-left:-30px" id="chk_Active' + (key + 1) + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
                         '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">'
                     '</td>' +
                '</tr>';
@@ -152,7 +152,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-         <div class="col-lg-2 col-md-4 col-sm-12" style="float: right;">
+         <div class="col-lg-1 col-md-4 col-sm-12" >
                     <input type="button" onclick="Addrow()" class="btn btn-primry" value="+" id="AddAccount"  />
                 </div>
     </div>

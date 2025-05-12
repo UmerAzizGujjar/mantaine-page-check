@@ -42,6 +42,7 @@
         select 
         {
             height: 20px !important;
+            
         }
         ul.token-input-list 
         {
@@ -149,6 +150,7 @@
         {
             width:123px !important;
         }
+
     </style>
     <script type="text/javascript">
         function Addrow() {
@@ -240,7 +242,7 @@
                     rows += '<tr>' +
                         '<td style="display:none"><input type=text class="form-control" id="AccountId' + (key + 1) + '" name="AccountId" style="width:164px !important;font-size: 10px !important;height:20px!important;"  value=' + data[key].Account_Category_Id + ' readonly=readonly /></td>' +
                         '<td><input type=text class="form-control" id="Id' + (key + 1) + '" name="Id" style="width:123px !important;font-size: 10px !important;height:20px!important;"  value=' + (key + 1) + ' readonly=readonly /></td>' +
-                        '<td><input type=text class="form-control" id="AccountCategoryName' + (key + 1) + '" name="AccountCategoryName" style="width:123px !important;font-size: 10px !important;height:20px!important;"  value="' + value.CategoryName + '" readonly=readonly /></td>' +
+                        '<td><input type=text class="form-control" id="AccountCategoryName' + (key + 1) + '" name="AccountCategoryName" style="font-size: 10px !important;height:20px!important;"  value="' + value.CategoryName + '" readonly=readonly /></td>' +
                         '<td><select class="form-control" id="txtAccountCode' + (key + 1) + '" name="txtAccountCode" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
                         '<td><select class="form-control" id="txtConsumptionAccount' + (key + 1) + '" name="txtConsumptionAccount" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
                         '<td><select class="form-control" id="txtsalAccount' + (key + 1) + '" name="txtsalAccount" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
@@ -300,12 +302,15 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div style="overflow: scroll; height: 435px !important; height: auto;">
-        <div class="col-lg-2 col-md-4 col-sm-12">
+    <div class="row">
+        <div class="col-lg-1 col-md-4 col-sm-6">
      <input type="button" class="btn-primry" onclick="Addrow()" value="+" id="AddAccount" />
  </div>
-        <table class="table responstable" id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset; height: auto; overflow: scroll">
-            <thead>
+        </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12- col-sm-12" style="overflow-x:scroll;height:600px">
+        <table class="table" id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important;">
+            <thead >
                 <tr>
                     <th style="display: none;">Account Category Id</th>
                     <th style="width: 70px !important; text-align: center; font-size: 10px;">Id</th>
@@ -323,7 +328,8 @@
             <tbody id="tblItemDescriptionDetail">
             </tbody>
         </table>
-    </div>
+        </div>
+        </div>
     <div class="purchaseOrderSubmitForm" style=" margin-top: 21px;">
       <div class="row">
             <div class="col-lg-1 col-md-4 col-sm-12">

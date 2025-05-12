@@ -16,51 +16,126 @@ namespace PMS
         {
 
         }
+
+
         [WebMethod]
-        public static string VoucherViewList(string month, string year, bool checkyear)
+        public static object VoucherViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string month, string year, bool checkyear)
         {
-            string result = string.Empty;
-            JavaScriptSerializer serl = new JavaScriptSerializer();
-            serl.MaxJsonLength = 2147483647;
-            using (DataBaseDataContext db = new DataBaseDataContext())
+            try
             {
-                if (checkyear == true)
+                using (var db = new DataBaseDataContext())
                 {
-                    var query = (from a in db.Budgets
-                                 where Convert.ToDateTime(a.Budget_Date).Year == Convert.ToInt32(year)
-                                 select new
-                                 {
-                                     a.Budget_ID,
-                                     a.Budget_No,
-                                     a.Budget_Date,
-                                     a.Remarks,
-                                     a.Budget_Status,
-                                     a.Total_Debit,
-                                     a.Creation_Time,
-                                     TotalDebtAmt = DBClass.getField("select sum(DR) from Budget_Accounts where Budget_ID =" + a.Budget_ID),
-                                 }).ToList().Distinct();
-                    return serl.Serialize(query);
-                }
-                else
-                {
-                    var query = (from a in db.Budgets
-                                 where Convert.ToDateTime(a.Budget_Date).Month == Convert.ToInt32(month)
-                                 && Convert.ToDateTime(a.Budget_Date).Year == Convert.ToInt32(year)
-                                 select new
-                                 {
-                                     a.Budget_ID,
-                                     a.Budget_No,
-                                     a.Budget_Date,
-                                     a.Remarks,
-                                     a.Budget_Status,
-                                     a.Total_Debit,
-                                     a.Creation_Time,
-                                     TotalDebtAmt = DBClass.getField("select sum(DR) from Budget_Accounts where Budget_ID =" + a.Budget_ID),
-                                 }).ToList().Distinct();
-                    return serl.Serialize(query);
+                    var totalRecords = db.Budgets.Count();
+
+                    var query = from a in db.Budgets
+                                where (checkyear
+                                        ? Convert.ToDateTime(a.Budget_Date).Year == Convert.ToInt32(year)
+                                        : Convert.ToDateTime(a.Budget_Date).Month == Convert.ToInt32(month)
+                                          && Convert.ToDateTime(a.Budget_Date).Year == Convert.ToInt32(year))
+                                select new
+                                {
+                                    a.Budget_ID,
+                                    a.Budget_No,
+                                    a.Budget_Date,
+                                    a.Remarks,
+                                    a.Budget_Status,
+                                    a.Total_Debit,
+                                    a.Creation_Time,
+                                    TotalDebtAmt = db.Budget_Accounts.Where(g => g.Budget_ID == a.Budget_ID).Sum(g => (decimal?)g.DR) ?? 0
+                                };
+
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        query = query.Where(q =>
+                            q.Budget_No.ToString().Contains(searchValue) ||
+                            q.Remarks.Contains(searchValue)
+                        );
+                    }
+
+                    var recordsFiltered = query.Count();
+
+                    switch (sortColumn)
+                    {
+                        case "Budget_No":
+                            query = sortColumnDirection == "asc" ? query.OrderBy(v => v.Budget_No) : query.OrderByDescending(v => v.Budget_No);
+                            break;
+                        case "Budget_Date":
+                            query = sortColumnDirection == "asc" ? query.OrderBy(v => v.Budget_Date) : query.OrderByDescending(v => v.Budget_Date);
+                            break;
+                        case "Total_Debit":
+                            query = sortColumnDirection == "asc" ? query.OrderBy(v => v.Total_Debit) : query.OrderByDescending(v => v.Total_Debit);
+                            break;
+                        default:
+                            query = query.OrderByDescending(v => v.Budget_ID);
+                            break;
+                    }
+
+                    var budgetList = query.Skip(start).Take(length).ToList();
+
+                    var jsonData = new
+                    {
+                        draw = draw,
+                        recordsTotal = totalRecords,
+                        recordsFiltered = recordsFiltered,
+                        data = budgetList
+                    };
+
+                    return jsonData;
                 }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching Budget list", ex);
+            }
         }
+
+
+
+        //[WebMethod]
+        //public static string VoucherViewList(string month, string year, bool checkyear)
+        //{
+        //    string result = string.Empty;
+        //    JavaScriptSerializer serl = new JavaScriptSerializer();
+        //    serl.MaxJsonLength = 2147483647;
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        if (checkyear == true)
+        //        {
+        //            var query = (from a in db.Budgets
+        //                         where Convert.ToDateTime(a.Budget_Date).Year == Convert.ToInt32(year)
+        //                         select new
+        //                         {
+        //                             a.Budget_ID,
+        //                             a.Budget_No,
+        //                             a.Budget_Date,
+        //                             a.Remarks,
+        //                             a.Budget_Status,
+        //                             a.Total_Debit,
+        //                             a.Creation_Time,
+        //                             TotalDebtAmt = DBClass.getField("select sum(DR) from Budget_Accounts where Budget_ID =" + a.Budget_ID),
+        //                         }).ToList().Distinct();
+        //            return serl.Serialize(query);
+        //        }
+        //        else
+        //        {
+        //            var query = (from a in db.Budgets
+        //                         where Convert.ToDateTime(a.Budget_Date).Month == Convert.ToInt32(month)
+        //                         && Convert.ToDateTime(a.Budget_Date).Year == Convert.ToInt32(year)
+        //                         select new
+        //                         {
+        //                             a.Budget_ID,
+        //                             a.Budget_No,
+        //                             a.Budget_Date,
+        //                             a.Remarks,
+        //                             a.Budget_Status,
+        //                             a.Total_Debit,
+        //                             a.Creation_Time,
+        //                             TotalDebtAmt = DBClass.getField("select sum(DR) from Budget_Accounts where Budget_ID =" + a.Budget_ID),
+        //                         }).ToList().Distinct();
+        //            return serl.Serialize(query);
+        //        }
+        //    }
+        //}
         [WebMethod]
         public static bool DeleteRecord(string BudgetID)
         {

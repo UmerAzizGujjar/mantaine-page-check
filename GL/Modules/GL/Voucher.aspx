@@ -568,27 +568,26 @@
         <!-- Left Column -->
         <div class="col-lg-6">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label>Type</label>
                     <input class="form-control" value="BCR" type="text" id="txt_vcher_type" readonly="readonly" />
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label>No</label>
                     <input class="form-control" type="text" value="New" id="voucher_no" readonly="readonly" />
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label>Date</label>
                     <input class="form-control" type="text" id="txt_date" />
                 </div>
-                <div class="col-lg-6">
+               
+            </div>
+            <div class="row mt-3" style="margin-top:15px">
+                <div class="col-lg-4">
                     <label>Ref Num</label>
                     <input class="form-control" type="text" id="txt_ref_no" />
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <%--<label id="lblptn">Pay to Name</label>--%>
                     <label id="lblptn" style="display: none;">Pay to Name</label>
                     <label id="lblname" style="display: none;">Name</label>
@@ -596,12 +595,12 @@
                     <label id="lblreference" style="display: none;">Reference</label>
                     <input class="form-control" type="text" id="txt_Ptn" />
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label>Status</label>
                     <input class="form-control" type="text" id="txtstatus" readonly="readonly" />
                 </div>
             </div>
-            <div class="row mt-3">
+            <div class="row mt-3" style="margin-top:16px">
                 <div class="col-lg-12">
                     <label>Description</label>
                     <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
@@ -619,14 +618,20 @@
                             <h4>Currency Exchange</h4>
                         </div>
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
                             <label>Currency</label>
                             <select class="form-control" id="ddl_currency">
                                 <option>PKR</option>
                                 <option>USD</option>
                                 <option>AUD</option>
                             </select>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
                             <label class="mt-3">Exchange Rate</label>
                             <input class="form-control" type="text" id="txt_exg_rate" value="1.00" readonly="readonly" />
+                        </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -639,27 +644,19 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label>Debit</label>
-                                </div>
-                                <div class="col-md-8">
                                     <input class="form-control" type="text" id="txt_debit" readonly="readonly" />
                                 </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label>Credit</label>
-                                </div>
-                                <div class="col-md-8">
                                     <input class="form-control" type="text" id="txt_credit" readonly="readonly" />
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label>Diff</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input class="form-control" type="text" id="txt_diff" readonly="readonly" />
+                                      <input class="form-control" type="text" id="txt_diff" readonly="readonly" />
                                 </div>
                             </div>
                         </div>
@@ -747,27 +744,23 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
             <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-12">
+                <div class="col-lg-1 col-md-4 col-sm-12">
                     <input type="button" class="btn btn-gray" id="btnList" value="List" onclick="redirecttonew()" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
+                <div class="col-lg-1 col-md-4 col-sm-12">
                     <input type="button" class="btn btn-primry" id="btnsave" value="Save" onclick="this.disabled = true;" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
+                <div class="col-lg-1 col-md-4 col-sm-12">
                     <input type="button" class="btn btn-yellow" id="btnnew" value="New" onclick="redirecttonew2()" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
+                <div class="col-lg-1 col-md-4 col-sm-12">
                     <input type="button" class="btn btn-primry" id="btnunapprove" value="UnApprove" onclick="UnApprove()" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-12">
+                <div class="col-lg-1 col-md-4 col-sm-12">
                     <input type="button" class="btn btn-primry" id="btnprint" value="Print" onclick="PrintReport()" />
                 </div>
             </div>
-        </div>
-    </div>
 
 
 

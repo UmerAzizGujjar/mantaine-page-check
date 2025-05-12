@@ -1008,7 +1008,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8 col-md-9 col-sm-10" style="margin-top:1%">
+        <div class="col-lg-6 col-md-9 col-sm-10" style="margin-top:1%">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
@@ -1031,7 +1031,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-md-3 col-sm-3"></div>
+        <div class="col-lg-4 col-md-3 col-sm-3"></div>
 
         <div class="col-lg-2 col-md-3 col-sm-3">
             <div style="float: right;">

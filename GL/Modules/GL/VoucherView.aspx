@@ -137,15 +137,30 @@
                     }
                 ],
                 "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#example_length');
                     var lengthDropdown = document.querySelector('#example_length select');
                     var label = document.querySelector('#example_length label');
-                    if (lengthDropdown && label) {
-                        label.innerHTML = 'Show entries ';
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries';
+                        labelText.style.marginLeft = '5px'; 
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.alignItems = 'center';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
                         label.appendChild(lengthDropdown);
                     } else {
-                        console.log("Length dropdown or label not found");
+                        console.log("Length dropdown, label, or container not found");
                     }
                 }
+
             });
         }
 
@@ -190,16 +205,14 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-lg-8">
-            <div class="col-lg-2 col-md-4 col-sm-12" style="margin-bottom: 1%">
-                <input type="button" class="btn btn-primry" onclick="redirecttonew()" value="Add New" />
-            </div>
-            <div class="col-lg-3">
-                <input type="text" id="txt_date" />
+            <div class="col-lg-1">
+                <input type="text" id="txt_date" style="width:100% !important" />
             </div>
             <div class="col-lg-1 col-md-4 col-sm-12">
-                <input type="button" class="btn btn-primry" onclick="LoadPageByYear()" value="Year" />
+                <input type="button" class="btn btn-primry" onclick="LoadPageByYear()" value="Year" style="width:100% !important" />
             </div>
+        <div class="col-lg-1 col-md-4 col-sm-12" style="margin-bottom: 1%">
+            <input type="button" class="btn btn-primry" onclick="redirecttonew()" value="Add New" style="width:100% !important" />
         </div>
     </div>
 
