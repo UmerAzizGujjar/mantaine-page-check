@@ -29,13 +29,17 @@
     </asp:GridView>
     <br />
     <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-12">
-    <asp:Button ID="btnApprove" CssClass="btn btn-primry" Text="Approve Selected Vouchers" runat="server" 
-       onclick="btnApprove_Click" />
-            </div>
-        <div class="col-lg-2 col-md-4 col-sm-12">
-    <asp:Button ID="btnCancel" CssClass="btn btn-primry" Text="Delete Selected Vouchers" runat="server" 
-        onclick="btnCancel_Click" />
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <asp:Button ID="btnApprove" CssClass="btn btn-primry" Text="Approve Vouchers" runat="server"
+                        OnClick="btnApprove_Click" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <asp:Button ID="btnCancel" CssClass="btn btn-primry" Text="Delete Vouchers" runat="server"
+                        OnClick="btnCancel_Click" />
+                </div>
             </div>
         </div>
+    </div>
 </asp:Content>
