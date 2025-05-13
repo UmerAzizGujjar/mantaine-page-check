@@ -104,19 +104,20 @@
                 },
                 "columns": [
                     { "data": "PR_Id", "visible": false, "width": "0%" },
+                    { "data": "PR_Num", "name": "PR_Num", "orderable": true },
                     {
                         "data": "PR_Date",
                         "render": function (data, type, full) {
                             var date = full.PR_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }
+                        }, "orderable": true
                     },
-                    { "data": "Priority" },
-                    { "data": "Department" },
-                    { "data": "TotalQty", className: "text-right" },
-                    { "data": "CreatedBY" },
-                    { "data": "Status" },
+                    { "data": "Priority", "orderable": false },
+                    { "data": "Department", "orderable": false },
+                    { "data": "TotalQty", className: "text-right", "orderable": false },
+                    { "data": "CreatedBY", "orderable": false },
+                    { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             debugger;
@@ -137,7 +138,7 @@
                             }
 
                             return result;
-                        }
+                        }, "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -187,6 +188,7 @@
         <table class="table table-hover  table-bordered" id="example" >
             <thead id="ihead">
                 <tr>
+                    <th style="display:none">PRID</th>
                     <th>PRNum</th>
                     <th>PR Date</th>
                     <th>Pirority</th>

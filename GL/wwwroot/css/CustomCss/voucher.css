@@ -4,9 +4,10 @@
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
-    height: 240px !important;
+    height: 200px !important;
     width: 100%;
     overflow: hidden;
+    margin-top:24px;
 }
 
 .card-body p {

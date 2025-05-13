@@ -111,14 +111,8 @@ namespace PMS.AP
                         case "Date":
                             QuotationsRequest = sortColumnDirection == "asc" ? QuotationsRequest.OrderBy(b => b.Date) : QuotationsRequest.OrderByDescending(a => a.Date);
                             break;
-                        case "RefNo":
-                            QuotationsRequest = sortColumnDirection == "asc" ? QuotationsRequest.OrderBy(b => b.RefNo) : QuotationsRequest.OrderByDescending(a => a.RefNo);
-                            break;                        
-                        case "Status":
-                            QuotationsRequest = sortColumnDirection == "asc" ? QuotationsRequest.OrderBy(b => b.Status) : QuotationsRequest.OrderByDescending(a => a.Status);
-                            break;
                             default:
-                            QuotationsRequest = QuotationsRequest.OrderBy(a => a.RFQNo);
+                            QuotationsRequest = QuotationsRequest.OrderByDescending(a => a.RFQID);
                             break;
                     }
 

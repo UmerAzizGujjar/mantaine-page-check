@@ -1468,8 +1468,8 @@
             </div>
      
             <div class="row row_2" style="margin-top:1%">
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                   <input type="button" class="btn-primry" id="btnSaveMessage" value="Save And Send Message"/>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                   <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg"/>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" class="btn-primry" id="btnSave" value="Save" />
@@ -1523,11 +1523,9 @@
                 <option>All</option>
                 <option>Visited</option>
                 <option>Booked</option>
-
-
             </select>
         </div>
-          <div class="col-lg-1 col-md-2 col-sm-3 mg">
+          <div class="col-lg-1 col-md-2 col-sm-3">
             <label></label>
             <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
         </div>
@@ -1537,7 +1535,7 @@
 
     <div class="row table-container">
 
-        <table class="table" id="table_res">
+        <table class="table" id="table_res" style="margin-left:11px !important">
 
             <tr id="row_sample">
                 <th>S No.</th>

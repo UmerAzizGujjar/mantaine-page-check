@@ -77,27 +77,27 @@
                 },
                 "columns": [
                     { "data": "GRN_ID", "visible": false, },
-                    { "data": "po_Number", "name": "po_Number" },
-                    { "data": "GRN_Num", "name": "GRN_Num", },
-                    { "data": "Igp_Number" },
+                    { "data": "po_Number", "name": "po_Number", "orderable": true },
+                    { "data": "GRN_Num", "name": "GRN_Num", "orderable": true },
+                    { "data": "Igp_Number", "name": "Igp_Number", "orderable": true },
                     {
                         "data": "Approved_Date",
                         "render": function (data, type, full) {
                             var date = full.Approved_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }
+                        }, "orderable": false
                     },
-                    { "data": "Vendor_Name" },
-                    { "data": "Remarks" },
-                    { "data": "Status" },
+                    { "data": "Vendor_Name", "orderable": false },
+                    { "data": "Remarks", "orderable": false },
+                    { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.GRN_ID + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
                             var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + full.GRN_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
                             var result = res + print;
                             return result;
-                        }
+                        }, "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

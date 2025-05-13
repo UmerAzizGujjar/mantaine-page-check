@@ -1,7 +1,28 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Budget.aspx.cs" Inherits="PMS.Budget" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
 
+        .card {
+            border: 1px solid #C4C4C4;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            height: 210px !important;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 24px;
+        }
+
+        .card-body p {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+
+
+    </style>
 
     <script type="text/javascript">
         $(function () {
@@ -449,53 +470,38 @@
         <div class="row" >
             <div class="col-lg-6">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label >Type</label>
-                        </div>
-                        <div>
                             <input class="form-control" value="BCR" type="text" id="txt_vcher_type" readonly="readonly" />
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label>No</label>
-                        </div>
-                        <div>
                             <input class="form-control" type="text" value="New" id="voucher_no" readonly="readonly" />
                         </div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label>Status</label>
-                        </div>
-                        <div>
                             <input class="form-control" type="text" id="txtstatus" readonly="readonly" />
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
                         <div class="form-group">
                             <label>Date</label>
-                        </div>
-                        <div>
                             <input class="form-control" type="text" id="txt_date" />
                         </div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-8">
                         <div class="form-group">
                             <label>Description</label>
-                        </div>
-                        <div>
                             <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="col-lg-3">
@@ -504,11 +510,9 @@
                         <h4>Currency Exchange</h4>
                     </div>
                     <div class="card-body">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6 md-6 sm-6">
                             <div class="form-group">
                                 <label>Currency</label>
-                            </div>
-                            <div>
                                 <select class="form-control" id="ddl_currency">
                                     <option>PKR</option>
                                     <option>USD</option>
@@ -516,11 +520,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-6 md-6 sm-6">
                             <div class="form-group">
                                 <label>Exchange Rate</label>
-                            </div>
-                            <div>
                                 <input class="form-control" type="text" id="txt_exg_rate" value="1.00" readonly="readonly" />
                             </div>
                         </div>
@@ -534,37 +536,23 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label >Debit</label>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div >
+                                    <label>Debit</label>
                                     <input class="form-control" type="text" id="txt_debit" readonly="readonly" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label >Credit</label>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div >
+                                    <label>Credit</label>
                                     <input class="form-control" type="text" id="txt_credit" readonly="readonly" />
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label >Diff</label>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div >
+                                    <label>Diff</label>
                                     <input class="form-control" type="text" id="txt_diff" readonly="readonly" />
                                 </div>
                             </div>
@@ -573,9 +561,7 @@
                 </div>
             </div>
         </div>
-        <br />
-      
-       
+
         <div class="table-container">
             <table class="table table-bordered" id="tbldescription">
                 <thead>

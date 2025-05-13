@@ -49,8 +49,8 @@
                     "columns": [
                         { "data": "subject_Id", "visible": false, "width": "0%" },
                         { "data": null, "orderable": false, "width": "10%" },
-                        { "data": "Program", "name": "Program", "width": "15%" },
-                        { "data": "Class", "name": "Class", "width": "55%" },                                           
+                        { "data": "Program", "name": "Program", "width": "15%", "orderable": true },
+                        { "data": "Class", "name": "Class", "width": "55%", "orderable": false },                                           
                         {
                             render: function (data, type, full) {
                                 debugger;
@@ -60,7 +60,7 @@
                                 var result;
                                 result = res + Del;
                                 return result;
-                            }, "width": "100%"
+                            }, "width": "100%", "orderable": false
                         }
                     ],
                     "initComplete": function (settings, json) {

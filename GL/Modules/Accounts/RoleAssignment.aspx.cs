@@ -57,7 +57,7 @@ namespace PMS.Modules.Accounts
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching Medicine Template list", ex);
+                throw new Exception("Error fetching Role Assignment list", ex);
             }
         }
 

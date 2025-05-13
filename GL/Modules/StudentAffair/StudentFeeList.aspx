@@ -52,13 +52,13 @@
              },
              "columns": [
                  { "data": "Fee_ID", "visible": false, "width": "0%" },
-                 { "data": "Fee_No", "width": "10%" },
-                 { "data": "Roll_No", "width": "15%", },
-                 { "data": "Student_Name", "name": "Student_Name", "width": "10%" },
-                 { "data": "Father_Name", "width": "10%", },
-                 { "data": "Total_Amount", "width": "10%", },
-                 { "data": "Status", "width": "10%", },
-                 { "data": "StudentClass", "width": "10%", },
+                 { "data": "Fee_No", "width": "10%", "orderable": true },
+                 { "data": "Roll_No", "width": "15%", "orderable": true },
+                 { "data": "Student_Name", "name": "Student_Name", "width": "10%", "orderable": false },
+                 { "data": "Father_Name", "width": "10%", "orderable": false },
+                 { "data": "Total_Amount", "width": "10%", "orderable": false },
+                 { "data": "Status", "width": "10%", "orderable": false },
+                 { "data": "StudentClass", "width": "10%", "orderable": false },
                  {
                      render: function (data, type, full) {
                          debugger;
@@ -69,7 +69,7 @@
                          var result;
                          result = res + Del;
                          return result;
-                     }, "width": "10%"
+                     }, "width": "10%", "orderable": false
                  }
              ],
              "initComplete": function (settings, json) {

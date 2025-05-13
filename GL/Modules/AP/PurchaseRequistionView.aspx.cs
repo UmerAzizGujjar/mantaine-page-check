@@ -82,12 +82,8 @@ namespace PMS.AP
                     var Purchase = from PR in _dbContext.Purchase_Requisitions
                                    where userDepartments.Contains(PR.Department)
                                    &&
-                                     ((PR.PR_Id.ToString().Contains(searchValue)
-                                      || PR.PR_Num.ToString().Contains(searchValue)
-                                      || _dbContext.GetDataValueName("Priority Type", PR.Priority).Contains(searchValue) 
-                                      || _dbContext.GetDataValueName("Department", PR.Department).Contains(searchValue)
-                                      || PR.Remarks.ToString().Contains(searchValue) 
-                                      || PR.Status.ToString().Contains(searchValue)
+                                     ((PR.PR_Id.ToString().Contains(searchValue) || PR.PR_Num.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Priority Type", PR.Priority).Contains(searchValue) 
+                                      || _dbContext.GetDataValueName("Department", PR.Department).Contains(searchValue) || PR.Remarks.ToString().Contains(searchValue) || PR.Status.ToString().Contains(searchValue)
                                       || _dbContext.aspnet_Users.Where(x => x.UserId == PR.Created_By).Select(x => x.UserName).FirstOrDefault().Contains(searchValue)))
                                   select new
                                   {
@@ -111,20 +107,8 @@ namespace PMS.AP
                         case "PR_Date":
                             Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(b => b.PR_Date) : Purchase.OrderByDescending(a => a.PR_Date);
                             break;
-                        case "Priority":
-                            Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(b => b.Priority) : Purchase.OrderByDescending(a => a.Priority);
-                            break;
-                        case "Department":
-                            Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(b => b.Department) : Purchase.OrderByDescending(a => a.Department);
-                            break;
-                        case "Remarks":
-                            Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(b => b.Remarks) : Purchase.OrderByDescending(a => a.Remarks);
-                            break;
-                        case "Status":
-                            Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(b => b.Status) : Purchase.OrderByDescending(a => a.Status);
-                            break;
                         default:
-                            Purchase = Purchase.OrderByDescending(a => a.PR_Num);
+                            Purchase = Purchase.OrderByDescending(a => a.PR_Id);
                             break;
                     }
 

@@ -147,8 +147,8 @@
             <input type="text" id="txt_dateto" />
         </div>
 
-        <div class=" col-lg-2 col-md-6 col-sm-12">
-            <input type="button" id="btnSearch" class="btn btn-primry mar-btn" style="top: 26px;" value="Search" />
+        <div class=" col-lg-1 col-md-6 col-sm-12">
+            <input type="button" id="btnSearch" class="btn btn-primry mar-btn" style="top: 21px;" value="Search" />
         </div>
     </div>
 

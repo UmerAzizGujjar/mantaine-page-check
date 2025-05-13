@@ -109,12 +109,9 @@ namespace PMS.Inventory
                             break;
                         case "Priority":
                             MaterialIssue = sortColumnDirection == "asc" ? MaterialIssue.OrderBy(b => b.Priority) : MaterialIssue.OrderByDescending(a => a.Priority);
-                            break;
-                        case "Remarks":
-                            MaterialIssue = sortColumnDirection == "asc" ? MaterialIssue.OrderBy(a => a.Remarks) : MaterialIssue.OrderByDescending(a => a.Remarks);
-                            break;                        
+                            break;                       
                         default:
-                            MaterialIssue = MaterialIssue.OrderBy(a => a.Request_No);
+                            MaterialIssue = MaterialIssue.OrderByDescending(a => a.MaterialRequest_Id);
                             break;
                     }
 

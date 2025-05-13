@@ -9,11 +9,11 @@
     </asp:UpdatePanel>
     <asp:Panel runat="server" ID="pnlForm" DefaultButton="btnCloseYear">
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-6 col-sm-12">
                  <asp:TextBox runat="server" ReadOnly="false" ID="txtYear" />
  <asp:RequiredFieldValidator ErrorMessage="Year is required." Display="Dynamic" ControlToValidate="txtYear" runat="server" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="col-lg-1 col-md-4 col-sm-12">
                  <asp:Button Text="Close Year" CssClass="btn btn-primry" ID="btnCloseYear" runat="server" OnClick="btnCloseYear_Click" />
                   <asp:Label ID="lblMessage" Text="" runat="server" />
             </div>

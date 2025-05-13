@@ -5225,10 +5225,6 @@
            <div  style="height: 90px;">                   
                         <div style="text-align: left;" id="Div1">
                             <div class="row">
-                                <div class="col-lg-2 col-md-4 col-sm-12 mb-2">
-                                    <label>Add New Symptom</label>
-                                    <input type="text" id="txtNewSymptom" class="form-control" />
-                                </div>
                                 <div class="col-lg-2 col-md-3 col-sm-12 mb-2">
                                     <label>Symptom</label>
                                     <input type="text" name="txtSymtom" id="txtSymtom" class="form-control" />
@@ -5250,9 +5246,12 @@
                                     <label>Remarks</label>
                                     <textarea style="width:100%;height:33px;" name="txtRemarks" id="txtRemarks" class="form-control"></textarea>
                                 </div>
+                                <div class="col-lg-2 col-md-4 col-sm-12 mb-2">
+                                    <label>Add New Symptom</label>
+                                    <input type="text" id="txtNewSymptom" class="form-control" />
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6 col-md-3 col-sm-12 mb-2"></div>
                                 <div class="col-lg-1 col-md-4 col-sm-12 mb-2">
                                     <input type="button" id="btnAddHistory" class="btn btn-primry" onclick="Add_SymtomRow()" value="Add" />
                                 </div>
@@ -5532,7 +5531,7 @@
                                 <tr>
                                     <td>Other</td>
                                     <td colspan="7">
-                                        <asp:TextBox ID="txtInputBox1" runat="server" TextMode="MultiLine" Style="height: 27px; width: 100%;" TabIndex="11"></asp:TextBox>
+                                        <asp:TextBox ID="txtInputBox1" runat="server" TextMode="MultiLine" Style="height: 60px; width: 98%;margin-left:1%" TabIndex="11"></asp:TextBox>
                                     </td>
                                 </tr>
                             </table>
@@ -6128,11 +6127,6 @@
 
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                             <td>
                                 <input type="button" class="btn-primry" value="Save Vital" id="btnSave_Vital"  style = "font-size:16px" <%-- onclick="SaveMedicinesAndTests()"--%>  />
                             </td>
@@ -6308,7 +6302,7 @@
             <div id="Tab-4">
                 <h1>Patients Waiting List Department Wise : </h1>
                 <div id="Div2">
-                    <div class="row">
+                    <div class="row" style="margin-bottom:10px">
                          <div class="col-lg-1 col-md-4 col-sm-6">
                             <label> Department </label>
                         </div>
@@ -6356,7 +6350,7 @@
                                         <option value="">Select Template</option>                                   
                                     </select>
                                 </div>
-                                <div class="d-flex align-items-center" style="margin-top: 40px;">
+                                <div class="d-flex align-items-center" style="margin-top: 36px;">
                                     <div class="col-lg-2 col-md-4 col-sm-12">
                                         <input type="button" class="btn btn-primry" style="width: 70% !important;" value="Add Medicine" id="btnAddMedicine" />
                                     </div>
@@ -6422,14 +6416,17 @@
                       </tbody>
                   </table>
              
-                       <div class="row">
-                           <div class="col-lg-2 col-md-4 col-sm-6">
-                           <input  type="button" class="btn btn-primry" value="Load Medicine" id="load_previous_Med" onclick="Appendintable()" />
-                       </div>   
-                        </div>
-                     </div>
-                    
-               </div>
+                          <div class="row">
+                              <div class="col-lg-8 col-md-9 col-sm-10">
+                                  <div class="row">
+                                      <div class="col-lg-2 col-md-4 col-sm-6">
+                                          <input type="button" class="btn btn-primry" value="Load Medicine" id="load_previous_Med" onclick="Appendintable()" />
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                </div>
             </div>
 
      <div id="Tab-6">
@@ -6475,7 +6472,7 @@
                     </div>
                     
                     <div class="col-lg-2 col-md-3 col-sm-6" style="margin-top: 2%;">
-                        <input type="button" class="btn-primry" value="Add Test" id="btnAddAllTest" onclick="AddAllTest()" style="width:70% !important" />
+                        <input type="button" class="btn-primry" value="Add Test" id="btnAddAllTest" onclick="AddAllTest()" style="width:60% !important" />
                     </div>
                     <div class="col-lg-1 col-md-3 col-sm-6" style="margin-top: 2%;margin-left:-5%">
                         <span class="btn-tests btn-primry"  id="btngetalltest"><i class="fa fa-check-square">Test</i></span>
@@ -6548,13 +6545,16 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-primry" value="Load Test" id="load_previous_test" onclick="Appendtestintable()" />
-        </div>
-    </div>
-</div>
-
+         <div class="row">
+             <div class="col-lg-8 col-md-9 col-sm-10">
+                 <div class="row">
+                     <div class="col-lg-2 col-md-4 col-sm-6">
+                         <input type="button" class="btn btn-primry" value="Load Test" id="load_previous_test" onclick="Appendtestintable()" />
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
 
             <div id="Tab-7">
                 <div id="Control" style="width: 100%">
@@ -6704,7 +6704,7 @@
                         <td>
                             <asp:Label ID="Label19" runat="server" Text="MR No" Style="margin-right:20px"></asp:Label>
                         </td>
-                        <td style="width:203px;">
+                        <td style="padding-bottom:7px">
                             <asp:TextBox ID="txtMRNO" runat="server"></asp:TextBox>
                         </td>
 
@@ -6739,7 +6739,7 @@
 
                  <div id="Tab-9">
                      <div class="row align-items-center mb-3">
-                         <div class="col-lg-3 col-md-4 col-sm-12">
+                         <div class="col-lg-2 col-md-4 col-sm-12">
                              <h2>Services</h2>
                              <input type="text" id="txtService" name="txtService" runat="server" class="form-control" />
                          </div>
@@ -6788,7 +6788,7 @@
                     </tbody>
                 </table>
             </div>
-                    <input type="button" onclick="AppendServices_Procedures()" class="btn-primry" id="Loadservice" value="Load Services" style=" width:125px !important" />
+                    <input type="button" onclick="AppendServices_Procedures()" class="btn-primry" id="Loadservice" value="Load Services" style=" width:130px !important" />
 
                </div>
         </div>
@@ -7304,48 +7304,48 @@
                         <td>+ve</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkRightPos" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="+ve Right Ear Comments" ID="ComRightPos" />
+                          <asp:TextBox CssClass="textComment mm"  runat="server" placeholder="+ve Right Ear Comments" ID="ComRightPos" />
                         </td>
                         <td>+ve</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkLeftPos" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="+ve Left Ear Comments" ID="ComLeftPos" />
+                          <asp:TextBox CssClass="textComment mm"  runat="server" placeholder="+ve Left Ear Comments" ID="ComLeftPos" />
                         </td>
                       </tr>
                       <tr>
                         <td>-ve</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkRightNeg" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="-ve Right Ear Comments" ID="ComRightNeg" />
+                          <asp:TextBox CssClass="textComment mm"  runat="server" placeholder="-ve Right Ear Comments" ID="ComRightNeg" />
                         </td>
                         <td>-ve</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkLeftNeg" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="-ve Left Ear Comments" ID="ComLeftNeg" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="-ve Left Ear Comments" ID="ComLeftNeg" />
                         </td>
                       </tr>
                       <tr>
                         <td>False</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkRightF" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="False Right Ear Comments" ID="ComRightF" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="False Right Ear Comments" ID="ComRightF" />
                         </td>
                         <td>False</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkLeftF" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="False Left Ear Comments" ID="ComLeftF" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="False Left Ear Comments" ID="ComLeftF" />
                         </td>
                       </tr>
                       <tr>
                         <td>-ve</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkRightFNeg" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="-ve Right Ear Comments" ID="ComRightFNeg" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="-ve Right Ear Comments" ID="ComRightFNeg" />
                         </td>
                         <td>-ve</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkLeftFNeg" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="-ve Left Ear Comments" ID="ComLeftFNeg" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="-ve Left Ear Comments" ID="ComLeftFNeg" />
                         </td>
                       </tr>
                       <tr>
@@ -7355,12 +7355,12 @@
                         <td>Central</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkcentral" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="Central Comments" ID="ComCentral" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="Central Comments" ID="ComCentral" />
                         </td>
                         <td>Lateralized</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkLateralized" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="Lateralized Comments" ID="ComLateralized" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="Lateralized Comments" ID="ComLateralized" />
                         </td>
                       </tr>
                       <tr>
@@ -7370,12 +7370,12 @@
                         <td>PTA</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkPTA" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="PTA Comments" ID="ComPTA" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="PTA Comments" ID="ComPTA" />
                         </td>
                         <td>Tympanometry</td>
                         <td>
                           <asp:CheckBox runat="server" ID="mchkTympanometry" />
-                          <asp:TextBox CssClass="textComment" runat="server" placeholder="Tympanometry Comments" ID="ComTympanometry" />
+                          <asp:TextBox CssClass="textComment mm" runat="server" placeholder="Tympanometry Comments" ID="ComTympanometry" />
                         </td>
                       </tr>
                     </tbody>
@@ -7420,14 +7420,18 @@
         </div>
       </div>
       <div class="modal-footer">
-        <input type="button" id="Button1" name="saveENT" value="Save" class="btn btn-primary" data-dismiss="modal" />
+          <div class="row">
+              <div class="col-lg-2 col-md-4 col-sm-6">
+                  <input type="button" id="Button1" name="saveENT" value="Save" class="btn btn-primry" data-dismiss="modal" />
+              </div>
+          </div>
       </div>
     </div>
   </div>
 </div>
 
 
-    <div id="PsychiatryModel" class="modal fade" role="dialog" style="width: 1080px; overflow-y: overaly; margin-left: 95px;">
+    <div id="PsychiatryModel" class="modal fade" role="dialog" style="overflow-y: overaly;">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 1060px;">
                 <div class="modal-header">
@@ -7453,17 +7457,17 @@
                             <li><a href="#PsychiatryTab-6">Formulation</a></li>
                         </ul>
                         <div id="PsychiatryTab-1">
-                            <table style="width: 860px; margin-top: 40px;">
+                            <table style="margin-top: 40px;">
                                 <tr>
-                                    <td>Informant(s):
+                                    <td style="width:100px;">Informant(s):
                                     </td>
                                     <td>
                                         <asp:TextBox ID="txtInformant" runat="server" TabIndex="16" TextMode="MultiLine"></asp:TextBox>
                                     </td>
-                                    <td>Source Of Referral
+                                    <td style="width:140px;">Source Of Referral
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtSourceOfReferral" runat="server" TabIndex="16" TextMode="MultiLine"></asp:TextBox>
+                                        <asp:TextBox ID="txtSourceOfReferral" runat="server" TabIndex="16" Style="width:200% !important" TextMode="MultiLine"></asp:TextBox>
                                     </td>
                                 </tr>
                                 <tr>
@@ -7477,18 +7481,23 @@
                                     </td>
                                 </tr>
                                 <tr>
-
-                                    <td>(a:) &nbsp; 
-                                        <asp:CheckBox ID="chkNeckHolding" Text="Neck Holding" runat="server" />
-                                        &nbsp;(b:) &nbsp;
-                                        <asp:CheckBox ID="chkWalking" runat="server" Text="Walking" />
+                                    <td colspan="2">(a:) Neck Holding &nbsp;
+                                    <asp:CheckBox ID="chkNeckHolding" runat="server" Style="position: relative; top: -17px;" />
                                     </td>
-                                    <td>(c:) &nbsp;
-                                        <asp:CheckBox ID="chkTalking" runat="server" Text="Talking" />
-                                        &nbsp;(d:) &nbsp;
-                                        <asp:CheckBox ID="chkOthers" runat="server" Text="Others" />
+                                    <td colspan="2">(b:) Walking &nbsp;
+                                    <asp:CheckBox ID="chkWalking" runat="server" Style="position: relative; top: -17px;" />
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="2">(c:) Talking &nbsp;
+                                    <asp:CheckBox ID="chkTalking" runat="server" Style="position: relative; top: -17px;" />
+                                    </td>
+                                    <td colspan="2">(d:) Others &nbsp;
+                                      <asp:CheckBox ID="chkOthers" runat="server" Style="position: relative; top: -17px;" />
+                                    </td>
+                                </tr>
+
+
                                 <tr>
                                     <td>Menarche
                                     </td>
@@ -7498,7 +7507,7 @@
                                     <td>Menstrual
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtMenstrual" runat="server" TabIndex="16" TextMode="MultiLine"></asp:TextBox>
+                                        <asp:TextBox ID="txtMenstrual" runat="server" TabIndex="16" Style="width:203% !important" TextMode="MultiLine"></asp:TextBox>
                                     </td>
                                 </tr>
                                 <tr>
@@ -7507,17 +7516,17 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>(a:) &nbsp;      Attachment/ Separation from Parents
+                                    <td colspan="2">(a:) &nbsp;      Attachment/ Separation from Parents
                                     </td>
 
-                                    <td>
+                                    <td colspan="2">
                                         <asp:TextBox ID="txtAttachmentSeparationfromParents" runat="server" TabIndex="16" TextMode="MultiLine"></asp:TextBox>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>(b:) &nbsp;      Health(Serious Illness, Severe Fever, Operation)
+                                    <td colspan="2">(b:) &nbsp;      Health(Serious Illness, Severe Fever, Operation)
                                     </td>
-                                    <td>
+                                    <td colspan="2">
                                         <asp:TextBox ID="txtHealth" runat="server" TabIndex="16" TextMode="MultiLine"></asp:TextBox>
                                     </td>
                                 </tr>
@@ -7525,12 +7534,14 @@
                                     <td>
                                         <h3>Neurotic Traits:</h3>
                                     </td>
-                                    <td>Nail Biting:
-                                         <asp:CheckBox ID="chkNailBiting" runat="server"></asp:CheckBox>
-                                        &nbsp; Temper Tantrums:
-                                         <asp:CheckBox ID="chkTemperTantrums" runat="server"></asp:CheckBox>
-                                        &nbsp; Bed Wetting:
-                                         <asp:CheckBox ID="chkBedWetting" runat="server"></asp:CheckBox>
+                                    <td>&nbsp;&nbsp;&nbsp;Nail Biting: 
+                                     <asp:CheckBox ID="chkNailBiting" Style="position:relative;top:-17px" runat="server" />&nbsp;&nbsp;
+    
+                                         Temper Tantrums: 
+                                         <asp:CheckBox ID="chkTemperTantrums" Style="position:relative;top:-17px" runat="server" />&nbsp;&nbsp;
+    
+                                         Bed Wetting: 
+                                         <asp:CheckBox ID="chkBedWetting" Style="position:relative;top:-17px" runat="server" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -7545,10 +7556,10 @@
                                     <td>
                                         <asp:TextBox ID="txtAcademics" runat="server" TabIndex="16" TextMode="MultiLine"></asp:TextBox>
                                     </td>
-                                    <td>(b:) &nbsp;      Peer Relationship
+                                    <td>(b:)Peer Relationship
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtPeerRelationship" runat="server" TabIndex="16" TextMode="MultiLine"></asp:TextBox>
+                                        <asp:TextBox ID="txtPeerRelationship" runat="server" TabIndex="16" Style="width:200%" TextMode="MultiLine"></asp:TextBox>
                                     </td>
                                 </tr>
                                 <tr>
@@ -7573,7 +7584,7 @@
                                     </td>
 
                                     <td>
-                                        <asp:TextBox ID="txtMaritalRelationshipSexualHistory" runat="server" TextMode="MultiLine"></asp:TextBox>
+                                        <asp:TextBox ID="txtMaritalRelationshipSexualHistory" Style="width:200%" runat="server" TextMode="MultiLine"></asp:TextBox>
                                     </td>
                                 </tr>
                                 <tr>
@@ -7587,7 +7598,7 @@
                                     </td>
 
                                     <td>
-                                        <asp:TextBox ID="txtForensicUse" runat="server" TextMode="MultiLine"></asp:TextBox>
+                                        <asp:TextBox ID="txtForensicUse" Style="width:200%" runat="server" TextMode="MultiLine"></asp:TextBox>
                                     </td>
                                 </tr>
 
@@ -7671,7 +7682,7 @@
                         </div>
 
                         <div id="PsychiatryTab-4">
-                            <table style="width: 860px;">
+                            <table>
                                 <tr>
                                     <td colspan="4">
                                         <h2>MentalStateExamination: </h2>
@@ -7683,11 +7694,11 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>(a:) &nbsp;       Actual and apparent age:</td>
+                                    <td style="width:200px">(a:) &nbsp;       Actual and apparent age:</td>
                                     <td>
                                         <asp:TextBox ID="txtActualandapparentage" runat="server" TextMode="MultiLine"></asp:TextBox>
                                     </td>
-                                    <td>(b:) &nbsp;      
+                                    <td style="width:14%">(b:) &nbsp;      
                                     Race:</td>
                                     <td>
                                         <asp:TextBox ID="txtRace" runat="server" TextMode="MultiLine"></asp:TextBox>
@@ -8330,20 +8341,21 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>(a:) &nbsp; 
-                                        <asp:CheckBox ID="chkPE_Neck_Rigidity" Text="Neck Rigidity" runat="server" />
+                                    <td colspan="2">(a:) Neck Rigidity &nbsp;
+                                    <asp:CheckBox ID="chkPE_Neck_Rigidity" Style="position:relative;top:-17px"  runat="server" />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>(b:) &nbsp; 
-                                        <asp:CheckBox ID="chkPE_Kerning_Sign" Text="Kerning's Sign" runat="server" />
+                                    <td colspan="2">(b:) Kerning's Sign &nbsp;
+                                    <asp:CheckBox ID="chkPE_Kerning_Sign" Style="position:relative;top:-17px" runat="server" />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>(c:) &nbsp; 
-                                        <asp:CheckBox ID="chkPE_Brudzinki_Sign" Text="Brudzinki's Sign" runat="server" />
+                                    <td colspan="2">(c:) Brudzinki's Sign &nbsp;
+                                     <asp:CheckBox ID="chkPE_Brudzinki_Sign" Style="position:relative;top:-17px" runat="server" />
                                     </td>
                                 </tr>
+
 
                             </table>
                         </div>
@@ -8473,7 +8485,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="Button4" name="saveENT" value="Save" data-dismiss="modal" />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" id="Button4" class="btn btn-primry" name="saveENT" value="Save" data-dismiss="modal" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -8649,10 +8665,13 @@
 
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="Button3" name="saveENT" value="Save" data-dismiss="modal" />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 co-sm-6">
+                            <input type="button" id="Button3" name="saveENT" value="Save" class="btn btn-primry" data-dismiss="modal" />
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -8660,7 +8679,7 @@
 
         <div class="modal-dialog">
 
-            <div class="modal-content" style="width: 1293px;">
+            <div class="modal-content" >
                 <div class="modal-header">
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Derma</h4>
@@ -8672,13 +8691,11 @@
                     <table class="test-table">
                         <tbody>
                             <tr>
-                                <td width="100px"></td>
+                                <td></td>
                                 <td width="120px">Face
                                 </td>
                                 <td>
                                     <asp:TextBox runat="server" type="text" ID="txtDermaFace" /></td>
-
-
                             </tr>
                             <tr>
                                 <td></td>
@@ -8728,7 +8745,7 @@
 
                         <tbody>
                             <tr>
-                                <td width="90px">Flexures
+                                <td width="120px">Flexures
                                 </td>
                                 <td>
                                     <asp:TextBox runat="server" type="text" ID="txtDermaFlexures" />
@@ -8831,10 +8848,13 @@
                 </div>
 
                 <div class="modal-footer">
-                    <input type="button" id="Button2" name="saveENT" value="Save" data-dismiss="modal" />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" id="Button2" name="saveENT" class="btn btn-primry" value="Save" data-dismiss="modal" />
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -8857,7 +8877,7 @@
                                     <asp:Label ID="Label20" runat="server" Text="Organ Name"></asp:Label>
                                 </td>
                                 <td>
-                                    <asp:DropDownList ID="ddlOrthoType" runat="server" Width="167px" AppendDataBoundItems="true" TabIndex="21">
+                                    <asp:DropDownList ID="ddlOrthoType" runat="server" Width="180px" AppendDataBoundItems="true" TabIndex="21">
                                     </asp:DropDownList>
                                 </td>
 
@@ -8871,7 +8891,7 @@
                                     <asp:Label ID="Label21" runat="server" Text="Organ Side"></asp:Label>
                                 </td>
                                 <td>
-                                    <asp:DropDownList ID="ddlOrthoSide" runat="server" Width="167px" AppendDataBoundItems="true" TabIndex="21">
+                                    <asp:DropDownList ID="ddlOrthoSide" runat="server" Width="180px" AppendDataBoundItems="true" TabIndex="21">
                                     </asp:DropDownList>
                                 </td>
                             </tr>
@@ -8881,11 +8901,11 @@
                     <table>
                         <tbody>
                             <tr>
-                                <td style="width: 100px">
+                                <td style="width: 39%">
                                     <h2>History</h2>
                                 </td>
                                 <td>
-                                    <asp:TextBox runat="server" type="text" ID="txtHistory" TextMode="MultiLine" />
+                                    <asp:TextBox runat="server" type="text" ID="txtHistory" Style="width:105% !important" TextMode="MultiLine" />
                                 </td>
                             </tr>
                         </tbody>
@@ -8894,8 +8914,8 @@
                         <tbody>
                             <tr>
 
-                                <td style="width: 100px"></td>
-                                <td>
+                                <td></td>
+                                <td style="width: 100px">
                                     <asp:Label ID="Label22" runat="server" Text="DM"></asp:Label>
 
                                 </td>
@@ -8942,7 +8962,7 @@
                         <tbody>
                             <tr>
 
-                                <td style="width: 100px"></td>
+                                <td></td>
                                 <td style="width: 100px">
                                     <asp:Label ID="Label25" runat="server" Text="Look"></asp:Label>
 
@@ -9008,29 +9028,23 @@
                         <tbody>
                             <tr>
 
-                                <td style="width: 100px"></td>
-                                <td style="width: 100px"></td>
+                                <td></td>
+                                <td></td>
                                 <td style="width: 100px">
                                     <asp:Label ID="Label29" runat="server" Text="Sensory"></asp:Label>
-
                                 </td>
                                 <td>
                                     <asp:TextBox runat="server" type="text" ID="txtSensory" />
-
                                 </td>
                             </tr>
-
                             <tr>
-
                                 <td></td>
                                 <td></td>
                                 <td>
                                     <asp:Label ID="Label30" runat="server" Text="Motor"></asp:Label>
-
                                 </td>
                                 <td>
                                     <asp:TextBox runat="server" type="text" ID="txtMotor" />
-
                                 </td>
                             </tr>
                             <tr>
@@ -9041,42 +9055,32 @@
                                 </td>
                                 <td>
                                     <asp:TextBox runat="server" type="text" ID="txtReflexes" />
-
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
                     <table>
                         <tbody>
                             <tr>
-
-                                <td style="width: 100px"></td>
                                 <td style="width: 100px">
                                     <asp:Label ID="Label32" runat="server" Text="Vascular Status"></asp:Label>
-
                                 </td>
                                 <td>
                                     <asp:TextBox runat="server" type="text" ID="txtVascularStatus" />
-
                                 </td>
                             </tr>
-
                             <tr>
-
-                                <td></td>
                                 <td>
                                     <asp:Label ID="Label33" runat="server" Text="Others"></asp:Label>
-
                                 </td>
                                 <td>
                                     <asp:TextBox runat="server" type="text" ID="txtOthers" />
                                 </td>
                             </tr>
                             <tr>
-
                                 <td>
-                                    <input type="button" id="btnAddOrtho" name="btnAddOrtho" value="Add" onclick="insertOrtho()" /></td>
+
+                                    <input type="button" class="btn btn-primry" id="btnAddOrtho" name="btnAddOrtho" value="Add" onclick="insertOrtho()" /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -9107,14 +9111,17 @@
                 </div>
 
                 <div class="modal-footer">
-                    <input type="button" id="Button5" name="saveENT" value="Save" data-dismiss="modal" />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" id="Button5" class="btn btn-primry" name="saveENT" value="Save" data-dismiss="modal" />
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <div id="ModelPeads" class="modal fade" role="dialog" style="width: 1080px; overflow-y: overaly; margin-left: 95px;">
+    <div id="ModelPeads" class="modal fade" role="dialog" style="overflow-y: overaly;">
         <div class="modal-dialog">
 
             <div class="modal-content" style="width: 1060px;">
@@ -9537,10 +9544,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="Button6" name="saveENT" value="Save" data-dismiss="modal" />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" id="Button6" name="saveENT" class="btn btn-primry" value="Save" data-dismiss="modal" />
+                        </div>
+                    </div>
                 </div>
-
-
             </div>
         </div>
     </div>

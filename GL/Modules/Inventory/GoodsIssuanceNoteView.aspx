@@ -67,21 +67,21 @@
                     });
                 },
                 "columns": [
-                    { "data": "Store_Issue_Id",visible :false },
-                    { "data": "Store_Issue_No","name": "Store_Issue_No" },
+                    { "data": "Store_Issue_Id", visible: false },
+                    { "data": "Store_Issue_No", "name": "Store_Issue_No", "orderable": true },
                     {
                         "data": "Created_Time",
                         "render": function (data, type, full) {
                             var date = full.Created_Time;
                             date = moment(date).format('D-MMM-YYYY');
                             return date;
-                        }
+                        }, "name": "Created_Time", "orderable": true
                     },
-                    { "data": "Department" },
-                    { "data": "WareHouse" },
-                    { "data": "Requester" },
-                    { "data": "Issuer" },
-                    { "data": "Status" },
+                    { "data": "Department", "orderable": false },
+                    { "data": "WareHouse", "orderable": false },
+                    { "data": "Requester", "orderable": false },
+                    { "data": "Issuer", "orderable": false },
+                    { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             var res = '<a href="#"  class="editListBtn" onclick="Edit(' + full.Store_Issue_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
@@ -93,7 +93,7 @@
                                 result = res + print;
                             }
                             return result;
-                        }
+                        }, "orderable": false
                     }
                 ],
                 "rowCallback": function (row, data, index) {

@@ -44,10 +44,9 @@
                     });
                 },
                 "columns": [
-                    { "data": "doc_id", "width": "0%", "orderable": false },
-                    { "data": "doc_id", "width": "0%", "visible": false},
-                    { "data": "Doc_name", "name": "Doc_name", "width": "20%" },  
-                    { "data": "Doc_Account", "width": "20%" },
+                    { "data": "doc_id", "name": "doc_id", "width": "10%", "orderable": true },
+                    { "data": "Doc_name", "name": "Doc_name", "width": "20%", "orderable": true },
+                    { "data": "Doc_Account", "width": "20%", "orderable": false },
                     {
                         "data": "Date",
                         "render": function (data, type, full) {
@@ -55,7 +54,7 @@
                             var date = full.Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "15%"
+                        }, "width": "15%", "orderable": false
                     },
                     {
                         render: function (data, type, full) {
@@ -64,7 +63,7 @@
                             var result;
                             result = res;                            
                             return result;
-                        }, "width": "4%"
+                        }, "width": "4%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -113,8 +112,7 @@
             <table id="example" class="table table-striped table-bordered display">
                 <thead>
                     <tr>
-                        <th>SR #</th>
-                        <th style="display:none">Doc Id</th>
+                        <th>Doctor Id</th>
                         <th>Doctor</th>                       
                         <th>Account</th>
                          <th>Date</th>

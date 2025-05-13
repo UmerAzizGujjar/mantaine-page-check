@@ -64,27 +64,27 @@
                 },
                 "columns": [
                     { "data": "Item_ID", "visible": false, "width": "0%" },
-                    { "data": "ItemCode", "name": "ItemCode" },
-                    { "data": "ItemName", "name": "ItemName" },
-                    { "data": "UOM", "name": "UOM" },
-                    { "data": "WareHouse", "name": "WareHouse" },
-                    { "data": "ItemCategory", "name": "ItemCategory" },
-                    { "data": "AccountCategory", "name": "AccountCategory" },
-                    { "data": "ItemType", "name": "ItemType" },                  
-                    { "data": "SaleRate", "name": "SaleRate" },
-                    { "data": "StockTotal", "name": "StockTotal" }, 
+                    { "data": "ItemCode", "name": "ItemCode", "orderable": true },
+                    { "data": "ItemName", "name": "ItemName", "orderable": false },
+                    { "data": "UOM", "name": "UOM", "orderable": true },
+                    { "data": "WareHouse", "name": "WareHouse", "orderable": false },
+                    { "data": "ItemCategory", "name": "ItemCategory", "orderable": false },
+                { "data": "AccountCategory", "name": "AccountCategory", "orderable": false },
+                { "data": "ItemType", "name": "ItemType", "orderable": false },                  
+                    { "data": "SaleRate", "name": "SaleRate", "orderable": false },
+                    { "data": "StockTotal", "name": "StockTotal", "orderable": false }, 
                     {
                         "data": "Active",
                         "name": "Active",
                         "render": function (data, type, full) {
                             return data ? 'Active' : 'InActive'; 
-                        }
+                        }, "orderable": false
                     },
                                     
                     {
                         "render": function (data, type, full) {
                             return '<a class="editListBtn" href="#" onclick="Edit(' + full.Item_ID + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
-                        }
+                        }, "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

@@ -48,7 +48,7 @@ namespace PMS.Inventory
                             StoreAdjustment = sortColumnDirection == "asc" ? StoreAdjustment.OrderBy(b => b.ItemCode) : StoreAdjustment.OrderByDescending(a => a.ItemCode);
                             break;
                         default:
-                            StoreAdjustment = StoreAdjustment.OrderByDescending(a => a.Adjustment_No);
+                            StoreAdjustment = StoreAdjustment.OrderByDescending(a => a.Adjustment_Id);
                             break;
                     }
 

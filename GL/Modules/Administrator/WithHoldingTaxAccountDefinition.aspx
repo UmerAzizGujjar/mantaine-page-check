@@ -158,8 +158,8 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row" style="float: right;">
-         <div class="col-lg-2 col-md-4 col-sm-12">
+    <div class="row">
+         <div class="col-lg-1 col-md-4 col-sm-12">
                     <input type="button" onclick="Addrow()" class="btn-primry" value="+" id="AddAccount" />
                 </div>
     </div>

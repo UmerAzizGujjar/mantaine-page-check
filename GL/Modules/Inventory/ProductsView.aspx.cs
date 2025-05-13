@@ -93,11 +93,11 @@ namespace PMS.Inventory
                         case "ItemCode":
                             inv_Items = sortColumnDirection == "asc" ? inv_Items.OrderBy(a => a.ItemCode) : inv_Items.OrderByDescending(a => a.ItemCode);
                             break;
-                        case "ItemName":
-                            inv_Items = sortColumnDirection == "asc" ? inv_Items.OrderBy(a => a.ItemName) : inv_Items.OrderByDescending(a => a.ItemName);
+                        case "UOM":
+                            inv_Items = sortColumnDirection == "asc" ? inv_Items.OrderBy(a => a.UOM) : inv_Items.OrderByDescending(a => a.UOM);
                             break;
                         default:
-                            inv_Items = inv_Items.OrderBy(a => a.ItemCode);
+                            inv_Items = inv_Items.OrderByDescending(a => a.Item_ID);
                             break;
                     }
 

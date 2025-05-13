@@ -45,12 +45,12 @@
                 },
                 "columns": [
                     { "data": "Menu_ID", "name": "Menu_ID", "visible": false, "width": "0%" },
-                    { "data": "Menu_Name", "name": "Menu_Name" },
-                    { "data": "Menu_Description", },
-                    { "data": "URL", width:"10%" },
-                    { "data": "Parent_Menu", },
-                    { "data": "Order_By", },
-                    { "data": "IsActive",  },
+                    { "data": "Menu_Name", "name": "Menu_Name", "width": "6%", "orderable": true },
+                    { "data": "Menu_Description", "orderable": false, "width": "10%" },
+                    { "data": "URL", width: "10%", "orderable": false, "width": "15%" },
+                    { "data": "Parent_Menu", "orderable": false, "width": "5%" },
+                    { "data": "Order_By", "orderable": false, "width": "3%" },
+                    { "data": "IsActive", "orderable": false, "width": "3%" },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -60,7 +60,7 @@
                             var result;
                             result = res + Delete;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "3%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

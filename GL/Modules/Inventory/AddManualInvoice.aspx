@@ -504,24 +504,17 @@
     </div>
 
 
-    <div class="row" style="margin-top: 5px;">      
-       
-
+    <div class="row" style="margin-top: 5px;">
         <div class="col-lg-4 col-md-6 col-sm-8">
-                <label id="lb_Remarks">Remarks</label>
-                <textarea cols="2" rows="1" style="width: 100%" id="txtRemarks" name="txtRemarks"></textarea>
-            </div>
-       
-        
+            <label id="lb_Remarks">Remarks</label>
+            <textarea cols="2" rows="1" style="width: 100%" id="txtRemarks" name="txtRemarks"></textarea>
+        </div>
         <div class="col-lg-1 col-md-6 col-sm-6">
             <input type="button" class="btn btn-primry" onclick="Addrow()" value="+" id="AddAccount" style="margin-top: 26px !important" />
         </div>
     </div>
 
-
-
-    
-    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12 table-responsive-lg table-responsive-md">
+    <div >
         <table class="table table-bordered" id="tblItemDescription" style="text-align: center;">
             <thead>
                 <tr>
@@ -540,9 +533,9 @@
             </tbody>
         </table>
     </div>
-
+    
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-6">
             <div class="row">
            <div class="col-lg-2 col-md-3">
             <input type="button" class="btn btn-primry" name="btn_Save" id="btn_Save" value="Save" onclick="SaveAllRecord()" />

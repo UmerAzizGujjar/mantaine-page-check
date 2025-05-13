@@ -50,7 +50,7 @@
                 "columns": [
                     { "data": "Stock_Transfer_ID", "visible": false, "width": "0%" },
                     { "data": null, "orderable": false, "width": "8%" },
-                    { "data": "Stock_Transfer_No", "name": "Stock_Transfer_No", "width": "12%" },
+                    { "data": "Stock_Transfer_No", "name": "Stock_Transfer_No", "width": "12%", "orderable": true },
                     {
                         "data": "Stock_Transfer_Date", "name": "Stock_Transfer_Date",
                         "render": function (data, type, full) {
@@ -58,12 +58,12 @@
                             var date = full.Stock_Transfer_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "15%"
+                        }, "width": "15%", "orderable": false
                     },
-                    { "data": "WareHouseFrom", "width": "15%" },
-                    { "data": "WareHouseTo", "width": "10%" },
-                    { "data": "Remarks", "width": "20%" },
-                    { "data": "Status", "width": "10%" },
+                    { "data": "WareHouseFrom", "width": "15%", "orderable": false },
+                    { "data": "WareHouseTo", "width": "10%", "orderable": false },
+                    { "data": "Remarks", "width": "20%", "orderable": false },
+                    { "data": "Status", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -73,7 +73,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
                 ],
                 "createdRow": function (row, data, dataIndex) {

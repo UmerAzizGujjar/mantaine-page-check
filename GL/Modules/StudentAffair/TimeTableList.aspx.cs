@@ -48,7 +48,7 @@ namespace PMS
                             Student = sortColumnDirection == "asc" ? Student.OrderBy(a => a.Classname) : Student.OrderByDescending(a => a.Classname);
                             break;
                         default:
-                            Student = Student.OrderBy(a => a.St_id);
+                            Student = Student.OrderByDescending(a => a.St_id);
                             break;
                     }
 
@@ -62,7 +62,7 @@ namespace PMS
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching patient list", ex);
+                throw new Exception("Error fetching Time Table list", ex);
             }
         }
 

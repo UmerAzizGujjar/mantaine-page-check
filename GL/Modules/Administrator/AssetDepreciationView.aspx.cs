@@ -40,10 +40,12 @@ namespace PMS.Modules.Administrator
                     var FilteredCount = dep.Count();
                     switch (sortColumn)
                     {
-                        case "Created_time":
+                        case "created_time":
                             dep = sortColumnDirection == "asc" ? dep.OrderBy(a => a.created_time) : dep.OrderByDescending(a => a.created_time);
                             break;
-                      
+                        default:
+                            dep = dep.OrderByDescending(a => a.Asset_Dep_ID);
+                            break;
                     }
 
 

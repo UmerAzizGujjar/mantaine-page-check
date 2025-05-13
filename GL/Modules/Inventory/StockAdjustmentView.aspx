@@ -52,25 +52,25 @@
                         });
                     },
                     "columns": [
-                        { "data": "Adjustment_Id",visible :false },
-                        { "data": "Adjustment_No", "name": "Adjustment_No" },
+                        { "data": "Adjustment_Id", visible: false },
+                        { "data": "Adjustment_No", "name": "Adjustment_No", "orderable": true },
                         {
                             "data": "AdjustmentDates",
                             "render": function (data, type, full) {
                                 var date = moment(full.AdjustmentDates).format('D-MMM-YYYY');
                                 return date;
-                            }
+                            }, "orderable": false
                         },
-                        { "data": "ItemCode" },
-                        { "data": "ItemDescription" },
-                        { "data": "Qty" },
-                        { "data": "Rate" },
-                        { "data": "Status" },
+                        { "data": "ItemCode", "name": "ItemCode", "orderable": true },
+                        { "data": "ItemDescription", "orderable": false },
+                        { "data": "Qty", "orderable": false },
+                        { "data": "Rate", "orderable": false },
+                        { "data": "Status", "orderable": false },
                         {
                             "data": null,
                             "render": function (data, type, full) {
                                 return '<a href="#"  class="editListBtn" onclick="Edit(' + full.Adjustment_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
-                            }
+                            }, "orderable": false
                         }
                     ],
                     "rowCallback": function (row, data, index) {

@@ -50,8 +50,8 @@
                 },
                 "columns": [
                     { "data": "TemplateID", "visible": false, "width": "0%" },
-                    { "data": "TemplateName", width: "20%" },
-                    { "data": "Doctor_Id", },
+                    { "data": "TemplateName", "name": "TemplateName", width: "20%", "orderable": true },
+                    { "data": "Doctor_Id", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -61,7 +61,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "10%"
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

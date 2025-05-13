@@ -41,8 +41,8 @@ namespace PMS.Account
                     var FilteredCount = role.Count();
                     switch (sortColumn)
                     {
-                        case "TemplateName":
-                            role = sortColumnDirection == "asc" ? role.OrderBy(a => a.RoleName) : role.OrderByDescending(a => a.Description);
+                        case "RoleName":
+                            role = sortColumnDirection == "asc" ? role.OrderBy(a => a.RoleName) : role.OrderByDescending(a => a.RoleName);
                             break;
 
                     }
@@ -57,7 +57,7 @@ namespace PMS.Account
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching patient list", ex);
+                throw new Exception("Error fetching Roles list", ex);
             }
         }
 
