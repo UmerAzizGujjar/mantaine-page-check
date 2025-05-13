@@ -41,6 +41,41 @@ namespace PMS
             }
             return data;
         }
+
+        //[WebMethod]
+        //public static string GetGLAccounts()
+        //{
+        //    string data = string.Empty;
+
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var result = (from account in db.GL_Accounts
+        //                      where account.Parent_Code == 244
+        //                      select new
+        //                      {
+        //                          account.Account_ID,
+        //                          account.Account_Name,
+        //                          account.Parent_Code,
+        //                      }).ToList();
+
+        //        data = new JavaScriptSerializer().Serialize(result);
+        //    }
+        //    return data;
+        //}
+
+        [WebMethod]
+        public static string GetGLAccounts()
+        {
+            string result = string.Empty;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemsList = (from i in db.GL_Accounts where i.Levels == 4 && (i.Bank == true || i.Cash == true) select new { i.Account_ID, name = i.Account_Code.ToString() + '-' + i.Account_Name }).ToList();
+            if (itemsList != null)
+            {
+                result = (new JavaScriptSerializer()).Serialize(itemsList);
+            }
+            return result;
+            // db.GL_Accounts.Where(x => x.Cash == true || x.Bank == true).ToList();
+        }
         [WebMethod]
         public static string GetItemCodes(int Pat_id)
         {
@@ -54,7 +89,7 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
-        } 
+        }
         [WebMethod]
         public static string GetItemCodesforipd(int pat_id)
         {
@@ -62,7 +97,7 @@ namespace PMS
             var pat_ids = (from p in db.Reg_patients join vs in db.In_Patients on p.pat_id equals vs.Patient_ID where vs.Patient_ID == Convert.ToInt32(pat_id) select vs.In_Patient_ID).FirstOrDefault();
             var itemCodes = (from op in db.Reg_patients
                              join ip in db.InPatientServices on op.pat_id equals ip.PatientId
-                             where ip.PatientType == "IPD" 
+                             where ip.PatientType == "IPD"
                                && ip.In_Patient_Id == pat_ids
                             && (ip.isbilled ?? false) == false
                              select ip.Service_ItemId).ToList();
@@ -418,7 +453,7 @@ namespace PMS
                     }
                     RecommendedService.Amount = (rate == null) ? 0 : Convert.ToDecimal(rate);
 
-               
+
                     listRecommendedTests.Add(RecommendedService);
                 }
             }
@@ -509,7 +544,7 @@ namespace PMS
                                                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
                                                      where vs.ValueSet_Name == "Test Groups" && dv.DataValue_Name == lbtD.Catagory_ID
                                                      select dv.Segment1).FirstOrDefault(),
-                                           
+
                                              Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
                                              ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                              ParentTrans_Type = "Test Group Category"
@@ -851,12 +886,12 @@ namespace PMS
             newBill.Charge_Policy = data.ChargePolicy;
             newBill.Referred_By = data.referred_by_doctor;
             newBill.Casher = data.Casher;
-          
+
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
             var inpatient_ID = db.In_Patients.Where(m => m.Patient_ID.Equals(data.Patient_ID)).Select(m => m.In_Patient_ID).ToList();
             var ipdid = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID=" + data.Patient_ID + "order by Created_Time desc");
 
-            if(ipdid != "There is no row at position 0.")
+            if (ipdid != "There is no row at position 0.")
             {
                 newBill.In_Patient_ID = Convert.ToInt32(ipdid);
             }
@@ -1249,7 +1284,7 @@ namespace PMS
 
 
                 var NewServices = (from t in ListOfDetails where t.Item_Type == "Service" select t).ToList();
-                if(NewServices.Count > 0)
+                if (NewServices.Count > 0)
                 {
                     foreach (var servs in NewServices)
                     {
@@ -1259,10 +1294,10 @@ namespace PMS
                             ipdservices.isbilled = true;
                             db.SubmitChanges();
                         }
-                       
-                       
+
+
                     }
-                  
+
                 }
 
                 if (NewTests.Count > 0)
@@ -1275,7 +1310,7 @@ namespace PMS
                     lt.Created_Time = DateTime.Now;
                     db.Laboratory_Tests.InsertOnSubmit(lt);
                     db.SubmitChanges();
-                    
+
                     foreach (var test in NewTests)
                     {
                         Lab_Test_Detail ltd = new Lab_Test_Detail();
@@ -1843,7 +1878,7 @@ namespace PMS
                 var Check_Doc = (from data in db.Doctor_Agreements
                                  join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
                                  where data.Doctor == doc_id
-                                 && dd.item_id.ToString() == item_id                            
+                                 && dd.item_id.ToString() == item_id
                                  && dd.AgrementTypeId == Aggreement_Type
                                  && (dd.service_description.Contains(item_name) || dd.test_description.Contains(item_name))
                                  select new { dd.services }).FirstOrDefault();
@@ -1926,7 +1961,7 @@ namespace PMS
                     {
                         var Service = db.INV_Items
                                         .Where(inv => inv.Item_ID == Convert.ToInt32(item_id) && inv.Services == true)
-                                        .Select(inv => new { doc_share = (inv.Doctor_Share / 100) * inv.Sale_Rate, hos_share  = (inv.Hospital_Share / 100) * inv.Sale_Rate })
+                                        .Select(inv => new { doc_share = (inv.Doctor_Share / 100) * inv.Sale_Rate, hos_share = (inv.Hospital_Share / 100) * inv.Sale_Rate })
                                         .FirstOrDefault();
 
                         return new JavaScriptSerializer().Serialize(Service);
@@ -2137,16 +2172,16 @@ namespace PMS
                                    where m.Bill_ID == Bill_ID
                                    select p).ToList();
             return (new JavaScriptSerializer()).Serialize(PackagesDetails);
-        }        
+        }
         [WebMethod]
         public static string GetBillingRecords(int Patient_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var PackagesDetails = (from 
-                                   m in db.Ar_Billings                                 
+            var PackagesDetails = (from
+                                   m in db.Ar_Billings
                                    where m.Patient_ID == Patient_ID && (m.In_Patient_ID != null && m.In_Patient_ID != 0)
                                    select new
-                                   {                                      
+                                   {
                                        m.Bill_No,
                                        m.Bill_ID,
                                        m.Net_Amount,
@@ -2161,25 +2196,25 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             var PackagesDetails = (from m in db.Ar_Billings
                                    join d in db.Ar_Billing_Details
-                                    on   m.Bill_ID equals d.Bill_ID
+                                    on m.Bill_ID equals d.Bill_ID
                                    where m.Bill_ID == Bill_Id
                                    select new
                                    {
                                        m.Bill_No,
-                                    d.Item_Name,
-                                    d.Item_ID,
-                                    d.Item_Type,
-                                    d.Net_Amount,
-                                    d.Qty,
-                                    d.Amount,
-                                    d.Discount_Amount
+                                       d.Item_Name,
+                                       d.Item_ID,
+                                       d.Item_Type,
+                                       d.Net_Amount,
+                                       d.Qty,
+                                       d.Amount,
+                                       d.Discount_Amount
                                    }).ToList();
             return (new JavaScriptSerializer()).Serialize(PackagesDetails);
         }
         [System.Web.Services.WebMethod]
 
         public static PatientDetail GetPatientDetails(string PatientID)
-        
+
         {
             int pat_id = 0;
             bool isExist_ipd = false;
@@ -2197,7 +2232,7 @@ namespace PMS
             {
                 pat_id = DBClass.GetPat_ID_By_PatientID_reg(Convert.ToInt32(PatientID));
             }
-         
+
             int Patien_No = DBClass.GetMRNOBy_PatientID_reg(Convert.ToInt32(PatientID));
             PatientDetail pt = new PatientDetail();
 
@@ -2287,7 +2322,7 @@ namespace PMS
                 pt.Follow = count.Count.ToString();
 
 
-          
+
                 return pt;
             }
             else
@@ -2295,7 +2330,7 @@ namespace PMS
         }
 
 
-        
+
 
         public class PatientDetail
         {
@@ -2334,9 +2369,9 @@ namespace PMS
 
             public string DiscountAmountFromMaster { get; set; }
             public string pkg_type { get; set; }
-            public string pkg_name { get; set; } 
+            public string pkg_name { get; set; }
             public string pkg_typefordetails { get; set; }
-            public string pkg_namefordetails { get; set; }        
+            public string pkg_namefordetails { get; set; }
             public string Package_Type { get; set; }
             public string Patient_Type_id { get; set; }
             public string In_Patient_Type { get; set; }
@@ -2555,7 +2590,7 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(result);
         }
 
-      
+
 
 
         public class TestPackageDetials
@@ -2627,7 +2662,7 @@ namespace PMS
                 listOfTest.Add(obj);
                 counter++;
             }
-           
+
             var listNew = (from t in db.DataValues
                            where t.Division == "005" && t.ValueSet_ID == 70
                            select new
@@ -2809,7 +2844,7 @@ namespace PMS
                         select new
                         {
                             t.Test_ID,
-                            t.Rate, 
+                            t.Rate,
                             Test_Name = SerialNo,
                             t.Group_Category,
                             TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
@@ -2847,9 +2882,9 @@ namespace PMS
 
                                        }).ToList();
                 return (new JavaScriptSerializer()).Serialize(GroupCategories);
-                 }
+            }
         }
-     
+
         [WebMethod]
         public static string PrintBillingDetail(int Bill_ID)
         {
