@@ -720,11 +720,11 @@
                 <input id="txt_invoiceAdjusted" class="form-control" type="text" name="txt_invoiceAdjusted" readonly="readonly" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_PaidAmount">Paid Amount</label>
+                <label id="lb_PaidAmount">Paid Amnt</label>
                 <input id="txt_PaidAmount" type="text" name="txt_PaidAmount" readonly="readonly" class="form-control" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_WTaxAmount" class="w115">W Tax Amount</label>
+                <label id="lb_WTaxAmount" class="w115">W Tax Amnt</label>
                 <input id="txt_WTaxAmount" class="form-control" type="text" readonly="readonly" name="txt_WTaxAmount" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
@@ -749,14 +749,14 @@
 
 
     <div class="row">
-        <div class="" style="width: 100%; overflow: scroll;">
+        <div class="col-lg-2" style="width: 100%; overflow: scroll;">
             <table class="table table-bordered" id="tblItemDescription">
                 <thead>
                     <tr>
                         <th class="table_heading_color">Invoice#</th>
-                        <th class="table_heading_color">Invoice Amt</th>
-                        <th class="table_heading_color">Advance Amt</th>
-                        <th class="table_heading_color" style="display: none;">SWHT Amt</th>
+                        <th class="table_heading_color">Invoice Amnt</th>
+                        <th class="table_heading_color">Advance Amnt</th>
+                        <th class="table_heading_color" style="display: none;">SWHT Amnt</th>
                         <th class="table_heading_color" >Payable</th>
                         <th class="table_heading_color" >Balance</th>
                         <th class="table_heading_color" >Adjusted</th>
@@ -765,10 +765,10 @@
                         <th class="table_heading_color" >WH Tax</th>
                         <th class="table_heading_color" style="display: none;">Wh On Inv Adj</th>
                         <th class="table_heading_color" style="display: none;">Taxtable SWHT</th>
-                        <th class="table_heading_color" >WH Tax Amt</th>
+                        <th class="table_heading_color" >WH Tax Amnt</th>
                         <th class="table_heading_color" >SalTax</th>
-                        <th class="table_heading_color" >SalTax Amt</th>
-                        <th class="table_heading_color" >Paid Amount</th>
+                        <th class="table_heading_color" >SalTax Amnt</th>
+                        <th class="table_heading_color" >Paid Amnt</th>
                         <th class="table_heading_color">Actions</th>
                     </tr>
                 </thead>

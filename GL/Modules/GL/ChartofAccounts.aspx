@@ -170,7 +170,7 @@
                     <br />
                     <asp:UpdatePanel runat="server" ID="upOptions" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div style="width: 777px;">
+                            <div style="margin-top:-20px;">
                                 <fieldset>
                                     <legend>Options
                                     </legend>

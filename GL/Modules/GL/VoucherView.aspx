@@ -205,9 +205,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-            <div class="col-lg-1">
+            <div class="col-lg-1 col-md-4 col-sm-6">
                 <input type="text" id="txt_date" style="width:100% !important" />
             </div>
+        
             <div class="col-lg-1 col-md-4 col-sm-12">
                 <input type="button" class="btn btn-primry" onclick="LoadPageByYear()" value="Year" style="width:100% !important" />
             </div>
@@ -215,7 +216,6 @@
             <input type="button" class="btn btn-primry" onclick="redirecttonew()" value="Add New" style="width:100% !important" />
         </div>
     </div>
-
     <div class="table-container">
         <table id="example" class="table table-hover table-bordered">
             <thead>

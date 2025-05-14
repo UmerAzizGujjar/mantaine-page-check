@@ -690,8 +690,8 @@
                         </td>
                         <td style="width: 15%;">
                             <div>
-                                <input class="form-control" type="text" id="txtAccountName" name="txtAccountName" placeholder="Search for a GL Accounts" />
-                                <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
+                                <input class ="form-control" type="text" id="txtAccountName"  name="txtAccountName" placeholder="Search for a GL Accounts" />
+                                <input type="hidden"  id="hdfAccount_Code" name="hdfAccount_Code" />
                             </div>
                         </td>
                         <td style="width: 10%;">

@@ -1,9 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="WithHoldingTaxAccountDefinition.aspx.cs" Inherits="PMS.WithHoldingTaxAccountDefinition" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
-        .select2 {
+       /* .select2 {
             width: 490px !important;
-        }
+        }*/
     </style> 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
@@ -163,25 +163,27 @@
                     <input type="button" onclick="Addrow()" class="btn-primry" value="+" id="AddAccount" />
                 </div>
     </div>
-    <div style="overflow: scroll; height: 276px !important; height: auto; width: 100%; position: relative;">
-        <table class="table responstable" id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset; height: auto; overflow: scroll">
-            <thead>
-                <tr>
-                    <th>Tax Type</th>
-                    <th>%</th>
-                    <th style="z-index: 5000;display:none">Payable Account Code</th>
-                    <th style="display:none">Payable Description</th>
-                    <th style="z-index: 5000;">Receivable Account Code</th>
-                    <th>Receivable Description</th>
-                    <th>S.T.W.H</th>
-                    <th>Active</th>
-                    <th style="z-index: 5000;">Action</th>
-                </tr>
-               
-            </thead>
-            <tbody id="tblItemDescriptionDetail">
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-9" style="overflow: scroll; height: 600px !important;position: relative;">
+            <table class="table responstable" id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset; height: auto; overflow: scroll">
+                <thead>
+                    <tr>
+                        <th>Tax Type</th>
+                        <th>%</th>
+                        <th style="z-index: 5000; display: none">Payable Account Code</th>
+                        <th style="display: none">Payable Description</th>
+                        <th style="z-index: 5000;">Receivable Account Code</th>
+                        <th>Receivable Description</th>
+                        <th>S.T.W.H</th>
+                        <th>Active</th>
+                        <th style="z-index: 5000;">Action</th>
+                    </tr>
+
+                </thead>
+                <tbody id="tblItemDescriptionDetail">
+                </tbody>
+            </table>
+        </div>
     </div>
      <div class="col-lg-1 col-md-4 col-sm-12">
     <input type="button" name="Save" class="btn btn-primry" value="Save" id="Savebtn" onclick="SaveAllRecord()" />

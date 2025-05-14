@@ -341,10 +341,14 @@
 
     .page-header {
         border-bottom: 1px dotted #438eb9 !important;
-        margin-left: 15px;
+        /*margin-left: 15px;*/
         margin-right: 15px;
         padding-bottom: 4px !important;
     }
+
+    .tokeninput{
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+}
 
     .notification {
         position: absolute;
