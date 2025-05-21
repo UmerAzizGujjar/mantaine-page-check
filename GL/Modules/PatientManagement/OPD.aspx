@@ -2,8 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <script type="text/javascript" src="../../wwwroot/CustomJs/OPD.js"></script>
-    <link href="../../wwwroot/css/CustomCss/OPD.css" rel="stylesheet" />
+    <script type="text/javascript" src="../../wwwroot/StandardTheme/CustomJs/OPD.js"></script>
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/OPD.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             DisableCardPrint();
