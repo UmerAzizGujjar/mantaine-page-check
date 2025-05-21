@@ -1,0 +1,13 @@
+#tblMedicines td,
+#tblMedicines th,
+#tblMedicines tbody {
+    border: none !important; /* Removes borders from td, th, and tbody */
+}
+
+#tblMedicines {
+    border-collapse: collapse; /* Ensures consistent behavior for table border styling */
+}
+
+#MedicationModel {
+    margin-top: 15px;
+}

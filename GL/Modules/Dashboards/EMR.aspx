@@ -1,11 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EMR.aspx.cs" Inherits="PMS.Modules.Dashboards.EMR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="../../wwwroot/Scripts/jquery-1.11.1.min.js"></script>
-    <script src="../../wwwroot/Scripts/jquery.canvasjs.min.js"></script>
+    <script src="../../wwwroot/Pakred/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="../../wwwroot/Pakred/Scripts/jquery.canvasjs.min.js"></script>
     
-    <link href="../../wwwroot/css/CustomCss/EMR.css" rel="stylesheet" />
-    <script src="../../wwwroot/js/apexchart.js"></script>
+    <link href="../../wwwroot/Pakred/css/CustomCss/EMR.css" rel="stylesheet" />
+    <script src="../../wwwroot/Pakred/js/apexchart.js"></script>
     <%--    <script src="../../wwwroot/CustomJs/EMR.js"></script>--%>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -789,7 +789,7 @@
         <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="card3">
                 <div class="profile-info">
-                    <img src="~../../../../wwwroot/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
+                    <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
                     <div class="profile-details">
                         <span class="profile-name" id="patname"></span>
                         <p><strong style="color: #438eb9 ">MR No:</strong> &nbsp; &nbsp; <span id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong style="color: #438eb9 ">Age:</strong> &nbsp; &nbsp; <span id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong style="color: #438eb9 ">Gender:</strong> &nbsp; &nbsp; <span id="gender"></span></p>

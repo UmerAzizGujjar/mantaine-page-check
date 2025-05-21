@@ -2,7 +2,7 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   <link href="../../wwwroot/css/Shortcuts.css" rel="stylesheet" />
+   <link href="../../wwwroot/Pakred/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -26,25 +26,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/RegisterPatient.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/Patient.png" alt="Patient" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/add.png" alt="Patient" style="object-fit: contain;" />
                     <h5 class="cocotxt">Reg Patient</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Appointment/Appointment.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/DoctorAppointment.png" alt="Appointment" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/medical-appointment.png" alt="Appointment" style="object-fit: contain;" />
                     <h5 class="cocotxt">Appointment</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/OPD.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/IPDadmission.png" alt="OPD" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/opd.png" alt="OPD" style="object-fit: contain;" />
                     <h5 class="cocotxt">OPD</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/OutPatients.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/OPDprescription.png" alt="Prescription" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/medical-record.png" alt="Prescription" style="object-fit: contain;" />
                     <h5 class="cocotxt">OPD Prescription</h5>
                 </a>
             </div>
@@ -53,25 +53,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/EmergencyCase.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/Emergency.png" alt="Emergency" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/first-aid-box.png" alt="Emergency" style="object-fit: contain;" />
                     <h5 class="cocotxt">Emergency</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientsAdmission.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/IpdAdmissions.png" alt="Purchase" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/inpatienta.png" alt="Purchase" style="object-fit: contain;" />
                     <h5 class="cocotxt">IPD Admission</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientsCase.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/Addmittiedpatient.png" alt="Accounts" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/inpatient.png" alt="Accounts" style="object-fit: contain;" />
                     <h5 class="cocotxt">Admitted Patient</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientMonitoring.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/images/dashboard_Icons/Nursing.png" alt="Administration" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/nurse.png" alt="Administration" style="object-fit: contain;" />
                     <h5 class="cocotxt">Nursing</h5>
                 </a>
             </div>

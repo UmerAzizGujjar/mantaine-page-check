@@ -1,8 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CONSULTANT_WISE_STATISTICS.aspx.cs" Inherits="PMS.CONSULTANT_WISE_STATISTICS" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-  <link href="js/select2.min.css" rel="stylesheet" />
-  <script src="js/select2.min.js"></script>
+  
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <style>
     select{

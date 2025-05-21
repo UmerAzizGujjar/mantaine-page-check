@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TestDefination.aspx.cs" Inherits="PMS.TestDefination" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/css/CustomCss/TestDefinition.css" rel="stylesheet" />
+    <link href="../../wwwroot/Pakred/css/CustomCss/TestDefinition.css" rel="stylesheet" />
     <script type="text/javascript">
         function FillOutSourceLabs() {
 
@@ -947,7 +947,7 @@
                         <div id="dvIPDRates">
                             <fieldset class="mt-n3">
                                 <legend>IPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus text-danger " style="font-size: 20px;float:right;margin-top:-10px;" onclick="IPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-10px;" onclick="IPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="IPD_Test_Rate_Table">
                                         <thead>
@@ -968,7 +968,7 @@
                         <div id="dvOPDRats">
                             <fieldset class="mt-n3">
                                 <legend>OPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus text-danger" style="font-size: 20px;float:right;margin-top:-10px;"  onclick="OPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-10px;"  onclick="OPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="OPD_Test_Rate_Table">
                                         <thead>
@@ -1003,7 +1003,7 @@
                             <div class="Ultra_values_table">
                                 <fieldset>
                                     <input type="button" class="btn btn-primry" id="loadultraSounds" value="Ultrasound Format" style="width: auto !important;" />
-                                    <a href="javascript:void(0)" style="color: #e00606db; font-size: 20px; float: right;" class="fa fa-plus" onclick="Level_value()"></a>
+                                    <a href="javascript:void(0)" style=" font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="Level_value()"></a>
                                     <table id="TblUltra_Value" class="table">
                                         <thead>
                                             <tr>
@@ -1026,7 +1026,7 @@
                             <div class="values_table">
                                 <fieldset>
                                     <legend>Values: &nbsp;&nbsp;<input type="checkbox" id="chkvalue" name="chkvalue" /></legend>
-                                    <a href="javascript:void(0)" style="color: #e00606db; font-size: 20px; float: right;" class="fa fa-plus" onclick="new_value()"></a>
+                                    <a href="javascript:void(0)" style=" font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="new_value()"></a>
                                     <table id="TestValues" class="table">
                                         <thead>
                                             <tr>

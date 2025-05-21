@@ -4,145 +4,8 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <style type="text/css">
-        .login {
-            font-family: "Open Sans";
-        }
 
-        .header h1 {
-            padding-left: 10px;
-            color: #fff;
-        }
-
-        .main table {
-            border: none !important;
-            background-color: transparent !important;
-        }
-
-        fieldset p {
-            margin: 0;
-        }
-
-        select, input.textEntry,
-        input.passwordEntry {
-            width: 100% !important;
-            height: 40px;
-        }
-
-        input.textEntry,
-        input.passwordEntry {
-            font-weight: 400 !important;
-        }
-
-        p.submitButton {
-            padding-top: 15px;
-        }
-
-        .main .submitButton input {
-            border-radius: 3px;
-            font-size: 12px;
-            line-height: 1.5;
-            padding: 5px 10px;
-            background-color: #438eb9 ;
-            border-color: #357ebd;
-            color: white;
-            text-align: center;
-            vertical-align: middle;
-            white-space: nowrap;
-            margin-bottom: 0;
-            font-weight: normal;
-            box-shadow: none;
-            text-shadow: none;
-            border: 0;
-            width: 75px;
-            height: 29px;
-            cursor: pointer;
-            display: inline-block;
-            background-image: none;
-            margin-right: 14%;
-        }
-
-            .main .submitButton input:focus {
-                background-color: #484B4D;
-            }
-
-        .toolbar {
-            padding-left: 20px;
-            left: -36px;
-            margin: 0 !important;
-            position: relative;
-            top: 16px;
-            width: 340px;
-        }
-
-        .popupContainer {
-            color: #fff;
-        }
-
-        /*input.textEntry,
-        input.passwordEntry {
-            position: relative;
-            left: 50px;
-            top: -1px;
-        }*/
-
-        input:hover {
-            border: 2px solid #FFC000 !important;
-        }
-
-        select:hover {
-            border: 2px solid #FFC000 !important;
-        }
-
-        select {
-            margin-left: 0 !important;
-            position: relative;
-            top: 7px;
-        }
-
-        .input-field label {
-            color: black !important;
-        }
-
-        #ctl00_MainContent_ErrorUserName, #ErrorUserName {
-            margin-top: 11px !important;
-        }
-
-        ctl00_MainContent_ErrorPassword, #ErrorPassword {
-            margin-top: 10px !important;
-        }
-           #ctl00_MainContent_UserLogin_LoginButton {}
-         #ctl00_MainContent_UserLogin_LoginButton {
-         text-align: center;
-            text-transform: uppercase;
-            transition: 0.5s;
-            background-size: 200% auto;
-            color: white;            
-            box-shadow: 0 0 20px #fff;
-            border-radius: 14px !important;
-            display: block;
-            width: 50% !important;
-            height:40px;
-             margin-left: 70px;
-          }
-
-          #ctl00_MainContent_UserLogin_LoginButton:hover {
-           background-position: right center; /* change the direction of the change here */
-            color: #fff;
-            text-decoration: none;
-            border:1px solid aliceblue !important;
-
-          }
-          .h2 {
-              color:#438eb9 ;
-              margin-left:-80%;
-          }
-          .labels {
-              color:#438eb9  !important;
-
-          }
-    </style>
-
+    <link href="../../wwwroot/Pakred/css/CustomCss/login.css" rel="stylesheet" />
     
 
 
@@ -176,7 +39,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <asp:TextBox ID="UserName" runat="server" autocomplete="off" CssClass="textEntry" Style="border: 1px solid #6baee9 !important;margin-top:10px;width:100% !important;border-radius:12px !important;height:40px"></asp:TextBox>
+                                        <asp:TextBox ID="UserName" runat="server" autocomplete="off" CssClass="textEntry"></asp:TextBox>
                                         <p id="ErrorUserName"></p>
                                         <asp:RequiredFieldValidator ID="UserNameRequired" runat="server" ControlToValidate="UserName"
                                             CssClass="" ErrorMessage="UserName is required." ToolTip="User Name is required." ValidationGroup="LoginUserValidationGroup" Display="Dynamic" EnableClientScript="false"></asp:RequiredFieldValidator>
@@ -190,7 +53,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <asp:TextBox ID="Password" autocomplete="off" Style="border: 1px solid #6baee9 !important;margin-top: 10px;width:100% !important;border-radius:12px !important;height:40px" runat="server" CssClass="passwordEntry" TextMode="Password"></asp:TextBox><br />
+                                        <asp:TextBox ID="Password" autocomplete="off" runat="server" CssClass="passwordEntry" TextMode="Password"></asp:TextBox><br />
                                         <p id="ErrorPassword"></p>
                                         <asp:RequiredFieldValidator ID="PasswordRequired" runat="server" ControlToValidate="Password"
                                             CssClass="" ErrorMessage="Password is required." ToolTip="Password is required."
@@ -205,7 +68,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <asp:DropDownList runat="server" Style="border: 1px solid #6baee9 !important;width:100% !important;border-radius:12px !important;height:40px" ID="ddlCompany" AppendDataBoundItems="true">
+                                        <asp:DropDownList runat="server"  ID="ddlCompany" AppendDataBoundItems="true">
                                         </asp:DropDownList>
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ErrorMessage="Company is required." Text="*"
                                             ControlToValidate="ddlCompany" runat="server" ValidationGroup="LoginUserValidationGroup" ToolTip="Company is required." InitialValue="0" />

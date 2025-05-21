@@ -1,0 +1,5 @@
+.numericUpDown { float:left; }
+.numericUpDown input { float:inherit; }
+.numericUpDown > div { padding-top:2px;float:inherit; width:20px; }
+.numericUpDown > div > div { float:inherit; border:1px solid black; }
+.numericUpDown > div > div > a img { float:inherit; height:10px; width:inherit; display:block; }

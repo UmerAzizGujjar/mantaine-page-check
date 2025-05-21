@@ -159,11 +159,14 @@ legend {
     font-weight: bold;
     font-weight: normal;
     background-repeat: repeat-x;
-    background-image: linear-gradient(to bottom, #fd494a 0, #881414 100%) !important;
+    background-image: linear-gradient(to bottom, #438eb9 0, #23403b 100%) !important;
     color: whitesmoke;
     background-attachment: scroll;
     border-radius: 20px;
     font-size: 14px;
+}
+.iconAdd {
+    color: #438eb9 !important;
 }
 
 

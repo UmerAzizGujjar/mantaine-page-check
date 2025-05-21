@@ -4,7 +4,7 @@
 
 
 
-    <script src="../../wwwroot/js/apexchart.js"></script>
+    <script src="../../wwwroot/Pakred/js/apexchart.js"></script>
 
 
     <style type="text/css">
