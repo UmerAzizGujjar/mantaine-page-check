@@ -20,6 +20,9 @@
             font-size: 14px;
         }
 
+        #token-input-txtAccountName {
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+}
 
 
     </style>

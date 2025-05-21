@@ -950,7 +950,7 @@
                                     <tr>
                                         <th>Item Code</th>
                                         <th>Description</th>
-                                        <th>Invoice Amt</th>
+                                        <th>Invoice Amnt</th>
                                         <th>PO No</th>
                                         <th>PO Date</th>
                                         <th>IGP #</th>
@@ -961,11 +961,11 @@
                                         <th>Qty</th>
                                         <th>Rate</th>
                                         <th>Disc%</th>
-                                        <th>Disc Amt</th>
+                                        <th>Disc Amnt</th>
                                         <th>S.Tax%</th>
-                                        <th>S.Tax Amt</th>
+                                        <th>S.Tax Amnt</th>
                                         <th>Value</th>
-                                        <th>Total Amt</th>
+                                        <th>Total Amnt</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

@@ -260,15 +260,15 @@
 
         <div class="row">
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <label>Paid Amount</label>
+                <label>Paid Amnt</label>
                 <input type="text" readonly="readonly" name="txt_paidamount" id="txt_paidamount" class="form-control" />
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <label>Total  Amount </label>
+                <label>Total  Amnt </label>
                 <input type="text" readonly="readonly" name="txtTotalAmount" id="txtTotalAmount" class="form-control" />
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <label>Advance Amount</label>
+                <label>Advance Amnt</label>
                 <input type="text" id="advance_amount" class="form-control" onchange="calculatetax()" />
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
@@ -277,7 +277,7 @@
                 </select>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <label>With Holding Tax Amount</label>
+                <label>With Holding Tax Amnt</label>
                 <input type="text" id="withhold_tax_amount" readonly="readonly" class="form-control" />
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">

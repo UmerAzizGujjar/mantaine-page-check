@@ -335,20 +335,25 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <input type="text" style="width:100% !important" id="txt_date" />
-        </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry" style="width:100% !important" onclick="LoadPage()" value="Month"/>
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="text" style="width: 100% !important" id="txt_date" />
+                </div>
+                <div class="col-lg-8 col-md-4 col-sm-6" style="margin-left: -16px">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" style="width: 100% !important" onclick="LoadPage()" value="Month" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" style="width: 100% !important" onclick="LoadPageByYear()" value="Year" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" style="width: 100% !important" onclick="redirecttonew()" value="Add New" />
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry" style="width:100% !important" onclick="LoadPageByYear()" value="Year"/>
-            </div>
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-primry" style="width:100% !important" onclick="redirecttonew()" value="Add New" />
         </div>
     </div>
-
     <div class="table-container">
         <table id="example" class="table table-hover table-bordered">
             <thead>

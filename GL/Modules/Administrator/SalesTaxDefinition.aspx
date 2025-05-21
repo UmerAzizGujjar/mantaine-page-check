@@ -59,13 +59,13 @@
                     rows += '<tr>' +
                         '<td style="display:none"><input type=text id="Sales_Tax_ID" name="Sales_Tax_ID" value="' + data[key].Sales_Tax_ID + '"/></td>' +
                         '<td><input style="width: 175px !important;" type=text id="Tax_Type' + (key + 1) + '" name="Tax_Type"  value="' + value.Tax_Type + '" readonly="readonly" /></td>' +
-                        '<td><input style="width: 35px !important;" type=text class="form-control" id="Sales_Tax_Perc' + (key + 1) + '" name="Sales_Tax_Perc" value="' + value.Sales_Tax_Perc + '" readonly="readonly"/></td>' +
+                        '<td><input style="width: 65px !important;" type=text class="form-control" id="Sales_Tax_Perc' + (key + 1) + '" name="Sales_Tax_Perc" value="' + value.Sales_Tax_Perc + '" readonly="readonly"/></td>' +
                         '<td style="display:none"><select style="width: 175px !important;" readonly="readonly" id="Account_ID_Payable' + (key + 1) + '" name="Account_ID_Payable" onchange="loadpayableaccountgl(this)">' + _global_payable + '</select></td>' +
                         '<td style="display:none"><input style="width: 165px !important;" type=text id="Description_Payable' + (key + 1) + '" readonly="readonly" name="Description_Payable"  value="' + value.Description_Payable + '"/></td>' +
                         '<td><select style="width: 175px !important;" id="Account_Code_Recvable' + (key + 1) + '" name="Account_Code_Recvable" readonly="readonly" onchange="loadrecvablaccountegl(this)" >' + _global_receiveable + '</select></td>' +
                         '<td><input style="width: 165px !important;" type=text id="Description_Recvable' + (key + 1) + '" readonly="readonly" name="Description_Recvable"  value="' + value.Description_Recvable + '" /></td>' +
                         '<td><input type="checkbox" style="margin-left:-30px" id="chk_STWH' + (key + 1) + '" name="chk_STWH" ' + chk_STWH_checked + ' /></td>' +
-                        '<td><input type="checkbox" style="margin-left:-30px" id="chk_Active' + (key + 1) + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
+                        '<td><input type="checkbox" style="margin-left:-20px" id="chk_Active' + (key + 1) + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
                         '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">'
                     '</td>' +
                '</tr>';
@@ -88,13 +88,13 @@
             var rowlength = tblItemDescription.rows.length;
             rows += '<tr>' +
                 '<td><input  style="width: 175px !important;" type=text id="Tax_Type" name="Tax_Type"  value=""  /></td>' +
-                '<td><input  style="width: 35px !important;" type=text id="Sales_Tax_Perc" name="Sales_Tax_Perc" /></td>' +
+                '<td><input  style="width: 65px !important;" type=text id="Sales_Tax_Perc" name="Sales_Tax_Perc" /></td>' +
                 '<td style="display:none"><select style="width: 175px !important;" id="Account_ID_Payable" name="Account_ID_Payable" onchange="loadpayableaccountgl(this)">' + _global_payable + '</select></td>' +
                 '<td style="display:none"><input style="width: 165px !important;" type=text id="Description_Payable" name="Description_Payable" /></td>' +
                 '<td><select style="width: 175px !important;" id="Account_Code_Recvable' + rowlength + '" name="Account_Code_Recvable" onchange="loadrecvablaccountegl(this)">' + _global_receiveable + '</select></td>' +
                 '<td><input style="width: 165px !important;" type=text id="Description_Recvable" name="Description_Recvable"  /></td>' +
-                '<td><input type="checkbox" id="chk_STWH' + rowlength + '" name="chk_STWH" /></td>' +
-                '<td><input type="checkbox" id="chk_Active' + rowlength + '" name="chk_Active" /></td>' +
+                '<td><input style="margin-left:-30px !important" type="checkbox" id="chk_STWH' + rowlength + '" name="chk_STWH" /></td>' +
+                '<td><input style="margin-left:-20px !important" type="checkbox" id="chk_Active' + rowlength + '" name="chk_Active" /></td>' +
                 '<td><a href="javascript:void(0)" onclick="EditRow()"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">'
             '</td>' +
             '</tr>';
@@ -152,12 +152,13 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-         <div class="col-lg-1 col-md-4 col-sm-12" >
+         <div class="col-lg-1 col-md-4 col-sm-6" >
                     <input type="button" onclick="Addrow()" class="btn btn-primry" value="+" id="AddAccount"  />
                 </div>
     </div>
-    <div style="overflow: scroll; height: 350px !important; height: auto; width: 100%; position: relative;">
-        <table class="table responstable" id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important; width: 100% !important; overflow: unset; height: auto; overflow: scroll">
+    <div class="row">
+    <div class="col-lg-9 col-md-9 col-sm-9" style="overflow: scroll; height: 600px !important; position: relative;">
+        <table class="table responstable" id="tblItemDescription" style="margin-top: 13px; width: 100% !important; overflow: unset; height: auto; overflow: scroll">
             <thead>
                 <tr>
                     <th id="tax_th">Tax Type</th>
@@ -170,13 +171,12 @@
                     <th>Active</th>
                     <th style="z-index: 5000;">Action</th>
                 </tr>
-              
-               
             </thead>
             <tbody id="tblItemDescriptionDetail">
             </tbody>
         </table>
     </div>
+        </div>
     <div class="col-lg-1 col-md-4 col-sm-12">
     <input type="button" name="Save" class="btn btn-primry" value="Save" id="Savebtn" onclick="SaveAllRecord()" />
         </div>

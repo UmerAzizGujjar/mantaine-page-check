@@ -29,7 +29,7 @@
                 <tr>
                     <td>
                         <asp:Label ID="Label1" Text="Old Account" runat="server" /></td>
-                    <td style="padding-left:12px">
+                    <td style="padding-left:12px;width:78% !important;">
                         <asp:TextBox runat="server" ID="txtOldAccount_ID" Width="350" />
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ErrorMessage="Select old account." Display="Dynamic" SetFocusOnError="true" ControlToValidate="txtOldAccount_ID" runat="server" />
                     </td>
@@ -56,7 +56,7 @@
                 </tr>
             </table>
             <div class="row">
-                <div class="col-lg-5" style="margin-left:46px;margin-top:10px">
+                <div class="col-lg-5" style="margin-left:91px;margin-top:10px">
                     <div class="row">
                         <div class="col-lg-2">
                             <asp:Button Text="Update" CssClass="btn btn-primry" runat="server" ID="btnUpdate" OnClick="btnUpdate_Click" />

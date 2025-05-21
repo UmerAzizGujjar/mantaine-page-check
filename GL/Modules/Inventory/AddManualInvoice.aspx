@@ -524,8 +524,8 @@
                     <th >Qty</th>
                     <th >Rate</th>
                     <th >S.Tax%</th>
-                    <th >ST Amount</th>
-                    <th >Total Amount</th>
+                    <th >ST Amnt</th>
+                    <th >Total Amnt</th>
                     <th >Remove</th>
                 </tr>
             </thead>
