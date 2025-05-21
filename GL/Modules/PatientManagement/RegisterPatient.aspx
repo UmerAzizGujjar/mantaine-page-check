@@ -1,100 +1,12 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegisterPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.RegisterPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/css/CustomCss/Toaster.css" rel="stylesheet" />
-    <script src="../../wwwroot/CustomJs/RegPatient.js" type="text/javascript"></script>
-    <style type="text/css">
-
-        .card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid gray;
-        }
-
-        h5.section-title {
-            font-weight: 600;
-            margin-bottom: 1.2rem;
-        }
-
-        h5.section-title::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 5px;
-            height: 22px;
-            width: 4px;
-            background-color: #007bff;
-            border-radius: 2px;
-        }
-
-      
-
-        .form-floating input,
-        .form-floating select {
-            border: none;
-            border-bottom: 2px solid #ccc;
-            padding: 0.45rem 0.75rem;
-            transition: all 0.3s ease;
-            background: transparent;
-            outline: none;
-        }
-
-        .form-floating input:focus,
-        .form-floating select:focus {
-            border-color: #007bff;
-            box-shadow: none;
-        }
-
-        .span_txt {
-            color: #d63031;
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-            display: block;
-        }
-
-        .btn-custom {
-            border-radius: 8px;
-            padding: 0.5rem 1.2rem;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        .row + .row {
-            margin-top: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .card-body .row > div {
-                margin-bottom: 1rem;
-            }
-        }
-    </style>
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/Toaster.css" rel="stylesheet" />
+    <script src="../../wwwroot/StandardTheme/CustomJs/RegPatient.js" type="text/javascript"></script>
+    <link href="../../wwwroot/StandardTheme/css/RegPat.css" rel="stylesheet" />
 
       <script type="text/javascript">
-     $(document).ready(function () {
-         var reg_id = '<%= Request.QueryString["Reg_id"] %>'
+          $(document).ready(function () {
+              var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
              setTimeout(function () {
              Get_Pat_Info(reg_id);

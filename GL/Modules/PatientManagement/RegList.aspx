@@ -1,28 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegList.aspx.cs" Inherits="PMS.RegList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/css/tablestyle.css" rel="stylesheet" />
-    <style type="text/css">
-table.dataTable thead > tr > th.sorting_desc::after {
-    content: "▼"; 
-    color: #000; 
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    transform: translateY(-50%);
-}
+    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
 
-.dataTable > thead > tr > th.sorting_desc, .dataTable > thead > tr > th.sorting_asc {
-    background-repeat: repeat-x;
-    background-image: linear-gradient(to bottom, #438eb9  0, #438eb9  100%) !important;
-}
 
-table.dataTable thead>tr>th.sorting_asc:before, table.dataTable thead>tr>th.sorting_desc:after, table.dataTable thead>tr>td.sorting_asc:before, table.dataTable thead>tr>td.sorting_desc:after {
-     opacity: 1 !important; 
-    color: white;
-}
-
-    </style>
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;

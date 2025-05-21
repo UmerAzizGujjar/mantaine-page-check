@@ -594,6 +594,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\DoctorAgrement.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Employee.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Forms.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\EMR.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\IGP.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\inv_org.css" />
