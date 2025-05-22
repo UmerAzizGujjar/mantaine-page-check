@@ -2,7 +2,7 @@
     CodeBehind="Register.aspx.cs" Inherits="PMS.Account.Register" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/registeruser.css" rel="stylesheet" />
+    <link href="../../wwwroot/Pakred/css/CustomCss/registeruser.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
 

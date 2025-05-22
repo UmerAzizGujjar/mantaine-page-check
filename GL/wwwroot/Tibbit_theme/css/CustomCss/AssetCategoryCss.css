@@ -1,0 +1,51 @@
+﻿/*.CustomeAddBtn {
+    background-color: #EFA63E   !important;
+    border: 5px solid #a73434 !important;
+    cursor: pointer;
+    margin-top: 23px !important;
+}
+
+    .CustomeAddBtn:active {
+        background-color: #EFA63E   !important;
+        border-color: #27689d;
+    }
+
+
+    .CustomeAddBtn, .CustomeAddBtn:focus {
+        background-color: #EFA63E   !important;
+        border: 5px solid #a73434 !important;
+        cursor: pointer;
+    }
+
+        .CustomeAddBtn:hover {
+            background-color: #ba0000 !important;
+            border: 5px solid #a73434 !important;
+        }
+
+        .CustomeAddBtn:active, .open .btn-primary.dropdown-toggle {
+            background-color: #EFA63E   !important;
+            border-color: #EFA63E  ;
+        }
+
+        .CustomeAddBtn.no-border:hover, .btn-primary.no-border:active {
+            border-color: #1b6aaa;
+        }
+
+        .CustomeAddBtn.no-hover:hover, .btn-primary.no-hover:active {
+            background-color: #EFA63E   !important;
+        }
+
+        .CustomeAddBtn.active {
+            background-color: #EFA63E   !important;
+            border-color: #27689d;
+        }
+
+        .CustomeAddBtn.no-border.active {
+            background-color: #EFA63E   !important;
+            border-color: #2b72ae;
+        }
+
+        .CustomeAddBtn.disabled, .CustomeAddBtn[disabled], fieldset[disabled] .CustomeAddBtn, .CustomeAddBtn.disabled:hover, .CustomeAddBtn[disabled]:hover, fieldset[disabled] .CustomeAddBtn:hover, .CustomeAddBtn.disabled:focus, .CustomeAddBtn[disabled]:focus, fieldset[disabled] .CustomeAddBtn:focus, .CustomeAddBtn.disabled:active, .CustomeAddBtn[disabled]:active, fieldset[disabled] .CustomeAddBtn:active, .CustomeAddBtn.disabled.active, .CustomeAddBtn[disabled].active, fieldset[disabled] .CustomeAddBtn.active {
+            background-color: #EFA63E   !important;
+            border-color: #EFA63E  ;
+        }*/
