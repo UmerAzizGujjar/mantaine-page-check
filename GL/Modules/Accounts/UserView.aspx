@@ -1,21 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="UserView.aspx.cs" Inherits="PMS.Account.UserView" Theme="Default_Theme" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .header-red {
-            background-color: #438eb9  !important;
-            color: white; /* Optional: set text color to white for contrast */
-        }
-        .mobileInput{
-            width:200px !important;
-
-        }
-        td {
-            padding-left:5px !important;
-        }
-       
-      
-    </style>
+    <link href="../../wwwroot/Pakred/css/CustomCss/Userview.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">

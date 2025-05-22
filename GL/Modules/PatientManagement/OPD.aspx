@@ -175,19 +175,19 @@
             <div class="col-lg-4 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Pakred/images/HMIS_Icons/adduser.png" alt="Register Icon" width="32" height="32">
-                    <span><a style="color: #438eb9 ;">Register a new patient</a></span>
+                    <span><a class="anchorOnOPD" >Register a new patient</a></span>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12" style="cursor: pointer" id="btnSearchApp_Patient" onclick="SearchPop_App()">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Pakred/images/HMIS_Icons/appointmenticon.png" width="32" height="32">
-                    <span><a style="color: #438eb9 ;">Search in appointment</a></span>
+                    <span><a class="anchorOnOPD">Search in appointment</a></span>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12" style="cursor: pointer" id="btnsearchpatlist">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Pakred/images/HMIS_Icons/existingpaticon.png" alt="Search" h="32" height="32">
-                    <span><a style="color: #438eb9 ;">Search an existing patient</a></span>
+                    <span><a class="anchorOnOPD">Search an existing patient</a></span>
                 </div>
             </div>
         </div>

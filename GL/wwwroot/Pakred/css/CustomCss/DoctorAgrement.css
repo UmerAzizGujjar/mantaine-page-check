@@ -10,7 +10,11 @@
     border-bottom: 1px solid aliceblue !important;
     color: white !important;
 }
-
+.fa-plus-circle {
+    font-size: 35px !important;
+    margin-top: 24px !important;
+    color: #c11718 !important;
+}
 
 
 .modal-body {

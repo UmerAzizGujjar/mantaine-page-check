@@ -2,55 +2,7 @@
     CodeBehind="Register.aspx.cs" Inherits="PMS.Account.Register" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <style type="text/css">
-        
-        input[type="text"],
-        input[type="Password"] {
-            margin-bottom: 8px !important;
-        }
-
-        input[type="button"], input[type="submit"] {
-            border-radius: 3px;
-            font-size: 16px;
-            line-height: 1.5;
-            padding: 5px 10px;
-            background-color: #438eb9 ;
-            border-color: #357ebd;
-            color: #FDC103;
-            font-weight: bold !important;
-            text-align: center;
-            vertical-align: middle;
-            white-space: nowrap;
-            margin-bottom: 0;
-            font-weight: normal;
-            box-shadow: none;
-            text-shadow: none;
-            border: 0;
-            width: 101px;
-            height: 33px;
-            cursor: pointer;
-            display: inline-block;
-            -moz-user-select: none;
-            background-image: none;
-        }
-
-        input.textEntry,
-        input.passwordEntry {
-            position: relative;
-            width: 90% !important;
-            height: 36px;
-        }
-        label-field{
-            margin-left:33%;
-            margin-bottom: 8px !important;
-            position: relative;
-            font-family: "Open Sans", sans-serif;
-        }
-        .register{
-            padding:0 !important;
-            margin:0 !important;
-        }
-    </style>
+    <link href="../../wwwroot/Pakred/css/CustomCss/registeruser.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
 

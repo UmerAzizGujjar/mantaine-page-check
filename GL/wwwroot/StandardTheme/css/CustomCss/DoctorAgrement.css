@@ -11,6 +11,11 @@
     color: white !important;
 }
 
+.fa fa-plus-circle {
+    font-size: 35px;
+    margin-top: 24px;
+    color: #438eb9 !important;
+}
 
 
 .modal-body {

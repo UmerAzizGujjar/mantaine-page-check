@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddDoctorAgreement.aspx.cs" Inherits="PMS.Inventory.AddDoctorAgreement" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/css/CustomCss/DoctorAgrement.css" rel="stylesheet" />
+    <link href="../../wwwroot/Pakred/css/CustomCss/DoctorAgrement.css" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
@@ -1742,7 +1742,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowopdModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle" ></i>
                     </a>
                 </div>
             </div>
@@ -1802,7 +1802,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowLabModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle"></i>
                     </a>
                 </div>
             </div>
@@ -1862,7 +1862,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowxrayModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle" ></i>
                     </a>
                 </div>
             </div>
@@ -1922,7 +1922,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowultrsoundModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle" ></i>
                     </a>
                 </div>
 
@@ -1983,7 +1983,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowCTScanModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle" ></i>
                     </a>
                 </div>
 
@@ -2044,7 +2044,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowbloodbankModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle"></i>
                     </a>
                 </div>
             </div>
@@ -2104,7 +2104,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowmirModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle" ></i>
                     </a>
                 </div>
             </div>
@@ -2164,7 +2164,7 @@
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <a href="#" id="btnshowservicesModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" style="font-size: 35px; margin-top: 24px; color: #438eb9 ;"></i>
+                        <i class="fa fa-plus-circle" ></i>
                     </a>
                 </div>
             </div>

@@ -2,16 +2,7 @@
     CodeBehind="DataValue.aspx.cs" Inherits="PMS.DataValue" Theme="Default_Theme" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .white {
-            color: white !important;
-        }
-
-        th {
-            background-color: #438eb9  !important;
-            color: white;
-        }
-    </style>
+    <link href="../../wwwroot/Pakred/css/CustomCss/Datavalue.css" rel="stylesheet" />
 
     <script type="text/javascript" clientidmode="Predictable">
         $(document).ready(function () {

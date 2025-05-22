@@ -12,7 +12,10 @@
     box-sizing: border-box;
     font-family: "Open Sans", sans-serif;
 }
-
+.tooltips {
+    color: #438eb9 !important;
+    font-size: 16px !important;
+}
 .ui-state-hover, .ui-state-hover a:hover {
     /*border: 1px solid #999999;*/
     background: #98A3A5 !important;
@@ -268,7 +271,14 @@ input[type="checkbox"] {
     accent-color: #438eb9;
     /* Green color */
 }
-
+.hr_receipt {
+    width: 100%;
+    border: 1px solid;
+    border-color: #438eb9;
+}
+.header-sample {
+    background-color: #438eb9 !important;
+}
 .buttons-colvis {
     width: 38%;
     border-radius: 12px;
@@ -343,7 +353,12 @@ input[type="button"][disabled] {
 }
 
 
-
+.anchorOnOPD {
+    color: #438eb9 !important;
+}
+.lab-head {
+    background-color: #438eb9 !important;
+}
 .table > thead > tr {
     background-position: 0% 0%;
     color: #707070;

@@ -1031,7 +1031,7 @@
     </div>
 
     <div class="modal-content" style="height: 505px; overflow-y: auto" id="listModel">
-        <div class="modal-header" style="background-color: #438eb9 ; color: white;">
+        <div class="modal-header header-sample" style=" color: white;">
             <h4 class="modal-title">Sample Calling List</h4>
         </div>
 

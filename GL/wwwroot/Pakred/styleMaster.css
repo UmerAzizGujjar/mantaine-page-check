@@ -19,6 +19,11 @@
     /*font-weight:  bolder;*/
     color: #fff !important;
 }
+.fa-plus-circle {
+    font-size: 35px !important;
+    margin-top: 24px !important;
+    color: #c11718 !important;
+}
 
 .sidebar {
     display: none;
@@ -129,6 +134,10 @@ page-header h1 {
 
 .editListBtn {
     background-color: #c11718 !important
+}
+.tooltips {
+    color: #c11718 !important;
+    font-size: 16px !important;
 }
 /*select, input[type="text"],*/ /*input[type="password"] {*/
 /*width: 167px !important;*/
@@ -263,12 +272,24 @@ td {
     background-color: #8b8f8c !important;
     color: white !important;
 }
-
+.anchorOnOPD{
+    color:#c11718 !important;
+}
+.hr_receipt {
+    width: 100%;
+    border: 1px solid;
+    border-color: #c11718;
+}
 input[type="checkbox"] {
     accent-color: #c11718;
     /* Green color */
 }
-
+.header-sample {
+    background-color: #c11718 !important;
+}
+.lab-head {
+    background-color: #c11718 !important;
+}
 .buttons-colvis {
     width: 38%;
     border-radius: 12px;
@@ -6538,19 +6559,19 @@ button.btn:active {
 
     /* Hover effect */
     .btn-primry:hover, .btn-primary:hover {
-        background-color: #175c83 !important; /* Slightly darker orange */
+        background-color: #9e1b1c !important; /* Slightly darker orange */
         box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3) !important;
     }
 
     /* Active state */
     .btn-primry:active, .open .btn-primary.dropdown-toggle {
-        background-color: #175c83 !important; /* Even darker orange for pressed effect */
+        background-color: #9e1b1c !important; /* Even darker orange for pressed effect */
         box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
     }
 
     /* No-border buttons on hover and active states */
     .btn-primry.no-border:hover, .btn-primary.no-border:active {
-        border-color: #b5691a !important; /* Darker orange instead of blue */
+        border-color: #9e1b1c !important; /* Darker orange instead of blue */
     }
 
     .btn-primry.no-hover:hover, .btn-primary.no-hover:active {
@@ -6918,7 +6939,7 @@ button.btn:active {
     font-weight: bold !important;
     border-radius: 8px !important;
     transition: all 0.3s ease-in-out !important;
-    box-shadow: 2px 2px 5px rgb(43 157 193 / 50%) !important;
+    box-shadow: 2px 2px 5px rgb(187 25 25 / 50%) !important;
 }
 
     /* Hover effect */

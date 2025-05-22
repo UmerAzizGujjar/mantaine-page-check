@@ -109,13 +109,13 @@ input[type="text"] {
 }
 
 .btn-item {
-    background-color: #c11718  !important;
+   
     font-size: 13px;
     line-height: 1.39;
     padding: 3px 9px;
     background-image: none !important;
-    border: 5px solid #a73434 !important;
-    border-radius: 5px !important;
+ 
+ 
     box-shadow: none !important;
     color: #fff !important;
     cursor: pointer;

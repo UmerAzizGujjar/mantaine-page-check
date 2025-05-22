@@ -1427,7 +1427,7 @@
         </div>
     </div>
 
-    <hr style="width: 100%; border: 1px solid; border-color: #438eb9 ;" />
+    <hr class="hr_receipt" />
         <div class="row g-3">
             <div  class="col-lg-8">
                 <div class="row">

@@ -2549,7 +2549,7 @@
            <asp:Button ID="btnSave" CssClass="btn btn-primry"  runat="server" Text="Save" OnClientClick="SaveMedicines()" OnClick="btnSave_Click" CausesValidation="false" />
  </div>
      <div class="col-lg-2 col-md-4 col-sm-6">
-       <asp:Button Text="New" Style="color:white !important" ID="btn3" CssClass="btn btn-yellow" runat="server" PostBackUrl="~/Modules/OT/OperationBooking.aspx" CausesValidation="false" />         
+       <asp:Button Text="New"  ID="btn3" CssClass="btn btn-yellow" runat="server" PostBackUrl="~/Modules/OT/OperationBooking.aspx" CausesValidation="false" />         
      </div>
 
     <%-- <div class="col-lg-2 col-md-4 col-sm-6">

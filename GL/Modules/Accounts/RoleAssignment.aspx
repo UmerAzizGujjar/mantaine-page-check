@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoleAssignment.aspx.cs" Inherits="PMS.Modules.Accounts.RoleAssignment" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/css/tablestyle.css" rel="stylesheet" />
+     <link href="../../wwwroot/Pakred/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {

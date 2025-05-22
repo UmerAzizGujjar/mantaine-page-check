@@ -465,7 +465,7 @@
             cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
             cell = row.insertCell(-1);
             var actions = ''
-            actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;" href="#"  onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i><span class="tooltiptxt">Add</span></a>';
+            actions += '<a class="tooltips" href="#"  onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i><span class="tooltiptxt">Add</span></a>';
             cell.innerHTML = actions;
         }
         function ClearPatientResults() {
