@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Pakred/css/CustomCss/Receipts.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/Receipts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -1269,7 +1269,7 @@
                     <div class="row">
                         <div class="col-lg-5 col-md-5 col-sm-6">
                             <div class="image-container">
-                                <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/Addrecepit.png" alt="Patient Image" class="img-fluid rounded-circle patient-image " />
+                                <img src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Addrecepit.png" alt="Patient Image" class="img-fluid rounded-circle patient-image " />
                             </div>
                         </div>
                         <div class="col-lg-7 col-md-7 col-sm-6">

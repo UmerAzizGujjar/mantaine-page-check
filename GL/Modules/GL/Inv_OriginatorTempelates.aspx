@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Pakred/css/CustomCss/inv_org.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/inv_org.css" rel="stylesheet" />
     <script type="text/javascript">   
         $(document).ready(function () {
             $('select').select2();

@@ -2,7 +2,7 @@
     CodeBehind="ChangePassword.aspx.cs" Inherits="PMS.Account.ChangePassword" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link href="../../wwwroot/Pakred/css/CustomCss/registeruser.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/registeruser.css" rel="stylesheet" />
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

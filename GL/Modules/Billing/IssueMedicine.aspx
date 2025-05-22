@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="IssueMedicine.aspx.cs" Inherits="PMS.IssueMedicine" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/CustomCss/Pharmacy.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/Pharmacy.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {

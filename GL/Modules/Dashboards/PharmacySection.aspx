@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PharmacySection.aspx.cs" Inherits="PMS.Modules.Dashboards.PharmacySection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/Pakred/css/Shortcuts.css" rel="stylesheet" />
+     <link href="../../wwwroot/StandardTheme/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -26,25 +26,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/pharmacy.png" alt="Sale" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/pharmacy.png" alt="Sale" style="object-fit: contain;" />
                     <h5 class="cocotxt">Pharmacy Sale</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/diagnosis.png" alt="Medicnine" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/diagnosis.png" alt="Medicnine" style="object-fit: contain;" />
                     <h5 class="cocotxt">Issue Medicnine</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/Pharmacy_Users.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/pharmacist.png" alt="User" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/pharmacist.png" alt="User" style="object-fit: contain;" />
                     <h5 class="cocotxt">Pharmacy User</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/sales.png" alt="Return" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/sales.png" alt="Return" style="object-fit: contain;" />
                     <h5 class="cocotxt">Sale Return</h5>
                 </a>
             </div>
@@ -53,7 +53,7 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/Report.png" alt="Report" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Report.png" alt="Report" style="object-fit: contain;" />
                     <h5 class="cocotxt">Sale Report</h5>
                 </a>
             </div>
