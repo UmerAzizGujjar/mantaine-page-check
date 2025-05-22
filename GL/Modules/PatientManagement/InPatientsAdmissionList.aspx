@@ -58,7 +58,7 @@
                     { "data": "Full_Name", "name": "Full_Name", "width": "15%", "orderable": false },
                     { "data": "Father_Name", "width": "20%", "orderable": false },
                     { "data": "Department", "width": "10%", "orderable": false },
-                    { "data": "Discharge_ON", "width": "16%", "orderable": false },
+                    { "data": "Discharge_ON", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -68,7 +68,7 @@
                             var result;
                             result = res + Del;
                             return result;
-                        }, "width": "5%", "orderable": false
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],

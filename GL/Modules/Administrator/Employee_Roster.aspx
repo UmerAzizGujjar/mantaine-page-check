@@ -274,14 +274,13 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-     <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="ibox-content to_in_put_bor_der">
                     <form class="form-horizontal" asp-controller="Create" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="row">
-                            <div class="col-md-2">                                                            
+                            <div class="col-lg-2 col-md-4 cols-m-6">                                                            
                                 <div class="md-form md-outline form-sm">
                                 <label  class="control-label" >Month</label>                                
                                      <select id="Month_id" onchange="MonthChage()">
@@ -289,7 +288,7 @@
                                 </div>
                             </div>
                            
-                            <div class="col-md-3">
+                            <div class="col-lg-2 col-md-4 cols-m-6">
                                 <label  class="control-label">Doctor Name</label>
                                 <div class="md-form md-outline form-sm">
                                     <Select  id="ddlDoctor" name="ddlDoctor">
@@ -299,7 +298,7 @@
                         </div>
                           <div id="roster" class="roster"></div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12 col-md-24 cols-m-12">
                                 <table class="table table-resposnive table-striped to_giv_wid" style="margin-top:30px; width:100% !important;" id="dtShifts">
                                     <thead>
                                         <tr>                                    
@@ -335,7 +334,5 @@
                 </div>
             </div>
         </div>
-
-    </div>
 
 </asp:Content>

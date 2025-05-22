@@ -29,6 +29,19 @@
     background-color: #015e11;
 }
 
+#token-input-ctl00_MainContent_txtPatient_ID {
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+#token-input-txtSymtom {
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+#token-input-ctl00_MainContent_txtService {
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+
 .moveleft {
     float: left;
 }

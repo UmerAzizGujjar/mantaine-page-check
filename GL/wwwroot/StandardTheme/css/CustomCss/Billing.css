@@ -1,4 +1,9 @@
-﻿.summary-label {
+﻿#token-input-txtMRNo {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+
+.summary-label {
     font-size: 16px;
     font-weight: bold;
     text-align: right;

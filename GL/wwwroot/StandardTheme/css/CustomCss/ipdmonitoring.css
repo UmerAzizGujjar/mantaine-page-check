@@ -1,4 +1,12 @@
-﻿.card {
+﻿#token-input-ctl00_MainContent_txtPatient_ID {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+#token-input-ctl00_MainContent_txtService {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.card {
     border: 1px solid #C4C4C4;
     background-color: #f9f9f9;
     border-radius: 10px;

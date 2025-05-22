@@ -71,7 +71,7 @@
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
                         },
-                        "width": "15%"
+                        "width": "10%"
                     },
 
 
@@ -84,7 +84,7 @@
                             var result;
                             result = res + Del;
                             return result;
-                        }, "width": "100%", "orderable": false
+                        }, "width": "15%", "orderable": false
                     }
 
                 ],

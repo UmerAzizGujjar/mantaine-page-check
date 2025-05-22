@@ -1,4 +1,14 @@
-﻿#tbltest p {
+﻿#token-input-ctl00_MainContent_txtLab_Test_ID {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+#token-input-ctl00_MainContent_txtPatient_ID {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+
+
+#tbltest p {
     margin: 0px 0px 4px !important;
     overflow: scroll;
     height: 40px;

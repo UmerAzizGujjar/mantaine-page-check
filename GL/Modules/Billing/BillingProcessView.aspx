@@ -180,7 +180,7 @@
     </div>
     <br />
     <div class="row">
-        <div class="table-container mt-3">
+        <div class="table-container">
             <table class="table table-hover table-striped table-bordered" id="tbloutPatients">
                 <thead id="ihead">
                     <tr>

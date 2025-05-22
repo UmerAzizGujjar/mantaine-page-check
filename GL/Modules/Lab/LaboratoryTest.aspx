@@ -1357,7 +1357,7 @@
                         <div class="table-responsive">
                             <table class="table" >
                                 <tr>
-                                    <td style="background-color:#438eb9 ">
+                                    <td class="bgcolor">
                                         <h1 style="text-align:center;color:white !important">Test Calling List</h1>
                                     </td>
                                 </tr>

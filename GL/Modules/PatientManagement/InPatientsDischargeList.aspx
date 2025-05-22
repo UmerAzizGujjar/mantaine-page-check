@@ -71,7 +71,7 @@
                             var date = full.Discharge_On;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "25%", "orderable": true
+                        }, "width": "20%", "orderable": true
                     },
 
                     
@@ -84,7 +84,7 @@
                             var result;
                             result = res;
                             return result;
-                        }, "width": "100%", "orderable": false
+                        }, "width": "15%", "orderable": false
                     }
 
                 ],

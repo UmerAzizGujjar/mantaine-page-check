@@ -367,12 +367,22 @@ ul.token-input-list {
     background-color: #fff;
     list-style-type: none;
     clear: left;
-   /* width: 225px !important;*/
-   width:100% !important;
+    /* width: 225px !important;*/
+    width: 100% !important;
+   
 }
 /*#token-input-ctl00_MainContent_txtPatNO {
     width: 200px !important;
 }*/
+
+#token-input-ctl00_MainContent_txtPatNO {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+#token-input-ctl00_MainContent_txtPatient_ID {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
 .patient-image {
     width: 100px;
     height: 100px;

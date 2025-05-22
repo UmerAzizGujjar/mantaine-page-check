@@ -5152,7 +5152,7 @@
                         <asp:Label ID="LblOut_Patient_ID" runat="server" Text="MR No:"></asp:Label>
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-6">
-                        <asp:TextBox ID="txtPatNO" runat="server" class="form-control" />
+                        <asp:TextBox ID="txtPatNO" runat="server" />
                     </div>
                 </div>
 
@@ -5208,15 +5208,15 @@
         <img src="~../../../../wwwroot/Styles/805.gif" class="se-pre-con" style="margin-left: 500px;"/>
         <div id="tabs">
             <ul class="forcolor" >
-                <li><a href="#Tab-4" style="background-color:#438eb9  !important;color:white;background:none;border: none">Patients Waiting List</a></li>
-                <li><a href="#Tab-2"  style="background-color:#438eb9  !important;color:white;background:none;border: none">Vital Parameter</a></li>
-                <li><a href="#Tab-1"  style="background-color:#438eb9  !important;color:white;background:none;border: none;">History / Examination</a></li>
-                <li><a href="#Tab-6"  style="background-color:#438eb9  !important;color:white;background:none;border: none;">Investigation</a></li>
-                <li><a href="#Tab-9"  style="background-color:#438eb9  !important;color:white;background:none;border: none;"">Services</a></li>
+                <li><a href="#Tab-4">Patients Waiting List</a></li>
+                <li><a href="#Tab-2">Vital Parameter</a></li>
+                <li><a href="#Tab-1">History / Examination</a></li>
+                <li><a href="#Tab-6">Investigation</a></li>
+                <li><a href="#Tab-9">Services</a></li>
                 <li><a href="#Tab-3" style="display: none;">OPD Details</a></li>
-                <li><a href="#Tab-5" style="background-color:#438eb9  !important;color:white;background:none;border: none;">Medication</a></li>
-                <li><a href="#Tab-7" style="background-color:#438eb9  !important;color:white;background:none;border: none;">Follow Up / Verified</a></li>
-                <li><a href="#Tab-8" style="background-color:#438eb9  !important;color:white;background:none;border: none;">Test Result</a></li>
+                <li><a href="#Tab-5">Medication</a></li>
+                <li><a href="#Tab-7">Follow Up / Verified</a></li>
+                <li><a href="#Tab-8">Test Result</a></li>
                 
             </ul>
             <div id="Tab-1">
