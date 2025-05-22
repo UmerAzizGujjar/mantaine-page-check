@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Pakred/css/CustomCss/Outpatient.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/Outpatient.css" rel="stylesheet" />
 
     <script type="text/javascript">
         window.addEventListener('load', function () {
@@ -4985,7 +4985,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="preloader" style="display: none;"><h1>Loading Page.....</h1></div>
-    <div class="loader" style="display:none;    width: 200px;height: 200px;margin-left: 450px;margin-top: 30px;"><img src="~../../../../wwwroot/Pakred/images/loading.gif"/></div>
+    <div class="loader" style="display:none;    width: 200px;height: 200px;margin-left: 450px;margin-top: 30px;"><img src="~../../../../wwwroot/StandardTheme/images/loading.gif"/></div>
 <div id="MedicationModel" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg"> <!-- Use modal-lg for larger standard size -->
         <div class="modal-content">
@@ -5078,7 +5078,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                         <div class="image-container">
-                            <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                            <img src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-6">
@@ -5152,7 +5152,7 @@
                         <asp:Label ID="LblOut_Patient_ID" runat="server" Text="MR No:"></asp:Label>
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-6">
-                        <asp:TextBox ID="txtPatNO" runat="server" />
+                        <asp:TextBox ID="txtPatNO" runat="server" class="form-control" />
                     </div>
                 </div>
 
@@ -5208,8 +5208,8 @@
         <img src="~../../../../wwwroot/Styles/805.gif" class="se-pre-con" style="margin-left: 500px;"/>
         <div id="tabs">
             <ul class="forcolor" >
-                <li><a href="#Tab-4">Patients Waiting List</a></li>
-                <li><a href="#Tab-2">Vital Parameter</a></li>
+                <li><a href="#Tab-4" >Patients Waiting List</a></li>
+                <li><a href="#Tab-2" >Vital Parameter</a></li>
                 <li><a href="#Tab-1">History / Examination</a></li>
                 <li><a href="#Tab-6">Investigation</a></li>
                 <li><a href="#Tab-9">Services</a></li>
@@ -5343,30 +5343,30 @@
                             <hr />
                             <tr>
                                 <td class="icon-cell">
-                                    <img src="~../../../../wwwroot/Pakred/images/HMIS_Icons/ENT.png"  alt="ENT" style="width: 100px;cursor: pointer"  onclick="ShowEntModel()" />
+                                    <img src="~../../../../wwwroot/StandardTheme/images/HMIS_Icons/ENT.png"  alt="ENT" style="width: 100px;cursor: pointer"  onclick="ShowEntModel()" />
                                     <span>ENT</span>
                                 </td>
                                 <td class="icon-cell">
-                                    <img src="~../../../../wwwroot/Pakred/images/HMIS_Icons/eye.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowEyeModel()" />
+                                    <img src="~../../../../wwwroot/StandardTheme/images/HMIS_Icons/eye.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowEyeModel()" />
                                     <span>EYE</span>
                                 </td>
                                 <td  class="icon-cell">
-                                    <img src="~../../../../wwwroot/Pakred/images/HMIS_Icons/dermatologist.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowDermaModel()" />
+                                    <img src="~../../../../wwwroot/StandardTheme/images/HMIS_Icons/dermatologist.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowDermaModel()" />
                                     <span>Dermatologist</span>
                                 </td>
                             </tr>
                       
                             <tr>                                
                                 <td class="icon-cell mtt-top">
-                                    <img src="~../../../../wwwroot/Pakred/images/HMIS_Icons/Peeds 1.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowPeadsModel()" />
+                                    <img src="~../../../../wwwroot/StandardTheme/images/HMIS_Icons/Peeds 1.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowPeadsModel()" />
                                     <span>Peads</span>
                                     </td>
                                 <td class="icon-cell">
-                                    <img src="~../../../../wwwroot/Pakred/images/HMIS_Icons/Psychiatry.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowPsychiatryModel()"/>
+                                    <img src="~../../../../wwwroot/StandardTheme/images/HMIS_Icons/Psychiatry.png" alt="ENT" style="width: 100px; cursor: pointer" onclick="ShowPsychiatryModel()"/>
                                     <span style="font-weight: bold;">Psychiatry</span>
                                 </td>
                                 <td class="icon-cell">
-                                    <img src="~../../../../wwwroot/Pakred/images/HMIS_Icons/ortho.svg" alt="Ortho" style="width: 100px; cursor: pointer" onclick="ShowOrthoModel()" />
+                                    <img src="~../../../../wwwroot/StandardTheme/images/HMIS_Icons/ortho.svg" alt="Ortho" style="width: 100px; cursor: pointer" onclick="ShowOrthoModel()" />
                                     <span style="font-weight: bold;">Ortho</span>
                                 </td>
                             </tr>                          

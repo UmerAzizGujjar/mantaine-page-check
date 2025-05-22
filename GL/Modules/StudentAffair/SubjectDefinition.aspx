@@ -836,7 +836,7 @@
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-6">
                         <a href="#" id="addButton" style="margin-top:10px;" onclick="addSubject()">
-                            <i class="fa fa-plus-circle" style="font-size:35px; margin-top:24px; color:#438eb9 ;"></i>
+                            <i class="fa fa-plus-circle"></i>
                         </a>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmergencyCaseView.aspx.cs" Inherits="PMS.EmergencyCaseView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();

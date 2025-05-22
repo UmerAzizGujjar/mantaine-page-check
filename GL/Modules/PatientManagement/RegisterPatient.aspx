@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegisterPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.RegisterPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/CustomCss/Toaster.css" rel="stylesheet" />
-    <script src="../../wwwroot/Pakred/CustomJs/RegPatient.js" type="text/javascript"></script>
-    <link href="../../wwwroot/Pakred/css/RegPat.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/Toaster.css" rel="stylesheet" />
+    <script src="../../wwwroot/StandardTheme/CustomJs/RegPatient.js" type="text/javascript"></script>
+    <link href="../../wwwroot/StandardTheme/css/RegPat.css" rel="stylesheet" />
 
       <script type="text/javascript">
           $(document).ready(function () {

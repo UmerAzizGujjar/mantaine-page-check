@@ -583,6 +583,8 @@
     <Content Include="wwwroot\Pakred\css\colorbox.min.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\AddNewLabTest.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\AddpurchaseInvoice.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Appointment.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\approveinvtemp.css" />
@@ -621,6 +623,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\TestDefinition.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Toaster.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\toggle.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\Userview.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\vendor.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\voucher.css" />
     <Content Include="wwwroot\Pakred\css\dataTables.jqueryui.min.css" />
@@ -3750,6 +3753,7 @@
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\appendto.html" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\assets\inlineall\logo.png" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\assets\outputxhtml\outputxhtml.css" />
+    <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\assets\posteddata.php" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\assets\sample.jpg" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\assets\uilanguages\languages.js" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\datafiltering.html" />
@@ -3772,6 +3776,7 @@
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\replacebycode.html" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\sample.css" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\sample.js" />
+    <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\sample_posteddata.php" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\tabindex.html" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\toolbar\toolbar.html" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\uicolor.html" />
@@ -4056,6 +4061,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Appointment.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\approveinvtemp.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\AssetCategoryCss.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\login.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\BloodBank.css" />
@@ -4084,6 +4090,8 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Product.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Receipts.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Refund.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Userview.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\studentReceipt.css" />
@@ -7369,9 +7377,7 @@
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\plugins\wsc\LICENSE.md" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\plugins\wsc\README.md" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\README.md" />
-    <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\assets\posteddata.php" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\htmlwriter\assets\outputforflash\outputforflash.fla" />
-    <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\old\sample_posteddata.php" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\toolbarconfigurator\font\config.json" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\toolbarconfigurator\font\fontello.eot" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\samples\toolbarconfigurator\font\fontello.ttf" />

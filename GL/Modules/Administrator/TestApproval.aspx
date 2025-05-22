@@ -3,7 +3,7 @@
 <%@ Register Assembly="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/CustomCss/TestApproval.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/TestApproval.css" rel="stylesheet" />
 
     <script type="text/javascript">
         var GrowthTypeGlobal = '';
@@ -1012,7 +1012,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                                    <img src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-6">
