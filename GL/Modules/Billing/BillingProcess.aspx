@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/CustomCss/Billing.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/Billing.css" rel="stylesheet" />
     <div style="margin: 0px 0px 0px 0px;">
      
         <script type="text/javascript">
@@ -5027,7 +5027,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                         <div class="image-container">
-                            <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/billing2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                            <img src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/billing2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-6">

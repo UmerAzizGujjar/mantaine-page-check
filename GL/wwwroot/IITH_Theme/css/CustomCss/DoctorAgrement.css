@@ -1,0 +1,49 @@
+﻿#tabs ul li a {
+    background-color: #438eb9  !important;
+    color: white;
+    background: none;
+    border: none;
+    padding: 10px;
+}
+
+#tabs ul li.ui-tabs-active a {
+    border-bottom: 1px solid aliceblue !important;
+    color: white !important;
+}
+
+.fa fa-plus-circle {
+    font-size: 35px;
+    margin-top: 24px;
+    color: #438eb9 !important;
+}
+
+
+.modal-body {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.modal-header {
+    background-color: #438eb9  !important;
+    color: white;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+}
+
+.search-input {
+    margin-bottom: 15px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.modal-header .close {
+    margin-top: -31px !important;
+}
+
+.custom-modal-width {
+    width: 1000px !important;
+}

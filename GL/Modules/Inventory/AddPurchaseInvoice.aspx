@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Pakred/css/CustomCss/AddpurchaseInvoice.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/AddpurchaseInvoice.css" rel="stylesheet" />
     <script type="text/javascript">
 
         var vendor_Id_Global = 0;

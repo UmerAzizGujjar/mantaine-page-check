@@ -1,0 +1,32 @@
+﻿#tabs ul {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: thin;
+}
+
+    #tabs ul li {
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+        #tabs ul li a {
+            background-color: #438eb9  !important;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border: none;
+        }
+
+            #tabs ul li a:hover {
+                color: #FFC000 !important;
+            }
+
+        #tabs ul li.ui-tabs-active a {
+            border-bottom: 2px solid aliceblue !important;
+            color: white !important;
+        }

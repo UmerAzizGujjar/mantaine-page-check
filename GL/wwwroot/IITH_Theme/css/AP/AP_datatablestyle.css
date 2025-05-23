@@ -1,0 +1,152 @@
+
+.sidebar.h-sidebar .nav-list > li > a {
+    text-align: center !important;
+    line-height: 22px !important;
+    height: auto !important;
+    font-family: Arial, sans-serif !important;
+    padding: 10px 14px !important;
+    font-weight: bold !important;
+}
+
+.nav-list > li .submenu > li.hover > a {
+    font-size: 13px !important;
+    font-family: Arial, sans-serif !important;
+    font-weight: bold !important;
+}
+
+.table {
+    width: 100%;
+    font-size: small;
+    line-height: 1.5px;
+    font-weight: 400 !important;
+}
+
+    .table > tbody > tr > td {
+        line-height: 1.75;
+    }
+
+    .table > thead > tr > th {
+        line-height: 0.75;
+    }
+
+.dataTables_wrapper .dataTables_paginate {
+    font-size: small;
+}
+
+.buttons-copy {
+    width: 20%;
+    border-radius: 12px;
+    background-color: #8b8f8c !important;
+    color: white !important;
+    min-width: 70px;
+}
+
+.buttons-excel {
+    width: 20%;
+    border-radius: 12px;
+    background-color: #5e8a6a !important;
+    color: white !important;
+    min-width: 70px;
+}
+
+.buttons-pdf {
+    width: 20%;
+    border-radius: 12px;
+    background-color: #e04343 !important;
+    color: white !important;
+    min-width: 70px;
+}
+
+.buttons-colvis {
+    width: 38%;
+    border-radius: 12px;
+    background-color: #4052a1 !important;
+    color: white !important;
+}
+
+div.dt-buttons {
+    float: left;
+    width: 34%;
+    margin-top: 15px;
+    margin-left: 15px;
+}
+
+.ui-button-text-only .ui-button-text {
+    font-weight: 900;
+}
+
+.dataTables_info {
+    font-size: 14px;
+    font-weight: 700 !important;
+}
+
+.dataTables_wrapper .ui-toolbar {
+    padding: 3px;
+}
+
+table.dataTable thead th div.DataTables_sort_wrapper span {
+    display: none;
+}
+
+#example_wrapper {
+    background-color: #e7e7e7;
+}
+
+.dataTables_filter input {
+    border-radius: 15px !important;
+}
+
+.dataTables_filter {
+    margin-top: 20px;
+}
+
+body {
+    font-weight: 700;
+}
+
+#ui-datepicker-div {
+    width: 20% !important;
+}
+
+.btn-addnew {
+    top: -5px !important;
+}
+
+.fa-pencil {
+    color: green !important;
+}
+
+.fa-print {
+    color: darkblue !important;
+}
+
+td:first-child {
+    text-align: center;
+}
+
+td:nth-child(5) {
+    text-align: right;
+}
+
+.table-container {
+    overflow-x: auto;
+    max-height: 800px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+th, td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+    th.actions, td.actions {
+        min-width: 180px;
+    }
+
+input {
+    width: auto !important;
+}
+
+
