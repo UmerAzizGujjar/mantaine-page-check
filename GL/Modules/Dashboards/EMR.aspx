@@ -784,7 +784,7 @@
             <asp:TextBox ID="txtPatNO" runat="server" class="form-control" />
         </div>
     </div>
-    <div class="row" style="margin-top: 15px;">
+    <div class="row">
         <!-- Left Column: Profile Information -->
         <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="card3">
