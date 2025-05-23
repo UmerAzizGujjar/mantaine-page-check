@@ -1,3 +1,7 @@
+.labelcolor {
+    color: #EFA63E !important;
+}
+
 
 body {
     background-color: #f5f5f5;
@@ -44,6 +48,7 @@ body {
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height:200px !important;
 }
 
 .card2 {
@@ -233,8 +238,19 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin: 10px auto;
     text-align: center;
+    height:120px;
 }
 
+.cardcard {
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    height: 500px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 10px;
+}
+ 
 .stat-item {
     margin: 0 auto;
 }
@@ -256,4 +272,8 @@ hr {
     margin-top: 10px !important;
     margin-bottom: 10px !important;
     border-top: 2px solid #c5c5c5d6 !important;
+}
+
+#token-input-ctl00_MainContent_txtPatNO {
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
 }
