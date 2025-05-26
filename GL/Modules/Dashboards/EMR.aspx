@@ -3,10 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <script src="../../wwwroot/Tibbit_theme/Scripts/jquery-1.11.1.min.js"></script>
     <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
-    
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
     <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
-    <%--    <script src="../../wwwroot/CustomJs/EMR.js"></script>--%>
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;

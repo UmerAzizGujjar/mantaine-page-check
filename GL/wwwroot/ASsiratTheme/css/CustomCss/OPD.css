@@ -1,0 +1,104 @@
+.forcolor {
+    background-color: #308665db  !important;
+}
+
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    height: 330px !important,
+}
+
+.tooltips {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+    .tooltips .tooltiptxt {
+        visibility: hidden;
+        width: 100px !important;
+        background-color: #484B4D;
+        color: #fff;
+        text-align: center;
+        padding: 5px;
+        border-radius: 6px;
+        /* Position the tooltip above the icon */
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* Position tooltip above the icon */
+        left: 50%;
+        margin-left: -60px; /* Center the tooltip */
+        /* Fade-in effect */
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+        .tooltips .tooltiptxt::after {
+            content: "";
+            position: absolute;
+            top: 100%; /* Arrow at the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+    /* Show the tooltip text when hovering over the icon */
+    .tooltips:hover .tooltiptxt {
+        visibility: visible;
+        opacity: 1;
+        font-size: 10px !important;
+        width: 100px !important;
+    }
+
+.card2 {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    margin-left: 0px;
+}
+
+.card3 {
+
+    border-radius: 10px;
+    padding: 15px;
+    margin-left: 0px;
+}
+#PatientModel{
+    margin-top:15px !important; 
+}
+#PatientsSearchModel {
+    margin-top: 15px !important;
+}
+#SearchModel_App {
+    margin-top: 15px !important;
+}
+.mtop{
+    margin-top:20px;
+}
+.d-flex {
+    display: flex;
+    align-items: center;
+}
+
+.custom-checkbox {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+
+}
+
+/*.ml-2 {
+    margin-left: 10px;
+}*/
+.wdth {
+    width: 100%;
+}
+#follow_up{
+    font-size:20px;
+    margin-left:15px;
+}
