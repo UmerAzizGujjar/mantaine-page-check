@@ -682,7 +682,7 @@
                 <div id="sidebar" runat="server" class="sidebar h-sidebar navbar-collapse collapse"></div>
                 <div class="main">
                     <div style="clear: both; height: 10px;"></div>
-                    <div class="ace-settings-container" id="ace-settings-container">
+                    <div class="ace-settings-container" style="display:none" id="ace-settings-container">
                         <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
                             <i class="ace-icon fa fa-cog bigger-130"></i>
                         </div>

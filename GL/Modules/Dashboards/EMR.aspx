@@ -790,29 +790,29 @@
                     <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
                     <div class="profile-details">
                         <span class="profile-name" id="patname"></span>
-                        <p><strong style="color: #438eb9 ">MR No:</strong> &nbsp; &nbsp; <span id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong style="color: #438eb9 ">Age:</strong> &nbsp; &nbsp; <span id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong style="color: #438eb9 ">Gender:</strong> &nbsp; &nbsp; <span id="gender"></span></p>
-                        <p><strong style="color: #438eb9 ">Phone Number:</strong> &nbsp; &nbsp;&nbsp; <span id="phonenumber"></span></p>
-                        <p><strong style="color: #438eb9 ">CNIC:</strong>&nbsp;&nbsp;&nbsp; <span id="CNIC"></span></p>
-                        <p><strong style="color: #438eb9 ">Address:</strong> &nbsp;&nbsp;&nbsp;<span id="address"></span></p>
+                        <p><strong class="labelcolor">MR No:</strong> &nbsp; &nbsp; <span id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong class="labelcolor">Age:</strong> &nbsp; &nbsp; <span id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong class="labelcolor">Gender:</strong> &nbsp; &nbsp; <span id="gender"></span></p>
+                        <p><strong class="labelcolor">Phone Number:</strong> &nbsp; &nbsp;&nbsp; <span id="phonenumber"></span></p>
+                        <p><strong class="labelcolor">CNIC:</strong>&nbsp;&nbsp;&nbsp; <span id="CNIC"></span></p>
+                        <p><strong class="labelcolor">Address:</strong> &nbsp;&nbsp;&nbsp;<span id="address"></span></p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Right Column: Appointment Information -->
-        <div class="col-lg-7 col-md-7 col-sm-7" style="margin-top: 30px;">
+        <div class="col-lg-7 col-md-7 col-sm-7">
             <div class="card3">
                 <div class="appointment-info">
-                    <h5><strong>Upcoming Appointment</strong></h5>
+                    <h5><strong class="labelcolor">Upcoming Appointment</strong></h5>
                     <span class="badge" style="cursor: pointer;"><span id="appdate">Appointment Date</span></span>
-                    <h5><strong style="color: #438eb9 ">Consultant:&nbsp;<span id="doctorname"></span></strong></h5>
+                    <h5><strong class="labelcolor">Consultant:&nbsp;<span id="doctorname"></span></strong></h5>
                 </div>
                 <hr />
                 <div class="appointment-details">
                     <div class="row-details">
-                        <p><strong style="color: #438eb9 ">Last Visit:&nbsp;</strong><span id="prv_visit"></span></p>
-                        <p><strong style="color: #438eb9 ">Doctor Name:&nbsp;</strong><span id="prvDoctor"></span></p>
-                        <p><strong style="color: #438eb9 ">Department:&nbsp;</strong><span id="Department"></span></p>
+                        <p><strong class="labelcolor">Last Visit:&nbsp;</strong><span id="prv_visit"></span></p>
+                        <p><strong class="labelcolor">Doctor Name:&nbsp;</strong><span id="prvDoctor"></span></p>
+                        <p><strong class="labelcolor">Department:&nbsp;</strong><span id="Department"></span></p>
                     </div>
                 </div>
 
@@ -821,16 +821,14 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-10">
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-2 col-md-3 col-sm-3">
                 <h4>Main Department</h4>
                 <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
             </div>
-        </div>
     </div>
     <hr />
     <div class="main-row">
-        <div class="row" id="opdvitals" style="overflow: scroll; height: 230px">
+        <div class="row" id="opdvitals" style="overflow: scroll; height: 230px;margin-left:-2px;">
             <h4>OPD Vitals</h4>
             <table class="table" id="tblVitalParametersHistory">
                 <thead>
@@ -853,7 +851,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="roww" id="ipdvitals" style="overflow: scroll; height: 200px;">
+        <div class="roww" id="ipdvitals" style="overflow: scroll; height: 200px;margin-left:-2px;">
             <h4>IPD Vitals</h4>
             <table class="table" id="tblVitalParametersHistoryIPD">
                 <thead>
@@ -871,7 +869,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="roww" id="emergencyVital" style="overflow: scroll; height: 200px;">
+        <div class="roww" id="emergencyVital" style="overflow: scroll; height: 200px;margin-left:-2px;">
             <h4>Emergency Vitals</h4>
             <table class="table" id="tblVitalParametersHistoryEmergency">
                 <thead>
@@ -940,16 +938,16 @@
     </div>
 
     <div class="row" style="margin-top: 10px;">
-        <div class="col-lg-6 col-md-6 col-sm-6 card2">
+        <div class="col-lg-6 col-md-6 col-sm-6 cardcard">
             <div>
-                <h5 style="color: #438eb9 ; font-size: 24px">Graph</h5>
+                <h5 class="labelcolor" style="font-size: 24px">Graph</h5>
                 <hr />
             </div>
             <div id="VisitGrapgh" style="height: 300px; width: 100%;"></div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-lg-6 col-md-6 col-sm-6" style="margin-left: -10px;">
             <div class="card2">
-                <h5 style="color: #438eb9 ; font-size: 24px">Test List</h5>
+                <h5 class="labelcolor" style="font-size: 24px">Test List</h5>
                 <hr />
                 <div class="table table-container" style="overflow-y: scroll; height: 266px">
                     <table id="tblLabtest" class="table table-bordered table-custom tests-table">
