@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BudgetView.aspx.cs" Inherits="PMS.BudgetView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/css/tablestyle.css" rel="stylesheet" />
+     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     
 
     <script type="text/javascript">
@@ -340,15 +340,15 @@
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="text" style="width: 100% !important" id="txt_date" />
                 </div>
-                <div class="col-lg-8 col-md-4 col-sm-6" style="margin-left: -16px">
+                <div class="col-lg-8 col-md-4 col-sm-6" style="margin-left: -8px">
                     <div class="col-lg-2 col-md-4 col-sm-6">
                         <input type="button" class="btn btn-primry" style="width: 100% !important" onclick="LoadPage()" value="Month" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-6">
                         <input type="button" class="btn btn-primry" style="width: 100% !important" onclick="LoadPageByYear()" value="Year" />
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <input type="button" class="btn btn-primry" style="width: 100% !important" onclick="redirecttonew()" value="Add New" />
+                    <div class="col-auto d-flex flex-wrap gap-2">
+                        <input type="button" class="btn btn-primry"  onclick="redirecttonew()" value="Add New" />
                     </div>
                 </div>
             </div>

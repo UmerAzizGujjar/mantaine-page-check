@@ -107,7 +107,7 @@
                             var result;
                             result = res + Del;
                             return result;
-                        }, "width": "100%", "orderable": false
+                        }, "width": "13%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {

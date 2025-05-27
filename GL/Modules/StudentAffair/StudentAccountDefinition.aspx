@@ -1,149 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentAccountDefinition.aspx.cs" Inherits="PMS.Modules.StudentAffair.StudentAccountDefinition" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .select2-selection__rendered {
-            line-height: 18px !important;
-        }
-
-        .main input {
-            margin-bottom: 0px !important;
-        }
-
-        .select2-container .select2-selection--single {
-            height: 20px !important;
-        }
-
-        .select2-selection__arrow {
-            height: 20px !important;
-        }
-
-        input[type="text"] {
-            height: 20px !important;
-        }
-
-        #ctl00_MainContent_Label2 {
-            position: relative;
-            left: 7px;
-        }
-
-        li.token-input-token p {
-            margin: -3px !important;
-        }
-
-        input[type="number"] {
-            height: 20px !important;
-        }
-
-        textarea {
-            font-size: 10px !important;
-        }
-
-        select {
-            height: 20px !important;
-        }
-
-        ul.token-input-list {
-            height: 23px !important;
-            width: 692px !important;
-        }
-
-        div.token-input-dropdown {
-            overflow: auto;
-            max-height: 150px;
-        }
-
-        ul.token-input-list {
-            width: 168px;
-        }
-
-        .table {
-            margin: 1em 0;
-            width: 100%;
-            overflow: hidden;
-            background: #FFF;
-            color: #024457;
-        }
-
-            .table tr {
-                border: 1px solid #D9E4E6;
-            }
-
-                .table tr:nth-child(even) {
-                    background-color: #EAF3F3;
-                }
-
-            .table th {
-                display: none;
-                border: 1px solid #FFF;
-                background-color: #438eb9;
-                color: #FFF;
-                padding: 1em;
-            }
-
-            .table thead th {
-                display: table-cell;
-                text-align: center;
-            }
-
-        @media (min-width: 480px) {
-            .table th:nth-child(2) span {
-                display: block;
-            }
-
-            .table th:nth-child(2):after {
-                display: none;
-            }
-        }
-
-        .table td {
-            display: block;
-            word-wrap: break-word;
-            max-width: 7em;
-        }
-
-            .table td:first-child {
-                display: table-cell;
-                text-align: center;
-                border-right: 1px solid #D9E4E6;
-            }
-
-        @media (min-width: 480px) {
-            .table td {
-                border: 1px solid #D9E4E6;
-            }
-        }
-
-        .table th, .table td {
-            text-align: center;
-            margin: .5em 1em;
-        }
-
-        @media (min-width: 480px) {
-            .table th, .table td {
-                display: table-cell;
-                padding: 1em;
-            }
-        }
-
-        select option {
-            background: #f5f5f5;
-            font-weight: bold;
-            color: #000000;
-            font-size: 10px !important;
-        }
-
-        .responstable td {
-            height: 0px !important;
-            padding: 0 !important;
-        }
-
-        .labelIGP {
-            font-size: 11px !important;
-        }
-    </style>
-
-
+    
     <script type="text/javascript">
         function Addrow() {
             debugger;
@@ -321,8 +179,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div style="text-align: right; margin-top: 5px; margin-right: 5%;">
-            <input type="button" class="btn btn-primry" onclick="Addrow()" value="+" id="AddAccount" style="width: 44px;">
+        <div  style="text-align: right; margin-top: 5px; margin-right: 5%;">
+            <input type="button" class="btn btn-primry" onclick="Addrow()" value="+" id="AddAccount" style="width: 44px !important;"/>
         </div>
     </div>
     <div class="row">
