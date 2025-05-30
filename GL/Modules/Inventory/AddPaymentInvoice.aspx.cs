@@ -16,20 +16,18 @@ namespace PMS.Inventory
             HyperLink1.Visible = false;
             if (!IsPostBack)
             {
-                if (Request.QueryString["ID"] != null)
+                if (Request.QueryString["Inv_ID"] != null)
                 {
                     DataBaseDataContext db = new DataBaseDataContext();
-                    var getID = Request.QueryString["ID"];
+                    var getID = Request.QueryString["Inv_ID"];
                     var gettype = (from a in db.Payment_Invoices where a.PaymentInvoiceId == Convert.ToInt32(getID) select a.FilePath).FirstOrDefault();
                     if (!string.IsNullOrEmpty(gettype))
                     {
                         HyperLink1.NavigateUrl = gettype;
                         HyperLink1.Visible = true;
                     }
-
                 }
             }
-
         }
         [WebMethod]
         public static string getwtaxtype()
@@ -41,9 +39,9 @@ namespace PMS.Inventory
                              a.WithHold_Tax_ID,
                              a.WithHold_Tax_Perc,
                          }).ToList();
-            string data = string.Empty;          
+            string data = string.Empty;
             return (new JavaScriptSerializer()).Serialize(query);
-        } 
+        }
         [WebMethod]
         public static string getStaxtype()
         {
@@ -54,7 +52,7 @@ namespace PMS.Inventory
                              a.Sales_Tax_ID,
                              a.Sales_Tax_Perc,
                          }).ToList();
-            string data = string.Empty;          
+            string data = string.Empty;
             return (new JavaScriptSerializer()).Serialize(query);
         }
         [WebMethod]
@@ -80,7 +78,6 @@ namespace PMS.Inventory
                                          SATDO => SATDO.OrignatorTempelate_ID,
                                          (temp, SATDO) => new { temp.SATM, temp.SATDF, SATDO })
                                    .Any(temp => temp.SATM.IsActive == true && temp.SATM.IsDeleted == false && temp.SATDF.FormId == 11 && temp.SATDO.UserId == uid);
-
                 return hasEntryRights;
             }
         }
@@ -110,7 +107,6 @@ namespace PMS.Inventory
                 result = (new JavaScriptSerializer()).Serialize(itemsList);
             }
             return result;
-           
         }
         [WebMethod]
         public static string GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId(string vendorId)
@@ -124,7 +120,6 @@ namespace PMS.Inventory
         public static string getVendorDDLlist()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-           
             var listItems = db.sp_LoadVendorPayment();
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
@@ -133,7 +128,7 @@ namespace PMS.Inventory
         public static string getzeroVendorDDLlist(string invid)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-          
+
             var listItems = db.sp_LoadzeroVendorPayment(Convert.ToInt32(invid));
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
@@ -204,7 +199,7 @@ namespace PMS.Inventory
             else
             {
                 PO.PaymentNum = Convert.ToInt32(record.PaymentNum);
-                PO.PaymentDate = Convert.ToDateTime(record.PaymentDate);              
+                PO.PaymentDate = Convert.ToDateTime(record.PaymentDate);
                 PO.AccountId = Convert.ToInt32(record.AccountId);
                 PO.PaymentModeId = record.PaymentModeId;
                 PO.DocumentNo = record.DocumentNum;
@@ -235,6 +230,7 @@ namespace PMS.Inventory
                 db.SubmitChanges();
                 PaymentInvoiceId = PO.PaymentInvoiceId.ToString();
             }
+            ///**********Deleting Previous details**************/
 
             if (btnSave == "Update")
             {
@@ -246,11 +242,13 @@ namespace PMS.Inventory
             {
                 Payment_Invoice_Detail ltd = new Payment_Invoice_Detail();
                 ltd.PaymentInvoiceId = Convert.ToInt64(PaymentInvoiceId);
+                ltd.Payable = Convert.ToDecimal(Invoiceitem.InvoiceAmount);
+                ltd.Advance_Amount = Convert.ToDecimal(Invoiceitem.AdvanceAmount);
                 ltd.AdjustedAmount = Convert.ToDecimal(Invoiceitem.AdjustedAmount);
+                ltd.Deduction = Convert.ToDecimal(Invoiceitem.Deduction);
                 ltd.TotalPaidAmount = Convert.ToDecimal(Invoiceitem.TotalPaidAmount);
                 ltd.PurchaseInvoiceId = Convert.ToInt64(Invoiceitem.PurchaseInoviceId);
                 ltd.Withholdinvadj = Convert.ToDecimal(Invoiceitem.withholdtaxadj);
-                ltd.Payable = Convert.ToDecimal(Invoiceitem.InvoicePayable);
                 ltd.Withholdtaxamount = Convert.ToDecimal(Invoiceitem.withholdtaxamou);
                 ltd.Withholdtaxper = Invoiceitem.wthtaxper;
                 ltd.WithHoldtax_ID = Convert.ToInt32(Invoiceitem.withholdtaxid);
@@ -308,7 +306,6 @@ namespace PMS.Inventory
             var listPurchaseDetails = db.sp_GetPurchaseInvoiceNDetailByVendorId(vendId).ToList();
             return (new JavaScriptSerializer()).Serialize(listPurchaseDetails);
         }
-       
         [WebMethod]
         public static string getManualInvoiceNDetailByVendorId(string vendorId)
         {
@@ -325,13 +322,12 @@ namespace PMS.Inventory
             var Details = db.SpApprovePayment(Convert.ToInt32(InvId), user_id);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
-     
         [WebMethod]
         public static string UnApprovePayment(string InvId)
         {
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.spUnApprovePayment(Convert.ToInt32(InvId),Convert.ToString(user_id));
+            var Details = db.spUnApprovePayment(Convert.ToInt32(InvId), Convert.ToString(user_id));
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
@@ -364,7 +360,9 @@ namespace PMS.Inventory
             public string PurchaseInoviceId { get; set; }
             public string InvoiceNum { get; set; }
             public string InvoiceAmount { get; set; }
+            public string AdvanceAmount { get; set; }
             public string AdjustedAmount { get; set; }
+            public string Deduction { get; set; }
             public string InvoicePayable { get; set; }
             public string withholdtaxamou { get; set; }
             public string withholdtaxadj { get; set; }

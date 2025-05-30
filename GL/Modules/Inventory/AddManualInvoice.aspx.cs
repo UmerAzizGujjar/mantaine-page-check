@@ -48,12 +48,13 @@ namespace PMS.Inventory
 
             return (new JavaScriptSerializer()).Serialize(query);
         }
-        
+
         [WebMethod]
         public static string getVendorDDLlist()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var listItems = (from tbl in db.AP_Vendors where tbl.IsActive==true
+            var listItems = (from tbl in db.AP_Vendors
+                             where tbl.IsActive == true
                              select new
                              {
                                  VendorID = tbl.Vendor_ID,
@@ -173,6 +174,7 @@ namespace PMS.Inventory
                 db.SubmitChanges();
                 InvNo = obj.ManualInvoiceId.ToString();
             }
+            ///**********Deleting Previous details**************/
 
             if (btnSave == "Update")
             {
@@ -262,25 +264,25 @@ namespace PMS.Inventory
 
         public class MasterInvoiceList
         {
-            public string Invoice_num{get;set;}
-            public string Date{get;set;}
-            public string RefInvoicenum{get;set;}
-            public string VendorId{get;set;}
-            public string project{get;set;}
-            public string Remarks{get;set;}
-            public List<DetailInvoiceList> ItemList{get;set;}
+            public string Invoice_num { get; set; }
+            public string Date { get; set; }
+            public string RefInvoicenum { get; set; }
+            public string VendorId { get; set; }
+            public string project { get; set; }
+            public string Remarks { get; set; }
+            public List<DetailInvoiceList> ItemList { get; set; }
         }
 
         public class DetailInvoiceList
         {
-            public string AccountId{get;set;}
-            public string Description{get;set;}
-            public string DepartmentId{get;set;}
-            public string Qty{get;set;}
-            public string Rate{get;set;}
-            public string ddlstax{get;set;}
-            public string stamount{get;set;}
-            public string TotalAmount{get;set;}
+            public string AccountId { get; set; }
+            public string Description { get; set; }
+            public string DepartmentId { get; set; }
+            public string Qty { get; set; }
+            public string Rate { get; set; }
+            public string ddlstax { get; set; }
+            public string stamount { get; set; }
+            public string TotalAmount { get; set; }
         }
     }
 }

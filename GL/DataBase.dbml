@@ -2625,15 +2625,6 @@
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Advance_Payment_Purchase_Invoice" Member="Advance_Payment_Purchase_Invoices">
-    <Type Name="Advance_Payment_Purchase_Invoice">
-      <Column Name="Advance_Purchase_Invoice_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="AdvancePayment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AdvancePayment_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="PurchaseInvoiceId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.WithHold_Tax" Member="WithHold_Taxes">
     <Type Name="WithHold_Tax">
       <Column Name="WithHold_Tax_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -2645,20 +2636,6 @@
       <Column Name="Description_Recvable" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="S_T_W_H" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Manual_Invoice_Detail" Member="Manual_Invoice_Details">
-    <Type Name="Manual_Invoice_Detail">
-      <Column Name="ManualInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="AccountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="SalTax_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="SalTax_Percentage" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.AP_Vendors_Person" Member="AP_Vendors_Persons">
@@ -3185,23 +3162,6 @@
       <Column Name="AdvTax_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="CS_Ven_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="CS_Detail_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Purchase_Return_Detail" Member="Purchase_Return_Details">
-    <Type Name="Purchase_Return_Detail">
-      <Column Name="Purchase_Return_Detail_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Purchase_Return_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Inventory_Org" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Batch_No" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Trans_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="GRN_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="GRN_Detail_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="GRN_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Sys_Approval_Stage_Detail" Member="Sys_Approval_Stage_Details">
@@ -3781,56 +3741,6 @@
       <Column Name="Special_Test" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Purchase_Return_Master" Member="Purchase_Return_Masters">
-    <Type Name="Purchase_Return_Master">
-      <Column Name="Purchase_Return_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Purchase_Return_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Purchase_Return_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="WareHouse" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Invoice_Type" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Vendor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CreatedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="UpdatedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="UpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="DeletedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="DeletedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Approved_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Manual_Invoice" Member="Manual_Invoices">
-    <Type Name="Manual_Invoice">
-      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ManualInvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="ManualInvoiceDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="RefInvoiceNum" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="VendorId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="UpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Branch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Total_Invoice_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Deleted_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.GRN_Master" Member="GRN_Masters">
     <Type Name="GRN_Master">
       <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3889,40 +3799,6 @@
       <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="DeletedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Deleted_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Advance_Payment" Member="Advance_Payments">
-    <Type Name="Advance_Payment">
-      <Column Name="Advance_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Advance_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Account_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Advance_Account_Desc" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Refer_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Paid_Through" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="WithHoldTax_Perc" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="WithHoldTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Actual_Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Advance_PO" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Total_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="BalanceAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Created_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Updated_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Approved_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Deleted_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Medicines_Template" Member="Medicines_Templates">
@@ -4091,84 +3967,6 @@
       <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ApprovedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="ApprovedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Payment_Invoice_Detail" Member="Payment_Invoice_Details">
-    <Type Name="Payment_Invoice_Detail">
-      <Column Name="PaymentInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="PaymentInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="AdjustedAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="TotalPaidAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Invoice_Type" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Withholdinvadj" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Withholdtaxamount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Withholdtaxper" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="WithHoldtax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Total_Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="AdvPoId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Purchase_Invoice_Detail" Member="Purchase_Invoice_Details">
-    <Type Name="Purchase_Invoice_Detail">
-      <Column Name="PurchaseInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="ItemId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="AdvancePayment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AdvancePayment_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Adv_Po_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Purchase_Invoice_Master" Member="Purchase_Invoice_Masters">
-    <Type Name="Purchase_Invoice_Master">
-      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="InvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="InvoiceTypeId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="VendorId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="RefInvoiceNum" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="SalTaxInvocieNum" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="InvoiceDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="AccountingDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="DueDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CurrencyId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="ExRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="ExDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="FilePath" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="FileType" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="UpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Branch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Total_Invoice_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Payment_Bit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Voucher_id_adjustment" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ApprovedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ApprovedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.AP_Purchase_Orders" Member="AP_Purchase_Orders">
@@ -6599,6 +6397,213 @@
       <Column Name="IsCencal" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Payment_Invoice_Detail" Member="Payment_Invoice_Details">
+    <Type Name="Payment_Invoice_Detail">
+      <Column Name="PaymentInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PaymentInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="AdjustedAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalPaidAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Invoice_Type" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Withholdinvadj" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Withholdtaxamount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Withholdtaxper" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="WithHoldtax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="AdvPoId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Deduction" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Advance_Payment" Member="Advance_Payments">
+    <Type Name="Advance_Payment">
+      <Column Name="Advance_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Advance_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Po_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Account_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Advance_Account_Desc" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Refer_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Paid_Through" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="WithHoldTax_Perc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="WithHoldTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Actual_Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Advance_PO" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="BalanceAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Updated_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Approved_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Deleted_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Advance_Payment_Purchase_Invoice" Member="Advance_Payment_Purchase_Invoices">
+    <Type Name="Advance_Payment_Purchase_Invoice">
+      <Column Name="Advance_Purchase_Invoice_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AdvancePayment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvancePayment_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="PurchaseInvoiceId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Manual_Invoice_Detail" Member="Manual_Invoice_Details">
+    <Type Name="Manual_Invoice_Detail">
+      <Column Name="ManualInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="AccountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="SalTax_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="SalTax_Percentage" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Manual_Invoice" Member="Manual_Invoices">
+    <Type Name="Manual_Invoice">
+      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ManualInvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ManualInvoiceDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="RefInvoiceNum" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="VendorId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="UpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Branch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Invoice_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Deleted_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Purchase_Invoice_Detail" Member="Purchase_Invoice_Details">
+    <Type Name="Purchase_Invoice_Detail">
+      <Column Name="PurchaseInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="ItemId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="AdvancePayment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvancePayment_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Adv_Po_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Po_Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Po_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Purchase_Invoice_Master" Member="Purchase_Invoice_Masters">
+    <Type Name="Purchase_Invoice_Master">
+      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="InvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="InvoiceTypeId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="VendorId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="RefInvoiceNum" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="SalTaxInvocieNum" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="InvoiceDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AccountingDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DueDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CurrencyId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ExRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="ExDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="FilePath" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="FileType" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="UpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Branch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Total_Invoice_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Payment_Bit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Voucher_id_adjustment" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ApprovedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ApprovedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Purchase_Return_Detail" Member="Purchase_Return_Details">
+    <Type Name="Purchase_Return_Detail">
+      <Column Name="Purchase_Return_Detail_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Purchase_Return_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Inventory_Org" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Batch_No" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Trans_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="GRN_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="GRN_Detail_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="GRN_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Purchase_Return_Master" Member="Purchase_Return_Masters">
+    <Type Name="Purchase_Return_Master">
+      <Column Name="Purchase_Return_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Purchase_Return_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Purchase_Return_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="WareHouse" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Invoice_Type" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Vendor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="UpdatedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="DeletedBy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="DeletedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Approved_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -7596,16 +7601,6 @@
       <Column Name="Vendor_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetPurchaseInvoiceNDetailByVendorId" Method="sp_GetPurchaseInvoiceNDetailByVendorId">
-    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetPurchaseInvoiceNDetailByVendorIdResult">
-      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
-      <Column Name="InvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_AdvGetPurchaseInvoiceNDetailByVendorId" Method="sp_AdvGetPurchaseInvoiceNDetailByVendorId">
     <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_AdvGetPurchaseInvoiceNDetailByVendorIdResult">
@@ -7613,16 +7608,6 @@
       <Column Name="Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="PaymentDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="PaymentNum" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetManualInvoiceDetailByVendorId" Method="sp_GetManualInvoiceDetailByVendorId">
-    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetManualInvoiceDetailByVendorIdResult">
-      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
-      <Column Name="ManualInvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.spApproveMIR" Method="spApproveMIR">
@@ -9173,27 +9158,6 @@
       <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_LoadPaymentInvoice" Method="sp_LoadPaymentInvoice">
-    <Parameter Name="PaymentInvoiceId" Parameter="paymentInvoiceId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_LoadPaymentInvoiceResult">
-      <Column Name="PaymentInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="AdjustedAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="Invoice_No" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Adjustment" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
-      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="InvoiceType" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="withholdtaxadj" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="withholdtaxamou" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="withholdtaxper" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="WithHoldtax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="TotalPaidAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="TotalAdvanceAdjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadPurchaseDetailInvoice" Method="sp_LoadPurchaseDetailInvoice">
     <Parameter Name="InvId" Parameter="invId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_LoadPurchaseDetailInvoiceResult">
@@ -10174,6 +10138,48 @@
       <Column Name="SumOfAllScores" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="TotalQuestionsAnswered" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="OverallAverageSatisfaction" Type="System.Decimal" DbType="Decimal(24,12)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadPaymentInvoice" Method="sp_LoadPaymentInvoice">
+    <Parameter Name="PaymentInvoiceId" Parameter="paymentInvoiceId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_LoadPaymentInvoiceResult">
+      <Column Name="PaymentInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="AdjustedAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="Invoice_No" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Adjustment" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="InvoiceType" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="withholdtaxadj" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="withholdtaxamou" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="withholdtaxper" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="WithHoldtax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TotalPaidAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalAdvanceAdjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="AdvPoId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetPurchaseInvoiceNDetailByVendorId" Method="sp_GetPurchaseInvoiceNDetailByVendorId">
+    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetPurchaseInvoiceNDetailByVendorIdResult">
+      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="InvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetManualInvoiceDetailByVendorId" Method="sp_GetManualInvoiceDetailByVendorId">
+    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetManualInvoiceDetailByVendorIdResult">
+      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="ManualInvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
