@@ -64,25 +64,5 @@
             </div>
         </ChangePasswordTemplate>
     </asp:ChangePassword>
-    <%--<script type="text/javascript">
-
-        window.onload = function () {
-            var messageType = '<%= Session["MessageType"] != null ? Session["MessageType"].ToString() : "" %>';
-            var loginMessage = '<%= Session["LoginSuccess"] != null ? Session["LoginSuccess"].ToString() : "" %>';
-
-            if (messageType && loginMessage) {
-                Swal.fire({
-                    title: messageType === 'success' ? 'Success!' : 'Error!',
-                    text: loginMessage,
-                    icon: messageType === 'success' ? 'success' : 'error',
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    if (messageType === 'success' && result.isConfirmed) {
-                        window.location.href = 'Login.aspx';
-                    }
-                });
-            }
-        };
-
-    </script>--%>
+  
 </asp:Content>

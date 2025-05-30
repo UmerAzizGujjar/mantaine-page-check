@@ -42,27 +42,7 @@ namespace PMS
             return data;
         }
 
-        //[WebMethod]
-        //public static string GetGLAccounts()
-        //{
-        //    string data = string.Empty;
-
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var result = (from account in db.GL_Accounts
-        //                      where account.Parent_Code == 244
-        //                      select new
-        //                      {
-        //                          account.Account_ID,
-        //                          account.Account_Name,
-        //                          account.Parent_Code,
-        //                      }).ToList();
-
-        //        data = new JavaScriptSerializer().Serialize(result);
-        //    }
-        //    return data;
-        //}
-
+     
         [WebMethod]
         public static string GetGLAccounts()
         {
@@ -2214,7 +2194,6 @@ namespace PMS
         [System.Web.Services.WebMethod]
 
         public static PatientDetail GetPatientDetails(string PatientID)
-
         {
             int pat_id = 0;
             bool isExist_ipd = false;

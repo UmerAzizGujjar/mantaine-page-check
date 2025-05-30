@@ -4860,13 +4860,15 @@
 
                 PageMethods.GetGLAccounts(function (Tests) {
                     debugger
-                    //optionsBnk = '<option value="0">Please Select</option>';
+                    optionsBnk = '<option value="0">Please Select</option>';
                     $.each(JSON.parse(Tests), function (key, value) {
                         debugger;
                         optionsBnk += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
                     });
                     $('#ddlCashInHand').html(optionsBnk);
+                    $('#ddlCashInHand').select2();
                     $('#ddl_Bank').html(optionsBnk);
+                    $('#ddl_Bank').select2();
                 });
             }
 
