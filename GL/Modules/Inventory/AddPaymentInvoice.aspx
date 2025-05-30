@@ -2,20 +2,19 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
    
-    
-     <script type="text/javascript">
-         var InvType = '';
-         $(document).ready(function () {
-             UserRights();
-             $('#ddl_PaymentMode').select2();
-             $('#ddl_venderName').select2();
-             $('#ddl_bankCash').select2();
-             $('#btnSave').click(function () {
-                 SaveAllRecord();
-             });
-             $('#btnVoucher').hide();
-             $('#btn_Print').hide();
-             var checkedit = '<%= Request.QueryString["Inv_ID"]%>'
+        <script type="text/javascript">
+            var InvType = '';
+            $(document).ready(function () {
+                UserRights();
+                $('#ddl_PaymentMode').select2();
+                $('#ddl_venderName').select2();
+                $('#ddl_bankCash').select2();
+                $('#btnSave').click(function () {
+                    SaveAllRecord();
+                });
+                $('#btnVoucher').hide();
+                $('#btn_Print').hide();
+                var checkedit = '<%= Request.QueryString["Inv_ID"]%>'
             if (checkedit == '') {
                 GetNewPaymentInvoiceNo();
             }
@@ -646,67 +645,67 @@
         function PrintVoucher() {
             debugger;
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
-             var locationInfo = window.location;
-             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
-             if (!locationInfo.origin.includes('localhost')) {
-                 debugger;
-                 var urlInfo = window.location.href.split('/');
-                 var ip = urlInfo[2];
-                 var foldername = urlInfo[3];
-                 url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
-             }
-             window.open(url, '_blank');
-         }
+                var locationInfo = window.location;
+                var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
+                if (!locationInfo.origin.includes('localhost')) {
+                    debugger;
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
+                }
+                window.open(url, '_blank');
+            }
 
-         function sendFile(ID) {
-             debugger;
-             var fileInput = $('#chosePaymentfile')[0];
-             if (fileInput.files.length > 0) {
-                 debugger;
-                 var data = new FormData();
-                 data.append('file', $('#chosePaymentfile')[0].files[0]);
-                 data.append('ID', ID);
-                 $.ajax({
-                     type: 'post',
-                     url: '../UploadPaymentFiles.ashx',
-                     data: data,
-                     success: function (status) {
+            function sendFile(ID) {
+                debugger;
+                var fileInput = $('#chosePaymentfile')[0];
+                if (fileInput.files.length > 0) {
+                    debugger;
+                    var data = new FormData();
+                    data.append('file', $('#chosePaymentfile')[0].files[0]);
+                    data.append('ID', ID);
+                    $.ajax({
+                        type: 'post',
+                        url: '../UploadPaymentFiles.ashx',
+                        data: data,
+                        success: function (status) {
 
-                     },
-                     processData: false,
-                     contentType: false,
-                     error: function () {
-                         alert(" something went wrong!");
-                     }
-                 });
-             }
-         }
-         function UserUnApproveButtonRights() {
-             debugger;
-             $.ajax({
-                 type: "POST",
-                 url: "AddPaymentInvoice.aspx/UserUnApproveEntryRights",
-                 contentType: "application/json; charset=utf-8",
-                 dataType: "json",
-                 success: function (response) {
-                     debugger;
-                     var hasRights = response.d;
-                     debugger;
-                     if (hasRights) {
-                         debugger;
-                         $('#btnUnApprove').show();
-                     } else {
-                         $('#btnUnApprove').hide();
-                     }
-                 },
-                 failure: function (response) {
-                     alert("Failed to retrieve User UnApprove Button Rights.");
-                 }
-             });
-         }
+                        },
+                        processData: false,
+                        contentType: false,
+                        error: function () {
+                            alert(" something went wrong!");
+                        }
+                    });
+                }
+            }
+            function UserUnApproveButtonRights() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "AddPaymentInvoice.aspx/UserUnApproveEntryRights",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var hasRights = response.d;
+                        debugger;
+                        if (hasRights) {
+                            debugger;
+                            $('#btnUnApprove').show();
+                        } else {
+                            $('#btnUnApprove').hide();
+                        }
+                    },
+                    failure: function (response) {
+                        alert("Failed to retrieve User UnApprove Button Rights.");
+                    }
+                });
+            }
 
 
-     </script>
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="item">

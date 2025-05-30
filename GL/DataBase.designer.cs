@@ -3414,13 +3414,6 @@ namespace PMS
 			return ((ISingleResult<sp_LoadGRNDetailByGRNIdResult>)(result.ReturnValue));
 		}
 
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadzeroVendorPayment")]
-		public ISingleResult<sp_LoadzeroVendorPaymentResult> sp_LoadzeroVendorPayment([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> paymntinvoiceid)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), paymntinvoiceid);
-			return ((ISingleResult<sp_LoadzeroVendorPaymentResult>)(result.ReturnValue));
-		}
-
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_AdvGetPurchaseInvoiceNDetailByVendorId")]
 		public ISingleResult<sp_AdvGetPurchaseInvoiceNDetailByVendorIdResult> sp_AdvGetPurchaseInvoiceNDetailByVendorId([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "VendorId", DbType = "Int")] System.Nullable<int> vendorId)
 		{
@@ -3700,13 +3693,6 @@ namespace PMS
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), purchase_Return_ID);
 			return ((ISingleResult<sp_LoadDetailforPurchaseReturnResult>)(result.ReturnValue));
-		}
-
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadVendorPayment")]
-		public ISingleResult<sp_LoadVendorPaymentResult> sp_LoadVendorPayment()
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
-			return ((ISingleResult<sp_LoadVendorPaymentResult>)(result.ReturnValue));
 		}
 
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetGRNDetailByVendorId")]
@@ -4066,13 +4052,6 @@ namespace PMS
 			return ((ISingleResult<spUnApprovePurchaseResult>)(result.ReturnValue));
 		}
 
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spUnApprovePayment")]
-		public ISingleResult<spUnApprovePaymentResult> spUnApprovePayment([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PaymentID", DbType = "Int")] System.Nullable<int> paymentID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(450)")] string user_id)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), paymentID, user_id);
-			return ((ISingleResult<spUnApprovePaymentResult>)(result.ReturnValue));
-		}
-
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spUnApprovePurchaseReturn")]
 		public ISingleResult<spUnApprovePurchaseReturnResult> spUnApprovePurchaseReturn([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PRT_ID", DbType = "Int")] System.Nullable<int> pRT_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(450)")] string user_id)
 		{
@@ -4115,25 +4094,11 @@ namespace PMS
 			return ((ISingleResult<sp_loadPatientsDepartmentWiseResult>)(result.ReturnValue));
 		}
 
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId")]
-		public ISingleResult<sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult> sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "VendorId", DbType = "Int")] System.Nullable<int> vendorId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), vendorId);
-			return ((ISingleResult<sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult>)(result.ReturnValue));
-		}
-
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPurchaseDetailInvoice")]
 		public ISingleResult<sp_LoadPurchaseDetailInvoiceResult> sp_LoadPurchaseDetailInvoice([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "InvId", DbType = "Int")] System.Nullable<int> invId)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invId);
 			return ((ISingleResult<sp_LoadPurchaseDetailInvoiceResult>)(result.ReturnValue));
-		}
-
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprovePayment")]
-		public ISingleResult<SpApprovePaymentResult> SpApprovePayment([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> paymentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "UserId", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> userId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), paymentID, userId);
-			return ((ISingleResult<SpApprovePaymentResult>)(result.ReturnValue));
 		}
 
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spMenuView")]
@@ -4463,6 +4428,27 @@ namespace PMS
 			return ((ISingleResult<sp_GetOverallSatisfactionAverageResult>)(result.ReturnValue));
 		}
 
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId")]
+		public ISingleResult<sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult> sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "VendorId", DbType = "Int")] System.Nullable<int> vendorId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), vendorId);
+			return ((ISingleResult<sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult>)(result.ReturnValue));
+		}
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadVendorPayment")]
+		public ISingleResult<sp_LoadVendorPaymentResult> sp_LoadVendorPayment()
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+			return ((ISingleResult<sp_LoadVendorPaymentResult>)(result.ReturnValue));
+		}
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadzeroVendorPayment")]
+		public ISingleResult<sp_LoadzeroVendorPaymentResult> sp_LoadzeroVendorPayment([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> paymntinvoiceid)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), paymntinvoiceid);
+			return ((ISingleResult<sp_LoadzeroVendorPaymentResult>)(result.ReturnValue));
+		}
+
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPaymentInvoice")]
 		public ISingleResult<sp_LoadPaymentInvoiceResult> sp_LoadPaymentInvoice([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PaymentInvoiceId", DbType = "Int")] System.Nullable<int> paymentInvoiceId)
 		{
@@ -4482,6 +4468,20 @@ namespace PMS
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), vendorId);
 			return ((ISingleResult<sp_GetManualInvoiceDetailByVendorIdResult>)(result.ReturnValue));
+		}
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprovePayment")]
+		public ISingleResult<SpApprovePaymentResult> SpApprovePayment([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> paymentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "UserId", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> userId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), paymentID, userId);
+			return ((ISingleResult<SpApprovePaymentResult>)(result.ReturnValue));
+		}
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spUnApprovePayment")]
+		public ISingleResult<spUnApprovePaymentResult> spUnApprovePayment([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PaymentID", DbType = "Int")] System.Nullable<int> paymentID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(450)")] string user_id)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), paymentID, user_id);
+			return ((ISingleResult<spUnApprovePaymentResult>)(result.ReturnValue));
 		}
 	}
 
@@ -160902,50 +160902,6 @@ namespace PMS
 		}
 	}
 
-	public partial class sp_LoadzeroVendorPaymentResult
-	{
-
-		private string _Vendor_Name;
-
-		private int _Vendor_ID;
-
-		public sp_LoadzeroVendorPaymentResult()
-		{
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Name", DbType = "VarChar(100)")]
-		public string Vendor_Name
-		{
-			get
-			{
-				return this._Vendor_Name;
-			}
-			set
-			{
-				if ((this._Vendor_Name != value))
-				{
-					this._Vendor_Name = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_ID", DbType = "Int NOT NULL")]
-		public int Vendor_ID
-		{
-			get
-			{
-				return this._Vendor_ID;
-			}
-			set
-			{
-				if ((this._Vendor_ID != value))
-				{
-					this._Vendor_ID = value;
-				}
-			}
-		}
-	}
-
 	public partial class sp_AdvGetPurchaseInvoiceNDetailByVendorIdResult
 	{
 
@@ -165047,86 +165003,6 @@ namespace PMS
 				if ((this._Rate != value))
 				{
 					this._Rate = value;
-				}
-			}
-		}
-	}
-
-	public partial class sp_LoadVendorPaymentResult
-	{
-
-		private System.Nullable<int> _VendorID;
-
-		private string _VendorName;
-
-		private System.Nullable<decimal> _TotalAmount;
-
-		private System.Nullable<bool> _IsActive;
-
-		public sp_LoadVendorPaymentResult()
-		{
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorID", DbType = "Int")]
-		public System.Nullable<int> VendorID
-		{
-			get
-			{
-				return this._VendorID;
-			}
-			set
-			{
-				if ((this._VendorID != value))
-				{
-					this._VendorID = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorName", DbType = "VarChar(100)")]
-		public string VendorName
-		{
-			get
-			{
-				return this._VendorName;
-			}
-			set
-			{
-				if ((this._VendorName != value))
-				{
-					this._VendorName = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,2)")]
-		public System.Nullable<decimal> TotalAmount
-		{
-			get
-			{
-				return this._TotalAmount;
-			}
-			set
-			{
-				if ((this._TotalAmount != value))
-				{
-					this._TotalAmount = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsActive", DbType = "Bit")]
-		public System.Nullable<bool> IsActive
-		{
-			get
-			{
-				return this._IsActive;
-			}
-			set
-			{
-				if ((this._IsActive != value))
-				{
-					this._IsActive = value;
 				}
 			}
 		}
@@ -169472,32 +169348,6 @@ namespace PMS
 		private string _Column1;
 
 		public spUnApprovePurchaseResult()
-		{
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Name = "", Storage = "_Column1", DbType = "VarChar(1000)")]
-		public string Column1
-		{
-			get
-			{
-				return this._Column1;
-			}
-			set
-			{
-				if ((this._Column1 != value))
-				{
-					this._Column1 = value;
-				}
-			}
-		}
-	}
-
-	public partial class spUnApprovePaymentResult
-	{
-
-		private string _Column1;
-
-		public spUnApprovePaymentResult()
 		{
 		}
 
@@ -179862,194 +179712,6 @@ namespace PMS
 		}
 	}
 
-	public partial class sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult
-	{
-
-		private long _ManualInvoiceId;
-
-		private decimal _TotalAdvanceAdjusted;
-
-		private System.Nullable<decimal> _ActualTotalAmount;
-
-		private System.Nullable<decimal> _TotalAmount;
-
-		private System.Nullable<long> _ManualInvoiceNum;
-
-		private decimal _Paid_Amount;
-
-		private string _Type;
-
-		private System.Nullable<int> _SalTax;
-
-		private System.Nullable<decimal> _SalTax_Amt;
-
-		private System.Nullable<decimal> _Balance;
-
-		public sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult()
-		{
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ManualInvoiceId", DbType = "BigInt NOT NULL")]
-		public long ManualInvoiceId
-		{
-			get
-			{
-				return this._ManualInvoiceId;
-			}
-			set
-			{
-				if ((this._ManualInvoiceId != value))
-				{
-					this._ManualInvoiceId = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAdvanceAdjusted", DbType = "Decimal(18,2) NOT NULL")]
-		public decimal TotalAdvanceAdjusted
-		{
-			get
-			{
-				return this._TotalAdvanceAdjusted;
-			}
-			set
-			{
-				if ((this._TotalAdvanceAdjusted != value))
-				{
-					this._TotalAdvanceAdjusted = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ActualTotalAmount", DbType = "Decimal(38,2)")]
-		public System.Nullable<decimal> ActualTotalAmount
-		{
-			get
-			{
-				return this._ActualTotalAmount;
-			}
-			set
-			{
-				if ((this._ActualTotalAmount != value))
-				{
-					this._ActualTotalAmount = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,2)")]
-		public System.Nullable<decimal> TotalAmount
-		{
-			get
-			{
-				return this._TotalAmount;
-			}
-			set
-			{
-				if ((this._TotalAmount != value))
-				{
-					this._TotalAmount = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ManualInvoiceNum", DbType = "BigInt")]
-		public System.Nullable<long> ManualInvoiceNum
-		{
-			get
-			{
-				return this._ManualInvoiceNum;
-			}
-			set
-			{
-				if ((this._ManualInvoiceNum != value))
-				{
-					this._ManualInvoiceNum = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Paid_Amount", DbType = "Decimal(38,2) NOT NULL")]
-		public decimal Paid_Amount
-		{
-			get
-			{
-				return this._Paid_Amount;
-			}
-			set
-			{
-				if ((this._Paid_Amount != value))
-				{
-					this._Paid_Amount = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Type", DbType = "VarChar(8) NOT NULL", CanBeNull = false)]
-		public string Type
-		{
-			get
-			{
-				return this._Type;
-			}
-			set
-			{
-				if ((this._Type != value))
-				{
-					this._Type = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SalTax", DbType = "Int")]
-		public System.Nullable<int> SalTax
-		{
-			get
-			{
-				return this._SalTax;
-			}
-			set
-			{
-				if ((this._SalTax != value))
-				{
-					this._SalTax = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SalTax_Amt", DbType = "Decimal(38,2)")]
-		public System.Nullable<decimal> SalTax_Amt
-		{
-			get
-			{
-				return this._SalTax_Amt;
-			}
-			set
-			{
-				if ((this._SalTax_Amt != value))
-				{
-					this._SalTax_Amt = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Balance", DbType = "Decimal(38,2)")]
-		public System.Nullable<decimal> Balance
-		{
-			get
-			{
-				return this._Balance;
-			}
-			set
-			{
-				if ((this._Balance != value))
-				{
-					this._Balance = value;
-				}
-			}
-		}
-	}
-
 	public partial class sp_LoadPurchaseDetailInvoiceResult
 	{
 
@@ -180521,32 +180183,6 @@ namespace PMS
 				if ((this._Rate1 != value))
 				{
 					this._Rate1 = value;
-				}
-			}
-		}
-	}
-
-	public partial class SpApprovePaymentResult
-	{
-
-		private string _Message;
-
-		public SpApprovePaymentResult()
-		{
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
-		public string Message
-		{
-			get
-			{
-				return this._Message;
-			}
-			set
-			{
-				if ((this._Message != value))
-				{
-					this._Message = value;
 				}
 			}
 		}
@@ -193144,6 +192780,336 @@ namespace PMS
 		}
 	}
 
+	public partial class sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult
+	{
+
+		private long _ManualInvoiceId;
+
+		private decimal _TotalAdvanceAdjusted;
+
+		private System.Nullable<decimal> _ActualTotalAmount;
+
+		private System.Nullable<decimal> _TotalAmount;
+
+		private System.Nullable<long> _ManualInvoiceNum;
+
+		private decimal _Paid_Amount;
+
+		private string _Type;
+
+		private System.Nullable<int> _SalTax;
+
+		private System.Nullable<decimal> _SalTax_Amt;
+
+		private decimal _Advance_Recieved_Amount;
+
+		private System.Nullable<decimal> _Balance;
+
+		public sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult()
+		{
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ManualInvoiceId", DbType = "BigInt NOT NULL")]
+		public long ManualInvoiceId
+		{
+			get
+			{
+				return this._ManualInvoiceId;
+			}
+			set
+			{
+				if ((this._ManualInvoiceId != value))
+				{
+					this._ManualInvoiceId = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAdvanceAdjusted", DbType = "Decimal(18,2) NOT NULL")]
+		public decimal TotalAdvanceAdjusted
+		{
+			get
+			{
+				return this._TotalAdvanceAdjusted;
+			}
+			set
+			{
+				if ((this._TotalAdvanceAdjusted != value))
+				{
+					this._TotalAdvanceAdjusted = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ActualTotalAmount", DbType = "Decimal(38,2)")]
+		public System.Nullable<decimal> ActualTotalAmount
+		{
+			get
+			{
+				return this._ActualTotalAmount;
+			}
+			set
+			{
+				if ((this._ActualTotalAmount != value))
+				{
+					this._ActualTotalAmount = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,2)")]
+		public System.Nullable<decimal> TotalAmount
+		{
+			get
+			{
+				return this._TotalAmount;
+			}
+			set
+			{
+				if ((this._TotalAmount != value))
+				{
+					this._TotalAmount = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ManualInvoiceNum", DbType = "BigInt")]
+		public System.Nullable<long> ManualInvoiceNum
+		{
+			get
+			{
+				return this._ManualInvoiceNum;
+			}
+			set
+			{
+				if ((this._ManualInvoiceNum != value))
+				{
+					this._ManualInvoiceNum = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Paid_Amount", DbType = "Decimal(38,2) NOT NULL")]
+		public decimal Paid_Amount
+		{
+			get
+			{
+				return this._Paid_Amount;
+			}
+			set
+			{
+				if ((this._Paid_Amount != value))
+				{
+					this._Paid_Amount = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Type", DbType = "VarChar(8) NOT NULL", CanBeNull = false)]
+		public string Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this._Type = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SalTax", DbType = "Int")]
+		public System.Nullable<int> SalTax
+		{
+			get
+			{
+				return this._SalTax;
+			}
+			set
+			{
+				if ((this._SalTax != value))
+				{
+					this._SalTax = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SalTax_Amt", DbType = "Decimal(38,2)")]
+		public System.Nullable<decimal> SalTax_Amt
+		{
+			get
+			{
+				return this._SalTax_Amt;
+			}
+			set
+			{
+				if ((this._SalTax_Amt != value))
+				{
+					this._SalTax_Amt = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_Recieved_Amount", DbType = "Decimal(38,2) NOT NULL")]
+		public decimal Advance_Recieved_Amount
+		{
+			get
+			{
+				return this._Advance_Recieved_Amount;
+			}
+			set
+			{
+				if ((this._Advance_Recieved_Amount != value))
+				{
+					this._Advance_Recieved_Amount = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Balance", DbType = "Decimal(38,2)")]
+		public System.Nullable<decimal> Balance
+		{
+			get
+			{
+				return this._Balance;
+			}
+			set
+			{
+				if ((this._Balance != value))
+				{
+					this._Balance = value;
+				}
+			}
+		}
+	}
+
+	public partial class sp_LoadVendorPaymentResult
+	{
+
+		private System.Nullable<int> _VendorID;
+
+		private string _VendorName;
+
+		private System.Nullable<decimal> _TotalAmount;
+
+		private System.Nullable<bool> _IsActive;
+
+		public sp_LoadVendorPaymentResult()
+		{
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorID", DbType = "Int")]
+		public System.Nullable<int> VendorID
+		{
+			get
+			{
+				return this._VendorID;
+			}
+			set
+			{
+				if ((this._VendorID != value))
+				{
+					this._VendorID = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorName", DbType = "VarChar(100)")]
+		public string VendorName
+		{
+			get
+			{
+				return this._VendorName;
+			}
+			set
+			{
+				if ((this._VendorName != value))
+				{
+					this._VendorName = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,2)")]
+		public System.Nullable<decimal> TotalAmount
+		{
+			get
+			{
+				return this._TotalAmount;
+			}
+			set
+			{
+				if ((this._TotalAmount != value))
+				{
+					this._TotalAmount = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsActive", DbType = "Bit")]
+		public System.Nullable<bool> IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this._IsActive = value;
+				}
+			}
+		}
+	}
+
+	public partial class sp_LoadzeroVendorPaymentResult
+	{
+
+		private string _Vendor_Name;
+
+		private int _Vendor_ID;
+
+		public sp_LoadzeroVendorPaymentResult()
+		{
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_Name", DbType = "VarChar(100)")]
+		public string Vendor_Name
+		{
+			get
+			{
+				return this._Vendor_Name;
+			}
+			set
+			{
+				if ((this._Vendor_Name != value))
+				{
+					this._Vendor_Name = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_ID", DbType = "Int NOT NULL")]
+		public int Vendor_ID
+		{
+			get
+			{
+				return this._Vendor_ID;
+			}
+			set
+			{
+				if ((this._Vendor_ID != value))
+				{
+					this._Vendor_ID = value;
+				}
+			}
+		}
+	}
+
 	public partial class sp_LoadPaymentInvoiceResult
 	{
 
@@ -193158,6 +193124,8 @@ namespace PMS
 		private System.Nullable<decimal> _Payable;
 
 		private decimal _Total_Adjustment;
+
+		private decimal _PreviouslyPaid;
 
 		private System.Nullable<long> _PurchaseInvoiceId;
 
@@ -193179,7 +193147,9 @@ namespace PMS
 
 		private System.Nullable<decimal> _Stax_Amount;
 
-		private int _AdvPoId;
+		private decimal _Deduction;
+
+		private decimal _Advance_Amount;
 
 		public sp_LoadPaymentInvoiceResult()
 		{
@@ -193277,6 +193247,22 @@ namespace PMS
 				if ((this._Total_Adjustment != value))
 				{
 					this._Total_Adjustment = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PreviouslyPaid", DbType = "Decimal(38,2) NOT NULL")]
+		public decimal PreviouslyPaid
+		{
+			get
+			{
+				return this._PreviouslyPaid;
+			}
+			set
+			{
+				if ((this._PreviouslyPaid != value))
+				{
+					this._PreviouslyPaid = value;
 				}
 			}
 		}
@@ -193441,18 +193427,34 @@ namespace PMS
 			}
 		}
 
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AdvPoId", DbType = "Int NOT NULL")]
-		public int AdvPoId
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Deduction", DbType = "Decimal(18,2) NOT NULL")]
+		public decimal Deduction
 		{
 			get
 			{
-				return this._AdvPoId;
+				return this._Deduction;
 			}
 			set
 			{
-				if ((this._AdvPoId != value))
+				if ((this._Deduction != value))
 				{
-					this._AdvPoId = value;
+					this._Deduction = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_Amount", DbType = "Decimal(18,2) NOT NULL")]
+		public decimal Advance_Amount
+		{
+			get
+			{
+				return this._Advance_Amount;
+			}
+			set
+			{
+				if ((this._Advance_Amount != value))
+				{
+					this._Advance_Amount = value;
 				}
 			}
 		}
@@ -193649,6 +193651,58 @@ namespace PMS
 				if ((this._Balance != value))
 				{
 					this._Balance = value;
+				}
+			}
+		}
+	}
+
+	public partial class SpApprovePaymentResult
+	{
+
+		private string _Message;
+
+		public SpApprovePaymentResult()
+		{
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+		public string Message
+		{
+			get
+			{
+				return this._Message;
+			}
+			set
+			{
+				if ((this._Message != value))
+				{
+					this._Message = value;
+				}
+			}
+		}
+	}
+
+	public partial class spUnApprovePaymentResult
+	{
+
+		private string _Column1;
+
+		public spUnApprovePaymentResult()
+		{
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name = "", Storage = "_Column1", DbType = "VarChar(1000)")]
+		public string Column1
+		{
+			get
+			{
+				return this._Column1;
+			}
+			set
+			{
+				if ((this._Column1 != value))
+				{
+					this._Column1 = value;
 				}
 			}
 		}

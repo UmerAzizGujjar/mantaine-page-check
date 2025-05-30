@@ -7594,13 +7594,6 @@
       <Column Name="PO_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_LoadzeroVendorPayment" Method="sp_LoadzeroVendorPayment">
-    <Parameter Name="paymntinvoiceid" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_LoadzeroVendorPaymentResult">
-      <Column Name="Vendor_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_AdvGetPurchaseInvoiceNDetailByVendorId" Method="sp_AdvGetPurchaseInvoiceNDetailByVendorId">
     <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_AdvGetPurchaseInvoiceNDetailByVendorIdResult">
@@ -8032,14 +8025,6 @@
       <Column Name="IGPDetailId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Batch_Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_LoadVendorPayment" Method="sp_LoadVendorPayment">
-    <ElementType Name="sp_LoadVendorPaymentResult">
-      <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="VendorName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_GetGRNDetailByVendorId" Method="sp_GetGRNDetailByVendorId">
@@ -8525,13 +8510,6 @@
     <Parameter Name="PurchaseID" Parameter="purchaseID" Type="System.Int32" DbType="Int" />
     <Parameter Name="user_id" Type="System.String" DbType="VarChar(450)" />
     <ElementType Name="spUnApprovePurchaseResult">
-      <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.spUnApprovePayment" Method="spUnApprovePayment">
-    <Parameter Name="PaymentID" Parameter="paymentID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="user_id" Type="System.String" DbType="VarChar(450)" />
-    <ElementType Name="spUnApprovePaymentResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
@@ -9143,21 +9121,6 @@
       <Column Name="NumberOfDays" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId" Method="sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId">
-    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult">
-      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="TotalAdvanceAdjusted" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="ActualTotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="ManualInvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Type" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
-      <Column Name="SalTax" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="SalTax_Amt" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadPurchaseDetailInvoice" Method="sp_LoadPurchaseDetailInvoice">
     <Parameter Name="InvId" Parameter="invId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_LoadPurchaseDetailInvoiceResult">
@@ -9187,13 +9150,6 @@
       <Column Name="PO_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="PO_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Rate1" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.SpApprovePayment" Method="SpApprovePayment">
-    <Parameter Name="paymentID" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="UserId" Parameter="userId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="SpApprovePaymentResult">
-      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.spMenuView" Method="spMenuView">
@@ -10140,6 +10096,37 @@
       <Column Name="OverallAverageSatisfaction" Type="System.Decimal" DbType="Decimal(24,12)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId" Method="sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId">
+    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorIdResult">
+      <Column Name="ManualInvoiceId" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="TotalAdvanceAdjusted" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="ActualTotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="ManualInvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="SalTax" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SalTax_Amt" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="Advance_Recieved_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadVendorPayment" Method="sp_LoadVendorPayment">
+    <ElementType Name="sp_LoadVendorPaymentResult">
+      <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="VendorName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadzeroVendorPayment" Method="sp_LoadzeroVendorPayment">
+    <Parameter Name="paymntinvoiceid" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_LoadzeroVendorPaymentResult">
+      <Column Name="Vendor_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.sp_LoadPaymentInvoice" Method="sp_LoadPaymentInvoice">
     <Parameter Name="PaymentInvoiceId" Parameter="paymentInvoiceId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_LoadPaymentInvoiceResult">
@@ -10149,6 +10136,7 @@
       <Column Name="Invoice_No" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
       <Column Name="Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Total_Adjustment" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="PreviouslyPaid" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
       <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
       <Column Name="InvoiceType" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="withholdtaxadj" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
@@ -10159,7 +10147,8 @@
       <Column Name="TotalAdvanceAdjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="AdvPoId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Deduction" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_GetPurchaseInvoiceNDetailByVendorId" Method="sp_GetPurchaseInvoiceNDetailByVendorId">
@@ -10180,6 +10169,20 @@
       <Column Name="ManualInvoiceNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
       <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
       <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApprovePayment" Method="SpApprovePayment">
+    <Parameter Name="paymentID" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="UserId" Parameter="userId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApprovePaymentResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spUnApprovePayment" Method="spUnApprovePayment">
+    <Parameter Name="PaymentID" Parameter="paymentID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="user_id" Type="System.String" DbType="VarChar(450)" />
+    <ElementType Name="spUnApprovePaymentResult">
+      <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
