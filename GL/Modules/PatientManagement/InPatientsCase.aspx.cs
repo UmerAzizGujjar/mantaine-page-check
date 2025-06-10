@@ -2607,9 +2607,9 @@ namespace PMS
                     OPD.Company_ID = AppConfig.Company_ID;
                     db.In_Patients.InsertOnSubmit(OPD);
                     // SMS Configration
-                    string ward = (from tbl in db.Ward_Definitions
+                    string ward = Convert.ToString((from tbl in db.Ward_Definitions
                                    where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
-                                   select tbl.Ward_No).FirstOrDefault();
+                                   select tbl.Ward_No).FirstOrDefault());
                     string SMS_Contant = "عارف میموریل ہسپتال پراعتماد کرنےکا شکریہ۔ آپکاداخلہ '" + ward + "' میں تجویز ہوا ہے-شکایات کیصورت میں اس نمبر پر رابطہ کریں۔ 03060682558";
                     string msg = "";
                   
