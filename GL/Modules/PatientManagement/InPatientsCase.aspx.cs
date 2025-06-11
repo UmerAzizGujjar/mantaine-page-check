@@ -5485,10 +5485,13 @@ namespace PMS
                                      on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                      join outpat in db.In_Patients
                                      on lbtM.Patient_ID equals outpat.In_Patient_ID
-                                     join p in db.Reg_patients
-                                     on outpat.Patient_ID equals p.pat_id
-                                     where p.Patient_No == Patien_No && lbtM.Transaction_Type == "InPatient"
-                                     orderby lbtD.Date descending
+                                     join p in db.Patients
+                                     on outpat.Patient_ID equals p.Patient_ID
+                                     join rp in db.Reg_patients
+                                     on p.Reg_PatId equals rp.pat_id
+                                     where rp.Patient_No == Patien_No && lbtM.Transaction_Type == "InPatient"
+
+
                                      select new
                                      {
                                          outpat.In_Patient_ID,
@@ -5505,7 +5508,7 @@ namespace PMS
                                          Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
                                          Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
                                          Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
-                                         DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                               Departments", t.Main_Department)).FirstOrDefault(),
+                                         DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                 Departments", t.Main_Department)).FirstOrDefault(),
                                          Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
                                          GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
                                          Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
@@ -5515,77 +5518,27 @@ namespace PMS
                                                                   join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
                                                                   where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
                                                                   select dv.DataValue_Description).FirstOrDefault(),
+
                                          lbtD.Special_Tests,
                                          lbtD.Area_Of_Interest,
                                          lbtD.Doctor,
                                          lbtD.Recieved_ID,
-                                         lbtD.Is_Result,
-                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(lbtD.Doctor) select d.Emp_Name).FirstOrDefault(),
-                                         IsSample = IsSample(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString()),
-                                         isResult = IsResult(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString()),
-                                 
-                                         Is_Approved = IsApproved(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString())
-
+                                         Is_Result = (from t in db.Lab_Test_Details where t.BillDetailID == lbtD.BillDetailID orderby t.Lab_Test_Detail_ID descending select t.isApproved).FirstOrDefault(),
+                                         Doctor_ID = outpat.Doctor
                                      }
-                ).ToList();
+     ).ToList();
 
             ApprTest.Clear();
             SampleTest.Clear();
             AckTest.Clear();
             ResTest.Clear();
-            //var OutPatienttestilst = (from lbtM in db.Laboratory_Tests
-            //                          join lbtD in db.Lab_Test_Details
-            //                          on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
-            //                          join outpat in db.Out_Patients
-            //                          on lbtM.Patient_ID equals outpat.Out_Patient_ID
-            //                          join p in db.Reg_patients
-            //                          on outpat.Reg_PatId equals p.pat_id
-            //                          where p.Patient_No == Patien_No && lbtM.Transaction_Type == "OutPatient"
-            //                          orderby lbtD.Date descending
-            //                          select new
-            //                          {
-
-            //                              outpat.Out_Patient_ID,
-            //                              lbtD.Lab_Test_Detail_ID,
-            //                              lbtD.Date,
-            //                              lbtD.Remark,
-            //                              lbtD.Catagory_ID,
-            //                              lbtM.Lab_Test_ID,
-            //                              lbtD.Test_ID,
-            //                              lbtD.Dept_ID,
-            //                              lbtD.L_R_Rotation_ID,
-            //                              Value_Type = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Value_Type).FirstOrDefault(),
-            //                              Value_TypeGroup = (from t in db.Lab_Tests where t.Group_Category == lbtD.Catagory_ID select t.Value_Type).FirstOrDefault(),
-            //                              Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
-            //                              Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
-            //                              Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
-            //                              DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                               Departments", t.Main_Department)).FirstOrDefault(),
-            //                              Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
-            //                              GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
-            //                              Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
-            //                              lbtD.Rotation_ID,
-            //                              Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
-            //                              DataValue_Description = (from dv in db.DataValues
-            //                                                       join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
-            //                                                       where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
-            //                                                       select dv.DataValue_Description).FirstOrDefault(),
-
-            //                              lbtD.Special_Tests,
-            //                              lbtD.Area_Of_Interest,
-            //                              lbtD.Doctor,
-            //                              lbtD.Recieved_ID,
-            //                              lbtD.Is_Result,
-            //                              outpat.Doctor_ID
-            //                          }
-            //   ).ToList();
-
+            
 
             List<PendingLabTestClass> list = new List<PendingLabTestClass>();
 
             foreach (var item in InPatienttestilst)
             {
                 PendingLabTestClass obj = new PendingLabTestClass();
-
                 obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
                 obj.Date = Convert.ToDateTime(item.Date);
                 obj.Remark = item.Remark;
@@ -5611,56 +5564,13 @@ namespace PMS
                 obj.Area_Of_Interest = item.Area_Of_Interest;
                 obj.Doctor = item.Doctor;
                 obj.Recieved_ID = item.Recieved_ID;
-                obj.ISSample = item.IsSample;
-                obj.ISRZlt = item.isResult;
-                obj.ISAppRove = item.Is_Approved;
                 if (item.Is_Result == null)
                     obj.Is_Result = false;
                 else
                     obj.Is_Result = (bool)item.Is_Result;
                 obj.Status = "InPatient";
-                obj.DoctorName = item.DoctorName;
                 list.Add(obj);
             }
-
-            //foreach (var item in OutPatienttestilst)
-            //{
-            //    PendingLabTestClass obj = new PendingLabTestClass();
-            //    obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
-            //    obj.Date = Convert.ToDateTime(item.Date);
-            //    obj.Remark = item.Remark;
-            //    obj.Catagory_ID = item.Catagory_ID;
-            //    obj.Lab_Test_ID = item.Lab_Test_ID.ToString();
-            //    obj.Test_ID = item.Test_ID;
-            //    obj.Dept_ID = item.Dept_ID;
-            //    obj.L_R_Rotation_ID = item.L_R_Rotation_ID;
-            //    obj.In_Patient_ID = item.Out_Patient_ID;
-            //    obj.Value_Type = item.Value_Type;
-            //    obj.Value_TypeGroup = item.Value_TypeGroup;
-            //    obj.Test_Name = item.Test_Name;
-            //    obj.Group_Department = item.Group_Department;
-            //    obj.Group_Category = item.Group_Category;
-            //    obj.DepartmentName = item.DepartmentName;
-             
-            //    obj.Department_ID = item.Department_ID;
-            //    obj.GroupName = item.GroupName;
-            //    obj.Group_Name = item.Group_Name;
-            //    obj.Rotation_ID = item.Rotation_ID;
-            //    obj.Rotation = item.Rotation;
-            //    obj.DataValue_Description = item.DataValue_Description;
-            //    obj.Special_Tests = item.Special_Tests;
-            //    obj.Area_Of_Interest = item.Area_Of_Interest;
-            //    obj.Doctor = item.Doctor;
-            //    obj.Recieved_ID = item.Recieved_ID;
-            //    if (item.Is_Result == null)
-            //        obj.Is_Result = false;
-            //    else
-            //        obj.Is_Result = (bool)item.Is_Result;
-            //    obj.DoctorName = item.Doctor_ID;
-            //    obj.Status = "OutPatient";
-            //    list.Add(obj);
-            //}
-
             return (new JavaScriptSerializer()).Serialize(list);
         }
 
