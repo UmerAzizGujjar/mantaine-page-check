@@ -577,7 +577,8 @@ function loaddoctor() {
                 $('#ddldoctor').html(options);         
                 var type = $('#ddlPatient_Type').val();
                 if (type != "02") {
-                    $('#txtfees').val('300');
+                  
+                    getGeneralFee();
                 }
 
             },
@@ -587,7 +588,25 @@ function loaddoctor() {
         });
     }
 }
+function getGeneralFee() {
+        $.ajax({
+            url: 'OPD.aspx/GetFees',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (resp) {
+                debugger;
+                var data = JSON.parse(resp.d);
+                $('#txtfees').val(data.Code);
 
+            },
+            error: function (response) {
+                alert("Error: " + response.responseText);
+                console.error("AJAX Error: ", response);
+            }
+        });
+    
+}
 function fillpanel() {
     var options = '<option value="0">Please Select</option>';
 
@@ -1342,7 +1361,7 @@ function loaddata() {
         $('#class').hide();
         $('#section').hide();
         $('#dependent').hide();
-      /*  $('#txtfees').val('300');*/
+     
         $('#emp_id').hide();
        
 
