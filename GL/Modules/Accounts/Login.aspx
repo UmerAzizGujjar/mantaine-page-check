@@ -5,7 +5,7 @@
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/login.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/login.css" rel="stylesheet" />
     
 
 
