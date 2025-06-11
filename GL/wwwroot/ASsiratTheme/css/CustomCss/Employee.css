@@ -15,3 +15,8 @@
         margin: 0; /* Removes any default margin on checkboxes */
         width: auto; /* Ensures proper sizing */
     }
+
+
+.chkwdth {
+    width: 58px !important
+}
