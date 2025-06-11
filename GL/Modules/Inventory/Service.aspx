@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Service.aspx.cs" Inherits="PMS.Modules.Inventory.Service" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-      <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Product.css" rel="stylesheet" />
+      <link href="../../wwwroot/StandardTheme/css/CustomCss/Product.css" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {

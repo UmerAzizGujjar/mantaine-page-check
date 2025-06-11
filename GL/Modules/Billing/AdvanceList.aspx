@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 <script src="<%= Page.ResolveClientUrl("~/javascripts/stocktransfer.js") %>" type="text/javascript"></script>
       <%--<link href="../../css/stock.css" rel="stylesheet" />--%>
-    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
         <script type="text/javascript">
 
 
