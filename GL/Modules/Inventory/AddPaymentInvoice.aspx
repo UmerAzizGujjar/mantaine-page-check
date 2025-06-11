@@ -1,21 +1,20 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddPaymentInvoice.aspx.cs" Inherits="PMS.Inventory.AddPaymentInvoice" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-
    
-    <script type="text/javascript">
-        var InvType = '';
-        $(document).ready(function () {
-            UserRights();
-            $('#ddl_PaymentMode').select2();
-            $('#ddl_venderName').select2();
-            $('#ddl_bankCash').select2();
-            $('#btnSave').click(function () {
-                SaveAllRecord();
-            });
-            $('#btnVoucher').hide();
-            $('#btn_Print').hide();
-            var checkedit = '<%= Request.QueryString["Inv_ID"]%>'
+        <script type="text/javascript">
+            var InvType = '';
+            $(document).ready(function () {
+                UserRights();
+                $('#ddl_PaymentMode').select2();
+                $('#ddl_venderName').select2();
+                $('#ddl_bankCash').select2();
+                $('#btnSave').click(function () {
+                    SaveAllRecord();
+                });
+                $('#btnVoucher').hide();
+                $('#btn_Print').hide();
+                var checkedit = '<%= Request.QueryString["Inv_ID"]%>'
             if (checkedit == '') {
                 GetNewPaymentInvoiceNo();
             }
@@ -28,8 +27,31 @@
             }, 2500);
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
-            $("#txt_paymentDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#txt_DocumentDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+
+            var $datepicker = $('#txt_paymentDate');
+
+            $datepicker.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: "dd M yy"
+            });
+
+            var currentDate = $.datepicker.formatDate("dd M yy", new Date());
+            $datepicker.val(currentDate);
+
+            var $datepicker = $('#txt_DocumentDate');
+
+            $datepicker.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: "dd M yy"
+            });
+
+            var currentDate = $.datepicker.formatDate("dd M yy", new Date());
+            $datepicker.val(currentDate);
+
             FillVendors();
             GetPaymentMode();
             FillBank();
@@ -48,7 +70,6 @@
                             debugger
                             var row = $(this);
                             debugger
-                            console.log(row);
                             append(row);
                         });
                     }, 1000);
@@ -123,14 +144,15 @@
                         '<td><input class="chktd" id="chktd" name="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 0px;height: 36px;" onclick="append(this)"/></td>' +
                         '<td style="display:none">' + Test[i].PurchaseInvoiceId + '</td> ' +
                         '<td>' + Test[i].InvoiceNum + '</td> ' +
-                        ' <td>' + Test[i].TotalAmount + '</td> ' +
-                        '<td>' + Test[i].Balance + '</td> ' +
-                        ' <td>' + Test[i].Paid_Amount + '</td> ' +
+                        '<td>' + Test[i].TotalAmount + '</td> ' +
+                        '<td>' + Test[i].Advance_Recieved_Amount + '</td> ' +
+                        '<td>' + Test[i].Paid_Amount + '</td> ' +                        
+                        '<td>' + Test[i].Balance + '</td> ' +                        
                         '<td>' + InvType + '</td>' +
                         '<td>' + Test[i].SalTax + '</td> ' +
                         '<td>' + Test[i].SalTax_Amt + '</td> ' +
                         '<td style="display:none"></td> ' +
-                        ' <td style="display:none"></td> ' +
+                        '<td style="display:none"></td> ' +
                         '<td style="display:none">' + Test[i].TotalAmount + '</td>' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
@@ -150,6 +172,7 @@
         }
         debugger;
         function GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId(vendorId) {
+            debugger
             PageMethods.GetManualInvoiceDetailAndGetPurchaseInvoiceNDetailByVendorId(vendorId, function (data) {
                 debugger;
                 var Test = JSON.parse(data);
@@ -169,8 +192,9 @@
                         '<td style="display:none">' + Test[i].ManualInvoiceId + '</td> ' +
                         '<td>' + Test[i].ManualInvoiceNum + '</td> ' +
                         '<td>' + Test[i].TotalAmount + '</td> ' +
-                        '<td>' + Test[i].Balance + '</td> ' +
-                        '<td>' + Test[i].Paid_Amount + '</td> ' +
+                        '<td>' + Test[i].Advance_Recieved_Amount + '</td> ' +
+                        '<td>' + Test[i].Paid_Amount + '</td> ' +                       
+                        '<td>' + Test[i].Balance + '</td> ' +                        
                         '<td>' + InvType + '</td>' +
                         '<td>' + Test[i].SalTax + '</td> ' +
                         '<td>' + Test[i].SalTax_Amt + '</td> ' +
@@ -190,7 +214,6 @@
                 $('#txt_PaymentNo').val(resp);
             },
                 function (error) {
-                    alert(error.get_message());
                 })
         }
         function FillzerobalanceVendors(invid) {
@@ -345,11 +368,9 @@
                 var Item_list = [];
                 table.find('tr').each(function (key, value) {
                     Item_list.push({
-                        'PurchaseInoviceId': $(value).find('td input[name=txtPurchaseInoviceId]').val(), 'InvoiceNum': $(value).find('td input[name=txtInvoiceNum]').val(), 'InvoiceAmount': $(value).find('td input[name=txtTotalAmount]').val(), 'InvoicePayable': $(value).find('td input[name=txtPayable]').val(), 'AdjustedAmount': $(value).find('td input[name=txtAdjusted]').val(), 'TotalPaidAmount': $(value).find('td input[name=txtPaidAmount]').val(), 'InvoiceType': $(value).find('td input[name=txtPurchaseInoviceType]').val(), 'wthtaxper': $(value).find('td select[name=ddlWTaxType] :selected').text(), 'withholdtaxid': $(value).find('td select[name=ddlWTaxType] :selected').val(), 'withholdtaxadj': $(value).find('td input[name=WhOnInvAdj]').val(), 'withholdtaxamou': $(value).find('td input[name=WTaxAmount]').val(), 'txtadvamount': $(value).find('td input[name=txtadvamount]').val(), 'ddlSalTaxid': $(value).find('td select[name=ddlSalTax] :selected').val(), 'SalTaxAmount': $(value).find('td input[name=SalTaxAmount]').val(),
+                        'PurchaseInoviceId': $(value).find('td input[name=txtPurchaseInoviceId]').val(), 'InvoiceNum': $(value).find('td input[name=txtInvoiceNum]').val(), 'InvoiceAmount': $(value).find('td input[name=txtTotalAmount]').val(), 'InvoicePayable': $(value).find('td input[name=txtPayable]').val(), 'AdvanceAmount': $(value).find('td input[name=txtadvanceamount]').val(), 'AdjustedAmount': $(value).find('td input[name=txtAdjusted]').val() === "" ? "0" : $(value).find('td input[name=txtAdjusted]').val(), 'Deduction': $(value).find('td input[name=txtDedcution]').val() === "" ? "0"  : $(value).find('td input[name=txtDedcution]').val(), 'TotalPaidAmount': $(value).find('td input[name=txtPaidAmount]').val(), 'InvoiceType': $(value).find('td input[name=txtPurchaseInoviceType]').val(), 'wthtaxper': $(value).find('td select[name=ddlWTaxType] :selected').text(), 'withholdtaxid': $(value).find('td select[name=ddlWTaxType] :selected').val(), 'withholdtaxadj': $(value).find('td input[name=WhOnInvAdj]').val(), 'withholdtaxamou': $(value).find('td input[name=WTaxAmount]').val(), 'txtadvamount': $(value).find('td input[name=txtadvamount]').val(), 'ddlSalTaxid': $(value).find('td select[name=ddlSalTax] :selected').val(), 'SalTaxAmount': $(value).find('td input[name=SalTaxAmount]').val(),
                     });
                 });
-                console.log(Item_list);
-                console.table(Item_list);
                 $('#btnSave').attr('disabled', true);
                 var AllItemDetail = { 'PaymentNum': PaymentNo, 'PaymentDate': PaymentDate, 'AccountId': AccountId, 'PaymentModeId': PaymentMode, 'DocumentNum': DocumentNo, 'DocumentDate': DocumentDate, 'Vendorid': VendorId, 'PaidAmount': PaidAmount, 'InvoiceAdjusted': InvoiceAdjusted, 'WTaxAmount': WTaxAmount, 'Remarks': Remarks, 'ItemList': Item_list };
                 PageMethods.SavePaymentInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
@@ -413,42 +434,42 @@
 
             },
                 function (error) {
-                    alert(error.get_message());
+                    //alert(error.get_message());
                 })
         }
+        //advance
         debugger;
         function LoadPaymnetInvocieDetail(Inv_ID) {
             debugger;
             PageMethods.LoadPaymentInvoiceDetail(Inv_ID, function (resp) {
                 debugger;
                 var data = (JSON.parse(resp));
-                console.log(data);
                 var rows = '';
                 selectedOptions = data;
-                var payable = 0
+                var payable = 0;
+                var TotalAmount = 0;
                 var totaladj = 0
+                var totaladvance = 0
                 var balnce = 0;
                 $.each(data, function (key, value) {
-                    payable = value.Payable;
-                    totaladj = value.Total_Adjustment;
-                    balnce = payable - totaladj;
+                    TotalAmount = value.TotalAmount;
+                    totaladvance = value.Advance_Amount;
+                    balnce = TotalAmount - totaladvance;
                     rows += '<tr>' +
                         '<td><input type="hidden" id="txtInvoiceNum' + key + '" name="txtInvoiceNum" value="' + value.Invoice_No + '"/>' + value.Invoice_No + '</td> ' +
                         '<td class="headcol_2"><input type="hidden" id="txtTotalAmount' + key + '" name="txtTotalAmount" value="' + value.TotalAmount + '"/>' + value.TotalAmount + '</td> ' +
-                        '<td><input type="hidden" id="txtadvamount' + length + '" name="txtadvamount" value="' + value.TotalAdvanceAdjusted + '"/>' + value.TotalAdvanceAdjusted + '</td> ' +
-                        '<td style="display:none;"><input type="hidden" id="txtSwhtAmount' + key + '" name="txtSwhtAmount" value=""/></td>' +
-                        '<td><input type="hidden" id="txtPayable' + key + '" name="txtPayable" value="' + payable + '"/>' + payable + '</td>' +
+                        '<td><input type="hidden" id="txtadvanceamount' + length + '" name="txtadvanceamount" value="' + value.Advance_Amount + '"/>' + value.Advance_Amount + '</td> ' +
+                        '<td><input type="hidden" id="txtPreviouslyPaid' + key + '" name="txtPreviouslyPaid" value="' + value.PreviouslyPaid + '"/>' + value.PreviouslyPaid + '</td>' +
                         '<td><input type="hidden" id="txtBalance' + key + '" name="txtBalance" value="' + balnce + '"/>' + balnce + '</td>' +
                         '<td><input type="text" id="txtAdjusted' + key + '" name="txtAdjusted" value="' + value.AdjustedAmount + '" onchange="calcutae()" style="width: 89px!important"/></td>' +
-                       
-                        '<td><select id="ddlWTaxType' + key + '" class="ddlWTaxType" name="ddlWTaxType" onchange="calcutae()" style=""></select></td>' +
+                        '<td><input type="text" id="txtDedcution' + key + '" name="txtDedcution" value="' + value.Deduction + '" onchange="calcutae()" style="width: 89px!important"/></td>' +
+                        '<td><select id="ddlWTaxType' + key + '" class="ddlWTaxType" name="ddlWTaxType" onchange="calcutae()" style="width:86px!important"></select></td>' +
                         '<td style="display:none;"><input type="text" id="WhOnInvAdj' + key + '" name="WhOnInvAdj" readonly="true" value="' + value.withholdtaxadj + '"/></td>' +
                         '<td style="display:none;"><input type="hidden" id="TaxableSwht' + key + '" name="TaxableSwht" value="" /></td>' +
                         '</td>' +
                         '<td><input type="text" id="WTaxAmount' + key + '" name="WTaxAmount" value="' + value.withholdtaxamou + '" style="width:117px!important"/></td>' +
-                        
-                        '<td><select id="ddlSalTax' + key + '" readonly class="ddlSalTax" name="ddlSalTax" style=""></select></td>' +
-                        '<td><input type="text" id="SalTaxAmount' + key + '" name="SalTaxAmount" readonly="true" value="' + value.Stax_Amount + '" style="width: 116px!important"></td>' +
+                        '<td style="display:none"><select id="ddlSalTax' + key + '" readonly class="ddlSalTax" name="ddlSalTax" style="width: 93px!important"></select></td>' +
+                        '<td style="display:none"><input type="text" id="SalTaxAmount' + key + '" name="SalTaxAmount" readonly="true" value="' + value.Stax_Amount + '" style="width: 116px!important"></td>' +
                         '<td><input id="txtPaidAmount' + key + '" name="txtPaidAmount" value="' + value.TotalPaidAmount + '" type="text" style="width: 136px!important;border: none;"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceId' + key + '" name="txtPurchaseInoviceId" value="' + value.PurchaseInvoiceId + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceType' + key + '" name="txtPurchaseInoviceType" value="' + value.InvoiceType + '"/></td>' +
@@ -462,11 +483,10 @@
                         $("#ddlWTaxType" + key).val(value.WithHoldtax_ID).trigger('change');
                         $('#ddlSalTax' + key).val(value.Stax_ID).trigger('change');
                     });
-                }, 5000);
+                }, 5500);
                 $('#btnSave').val('Update');
             },
                 function (error) {
-                    alert(error.get_message());
                 })
         }
         debugger;
@@ -476,12 +496,14 @@
             var PurchaseInvoiceId = $($(row).find('td')[1]).text();
             var Invoicenum = $($(row).find('td')[2]).text();
             var payable = $($(row).find('td')[3]).text();
-            var balance = $($(row).find('td')[4]).text();
-            var InvoiceType = $($(row).find('td')[6]).text();
-            var SalTaxid = $($(row).find('td')[7]).text();
-            var SalTaxAmt = $($(row).find('td')[8]).text();
-            var advamount = $($(row).find('td')[9]).text();
-            var Actual_Inv_Amont = $($(row).find('td')[10]).text();
+            var advance = $($(row).find('td')[4]).text();
+            var paidamount = $($(row).find('td')[5]).text();
+            var balance = $($(row).find('td')[6]).text();
+            var InvoiceType = $($(row).find('td')[7]).text();
+            var SalTaxid = $($(row).find('td')[8]).text();
+            var SalTaxAmt = $($(row).find('td')[9]).text();
+            var advamount = $($(row).find('td')[10]).text();
+            var Actual_Inv_Amont = $($(row).find('td')[11]).text();
             var length = $("#tblItemDescription tr:gt(0)").length;
             if (length > 0) {
                 length = length + 1;
@@ -498,17 +520,18 @@
             var rows = '<tr>' +
                 '<td><input type="hidden" id="txtInvoiceNum' + length + '" name="txtInvoiceNum" value="' + Invoicenum + '"/>' + Invoicenum + '</td> ' +
                 '<td class="headcol_2"><input type="hidden" id="txtTotalAmount' + length + '" name="txtTotalAmount" value="' + Actual_Inv_Amont + '"/>' + Actual_Inv_Amont + '</td> ' +
-                '<td><input type="hidden" id="txtadvamount' + length + '" name="txtadvamount" value="' + advamount + '"/>' + advamount + '</td> ' +
-                '<td><input type="text" readonly style="width: 100px!important" id="txtPayable' + length + '" name="txtPayable" value="' + payable + '"/></td>' +
-                '<td><input type="text" readonly style="width: 100px!important" id="txtBalance' + length + '" name="txtBalance" value="' + balance + '"/></td>' +
+                '<td><input type="hidden" id="txtadvanceamount' + length + '" name="txtadvanceamount" value="' + advance + '"/>' + advance + '</td> ' +
+                '<td><input type="text" readonly style="width: 70px!important" id="txtPreviouslyPaid' + length + '" name="txtPreviouslyPaid" value="' + paidamount + '"/></td>' +
+                '<td><input type="text" readonly style="width: 70px!important" id="txtBalance' + length + '" name="txtBalance" value="' + balance + '"/></td>' +
                 '<td><input type="text" id="txtAdjusted' + length + '" name="txtAdjusted" onchange="calcutae()" style="width: 88px!important"/></td>' +
-                '<td><select id="ddlWTaxType' + length + '" class="ddlWTaxType" name="ddlWTaxType" onchange="calcutae()" style=""></select></td>' +
+                '<td><input type="text" id="txtDedcution' + length + '" name="txtDedcution" onchange="calcutae()" style="width: 88px!important"/></td>' +
+                '<td><select id="ddlWTaxType' + length + '" class="ddlWTaxType" name="ddlWTaxType" onchange="calcutae()" style="width: 93px!important"></select></td>' +
                 '<td style="display:none;"><input type="text" id="WhOnInvAdj' + length + '" name="WhOnInvAdj"  readonly="true"/></td>' +
                 '<td style="display:none;"><input type="hidden" id="TaxableSwht' + length + '" name="TaxableSwht" value="" /></td>' +
                 '</td>' +
                 '<td><input type="text" id="WTaxAmount' + length + '" name="WTaxAmount" readonly="true" style="width: 116px!important"></td>' +
-                '<td><select id="ddlSalTax' + length + '" name="ddlSalTax" class="ddlSalTax" readonly style=""></select></td>' +
-                '<td><input type="text" id="SalTaxAmount' + length + '" name="SalTaxAmount" readonly="true" value="' + SalTaxAmt + '" style="width: 116px!important"></td>' +
+                '<td style="display:none"><select id="ddlSalTax' + length + '" name="ddlSalTax" class="ddlSalTax" readonly style="width: 93px!important"></select></td>' +
+                '<td style="display:none"><input type="text" id="SalTaxAmount' + length + '" name="SalTaxAmount" readonly="true" value="' + SalTaxAmt + '" style="width: 116px!important"></td>' +
                 '<td><input  readonly="readonly" style="width:133px!important;border: none" id="txtPaidAmount' + length + '" name="txtPaidAmount" value="" type="text"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceId' + length + '" name="txtPurchaseInoviceId" value="' + PurchaseInvoiceId + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtPurchaseInoviceType' + length + '" name="txtPurchaseInoviceType" value="' + InvoiceType + '"/></td>' +
@@ -518,7 +541,6 @@
             debugger
             populateWithTaxddl(length);
             populateSalTaxddl(length, SalTaxid);
-
             length++;
         }
 
@@ -556,45 +578,57 @@
             var TotalPaidAmount = 0;
             var totalcheckpaidamou = 0;
             var totaltaxamount = 0;
+
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                debugger
-                var InvoiceAjust = $($(value).find('td input[name=txtAdjusted]')[0]).val() || 0;
-                TotalinvoiceAdjusted += parseFloat(InvoiceAjust);
+                debugger;
+                var InvoiceAjust = parseFloat($($(value).find('td input[name=txtAdjusted]')[0]).val()) || 0;
+                var balance = parseFloat($($(value).find('td input[name=txtBalance]')[0]).val()) || 0;
+                var InvoiceDeduction = parseFloat($($(value).find('td input[name=txtDedcution]')[0]).val()) || 0;
+                // Check if InvoiceAjust is greater than balance
+                if (InvoiceAjust > balance) {
+                    alert("Adjusted amount cannot be greater than the balance.");
+                    $(value).find('td input[name=txtAdjusted]').val(0);
+                    InvoiceAjust = 0;
+                }
+                TotalinvoiceAdjusted += InvoiceAjust;
                 var wtxtype = $(value).find('td select[name=ddlWTaxType] :selected').text() || 0;
-                if (wtxtype == "Please Select")
-                    wtxtype = 0;
-                var adjustedvalue = InvoiceAjust * wtxtype / 100;
-                $(this).find('input[name=WhOnInvAdj]').val(adjustedvalue);
-                $(this).find('input[name=WTaxAmount]').val(adjustedvalue);
-                var staxamount = $($(value).find('td input[name=SalTaxAmount]')[0]).val() || 0;
-                var remnvalueadjusted = InvoiceAjust - adjustedvalue - staxamount;
-                $(this).find('input[name=txtPaidAmount]').val(remnvalueadjusted);
+                if (wtxtype == "Please Select") wtxtype = 0;
+                var adjustedvalue = ((InvoiceAjust * wtxtype) / 100).toFixed(2);
+                $(value).find('input[name=WhOnInvAdj]').val(adjustedvalue);
+                $(value).find('input[name=WTaxAmount]').val(adjustedvalue);
+                var remnvalueadjusted = (InvoiceAjust - adjustedvalue - InvoiceDeduction).toFixed(2);
+                $(value).find('input[name=txtPaidAmount]').val(remnvalueadjusted);
                 TotalPaidAmount += parseFloat(remnvalueadjusted);
-                var checkwhtad = $($(value).find('td input[name=WhOnInvAdj]')[0]).val();
-                if (checkwhtad == "NaN") {
-                    var val2 = 0;
-                    $(this).find('input[name=WhOnInvAdj]').val(val2);
+                // Validate NaN cases
+                if (isNaN(parseFloat(adjustedvalue))) {
+                    $(value).find('input[name=WhOnInvAdj]').val(0);
+                    $(value).find('input[name=WTaxAmount]').val(0);
                 }
-                var checkwtxamn = $($(value).find('td input[name=WTaxAmount]')[0]).val();
-                if (checkwtxamn == "NaN") {
-                    var val1 = 0;
-                    $(this).find('input[name=WTaxAmount]').val(val1);
+                if (isNaN(parseFloat(remnvalueadjusted))) {
+                    $(value).find('input[name=txtPaidAmount]').val(InvoiceAjust);
                 }
-                var checkpaidamou = $($(value).find('td input[name=txtPaidAmount]')[0]).val();
-                if (checkpaidamou == "NaN") {
-                    $(this).find('input[name=txtPaidAmount]').val(InvoiceAjust);
-                }
-                var checkpaidamou2 = $($(value).find('td input[name=txtPaidAmount]')[0]).val();
-                totalcheckpaidamou += parseFloat(checkpaidamou2);
-                var txamn = $($(value).find('td input[name=WTaxAmount]')[0]).val();
-                totaltaxamount += parseFloat(txamn);
+                totalcheckpaidamou += parseFloat($(value).find('td input[name=txtPaidAmount]').val()) || 0;
+                totaltaxamount += parseFloat($(value).find('td input[name=WTaxAmount]').val()) || 0;
             });
             $('#txt_invoiceAdjusted').val(TotalinvoiceAdjusted);
             $('#txt_PaidAmount').val(totalcheckpaidamou);
             $('#txt_WTaxAmount').val(totaltaxamount);
         }
+        
 
-    
+       <%-- debugger;
+        function Approve() {
+            debugger;
+            var InvId = '<% =Request.QueryString["Inv_ID"] %>';
+            PageMethods.ApprovePayment(InvId, function (Tests) {
+                debugger
+                var message = JSON.parse(Tests);
+                if (message[0].Message != null || message[0].Message != "") {
+                    alert(message[0].Message);
+                    location.reload();
+                }
+            });
+        }--%>
         debugger;
         function UnApprove() {
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
@@ -611,64 +645,64 @@
         function PrintVoucher() {
             debugger;
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
-            var locationInfo = window.location;
-            var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
-            if (!locationInfo.origin.includes('localhost')) {
-                debugger;
-                var urlInfo = window.location.href.split('/');
-                var ip = urlInfo[2];
-                var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
+                var locationInfo = window.location;
+                var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
+                if (!locationInfo.origin.includes('localhost')) {
+                    debugger;
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
+                }
+                window.open(url, '_blank');
             }
-            window.open(url, '_blank');
-        }
 
-        function sendFile(ID) {
-            debugger;
-            var fileInput = $('#chosePaymentfile')[0];
-            if (fileInput.files.length > 0) {
+            function sendFile(ID) {
                 debugger;
-                var data = new FormData();
-                data.append('file', $('#chosePaymentfile')[0].files[0]);
-                data.append('ID', ID);
-                $.ajax({
-                    type: 'post',
-                    url: '../UploadPaymentFiles.ashx',
-                    data: data,
-                    success: function (status) {
+                var fileInput = $('#chosePaymentfile')[0];
+                if (fileInput.files.length > 0) {
+                    debugger;
+                    var data = new FormData();
+                    data.append('file', $('#chosePaymentfile')[0].files[0]);
+                    data.append('ID', ID);
+                    $.ajax({
+                        type: 'post',
+                        url: '../UploadPaymentFiles.ashx',
+                        data: data,
+                        success: function (status) {
 
+                        },
+                        processData: false,
+                        contentType: false,
+                        error: function () {
+                            alert(" something went wrong!");
+                        }
+                    });
+                }
+            }
+            function UserUnApproveButtonRights() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "AddPaymentInvoice.aspx/UserUnApproveEntryRights",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var hasRights = response.d;
+                        debugger;
+                        if (hasRights) {
+                            debugger;
+                            $('#btnUnApprove').show();
+                        } else {
+                            $('#btnUnApprove').hide();
+                        }
                     },
-                    processData: false,
-                    contentType: false,
-                    error: function () {
-                        alert(" something went wrong!");
+                    failure: function (response) {
+                        alert("Failed to retrieve User UnApprove Button Rights.");
                     }
                 });
             }
-        }
-        function UserUnApproveButtonRights() {
-            debugger;
-            $.ajax({
-                type: "POST",
-                url: "AddPaymentInvoice.aspx/UserUnApproveEntryRights",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    debugger;
-                    var hasRights = response.d;
-                    debugger;
-                    if (hasRights) {
-                        debugger;
-                        $('#btnUnApprove').show();
-                    } else {
-                        $('#btnUnApprove').hide();
-                    }
-                },
-                failure: function (response) {
-                    alert("Failed to retrieve User UnApprove Button Rights.");
-                }
-            });
-        }
 
 
     </script>
@@ -716,7 +750,7 @@
                 <input style="margin-top:25px" type="button" id="btn_ManInv" name="" value="Add" class="btn btn-primry"  />
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
-                <label id="lb_invoiceAdjusted">invoice Adjusted</label>
+                <label id="lb_invoiceAdjusted"> Adjusted</label>
                 <input id="txt_invoiceAdjusted" class="form-control" type="text" name="txt_invoiceAdjusted" readonly="readonly" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
@@ -749,26 +783,27 @@
 
 
     <div class="row">
-        <div class="col-lg-2" style="width: 100%; overflow: scroll;">
+        <div class="" style="width: 100%; overflow: scroll;">
             <table class="table table-bordered" id="tblItemDescription">
                 <thead>
                     <tr>
-                        <th class="table_heading_color">Invoice#</th>
-                        <th class="table_heading_color">Invoice Amnt</th>
-                        <th class="table_heading_color">Advance Amnt</th>
-                        <th class="table_heading_color" style="display: none;">SWHT Amnt</th>
-                        <th class="table_heading_color" >Payable</th>
-                        <th class="table_heading_color" >Balance</th>
-                        <th class="table_heading_color" >Adjusted</th>
+                        <th class="table_heading_color" style="width: 87px;">Invoice#</th>
+                        <th class="table_heading_color" style="width: 114px;">Invoice Amt</th>
+                        <th class="table_heading_color" style="width: 104px;">Advance Amt</th>
+                        <%--<th class="table_heading_color" style="display: none;">SWHT Amt</th>--%>
+                        <th class="table_heading_color" style="width: 100px;">Previously Paid </th>
+                        <th class="table_heading_color" style="width: 100px;">Balance</th>
+                        <th class="table_heading_color" style="width: 120px;">Adjusted</th>
+                        <th class="table_heading_color" style="width: 120px;">Deduction</th>
                         <th class="table_heading_color" style="display: none;">P Tax</th>
                         <th class="table_heading_color" style="display: none;">P Tax</th>
-                        <th class="table_heading_color" >WH Tax</th>
+                        <th class="table_heading_color" style="width: 120px;">WH Tax</th>
                         <th class="table_heading_color" style="display: none;">Wh On Inv Adj</th>
                         <th class="table_heading_color" style="display: none;">Taxtable SWHT</th>
-                        <th class="table_heading_color" >WH Tax Amnt</th>
-                        <th class="table_heading_color" >SalTax</th>
-                        <th class="table_heading_color" >SalTax Amnt</th>
-                        <th class="table_heading_color" >Paid Amnt</th>
+                        <th class="table_heading_color" style="width: 134px;">WH Tax Amt</th>
+                        <th class="table_heading_color" style="width: 101px;display:none !important;">SalTax</th>
+                        <th class="table_heading_color" style="width: 134px;display:none !important;">SalTax Amt</th>
+                        <th class="table_heading_color" style="width: 150px;">Paid Amount</th>
                         <th class="table_heading_color">Actions</th>
                     </tr>
                 </thead>
@@ -777,7 +812,7 @@
             </table>
         </div>
     </div>
-    <div class="row" style="margin-top:1%">
+<div class="row" style="margin-top:1%">
          <div class="col-lg-6">
             <div class="row">
                     <div class="col-lg-2 col-md-4 col-sm-12">
@@ -808,7 +843,7 @@
             <div class="modal-content" style="width: 1000px; margin-left: -270px; height: 505px;">
                 <div class="modal-header">
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
-                    <h4 style="margin-right:770px;margin-left:20px" class="modal-title">Add Purchase Items </h4>
+                    <h4 class="modal-title">Add Purchase Items </h4>
                 </div>
                 <input type="hidden" id="txthiddentr" name="txthidddentr" />
                 <div style="width: 970px; overflow: scroll; height: 401px  !important; height: auto;">
@@ -816,11 +851,12 @@
                         <thead>
                             <tr>
                                 <th style="width: 40px !important;">
-                                    <input type="checkbox" id="checkHeader" value="false" /></th>
-                                <th></th>
+                                <input type="checkbox" id="checkHeader" value="false" /></th>
+                                <th>Invoice#</th>
                                 <th>Payable</th>
-                                <th>Balance</th>
-                                <th>Paid Amount</th>
+                                <th>Advance Amount</th>
+                                <th>Paid Amount</th>                              
+                                <th>Balance</th>                               
                                 <th>Invoice Type</th>
                                 <th>SalTax</th>
                                 <th>SalTax Amt</th>
@@ -829,7 +865,6 @@
                         <tbody>
                         </tbody>
                     </table>
-                </div>
                 <div class="modal-footer">
                     <div class="row">
                         <div class="col-lg-10"></div>

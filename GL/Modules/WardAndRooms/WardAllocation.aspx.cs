@@ -316,11 +316,11 @@ namespace PMS
         protected void btnAllocatedWardChkTrigger_Click(object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var countOfRows = db.Ward_Allocatrion_Histories.Where(m => m.Patient_ID == Convert.ToInt32(txtPatient_ID.Text)).Count();
+            var countOfRows = db.Ward_Allocations.Where(m => m.Patient_ID == Convert.ToInt32(txtPatient_ID.Text)).Count();
 
             if (countOfRows > 0)
             {
-                var lastRow = db.Ward_Allocatrion_Histories.Where(m => m.Patient_ID == Convert.ToInt32(txtPatient_ID.Text)).Skip(countOfRows - 1).FirstOrDefault();
+                var lastRow = db.Ward_Allocations.Where(m => m.Patient_ID == Convert.ToInt32(txtPatient_ID.Text)).Skip(countOfRows - 1).FirstOrDefault();
 
                 if (lastRow != null)
                 {
@@ -335,7 +335,7 @@ namespace PMS
                                     }).FirstOrDefault();
 
                     txtCurrent_Allocated_Ward.Text = wardInfo.Ward.ToString();
-                    txtCurrent_Allocated_Bed.Text = lastRow.Bed_No.ToString();
+                    txtCurrent_Allocated_Bed.Text = lastRow.Bed_No_Assigned.ToString();
                     vlblCurrent_Allocated_Ward.Text = "";
                     vlblCurrent_Allocated_Ward.CssClass = "Success";
                 }

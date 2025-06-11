@@ -5112,55 +5112,55 @@
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
                         <label>Patient Category:</label>
-                        <%--<label id="lblPatientCategory"></label>--%>
-                        <input type="text" id="lblPatientCategory" class="form-control" />
+                 
+                        <input type="text" id="lblPatientCategory"  disabled class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
                         <label>Department:</label>
-                        <%--<label id="lblDepartment"></label>--%>
-                        <input type="text" id="lblDepartment" class="form-control" />
+                      
+                        <input type="text" id="lblDepartment" disabled class="form-control" />
                     </div>
                 </div>  
 
                 <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Category</label>
-                        <select id="" class="form-select">
+                        <select id="" disabled class="form-select">
                             <option></option>
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Companies:</label>
-                        <%--<label id="lblOPDpnl"></label>--%>
-                        <input type="text" id="lblOPDpnl" class="form-control" />
+                   
+                        <input type="text" disabled id="lblOPDpnl" class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Admit Date</label>
-                        <input type="text" id="" class="form-control" />
+                        <input type="text" id="txtadmitdate" disabled class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Discharge Date</label>
-                        <input type="text" id="" class="form-control" />
+                        <input type="text" id="txtdischargedate" disabled class="form-control" />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Ward Type</label>
-                        <input type="text" id="" class="form-control" />
+                        <input type="text" id="wardtype" disabled class="form-control" />
                     </div>
 
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Bed No</label>
-                        <input type="text" id="" class="form-control" />
+                        <input type="text" id="bedno" disabled class="form-control" />
                     </div>
 
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Room Type</label>
-                        <input type="text" id="" class="form-control" />
+                        <input type="text" id="txtroomtype" disabled class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Room No</label>
-                        <input type="text" id="" class="form-control" />
+                        <input type="text" id="txtroomno"  disabled class="form-control" />
                     </div>
                 </div>
             </div>

@@ -713,7 +713,7 @@ namespace PMS
             if (Inpat != null)
             {
                 pt.Bed_No = Inpat.Bed_No.ToString();
-                pt.Ward_Name = Inpat.Ward_Name;
+                pt.Ward_Name = Convert.ToString(Inpat.Ward_Name);
                 pt.Room_Name = Inpat.Room_Name.ToString();
                 pt.Admission_Date = Convert.ToDateTime(Inpat.Admission_Date);
                 pt.Discharge_On = Inpat.Discharge_On.ToString();

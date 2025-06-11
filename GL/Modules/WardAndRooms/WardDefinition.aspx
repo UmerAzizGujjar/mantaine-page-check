@@ -1,8 +1,139 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="WardDefinition.aspx.cs" Inherits="PMS.WardDefinition" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            filldepartment();
+            loadWard();
+        });
+
+         function filldepartment() {
+                var options = '<option value="0">Please Select</option>';
+                PageMethods.GetDepartment(function (data) {
+                    $.each(JSON.parse(data), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlsubdepartment').html(options);
+
+                });
+                return options;
+            }
+
+
+
+        function saveWardDefinition() {
+            var wardID = $('#<%= txtWard_ID.ClientID %>').val();
+        var wardType = $('#<%= txtWard_Type.ClientID %>').val();
+        var department = $('#ddlsubdepartment').val();
+        var noOfBeds = $('#<%= txtNo_Of_Beds.ClientID %>').val();
+
+            if (!department || department === "0") {
+                alert("Please select a Department.");
+                return;
+            }
+
+        if (wardType.trim() === "" || department === "0" || noOfBeds.trim() === "") {
+            alert("Please fill all required fields.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "WardDefinition.aspx/SaveWardDefinition",
+            data: JSON.stringify({
+                wardID: wardID,
+                wardType: wardType,
+                department: department,
+                noOfBeds: noOfBeds
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var result = response.d;
+                if (result === "Success") {
+                    $('#lblMessage').text("Data saved successfully!").css("color", "green");
+                    setTimeout(() => window.location.href = "WardDefinitionView.aspx", 1000);
+                } else {
+                    $('#lblMessage').text(result).css("color", "red");
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#lblMessage').text("AJAX Error: " + error).css("color", "red");
+            }
+        });
+    }
+
+        function loadWard() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const wardID = urlParams.get('ID');
+
+            if (wardID) {
+                PageMethods.GetWard(wardID, function (response) {
+                    try {
+                        const data = JSON.parse(response);
+                        $('#<%= txtWard_ID.ClientID %>').val(data.Ward_ID);
+                        $('#<%= txtWard_Type.ClientID %>').val(data.Ward_Type);
+                        $('#ddlsubdepartment').val(data.Department);
+                        $('#<%= txtNo_Of_Beds.ClientID %>').val(data.No_Of_Beds);
+                        $('#btnSaveWard').val("Update");
+                    } catch (e) {
+                        $('#lblMessage').text("Failed to parse ward data.").css("color", "red");
+                    }
+                }, function (error) {
+                    $('#lblMessage').text("AJAX Error: Could not fetch ward data.").css("color", "red");
+                });
+            }
+        }
+
+        function redirecttonew() {
+            window.location.href = "WardDefinitionView.aspx";
+        }
+         
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
+     <div class="container-fluid">
+            <div class="row mt-4">
+                <div class="col-lg-3 col-md-6 col-sm-8">
+                    <label for="txtWard_ID">Ward No</label>
+                    <asp:TextBox runat="server" ID="txtWard_ID" CssClass="form-control" ReadOnly="true" Text="(New)" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-8">
+                    <label for="txtWard_Type">Ward Type *</label>
+                    <asp:TextBox ID="txtWard_Type" runat="server" CssClass="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <label for="ddlDepartment">Department *</label>
+                    <select style="border-radius: 5px; height: 36px;" class="form-control ddldoc" id="ddlsubdepartment">
+                        <option></option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-8">
+                    <label for="txtNo_Of_Beds">No. Of Beds *</label>
+                    <asp:TextBox ID="txtNo_Of_Beds" runat="server" CssClass="form-control" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 col-col-md-9 col-sm-10">
+                    <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                     <input type="button"  class="btn btn-primry" value="View" onclick="redirecttonew()" />
+                </div>
+
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <input type="button" id="btnSaveWard" class="btn btn-primry" value="Save" onclick="saveWardDefinition()" />
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <span id="lblMessage" style="font-weight: bold;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <%--<div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
               <asp:Label ID="lblWard_ID" runat="server" Text="Ward No"></asp:Label>
                 <asp:TextBox runat="server" ID="txtWard_ID" ReadOnly="true" Text="(New)" />
@@ -46,8 +177,8 @@
 
 
       
-    </div>
+    </div>--%>
     </asp:Content>
 
                 
-        
+ 

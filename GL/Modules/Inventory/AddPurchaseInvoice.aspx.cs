@@ -30,7 +30,7 @@ namespace PMS.Inventory
                 }
             }
         }
-
+ 
         [WebMethod]
         public static string Loadadvancepaymentdetail(int Inv_ID)
         {
@@ -347,7 +347,7 @@ namespace PMS.Inventory
                     db.SubmitChanges();
                 }
             }
-           
+        
             return int.Parse(InvoiceId);
         }
         [WebMethod]
@@ -399,7 +399,7 @@ namespace PMS.Inventory
         {
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.spUnApprovePurchase(Convert.ToInt32(InvId),Convert.ToString(user_id));
+            var Details = db.spUnApprovePurchase(Convert.ToInt32(InvId), Convert.ToString(user_id));
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         public class MasterInoviceList

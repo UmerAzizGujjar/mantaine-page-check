@@ -11,7 +11,7 @@
             debugger;
             var optionsVen = '';
             PageMethods.getwtaxtype(function (Tests) {
-                debugger
+                debugger;
                 $.each(JSON.parse(Tests), function (key, value) {
                     debugger;
                     optionsVen += '<option value="' + value.Sales_Tax_ID + '" >' + value.Sales_Tax_Perc + '</option>';
@@ -31,7 +31,9 @@
             $(function () {
                 $("#tabs").tabs();
             });
-            Fillwtaxtype();
+            setTimeout(function () {
+                Fillwtaxtype();
+            }, 500);
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {
@@ -53,10 +55,54 @@
 
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
-            $("#txt_invoicedate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#txt_accountingDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#txt_dueDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#txt_exDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+
+            var $datepicker = $('#txt_invoicedate');
+
+            $datepicker.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: "dd M yy"
+            });
+
+            var currentDate = $.datepicker.formatDate("dd M yy", new Date());
+            $datepicker.val(currentDate);
+
+            var $datepicker = $('#txt_accountingDate');
+
+            $datepicker.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: "dd M yy"
+            });
+
+            var currentDate = $.datepicker.formatDate("dd M yy", new Date());
+            $datepicker.val(currentDate);
+
+            var $datepicker = $('#txt_dueDate');
+
+            $datepicker.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: "dd M yy"
+            });
+
+            var currentDate = $.datepicker.formatDate("dd M yy", new Date());
+            $datepicker.val(currentDate);
+
+            var $datepicker = $('#txt_exDate');
+
+            $datepicker.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: "dd M yy"
+            });
+
+            var currentDate = $.datepicker.formatDate("dd M yy", new Date());
+            $datepicker.val(currentDate);
             $('select').select2();
             GetNewInvoiceNo();
             GetDepartments();
@@ -502,7 +548,7 @@
                         }
                         $("#Staxddl" + (key + 1)).val(value.Stax_ID);
                     });
-                }, 2500);
+                }, 4500);
                 $('#btnSave').val('Update');
                 loadadvacedetail();
                 setTimeout(function () {
@@ -613,7 +659,6 @@
             }
         }
 
-
         function UnApprove() {
             debugger;
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
@@ -648,7 +693,7 @@
                     alert("Failed to retrieve User UnApprove Button Rights.");
                 }
             });
-        }
+        }   
         function PrintPurchaseDetail() {
             var id = '<% =Request.QueryString["Inv_ID"] %>';
             var locationInfo = window.location;
@@ -673,7 +718,7 @@
             }
             window.open(url, '_blank');
         }
-
+      
         function Addrow() {
             debugger;
             var rows = '';

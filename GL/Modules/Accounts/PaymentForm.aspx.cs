@@ -604,7 +604,7 @@ namespace PMS
                     pt.isInpatient = true;
                     pt.Patient_Discount_Type = db.GetDataValueName("Patient Type", Type.Patient_Discount_Type);
                     pt.Discharge = Convert.ToBoolean(Type.Discharge);
-                    pt.Ward_Name = (from wd in db.Ward_Definitions where wd.Ward_ID == Type.Ward_ID select wd.Ward_No).FirstOrDefault();
+                    pt.Ward_Name = Convert.ToString((from wd in db.Ward_Definitions where wd.Ward_ID == Type.Ward_ID select wd.Ward_No).FirstOrDefault());
                     pt.Bed_No = Type.Bed_No.ToString();
                     pt.Room_Name = (from rm in db.Rooms where rm.Room_ID == Type.Room_ID select rm.Name).FirstOrDefault();
                     pt.Room_No = Convert.ToString((from rm in db.Rooms where rm.Room_ID == Type.Room_ID select rm.Room_No).FirstOrDefault());
