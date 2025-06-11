@@ -2715,6 +2715,199 @@ on p.Reg_PatId equals rp.pat_id
             public string Status;
 
         }
+        //[WebMethod]
+        //public static string GetTestListForHistory(int id)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    int Patien_No = DBClass.GetMRNOBy_RgPatientID(Convert.ToInt32(id));
+
+        //    var InPatienttestilst = (from lbtM in db.Laboratory_Tests
+        //                             join lbtD in db.Lab_Test_Details
+        //                             on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+        //                             join outpat in db.In_Patients
+        //                             on lbtM.Patient_ID equals outpat.In_Patient_ID
+        //                             join p in db.Patients
+        //                             on outpat.Patient_ID equals p.Patient_ID
+        //                             where p.Patient_No == Patien_No && lbtM.Transaction_Type == "InPatient"
+
+
+        //                             select new
+        //                             {
+        //                                 outpat.In_Patient_ID,
+        //                                 lbtD.Lab_Test_Detail_ID,
+        //                                 lbtD.Date,
+        //                                 lbtD.Remark,
+        //                                 lbtD.Catagory_ID,
+        //                                 lbtM.Lab_Test_ID,
+        //                                 lbtD.Test_ID,
+        //                                 lbtD.Dept_ID,
+        //                                 lbtD.L_R_Rotation_ID,
+        //                                 Value_Type = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Value_Type).FirstOrDefault(),
+        //                                 Value_TypeGroup = (from t in db.Lab_Tests where t.Group_Category == lbtD.Catagory_ID select t.Value_Type).FirstOrDefault(),
+        //                                 Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
+        //                                 Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
+        //                                 Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
+        //                                 DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                   Departments", t.Main_Department)).FirstOrDefault(),
+        //                                 Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
+        //                                 GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
+        //                                 Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
+        //                                 lbtD.Rotation_ID,
+        //                                 Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+        //                                 DataValue_Description = (from dv in db.DataValues
+        //                                                          join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+        //                                                          where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
+        //                                                          select dv.DataValue_Description).FirstOrDefault(),
+        //                                 lbtD.Special_Tests,
+        //                                 lbtD.Area_Of_Interest,
+        //                                 lbtD.Doctor,
+        //                                 lbtD.Recieved_ID,
+        //                                 lbtD.Is_Result,
+        //                                 DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(lbtD.Doctor) select d.Emp_Name).FirstOrDefault()
+        //                             }
+        //        ).ToList();
+
+
+
+        //    var OutPatienttestilst = (
+        //                                from lbtM in db.Laboratory_Tests
+        //                                join lbtD in db.Lab_Test_Details
+        //                                on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+        //                                join outpat in db.Out_Patients
+        //                                on lbtM.Patient_ID equals outpat.Out_Patient_ID
+        //                                join p in db.Patients
+        //                                on outpat.Patient_ID equals p.Patient_ID
+        //                                join rp in db.Reg_patients
+        //                                on p.Reg_PatId equals rp.pat_id
+        //                                where rp.Patient_No == Patien_No && lbtM.Transaction_Type == "OutPatient"
+
+
+        //                                select new
+        //                                {
+
+        //                                    outpat.Out_Patient_ID,
+        //                                    lbtD.Lab_Test_Detail_ID,
+        //                                    lbtD.Date,
+        //                                    lbtD.Remark,
+        //                                    lbtD.Catagory_ID,
+        //                                    lbtM.Lab_Test_ID,
+        //                                    lbtD.Test_ID,
+        //                                    lbtD.Dept_ID,
+        //                                    lbtD.L_R_Rotation_ID,
+        //                                    Value_Type = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Value_Type).FirstOrDefault(),
+        //                                    Value_TypeGroup = (from t in db.Lab_Tests where t.Group_Category == lbtD.Catagory_ID select t.Value_Type).FirstOrDefault(),
+        //                                    Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
+        //                                    Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
+        //                                    Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
+        //                                    DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                 Departments", t.Main_Department)).FirstOrDefault(),
+        //                                    Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
+        //                                    GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
+        //                                    Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
+        //                                    lbtD.Rotation_ID,
+        //                                    Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+        //                                    DataValue_Description = (from dv in db.DataValues
+        //                                                             join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+        //                                                             where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
+        //                                                             select dv.DataValue_Description).FirstOrDefault(),
+
+        //                                    lbtD.Special_Tests,
+        //                                    lbtD.Area_Of_Interest,
+        //                                    lbtD.Doctor,
+        //                                    lbtD.Recieved_ID,
+        //                                    lbtD.Is_Result,
+        //                                    outpat.Doctor_ID
+        //                                }
+        //       ).ToList();
+
+
+        //    List<LabTestClass> list = new List<LabTestClass>();
+
+        //    foreach (var item in InPatienttestilst)
+        //    {
+        //        LabTestClass obj = new LabTestClass();
+
+        //        //// obj.IsBilled = (bool)item.IsBilled;
+        //        obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+        //        obj.Date = Convert.ToDateTime(item.Date);
+        //        obj.Remark = item.Remark;
+        //        obj.Catagory_ID = item.Catagory_ID;
+        //        obj.Lab_Test_ID = item.Lab_Test_ID.ToString();
+        //        obj.Test_ID = item.Test_ID;
+        //        obj.Dept_ID = item.Dept_ID;
+        //        obj.L_R_Rotation_ID = item.L_R_Rotation_ID;
+
+        //        obj.In_Patient_ID = item.In_Patient_ID;
+
+        //        obj.Value_Type = item.Value_Type;
+        //        obj.Value_TypeGroup = item.Value_TypeGroup;
+        //        obj.Test_Name = item.Test_Name;
+        //        obj.Group_Department = item.Group_Department;
+        //        obj.Group_Category = item.Group_Category;
+        //        obj.DepartmentName = item.DepartmentName;
+        //        //obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+        //        obj.Department_ID = item.Department_ID;
+        //        obj.GroupName = item.GroupName;
+        //        obj.Group_Name = item.Group_Name;
+        //        obj.Rotation_ID = item.Rotation_ID;
+        //        obj.Rotation = item.Rotation;
+        //        obj.DataValue_Description = item.DataValue_Description;
+        //        obj.Special_Tests = item.Special_Tests;
+        //        obj.Area_Of_Interest = item.Area_Of_Interest;
+        //        obj.Doctor = item.Doctor;
+        //        obj.Recieved_ID = item.Recieved_ID;
+        //        if (item.Is_Result == null)
+        //            obj.Is_Result = false;
+        //        else
+        //            obj.Is_Result = (bool)item.Is_Result;
+        //        obj.Status = "InPatient";
+        //        obj.DoctorName = item.DoctorName;
+        //        list.Add(obj);
+        //    }
+
+        //    foreach (var item in OutPatienttestilst)
+        //    {
+        //        LabTestClass obj = new LabTestClass();
+
+        //        //// obj.IsBilled = (bool)item.IsBilled;
+        //        obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+        //        obj.Date = Convert.ToDateTime(item.Date);
+        //        obj.Remark = item.Remark;
+        //        obj.Catagory_ID = item.Catagory_ID;
+        //        obj.Lab_Test_ID = item.Lab_Test_ID.ToString();
+        //        obj.Test_ID = item.Test_ID;
+        //        obj.Dept_ID = item.Dept_ID;
+        //        obj.L_R_Rotation_ID = item.L_R_Rotation_ID;
+
+        //        obj.In_Patient_ID = item.Out_Patient_ID;
+
+        //        obj.Value_Type = item.Value_Type;
+        //        obj.Value_TypeGroup = item.Value_TypeGroup;
+        //        obj.Test_Name = item.Test_Name;
+        //        obj.Group_Department = item.Group_Department;
+        //        obj.Group_Category = item.Group_Category;
+        //        obj.DepartmentName = item.DepartmentName;
+        //        //obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+        //        obj.Department_ID = item.Department_ID;
+        //        obj.GroupName = item.GroupName;
+        //        obj.Group_Name = item.Group_Name;
+        //        obj.Rotation_ID = item.Rotation_ID;
+        //        obj.Rotation = item.Rotation;
+        //        obj.DataValue_Description = item.DataValue_Description;
+        //        obj.Special_Tests = item.Special_Tests;
+        //        obj.Area_Of_Interest = item.Area_Of_Interest;
+        //        obj.Doctor = item.Doctor;
+        //        obj.Recieved_ID = item.Recieved_ID;
+
+        //        if (item.Is_Result == null)
+        //            obj.Is_Result = false;
+        //        else
+        //            obj.Is_Result = (bool)item.Is_Result;
+        //        obj.DoctorName = item.Doctor_ID;
+        //        obj.Status = "OutPatient";
+        //        list.Add(obj);
+        //    }
+
+        //    return (new JavaScriptSerializer()).Serialize(list);
+        //}
         [WebMethod]
         public static string GetTestListForHistory(int id)
         {
@@ -2728,7 +2921,9 @@ on p.Reg_PatId equals rp.pat_id
                                      on lbtM.Patient_ID equals outpat.In_Patient_ID
                                      join p in db.Patients
                                      on outpat.Patient_ID equals p.Patient_ID
-                                     where p.Patient_No == Patien_No && lbtM.Transaction_Type == "InPatient"
+                                     join rp in db.Reg_patients
+                                     on p.Reg_PatId equals rp.pat_id
+                                     where rp.Patient_No == Patien_No && lbtM.Transaction_Type == "InPatient"
 
 
                                      select new
@@ -2747,7 +2942,7 @@ on p.Reg_PatId equals rp.pat_id
                                          Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
                                          Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
                                          Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
-                                         DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                   Departments", t.Main_Department)).FirstOrDefault(),
+                                         DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                 Departments", t.Main_Department)).FirstOrDefault(),
                                          Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
                                          GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
                                          Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
@@ -2757,12 +2952,13 @@ on p.Reg_PatId equals rp.pat_id
                                                                   join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
                                                                   where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
                                                                   select dv.DataValue_Description).FirstOrDefault(),
+
                                          lbtD.Special_Tests,
                                          lbtD.Area_Of_Interest,
                                          lbtD.Doctor,
                                          lbtD.Recieved_ID,
-                                         lbtD.Is_Result,
-                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(lbtD.Doctor) select d.Emp_Name).FirstOrDefault()
+                                         Is_Result = (from t in db.Lab_Test_Details where t.BillDetailID == lbtD.BillDetailID orderby t.Lab_Test_Detail_ID descending select t.isApproved).FirstOrDefault(),
+                                         Doctor_ID = outpat.Doctor
                                      }
                 ).ToList();
 
@@ -2813,7 +3009,7 @@ on p.Reg_PatId equals rp.pat_id
                                             lbtD.Area_Of_Interest,
                                             lbtD.Doctor,
                                             lbtD.Recieved_ID,
-                                            lbtD.Is_Result,
+                                            Is_Result = (from t in db.Lab_Test_Details where t.BillDetailID == lbtD.BillDetailID orderby t.Lab_Test_Detail_ID descending select t.isApproved).FirstOrDefault(),
                                             outpat.Doctor_ID
                                         }
                ).ToList();
@@ -2859,7 +3055,7 @@ on p.Reg_PatId equals rp.pat_id
                 else
                     obj.Is_Result = (bool)item.Is_Result;
                 obj.Status = "InPatient";
-                obj.DoctorName = item.DoctorName;
+                //obj.DoctorName = item.DoctorName;
                 list.Add(obj);
             }
 
@@ -2948,8 +3144,8 @@ on p.Reg_PatId equals rp.pat_id
         public static string GetTestResultList(int id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var patientNo = (from p in db.Reg_patients where p.pat_id == Convert.ToInt32(id) select p.Patient_No).FirstOrDefault();
-            var patientIDs = (from p in db.Reg_patients where p.Patient_No == patientNo select p.pat_id).ToList();
+            var Pat_id = (from p in db.Reg_patients join pat in db.Patients on p.pat_id equals pat.Reg_PatId where pat.Patient_ID == Convert.ToInt32(id) select p.pat_id).FirstOrDefault();
+            // var patientIDs = (from p in db.Reg_patients where p.Patient_No == patientNo select p.pat_id).ToList();
             //Individual Tests
             var data = (from lt in db.Laboratory_Tests
                         join ltd in db.Lab_Test_Details on lt.Lab_Test_ID equals ltd.Lab_Test_ID
@@ -2958,7 +3154,7 @@ on p.Reg_PatId equals rp.pat_id
                         join bd in db.Ar_Billing_Details on ltd.Bill_Details_ID equals bd.Bill_Details_ID
                         join img in db.Test_Images on ltd.Lab_Test_Detail_ID equals img.Lab_Test_Detail_ID into imgJoin
                         from imgLeftJoin in imgJoin.DefaultIfEmpty()
-                        where pa.pat_id == Convert.ToInt32(Convert.ToString(id))
+                        where pa.pat_id == Convert.ToInt32(Convert.ToString(Pat_id))
                                 && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
                                 && bd.Is_Group_Category == false
                         select new
@@ -2967,7 +3163,8 @@ on p.Reg_PatId equals rp.pat_id
                             lt.Parent_Transaction_Type_ID,
                             lt.Lab_Test_ID,
                             tdef.Test_ID,
-                            ltd.Test_Collected_On,
+                            ltd.Date,
+                            ltd.Test_Ready_On,
                             ltd.Test_Collected_By,
                             ltd.Lab_Test_Detail_ID,
                             tdef.Test_Name,
@@ -3038,6 +3235,9 @@ on p.Reg_PatId equals rp.pat_id
                 test.Rejected_Reason = item.Rejected_Reason;
                 test.Report_Colum = item.Report_Colum;
                 test.Service_Date = item.Service_Date.ToString();
+                test.Test_Collected_On = item.Date.ToString();
+                test.Test_Ready_On = item.Test_Ready_On.ToString();
+                test.Service_Date = item.Service_Date.ToString();
                 if (item.isApproved != null)
                 {
                     test.Is_Approve = (bool)item.isApproved;
@@ -3052,7 +3252,7 @@ on p.Reg_PatId equals rp.pat_id
 
             AlltestListRefined = AlltestList;
             // For Group Tests
-            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], bd.Bill_Details_ID,ld.Is_Result,ld.Rejected_Reason,bd.Service_Date ,isnull(ld.isApproved,'') as IsApproved,ltm.patient_id from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Reg_patient pat where bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = pat.pat_id  and pat.Patient_No = (case when " + patientNo + " = 0 then pat.Patient_No else " + patientNo + " end) and lt.Test_ID = ld.Test_ID and ltm.Lab_Test_ID = ld.Lab_Test_ID");
+            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], bd.Bill_Details_ID,ld.Is_Result,ld.Rejected_Reason,bd.Service_Date ,isnull(ld.isApproved,'') as IsApproved,ltm.patient_id,FORMAT(ld.date, 'yyyy-MM-dd HH:mm') AS Test_Collected_On,FORMAT(ld.Test_Ready_On, 'yyyy-MM-dd HH:mm') AS Test_Ready_On,isNull(ld.Test_Collected_By,'') as Test_Collected_By,dbo.GetDataValueName('Main Test Departments',lt.Main_Department) as DepartmentName from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Reg_patient pat where bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = pat.pat_id  and pat.pat_id = (case when " + Pat_id + " = 0 then pat.pat_id else " + Pat_id + " end) and lt.Test_ID = ld.Test_ID and ltm.Lab_Test_ID = ld.Lab_Test_ID");
 
 
             foreach (DataRow item in GroupTest.Rows)
@@ -3069,7 +3269,11 @@ on p.Reg_PatId equals rp.pat_id
                     Rejected_Reason = item[7] == DBNull.Value ? "" : item[7].ToString(),
                     Service_Date = item[8] == DBNull.Value ? "" : item[8].ToString(),
                     Is_Approve = Convert.ToBoolean(item[9] == DBNull.Value ? "" : item[9]),
-                    patient_ID = item[10] == DBNull.Value ? "" : item[10].ToString()
+                    patient_ID = item[10] == DBNull.Value ? "" : item[10].ToString(),
+                    Test_Collected_On = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Test_Ready_On = item[12] == DBNull.Value ? "" : item[12].ToString(),
+                    Test_Collected_By = item[13] == DBNull.Value ? "" : item[13].ToString(),
+                    DepartmentName = item[14] == DBNull.Value ? "" : item[14].ToString(),
 
                 };
 
@@ -3108,14 +3312,13 @@ on p.Reg_PatId equals rp.pat_id
             public string ListOfTestIDs { get; set; }
             public string Bill_Details_ID { get; set; }
             public string patient_ID { get; set; }
-            // public string ListOfTestID { get; set; }
-            // public string DataValue_ID { get; set; }
-            // public string DataValue_Name { get; set; }
-            // public string DataValue_Description { get; set; }
+
             public string Rejected_Reason { get; set; }
 
             public string Report_Colum { get; set; }
             public string Service_Date { get; set; }
+            public string Test_Ready_On { get; set; }
+            public string Test_Collected_On { get; set; }
 
             public bool Is_Approve { get; set; }
             public string Image_ID { get; set; }

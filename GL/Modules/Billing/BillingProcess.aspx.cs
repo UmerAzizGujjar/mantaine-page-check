@@ -1175,6 +1175,7 @@ namespace PMS
                         ltd.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
                         ltd.Date = newBill.Creation_Date;
                         ltd.Test_ID = (int)item.Item_ID;
+                        ltd.Actual_Patient_ID = newBill.Patient_ID;
                         ltd.Catagory_ID = item.Category_ID;
                         //ltd.Dept_ID = item.Main_Department;
                         db.Lab_Test_Details.InsertOnSubmit(ltd);
@@ -1233,6 +1234,7 @@ namespace PMS
                     grpdtl.Test_ID = 0;
                     grpdtl.IsBilled = true;
                     grpdtl.Catagory_ID = test.Category_ID;
+                    grpdtl.Actual_Patient_ID = newBill.Patient_ID;
                     //grpdtl.Dept_ID = Category[0].t.Main_Department;
                     db.Lab_Test_Details.InsertOnSubmit(grpdtl);
                     db.SubmitChanges();
@@ -1335,9 +1337,30 @@ namespace PMS
             db.SubmitChanges();
 
             var Bill_Detail_List = db.Ar_Billing_Details
-                .Where(abd => abd.Bill_ID == ListOfDetails[0].Bill_ID && (abd.ParentTrans_Type == "Test Group Category" || abd.ParentTrans_Type == "Test"))
-                .ToList();
+               .Where(abd => abd.Bill_ID == ListOfDetails[0].Bill_ID && (abd.ParentTrans_Type == "Test"))
+               .ToList();
 
+            var Bill_Detail_Lists = db.Ar_Billing_Details
+              .Where(abd => abd.Bill_ID == ListOfDetails[0].Bill_ID && (abd.ParentTrans_Type == "Test Group Category"))
+              .ToList();
+
+            foreach (var billDetailss in Bill_Detail_Lists)
+            {
+                int billDetailIDs = billDetailss.Bill_Details_ID;
+
+                // Update matching Lab_Test_Details rows using raw SQL
+                db.ExecuteCommand(@"
+                UPDATE Lab_Test_Detail 
+                 SET BillDetailID = {0} 
+                 WHERE Actual_Patient_ID = {1} 
+                 AND Test_ID = {2} 
+                 AND Catagory_ID = {3}",
+                    billDetailIDs,
+                    newBill.Patient_ID,
+                    billDetailss.Item_ID,
+                    billDetailss.Category_ID);
+            }
+            //To Update The latest Billing Entry
             foreach (var billDetail in Bill_Detail_List)
             {
                 int billDetailID = billDetail.Bill_Details_ID;
@@ -1351,12 +1374,30 @@ namespace PMS
                     db.SubmitChanges();
                 }
             }
+            //To Update The OutPatient Billing Entry
+            foreach (var billDetails in Bill_Detail_List)
+            {
+                int billDetailID = billDetails.Bill_Details_ID;
 
-            //bypass X-Ray etc
+                var labTestDetails = db.Lab_Test_Details
+                    .Where(ltd => ltd.Actual_Patient_ID == newBill.Patient_ID && ltd.Test_ID == billDetails.Item_ID)
+                    .ToList(); // Get all matching rows
 
-            #region"Deleting previous receipt and insert new according to bill."
+                foreach (var labTestDetail in labTestDetails)
+                {
+                    labTestDetail.BillDetailID = billDetailID;
 
-            List<Receipt> rcpt = db.Receipts.Where(r => r.Bill_ID == newBill.Bill_ID).ToList();
+                }
+
+                db.SubmitChanges();
+            }
+
+
+                //bypass X-Ray etc
+
+                #region"Deleting previous receipt and insert new according to bill."
+
+                List<Receipt> rcpt = db.Receipts.Where(r => r.Bill_ID == newBill.Bill_ID).ToList();
             if (rcpt != null)
                 db.Receipts.DeleteAllOnSubmit(rcpt);
             db.SubmitChanges();
