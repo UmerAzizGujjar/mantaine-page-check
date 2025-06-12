@@ -163,7 +163,7 @@
         <span " id="txtOrder_By-error" class="span_txt" style=" display: none;color: red;">Please Enter Order By</span>
     </div>
     <div class="col-lg-2 col-md-6 col-sm-6">
-        <label for="cbActive" class="ml-2 wdth">Free Check</label>
+        <label for="cbActive" class="ml-2 wdth">Active</label>
         <input type="checkbox" id="cbActive" name="cbActive" />
     </div>
 </div>

@@ -7,10 +7,9 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
 namespace PMS.Modules.Accounts
 {
-    public partial class ChangePasswordNew : System.Web.UI.Page
+    public partial class PasswordChange : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -115,3 +114,4 @@ namespace PMS.Modules.Accounts
         }
     }
 }
+    

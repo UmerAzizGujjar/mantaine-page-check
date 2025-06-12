@@ -197,7 +197,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Modules\Accounts\ChangePasswordNew.aspx" />
+    <Content Include="Modules\Accounts\PasswordChange.aspx" />
     <Content Include="Modules\Accounts\RoleAssignment.aspx" />
     <Content Include="Modules\Administrator\AddDepartment_Packages.aspx" />
     <Content Include="Modules\Administrator\AddDoctorAgreement.aspx" />
@@ -3335,6 +3335,7 @@
     <Content Include="wwwroot\ASsiratTheme\js\select2.min.js" />
     <Content Include="wwwroot\ASsiratTheme\js\spin.js" />
     <Content Include="wwwroot\ASsiratTheme\js\spinbox.min.js" />
+    <Content Include="wwwroot\ASsiratTheme\js\swalalert.js" />
     <Content Include="wwwroot\ASsiratTheme\js\sweetalert.min.js" />
     <Content Include="wwwroot\ASsiratTheme\js\tree.min.js" />
     <Content Include="wwwroot\ASsiratTheme\js\wizard.min.js" />
@@ -6756,6 +6757,7 @@
     <Content Include="wwwroot\IITH_Theme\js\select2.min.js" />
     <Content Include="wwwroot\IITH_Theme\js\spin.js" />
     <Content Include="wwwroot\IITH_Theme\js\spinbox.min.js" />
+    <Content Include="wwwroot\IITH_Theme\js\swalalert.js" />
     <Content Include="wwwroot\IITH_Theme\js\sweetalert.min.js" />
     <Content Include="wwwroot\IITH_Theme\js\tree.min.js" />
     <Content Include="wwwroot\IITH_Theme\js\wizard.min.js" />
@@ -10290,6 +10292,7 @@
     <Content Include="wwwroot\Pakred\js\select2.min.js" />
     <Content Include="wwwroot\Pakred\js\spin.js" />
     <Content Include="wwwroot\Pakred\js\spinbox.min.js" />
+    <Content Include="wwwroot\Pakred\js\swalalert.js" />
     <Content Include="wwwroot\Pakred\js\sweetalert.min.js" />
     <Content Include="wwwroot\Pakred\js\tree.min.js" />
     <Content Include="wwwroot\Pakred\js\wizard.min.js" />
@@ -10729,6 +10732,8 @@
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
+    <Content Include="wwwroot\StandardTheme\css\swalalert.css" />
+    <Content Include="wwwroot\StandardTheme\js\swalalert.js" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.css" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.js" />
     <Content Include="wwwroot\Tibbit_theme\css\ace-ie.min.css" />
@@ -13500,6 +13505,7 @@
     <Content Include="wwwroot\Tibbit_theme\js\select2.min.js" />
     <Content Include="wwwroot\Tibbit_theme\js\spin.js" />
     <Content Include="wwwroot\Tibbit_theme\js\spinbox.min.js" />
+    <Content Include="wwwroot\Tibbit_theme\js\swalalert.js" />
     <Content Include="wwwroot\Tibbit_theme\js\sweetalert.min.js" />
     <Content Include="wwwroot\Tibbit_theme\js\tree.min.js" />
     <Content Include="wwwroot\Tibbit_theme\js\wizard.min.js" />
@@ -18442,12 +18448,12 @@
     <Content Include="wwwroot\Tibbit_theme\Styles\font-awesome\scss\_variables.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\Accounts\ChangePasswordNew.aspx.cs">
-      <DependentUpon>ChangePasswordNew.aspx</DependentUpon>
+    <Compile Include="Modules\Accounts\PasswordChange.aspx.cs">
+      <DependentUpon>PasswordChange.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Modules\Accounts\ChangePasswordNew.aspx.designer.cs">
-      <DependentUpon>ChangePasswordNew.aspx</DependentUpon>
+    <Compile Include="Modules\Accounts\PasswordChange.aspx.designer.cs">
+      <DependentUpon>PasswordChange.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Accounts\RoleAssignment.aspx.cs">
       <DependentUpon>RoleAssignment.aspx</DependentUpon>
