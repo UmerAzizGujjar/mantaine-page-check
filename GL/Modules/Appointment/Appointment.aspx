@@ -3,25 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/StandardTheme/css/CustomCss/Appointment.css" rel="stylesheet" />
     
-    <style type="text/css">
-        .swal-big-popup {
-    width: 600px !important;
-    padding: 30px !important;
-    font-size: 20px !important;
-    border-radius: 20px !important;
-    box-sizing: border-box;
-}
-
-.swal-big-title {
-    font-size: 28px !important;
-    font-weight: bold;
-}
-
-.swal-big-text {
-    font-size: 20px !important;
-}
-
-    </style>
+    
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;

@@ -10729,6 +10729,7 @@
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
+    <Content Include="wwwroot\StandardTheme\css\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\js\swalalert.js" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.css" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.js" />
