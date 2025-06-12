@@ -2,11 +2,41 @@
     CodeBehind="ChangePassword.aspx.cs" Inherits="PMS.Account.ChangePassword" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/registeruser.css" rel="stylesheet" />
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-      
+    <style type="text/css">
+        BodyContent{
+        }
+        label-field {
+        }
+        input.textEntry,
+        input.passwordEntry {
+            position: relative;
+            width: 90% !important;
+            height: 36px;
+        }
+     input[type="button"], input[type="submit"] {
+            border-radius: 50px;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 5px 10px;
+            background-color: #EFA63E;
+            border-color: #357ebd !important;
+            color: white;
+            font-weight: bold !important;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+            margin-bottom: 0;
+            box-shadow: none;
+            text-shadow: none;
+            border: 0;
+            width: 170px;
+            height: 33px;
+            cursor: pointer;
+            display: inline-block;
+            background-image: none;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
      
@@ -64,5 +94,25 @@
             </div>
         </ChangePasswordTemplate>
     </asp:ChangePassword>
-  
+    <%--<script type="text/javascript">
+
+        window.onload = function () {
+            var messageType = '<%= Session["MessageType"] != null ? Session["MessageType"].ToString() : "" %>';
+            var loginMessage = '<%= Session["LoginSuccess"] != null ? Session["LoginSuccess"].ToString() : "" %>';
+
+            if (messageType && loginMessage) {
+                Swal.fire({
+                    title: messageType === 'success' ? 'Success!' : 'Error!',
+                    text: loginMessage,
+                    icon: messageType === 'success' ? 'success' : 'error',
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    if (messageType === 'success' && result.isConfirmed) {
+                        window.location.href = 'Login.aspx';
+                    }
+                });
+            }
+        };
+
+    </script>--%>
 </asp:Content>

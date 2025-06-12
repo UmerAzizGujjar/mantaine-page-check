@@ -1,254 +1,527 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Employee.aspx.cs" Inherits="PMS.Employee" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/css/CustomCss/Employee.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/Employee.css" rel="stylesheet" />
+        <link href="../../wwwroot/StandardTheme/css/CustomCss/Toaster.css" rel="stylesheet" />
  
-    <script type="text/javascript">
+      <script type="text/javascript">
 
-        var Panels = '';
-        $(document).ready(function () {
-            debugger;
-            $('#ctl00_MainContent_TxtTime_In').ptTimeSelect();
-            $("#ctl00_MainContent_TxtTime_Out").ptTimeSelect();
-            
+          var Panels = '';
+          $(document).ready(function () {
+              debugger;
+              $('#TxtTime_In').ptTimeSelect();
+              $("#TxtTime_Out").ptTimeSelect();
+              filldepartment();
+              fillDesignation();
+              GetPatientType();
+              fillBuildingType();
+              fillDoctorBuilding();
+              fillusers();
+              fillroom();
 
-            var time = new Date();
-            var t = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-
-
-            GetPanels();
-            $('#ctl00_MainContent_txtDoctorShare, #ctl00_MainContent_txtHospital_Share').on('keyup', function () {
-                var docShare = parseFloat($('#ctl00_MainContent_txtDoctorShare').val()) || 0; // Parse as float and handle NaN
-                var hosShare = parseFloat($('#ctl00_MainContent_txtHospital_Share').val()) || 0; // Parse as float and handle NaN
-                var conCharges = docShare + hosShare;
-                $('#ctl00_MainContent_txtConsultant_Charges').val(conCharges);
-            });
-
-            $('#btnSaveH').on('click', function () {
-                debugger;
-               
-                var customers = [];
-                $("#tblPanel tr:gt(1)").each(function (key, value) {
-                    var listOfDetails = {};
-                    debugger;
-
-                    debugger;
-                    var Panel = $(value).find('select[name="Panel"]').val();
-                    var Rate = $(value).find('input[name="Rate"]').val();
-
-                    listOfDetails.Panel = Panel;
-                    listOfDetails.Rate = Rate;
-
-                    customers.push(listOfDetails);
-
-                });
-                debugger;
+              var time = new Date();
+              var t = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
 
-                document.getElementsByName("CustomerJSON")[0].value = JSON.stringify(customers);
 
-                $("[id$='_ctl00_MainContent_btnSave']").click();
-                $("[id$='_btnSave']").click();
+              $('#txtDoctorShare, #txtHospital_Share').on('keyup', function () {
+                  var docShare = parseFloat($('#txtDoctorShare').val()) || 0; // Parse as float and handle NaN
+                  var hosShare = parseFloat($('#txtHospital_Share').val()) || 0; // Parse as float and handle NaN
+                  var conCharges = docShare + hosShare;
+                  $('#txtConsultant_Charges').val(conCharges);
+              });
 
-            });
 
-            var id = '<% =Request.QueryString["ID"] %>';
-            if (id != "") {
-                debugger;
-                LoadPanel();
-                $('#btnSaveH').val('Update');
 
-            }
-            else {
-                $('#ctl00_MainContent_TxtTime_In').val(t);
-                $("#ctl00_MainContent_TxtTime_Out").val(t);
+              var id = '<%= Request.QueryString["ID"] %>';
+          if (id !== "") {
 
-            }
-        });
+              populatedata(id);
 
-        $(function () {
-            Sys.WebForms.PageRequestManager.getInstance().add_pageLoaded(function (evt, args) {
-                $("#ctl00_MainContent_txtEmployee_Date_of_Birth").datepicker({ dateFormat: 'mm/dd/yy' });
-                $("#ctl00_MainContent_txtEmployee_DOJ").datepicker({ dateFormat: 'mm/dd/yy' });
-                $("#ctl00_MainContent_txtEmployee_Resign").datepicker({ dateFormat: 'mm/dd/yy' });
-             
-            });
-        });
-        function DeleteRate(row) {
-            $(row).closest('tr').remove();
-        }
-        function LoadPanel() {
+          }
+          else {
+              loadnewaccountToCreate();
+              $('#TxtTime_In').val(t);
+              $("#TxtTime_Out").val(t);
 
-            debugger;
-            var id = '<% =Request.QueryString["ID"] %>';
-            $.ajax({
-                type: "POST",
-                url: "Employee.aspx/LoadPanel",
-                data: JSON.stringify({
-                    "Id": id
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var parsed_Data = JSON.parse(response.d);
-                    debugger;
-                    var rows = '';
-                    for (var i = 1; i <= parsed_Data.length; i++) {
-                        generateRow();
-                        debugger;
-                        $('#Select' + i + '').val(parsed_Data[i - 1].Patient_Category);
-                        $('#Rate' + i + '').val(parsed_Data[i - 1].Test_Rate);
-                    }
+          }
+      });
 
-                },
 
-                error: function () {
-                    alert("Error");
-                }
 
-            });
 
-        }
-       
 
-        function GetPanels() {
-            debugger;
-            var options = '<option value="0">Select Panel</option>';
-            $.ajax({
-                type: "post",
-                url: "Employee.aspx/GetPanel",
-                data: "",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,
-                success: function (response) {
-                    debugger;
-                    $.each(JSON.parse(response.d), function (key, value) {
+          $(function () {
+              Sys.WebForms.PageRequestManager.getInstance().add_pageLoaded(function (evt, args) {
+                  $("#txtEmployee_Date_of_Birth").datepicker({ dateFormat: 'mm/dd/yy' });
+                  $("#txtEmployee_DOJ").datepicker({ dateFormat: 'mm/dd/yy' });
+                  $("#txtEmployee_Resign").datepicker({ dateFormat: 'mm/dd/yy' });
 
-                        options += '<option value="' + value.Panel_ID + '">' + value.Company_Name + '</option>';
-                    });
-                    debugger;
-                    Panels = options;
-                },
-                failure: function (response) {
-                    alert("Error!!!");
-                }
-            });
-        }
+              });
+          });
 
-        function SavePanelRate(id) {
-            var tblOPDList = document.getElementById('tblPanel');
-            var opdData = new Array();
-            for (var i = 1; i < tblOPDList.rows.length; i++) {
-                var opdCategory = $('#opdSelect' + i + '').val();
-                var opdRate = $('#opdRate' + i + '').val();
-                if (opdCategory != null && opdRate != null) {
-                    opdData[i] = new Array(opdCategory, opdRate);
-                }
-            }
-            PageMethods.saveData(id, ipdData, onSuccess, onFail);
+         
 
-        }
 
-        function Chk_SubDepartment_Info() {
 
-            var Doctor_Val = document.getElementById('<%= ddlDepartment.ClientID%>').value;
 
-            if (Doctor_Val == 0) {
-                $('#ctl00_MainContent_ddl_Sub_Department').val('');
-            }
-            else {
-                var button = document.getElementById('<%= btnGet_SubDepartment.ClientID%>');
-                button.click();
-            }
+          function filldepartment() {
+              var options = '<option value="0">Please Select</option>';
+              PageMethods.GetDepartment(function (data) {
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                  });
+                  $('#ddlDepartment').html(options);
+                  //$('#ddl_Gender').select2();
 
-        }
+              });
+              return options;
+          }
+          function GetPatientType() {
+              var options = '<option value="0">Please Select</option>';
+              PageMethods.GetPatientType(function (data) {
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                  });
+                  $('#ddlPatientType').html(options);
+                  //$('#ddl_Gender').select2();
 
-        function generateRow() {
-            debugger;
-            var rowID = document.getElementById('tblPanel').rows.length - 1;
-            var html = '<tr id = "Row' + rowID + '">' +
-                '<td><select style="width: 145px !important;" name="Panel" id = "Select' + rowID + '">' + Panels + '</select></td>' +
-                '<td><input type="text" id="Rate' + rowID + '" name="Rate" style="width: 65px !important;"/></td>' +
-                '<td><a href="javascript:void(0)" onclick="DeleteRate(this)">Delete</a>' +
-                '</td>' +
-                '</tr>';
+              });
+              return options;
+          }
+          function fillDesignation() {
+              var options = '<option value="0">Please Select</option>';
+              PageMethods.GetDesignation(function (data) {
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                  });
+                  $('#ddlDesignation').html(options);
+                  //$('#ddl_Gender').select2();
 
-            $('#tblPanel').append(html);
-        }
-    </script>
+              });
+              return options;
+          }
+          function fillBuildingType() {
+              var options = '<option value="0">Please Select</option>';
+              PageMethods.GetBuildingType(function (data) {
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                  });
+                  $('#ddlFloor').html(options);
+                  //$('#ddl_Gender').select2();
+
+              });
+              return options;
+          }
+          function fillDoctorBuilding() {
+              var options = '<option value="0">Please Select</option>';
+              PageMethods.GetDoctorBuilding(function (data) {
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                  });
+                  $('#ddlDoctorBuilding').html(options);
+                  //$('#ddl_Gender').select2();
+
+              });
+              return options;
+          }
+          function fillusers() {
+              var options = '<option value="0">Please Select</option>';
+              PageMethods.GetUsers(function (data) {
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.UserId + '" >' + value.UserName + '</option>';
+                  });
+                  $('#ddluser').html(options);
+                  //$('#ddl_Gender').select2();
+
+              });
+              return options;
+          }
+          function fillroom() {
+              var options = '<option value="0">Please Select</option>';
+              PageMethods.GetRoom(function (data) {
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                  });
+                  $('#ddlRoom').html(options);
+                  //$('#ddl_Gender').select2();
+
+              });
+              return options;
+          }
+
+          function populatedata(empID) {
+              PageMethods.PopulateEmployeeData(parseInt(empID), function (data) {
+                  var empData = JSON.parse(data);
+                  debugger;
+                  console.log(empData);
+                  // Now populate form fields
+                  // Textboxes and Dropdowns
+                  $("#txtEmployeeID").val(empData.txtEmployeeID);
+                  $("#txtEmployeeCode").val(empData.txtEmployeeCode);
+                  $("#txtEmployee_Name").val(empData.txtEmployee_Name);
+                  $("#txtFather_Name").val(empData.txtFather_Name);
+                  $("#txtEmployee_Date_of_Birth").val(empData.txtEmployee_Date_of_Birth);
+
+                  $("#ddlDoctorBuilding").val(empData.ddlDoctorBuilding);
+                  $("#txtEmployee_Address").val(empData.txtEmployee_Address);
+                  $("#txtEmployee_Phone1").val(empData.txtEmployee_Phone1);
+                  $("#txtEmployee_Phone2").val(empData.txtEmployee_Phone2);
+                  $("#txtGovt_Hospital").val(empData.txtGovt_Hospital);
+                  $("#ddluser").val(empData.user);
+                  $("#txtdependent").val(empData.dependent);
+                  $("#txtPanelAmount").val(empData.panelrate);
+
+
+                  debugger;
+
+                  $("#ddluser").val(empData.user);
+                  $("#ddluser").val(empData.ddluser);
+                  $("#txtPatient_Time").val(empData.txtPatient_Time);
+                  $("#TxtTime_In").val(empData.TxtTime_In);
+                  $("#TxtTime_Out").val(empData.TxtTime_Out);
+                  $("#ddlRoom").val(empData.ddlRoom);
+                  $("#Ext_txt").val(empData.Ext_txt);
+                  $("#txtEmployee_NTN_No").val(empData.txtEmployee_NTN_No);
+                  $("#txtEmployee_Email").val(empData.txtEmployee_Email);
+                  $("#txtEmployee_DOJ").val(empData.txtEmployee_DOJ);
+                  $("#txtDoctorShare").val(empData.txtDoctorShare);
+                  $("#txtHospital_Share").val(empData.txtHospital_Share);
+                  $("#txtEmployee_Resign").val(empData.txtEmployee_Resign);
+                  $("#txtGrossPay").val(empData.txtGrossPay);
+                  $("#txtRemarks").val(empData.txtRemarks);
+                  $("#txtConsultant_Charges").val(empData.txtConsultant_Charges);
+
+                  // Checkboxes
+
+
+                  // Set button text
+
+
+                  setTimeout(function () {
+                      $("#ddlDesignation").val(empData.ddlDesignation);
+                      $("#ddlFloor").val(empData.ddlFloor);
+                      $("#ddlDepartment").val(empData.ddlDepartment);
+                      $("#ddlPatientType").val(empData.ddlPatientType);
+                      $("#btnSave").val(empData.btnSave);
+                      $("#ChkDoctor").prop("checked", empData.ChkDoctor);
+                      $("#ChkVisting").prop("checked", empData.ChkVisting);
+                      $("#sun").prop("checked", empData.isSun);
+                      $("#mon").prop("checked", empData.isMon);
+                      $("#tue").prop("checked", empData.isTue);
+                      $("#wed").prop("checked", empData.isWed);
+                      $("#thur").prop("checked", empData.isThur);
+                      $("#fri").prop("checked", empData.isFri);
+                      $("#sat").prop("checked", empData.isSat);
+                  }, 2500)
+
+
+                  if (empData.Account_ID != null) {
+                      PageMethods.LoadGLAccount(parseInt(empData.Account_ID), function (data) {
+                          var AccountData = JSON.parse(data);
+
+                          $("#txtAccount_Code_Name").val(AccountData.txtAccount_Code_Name);
+                          $("#hdfAccount_Name").val(AccountData.hdfAccount_Name);
+                          $("#hdfAccount_Code").val(AccountData.hdfAccount_Code);
+                          $("#hdfParent_Code").val(AccountData.hdfParent_Code);
+                          $("#hdfAccount_Serial").val(AccountData.hdfAccount_Serial);
+                          $("#hdfLevel").val(AccountData.hdfLevel);
+                          $("#hdfAccount_ID").val(AccountData.hdfAccount_ID);
+
+
+                      }
+                          , function (err) {
+                              alert("Error: " + err.get_message());
+                          });
+                  }
+
+              },
+                  function (err) {
+                      alert("Error: " + err.get_message());
+                  });
+          }
+
+          function toasterMessage(isError = false, title, message) {
+              debugger;
+              toastr.options = {
+                  "closeButton": true,
+                  "debug": false,
+                  "preventDuplicates": false,
+                  "positionClass": "toast-center-screen", // Custom class for center
+                  "onclick": null,
+                  "showDuration": "551500",
+                  "hideDuration": "2000",
+                  "timeOut": "4000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut",
+                  onclick: function () {
+                      $('#right-sidebar').toggleClass('sidebar-open');
+                  }
+              };
+
+              if (isError)
+                  toastr.error(message, title);
+              else
+                  toastr.success(message, title);
+          }
+
+
+          function loadnewaccountToCreate() {
+
+              PageMethods.LoadNewAccountToCreate(function (data) {
+                  var NewAccountData = JSON.parse(data);
+
+                  $("#hdfParent_Code").val(NewAccountData.NewhdfParent_Code);
+                  $("#hdfAccount_Code").val(NewAccountData.NewhdfAccount_Code);
+                  $("#hdfAccount_Serial").val(NewAccountData.NewhdfAccount_Serial);
+                  $("#hdfLevel").val(NewAccountData.NewhdfLevel);
+
+
+
+              }
+                  , function (err) {
+                      alert("Error: " + err.get_message());
+                  });
+
+
+          }
+          function saveData() {
+
+
+              var hdfAccount_ID = $('#hdfAccount_ID').val();
+              var buttonVal = $('#btnSave').val();
+              var txtEmployeeID = $('#txtEmployeeID').val();
+              var txtEmployee_Name = $('#txtEmployee_Name').val();
+              var txtFather_Name = $('#txtFather_Name').val();
+              var txtEmployee_Date_of_Birth = $('#txtEmployee_Date_of_Birth').val();
+              var txtPanelAmount = $('#txtPanelAmount').val();
+              var ddlPatientType = $('#ddlPatientType').val();
+              var ddlDepartment = $('#ddlDepartment').val();
+              var ddlDesignation = $('#ddlDesignation').val();
+              var txtEmployee_Phone2 = $('#txtEmployee_Phone2').val();
+              var txtEmployee_Phone1 = $('#txtEmployee_Phone1').val();
+              var txtEmployee_Email = $('#txtEmployee_Email').val();
+              var txtPatient_Time = $('#txtPatient_Time').val();
+              var TxtTime_In = $('#TxtTime_In').val();
+              var TxtTime_Out = $('#TxtTime_Out').val();
+              var txtEmployee_NTN_No = $('#txtEmployee_NTN_No').val();
+              var ddlRoom = $('#ddlRoom').val();
+              var txtEmployee_DOJ = $('#txtEmployee_DOJ').val();
+              var txtEmployee_Resign = $('#txtEmployee_Resign').val();
+              var ddlFloor = $('#ddlFloor').val();
+              var txtDoctorShare = $('#txtDoctorShare').val();
+              var txtHospital_Share = $('#txtHospital_Share').val();
+              var Ext_txt = $('#Ext_txt').val();
+              var txtGrossPay = $('#txtGrossPay').val();
+              var txtConsultant_Charges = $('#txtConsultant_Charges').val();
+              var ddlDoctorBuilding = $('#ddlDoctorBuilding').val();
+              var txtEmployee_Address = $('#txtEmployee_Address').val();
+              var txtRemarks = $('#txtRemarks').val();
+              var ddluser = $('#ddluser').val();
+              var txtdependent = $('#txtdependent').val();
+              var isSun = $('#sun').prop('checked');
+              var isMon = $('#mon').prop('checked');
+              var isTue = $('#tue').prop('checked');
+              var isWed = $('#wed').prop('checked');
+              var isThur = $('#thur').prop('checked');
+              var isFri = $('#fri').prop('checked');
+              var isSat = $('#sat').prop('checked');
+              var isDoc = $('#ChkDoctor').prop('checked');
+              var isVisiting = $('#ChkVisting').prop('checked');
+
+              var hdfParent_Code = $('#hdfParent_Code').val();
+              var hdfAccount_Serial = $('#hdfAccount_Serial').val();
+              var hdfLevel = $('#hdfLevel').val();
+              var hdfAccount_Code = $('#hdfAccount_Code').val();
+              var txtGovt_Hospital = $('#txtGovt_Hospital').val();
+              var hdnEmp = $('#hdnEmp').val();
+              var lblMessage = $('#lblMessage').val();
+              var CustomerJSON = $('#CustomerJSON').val();
+
+
+              var dataObj = {
+                  "buttonVal": buttonVal,
+                  "txtEmployeeID": txtEmployeeID,
+                  "txtEmployee_Name": txtEmployee_Name,
+                  "txtFather_Name": txtFather_Name,
+                  "txtEmployee_Date_of_Birth": txtEmployee_Date_of_Birth,
+                  "txtPanelAmount": txtPanelAmount,
+                  "ddlPatientType": ddlPatientType,
+                  "ddlDepartment": ddlDepartment,
+                  "ddlDesignation": ddlDesignation,
+                  "txtEmployee_Phone2": txtEmployee_Phone2,
+                  "txtEmployee_Phone1": txtEmployee_Phone1,
+                  "txtEmployee_Email": txtEmployee_Email,
+                  "txtPatient_Time": txtPatient_Time,
+                  "TxtTime_In": TxtTime_In,
+                  "TxtTime_Out": TxtTime_Out,
+                  "txtEmployee_NTN_No": txtEmployee_NTN_No,
+                  "ddlRoom": ddlRoom,
+                  "txtEmployee_DOJ": txtEmployee_DOJ,
+                  "txtEmployee_Resign": txtEmployee_Resign,
+                  "ddlFloor": ddlFloor,
+                  "txtDoctorShare": txtDoctorShare,
+                  "txtHospital_Share": txtHospital_Share,
+                  "Ext_txt": Ext_txt,
+                  "txtGrossPay": txtGrossPay,
+                  "txtConsultant_Charges": txtConsultant_Charges,
+                  "ddlDoctorBuilding": ddlDoctorBuilding,
+                  "txtEmployee_Address": txtEmployee_Address,
+                  "txtRemarks": txtRemarks,
+                  "ddluser": ddluser,
+                  "txtdependent": txtdependent,
+                  "isSun": isSun,
+                  "isMon": isMon,
+                  "isTue": isTue,
+                  "isWed": isWed,
+                  "isThur": isThur,
+                  "isFri": isFri,
+                  "isSat": isSat,
+                  "isDoc": isDoc,
+                  "isVisiting": isVisiting,
+                  "hdfAccount_ID": hdfAccount_ID,
+                  "hdfParent_Code": hdfParent_Code,
+                  "hdfAccount_Serial": hdfAccount_Serial,
+                  "hdfLevel": hdfLevel,
+                  "hdfAccount_Code": hdfAccount_Code,
+                  "txtGovt_Hospital": txtGovt_Hospital,
+                  "hdnEmp": hdnEmp,
+                  "lblMessage": lblMessage,
+                  "CustomerJSON": CustomerJSON
+              };
+              var data = JSON.stringify({ dataa: dataObj });
+              console.log(data);
+
+              debugger
+              $.ajax({
+                  type: "POST",
+                  url: "Employee.aspx/SaveData",
+                  data: data,
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  success: function (data) {
+                      debugger;
+                      var ini_patientID = data.d;
+
+                      toasterMessage(false, "Data Saved");
+
+                  },
+                  error: function (xhr, status, error) {
+                      console.log("XHR:", xhr);
+                      console.log("Status:", status);
+                      console.log("Error:", error);
+
+                      // Try to show server response if it's plain text
+                      if (xhr.responseText) {
+                          alert("Server Error: " + xhr.responseText);
+                      } else {
+                          alert("AJAX Error: " + error);
+                      }
+                  }
+              });
+          }
+
+          function redirect() {
+              window.location.href = "EmployeeView.aspx";
+          }
+
+      </script>
   
 
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <form id="Items">
-        <div class="row">
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+            <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Employee ID</label>
-                <asp:TextBox runat="server" ID="txtEmployeeID" ReadOnly="true" Text="(New)" />
+               
+                <input readonly type="text" id="txtEmployeeID" value="(New)"  />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Employee Code **</label>
-                <asp:TextBox ID="txtEmployeeCode" runat="server" disabled="disabled" />
+                <input type="text" id="txtEmployeeCode" name="txtEmployeeCode" disabled="disabled" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Employee Name *</label>
-                <asp:TextBox runat="server" ID="txtEmployee_Name" autocomplete="off" />
-                <asp:RequiredFieldValidator ErrorMessage="Employee Name is required." ControlToValidate="txtEmployee_Name" CssClass="validation"
-                    ID="rfvEmployee_Name" SetFocusOnError="true" runat="server" Display="Dynamic" />
+               <input type="text" id="txtEmployee_Name" name="txtEmployee_Name" autocomplete="off" />
+
+                <span id="errorEmployee_Name" class="validation" style="color:red; display:none;">
+  Employee Name is required.
+</span>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Father Name</label>
-                <asp:TextBox runat="server" ID="txtFather_Name" autocomplete="off" />
+                <input type="text" id="txtFather_Name" name="txtFather_Name" autocomplete="off" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Date of Birth</label>
-                <asp:TextBox runat="server" ID="txtEmployee_Date_of_Birth" />
+                <input type="text" id="txtEmployee_Date_of_Birth" name="txtEmployee_Date_of_Birth" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Panel Rate</label>
-                <asp:TextBox ID="txtPanelAmount" runat="server" />
+                <input type="text" id="txtPanelAmount" name="txtPanelAmount" />
             </div>
         </div>
         <br />
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Patient type</label>
-                <asp:DropDownList ID="ddlPatientType" runat="server">
-                </asp:DropDownList>
+                <select id="ddlPatientType" name="ddlPatientType">
+                  <!-- Add <option> elements here -->
+                </select>
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Department *</label>
-                <asp:DropDownList runat="server" ID="ddlDepartment" AppendDataBoundItems="true" onchange="Chk_SubDepartment_Info()">
-                </asp:DropDownList>
-                <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Always">
-                    <ContentTemplate>
-                        <asp:Button ID="btnGet_SubDepartment" Style="display: none;" Text="" runat="server" OnClick="btnGet_SubDepartment_Click" CausesValidation="false" />
-                    </ContentTemplate>
-                </asp:UpdatePanel>
+                <select id="ddlDepartment" name="ddlDepartment" >
+                  <!-- Add <option> elements here -->
+                </select>
+
+                
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Designation</label>
-                <asp:DropDownList runat="server" ID="ddlDesignation" AppendDataBoundItems="true">
-                </asp:DropDownList>
+                <select id="ddlDesignation" name="ddlDesignation">
+                  <!-- Add <option> elements here -->
+                </select>
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Mobile No</label>
-                <asp:UpdatePanel runat="server" TabIndex="2" ID="UpdatePanel13">
-                    <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
-                    </Triggers>
-                </asp:UpdatePanel>
-                <asp:TextBox runat="server" ID="txtEmployee_Phone2" MaxLength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off" />
+                
+                <input
+                  type="text"
+                  id="txtEmployee_Phone2"
+                  name="txtEmployee_Phone2"
+                  maxlength="11"
+                  autocomplete="off"
+                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Home Phone</label>
-                <asp:TextBox runat="server" ID="txtEmployee_Phone1" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" MaxLength="11" autocomplete="off" />
+                <input
+                  type="text"
+                  id="txtEmployee_Phone1"
+                  name="txtEmployee_Phone1"
+                  maxlength="11"
+                  autocomplete="off"
+                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Email</label>
-                <asp:TextBox ID="txtEmployee_Email" runat="server" autocomplete="off" />
+                <input type="text" id="txtEmployee_Email" name="txtEmployee_Email" autocomplete="off" />
+
             </div>
         </div>
         <br />
@@ -256,126 +529,166 @@
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Patient Time</label>
-                <asp:TextBox ID="txtPatient_Time" runat="server" />
+                <input type="text" id="txtPatient_Time" name="txtPatient_Time" />
+
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
                 <label>Time In</label>
-                <asp:TextBox ID="TxtTime_In" runat="server" />
+                <input type="text" id="TxtTime_In" name="TxtTime_In" />
+
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
                 <label>Time Out</label>
-                <asp:TextBox ID="TxtTime_Out" runat="server" />
+                <input type="text" id="TxtTime_Out" name="TxtTime_Out" />
+
 
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>NTN No.</label>
-                <asp:TextBox runat="server" ID="txtEmployee_NTN_No" autocomplete="off" />
+                <input type="text" id="txtEmployee_NTN_No" name="txtEmployee_NTN_No" autocomplete="off" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Room #</label>
-                <asp:DropDownList ID="ddlRoom" runat="server">
-                </asp:DropDownList>
+                <select id="ddlRoom" name="ddlRoom">
+                  <!-- Add your <option> elements here -->
+                </select>
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Date of Joining</label>
-                <asp:TextBox runat="server" ID="txtEmployee_DOJ" />
+                <input type="text" id="txtEmployee_DOJ" name="txtEmployee_DOJ" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Resign Date</label>
-                <asp:TextBox ID="txtEmployee_Resign" runat="server" autocomplete="off" />
+                <input type="text" id="txtEmployee_Resign" name="txtEmployee_Resign" autocomplete="off" />
+
             </div>
         </div>
         <br />
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Floor #</label>
-                <asp:DropDownList ID="ddlFloor" runat="server">
-                </asp:DropDownList>
+               <select id="ddlFloor" name="ddlFloor">
+                  <!-- Add your <option> elements here -->
+                </select>
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Doctor Share</label>
-                <asp:TextBox runat="server" ID="txtDoctorShare" autocomplete="off" />
+                <input type="text" id="txtDoctorShare" name="txtDoctorShare" autocomplete="off" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Hospital Share</label>
-                <asp:TextBox runat="server" ID="txtHospital_Share" />
+                <input type="text" id="txtHospital_Share" name="txtHospital_Share" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Extension No</label>
-                <asp:TextBox ID="Ext_txt" runat="server" />
+                <input type="text" id="Ext_txt" name="Ext_txt" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Gross Pay</label>
-                <asp:TextBox ID="txtGrossPay" runat="server" autocomplete="off" />
+                <input type="text" id="txtGrossPay" name="txtGrossPay" autocomplete="off" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Consultant Charges</label>
-                <asp:TextBox ID="txtConsultant_Charges" ReadOnly="true" runat="server" autocomplete="off" />
+                <input type="text" id="txtConsultant_Charges" name="txtConsultant_Charges" readonly autocomplete="off" />
+
             </div>
         </div>
         <br />
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>GL Account</label>
-                <asp:TextBox runat="server" ReadOnly="true" ID="txtAccount_Code_Name" />
-                <asp:HiddenField runat="server" ID="hdfAccount_Name" />
-                <asp:HiddenField ID="hdfAccount_Code" runat="server" />
-                <asp:HiddenField ID="hdfParent_Code" runat="server" />
-                <asp:HiddenField ID="hdfAccount_Serial" runat="server" />
-                <asp:HiddenField ID="hdfLevel" runat="server" />
-                <asp:HiddenField ID="hdfAccount_ID" runat="server" />
-                <asp:HiddenField ID="hdfAccountExists" runat="server" />
+                <input type="text" id="txtAccount_Code_Name" name="txtAccount_Code_Name" readonly />
+
+                <input type="hidden" id="hdfAccount_Name" name="hdfAccount_Name" />
+                <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
+                <input type="hidden" id="hdfParent_Code" name="hdfParent_Code" />
+                <input type="hidden" id="hdfAccount_Serial" name="hdfAccount_Serial" />
+                <input type="hidden" id="hdfLevel" name="hdfLevel" />
+                <input type="hidden" id="hdfAccount_ID" name="hdfAccount_ID" />
+                <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Building</label>
-                <asp:DropDownList ID="ddlDoctorBuilding" name="ddlDoctorBuilding" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                <select id="ddlDoctorBuilding" name="ddlDoctorBuilding">
+                  <!-- Add your <option> elements here -->
+                </select>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Address</label>
-                <asp:TextBox runat="server" ID="txtEmployee_Address" TextMode="MultiLine" Style="width: 100%; height: 34px !important; border-radius: 5px !important" />
+                <textarea
+                  id="txtEmployee_Address"
+                  name="txtEmployee_Address"
+                  rows="1"
+                  cols="50"
+                  style="width: 100%; height: 34px !important; border-radius: 5px !important;">
+                </textarea>
+
+
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Remarks</label>
-                <asp:TextBox runat="server" ID="txtRemarks" TextMode="MultiLine" Style="width: 100%; height: 34px !important; border-bottom-right-radius: 5px!important" />
+                <textarea
+                  id="txtRemarks"
+                  name="txtRemarks"
+                  rows="1"
+                  cols="50"
+                  style="width: 100%; height: 34px !important; border-bottom-right-radius: 5px !important;">
+                </textarea>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Users</label>
-                <asp:DropDownList ID="ddluser" name="ddluser" AppendDataBoundItems="true" runat="server"></asp:DropDownList>
+                <select id="ddluser" name="ddluser">
+                  <!-- Add your <option> elements here -->
+                </select>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="row">
-                    <asp:Label ID="Off_txt" runat="server" Text="Off Days"></asp:Label>
+                <label id="Off_txt" for="">
+                  Off Days
+                </label>
                 </div>
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         Sun 
-                <asp:CheckBox ID="sun" runat="server" />
+                        <input type="checkbox" id="sun" name="sun" />
+
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         Mon 
-                <asp:CheckBox ID="mon" runat="server" />
+                <input type="checkbox" id="mon" name="mon" />
+
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         Tue 
-                      <asp:CheckBox ID="tue" runat="server" />
+                      <input type="checkbox" id="tue" name="mon" />
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         Wed 
-                            <asp:CheckBox ID="wed" runat="server" />
+                            <input type="checkbox" id="wed" name="mon" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         Thur 
-                         <asp:CheckBox ID="thur" runat="server" />
+                         <input type="checkbox" id="thur" name="mon" />
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         Fri 
-                <asp:CheckBox ID="fri" runat="server" />
+                <input type="checkbox" id="fri" name="mon" />
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         Sat 
-                        <asp:CheckBox ID="sat" runat="server" />
+                        <input type="checkbox" id="sat" name="mon" />
                     </div>
                 </div>
             </div>
@@ -385,15 +698,18 @@
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Dependent</label>
-                 <asp:TextBox runat="server" ID="txtdependent"   />
+                 <input type="text" id="txtdependent" name="txtdependent" />
+
             </div>
                   <div class="col-lg-2 col-md-4 col-sm-6 custom-label-checkbox">
-                <asp:Label ID="LblIsDoctor" runat="server" Text="Doctor"></asp:Label>
-                <asp:CheckBox ID="ChkDoctor" style="width: 58px !important;" runat="server" />
+                <label id="LblIsDoctor" for="ChkDoctor">Doctor</label>
+                <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
+
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6 custom-label-checkbox">
-                <asp:Label ID="LblIsVisting" runat="server" Text="Visting"></asp:Label>
-                <asp:CheckBox ID="ChkVisting" runat="server" />
+                <label id="LblIsVisting" for="ChkVisting">Visting</label>
+                <input type="checkbox" id="ChkVisting" name="ChkVisting" class="chkwdth" />
+
             </div>
 
 
@@ -401,39 +717,36 @@
             </div>
         </div>
 
-        <div class="row">
-             <div class="col-lg-8">
+    <div class="row">
+        <div class="col-lg-8 col-md-9 col-sm-6">
             <div class="row">
-                  <div class="col-lg-2 col-md-4 col-sm-6">
-                <asp:Button Text="Save" runat="server" ID="btnSave" OnClick="btnSave_Click" UseSubmitBehavior="false" Style="display: none;" />
-                <input type="hidden" name="DataJSON" />
-                <input type="hidden" name="CustomerJSON" />
-                <input type="button" class="btn btn-primry" id="btnSaveH" value="Save" />
-            </div>
-                 <div class="col-lg-2 col-md-4 col-sm-6">
-                <asp:Button Text="View" class="btn-gray" runat="server" ID="btnBack" CausesValidation="false" PostBackUrl="~/Modules/Administrator/EmployeeView.aspx" />
-                &nbsp;&nbsp;
-            </div>
-          
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-primry" onclick="saveData()" id="btnSave" value="Save" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 ">
+                    <input type="button" class="btn btn-gray" onclick="redirect()" id="btnBack" value="View" />
+                </div>
             </div>
         </div>
-           
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-0 col-md-4 col-sm-6" style="visibility: hidden">
+            <label>Govt.Hospital</label>
+            <input type="text" id="txtGovt_Hospital" name="txtGovt_Hospital" />
+
         </div>
-        <div class="row">
-            <div class="col-lg-0 col-md-4 col-sm-6" style="visibility: hidden">
-                <label>Govt.Hospital</label>
-                <asp:TextBox ID="txtGovt_Hospital" runat="server" />
-            </div>
-        </div>
-        <asp:RequiredFieldValidator ErrorMessage="Department is required." ControlToValidate="ddlDepartment"
-            ID="rfvDepartment" SetFocusOnError="true" InitialValue="0" runat="server" />
-    </form>
+    </div>
+        <span id="errorDepartment" style="color:red; display:none;">Department is required.</span>
+    
     <table style="padding: 20px; width: 1130px; height: 210px;">
         <tr>
             <td colspan="6">
-                <asp:Label ID="lblMessage" Text="" runat="server" />
+               <span id="lblMessage"></span>
+
             </td>
         </tr>
     </table>
-    <asp:HiddenField ID="hdnEmp" runat="server" />
+    <input type="hidden" id="hdnEmp" name="hdnEmp" />
 </asp:Content>

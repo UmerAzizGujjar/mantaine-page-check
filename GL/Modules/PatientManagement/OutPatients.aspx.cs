@@ -2020,13 +2020,13 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            // Start the base query for today's patients
             var data = (from p in db.Patients
                         join u in db.aspnet_Users
                         on p.Created_By equals u.UserId
                         where Convert.ToDateTime(p.Created_Time).Month == DateTime.Now.Month &&
                               Convert.ToDateTime(p.Created_Time).Year == DateTime.Now.Year &&
                               Convert.ToDateTime(p.Created_Time).Day == DateTime.Now.Day
+
                         select new
                         {
                             p.Patient_ID,
@@ -2057,25 +2057,21 @@ namespace PMS
                                         select t).Count() + 1
                         });
 
-            // Case 1: If filterDepartment is passed and doc_name is null or empty
             if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "0" && doc_name=="0")
             {
                 data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment));
             }
 
-            // Case 2: If both filterDepartment and doc_name are passed
             else if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "0" && !string.IsNullOrEmpty(doc_name))
             {
                 data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment) &&  p.Doctor_ID == doc_name);
             }
 
-            // Case 3: If only doc_name is passed
             else if (!string.IsNullOrEmpty(doc_name) && (string.IsNullOrEmpty(filterDepartment) || filterDepartment == "0"))
             {
                 data = data.Where(p => p.Doctor_ID == doc_name);
             }
 
-            // Convert the result to a list and serialize it
             var result = data.ToList();
             return (new JavaScriptSerializer()).Serialize(result);
         }
