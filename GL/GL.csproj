@@ -3335,6 +3335,7 @@
     <Content Include="wwwroot\ASsiratTheme\js\select2.min.js" />
     <Content Include="wwwroot\ASsiratTheme\js\spin.js" />
     <Content Include="wwwroot\ASsiratTheme\js\spinbox.min.js" />
+    <Content Include="wwwroot\ASsiratTheme\js\swalalert.js" />
     <Content Include="wwwroot\ASsiratTheme\js\sweetalert.min.js" />
     <Content Include="wwwroot\ASsiratTheme\js\tree.min.js" />
     <Content Include="wwwroot\ASsiratTheme\js\wizard.min.js" />
@@ -6756,6 +6757,7 @@
     <Content Include="wwwroot\IITH_Theme\js\select2.min.js" />
     <Content Include="wwwroot\IITH_Theme\js\spin.js" />
     <Content Include="wwwroot\IITH_Theme\js\spinbox.min.js" />
+    <Content Include="wwwroot\IITH_Theme\js\swalalert.js" />
     <Content Include="wwwroot\IITH_Theme\js\sweetalert.min.js" />
     <Content Include="wwwroot\IITH_Theme\js\tree.min.js" />
     <Content Include="wwwroot\IITH_Theme\js\wizard.min.js" />
@@ -10290,6 +10292,7 @@
     <Content Include="wwwroot\Pakred\js\select2.min.js" />
     <Content Include="wwwroot\Pakred\js\spin.js" />
     <Content Include="wwwroot\Pakred\js\spinbox.min.js" />
+    <Content Include="wwwroot\Pakred\js\swalalert.js" />
     <Content Include="wwwroot\Pakred\js\sweetalert.min.js" />
     <Content Include="wwwroot\Pakred\js\tree.min.js" />
     <Content Include="wwwroot\Pakred\js\wizard.min.js" />
@@ -13502,6 +13505,7 @@
     <Content Include="wwwroot\Tibbit_theme\js\select2.min.js" />
     <Content Include="wwwroot\Tibbit_theme\js\spin.js" />
     <Content Include="wwwroot\Tibbit_theme\js\spinbox.min.js" />
+    <Content Include="wwwroot\Tibbit_theme\js\swalalert.js" />
     <Content Include="wwwroot\Tibbit_theme\js\sweetalert.min.js" />
     <Content Include="wwwroot\Tibbit_theme\js\tree.min.js" />
     <Content Include="wwwroot\Tibbit_theme\js\wizard.min.js" />

@@ -782,7 +782,9 @@
             <script src="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/js/bootstrap.min.js") %>" type="text/javascript"></script>
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/js/ace-elements.min.js") %>" type="text/javascript"></script>
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/js/ace.min.js") %>" type="text/javascript"></script>
-    <script src="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/js/ace.min.js") %>" type="text/javascript"></script>
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/js/swalalert.js") %>" type="text/javascript"></script>
+    
+
     <script type="text/javascript">
 
 </script>
