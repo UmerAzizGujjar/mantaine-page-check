@@ -759,24 +759,24 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["Patient_ID"] != null)
-                        sqlQuery = "Select  top 1 Patient_ID,Patient_No,Full_Name from Patients Where Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' and IsRevisit='False'";
+                        sqlQuery = "Select  top 1 Patient_ID,Opd_No,Full_Name from Patients Where Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' and IsRevisit='False'";
                     else
-                        sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where IsRevisit='False'"; string result = "";
+                        sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Opd_No,Full_Name from Patients p where IsRevisit='False'"; string result = "";
 
                     DataTable dt = DBClass.getDataTable(sqlQuery);
                     // It is for the patients coming from patient waiting select list.
                     if (dt.Rows.Count == 0)
                     {
                         if (Request.QueryString["Patient_ID"] != null)
-                            sqlQuery = "Select  top 1 Patient_ID,Patient_No,Full_Name from Patients Where Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' ";
+                            sqlQuery = "Select  top 1 Patient_ID, Opd_No,Full_Name from Patients Where Patient_ID = '" + Request.QueryString["Patient_ID"].ToString() + "' ";
                         else
-                            sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where IsRevisit='False'";
+                            sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Opd_No,Full_Name from Patients p where IsRevisit='False'";
                         dt = DBClass.getDataTable(sqlQuery);
                     }
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
+                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Opd_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
                 }

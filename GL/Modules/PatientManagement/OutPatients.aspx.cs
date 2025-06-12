@@ -2046,7 +2046,8 @@ namespace PMS
                         on p.Created_By equals u.UserId
                         where Convert.ToDateTime(p.Created_Time).Month == DateTime.Now.Month &&
                               Convert.ToDateTime(p.Created_Time).Year == DateTime.Now.Year &&
-                              Convert.ToDateTime(p.Created_Time).Day == DateTime.Now.Day
+                              Convert.ToDateTime(p.Created_Time).Day == DateTime.Now.Day &&
+                              p.Patient_Main_Category == "010"
 
                         select new
                         {
@@ -5301,7 +5302,7 @@ on d.Doctor_Id equals hr.Emp_ID
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from hr in db.HR_Employees
-                              where hr.IsDoctor == true
+                              where hr.IsDoctor == true && hr.userid == Convert.ToString(AppConfig.UserID)
 
                               select new
                               {
@@ -5312,6 +5313,7 @@ on d.Doctor_Id equals hr.Emp_ID
             }
             return data;
         }
+
         //[WebMethod]
         //public static string GetfilterClinic()
         //{
