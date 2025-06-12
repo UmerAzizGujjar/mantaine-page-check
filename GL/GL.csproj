@@ -197,6 +197,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Modules\Accounts\ChangePasswordNew.aspx" />
     <Content Include="Modules\Accounts\RoleAssignment.aspx" />
     <Content Include="Modules\Administrator\AddDepartment_Packages.aspx" />
     <Content Include="Modules\Administrator\AddDoctorAgreement.aspx" />
@@ -589,6 +590,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\AssetCategoryCss.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\BloodBank.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\ComparativeStatement.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Datavalue.css" />
@@ -4009,6 +4011,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\AssetCategoryCss.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\BloodBank.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\ComparativeStatement.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Datavalue.css" />
@@ -7544,6 +7547,7 @@
     <Content Include="wwwroot\Pakred\css\colorbox.min.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\AddNewLabTest.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\AddpurchaseInvoice.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Advance.css" />
@@ -10724,6 +10728,7 @@
     <Content Include="wwwroot\Pakred\Scripts\gridmvc.min.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.css" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.js" />
     <Content Include="wwwroot\Tibbit_theme\css\ace-ie.min.css" />
@@ -10754,6 +10759,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\AssetCategoryCss.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\BloodBank.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\ComparativeStatement.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Datavalue.css" />
@@ -18436,6 +18442,13 @@
     <Content Include="wwwroot\Tibbit_theme\Styles\font-awesome\scss\_variables.scss" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\Accounts\ChangePasswordNew.aspx.cs">
+      <DependentUpon>ChangePasswordNew.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Accounts\ChangePasswordNew.aspx.designer.cs">
+      <DependentUpon>ChangePasswordNew.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Accounts\RoleAssignment.aspx.cs">
       <DependentUpon>RoleAssignment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

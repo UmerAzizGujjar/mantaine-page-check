@@ -1,3 +1,30 @@
+.card {
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 400px;
+}
+
+    .card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+hr {
+    width: 400px;
+}
+
+.card-body {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.mybutton:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: antiquewhite;
+    transition: all 0.3s ease;
+}
 
 input[type="text"],
 input[type="Password"] {
@@ -9,8 +36,8 @@ input[type="button"], input[type="submit"] {
     font-size: 16px;
     line-height: 1.5;
     padding: 5px 10px;
-    background-color: #c11718;
-    border-color: #c11718;
+    background-color: #EFA63E;
+    border-color: #357ebd;
     color: #FDC103;
     font-weight: bold !important;
     text-align: center;
@@ -21,7 +48,7 @@ input[type="button"], input[type="submit"] {
     box-shadow: none;
     text-shadow: none;
     border: 0;
-    width: 170px;
+    width: 101px;
     height: 33px;
     cursor: pointer;
     display: inline-block;
@@ -36,11 +63,13 @@ input.passwordEntry {
     height: 36px;
 }
 
-label-field {
-    margin-left: 33%;
+.label-field {
+    margin-left: 0; /* or remove this line completely */
     margin-bottom: 8px !important;
     position: relative;
     font-family: "Open Sans", sans-serif;
+    text-align: left; /* optional: ensures text aligns left */
+    margin-left: 5%;
 }
 
 .register {
