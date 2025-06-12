@@ -93,6 +93,7 @@
             $('#ddl_colstnt').on('change', function () {
                 debugger;
                 var doctor_id = $('#ddl_colstnt').val();
+                ConfigureAvailableDates(doctor_id);
                 var aID = '<%= Request.QueryString["aID"]%>';
                 if (aID != "") {
 
@@ -300,7 +301,35 @@
         function closemodal() {
             window.location.href = "Appointment.aspx";
         }
+        function ConfigureAvailableDates(doc_id) {
+            $.ajax({
+                type: "POST",
+                url: "Appointment.aspx/GetAvailableDates",
+                data: JSON.stringify({ doc_id: doc_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var availableDates = JSON.parse(response.d);
 
+                    $("#txt_date").datepicker("destroy"); // Remove any previous config
+
+                    $("#txt_date").datepicker({
+                        dateFormat: "yy-mm-dd", // format to match your returned data
+                        beforeShowDay: function (date) {
+                            var dmy = $.datepicker.formatDate("yy-mm-dd", date);
+                            if (availableDates.indexOf(dmy) !== -1) {
+                                return [true, "available-date", "Doctor Available"];
+                            } else {
+                                return [false, "", "Doctor Not Available"];
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
+        }
         function addfunc() {
             debugger;
 

@@ -71,6 +71,27 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(data));
         }
         [WebMethod]
+        public static string GetAvailableDates(int DocID)
+        {
+            List<string> availableDates = new List<string>();
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // First get DateTime list from DB (no formatting in SQL)
+                var rawDates = (from r in db.Doctor_Rouster_Masters
+                                join d in db.Doctor_Rouster_Details
+                                on r.Rouster_id equals d.Rouster_id
+                                where r.Doctor_Id == DocID
+                                && d.Rouster_Date >= DateTime.Today
+                                select d.Rouster_Date.Value).Distinct().ToList();
+
+                // Format in C#
+                availableDates = rawDates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+            }
+
+            return new JavaScriptSerializer().Serialize(availableDates);
+        }
+        [WebMethod]
         public static string SaveMedicines(string MedicineDetails)
         {
             try

@@ -337,6 +337,37 @@
                 debugger;
                 $('#ctl00_MainContent_txtDesignation').val(doctor.Emp_designatin);
             });
+            ConfigureAvailableDates(DocID);
+        }
+
+        function ConfigureAvailableDates(DocID) {
+            $.ajax({
+                type: "POST",
+                url: "OutPatients.aspx/GetAvailableDates",
+                data: JSON.stringify({ DocID: DocID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var availableDates = JSON.parse(response.d);
+
+                    $("#ctl00_MainContent_FollowNoDate").datepicker("destroy"); // Remove any previous config
+
+                    $("#ctl00_MainContent_FollowNoDate").datepicker({
+                        dateFormat: "yy-mm-dd", // format to match your returned data
+                        beforeShowDay: function (date) {
+                            var dmy = $.datepicker.formatDate("yy-mm-dd", date);
+                            if (availableDates.indexOf(dmy) !== -1) {
+                                return [true, "available-date", "Doctor Available"];
+                            } else {
+                                return [false, "", "Doctor Not Available"];
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
         }
         function check() {
             debugger;
