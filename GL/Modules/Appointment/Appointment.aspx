@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/StandardTheme/css/CustomCss/Appointment.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     
     
     <script type="text/javascript">
@@ -348,7 +349,19 @@
                 AddNewPatient();
             }
             else {
-                alert("Please Enter Complete Mobile Number First");
+                Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Please Enter Complete Mobile Number First',
+        showConfirmButton: false,
+        timer: 2000,
+        customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+        }
+        });
+               
                 return;
             }
 
@@ -832,15 +845,40 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
+                        Swal.fire({
+    icon: 'success',
+    title: 'Success!',
+    text: 'Appointment cancelled successfully',
+    showConfirmButton: false,
+    timer: 2500,
+    customClass: {
+        popup: 'swal-big-popup',
+        title: 'swal-big-title',
+        htmlContainer: 'swal-big-text'
+    }
+});
 
-                        alert('Appointment canceled successfully');
+                        
 
                         location.reload();
 
                     },
                     error: function (xhr, status, error) {
+                        Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to cancel the appointment. Please try again.',
+        showConfirmButton: false,
+        timer: 2000,
+        customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+        }
+        });
 
-                        alert('Failed to cancel the appointment. Please try again.');
+
+                       
                     }
                 });
             }
@@ -1083,8 +1121,20 @@
 
             if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || houseno == "" || city_val == "0" || area_val == "0")) {
 
+                Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Please Enter compulsory Fields',
+        showConfirmButton: false,
+        timer: 2000,
+        customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+        }
+        });
 
-                alert("Please Enter compulsory Fields");
+                
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
                 // }
@@ -1123,8 +1173,20 @@
                 success: function (data) {
                     debugger;
                     var ini_patientID = data.d;
+                    Swal.fire({
+    icon: 'success',
+    title: 'Success!',
+    text: 'Your Record Save and Load Successfully.',
+    showConfirmButton: false,
+    timer: 2500,
+    customClass: {
+        popup: 'swal-big-popup',
+        title: 'swal-big-title',
+        htmlContainer: 'swal-big-text'
+    }
+});
 
-                    alert('Your Record Save and Load Successfully');
+                   
                     $('#PatientModel').modal('hide');
 
                     get_pat_initial_info(ini_patientID);
@@ -1309,15 +1371,53 @@
             debugger;
             var subdepartment = $('#ddlsubdepartment').val();
             if (subdepartment == '' || subdepartment == '0' || subdepartment == null) {
-                alert("Please select Sub departmet");
+                
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Mandatory Fields.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                        });
+
                 return true;
             }
             if (txt_time == '' || txt_time == undefined) {
-                alert('Please Select Slot')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Time Slot',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                
                 return
             }
+
             if (txt_time_24hr == '' || txt_time_24hr == undefined) {
-                alert('Roaster Not Defined')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Roaster Not Defined',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                
                 return
             }
             var aptid = '<%= Request.QueryString["aID"]%>';
@@ -1326,8 +1426,20 @@
                 debugger;
 
                 if (res === "Doctor not Available") {
+                    Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Doctor is not available, Please choose some other Day and time',
+        showConfirmButton: false,
+        timer: 2000,
+        customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+        }
+        });
 
-                    alert("Doctor is not available, Please choose some other Day and time");
+
                     return false;
                 }
 
@@ -1416,7 +1528,19 @@
                         var dayNameShort = dateObject.toLocaleDateString('en-US', options);
 
                         if (dataaa.Off_Days_Names.includes(dayNameShort)) {
-                            alert('Doctor Not Available Today');
+                            
+                            Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Doctor Not Available Today',
+        showConfirmButton: false,
+        timer: 2000,
+        customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+        }
+        });
                             callback('OffDay');
                         } else {
                             callback('OnDay');

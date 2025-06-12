@@ -4,6 +4,7 @@
 
     <script type="text/javascript" src="../../wwwroot/StandardTheme/CustomJs/OPD.js"></script>
     <link href="../../wwwroot/StandardTheme/css/CustomCss/OPD.css" rel="stylesheet" />
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             DisableCardPrint();
@@ -73,7 +74,18 @@
                 debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
-                    alert(message[0].Message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: message[0].Message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     location.reload();
                 }
             });
@@ -84,11 +96,34 @@
                 var Pat_idforCard = $('#hdn_opdId').val();
                 PageMethods.CardFee(Pat_idforCard, function (Tests) {
                     debugger;
-                    alert('Card Has Been Issued');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Card Has Been Issued.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 });
             }
             else {
-                alert('Please Select Issue Card CheckBox')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Issue Card CheckBox',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             setTimeout(function () {
                 debugger;

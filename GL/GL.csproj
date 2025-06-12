@@ -622,6 +622,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\TestDefinition.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Toaster.css" />
@@ -4044,6 +4045,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\TestDefinition.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Toaster.css" />
@@ -7586,6 +7588,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Student.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\TestDefinition.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Toaster.css" />
@@ -10732,7 +10735,7 @@
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
-    <Content Include="wwwroot\StandardTheme\css\swalalert.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\js\swalalert.js" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.css" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.js" />
@@ -10795,6 +10798,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\TestDefinition.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Toaster.css" />

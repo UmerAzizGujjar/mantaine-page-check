@@ -368,7 +368,18 @@ var appointment_id;
 var reg_ids;
 function AddDetail(id, reg_id) {
     debugger;
-    alert('Patient Proceed');
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Patient Proceed',
+        showConfirmButton: false,
+        timer: 2500,
+        customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+        }
+    });
     appointment_id = id;
     reg_ids = reg_id;
     $('#CloseSearchModel_apt').click();
@@ -601,7 +612,19 @@ function getGeneralFee() {
 
         },
         error: function (response) {
-            alert("Error: " + response.responseText);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: response.responseText,
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+
             console.error("AJAX Error: ", response);
         }
     });
@@ -893,7 +916,18 @@ function SavePatient() {
     var Province = $('#ddl_Province :selected').val();
 
     if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || houseno == "" || city_val == "0" || area_val == "0")) {
-        alert("Please Enter compulsory Fields");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please Enter compulsory Fields',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
         $('#SavePatient_Data').attr('disabled', false);
         return;
     }
@@ -931,12 +965,35 @@ function SavePatient() {
         success: function (response) {
             debugger;
             var ini_patientID = response.d;
-            alert('Your Record Saved Successfully');
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Your Record Saved Successfully.',
+                showConfirmButton: false,
+                timer: 2500,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             get_pat_initial_info(ini_patientID);
         },
         error: function (xhr, status, error) {
             console.error("Error: ", error);
-            alert("Error while saving data. Please try again.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Error while saving data. Please try again',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
         }
     });
 }
@@ -977,71 +1034,218 @@ function SaveData() {
         Fees = 0;
     }
 
+    if (!pat_no || pat_no === "0") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select a Patient.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
+    }
     if (!pat_category || pat_category === "0") {
-        alert("Please select a patient category.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select a patient category.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
         return;
     }
 
     if (pat_category === "01" && (!Department || Department === "0")) {
-        alert("Please select a department for the selected patient category.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select a department for the selected patient category.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
         return;
     }
 
     if (pat_category === "02") {
         if (!Department || Department === "0") {
-            alert("Please select a department for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a department for the selected patient category.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
 
         if (!doctor || doctor === "0") {
-            alert("Please select a doctor for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a doctor for the selected patient category',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
     }
 
     if (pat_category === "03") {
         if (!doctor || doctor === "0") {
-            alert("Please select a doctor for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a doctor for the selected patient category.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
 
         if (!panel || panel === "0") {
-            alert("Please select a panel for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a panel for the selected patient category.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
     }
 
     if (pat_category === "04") {
         if (!Department || Department === "0") {
-            alert("Please select a department for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a department for the selected patient category.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
 
         if (!doctor || doctor === "0") {
-            alert("Please select a doctor for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a doctor for the selected patient category.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
     }
 
     if (pat_category === "05") {
         if (!Department || Department === "0") {
-            alert("Please select a department for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a department for the selected patient category.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
 
         if (!doctor || doctor === "0") {
-            alert("Please select a doctor for the selected patient category.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a doctor for the selected patient category.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             return;
         }
     }
 
     if (!Cashier || Cashier === "0") {
-        alert("Please select a Cashier.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select a Cashier.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
         return;
     }
 
     if (!accountid || accountid === "0") {
-        alert("Please select a Cash In Hand.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select a Cash In Hand.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
         return;
     }
 
@@ -1089,7 +1293,18 @@ function SaveData() {
         success: function (response) {
             debugger;
             var patientID = response.d;
-            alert('Your Record Saved Successfully');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Your Record Saved Successfully',
+                showConfirmButton: false,
+                timer: 2500,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
             window.location.href = "OPDView.aspx"
@@ -1097,7 +1312,18 @@ function SaveData() {
         },
         error: function (xhr, status, error) {
             console.error("Error: ", error);
-            alert("Error while saving data. Please try again.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Error while saving data. Please try again.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
         }
     });
 }
