@@ -7,11 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+
 namespace PMS.Modules.Accounts
 {
-
-
-    public partial class ChangePasswordNew
+    public partial class PasswordChange
     {
     }
 }

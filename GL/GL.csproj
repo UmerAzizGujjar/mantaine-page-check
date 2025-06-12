@@ -197,7 +197,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Modules\Accounts\ChangePasswordNew.aspx" />
+    <Content Include="Modules\Accounts\PasswordChange.aspx" />
     <Content Include="Modules\Accounts\RoleAssignment.aspx" />
     <Content Include="Modules\Administrator\AddDepartment_Packages.aspx" />
     <Content Include="Modules\Administrator\AddDoctorAgreement.aspx" />
@@ -18442,12 +18442,12 @@
     <Content Include="wwwroot\Tibbit_theme\Styles\font-awesome\scss\_variables.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\Accounts\ChangePasswordNew.aspx.cs">
-      <DependentUpon>ChangePasswordNew.aspx</DependentUpon>
+    <Compile Include="Modules\Accounts\PasswordChange.aspx.cs">
+      <DependentUpon>PasswordChange.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Modules\Accounts\ChangePasswordNew.aspx.designer.cs">
-      <DependentUpon>ChangePasswordNew.aspx</DependentUpon>
+    <Compile Include="Modules\Accounts\PasswordChange.aspx.designer.cs">
+      <DependentUpon>PasswordChange.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Accounts\RoleAssignment.aspx.cs">
       <DependentUpon>RoleAssignment.aspx</DependentUpon>
