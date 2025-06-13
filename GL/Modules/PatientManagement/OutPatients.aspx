@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <link href="../../wwwroot/StandardTheme/css/CustomCss/Outpatient.css" rel="stylesheet" />
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
 
     <script type="text/javascript">
         window.addEventListener('load', function () {
@@ -266,7 +267,18 @@
 
                 },
                 failure: function (response) {
-                    alert(response.d);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: response.d,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 }
             });
         }
@@ -1595,7 +1607,18 @@
                 processData: false,
                 contentType: false,
                 error: function () {
-                    alert("Something went wrong!");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 }
             });
         }
@@ -2497,7 +2520,18 @@
 
 
                 if (symp === "") {
-                    alert('Please Fill Symptom First')
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Fill Symptom First',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 }
                 else {
                     $('#tblSymtoms tbody').append(html);
@@ -2507,7 +2541,20 @@
                 $('#txtDuration').val("");
                 $('#ddlDaysMonthsYears').val("001");
                 $('#txtRemarks').val("");
-            } else { alert('Symptom already added'); }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Symptom already added',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            }
         }
 
         function Delete_Symtom(row) {
@@ -3497,11 +3544,33 @@
                 }
 
                 if ($('#txtMedicen').val() != '' && $('#txtPharmacyItem').val() != '') {
-                    alert("Please Eneter One Name")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter One Name',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 if ($('#txtMedicen').val() == '' && $('#txtPharmacyItem').val() == '') {
-                    alert("Please Eneter Name")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter Name',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 var UnListedMed = $('#txtMedicen').val();
@@ -3515,12 +3584,34 @@
 
                 var Dose = $('#txtDosage').val();
                 if (Dose == "") {
-                    alert("Please Select Dose ")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Dose',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 var Frequency = $('#txtRecomended_Dosage').val();
                 if (Frequency == "" || Frequency == "0" || Frequency == null) {
-                    alert("Please Select Frequency ")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Frequency',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 var DosageFrom = $('#ddlDosage_From').val();
@@ -3532,7 +3623,18 @@
                 }
                 var Duration = $('#txtInjection').val();
                 if (Duration == "") {
-                    alert("Please Select Duration ")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Duration',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
@@ -3620,7 +3722,18 @@
 
                 var test_array = $('.tests-table').find('input[name=testID][value="' + Procedure + '"]');
                 if (test_array.length > 0) {
-                    alert('This Procedure already added!');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This Procedure already added!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 } else {
                     $('.tests-table').append(row);
 
@@ -3669,7 +3782,18 @@
 
 
             if (isNaN(height_in_cm) || isNaN(weight_kg)) {
-                alert("Please enter valid height and weight.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter valid height and weight.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return;
             }
 
@@ -3857,7 +3981,18 @@
                 }
             });
             if (exists) {
-                alert('Item already Exists in the table.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Item already Exists in the table.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return;
             }
             var length = $("#tblServices tr").length;
@@ -4452,7 +4587,18 @@
 
             var syptum = $('#txtNewSymptom').val();
             PageMethods.SyptumNew(syptum, On_Sypyum_Success);
-            alert("New Symtom Save Successfully ");
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'New Symtom Save Successfully',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
         }
         function new_value() {
 
@@ -4989,12 +5135,41 @@
                     var error = response._errorObject.Message;
                     console.log(error);
                     if (error != "") {
-                        alert(response._errorObject.Message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response._errorObject.Message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         return false;
                     }
+                    
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Record has been saved successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                    
                     debugger;
                     sendFile(response);
-                    window.location = "OutPatients.aspx?ID=" + response;
+                    setTimeout(function () {
+                        window.location = "OutPatients.aspx?ID=" + response;
+                    }, 2500);
+
+                   
                     $('#btnSave').val("Update");
                     $('#btnSave_Vital').text('Update Vital');
                 });
