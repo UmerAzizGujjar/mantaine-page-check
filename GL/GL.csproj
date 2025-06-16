@@ -9989,6 +9989,8 @@
     <Content Include="wwwroot\Pakred\images\HMIS_Icons\vplogopage.png" />
     <Content Include="wwwroot\Pakred\images\HMIS_Icons\Ward_Allotment.jpg" />
     <Content Include="wwwroot\Pakred\images\HMIS_Icons\Ward_Definition.jpg" />
+    <Content Include="wwwroot\Pakred\images\Pakred_icons\LoginBackground.png" />
+    <Content Include="wwwroot\Pakred\images\Pakred_icons\logo.jpg" />
     <Content Include="wwwroot\Pakred\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\Pakred\images\StudentImages\1.jpg" />
     <Content Include="wwwroot\Pakred\images\StudentImages\1.png" />

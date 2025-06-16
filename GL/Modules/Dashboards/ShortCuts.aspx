@@ -25,8 +25,8 @@
         <div class="row text-center">
          
               <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
-              <a class="btn btn-coco radius-4 shortcut" href="../../../../Modules/Dashboards/BillingSection.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="../../../../wwwroot/StandardTheme/images/dashboard_Icons/cash-machine.png" alt="Billing" />
+              <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/BillingSection.aspx" style="width: 60%;">
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/cash-machine.png" alt="Billing" />
                     <h5 class="cocotxt">Billing</h5>
                 </a>
 
