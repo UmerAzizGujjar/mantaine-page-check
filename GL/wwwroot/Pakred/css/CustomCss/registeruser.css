@@ -4,7 +4,7 @@
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
-    width: 400px;
+    width: 460px;
 }
 
     .card:hover {
@@ -26,16 +26,22 @@ hr {
     transition: all 0.3s ease;
 }
 
+input[type="checkbox"] {
+    margin-bottom: 9px !important;
+}
+
 input[type="text"],
 input[type="Password"] {
     margin-bottom: 8px !important;
 }
 
 input[type="button"], input[type="submit"] {
+    position: relative;
+    width: 90% !important;
+    height: 33px;
     border-radius: 3px;
     font-size: 16px;
     line-height: 1.5;
-    padding: 5px 10px;
     background-color: #438eb9;
     border-color: #357ebd;
     color: #7ea9c2;
@@ -48,8 +54,6 @@ input[type="button"], input[type="submit"] {
     box-shadow: none;
     text-shadow: none;
     border: 0;
-    width: 101px;
-    height: 33px;
     cursor: pointer;
     display: inline-block;
     -moz-user-select: none;
@@ -60,7 +64,7 @@ input.textEntry,
 input.passwordEntry {
     position: relative;
     width: 90% !important;
-    height: 36px;
+    height: 35px;
 }
 
 .label-field {
