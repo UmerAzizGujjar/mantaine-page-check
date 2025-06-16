@@ -6,8 +6,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Security;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web;
 
 namespace PMS.Account
 {
@@ -16,102 +18,108 @@ namespace PMS.Account
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RegisterUser.ContinueDestinationPageUrl = Request.QueryString["ReturnUrl"];
         }
-
-        protected void RegisterUser_CreatedUser(object sender, EventArgs e)
+        [WebMethod]
+        public static string Create_User(DataFromFrontEnd data)
         {
-            SqlTransaction tranObj = null;
-            SqlConnection con = new SqlConnection(DBClass.ConnectionString());
-            con.Open();
-            tranObj = con.BeginTransaction();
+          
+            
             try
             {
-                CheckBox AllowUnapproveVoucher = (CheckBox)RegisterUser.CreateUserStep.ContentTemplateContainer.FindControl("AllowUnapproveVoucher");
-                CheckBox AllowPatientEdit = (CheckBox)RegisterUser.CreateUserStep.ContentTemplateContainer.FindControl("AllowPatientEdit");
-                CheckBox AllowPatientDelete = (CheckBox)RegisterUser.CreateUserStep.ContentTemplateContainer.FindControl("AllowPatientDelete");
-                CheckBox AllPatientRecords = (CheckBox)RegisterUser.CreateUserStep.ContentTemplateContainer.FindControl("AllPatientRecords");
-                CheckBox OTPUsers = (CheckBox)RegisterUser.CreateUserStep.ContentTemplateContainer.FindControl("OTPUsers");
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                //checks for duplicate
+
+                bool userExists = (from u in db.aspnet_Users
+                                   where u.LoweredUserName == data.UserName.ToLower()
+                                   select u).Any();
+                bool emailExists = (from u in db.aspnet_Memberships
+                                    where u.LoweredEmail == data.Email.ToLower()
+                                   select u).Any();
+                if (userExists)
+                {
+                    return "UserName Already Exists";
+                }
+                else if (emailExists)
+                {
+                    return "Email Already Exists";
+                }
+                aspnet_User newuser = new aspnet_User();
+                Guid userID = Guid.NewGuid();
+                var appID = (from app in db.aspnet_Applications
+                             where app.ApplicationName == "/"
+                             select app.ApplicationId).FirstOrDefault();
                 
-                string userID = DBClass.getField("SELECT UserID FROM aspnet_Users WHERE UserName = '" + RegisterUser.UserName + "'");
-                TextBox passwordTextbox = (TextBox)RegisterUser.CreateUserStep.ContentTemplateContainer.FindControl("Password");
-                string plainPassword = passwordTextbox.Text;
-                string salt = GenerateSalt();  
-                string encryptedPassword = EncryptPassword(plainPassword, salt); 
+                //Assign Values to aspnet_user table
+                newuser.ApplicationId = appID;
+                newuser.UserId = userID;
+                newuser.UserName = data.UserName;
+                newuser.LoweredUserName = data.UserName.ToLower();
+                newuser.AllowPatientDelete = data.AllowPatientDelete;
+                newuser.AllPatientRecords = data.AllPatientRecords;
+                newuser.AllowPatientEdit = data.AllowPatientEdit;
+                newuser.OTPUsers = data.OTPUsers;
+                newuser.AllowTestRate = false;
+                newuser.OpdAllow = false;
+                newuser.allow_lab = false;
+                newuser.allow_ultra = false;
+                newuser.BlockUser = false;
+                newuser.AllowBillDelete = false;
+                newuser.allowtestbox = false;
+                newuser.allow_ctscan = false;
+                newuser.allow_xray = false;
+                newuser.allow_b_bank = false;
+                newuser.AllowPharmacy = false;
+                newuser.AllowGeneralItems = false;
+                newuser.IsShowBudget = false;
+                newuser.IsInventoryUnApprove = false;
+                newuser.AllowToAccessAllTest = false;
+                newuser.allow_cardio = false;
+                newuser.IsNotificationViewed = false;
+                newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
+                newuser.IsAnonymous = false;
+                newuser.LastActivityDate= new DateTime(1754, 1, 1, 0, 0, 0);
+                db.aspnet_Users.InsertOnSubmit(newuser);
 
-                using (DataBaseDataContext db = new DataBaseDataContext()) 
-                {
-                    Guid userGuid = Guid.Parse(userID);
-                    aspnet_Membership Rest = (from m in db.aspnet_Memberships
-                                              where m.UserId == userGuid
-                                              select m).FirstOrDefault();
+                //generate password hashes
 
+                string plainPassword = data.Password;
+                string salt = GenerateSalt();
+                string encryptedPassword = EncryptPassword(plainPassword, salt);
 
-                    if (Rest != null)
-                    {
-                        Rest.Password = encryptedPassword;
-                        Rest.PasswordSalt = salt;
-                        Rest.IsLockedOut = false; 
+                //Assign Values to aspnet_membership table
 
-                       
-                        db.SubmitChanges();
-                    }
-                }
-         
-                if (AllowUnapproveVoucher != null)
-                {
-                    if (AllowUnapproveVoucher.Checked)
-                        DBClass.exectueQuery("Update aspnet_Users set AllowUnapproveVoucher=1 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                    else
-                        DBClass.exectueQuery("Update aspnet_Users set AllowUnapproveVoucher=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-
-                   
-                }
-                DBClass.exectueQuery(
-                "Update aspnet_Users set AllowPatientEdit='" + AllowPatientEdit.Checked +
-                "', AllPatientRecords='" + AllPatientRecords.Checked +
-                "', AllowPatientDelete='" + AllowPatientDelete.Checked +
-                "', OTPUsers='" + OTPUsers.Checked +
-                "' where username='" + RegisterUser.UserName + "'",
-                tranObj, con
-            );
-                DBClass.exectueQuery("Update aspnet_Users set AllowTestRate=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set OpdAllow=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set allow_lab=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set allow_ultra=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set BlockUser=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set AllowBillDelete=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set Allowtestbox=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set AllowTestRate=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set allow_ctscan=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set allow_xray=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set allow_b_bank=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set AllowPharmacy=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set AllowGeneralItems=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set IsShowBudget=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-                DBClass.exectueQuery("Update aspnet_Users set IsInventoryUnApprove=0 where UserName='" + RegisterUser.UserName + "'", tranObj, con);
-            
-                tranObj.Commit();
-
-                string continueUrl = RegisterUser.ContinueDestinationPageUrl;
-                if (String.IsNullOrEmpty(continueUrl))
-                {
-                    continueUrl = "~/";
-                }
-                Response.Redirect("~/Modules/Accounts/Login.aspx", false);
+                aspnet_Membership newUser_membership = new aspnet_Membership();
+                newUser_membership.ApplicationId = appID;
+                newUser_membership.UserId = userID;
+                newUser_membership.Password = encryptedPassword;
+                newUser_membership.PasswordSalt = salt;
+                newUser_membership.IsLockedOut = false;
+                newUser_membership.Email = data.Email;
+                newUser_membership.LoweredEmail = data.Email.ToLower();
+                newUser_membership.IsApproved = true;
+                newUser_membership.CreateDate = DateTime.Now;
+                newUser_membership.LastPasswordChangedDate = DateTime.Now;
+                newUser_membership.LastLoginDate = new DateTime(1754, 1, 1, 0, 0, 0);
+                newUser_membership.LastLockoutDate = new DateTime(1754, 1, 1, 0, 0, 0);
+                newUser_membership.FailedPasswordAnswerAttemptWindowStart = new DateTime(1754, 1, 1, 0, 0, 0);
+                newUser_membership.FailedPasswordAttemptWindowStart = new DateTime(1754, 1, 1, 0, 0, 0);
+                newUser_membership.PasswordFormat = 1;
+                newUser_membership.FailedPasswordAttemptCount = 0;
+                newUser_membership.FailedPasswordAnswerAttemptCount = 0;
+                db.aspnet_Memberships.InsertOnSubmit(newUser_membership);
+                db.SubmitChanges();
 
             }
             catch (Exception ex)
             {
-                if (tranObj != null)
-                    tranObj.Rollback();
+               
+                return "Error: " + ex.Message;
             }
-            finally
-            {
-                con.Close();
-            }
+            
+            return "success";
         }
-        private string GenerateSalt()
+        private static string GenerateSalt()
         {
             byte[] saltBytes = new byte[16];
             using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
@@ -121,7 +129,7 @@ namespace PMS.Account
             return Convert.ToBase64String(saltBytes);
         }
 
-        private string EncryptPassword(string password, string salt)
+        private static string EncryptPassword(string password, string salt)
         {
             var combinedPasswordSalt = password + salt;
 
@@ -133,14 +141,21 @@ namespace PMS.Account
                 return Convert.ToBase64String(hash);
             }
         }
-        protected void RegisterUser_CreatingUser(object sender, LoginCancelEventArgs e)
+        public class DataFromFrontEnd
         {
-            
-        }
+            public string UserName { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public string ConfirmPassword { get; set; }
+            public bool AllowPatientEdit { get; set; }
+            public bool AllowPatientDelete { get; set; }
+            public bool AllPatientRecords { get; set; }
 
-        protected void CreateUserButton_Click(object sender, EventArgs e)
-        {
-            
+            public bool AllowUnapproveVouchers { get; set; }
+
+            public bool OTPUsers { get; set; }
         }
     }
 }
+
+

@@ -5,11 +5,11 @@
             fillParentMenu();
             $('#ddlParent_Menu').select2();
             var id = '<%= Request.QueryString["ID"] %>';
-        if (id != "") {
-            cleartext();
-            populatemenudata(id);
-        }
-    });
+            if (id != "") {
+                cleartext();
+                populatemenudata(id);
+            }
+        });
         function cleartext() {
             $('#txtMenu_Name').val("");
             $('#txtMenu_Discription').val("");

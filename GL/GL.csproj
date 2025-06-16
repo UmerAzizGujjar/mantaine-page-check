@@ -198,7 +198,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Modules\Accounts\PasswordChange.aspx" />
+    <Content Include="Modules\Accounts\RegisterUser.aspx" />
     <Content Include="Modules\Accounts\RoleAssignment.aspx" />
+    <Content Include="Modules\Accounts\UserList.aspx" />
     <Content Include="Modules\Administrator\AddDepartment_Packages.aspx" />
     <Content Include="Modules\Administrator\AddDoctorAgreement.aspx" />
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
@@ -18459,12 +18461,26 @@
     <Compile Include="Modules\Accounts\PasswordChange.aspx.designer.cs">
       <DependentUpon>PasswordChange.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Accounts\RegisterUser.aspx.cs">
+      <DependentUpon>RegisterUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Accounts\RegisterUser.aspx.designer.cs">
+      <DependentUpon>RegisterUser.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Accounts\RoleAssignment.aspx.cs">
       <DependentUpon>RoleAssignment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Accounts\RoleAssignment.aspx.designer.cs">
       <DependentUpon>RoleAssignment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Accounts\UserList.aspx.cs">
+      <DependentUpon>UserList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Accounts\UserList.aspx.designer.cs">
+      <DependentUpon>UserList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\AddDepartment_Packages.aspx.cs">
       <DependentUpon>AddDepartment_Packages.aspx</DependentUpon>
