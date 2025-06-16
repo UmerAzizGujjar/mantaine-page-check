@@ -1253,6 +1253,18 @@
                             $('#btnSave').removeAttr("disabled");
                             return;
                         }
+
+                        var Previous_Balance = $('#txt_balance').val();
+                        var Previous_Paid = $('#txtprevious_paid').val();
+                        var Total_Doctor_Share = $('#txtTotalDoctorShare').val();
+                        var Over_and_Above = $('#txtOver_and_Above').val();
+                        var Cash_In_Hand = $('#txtcashinhand').val();
+                        var Cash_In_Hand_Account = $('#ddlCashInHand').val();
+                        var Bank_Account = $('#ddl_Bank').val();
+                        var Bank_Cash = $('#txtbankcash').val();
+                        var Main_Department = $('#txtMaindepartment').val();
+
+
                         var ChargePolicy = ddlChargePolicy.value;
                         var referred_by_doctor = $('#ddlReffered_By').val();
                         var Casher = $('#ddlcasher').val();
@@ -1342,7 +1354,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, Casher: Casher };
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Total_Doctor_Share: Total_Doctor_Share, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department};
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -3015,10 +3027,26 @@
                 //var Qty = $($(row).find('td input[name=txtQty]')[0]).val();
                 //var totalamount = (CalAmount) *(Qty)
                 //$($(row).find('td')[5]).text(totalamount);
-                //$($(row).find('td')[8]).text(totalamount);
-       
+            //$($(row).find('td')[8]).text(totalamount);
+            function SumTotalAmountrecived() {
+                debugger;
+                var Cash_in_Hand = $('#txtcashinhand').val();
+                var BankCash = $('#txtbankcash').val();
+                if (BankCash == "") {
+                    BankCash = 0;
+                }
+                if (Cash_in_Hand == "") {
+                    Cash_in_Hand = 0;
+                }
+
+
+                $('#txtAmountReceived').val((Math.round(parseFloat(Cash_in_Hand)) + parseFloat(BankCash)).toFixed(0));
+                CountBalance()
+            }
+            debugger;
             function CountBalance()
             {
+                debugger;
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
@@ -4254,7 +4282,16 @@
                     $('#lblContactNo').text(ReplaceNullWith_Space(data.d.Mobile));
                     $('#txtadvance_amount').val(data.d.advance_amount);
                     $('#txtprevious_paid').val(data.d.paid_amount);
+                    $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
+
+                    $('#txtadmitdate').val(data.d.Admission_Date);
+                    $('#txtdischargedate').val(data.d.Discharge_On);
+                    $('#wardtype').val(data.d.Ward_Name);
+                    $('#bedno').val(data.d.Bed_No);
+                    //$('#txtroomtype').val(data.d.Balance);
+                    //$('#txtroomno').val(data.d.Balance);
+
                     var Packtypes = data.d.Package_Type
                     var Packnames = data.d.Package_Name
 
@@ -5108,59 +5145,61 @@
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
                         <label for="txtBillNo">Bill No:</label>
-                        <input type="text" id="txtBillNo" class="form-control" disabled value="New" />
+                        <input type="text" id="txtBillNo" class="form-control" disabled="disabled" value="New" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
                         <label>Patient Category:</label>
                  
-                        <input type="text" id="lblPatientCategory"  disabled class="form-control" />
+                        <input type="text" id="lblPatientCategory"  disabled="disabled" class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn">
                         <label>Department:</label>
                       
-                        <input type="text" id="lblDepartment" disabled class="form-control" />
+                        <input type="text" id="lblDepartment" disabled="disabled" class="form-control" />
                     </div>
                 </div>  
 
                 <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Category</label>
-                        <select id="" disabled class="form-select">
+                        <select id="txtMaindepartment" disabled="disabled" class="form-select">
                             <option></option>
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Companies:</label>
                    
-                        <input type="text" disabled id="lblOPDpnl" class="form-control" />
+                        <select  disabled="disabled" id="lblOPDpnl" class="form-select">
+                            <option></option>
+                        </select>
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Admit Date</label>
-                        <input type="text" id="txtadmitdate" disabled class="form-control" />
+                        <input type="text" id="txtadmitdate" disabled="disabled" class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Discharge Date</label>
-                        <input type="text" id="txtdischargedate" disabled class="form-control" />
+                        <input type="text" id="txtdischargedate" disabled="disabled" class="form-control" />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Ward Type</label>
-                        <input type="text" id="wardtype" disabled class="form-control" />
+                        <input type="text" id="wardtype" disabled="disabled" class="form-control" />
                     </div>
 
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Bed No</label>
-                        <input type="text" id="bedno" disabled class="form-control" />
+                        <input type="text" id="bedno" disabled="disabled" class="form-control" />
                     </div>
 
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Room Type</label>
-                        <input type="text" id="txtroomtype" disabled class="form-control" />
+                        <input type="text" id="txtroomtype" disabled="disabled" class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Room No</label>
-                        <input type="text" id="txtroomno"  disabled class="form-control" />
+                        <input type="text" id="txtroomno"  disabled="disabled" class="form-control" />
                     </div>
                 </div>
             </div>
@@ -5331,7 +5370,7 @@
                  <label>Over and Above </label>
                  </div>
              <div class="col-lg-2 col-md-4 col-sm-6">
-                 <input type="text" id="" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+                 <input type="text" id="txtOver_and_Above " style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
             </div>
              </div>
 
@@ -5369,7 +5408,7 @@
                 </select>
                 </div>
             <div class="col-lg-1 col-md-3 col-sm-4">
-                <input type="text" id="" style="height: 30px; text-align: right; font-size: 22px;" />
+                <input type="text" id="txtcashinhand" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()"/>
                 </div>
         </div>
 
@@ -5384,7 +5423,7 @@
                  </select>
                  </div>
              <div class="col-lg-1 col-md-4 col-sm-6">
-                 <input type="text" id="" style="height: 30px; text-align: right; font-size: 22px;" />
+                 <input type="text" id="txtbankcash" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()" />
                  </div>
              </div>
 
@@ -5394,7 +5433,7 @@
                 <label>Amount Received:</label>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtAmountReceived" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="CountBalance()" />
+                <input type="text" id="txtAmountReceived" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="CountBalance()" disabled="disabled" />
             </div>
         </div>
 

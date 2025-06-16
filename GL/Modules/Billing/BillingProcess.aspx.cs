@@ -865,7 +865,15 @@ namespace PMS
             newBill.Balance_Amount = data.Balance_Amount;
             newBill.Charge_Policy = data.ChargePolicy;
             newBill.Referred_By = data.referred_by_doctor;
-            newBill.Casher = data.Casher;
+            //newBill.Previous_Paid = data.Previous_Paid;
+            //newBill.Previous_Balance = data.Previous_Balance;
+            //newBill.Total_Doctor_Share = data.Total_Doctor_Share;
+            //newBill.Over_and_Above = data.Over_and_Above;
+            //newBill.Cash_In_Hand = data.Cash_In_Hand;
+            //newBill.Cash_In_Hand_Account = data.Cash_In_Hand_Account;
+            //newBill.Bank_Account = data.Bank_Account;
+            //newBill.Bank_Cash = data.Bank_Cash;
+            //newBill.Main_Department = data.Main_Department;
 
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
             var inpatient_ID = db.In_Patients.Where(m => m.Patient_ID.Equals(data.Patient_ID)).Select(m => m.In_Patient_ID).ToList();
@@ -1567,12 +1575,21 @@ namespace PMS
             public DateTime Bill_Date { get; set; }
             public string Remarks { get; set; }
             public decimal Discount_Percentage { get; set; }
+            public decimal Previous_Balance { get; set; }
+            public decimal Previous_Paid { get; set; }
+            public decimal Total_Doctor_Share { get; set; }
+            public decimal Over_and_Above { get; set; }
+            public decimal Cash_In_Hand { get; set; }
+            public decimal Bank_Account { get; set; }
             public decimal Discount_Amount { get; set; }
             public decimal TotalPayable { get; set; }
             public decimal Net_Amount { get; set; }
             public decimal Received_Amount { get; set; }
             public decimal Balance_Amount { get; set; }
             public string ChargePolicy { get; set; }
+            public string Cash_In_Hand_Account { get; set; }
+            public string Bank_Cash { get; set; }
+            public string Main_Department { get; set; }
             //public string Remarks { get; set; }
             public List<BillingProcessDetails> Details { get; set; }
             public List<DoctorDistributionList> Share { get; set; }
@@ -2319,24 +2336,53 @@ namespace PMS
                 pt.In_Patient_Type = DBClass.getField("select top 1 Patient_Discount_Type from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
                 pt.Package_Type = DBClass.getField("select top 1 Package_type_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
                 pt.Package_Name = DBClass.getField("select top 1 Package_Name_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
+
                 if (pt.IsDisountAvailable.Contains("position")) pt.IsDisountAvailable = "false";
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
+                pt.Admission_Date = "";
+                pt.Discharge_On = "";
+                pt.Ward_Name = "";
+                pt.Bed_No = "";
+                pt.Room_Name = "";
+                
                 var inpatid_adv = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + "order by Advance_ID desc");
                 if (inpatid_adv != "There is no row at position 0.")
                 {
                     pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid_adv);
                 }
 
+                var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + " order by Emergency_ID desc");
                 var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + " order by In_Patient_ID desc");
 
                 if (ipd_id != "There is no row at position 0.")
                 {
                     pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where In_Patient_ID =" + ipd_id);
                     pt.Balance = DBClass.getField("select sum(Balance_Amount) from Ar_Billings where In_Patient_ID =" + ipd_id);
+                    pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
+                    pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
+                    pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
+                    pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
                 }
 
-                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+                if (Emergency_Id != "There is no row at position 0.")
+                {
+                    pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + ipd_id);
+                    pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + ipd_id);
+                    pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
+                    pt.Bed_No = DBClass.getField("Select Bed_No from Emergency_Patient ipd where ipd.Emergency_ID =" + ipd_id);
+                }
+
+                if (ipd_id != "There is no row at position 0.")
+                {
+                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
+                }
+                else
+                {
+                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Patient_Main_Category from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
+                }
+
+                    pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 var Patientno = pat.Patient_No.ToString();
                 var count = (db.Patients.Where(v => v.Patient_No == Convert.ToInt32(Patientno)).ToList());
                 pt.Follow = count.Count.ToString();
@@ -2376,7 +2422,9 @@ namespace PMS
             public string OPD_Panel_ID { get; set; }
             public string opdid { get; set; }
             public string pat_id { get; set; }
-
+            public string Department { get; set; }
+            public string Admission_Date { get; set; }
+            public string Discharge_On { get; set; }
             public string IPD_Panel_ID { get; set; }
 
             public string OPD_Panel_Name { get; set; }
