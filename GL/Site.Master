@@ -492,13 +492,13 @@
                         <!-- Left Side Logo + Company -->
                         <div class="col-lg-7 col-md-4 col-sm-4" >
                             <a href="~/Modules/Dashboards/ShortCuts.aspx" runat="server" id="IHome" title="Haroon Estates">
-                                <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 142px;" ImageUrl="~/wwwroot/StandardTheme\images\Standard_icons/logo.png" />
+                                <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 108px;" ImageUrl="~/wwwroot/StandardTheme\images\Standard_icons/logo.png" />
                                 <asp:Label ID="lblCompanyName" runat="server" Text="" Style="margin-left: 20px; display: none; font-weight: bold"></asp:Label>
                             </a>
 
                         </div>
 
-                        <div id="headerWelcome" class="mleft col-lg-3 col-md-3 col-sm-3" style="margin-top: 17px;left:91px">
+                        <div id="headerWelcome" class="mleft col-lg-3 col-md-3 col-sm-3" style="margin-top: 17px;text-align:end">
 
                             <!-- Welcome Message -->
                             <span id="welCome">Welcome</span>
