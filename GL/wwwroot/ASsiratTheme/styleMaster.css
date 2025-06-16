@@ -1100,9 +1100,9 @@ page-header h1 {
 
         .ace-nav > li.purple > a {
             background-color: aliceblue !important;
-            border-radius: 23px;
-            height: 58px;
-            margin-top: 1px;
+            border-radius: 20px;
+            height: 50px;
+            margin-top: 5px;
         }
 
             .ace-nav > li.purple > a:hover, .ace-nav > li.purple > a:focus, .ace-nav > li.open.purple > a {

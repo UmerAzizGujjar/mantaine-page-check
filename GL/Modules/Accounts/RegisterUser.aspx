@@ -314,8 +314,8 @@
                         </div>
                         <!-- Buttons -->
                         <div class="">
-                            <input id="saveBtn" type="button" value="Create User" class="mybutton" onclick="CreateUser()" style="border-radius: 50px; margin-top: 10px; width: 45% !important;" />
-                            <input type="button" value="Back" onclick="window.location.href='UserView.aspx'" class="mybutton" style="border-radius: 50px; margin-top: 10px; width: 45% !important;" />
+                            <input id="saveBtn" class="btn-primry" type="button" value="Create User"  onclick="CreateUser()" style="border-radius: 50px; margin-top: 10px; width: 45% !important;" />
+                            <input type="button" class="btn-primry" value="Back" onclick="window.location.href='UserView.aspx'"  style="border-radius: 50px; margin-top: 10px; width: 45% !important;" />
                         </div>
                         <%--patient modal--%>
                         <div id="UserModel" class="modal fade" tabindex="-1" role="dialog">
