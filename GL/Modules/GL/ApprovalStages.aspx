@@ -252,16 +252,18 @@
         </div>
     </div>
     <div class="row">
-          <div class="col-lg-1 col-md-4 col-sm-6">
+       <div class="col-lg-8 col-md-8">
+             <div class="col-lg-2 col-md-2 col-sm-3">
                 <input type="button" id="btnSave" class="btn btn-primry" value="Save"  />
             </div>
-              <div class="col-lg-1 col-md-4 col-sm-6">
+              <div class="col-lg-2 col-md-2 col-sm-3">
                   <input type="button" id="btnNew" value="New" class="btn btn-yellow" />
               </div>
-              <div class="col-lg-1 col-md-4 col-sm-6">
+              <div class="col-lg-2 col-md-2 col-sm-3">
                    
                 <input type="button" id="btnList" value="List view" class="btn btn-gray" />
                </div>
+       </div>
       
               
                
