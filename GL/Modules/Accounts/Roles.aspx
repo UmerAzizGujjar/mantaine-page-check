@@ -277,7 +277,7 @@ margin-left: 10px;
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" class="btn btn-primry" value="Save" onclick="validator()" id="btnSave" />
-                <asp:Button ID="btnSave1" runat="server" Text="Save" OnClick="btnSave_Click" style="display:none;" />
+                <asp:Button ID="btnSave1" runat="server" Text="Save" OnClick="btnSave_Click"  Visible="false" />
             </div>
         </div>
     </div>
