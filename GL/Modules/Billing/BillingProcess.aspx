@@ -1009,6 +1009,19 @@
                     $('#ddlChargePolicy').attr('disabled', true);
                 });
             }
+
+            function LoadMainDepartment() {
+                //var options = ''
+                PageMethods.GetMainDepartment(function (data) {
+                    var options = '<option value="0" >Please Select</option>';
+                    $.each(JSON.parse(data), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    });
+                    $('#txtMaindepartment').html(options);
+                    $('#txtMaindepartment').attr('disabled', true);
+                });
+            }
+
             function Share_Doctor() {
                 var doctorShareList = document.getElementById('Doctor_Share_Table');
                 var currentRowIndex = doctorShareList.rows.length - 1;
@@ -1091,6 +1104,28 @@
                     $('#txtAmountReceived').val(data[0].Received_Amount);
                     $('#txtBalances').val(data[0].Balance_Amount);
                     $('#ddlChargePolicy').val(data[0].Charge_Policy);
+
+
+
+                    $('#txt_balance').val(data[0].Previous_Balance);
+                    $('#txtprevious_paid').val(data[0].Previous_Paid);
+                    $('#txtTotalDoctorShare').val(data[0].Total_Doctor_Share);
+                    $('#txtOver_and_Above').val(data[0].Over_and_Above);
+                    $('#txtcashinhand').val(data[0].Cash_In_Hand);
+                    $('#txtbankcash').val(data[0].Bank_Cash);
+
+
+                    setTimeout(function () {
+                        $('#ddlCashInHand').val(data[0].Cash_In_Hand_Account).trigger('change');
+                    }, 1000)
+                    setTimeout(function () {
+                        $('#ddl_Bank').val(data[0].Bank_Account).trigger('change');
+                    }, 1000)
+                    setTimeout(function () {
+                        $('#txtMaindepartment').val(data[0].Main_Department).trigger('change');
+                    }, 1000)
+
+
                     setTimeout(function () {
                         $('#ddlcasher').val(data[0].Casher).trigger('change');
                     }, 1000)
@@ -1256,13 +1291,34 @@
 
                         var Previous_Balance = $('#txt_balance').val();
                         var Previous_Paid = $('#txtprevious_paid').val();
-                        var Total_Doctor_Share = $('#txtTotalDoctorShare').val();
+                       // var Total_Doctor_Share = $('#txtTotalDoctorShare').val();
                         var Over_and_Above = $('#txtOver_and_Above').val();
                         var Cash_In_Hand = $('#txtcashinhand').val();
                         var Cash_In_Hand_Account = $('#ddlCashInHand').val();
                         var Bank_Account = $('#ddl_Bank').val();
                         var Bank_Cash = $('#txtbankcash').val();
                         var Main_Department = $('#txtMaindepartment').val();
+
+
+                        if (Previous_Balance == '') {
+                            Previous_Balance = 0.00
+                        }
+                        if (Previous_Paid == '') {
+                            Previous_Paid = 0.00
+                        }
+                        //if (Total_Doctor_Share == '') {
+                        //    Total_Doctor_Share = 0.00
+                        //}
+                        if (Cash_In_Hand == '') {
+                            Cash_In_Hand = 0.00
+                        }
+                        if (Bank_Cash == '') {
+                            Bank_Cash = 0.00
+                        }
+                        if (Over_and_Above == '') {
+                            Over_and_Above = 0.00
+                        }
+
 
 
                         var ChargePolicy = ddlChargePolicy.value;
@@ -1354,7 +1410,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Total_Doctor_Share: Total_Doctor_Share, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department};
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -2383,14 +2439,16 @@
                
             }
             var Temporary = 0;
+            debugger;
             function calculateDoctorShare()
             {
+                debugger;
                 var list = document.getElementById('tblDetails');
                 var doctorsList = document.getElementById('Doctor_Share_Table');
                 var totalDoctorDistribution = 0;
                 var totalDoctorShare = 0;
                 for (var i = 0; i < list.rows.length - 1; i++) {
-                    totalDoctorShare += parseInt($('#ds' + i + '').val());
+                    totalDoctorShare += parseInt($('#DocShare' + i + '').val());
                 }
                 for (var i = 0; i < doctorsList.rows.length - 1; i++) {
                     totalDoctorDistribution += parseInt($('#DoctorAmount' + i + '').val());;
@@ -3416,6 +3474,7 @@
                 debugger;
                 itemIds = [];
                 var Pat_id = $('#hdfPatient_ID').val();
+                console.log(Pat_id);
 
                 debugger;
                 $.ajax({
@@ -4284,6 +4343,7 @@
                     $('#txtprevious_paid').val(data.d.paid_amount);
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
+                    $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
 
                     $('#txtadmitdate').val(data.d.Admission_Date);
                     $('#txtdischargedate').val(data.d.Discharge_On);
@@ -5031,6 +5091,7 @@
                 FillOtherTest();
                 FillMainTestDepartment();
                 FillChargePolicy();
+                LoadMainDepartment();
                 $('#add-new-testDirect').click(function () {
                 });
                 $('#add-new-Othertest').click(function () {
