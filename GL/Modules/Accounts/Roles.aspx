@@ -294,7 +294,7 @@ margin-left: 10px;
             LineImagesFolder="~/TreeLineImages" ShowCheckBoxes="All" onclick="OnTreeClick(event)">
         </asp:TreeView>
 
-        <asp:Label ID="lblMessage" runat="server"style="display:none;"   />
+        <asp:Label ID="lblMessage" runat="server"   />
     </div>
 </div></div>
 
