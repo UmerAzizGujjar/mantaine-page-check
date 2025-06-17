@@ -35,30 +35,7 @@ input[type="Password"] {
     margin-bottom: 8px !important;
 }
 
-input[type="button"], input[type="submit"] {
-    position: relative;
-    width: 90% !important;
-    height: 33px;
-    border-radius: 3px;
-    font-size: 16px;
-    line-height: 1.5;
-    background-color: #438eb9;
-    border-color: #357ebd;
-    color: #7ea9c2;
-    font-weight: bold !important;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
-    margin-bottom: 0;
-    font-weight: normal;
-    box-shadow: none;
-    text-shadow: none;
-    border: 0;
-    cursor: pointer;
-    display: inline-block;
-    -moz-user-select: none;
-    background-image: none;
-}
+
 
 input.textEntry,
 input.passwordEntry {

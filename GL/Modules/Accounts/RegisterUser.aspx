@@ -309,14 +309,14 @@
                             </div>
                             <div class="input-field">
                                 <input autocomplete="off" type="text" id="Mobile" name="UserName" class="textEntry" style="border-radius: 10px !important; width: 55% !important; margin-right: 5px" />
-                                <input type="button" value="User Rights" class="mybutton" onclick="showmodal()" style="border-radius: 50px; width: 34% !important; color: white !important" />
+                                <input type="button" value="User Rights" class="btn-primry" onclick="showmodal()" style="border-radius: 50px !important; margin-top: 10px;width: 34% !important;" />
                             </div>
                         </div>
                         <!-- Buttons -->
-                        <div class="">
-                            <input id="saveBtn" class="btn-primry" type="button" value="Create User"  onclick="CreateUser()" style="border-radius: 50px; margin-top: 10px; width: 45% !important;" />
-                            <input type="button" class="btn-primry" value="Back" onclick="window.location.href='UserView.aspx'"  style="border-radius: 50px; margin-top: 10px; width: 45% !important;" />
-                        </div>
+                       
+                            <input id="saveBtn" class="btn-primry" type="button" value="Create User"  onclick="CreateUser()" style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
+                            <input type="button" class="btn-primry" value="Back" onclick="window.location.href='UserView.aspx'"  style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
+                        
                         <%--patient modal--%>
                         <div id="UserModel" class="modal fade" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-lg" role="document">
@@ -331,45 +331,7 @@
                                     <div class="modal-body">
                                         <div class="container-fluid">
                                             <div class="row">
-                                                <div class="col-md-3">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowPatientEdit">Edit Patient</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowPatientDelete">Cancel Patient</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllPatientRecords">All Patients</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowBillDelete">Allow Bill Delete</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowTestRate">Allow Test Rate</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowOPD">Allow OPD</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowLab">Allow Lab</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowUltra">Allow Ultra</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowCtscan">Allow CT Scan</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowXray">Allow X-ray</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowToAccessAllTest">Allow To Access All Test</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="AllowCardio">Allow Cardio</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-1">
+                                               <div class="col-md-1">
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowPatientEdit" name="AllowPatientEdit" />
                                                     </div>
@@ -408,8 +370,86 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="col-md-2"></div>
 
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowPatientEdit">Edit Patient</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowPatientDelete">Cancel Patient</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllPatientRecords">All Patients</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowBillDelete">Allow Bill Delete</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowTestRate">Allow Test Rate</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowOPD">Allow OPD</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowLab">Allow Lab</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowUltra">Allow Ultra</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowCtscan">Allow CT Scan</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowXray">Allow X-ray</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowToAccessAllTest">Allow To Access All Test</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowCardio">Allow Cardio</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-1">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="AllowB_Bank" name="AllowB_Bank" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="AllowPharmacy" name="AllowPharmacy" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="AllowUnapproveVouchers" name="AllowUnapproveVouchers" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="GeneralItems" name="GeneralItems" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="ShowBudgetBtn" name="ShowBudgetBtn" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="InventoryUnApprove" name="InventoryUnApprove" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="PRFsNotifications" name="PRFsNotifications" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="OTPUsers" name="OTPUsers" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="RateBox" name="RateBox" />
+    </div>
+
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="BlockUser" name="OTPUsers" />
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="IsAnonymous" name="RateBox" />
+    </div>
+    <div class="form-check">
+        <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
+    </div>
+
+</div>
                                                 <div class="col-md-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowB_Bank">Allow B_Bank</label>
@@ -449,46 +489,7 @@
                                                         <label class="form-check-label" for="EmpCode">Employee Code</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="AllowB_Bank" name="AllowB_Bank" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="AllowPharmacy" name="AllowPharmacy" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="AllowUnapproveVouchers" name="AllowUnapproveVouchers" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="GeneralItems" name="GeneralItems" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="ShowBudgetBtn" name="ShowBudgetBtn" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="InventoryUnApprove" name="InventoryUnApprove" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="PRFsNotifications" name="PRFsNotifications" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="OTPUsers" name="OTPUsers" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="RateBox" name="RateBox" />
-                                                    </div>
-
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="BlockUser" name="OTPUsers" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" id="IsAnonymous" name="RateBox" />
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
-                                                    </div>
-
-                                                </div>
+                                                
                                                 <div class="col-md-2"></div>
                                             </div>
                                         </div>
