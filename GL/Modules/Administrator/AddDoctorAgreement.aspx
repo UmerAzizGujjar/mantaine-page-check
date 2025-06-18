@@ -334,7 +334,7 @@
                 setTimeout(function () {
                     $('#ddl_Doctor').val(doc_data.Doctor).trigger('change');
                 }, 1500);
-                $('#txtdocamount').val(doc_data.Doc_account);                
+                $('#txtdocamount').val(doc_data.Doc_account);
             });
             debugger;
             setTimeout(function () {
@@ -368,7 +368,7 @@
 
                         if (md.Department == "OPD") {
                             $('#ddlmaindep_Opd').val('004').trigger('change');
-                         
+
                             $('#ddlmaindep_Opd').attr('disabled', true);
                             $('#ddl_Opd_AgrementType').val(md.AgrementTypeId).trigger('change');
                             $('#ddl_Opd_Agrementdept').val(md.AgrementDepartmentId).trigger('change');
@@ -388,7 +388,7 @@
                             $('#ddlmaindep_xray').attr('disabled', true);
                             $('#ddl_xray_AgrementType').val(md.AgrementTypeId).trigger('change');
                             $('#ddl_xray_Agrementdept').val(md.AgrementDepartmentId).trigger('change');
-                             mdTablexray.append('<tr><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.test_id + '" /></td><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.item_id + '" /></td><td style="display:none;"><input type="hidden" name="txtdep" id="txtdep" value="' + md.Department + '" /></td><td><input type="text" readonly name="txtname" id="txtname" value="' + md.test_description + '" /></td><td style="display:none;"><input type="hidden" readonly id="agremntTypeId" name="agremntTypeId" value="' + md.AgrementTypeId + '" /></td><td><input type="text" readonly name="agremntType" id="agremntType" value="' + md.AgrementType + '" /></td><td style="display:none;"><input type="hidden"readonly id="agremntDeptId" name="agremntDeptId" value="' + md.AgrementDepartmentId + '" /></td><td><input type="text" readonly name="agremntDept" id="agremntDept" value="' + md.AgrementDepartment + '" /></td><td><input type="text" readonly name="txtrate" id="txtrate" value="' + md.Actual_amount + '" /></td><td><input type="text"  name="txtdiscount" id="txtdiscount" onchange="calculatedisc(this);" value="' + md.dicount + '" /></td><td><input type="text" readonly name="txtnetamount" id="txtnetamount" value="' + md.Net_amount + '" /></td><td><input type="text"  name="Txtdocshare" id="Txtdocshare" onchange="hosp_doc(this);" value="' + md.doc_share + '" /></td><td><input type="text" readonly name="Txthocshare" id="Txthocshare" value="' + md.hos_share + '" /></td><td><a href="#" class="btn-primry delete-row-xray" style="border-radius: 50%; display: inline-block; width: 27px; height: 24px; text-align: center"><i class="fa fa-trash" style="color: white;"></i></a></td></tr>');
+                            mdTablexray.append('<tr><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.test_id + '" /></td><td style="display:none;"><input type="hidden" name="txtestid" id="txtestid" value="' + md.item_id + '" /></td><td style="display:none;"><input type="hidden" name="txtdep" id="txtdep" value="' + md.Department + '" /></td><td><input type="text" readonly name="txtname" id="txtname" value="' + md.test_description + '" /></td><td style="display:none;"><input type="hidden" readonly id="agremntTypeId" name="agremntTypeId" value="' + md.AgrementTypeId + '" /></td><td><input type="text" readonly name="agremntType" id="agremntType" value="' + md.AgrementType + '" /></td><td style="display:none;"><input type="hidden"readonly id="agremntDeptId" name="agremntDeptId" value="' + md.AgrementDepartmentId + '" /></td><td><input type="text" readonly name="agremntDept" id="agremntDept" value="' + md.AgrementDepartment + '" /></td><td><input type="text" readonly name="txtrate" id="txtrate" value="' + md.Actual_amount + '" /></td><td><input type="text"  name="txtdiscount" id="txtdiscount" onchange="calculatedisc(this);" value="' + md.dicount + '" /></td><td><input type="text" readonly name="txtnetamount" id="txtnetamount" value="' + md.Net_amount + '" /></td><td><input type="text"  name="Txtdocshare" id="Txtdocshare" onchange="hosp_doc(this);" value="' + md.doc_share + '" /></td><td><input type="text" readonly name="Txthocshare" id="Txthocshare" value="' + md.hos_share + '" /></td><td><a href="#" class="btn-primry delete-row-xray" style="border-radius: 50%; display: inline-block; width: 27px; height: 24px; text-align: center"><i class="fa fa-trash" style="color: white;"></i></a></td></tr>');
 
                         }
                         if (md.Department == "002") {
@@ -473,7 +473,7 @@
         var doc_idss;
         function saveLabtest() {
             debugger;
-             $("#btnValue").prop("disabled", true);
+            $("#btnValue").prop("disabled", true);
             var btnsaves = $('#btnValue').val();
             debugger;
             if (btnsaves == "Update") {
@@ -484,7 +484,7 @@
                 doc_idss = 0;
             }
             var ddlDoctor = $('#ddl_Doctor').val();
-            var doc_account = $('#txtdocamount').val();           
+            var doc_account = $('#txtdocamount').val();
             var ddllabtest = $('#ddlmaindep').val();
             var ddl_xray = $('#ddlmaindep_xray').val();
             var ddl_opd = $('#ddlmaindep_Opd').val();
@@ -505,161 +505,161 @@
             debugger;
             //multiple loops here
             if ($('#tblResult_Opd tbody tr').length > 0) {
-            $.each($('#tblResult_Opd tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var txtdep = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                save_opd.push({
-                    hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                $.each($('#tblResult_Opd tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var txtdep = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    save_opd.push({
+                        hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
 
-             if ($('#tblResult tbody tr').length > 0) {
-            $.each($('#tblResult tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var txtdep = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                Save_list.push({
-                    hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+            if ($('#tblResult tbody tr').length > 0) {
+                $.each($('#tblResult tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var txtdep = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    Save_list.push({
+                        hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
 
-              if ($('#tblResults tbody tr').length > 0) {
-            $.each($('#tblResults tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var txtdep_xray = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                save_xray.push({
-                    hdn_test_id: hdn_test_id, txtdep_xray: txtdep_xray, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+            if ($('#tblResults tbody tr').length > 0) {
+                $.each($('#tblResults tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var txtdep_xray = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    save_xray.push({
+                        hdn_test_id: hdn_test_id, txtdep_xray: txtdep_xray, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
 
             if ($('#tblResult_ultra tbody tr').length > 0) {
-            $.each($('#tblResult_ultra tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var txtdep_ultra = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                save_ultra.push({
-                    hdn_test_id: hdn_test_id, txtdep_ultra: txtdep_ultra, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                $.each($('#tblResult_ultra tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var txtdep_ultra = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    save_ultra.push({
+                        hdn_test_id: hdn_test_id, txtdep_ultra: txtdep_ultra, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
 
-               if ($('#tblResult_ctscan tbody tr').length > 0) {
-            $.each($('#tblResult_ctscan tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var txtdep_ctscan = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                save_Ct_Scan.push({
-                    hdn_test_id: hdn_test_id, txtdep_ctscan: txtdep_ctscan, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+            if ($('#tblResult_ctscan tbody tr').length > 0) {
+                $.each($('#tblResult_ctscan tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var txtdep_ctscan = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    save_Ct_Scan.push({
+                        hdn_test_id: hdn_test_id, txtdep_ctscan: txtdep_ctscan, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
 
-              if ($('#tblResult_bloodbank tbody tr').length > 0) {
-            $.each($('#tblResult_bloodbank tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var txtdep_bloodbank = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                save_blood_bank.push({
-                    hdn_test_id: hdn_test_id, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+            if ($('#tblResult_bloodbank tbody tr').length > 0) {
+                $.each($('#tblResult_bloodbank tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var txtdep_bloodbank = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    save_blood_bank.push({
+                        hdn_test_id: hdn_test_id, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
 
-             if ($('#tblResult_mri tbody tr').length > 0) {             
-            $.each($('#tblResult_mri tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var txtdep_mir = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                save_mri.push({
-                    hdn_test_id: hdn_test_id, txtdep_mir: txtdep_mir, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+            if ($('#tblResult_mri tbody tr').length > 0) {
+                $.each($('#tblResult_mri tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var txtdep_mir = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    save_mri.push({
+                        hdn_test_id: hdn_test_id, txtdep_mir: txtdep_mir, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
-             if ($('#tblResult_services tbody tr').length > 0) {          
-            $.each($('#tblResult_services tbody tr'), function (key, value) {
-                debugger;
-                var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
-                var hdn_services = $($(value).find('td input[name=txtservices]')[0]).val();
-                var txtdep_bloodbank = $($(value).find('td input[name=txtdep]')[0]).val();
-                var Description = $($(value).find('td input[name=txtname]')[0]).val();
-                var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
-                var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
-                var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
-                var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
-                var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
-                var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
-                var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
-                save_Services.push({
-                    hdn_test_id: hdn_test_id, hdn_services: hdn_services, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+            if ($('#tblResult_services tbody tr').length > 0) {
+                $.each($('#tblResult_services tbody tr'), function (key, value) {
+                    debugger;
+                    var hdn_test_id = $($(value).find('td input[name=txtestid]')[0]).val();
+                    var hdn_services = $($(value).find('td input[name=txtservices]')[0]).val();
+                    var txtdep_bloodbank = $($(value).find('td input[name=txtdep]')[0]).val();
+                    var Description = $($(value).find('td input[name=txtname]')[0]).val();
+                    var hdn_agremntTypeId = $($(value).find('td input[name=agremntTypeId]')[0]).val();
+                    var hdn_agremntDeptId = $($(value).find('td input[name=agremntDeptId]')[0]).val();
+                    var test_Rate = $($(value).find('td input[name=txtrate]')[0]).val();
+                    var Discount = $($(value).find('td input[name=txtdiscount]')[0]).val();
+                    var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
+                    var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
+                    var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    save_Services.push({
+                        hdn_test_id: hdn_test_id, hdn_services: hdn_services, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                    });
                 });
-            });
             }
             var AllRecords = { 'ddlDoctor': ddlDoctor, 'doc_account': doc_account, 'Is_Active': Is_Active, 'ddllabtest': ddllabtest, 'ddl_xray': ddl_xray, 'ddl_ultrasound': ddl_ultrasound, 'ddlmaindep_Opd': ddlmaindep_Opd, 'ddl_CTScan': ddl_CTScan, 'ddl_bloodbank': ddl_bloodbank, 'ddl_Service': ddl_Service, 'ddl_mir': ddl_mir, 'save_opd': save_opd, 'Save_list': Save_list, 'save_xray': save_xray, 'save_ultra': save_ultra, 'save_Ct_Scan': save_Ct_Scan, 'save_blood_bank': save_blood_bank, 'save_Services': save_Services, 'save_mri': save_mri, 'doc_idss': doc_idss };
             PageMethods.SaveDocagreement(JSON.stringify(AllRecords), btnsaves, function () {
                 toasterMessage(false, "Success", "Data added Successfully");
                 window.location.href = "AddDoctorAgreement.aspx";
-               $("#btnValue").prop("disabled", false);
+                $("#btnValue").prop("disabled", false);
             });
         }
 
@@ -1675,10 +1675,16 @@
             <label id="LblDescription">Doctor Account</label>
             <input type="text" id="txtdocamount" name="txtdocamount" autocomplete="off" readonly="readonly" />
         </div>
-        <div class="col-lg-1 col-md-1 col-sm-1">
-            <label id="LblActive">Active</label>
-            <input type="checkbox" id="Active" name="Active" />
+        <div class="col-lg-1 col-md-2 col-sm-12" style="margin-top: 30px; width: 40px !important;">
+
+            <input type="checkbox" id="Active" name="chkIsActive" />
+
         </div>
+        <div class="col-lg-1 col-md-2 col-sm-12" style="margin-top: 30px;">
+            <label id="LblActive">Active</label>
+
+        </div>
+
     </div>
 
     <div class="row" style="margin-top: 10px !important">
@@ -1740,9 +1746,10 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowopdModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" ></i>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+                    <a href="#" id="btnshowopdModal" >
+                       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
                     </a>
                 </div>
             </div>
@@ -1800,11 +1807,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowLabModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle"></i>
-                    </a>
-                </div>
+                
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+    <a href="#" id="btnshowLabModal" >
+       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+    </a>
+</div>
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult">
                 <thead id="ihead">
@@ -1860,11 +1869,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowxrayModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" ></i>
-                    </a>
-                </div>
+                
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+    <a href="#" id="btnshowxrayModal" >
+       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+    </a>
+</div>
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResults">
                 <thead id="iheads">
@@ -1920,11 +1931,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowultrsoundModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" ></i>
-                    </a>
-                </div>
+               
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+    <a href="#" id="btnshowultrsoundModal" >
+       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+    </a>
+</div>
 
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult_ultra">
@@ -1981,11 +1994,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowCTScanModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" ></i>
-                    </a>
-                </div>
+                
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+    <a href="#" id="btnshowCTScanModal" >
+       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+    </a>
+</div>
 
             </div>
             <table class="table table-bordered table-hover table-striped" style="overflow: scroll; height: auto; margin-top: 10px !important" id="tblResult_ctscan">
@@ -2042,11 +2057,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowbloodbankModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle"></i>
-                    </a>
-                </div>
+                
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+    <a href="#" id="btnshowbloodbankModal" >
+       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+    </a>
+</div>
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult_bloodbank">
                 <thead id="ihead_bloodbank">
@@ -2102,11 +2119,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowmirModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" ></i>
-                    </a>
-                </div>
+                
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+    <a href="#" id="btnshowmirModal" >
+       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+    </a>
+</div>
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult_mri">
                 <thead id="ihead_mri">
@@ -2162,11 +2181,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <a href="#" id="btnshowservicesModal" style="margin-top: 10px;">
-                        <i class="fa fa-plus-circle" ></i>
-                    </a>
-                </div>
+               
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+    <a href="#" id="btnshowservicesModal" >
+       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+    </a>
+</div>
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult_services">
                 <thead id="ihead_services">
