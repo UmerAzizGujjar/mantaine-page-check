@@ -2,6 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/StandardTheme/css/CustomCss/Refund.css" rel="stylesheet" />
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -300,7 +302,19 @@
                 });
                 var data = { Patient_ID: Patient_ID, advanceDate: advanceDate, remarks: remarks, ServiceRefund: ServiceRefund, ShareRefund: ShareRefund };
                 PageMethods.SaveRefund(JSON.stringify(data), function (res) {
-                    alert('Data Successfully Save');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Successfully Save',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#btnSave').attr('disabled', 'disabled');
                 }, function (error) {
                     alert(error.get_message());
@@ -316,7 +330,19 @@
             var Totaldoctordistribution = $('#txtDoctorTotalDistribution').val();
 
             if (Totaldoctorshare != Totaldoctordistribution) {
-                alert('Doctor Refund and Doctor Distribution Refund Should be Same.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Doctor Refund and Doctor Distribution Refund Should be Same.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 proceed = false;
             }
 

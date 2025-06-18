@@ -4784,6 +4784,7 @@
 
         }
         function bindControls() {
+            debugger;
             var hdFile_ID = $("#hdfPatient_ID").val();
             if (hdFile_ID != "(New)") {
                 var Patient_ID = $("#hdfPatient_ID").val();
@@ -5407,7 +5408,7 @@
 
            <div class="row">
            <div class="col-md-2 text-end">
-            <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />
+            <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry"  />
         </div>
        </div>
 

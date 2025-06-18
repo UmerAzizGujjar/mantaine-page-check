@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <link href="../../wwwroot/StandardTheme/css/CustomCss/Receipts.css" rel="stylesheet" />
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -427,7 +428,19 @@
             if (Number(junkVal) >= 0) {
             }
             else {
-                alert('wrong Number cannot be converted');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'wrong Number cannot be converted',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (Number(junkVal) == 0) {
@@ -436,7 +449,19 @@
                 return false;
             }
             if (actnumber.length > 9) {
-                alert('Oops!!!! the Number is too big to covertes');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Oops!!!! the Number is too big to covertes',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
@@ -757,22 +782,69 @@
                 if (Bill_ID == '')
                     Bill_ID = 0
                 if ($('#txtMRNo').val() == '') {
-                    alert('Select Patient.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Patient.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#txtMRNo').focus();
                     return;
                 }
                 else if (isNaN($('#txtReceiptAmount').val())) {
-                    alert('Enter Only Digits.!');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Enter Only Digits.!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#txtReceiptAmount').focus();
                     return;
                 }
                 else if (($('#txtReceiptAmount').val()) == '') {
-                    alert('Amount is required.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Amount is required.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     $('#txtReceiptAmount').focus();
                     return;
                 }
                 else if (Bill_ID == 0) {
-                    alert('Select Your Bill.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Select Your Bill.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return;
                 }
                 if ($('#chkDischarge').is(':checked') == true) {
@@ -808,7 +880,19 @@
                 });
             }
             else {
-                alert("Processing Please Wait");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Processing Please Wait',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 returnVal = false;
             }
         }
@@ -1235,7 +1319,18 @@
             var chkSummary = document.getElementById('chkSummary').checked;
 
             if (MrNo == "") {
-                alert("Please Select MR No")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select MR No',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
             }
             else {
                 if (chkSummary != true)
@@ -1479,7 +1574,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="txtNetReceivable" class="form-label">Net Receivables:</label>
-                            <input type="text" id="txtNetReceivable" name="txtNetReceivable" style="background-color: rgb(255, 0, 0);color:white !important" class="form-control" />
+                            <input type="text" id="txtNetReceivable" name="txtNetReceivable"  class="form-control fieldcolor" />
                         </div>
                      
                             <div class="form-check">
@@ -1517,7 +1612,6 @@
                         <div class="self2">
                             <h3 class="self" style="position: relative;">Advance Entries </h3>
                             <div style="width: 430px; overflow: scroll; height: 153px !important; height: auto;">
-
                                 <table class="table" id="tblAdvance" style="height: 146px !important; height: auto; overflow: scroll;">
                                     <thead>
                                         <tr>
