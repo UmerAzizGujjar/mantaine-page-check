@@ -1,5 +1,55 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Menu.aspx.cs" Inherits="PMS.Menu" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <style type="text/css">
+        .card {
+            border: 1px solid #ccc;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 460px;
+        }
+
+            .card:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+
+     
+
+        .card-body {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+      
+
+        input[type="checkbox"] {
+            margin-bottom: 9px !important;
+        }
+
+        input[type="text"],
+        #select2-ddlParent_Menu-container {
+            margin-bottom: 8px !important;
+        }
+
+
+
+        input[type=button]{
+            width:100px !important;
+        }
+
+        label {
+            margin-left: 0; /* or remove this line completely */
+            margin-bottom: 8px !important;
+            position: relative;
+            font-family: "Open Sans", sans-serif;
+            text-align: left; /* optional: ensures text aligns left */
+            font-size: 16px;
+        }
+
+        
+    </style>
     <script type="text/javascript">
         $(document).ready(function () {
             fillParentMenu();
@@ -21,7 +71,7 @@
         function fillParentMenu() {
             $.ajax({
                 type: "POST",
-                url: "Menu.aspx/BindParentMenu", 
+                url: "Menu.aspx/BindParentMenu",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -40,7 +90,7 @@
         function populatemenudata(id) {
             $.ajax({
                 type: "POST",
-                url: "Menu.aspx/PopulateMenuData", 
+                url: "Menu.aspx/PopulateMenuData",
                 data: JSON.stringify({ id: parseInt(id) }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -72,24 +122,77 @@
             var BtnText = $('#btnSave').val();
             var id = '<%= Request.QueryString["ID"] %>';
             if (MenuName == "") {
-                $('#txtMenu_Name-error').show();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Menu Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 valid = false;
             }
-            if (MenuDescription == "") {
-                $('#txtMenu_Discription-error').show();
+            else if (MenuDescription == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Menu Description',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 valid = false;
             }
-            if (URL == "") {
-                $('#txtMenu_Url-error').show();
-                valid = false;
+            else if (URL == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter URL',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });                valid = false;
             }
-            if (ParentID == 0) {
-                $('#ddlParent_Menu-error').show();
-                valid = false;
+            else if (ParentID == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: ' Please Select Parent Menu',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });                valid = false;
             }
-            if (OrderBy == "") {
-                $('#txtOrder_By-error').show();
-                valid = false;
+            else if (OrderBy == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Order By',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });                valid = false;
             }
             var dataObj = {
                 "MenuName": MenuName,
@@ -135,48 +238,67 @@
   
 
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-        <div class="row">
-    <div class="col-lg-2 col-md-6 col-sm-6">
-        <label for="txtMenu_Name">Menu Name *</label>
-        <input type="text" id="txtMenu_Name" name="txtMenu_Name" class="form-control"  />
-        <span id="txtMenu_Name-error" class="span_txt" style="display: none;color: red;">Please Enter Menu Name</span>
-    </div>
-    <div class="col-lg-2 col-md-6 col-sm-6">
-        <label for="txtMenu_Discription">Menu Description *</label>
-        <input type="text" id="txtMenu_Discription" name="txtMenu_Discription" class="form-control"  />
-        <span id="txtMenu_Discription-error" class="span_txt" style="display: none;color: red;">Please Enter Menu Description</span>
-    </div>
-    <div class="col-lg-2 col-md-6 col-sm-6">
-        <label for="txtMenu_Url">URL *</label>
-        <input type="text" id="txtMenu_Url" name="txtMenu_Url" class="form-control"  />
-        <span id="txtMenu_Url-error" class="span_txt" style="display: none;color: red;">Please Enter URL</span>
-    </div>
-    <div class="col-lg-2 col-md-6 col-sm-6">
-        <label for="ddlParent_Menu">Parent Menu *</label>
-        <select id="ddlParent_Menu" name="ddlParent_Menu" class="form-control"></select>
-        <span id="ddlParent_Menu-error" class="span_txt" style="display: none;color: red;">Please Select Parent Menu</span>
-    </div>
-    <div class="col-lg-2 col-md-6 col-sm-6">
-        <label for="txtOrder_By">Order By *</label>
-        <input type="text" id="txtOrder_By" name="txtOrder_By" class="form-control"  />
-        <span " id="txtOrder_By-error" class="span_txt" style=" display: none;color: red;">Please Enter Order By</span>
-    </div>
-    <div class="col-lg-2 col-md-6 col-sm-6">
-        <label for="cbActive" class="ml-2 wdth">Active</label>
-        <input type="checkbox" id="cbActive" name="cbActive" />
-    </div>
-</div>
     <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                            <div class="row" style="    margin-left: 20px;
+    width: 90%;">
+        <div><label for="txtMenu_Name">Menu Name *</label>
+<input type="text" id="txtMenu_Name" name="txtMenu_Name" class="form-control"  />
+<span id="txtMenu_Name-error" class="span_txt" style="display: none;color: red;">Please Enter Menu Name</span></div>
+        
+        <div><label for="txtMenu_Discription">Menu Description *</label>
+<input type="text" id="txtMenu_Discription" name="txtMenu_Discription" class="form-control"  />
+<span id="txtMenu_Discription-error" class="span_txt" style="display: none;color: red;">Please Enter Menu Description</span></div>
+   
+        
+        <div><label for="txtMenu_Url">URL *</label>
+<input type="text" id="txtMenu_Url" name="txtMenu_Url" class="form-control"  />
+<span id="txtMenu_Url-error" class="span_txt" style="display: none;color: red;">Please Enter URL</span></div>
+   
+        
+        <div> <label for="ddlParent_Menu">Parent Menu *</label>
+ <select id="ddlParent_Menu" name="ddlParent_Menu" class="form-control"></select>
+ <span id="ddlParent_Menu-error" class="span_txt" style="display: none;color: red;">Please Select Parent Menu</span></div>
+    
+       
+        <div><label for="txtOrder_By">Order By *</label>
+<input type="text" id="txtOrder_By" name="txtOrder_By" class="form-control"  />
+<span " id="txtOrder_By-error" class="span_txt" style=" display: none;color: red;">Please Enter Order By</span></div>
+   
+        <div class="row">
+            <div class="col-lg-2">
+                <input type="checkbox" id="cbActive" name="cbActive" />
+            </div>
+            <div class="col-lg-10">
+                <label for="cbActive" class="ml-2 wdth">Active</label>
+            </div>
+        </div>
+                                    <div class="row">
     <div class="col-lg-8">
         <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="col-lg-5 col-md-4 col-sm-6">
                 <input type="button" class="btn btn-gray" onclick="redirect()"  value="View" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <input type="button" class="btn btn-primry" onclick="savedata()" id="btnSave" value="Save" />
             </div>
         </div>
     </div>
 </div>
+        
+
+        
+    
+
+                </div>
+            </div>
+                </div>
+        </div>
+    </div>
+   
 </asp:Content>

@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inv_OriginatorTempelates.aspx.cs" Inherits="PMS.GL.Inv_OriginatorTempelates" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
 
     <link href="../../wwwroot/StandardTheme/css/CustomCss/inv_org.css" rel="stylesheet" />
     <script type="text/javascript">   
@@ -33,21 +34,54 @@
                 var txttempelateDescription = $("#txtOrignatorTempelateDescription").val();
                 var chkIsActive = $("#chkIsActive").prop('checked');
                 if (txttempelateName == "") {
-                    alert("Please Enter Tempelate Name");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter Tempelate Name',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 debugger
                 var UserList = new Array();
                 var list = document.getElementById('Originatorlist');
                 if (list.rows.length <= 1) {
-                    alert("Please add User");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please add User',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 var usertable = $('#appusers');
                 usertable.find('tr').each(function (key, value) {
                     var ddlUser = $("#tblddlUser" + (key + 1) + " option:selected").val();
                     if (ddlUser == "") {
-                        alert("Please Select User");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Select User',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         return false;
                     }
                     UserList[key + 1] = new Array(ddlUser);
@@ -108,7 +142,19 @@
                     dataType: "json",
                     success: function (response) {
                         var data = response.d;
-                        alert("Data has been saved successfully");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data has been saved successfully',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         window.location.href = "Inv_OriginatorTempelates.aspx?ID=" + data;
                     }, error: function () { }
                 });
@@ -211,7 +257,19 @@
                 }
             });
             if (NoUserselect) {
-                alert("Please select a user.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select a user.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             } else {
                 var rows = '';
                 var rowlength = Originatorlist.rows.length;
@@ -246,11 +304,27 @@
 
         function ExcludeFromPayment(anchor) {
             debugger;
-            var a = confirm("Are you sure You want to delete");
-            if (a == true) {
-                var row = $(anchor).parents('tr')[0];
-                row.remove();
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'This action will delete ',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var row = $(anchor).parents('tr')[0];
+                    row.remove();
+                }
+            });
+            
         }
 
     </script>
@@ -270,10 +344,15 @@
             <input type="text" name="txtOrignatorTempelateDescription" class="form-control" id="txtOrignatorTempelateDescription" placeholder="Enter OrignatorTempelate Description" />
 
         </div>
-        <div class="col-lg-1 col-md-2 col-sm-2">
-            <label id="lblchkIsActive">Active</label>
-            <input type="checkbox" id="chkIsActive" name="chkIsActive" />
-        </div>
+        <div class="col-lg-1 col-md-2 col-sm-12" style="margin-top: 30px; width: 40px !important;">
+
+     <input type="checkbox" id="chkIsActive" name="chkIsActive" />
+
+ </div>
+ <div class="col-lg-1 col-md-2 col-sm-12" style="margin-top: 30px;">
+     <label id="lblchkIsActive">Active</label>
+
+ </div>
     </div>
 
 
@@ -287,6 +366,7 @@
             <div id="Tab-1" style="width: 100%;">
                 <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
                   <div class="row">
+                      <div class="col-lg-11"></div>
                       <div class="col-lg-1 col-md-1 col-sm-1">
                             <input type="button" class="btn-primry" onclick="AppendUser()" value="+" id="AddUser" style="" />
                       </div>

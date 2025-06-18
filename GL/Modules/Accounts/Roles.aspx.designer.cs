@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.Account {
-    
-    
-    public partial class Roles {
-        
+namespace PMS.Account
+{
+
+
+    public partial class Roles
+    {
+
         /// <summary>
         /// Label3 control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label3;
-        
+
         /// <summary>
         /// txtRoleId control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRoleId;
-        
+
         /// <summary>
         /// Label1 control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label1;
-        
+
         /// <summary>
         /// txtRoleName control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRoleName;
-        
+
         /// <summary>
         /// hdfOldRoleName control.
         /// </summary>
@@ -56,16 +58,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdfOldRoleName;
-        
-        /// <summary>
-        /// RequiredFieldValidator1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
-        
+
         /// <summary>
         /// Label2 control.
         /// </summary>
@@ -74,7 +67,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label2;
-        
+
         /// <summary>
         /// ddlDepartment control.
         /// </summary>
@@ -83,7 +76,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlDepartment;
-        
+
         /// <summary>
         /// btnBack control.
         /// </summary>
@@ -92,16 +85,16 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBack;
-        
+
         /// <summary>
-        /// btnSave control.
+        /// btnSave1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSave;
-        
+        protected global::System.Web.UI.WebControls.Button btnSave1;
+
         /// <summary>
         /// tvMenus control.
         /// </summary>
@@ -110,7 +103,7 @@ namespace PMS.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TreeView tvMenus;
-        
+
         /// <summary>
         /// lblMessage control.
         /// </summary>

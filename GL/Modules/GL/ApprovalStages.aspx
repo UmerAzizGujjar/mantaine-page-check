@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovalStages.aspx.cs" Inherits="PMS.GL.ApprovalStages" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <link href="../css/stock.css" rel="stylesheet" />
     <script src="../CssJs/select2.min.js"></script>
     <link href="../CssJs/select2.min.css" rel="stylesheet" />
@@ -33,28 +34,83 @@
                 var txtNoOfUnApproval = $("#txtNoOfUnApproval").val();
                 var chkFinalApproval = $("#chkFinalApproval").prop('checked');
                 if (txtStageName == "") {
-                    alert("Please Enter Stage Name");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter Stage Name',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 if (txtNoOfApproval !== "" && (!txtNoOfApproval.match(/^\d+$/) || txtNoOfApproval < 0 || txtNoOfApproval > 10)) {
-                    alert("Please Enter a valid number between 0 and 9 for No Of Approvals Required");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter a valid number between 0 and 9 for No Of Approvals Required',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 if (txtNoOfUnApproval !== "" && (!txtNoOfUnApproval.match(/^\d+$/) || txtNoOfUnApproval < 0 || txtNoOfUnApproval > 10)) {
-                    alert("Please Enter a valid number between 0 and 9 for No Of UnApprovals Required");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter a valid number between 0 and 9 for No Of UnApprovals Required',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 var approvalList = new Array();
                 var list = document.getElementById('tblItemDescription');
                 if (list.rows.length <= 1) {
-                    alert("Please add User");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please add User',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 var table = $('#tblItemDescriptionDetail');
                 table.find('tr').each(function (key, value) {
                     var ddlUser = $("#tblddlUser" + (key + 1) + " option:selected").val();
                     if (ddlUser == "") {
-                        alert("Please Select User");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Select User',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         return false;
                     }
                     approvalList[key + 1] = new Array(ddlUser);
@@ -76,7 +132,18 @@
                     dataType: "json",
                     success: function (response) {
                         var data = response.d;
-                        alert("Data has been saved successfully");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data has been saved successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         window.location.href = "ApprovalStages.aspx?ID=" + data;
                     }, error: function () { }
                 });
@@ -183,11 +250,27 @@
                 });
         }
         function ExcludeFromPayment(anchor) {
-            var a = confirm("Are you sure You want to delete");
-            if (a == true) {
-                var row = $(anchor).parents('tr')[0];
-                row.remove();
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'Are you sure You want to delete?',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var row = $(anchor).parents('tr')[0];
+                    row.remove();
+                }
+            });
+            
         }
     </script>
 </asp:Content>
@@ -196,28 +279,34 @@
     <input type="hidden" id="txtStageID" name="txtStageID" />
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
-          
-                <label for="txtStageName">Stage Name</label>
-                <input type="text" name="txtStageName" class="form-control" id="txtStageName" placeholder="Enter Stage Name" />
-            
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            
-                <label for="txtStageDescription">Stage Description</label>
-                <input type="text" name="txtStageDescription" class="form-control" id="txtStageDescription" placeholder="Enter Stage Description" />
+
+            <label for="txtStageName">Stage Name</label>
+            <input type="text" name="txtStageName" class="form-control" id="txtStageName" placeholder="Enter Stage Name" />
 
         </div>
-         <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input type="checkbox" id="chkFinalApproval" name="chkFinalApproval" />
-                    <label id="lblchkFinalApproval">Final Approval</label>
-                </div>        
+        <div class="col-lg-3 col-md-6 col-sm-12">
+
+            <label for="txtStageDescription">Stage Description</label>
+            <input type="text" name="txtStageDescription" class="form-control" id="txtStageDescription" placeholder="Enter Stage Description" />
+
+        </div>
+        
+                <div class="col-lg-1 col-md-3 col-sm-4" style="margin-top: 30px;width: 40px !important;">
+    <input type="checkbox" id="chkFinalApproval" name="chkFinalApproval" />
+
+</div>
+        <div class="col-lg-1 col-md-3 col-sm-4" style="margin-top: 30px;">
+
+    <label id="lblchkFinalApproval" for="chkFinalApproval">Final Approval</label>
+</div>
+        
         <div class="col-lg-2 col-md-3 col-sm-4">
-                        <label ></label>
-                      <input type="button" class="btn-primry" onclick="AddRow()" value="Add"  />
-                    
-                </div>
+            <label></label>
+            <input type="button" class="btn-primry" onclick="AddRow()" value="Add" />
+
+        </div>
     </div>
-    <div class="row" style="display:none">
+    <div class="row" style="display: none">
         <div class="col-md-6">
             <div class="form-group">
                 <label for="txtNoOfApproval">No Of Approvals Required</label>
@@ -235,8 +324,8 @@
     <div class="row">
         <div class="col-lg-10 col-md-10 col-sm-12">
             <div class="form-group">
-               
-             
+
+
                 <table class="table table-bordered" id="tblItemDescription">
                     <thead>
                         <tr>
@@ -252,18 +341,18 @@
         </div>
     </div>
     <div class="row">
-          <div class="col-lg-1 col-md-4 col-sm-6">
-                <input type="button" id="btnSave" class="btn btn-primry" value="Save"  />
-            </div>
-              <div class="col-lg-1 col-md-4 col-sm-6">
-                  <input type="button" id="btnNew" value="New" class="btn btn-yellow" />
-              </div>
-              <div class="col-lg-1 col-md-4 col-sm-6">
-                   
-                <input type="button" id="btnList" value="List view" class="btn btn-gray" />
-               </div>
-      
-              
-               
+        <div class="col-lg-1 col-md-4 col-sm-6">
+            <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
         </div>
+        <div class="col-lg-1 col-md-4 col-sm-6">
+            <input type="button" id="btnNew" value="New" class="btn btn-yellow" />
+        </div>
+        <div class="col-lg-1 col-md-4 col-sm-6">
+
+            <input type="button" id="btnList" value="List view" class="btn btn-gray" />
+        </div>
+
+
+
+    </div>
 </asp:Content>

@@ -2,21 +2,104 @@
 
 <%@ Register Src="~/LookupControl.ascx" TagName="LookupControl" TagPrefix="uc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <style type="text/css">
-     input[type="checkbox"] {
-    width: 20% !important;
+        input[type="checkbox"] {
+            width: 20% !important;
+        }
+        input[type="text"] {
+        width: 300px !important;
+    margin-left: 10px;
 }
-  
+        select{
+                width: 300px !important;
+margin-left: 10px;
+        }
+        #btnSave,#ctl00_MainContent_btnBack{
+            width:100px !important;
 
+            margin-top:10px;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 460px;
+        }
+
+            .card:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
     </style>
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
 
-        $(document).ready(function (){
+        $(document).ready(function () {
             //fillDepts();
+            $('#ddlDepartment').removeAttr('style');
+            $('#ctl00_MainContent_txtRoleId').removeAttr('style');
+            $('#ctl00_MainContent_txtRoleName').removeAttr('style');
+            $('#ctl00_MainContent_btnBack').removeAttr('style');
+            
+            
         });
+        function labelSwal() {
+            var label = $('#<%= lblMessage.ClientID %>').text();
+            if (label != "") {
+                if (label == "Data has been sucessfully save") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: label,
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: label,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
+                }
+
+            }
+        }
+        function validator() {
+            var roleName = $('#<%= txtRoleName.ClientID %>').val();
+            labelSwal();
+            if (roleName == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Role Name is Required!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            } else {
+                // If input is not empty, click the hidden ASP.NET button
+                $('#<%= btnSave1.ClientID %>').click();
+            }
+        }
         function fillDepts() {
 
             PageMethods.FillDepts(function (data) {
@@ -32,7 +115,7 @@
         }
 
         //************************** Treeview Parent-Child check behaviour ****************************// 
-        function OnTreeClick(evt) {          
+        function OnTreeClick(evt) {
             var src = window.event != window.undefined ? window.event.srcElement : evt.target;
             var isChkBoxClick = (src.tagName.toLowerCase() == "input" && src.type == "checkbox");
             if (isChkBoxClick) {
@@ -52,8 +135,8 @@
         }
         function CheckUncheckChildren(childContainer, check) {
             var childChkBoxes = childContainer.getElementsByTagName("input");
-            
-           // childChkBoxes[0].parentNode.checked = check;
+
+            // childChkBoxes[0].parentNode.checked = check;
             var childChkBoxCount = childChkBoxes.length;
             for (var i = 0; i < childChkBoxCount; i++) {
                 childChkBoxes[i].checked = check;
@@ -64,7 +147,7 @@
             var parentDiv = GetParentByTagName("div", srcChild);
             var parentNodeTable = parentDiv.previousSibling;
             //srcChild.parentNode.checked = true;
-            
+
             if (parentNodeTable) {
                 var checkUncheckSwitch;
 
@@ -122,33 +205,41 @@
         function fn_init() {
             $("#aspnetForm").validate({
                 rules: {
-                    <%=txtRoleName.UniqueID %>: {
+            '<%= txtRoleName.UniqueID %>': {
                         required: true
-                    }                    
+                    }
                 }
             });
-         
-            var prm = Sys.WebForms.PageRequestManager.getInstance();
-            prm.add_initializeRequest(onEachRequest);
         }
+
+
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_initializeRequest(onEachRequest)
+
 
         function onEachRequest(sender, args) {
             if ($("#aspnetForm").valid() == false) {
                 args.set_cancel(true);
             }
-        }         
-        function _valid(){
+        }
+        function _valid() {
             var p = Sys.WebForms.PageRequestManager.getInstance();
             p.add_initializeRequest(onOtherRequest);
         }
         function onOtherRequest(sender, args) {
             args.set_cancel(false);
-        }            
+        }
     </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="row">
 
-    <fieldset>
-        <legend>Define User Roles</legend>
-        <table style="padding: 20px; width:80% ">
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-5">
+            <div class="card">
+    <div class="card-body">
+        <table style="padding: 20px; width: 100%">
             <tr>
                 <td>
                     <asp:Label ID="Label3" Text="Role ID" runat="server" />
@@ -167,7 +258,6 @@
                     <asp:HiddenField ID="hdfOldRoleName" runat="server" />
                 </td>
                 <td>
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Role Name is required" ControlToValidate="txtRoleName"></asp:RequiredFieldValidator>
                 </td>
             </tr>
             <tr>
@@ -175,27 +265,43 @@
                     <asp:Label ID="Label2" Text="Department" runat="server" />
                     &nbsp
                 </td>
-                <td>                    
-                    <asp:DropDownList runat="server" style="width:100% !important" ID="ddlDepartment" AppendDataBoundItems="true" ClientIDMode="Static" CausesValidation="false" ></asp:DropDownList>
+                <td>
+                    <asp:DropDownList runat="server" Style="width: 100% !important" ID="ddlDepartment" AppendDataBoundItems="true" ClientIDMode="Static" CausesValidation="false"></asp:DropDownList>
                 </td>
             </tr>
-         
+
         </table>
         <div class="row">
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                        <asp:Button Text="Back" CssClass="btn btn-gray" ID="btnBack" PostBackUrl="~/Modules/Accounts/RolesView.aspx" CausesValidation="false" runat="server" />
-            </div>   
-            <div class="col-lg-1 col-md-4 col-sm-6">
-                  <asp:Button ID="btnSave" CssClass="btn btn-primry"  runat="server" Text="Save" OnClick="btnSave_Click"  />
+            <div class="col-lg-3 col-md-4 col-sm-6" >
+                <asp:Button Text="Back" CssClass="btn btn-gray" ID="btnBack" PostBackUrl="~/Modules/Accounts/RolesView.aspx" CausesValidation="false" runat="server"  />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-primry" value="Save" onclick="validator()" id="btnSave" />
+                <asp:Button ID="btnSave1" runat="server" Text="Save" OnClick="btnSave_Click"  Visible="false" />
             </div>
         </div>
-        <fieldset>
-            <legend>Menu Rights</legend>
-            <asp:TreeView ID="tvMenus" runat="server" ShowLines="True"  ExpandDepth="0" 
-                LineImagesFolder="~/TreeLineImages" ShowCheckBoxes="All" onclick="OnTreeClick(event)">
-            </asp:TreeView>
-        </fieldset>
-        <asp:Label ID="lblMessage" runat="server" />
-    </fieldset>
+    </div>
+</div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header" style="font-weight:bold; font-size:2rem">
+                    Menu Rights:
+                </div>
+    <div class="card-body">
+
+        <asp:TreeView ID="tvMenus" runat="server" ShowLines="True" ExpandDepth="0"
+            LineImagesFolder="~/TreeLineImages" ShowCheckBoxes="All" onclick="OnTreeClick(event)">
+        </asp:TreeView>
+
+        <asp:Label ID="lblMessage" runat="server"   />
+    </div>
+</div></div>
+
+        <div class="col-lg-1"></div>
+    </div>
+    
+    
+
 
 </asp:Content>

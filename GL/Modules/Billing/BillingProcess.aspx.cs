@@ -94,7 +94,7 @@ namespace PMS
             var pat_ids = (from p in db.Reg_patients join vs in db.Emergency_Patients on p.pat_id equals vs.Patient_ID where vs.Patient_ID == Convert.ToInt32(Pat_id) select vs.Emergency_ID).FirstOrDefault();
             var itemCodes = (from op in db.Reg_patients
                              join ip in db.InPatientServices on op.pat_id equals ip.PatientId
-                             where ip.PatientId == pat_ids
+                             where ip.EmergencyId == pat_ids
                              && ip.PatientType == "Emergency"
                             && (ip.isbilled ?? false) == false
                              select ip.Service_ItemId).ToList();
@@ -311,6 +311,23 @@ namespace PMS
                        join v in db.ValueSets
                        on d.ValueSet_ID equals v.ValueSet_ID
                        where v.ValueSet_Name == "Charge Policy"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
+        }
+        [WebMethod]
+        public static string GetMainDepartment()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var Dis = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Mode Of Registration"
                        select new
                        {
                            d.DataValue_Name,
@@ -865,15 +882,15 @@ namespace PMS
             newBill.Balance_Amount = data.Balance_Amount;
             newBill.Charge_Policy = data.ChargePolicy;
             newBill.Referred_By = data.referred_by_doctor;
-            //newBill.Previous_Paid = data.Previous_Paid;
-            //newBill.Previous_Balance = data.Previous_Balance;
+            newBill.Previous_Paid = data.Previous_Paid;
+            newBill.Previous_Balance = data.Previous_Balance;
             //newBill.Total_Doctor_Share = data.Total_Doctor_Share;
-            //newBill.Over_and_Above = data.Over_and_Above;
-            //newBill.Cash_In_Hand = data.Cash_In_Hand;
-            //newBill.Cash_In_Hand_Account = data.Cash_In_Hand_Account;
-            //newBill.Bank_Account = data.Bank_Account;
-            //newBill.Bank_Cash = data.Bank_Cash;
-            //newBill.Main_Department = data.Main_Department;
+            newBill.Over_and_Above = data.Over_and_Above;
+            newBill.Cash_In_Hand = data.Cash_In_Hand;
+            newBill.Cash_In_Hand_Account = data.Cash_In_Hand_Account;
+            newBill.Bank_Account = data.Bank_Account;
+            newBill.Bank_Cash = data.Bank_Cash;
+            newBill.Main_Department = data.Main_Department;
 
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
             var inpatient_ID = db.In_Patients.Where(m => m.Patient_ID.Equals(data.Patient_ID)).Select(m => m.In_Patient_ID).ToList();
@@ -1580,7 +1597,7 @@ namespace PMS
             public decimal Total_Doctor_Share { get; set; }
             public decimal Over_and_Above { get; set; }
             public decimal Cash_In_Hand { get; set; }
-            public decimal Bank_Account { get; set; }
+            public string Bank_Account { get; set; }
             public decimal Discount_Amount { get; set; }
             public decimal TotalPayable { get; set; }
             public decimal Net_Amount { get; set; }
@@ -1588,7 +1605,7 @@ namespace PMS
             public decimal Balance_Amount { get; set; }
             public string ChargePolicy { get; set; }
             public string Cash_In_Hand_Account { get; set; }
-            public string Bank_Cash { get; set; }
+            public decimal Bank_Cash { get; set; }
             public string Main_Department { get; set; }
             //public string Remarks { get; set; }
             public List<BillingProcessDetails> Details { get; set; }
@@ -1667,6 +1684,15 @@ namespace PMS
                             data.Updated_By,
                             data.Updation_Date,
                             data.Casher,
+                            data.Previous_Balance,
+                            data.Previous_Paid,
+                            data.Total_Doctor_Share,
+                            data.Over_and_Above,
+                            data.Cash_In_Hand,
+                            data.Bank_Account,
+                            data.Cash_In_Hand_Account,
+                            data.Bank_Cash,
+                            data.Main_Department,
                             data.Voucher_ID,
                             data.In_Patient_ID,
                             data.Referred_By,
@@ -2336,7 +2362,7 @@ namespace PMS
                 pt.In_Patient_Type = DBClass.getField("select top 1 Patient_Discount_Type from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
                 pt.Package_Type = DBClass.getField("select top 1 Package_type_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
                 pt.Package_Name = DBClass.getField("select top 1 Package_Name_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
-
+                pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Patient_Main_Category from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
                 if (pt.IsDisountAvailable.Contains("position")) pt.IsDisountAvailable = "false";
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
@@ -2345,15 +2371,16 @@ namespace PMS
                 pt.Ward_Name = "";
                 pt.Bed_No = "";
                 pt.Room_Name = "";
-                
-                var inpatid_adv = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + "order by Advance_ID desc");
+                pt.MainDepartment = "01";
+
+                var inpatid_adv = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + " order by Advance_ID desc");
                 if (inpatid_adv != "There is no row at position 0.")
                 {
                     pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid_adv);
                 }
 
-                var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + " order by Emergency_ID desc");
-                var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + " order by In_Patient_ID desc");
+                var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by Emergency_ID desc");
+                var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by In_Patient_ID desc");
 
                 if (ipd_id != "There is no row at position 0.")
                 {
@@ -2363,24 +2390,21 @@ namespace PMS
                     pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
                     pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
                     pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
+                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
+                    pt.MainDepartment = "03";
                 }
 
                 if (Emergency_Id != "There is no row at position 0.")
                 {
-                    pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + ipd_id);
-                    pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + ipd_id);
-                    pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Bed_No = DBClass.getField("Select Bed_No from Emergency_Patient ipd where ipd.Emergency_ID =" + ipd_id);
+                    pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + Emergency_Id);
+                    pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
+                    pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.In_Patient_ID =" + Emergency_Id);
+                    pt.Bed_No = DBClass.getField("Select Bed_No from Emergency_Patient ipd where ipd.Emergency_ID =" + Emergency_Id);
+                    pt.MainDepartment = "02";
+                    pt.Department = "";
                 }
 
-                if (ipd_id != "There is no row at position 0.")
-                {
-                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
-                }
-                else
-                {
-                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Patient_Main_Category from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
-                }
+         
 
                     pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 var Patientno = pat.Patient_No.ToString();
@@ -2408,7 +2432,6 @@ namespace PMS
             public string Mobile;
             public string Address;
             public string Entry_Date;
-            public string department;
             public string Follow;
             public string Created_Time;
             public string Bed_No;
@@ -2420,6 +2443,7 @@ namespace PMS
 
             public string Previous_inpatient { get; set; }
             public string OPD_Panel_ID { get; set; }
+            public string MainDepartment { get; set; }
             public string opdid { get; set; }
             public string pat_id { get; set; }
             public string Department { get; set; }

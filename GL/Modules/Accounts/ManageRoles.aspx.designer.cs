@@ -69,15 +69,6 @@ namespace PMS.Account
         protected global::System.Web.UI.WebControls.CheckBoxList cbRolesList;
 
         /// <summary>
-        /// lblCompany control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCompany;
-
-        /// <summary>
         /// cbAllCompany control.
         /// </summary>
         /// <remarks>
@@ -103,6 +94,15 @@ namespace PMS.Account
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCompany;
+
+        /// <summary>
+        /// btnBack control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnBack;
 
         /// <summary>
         /// btnSave control.
