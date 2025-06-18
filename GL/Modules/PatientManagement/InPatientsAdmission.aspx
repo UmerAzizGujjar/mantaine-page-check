@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/StandardTheme/css/CustomCss/ipdadmission.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
@@ -778,7 +779,19 @@
             var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             if (dischargechk == false) {
-                alert("First Discharge The Patient")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'First Discharge The Patient',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
@@ -915,7 +928,19 @@
                     doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
 
                     if (doctorVal == 0 || doctorVal == undefined) {
-                        alert("Please Select Doctor")
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Select Doctor',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         return false;
                     }
                     if (value.Test_ID != 0) {
@@ -931,7 +956,19 @@
 
 
                     if (test_array.length > 0) {
-                        alert('This test already added!');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This test already added!',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     } else {
                         $('.tests-table').append(row);
 
@@ -1154,7 +1191,19 @@
                 return true;
             }
             else {
-                alert('Please input a number between 1 and 4:');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please input a number between 1 and 4:',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return $("#ctl00_MainContent_ctl00_MainContent_txtEOR").val('_/4');
 
             }
@@ -1173,7 +1222,19 @@
                 return true;
             }
             else {
-                alert('Please input a number between 1 and 5:');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please input a number between 1 and 5:',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return $("#ctl00_MainContent_txtMR").val('_/5');
             }
         }
@@ -1192,8 +1253,19 @@
                 return true;
             }
             else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please input a number between 1 and 6:',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
-                alert('Please input a number between 1 and 6:');
                 return $("#ctl00_MainContent_txtVR").val('_/6');
             }
         }
@@ -1220,7 +1292,19 @@
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
             if (PatientDiscountType == "10") {
                 if (PanelCompany == "0") {
-                    alert("Please Select Panel Company");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Panel Company',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return true;
                 }
 
@@ -1760,8 +1844,19 @@
 
                     if (btn == 'btnSave') {
                         debugger;
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Successfully Save',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
-                        alert('Data Successfully Save');
                         window.location = "InPatientsAdmission.aspx?ID=" + response;
                         //window.open('ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
                         $('#btnSave').val("Update");
@@ -1816,7 +1911,19 @@
         function GetInvestigationTab() {
             var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
             if (doctor == "0" || doctor == null) {
-                alert("Please Select Doctor Name..")
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Doctor Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
             }
             else {
 
@@ -1858,7 +1965,19 @@
             debugger;
             var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
             if (doctor == "0" || doctor == null) {
-                alert("Please Select Doctor Name..")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Doctor Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             else {
                 var Date = $('#ctl00_MainContent_txtMo_Date').val();
@@ -1903,7 +2022,19 @@
         function GetLastMediceineTab() {
             var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
             if (doctor == "0" || doctor == null) {
-                alert("Please Select Doctor Name..")
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Doctor Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
             }
             else {
                 $('#ctl00_MainContent_chkMedDoctor').prop('checked', true);
@@ -1942,7 +2073,19 @@
 
             var doctor = $('#ctl00_MainContent_ddlDischarge_By').val();
             if (doctor == "0") {
-                alert("Please Select Doctor Name..")
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Doctor Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
             }
             else {
                 $('#ctl00_MainContent_chkDischargeMedication').prop('checked', true);
@@ -2990,13 +3133,38 @@
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
             if (PatientDiscountType == "10") {
                 if (PanelCompany == "0") {
-                    alert("Please Select Panel Company");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Panel Company',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return true;
                 }
 
             }
             if (pkg == "0") {
-                alert("You Haven't Selected Package")
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'You Have not Selected Package',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
 
 
@@ -3010,11 +3178,33 @@
                         debugger;
 
                         if (response === "0") {
-                            alert('Data not Saved !');
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Data not Saved !',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                         }
                         else {
-
-                            alert('Data Successfully Save');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Successfully Save',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                         }
 
                         debugger;
@@ -3056,18 +3246,53 @@
                     else {
                         var Admitcategory = $('#ctl00_MainContent_ddlPatientType').val();
                         if (Admitcategory == "0") {
-                            alert("Please Select Admit Category");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Select Admit Category',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                             return false;
 
                         }
                         var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
                         var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
                         if (Doctor == "0" || Doctor == null) {
-                            alert("Please Select Doctor");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Select Doctor',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                             return false;
                         }
                         if (Complain == "") {
-                            alert("Please Enter Health Complaint ");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Enter Health Complaint',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                             return false;
                         }
                         var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
@@ -3076,7 +3301,19 @@
                             if (refer_to == "001") {
                                 var bedNo = $('#ctl00_MainContent_txtBedno').val();
                                 if (bedNo == "") {
-                                    alert("Please Select Bed No");
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: 'Please Select Bed No',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
                                     return false;
                                 }
                                 SaveWard();
@@ -3085,7 +3322,18 @@
                                 var roomNo = $('#ctl00_MainContent_ddlroom').val();
                                 if (roomNo == "0") {
                                     localStorage.SelectedTabID
-                                    alert("Please Select Room No");
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: 'Please Select Room No',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
                                     return false;
                                 }
                                 SaveRoom();
@@ -3095,14 +3343,37 @@
                         }
                         else {
                             if (ddlIssuance_Of == "0") {
-                                alert("Please First Create Admision ");
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Please First Create Admision',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
                                 return false;
                             }
 
                             if (ddlIssuance_Of == "001") {
                                 var bedNo = $('#ctl00_MainContent_txtBed_No').val();
                                 if (bedNo == "") {
-                                    alert("Please Select Bed No");
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: 'Please Select Bed No',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
                                     return false;
                                 }
                                 SaveWard();
@@ -3111,7 +3382,19 @@
                                 var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
                                 if (roomNo == "0") {
                                     localStorage.SelectedTabID
-                                    alert("Please Select Room No");
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: 'Please Select Room No',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
                                     return false;
                                 }
                                 SaveRoom();
@@ -3555,7 +3838,21 @@
                 $('#ddlDaysMonthsYears').val("001");
                 $('#txtRemarks').val("");
                 $('#txtNewSymptom').hide();
-            } else { alert('Symptom already added'); }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Symptom already added',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+            }
         }
 
         function Edit_Symtom(AnchorTag) {
@@ -3828,7 +4125,19 @@
 
 
                     if (doctorVal == 0 || doctorVal == undefined) {
-                        alert("Please Select Doctor")
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Select Doctor',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         return false;
                     }
 
@@ -3840,7 +4149,19 @@
                     }
                     var test_array = $('.tests-table').find('input[name=testID][value="' + value.TestID + '"]');
                     if (test_array.length > 0) {
-                        alert('This test already added!');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This test already added!',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     } else {
                         $('.tests-table').append(row);
 
@@ -3893,7 +4214,19 @@
 
 
                     if (doctorVal == 0 || doctorVal == undefined) {
-                        alert("Please Select Doctor")
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Select Doctor',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         return false;
                     }
                     var areaOfIntrest = $('#ctl00_MainContent_txtAreaOfInterest').val();
@@ -3902,7 +4235,19 @@
 
                     var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
                     if (test_array.length > 0) {
-                        alert('This test already added!');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This test already added!',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     } else {
                         $('.tests-table').append(row);
 
@@ -3936,7 +4281,19 @@
             }
 
             if (doctorVal == 0 || doctorVal == undefined) {
-                alert("Please Select Doctor")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Doctor',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
@@ -3945,7 +4302,18 @@
 
             var test_array = $('.tests-table').find('input[name=testID][value="' + Procedure + '"]');
             if (test_array.length > 0) {
-                alert('This Procedure already added!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Procedure already added!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
             } else {
                 $('.tests-table').append(row);
             }
@@ -4249,7 +4617,18 @@
                     doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
                 }
                 if (doctorVal == 0 || doctorVal == undefined) {
-                    alert("Please Select Doctor")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Doctor',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
 
@@ -4258,7 +4637,19 @@
 
                 var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
                 if (test_array.length > 0) {
-                    alert('This test already added!');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This test already added!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 } else {
                     $('.tests-table').append(row);
                 }
@@ -4296,11 +4687,34 @@
                 }
 
                 if ($('#txtMedicen').val() != '' && $('#txtPharmacyItem').val() != '') {
-                    alert("Please Eneter One Name")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Eneter One Name',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
                 if ($('#txtMedicen').val() == '' && $('#txtPharmacyItem').val() == '') {
-                    alert("Please Eneter Name")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter Name',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 var UnListedMed = $('#txtMedicen').val();
@@ -4314,24 +4728,72 @@
 
                 var Dose = $('#txtDosage').val();
                 if (Dose == "") {
-                    alert("Please Select Dose ")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Dose ',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 var Frequency = $('#txtRecomended_Dosage').val();
                 if (Frequency == "") {
-                    alert("Please Select Frequency ")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Frequency',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 var DosageFrom = $('#ddlDosage_From').val();
 
                 var Route = $('#Routes').val();
                 if (Route == "") {
-                    alert("Please Select Route ")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Route',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 var Duration = $('#txtInjection').val();
                 if (Duration == "") {
-                    alert("Please Select Duration ");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Duration',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 // var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
@@ -5129,7 +5591,19 @@
             var Address = $('#txt_Address').val();
             var martail_status = $('#ddl_status').val();
             if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || Address == "")) {
-                alert("Please Enter compulsory Fields");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter compulsory Fields',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
@@ -5156,7 +5630,19 @@
                 success: function (data) {
                     debugger;
                     var Reg_Patient_ID = data.d;
-                    alert('Your Record Save and Load Successfully');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Your Record Save and Load Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#PatientModel').modal('hide');
                     AddPatientDetail(Reg_Patient_ID)
                 },
@@ -5256,7 +5742,19 @@
                 AddNewPatient();
             }
             else {
-                alert("Please Enter Complete Mobile Number First");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Complete Mobile Number First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             $('#ClosePatientsSearchModel').click();
