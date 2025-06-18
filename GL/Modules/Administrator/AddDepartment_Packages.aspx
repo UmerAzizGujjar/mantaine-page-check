@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddDepartment_Packages.aspx.cs" Inherits="PMS.Modules.Inventory.AddDepartment_Packages" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
 
     <script type="text/javascript">
     $(document).ready(function () {
@@ -48,13 +49,37 @@
                 }
             });
             if (Dep_list.length === 0) {
-                alert("Please select at least one department.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select at least one department.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return; 
             }
             var PAKrate = { 'PKRateDetail': Dep_list };
             
-            PageMethods.SavePackage(btnSave, PAckID, Package, Remarks, PackageType, duration, JSON.stringify(PAKg), JSON.stringify(PAKrate), PerDay_Charges, function (res) {   
-                alert("Record Saved Successfully.");
+            PageMethods.SavePackage(btnSave, PAckID, Package, Remarks, PackageType, duration, JSON.stringify(PAKg), JSON.stringify(PAKrate), PerDay_Charges, function (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Record Saved Successfully.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').val("Update");
                 window.location = "AddDepartment_Packages.aspx?Dep_Package_id=" + res;
             });

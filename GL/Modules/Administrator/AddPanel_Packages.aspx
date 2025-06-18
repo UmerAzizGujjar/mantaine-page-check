@@ -44,12 +44,36 @@
                 }
             });
             if (Pan_list.length === 0) {
-                alert("Please select at least one Panel.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select at least one Panel.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             var PAKrate = { 'PKRateDetail': Pan_list };
-            PageMethods.SavePackage(btnSave, PAckID, Package, Remarks, PackageType, duration, JSON.stringify(PAKg), JSON.stringify(PAKrate), PerDay_Charges, function (res) {                        
-                alert("Record Saved Successfully.");
+            PageMethods.SavePackage(btnSave, PAckID, Package, Remarks, PackageType, duration, JSON.stringify(PAKg), JSON.stringify(PAKrate), PerDay_Charges, function (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Record Saved Successfully.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').val("Update");
                 window.location = "AddPanel_Packages.aspx?Pan_Package_id=" + res;
             });
