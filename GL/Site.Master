@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="/wwwroot/images/favicon.png" />
     <asp:PlaceHolder ID="PlaceHolder1" runat="server">
         <%--Datatable css--%>
-
+        <%--hehe --%>
         <%--<link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/toastr.min.css") %>" rel="stylesheet" type="text/css" />--%>
         <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/wwwroot/StandardTheme/Styles/jquery.datetimepicker.css") %>" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
@@ -23,7 +23,7 @@
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Select2/select2.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-skins.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
-        <link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/styleMaster.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/styleMaster.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Styles/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Styles/token-input.css") %>" type="text/css" rel="stylesheet" />
@@ -725,7 +725,7 @@
         </div>
         <br />
         <div class="center row" id="tibbitFooter" runat="server">
-            <div class="col-lg-1 col-sm-1 col-md-1">
+            <div class ="col-lg-9 col-md-8 col-sm-6">
             </div>
 
             <div class="col-lg-9 col-md-8 col-sm-6">
