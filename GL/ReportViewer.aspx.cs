@@ -616,6 +616,9 @@ namespace PMS
                     string STIME = Request.QueryString["STime"].ToString();
                     string ETIME = Request.QueryString["ETime"].ToString();
                     bool summary = Convert.ToBoolean(Request.QueryString["Summary"]);
+                    //bool date_Only_Boolean_converted = Convert.ToBoolean(dateOnly);
+                    bool AllPatientsRecords_Boolean_Converted = Convert.ToBoolean(AllPatientsRecords);
+                    bool summary_Boolean_Converted = Convert.ToBoolean(summary);
                     //Mohsin
                     reportPath += "Patients/rptPatientsDetails.rpt";
                     rd.Load(reportPath);
@@ -629,7 +632,7 @@ namespace PMS
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("Summary", summary);
                     rd.SetParameterValue("@UserID", CurrentUserID);
-                    rd.SetParameterValue("@AllPatientsRecords", AllPatientsRecords);
+                    rd.SetParameterValue("@AllPatientsRecords", AllPatientsRecords_Boolean_Converted);
                     rd.SetParameterValue("@Operator", Operator);                  
                     rd.SetParameterValue("STime", STIME);
                     rd.SetParameterValue("ETime", ETIME);
@@ -962,7 +965,9 @@ namespace PMS
 
                 string parameterStDate = string.Empty;
                 string parameterEndDate = string.Empty;
-
+                //Mohsin
+                string op = Request.QueryString["Operator"];
+                //Mohsin
                 this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
                 this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
                 rd.SetParameterValue("@Patient_Type", patientTpe);
@@ -970,7 +975,7 @@ namespace PMS
                 rd.SetParameterValue("@endDate", parameterEndDate);
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                 rd.SetParameterValue("@serviceID", serviceID);
-                rd.SetParameterValue("@Operator", Request.QueryString["Operator"]);
+                rd.SetParameterValue("@Operator", op);
             }
             #endregion
             #region General Patient Report
