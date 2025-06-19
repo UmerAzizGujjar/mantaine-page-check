@@ -129,8 +129,8 @@ namespace PMS
             }
             DataBaseDataContext db = new DataBaseDataContext();
             var userid = AppConfig.UserID;
-            mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == userid select a.mobileno).FirstOrDefault();
-            email.InnerText = (from a in db.aspnet_Memberships where a.UserId == userid select a.Email).FirstOrDefault();
+            //mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == userid select a.mobileno).FirstOrDefault();
+            //email.InnerText = (from a in db.aspnet_Memberships where a.UserId == userid select a.Email).FirstOrDefault();
 
         }
 

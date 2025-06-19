@@ -2,9 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <script type="text/javascript" src="../../wwwroot/StandardTheme/CustomJs/OPD.js"></script>
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/OPD.css" rel="stylesheet" />
-     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <script type="text/javascript" src="../../wwwroot/Tibbit_theme/CustomJs/OPD.js"></script>
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
+     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             DisableCardPrint();
@@ -209,19 +209,19 @@
         <div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
             <div class="col-lg-4 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
                 <div class="icon-text">
-                    <img src="~~../../../../wwwroot/StandardTheme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="32" height="32">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="32" height="32">
                     <span><a class="anchorOnOPD" >Register a new patient</a></span>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12" style="cursor: pointer" id="btnSearchApp_Patient" onclick="SearchPop_App()">
                 <div class="icon-text">
-                    <img src="~~../../../../wwwroot/StandardTheme/images/HMIS_Icons/appointmenticon.png" width="32" height="32">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" width="32" height="32">
                     <span><a class="anchorOnOPD">Search in appointment</a></span>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12" style="cursor: pointer" id="btnsearchpatlist">
                 <div class="icon-text">
-                    <img src="~~../../../../wwwroot/StandardTheme/images/HMIS_Icons/existingpaticon.png" alt="Search" h="32" height="32">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/existingpaticon.png" alt="Search" h="32" height="32">
                     <span><a class="anchorOnOPD">Search an existing patient</a></span>
                 </div>
             </div>
