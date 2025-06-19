@@ -24,7 +24,22 @@
     margin-top: 24px !important;
     color: #EFA63E  !important;
 }*/
+.swal-big-popup {
+    width: 400px !important;
+    padding: 20px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box;
+}
 
+.swal-big-title {
+    font-size: 22px !important;
+    font-weight: bold;
+}
+
+.swal-big-text {
+    font-size: 16px !important;
+}
 .sidebar {
     display: none;
 }
@@ -51,7 +66,7 @@
 
 .main-content {
     background-color: #fff !important;
-    padding-bottom: 40px !important;
+    padding-bottom: 100px !important;
 }
 
 .page {
@@ -598,7 +613,7 @@ page-header h1 {
 
 .main-content {
     background-color: #fff;
-    padding-bottom: 40px !important;
+    padding-bottom: 100px !important;
 }
 
 .notif-detail {
@@ -1099,6 +1114,7 @@ page-header h1 {
 }
 
 #ctl00_tibbitFooter {
+    margin-left: 0px !important;
     position: absolute;
     bottom: 0;
     width: 100%;

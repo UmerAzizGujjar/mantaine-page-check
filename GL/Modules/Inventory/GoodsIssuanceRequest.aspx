@@ -148,8 +148,22 @@
                     });
                     if (find == true) {
                         debugger;
-                        alert("item already exists");
-                        $("#txtItem").tokenInput("clear");
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'item already exists',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+
+                         $("#txtItem").tokenInput("clear");
                     }
                     else {
                         if (parse[0].Active == true) {
@@ -158,8 +172,22 @@
                             $("#txtItem").tokenInput("clear");
                         }
                         else {
-                            alert("You have selected InActive items");
-                            $("#txtItem").tokenInput("clear");
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'You have selected InActive items',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+
+                             $("#txtItem").tokenInput("clear");
                         }
                     }
                 },
@@ -254,8 +282,22 @@
             if (WareHouse == '0') $('#ddlwarehouse').addClass('ErrorAlert'); else $('#ddlwarehouse').removeClass('ErrorAlert');
             var tblLength = $("#tblPackage tr:gt(0)").length;
             if (tblLength == '0') {
-                alert("Please Add Items")
-                $('#tblPackage').addClass('ErrorAlert');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add Items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+
+                 $('#tblPackage').addClass('ErrorAlert');
             } else {
                 $('#tblPackage').removeClass('ErrorAlert');
             }
@@ -272,8 +314,22 @@
                 })
                 if (status == "QtyError") {
                     debugger;
-                    alert("Please Enter MIR Qty Or MIR  Qty Must be Greater than zero");
-                    return false;
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter MIR Qty Or MIR  Qty Must be Greater than zero',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                     return false;
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
@@ -363,12 +419,34 @@
                         options.error = function (err) { };
                         $.ajax(options);
                         if (btnValue == "Save") {
-                            alert("Data Inserted Successfully!");
-                            $("#btnsave").prop("disabled", true);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Inserted Successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                             $("#btnsave").prop("disabled", true);
                         }
                         else {
-                            alert("Data Updated Successfully!");
-                            $("#btnsave").prop("disabled", true);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Updated Successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                             $("#btnsave").prop("disabled", true);
                         }
                         window.location.href = 'GoodsIssuanceRequestView.aspx';
                     },
@@ -413,7 +491,23 @@
             var seen = {};
             $('#tblPackage tr').each(function () {
                 var item_id = $("td:nth-child(11)", $(this)).text();
-                if (seen[item_id]) alert('duplicate');
+                if (seen[item_id]) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'duplicate',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+
+                }  
                 else {
                     seen[item_id] = true;
                 }

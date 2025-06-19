@@ -121,8 +121,20 @@
                    $("#btn_save").val('Update');
                },
                error: function () {
-                   alert('Error fetching retirement result');
-               }
+                   Swal.fire({
+                       icon: 'error',
+                       title: 'Error!',
+                       text: 'Error fetching retirement result',
+                       showConfirmButton: false,
+                       timer: 2000,
+                       customClass: {
+                           popup: 'swal-big-popup',
+                           title: 'swal-big-title',
+                           htmlContainer: 'swal-big-text'
+                       }
+                   });
+
+                }
            });
        }
 
@@ -131,8 +143,20 @@
            var Trans_Type = $("#ddl_transType").val();
 
            if (Trans_Type == 0 || Trans_Type == "0" || Trans_Type == '0' || Trans_Type == "") {
-               alert("Fill mandatory fields");
-               console.error("Error: Trans_Type is required.");
+               Swal.fire({
+                   icon: 'error',
+                   title: 'Error!',
+                   text: 'Fill mandatory fields',
+                   showConfirmButton: false,
+                   timer: 2000,
+                   customClass: {
+                       popup: 'swal-big-popup',
+                       title: 'swal-big-title',
+                       htmlContainer: 'swal-big-text'
+                   }
+               });
+
+                console.error("Error: Trans_Type is required.");
                return;
            }
 
@@ -185,7 +209,18 @@
                    function (response) {
                        var master_id = response;
                        if (master_id != '-1') {
-                           alert("Data has been saved successfully");
+                           Swal.fire({
+                               icon: 'success',
+                               title: 'Success!',
+                               text: 'Data has been saved successfully.',
+                               showConfirmButton: false,
+                               timer: 2500,
+                               customClass: {
+                                   popup: 'swal-big-popup',
+                                   title: 'swal-big-title',
+                                   htmlContainer: 'swal-big-text'
+                               }
+                           });
                            window.location.href = "AssetRetirement.aspx";
                        }
                    }
@@ -380,7 +415,18 @@
                PageMethods.approveAssetRetirement(assetRetId, function (response) {
                    var data = response;
                    if (data == "Success") {
-                       alert("Approve Retirement Successfully")
+                       Swal.fire({
+                           icon: 'success',
+                           title: 'Success!',
+                           text: 'Approve Retirement Successfully.',
+                           showConfirmButton: false,
+                           timer: 2500,
+                           customClass: {
+                               popup: 'swal-big-popup',
+                               title: 'swal-big-title',
+                               htmlContainer: 'swal-big-text'
+                           }
+                       });
                    }
                });
            });
@@ -393,8 +439,19 @@
                PageMethods.UnapproveAssetRetirement(assetRetId, function (response) {
                    var data = response;
                    if (data == "Success") {
-                       alert("Approve Retirement Successfully")
-                   }
+                       Swal.fire({
+                           icon: 'success',
+                           title: 'Success!',
+                           text: 'Approve Retirement Successfully.',
+                           showConfirmButton: false,
+                           timer: 2500,
+                           customClass: {
+                               popup: 'swal-big-popup',
+                               title: 'swal-big-title',
+                               htmlContainer: 'swal-big-text'
+                           }
+                       });
+                    }
                });
            });
 

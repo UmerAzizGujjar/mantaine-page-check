@@ -269,7 +269,21 @@
                 var location = $('#ddlLocation_ID').val();
 
                 if (location == 0 || location == "0" || location == '0' || location == "") {
-                    alert("Fill mandatory fields");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Fill mandatory fields',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
                     console.error("Error: Location is required.");
                     return;
                 }
@@ -278,16 +292,44 @@
                 var ast_ctgry = $("#ast_ctgry").val();
 
                 if (ast_ctgry == 0 || ast_ctgry == "0" || ast_ctgry == '0' || ast_ctgry == "") {
-                    alert("Fill mandatory fields");
-                    console.error("Error: Asset category is required.");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Fill mandatory fields',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                     console.error("Error: Asset category is required.");
                     return;
                 }
 
                 var sub_ctgry = $("#sub_ctgry").val();
 
                 if (sub_ctgry == 0 || sub_ctgry == "0" || sub_ctgry == '0' || sub_ctgry == "") {
-                    alert("Fill mandatory fields");
-                    console.error("Error: Sub-category is required.");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Fill mandatory fields',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                     console.error("Error: Sub-category is required.");
                     return;
                 }
 
@@ -298,8 +340,36 @@
                 var txt_idesp = $("#txt_idesp").val();
 
                 if (txt_idesp == "" || txt_idesp == null) {
-                    alert("Fill mandatory fields");
-                    console.error("Error: Description is required.");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to select Patient',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Fill mandatory fields',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                     console.error("Error: Description is required.");
                     return;
                 }
 
@@ -404,8 +474,19 @@
                         function (response) {
                             var master_id = response;
                             if (master_id != '-1') {
-                                alert("Data has been saved successfully");
-                                window.location.href = "AddAssetSelection.aspx";
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Data has been saved successfully.',
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                                 window.location.href = "AddAssetSelection.aspx";
                             }
                         }
                     );
@@ -710,8 +791,19 @@
                     $("#txt_asi").val(id);
                 },
                 failure: function (response) {
-                    alert("In failure method");
-                }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'In failure method',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                 }
             });
         }
         var rowlength = '';

@@ -121,16 +121,40 @@
             var isShareService = $('#chkIsShareService').prop('checked');
             var TotalShare = parseInt(doctor_share) + parseInt(hospital_Share);
             if (Desc == "") {
-                alert("Please Add Items");
-                proceed = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add Items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 proceed = false;
             }
             if (isShareService == true) {
 
             }
             else {
                 if ((TotalShare > 100) || (TotalShare < 100)) {
-                    alert("Please Add Share equal to 100%");
-                    proceed = false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Add Share equal to 100%"',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                     proceed = false;
                 }
 
             }
@@ -138,24 +162,84 @@
             var locatorAddress = $('#txtlocatorAddress').val();
             var fianceIntegration = $('#ddlfiance_integration').val();
             if (Desc == "") {
-                alert("Please Write Item Name in Item Description Filed");
-                proceed = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Write Item Name in Item Description Filed',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 proceed = false;
             }
             if (locator && locatorAddress === "") {
-                alert("Please Add Locator Address");
-                proceed = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add Locator Address',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 proceed = false;
             }
             if (PharmacyItem && (uomqty <= 0 || uomqty === "")) {
-                alert("Please Enter UOM Quantity that Must be Greater then Zero");
-                proceed = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter UOM Quantity that Must be Greater then Zero',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 proceed = false;
             }
             if (itemType == "0") {
-                alert("Please Select Item Type");
-                proceed = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Item Type',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 proceed = false;
             }
             if (fianceIntegration == "0") {
-                alert("Please Select Account Category");
-                proceed = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Account Category',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 proceed = false;
             }
             return proceed;
         }
@@ -295,18 +379,52 @@
                         var Split = msg.split("-");
                         if (Split[0] == "Success") {
                             debugger;
-                            alert("Data added Successfully");
-                            window.location.href = 'Service.aspx?ID=' + Split[1];
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data added Successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                             window.location.href = 'Service.aspx?ID=' + Split[1];
                         }
                         if (Split[0] == "Update") {
                             debugger;
-                            alert("Data Updated Successfully");
-                            window.location.href = 'Service.aspx?ID=' + Split[1];
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Updated Successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                             window.location.href = 'Service.aspx?ID=' + Split[1];
                         }
                     },
                     failure: function (response) {
-                        alert("In failure method");
-                    }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'In failure method',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                     }
                 });
             }
         }
