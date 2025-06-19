@@ -119,6 +119,14 @@ namespace PMS
                 StandardFooter.Visible = true;
 
             }
+            else if(companyName == "Imran Adrees Teaching Hospital")
+            {
+                StandardFooter.Visible = true;
+            }  
+            else if(companyName == "Pakred")
+            {
+                StandardFooter.Visible = true;
+            }
             DataBaseDataContext db = new DataBaseDataContext();
             var userid = AppConfig.UserID;
             mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == userid select a.mobileno).FirstOrDefault();
