@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="/wwwroot/images/favicon.png" />
     <asp:PlaceHolder ID="PlaceHolder1" runat="server">
         <%--Datatable css--%>
-
+        <%--hehe --%>
         <%--<link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/toastr.min.css") %>" rel="stylesheet" type="text/css" />--%>
         <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/wwwroot/StandardTheme/Styles/jquery.datetimepicker.css") %>" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
