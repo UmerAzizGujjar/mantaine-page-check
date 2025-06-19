@@ -23,7 +23,7 @@
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Select2/select2.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-skins.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
-        <link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/styleMaster.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/styleMaster.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Styles/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Styles/token-input.css") %>" type="text/css" rel="stylesheet" />
