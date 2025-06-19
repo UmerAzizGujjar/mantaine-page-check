@@ -451,6 +451,18 @@ input[type="button"][disabled] {
 
 #ctl00_HeadLoginStatus {
     color: Black !important;
+    background-color: #EFA63E !important;
+    border: none !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    padding: 3px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    margin: 0 !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
 }
 
 .dropdown-colorpicker > .dropdown-menu {
@@ -1101,7 +1113,7 @@ page-header h1 {
             .ace-nav > li > a > .ace-icon {
                 display: inline-block;
                 font-size: 24px;
-                color: #c11718;
+                color: black;
                 text-align: center;
                 width: 20px;
                 margin-top: 22px !important;
@@ -8062,7 +8074,7 @@ button.btn:active {
 }
 
 .label-important, .badge-important {
-    background-color: #c11718 !important;
+    background-color: #EFA63E !important;
 }
 
 .label-inverse, .badge-inverse {
