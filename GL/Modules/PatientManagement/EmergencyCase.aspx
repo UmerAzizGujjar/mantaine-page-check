@@ -5198,7 +5198,7 @@
             <div class="row mb-2">
                 <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                     <div class="image-container">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Emergency.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                        <img src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Emergency.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                     </div>
                 </div>
                     <div class="row mb-2"  style="display:none">
