@@ -442,9 +442,8 @@ input[type="button"][disabled] {
     margin-top: 0px !important;
 }
 
-#ctl00_HeadLoginStatus {
-    color: Black !important;
-}
+
+
 
 .dropdown-colorpicker > .dropdown-menu {
     top: -43% !important;
