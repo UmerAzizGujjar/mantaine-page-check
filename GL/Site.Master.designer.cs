@@ -96,24 +96,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblCompanyName;
 
         /// <summary>
-        /// LoginName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LoginName;
-
-        /// <summary>
-        /// HeadLoginStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LoginStatus HeadLoginStatus;
-
-        /// <summary>
         /// notification control.
         /// </summary>
         /// <remarks>
@@ -393,6 +375,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblAdvance;
 
         /// <summary>
+        /// LoginName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LoginName;
+
+        /// <summary>
+        /// HeadLoginStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LoginStatus HeadLoginStatus;
+
+        /// <summary>
         /// sidebar control.
         /// </summary>
         /// <remarks>
@@ -445,6 +445,24 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tibbitFooter;
+
+        /// <summary>
+        /// mbl_no control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor mbl_no;
+
+        /// <summary>
+        /// email control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor email;
 
         /// <summary>
         /// StandardFooter control.
