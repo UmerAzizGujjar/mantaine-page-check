@@ -109,15 +109,23 @@ namespace PMS
             }
             generateDynamicMenu();
             string companyName = Session["Company_Name"] != null ? Session["Company_Name"].ToString() : string.Empty;
-            if(companyName == "Tibbit")
+            if(companyName == "TibbIT By Garaj")
             {
                 tibbitFooter.Visible = true;
 
             }
-            else if(companyName == "Visionplus")
+            else if(companyName == "Hmis Standard")
             {
                 StandardFooter.Visible = true;
 
+            }
+            else if(companyName == "Imran Adrees Teaching Hospital")
+            {
+                StandardFooter.Visible = true;
+            }  
+            else if(companyName == "Pakred")
+            {
+                StandardFooter.Visible = true;
             }
             DataBaseDataContext db = new DataBaseDataContext();
             var userid = AppConfig.UserID;

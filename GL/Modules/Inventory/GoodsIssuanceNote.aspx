@@ -7,7 +7,7 @@
     </style>
     <script type="text/javascript">
         var selectedOptions = '';
-        $(document).ready(function () {
+        $(document).ready(function () { 
             $('#ddlMIR').select2();
             UserRights();
             LoadDepartments();
@@ -86,15 +86,43 @@
                      var BatchNum = $(value).find('td select[name=ddlBatchNum]').val();
 
                      if ((parseFloat(IssueQty) > parseFloat(StoreStock)) && btnSave == "Save") {
-                         alert('Issue Qty Must Be Less Than Total Stock');
-                         checkstock = true;
+                         Swal.fire({
+                             icon: 'error',
+                             title: 'Error!',
+                             text: 'Issue Qty Must Be Less Than Total Stock',
+                             showConfirmButton: false,
+                             timer: 2000,
+                             customClass: {
+                                 popup: 'swal-big-popup',
+                                 title: 'swal-big-title',
+                                 htmlContainer: 'swal-big-text'
+                             }
+                         });
+
+
+
+                          checkstock = true;
                          return false;
                      }
                      if (btnSave == "Update") {
                          var txtSaveTimeStock = $(value).find('td input[name=txtSaveTimeStock]').val();
                          if (parseFloat(IssueQty) > parseFloat(txtSaveTimeStock)) {
-                             alert('Issue Qty Must Be Less Than Total Stock');
-                             return false;
+                             Swal.fire({
+                                 icon: 'error',
+                                 title: 'Error!',
+                                 text: 'Issue Qty Must Be Less Than Total Stock',
+                                 showConfirmButton: false,
+                                 timer: 2000,
+                                 customClass: {
+                                     popup: 'swal-big-popup',
+                                     title: 'swal-big-title',
+                                     htmlContainer: 'swal-big-text'
+                                 }
+                             });
+
+
+
+                              return false;
                          }
                      }
                      if (Batch == "true") {
@@ -124,16 +152,58 @@
                      }
                  });
                  if (status == false) {
-                     alert("Stock store Must Be Greater than 0");
-                     return false;
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'Error!',
+                         text: 'Stock store Must Be Greater than 0',
+                         showConfirmButton: false,
+                         timer: 2000,
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
+                         }
+                     });
+
+
+
+                      return false;
                  }
                  else if (status == "error") {
-                     alert("Issue Must Be Greater than 0 OR SIN Qty not greater than MIR Qty");
-                     return false;
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'Error!',
+                         text: 'Issue Must Be Greater than 0 OR SIN Qty not greater than MIR Qty',
+                         showConfirmButton: false,
+                         timer: 2000,
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
+                         }
+                     });
+
+
+
+                      return false;
                  }
                  else if (status == "errorBatch") {
-                     alert("Please Enter Batch Number");
-                     return false;
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'Error!',
+                         text: 'Please Enter Batch Number',
+                         showConfirmButton: false,
+                         timer: 2000,
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
+                         }
+                     });
+
+
+
+                      return false;
                  }
                  else {
                      if (checkstock == true) {
@@ -150,8 +220,19 @@
                          $(this).attr('disabled', true);
                          PageMethods.Save(btnSave, JSON.stringify(AllItemDetail), function (res) {
                              sendFile(res);
-                             alert('Data Save Successfully');
-                             $('#btnSave').val("Update");
+                             Swal.fire({
+                                 icon: 'success',
+                                 title: 'Success!',
+                                 text: 'Data Save Successfully.',
+                                 showConfirmButton: false,
+                                 timer: 2500,
+                                 customClass: {
+                                     popup: 'swal-big-popup',
+                                     title: 'swal-big-title',
+                                     htmlContainer: 'swal-big-text'
+                                 }
+                             });
+                              $('#btnSave').val("Update");
                              window.location = "GoodsIssuanceNote.aspx?SI_ID=" + res;
                              $('#btnSave').val("Update");
                          });
@@ -288,8 +369,20 @@
             }
             var test_array = $('#tblStoreIssueBote').find('input[name=txtItemCode][value=' + itemcode + ']');
             if (test_array.length > 0) {
-                alert('This Item already added!');
-                return false;
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Item already added',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                 return false;
             }
             else {
                 getbatchsAgainstItem(itemcode, length);

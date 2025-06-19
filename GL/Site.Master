@@ -23,7 +23,7 @@
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Select2/select2.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-skins.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
-        <link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/styleMaster.css") %>" rel="stylesheet" type="text/css" />
+        <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/styleMaster.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/ace-rtl.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Styles/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/Styles/token-input.css") %>" type="text/css" rel="stylesheet" />
@@ -75,11 +75,45 @@
 
     </asp:PlaceHolder>
     <style type="text/css">
-       </style>
-    <script type="text/javascript">        jQuery.browser = {};        (function () {            jQuery.browser.msie = false;            jQuery.browser.version = 0;            if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {                jQuery.browser.msie = true;                jQuery.browser.version = RegExp.$1;            }        })();        function RunHRMS() {            $.ajax({                type: "POST",                url: "PatientManagementSection.aspx/RunHRMS",                contentType: "application/json; charset=utf-8",                dataType: "json",                success: function (response) {                },                Error: function (x, e) {                    alert(e)                }            });        }        $(window).load(function () {            $("#loading").delay(1000).fadeOut(1000);            $('#ctl00_lblMessage').hide();        });</script>
+       
+</style>
+    <script type="text/javascript">
+        jQuery.browser = {};
+        (function () {
+            jQuery.browser.msie = false;
+            jQuery.browser.version = 0;
+            if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+                jQuery.browser.msie = true;
+                jQuery.browser.version = RegExp.$1;
+            }
+        })();
+        function RunHRMS() {
+            $.ajax({
+                type: "POST",
+                url: "PatientManagementSection.aspx/RunHRMS",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                },
+                Error: function (x, e) {
+                    alert(e)
+                }
+            });
+        }
+
+        $(window).load(function () {
+
+            $("#loading").delay(1000).fadeOut(1000);
+            $('#ctl00_lblMessage').hide();
+
+        });
+</script>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
     <style type="text/css">
+
         @media screen and (max-width: 995px) {
+
             #ctl00_sidebar {
                 width: 152px !important;
             }
@@ -278,7 +312,9 @@
             }
         }
 
-
+        #ctl00_HeadLoginStatus{
+            background-color:
+        }
 
         .sidebar.h-sidebar .nav-list > li > a {
             text-align: center;
@@ -662,12 +698,12 @@
                         <div id="headerWelcome" class="mleft col-lg-3 col-md-4 col-sm-5" style="margin-top: 17px;    text-align: end;">
 
                             <!-- Welcome Message -->
-                            <span style="color:black" id="welCome">Welcome</span>
+                            <span style="color:white" id="welCome">Welcome</span>
 
                             <a href="#" onclick="RunHRMS()"></a>
                             <span class="bold">
-                                <asp:Label ID="LoginName" style="color:black" runat="server"></asp:Label></span>
-                            <span  style="color:black" id="LoginSign">! </span>
+                                <asp:Label ID="LoginName" style="color:white" runat="server"></asp:Label></span>
+                            <span  style="color:white" id="LoginSign">! </span>
 
                             <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" CssClass="py-0 my-0 small" LogoutText="Log Out" LogoutPageUrl="~/Modules/Accounts/Login.aspx" OnLoggedOut="HeadLoginStatus_LoggedOut" />
 
@@ -724,7 +760,7 @@
             </div>
         </div>
         <br />
-        <div class="center row" id="tibbitFooter" runat="server">
+        <div class=" row" id="tibbitFooter" runat="server">
             <div class="col-lg-1 col-sm-1 col-md-1">
             </div>
 
