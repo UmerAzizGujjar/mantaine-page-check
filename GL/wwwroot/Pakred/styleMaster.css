@@ -24,7 +24,21 @@
     margin-top: 24px !important;
     color: #c11718 !important;
 }
-
+#ctl00_tibbitFooter {
+    margin-left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    background-color: Black !important;
+    color: white;
+    padding: 15px 0;
+    font-size: small;
+    display: flex;
+}
+    #ctl00_tibbitFooter a {
+        color: white !important;
+    }
 .swal-big-title {
     font-size: 22px !important;
     font-weight: bold;

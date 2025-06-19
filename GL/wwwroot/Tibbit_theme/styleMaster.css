@@ -1112,7 +1112,8 @@ page-header h1 {
     line-height: 1 !important;
 }
 
-#ctl00_tibbitFooter{
+#ctl00_tibbitFooter {
+    margin-left: 0;
     position: absolute;
     bottom: 0;
     width: 100%;

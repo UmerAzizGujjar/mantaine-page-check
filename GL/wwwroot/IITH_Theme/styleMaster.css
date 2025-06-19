@@ -1107,7 +1107,7 @@ page-header h1 {
 }
 
 #ctl00_tibbitFooter {
-    margin-left: 0px !important;
+    margin-left: 0;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -1118,7 +1118,6 @@ page-header h1 {
     font-size: small;
     display: flex;
 }
-
     #ctl00_tibbitFooter a {
         color: white !important;
     }
