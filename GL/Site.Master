@@ -111,7 +111,9 @@
 </script>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
     <style type="text/css">
+
         @media screen and (max-width: 995px) {
+
             #ctl00_sidebar {
                 width: 152px !important;
             }
@@ -310,7 +312,9 @@
             }
         }
 
-
+        #ctl00_HeadLoginStatus{
+            background-color:
+        }
 
         .sidebar.h-sidebar .nav-list > li > a {
             text-align: center;
@@ -756,7 +760,7 @@
             </div>
         </div>
         <br />
-        <div class="center row" id="tibbitFooter" runat="server">
+        <div class=" row" id="tibbitFooter" runat="server">
             <div class="col-lg-1 col-sm-1 col-md-1">
             </div>
 
