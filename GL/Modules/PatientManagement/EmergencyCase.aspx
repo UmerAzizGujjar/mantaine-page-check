@@ -2,8 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
   
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Emergency.css" rel="stylesheet" />
-
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/Emergency.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
@@ -132,28 +132,35 @@
                 var Min = $(this).children(":selected").attr('name');
                 if (typeof (Min) != "undefined") {
 
-                    toastr.options = {
-                        newestOnTop: true,
-                        closeButton: true,
-                        progressBar: true,
-                        showMethod: 'slideDown',
-                        timeOut: 30000,
-                    };
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'You must check this Patient within ' + Min + ' minutes!',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
                     if (Min == 30) {
-                        toastr.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-Urgent" });
+                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-Urgent" });
                     }
                     if (Min == 2) {
-                        toastr.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-immediate" });
+                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-immediate" });
                     }
                     if (Min == 10) {
-                        toastr.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-emergency" });
+                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-emergency" });
                     }
                     if (Min == 60) {
-                        toastr.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-semi-urgent" });
+                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-semi-urgent" });
                     }
                     if (Min == 120) {
-                        toastr.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-not-urgent" });
+                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-not-urgent" });
                     }
 
 
