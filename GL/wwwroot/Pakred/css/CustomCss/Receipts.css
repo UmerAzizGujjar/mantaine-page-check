@@ -1,3 +1,9 @@
+.fieldcolor {
+    background-color: #C11718 !important;
+    color: white !important;
+}
+
+
 #token-input-txtMRNo {
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
 }

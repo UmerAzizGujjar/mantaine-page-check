@@ -2,7 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/StandardTheme/css/CustomCss/Pharmacy.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             if (!$('#chkbatch').prop("checked")) {
@@ -700,23 +702,71 @@
             var saleRate = parseFloat($row.find('input[name="txtRSalerate"]').val()) || 0;
             var disPer = parseFloat($row.find('input[name="txtRDisPer"]').val()) || 0;
             if (CheckQty > 0 && qty > CheckQty) {
-                alert("Quantity Must Be Less Than Or Equal To Sold Quantity");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Quantity Must Be Less Than Or Equal To Sold Quantity',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $row.find('input[name="txtRQty"]').val(CheckQty);
                 qty = CheckQty;
                 return;
             }
             if (isNaN(qty) || qty <= 0) {
-                alert("Quantity Must Be Greater Than 0");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Quantity Must Be Greater Than 0',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $row.find('input[name="txtRQty"]').val(1);
                 return;
             }
             if (isNaN(saleRate) || saleRate <= 0) {
-                alert("Sale Rate Must Be Greater Than 0");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Sale Rate Must Be Greater Than 0',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $row.find('input[name="txtRSalerate"]').val(1);
                 return;
             }
             if (isNaN(disPer) || disPer < 0) {
-                alert("Discount Percentage Must Be Positive or 0");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Discount Percentage Must Be Positive or 0',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $row.find('input[name="txtRSalerate"]').val(0);
                 return;
             }
@@ -783,13 +833,37 @@
             if (!total || total <= 0) {
                 proceed = false;
                 $('#btnSaveSaleReturn').attr('disabled', false);
-                alert('Please check the total amount.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please check the total amount.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
 
             if ($('#saleReturnTable tbody tr').length === 0) {
                 proceed = false;
                 $('#btnSaveSaleReturn').attr('disabled', false);
-                alert('Items list should have at least one item.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Items list should have at least one item.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
 
             $('#saleReturnTable tbody tr').each(function () {
@@ -799,13 +873,37 @@
                 if (!qty || qty <= 0) {
                     proceed = false;
                     $('#btnSaveSaleReturn').attr('disabled', false);
-                    alert("Please check the quantity. It must be greater than zero.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please check the quantity. It must be greater than zero.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
 
                 if (!rate || rate <= 0) {
                     proceed = false;
                     $('#btnSaveSaleReturn').attr('disabled', false);
-                    alert("Please check the rate. It must be greater than zero.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please check the rate. It must be greater than zero.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
             return proceed;
@@ -899,7 +997,19 @@
                     UserId = data[0].UserID;
                 }
                 else {
-                    toasterMessage(true, "Error", "Invalid User");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Invalid User',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -926,7 +1036,19 @@
                             var netAmt = $(this).find('input[name="txtRnet"]').val() || 0;
                             var Batch_No = $(this).find('input[name="txtRBatch_No"]').val();
                             if (Batch_No == 'Please Select' || Batch_No == '0' || Batch_No == "") {
-                                alert('Please Select Batch Number');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Please Select Batch Number',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+
                                 isValid = false; 
                                 $('#btnSaveSaleReturn').attr('disabled', false);
                                 return false; 
@@ -964,7 +1086,19 @@
                             if (btnSave == 'Save & Print' || btnSave == "Save & Print") {
                                 window.open('ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
                             }
-                            toasterMessage(false, "Data Saved", "Data Saved Successfully");
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Saved Successfully',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                             window.location = "IssueMedicine.aspx";
                         });
                     }
@@ -1069,7 +1203,19 @@
                 Qty = 0;
             }
             if (parseInt(Qty) > parseInt(Stock)) {
-                toasterMessage(true, "Error", "QTY Should Not Be Greater Than Stock");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'QTY Should Not Be Greater Than Stock',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 var Qty = $($(row).find('td input[name=txtQty]')[0]).val(1);
                 if (Stock == 0 || Stock == "0") {
                     var Qty = $($(row).find('td input[name=txtQty]')[0]).val(0);
@@ -1254,7 +1400,19 @@
                 }
                 if (parseInt(TDis) > NtAmt) {
                     isMax = 1;
-                    alert("Discount Percentage Should not be greater than 100%");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Discount Percentage Should not be greater than 100%',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $(value).find('input[name="DisAmount"]').val('0');
                     $(value).find('input[name="DisPer"]').val('0');
                     $($(value).find('td')[11]).text(Amount);
@@ -1405,7 +1563,19 @@
                 }
             });
             if (itemExists) {
-                alert("This item with the same batch number already exists.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This item with the same batch number already exists.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             $.ajax({
@@ -1513,7 +1683,19 @@
                     UserId = data[0].UserID;
                 }
                 else {
-                    toasterMessage(true, "Error", "Invalid User");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Invalid User',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
@@ -1561,7 +1743,19 @@
                         var batchno = $($(value).find('td input[name=BatchNo]')[0]).val();
                         var expdate = $($(value).find('td input[name=exp_date]')[0]).val();
                         if (parseFloat(Stock) <= 0 && parseFloat(Qty) > 0) {
-                            alert('Quantity must be greater than zero.');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Quantity must be greater than zero.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                             hasInvalidStock = true;
                             return false;
                         }
@@ -1601,12 +1795,36 @@
                         if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
                             window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
                         }
-                        toasterMessage(false, "Data Saved", "Data Saved Successfully");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Saved Successfully',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         window.location.href = 'IssueMedicine.aspx';
                     });
                 }
                 else {
-                    toasterMessage(true, "Error", "Invalid User");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Invalid User',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return;
                 }
             });

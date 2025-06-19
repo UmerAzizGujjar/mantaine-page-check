@@ -48,8 +48,8 @@
                 "columns": [
                     { "data": "Emergency_ID", "visible": false, "width": "0%", "orderable": false },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%" },
-                    { "data": "Father_Name", "width": "18%", "orderable": false },
                     { "data": "Full_Name", "width": "18%", "orderable": false },
+                    { "data": "Father_Name", "width": "18%", "orderable": false },
                     { "data": "Department", "width": "18%", "orderable": false },
                     {
                         "data": "Admission_Date", "name": "Admission_Date",

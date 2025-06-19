@@ -1,3 +1,9 @@
+.fieldcolor {
+    background-color: #308665db !important;
+    color: white !important;
+}
+
+
 #token-input-txtMRNo {
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
 }
@@ -57,7 +63,7 @@
     color: #300707;
     font-weight: normal;
     background-repeat: repeat-x;
-    background-image: linear-gradient(to bottom, #fd494a 0, #881414 100%) !important;
+    background-image: linear-gradient(to bottom, #308665db 0, #308665db 100%) !important;
     color: whitesmoke !important;
     background-attachment: scroll;
     border-radius: 15px;
@@ -70,7 +76,7 @@
 .self2 {
     border: 2px solid;
     width: 434px;
-    border-color: #fd494a;
+    border-color: #308665db;
     border-radius: 15px;
     margin-top: 5px;
 }

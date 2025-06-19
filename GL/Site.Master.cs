@@ -12,6 +12,7 @@ using System.Web.Services;
 using System.Web.Script.Serialization;
 using System.Diagnostics.Eventing.Reader;
 using Telerik.Web.UI;
+using System.Net.PeerToPeer;
 
 namespace PMS
 {
@@ -108,15 +109,20 @@ namespace PMS
             }
             generateDynamicMenu();
             string companyName = Session["Company_Name"] != null ? Session["Company_Name"].ToString() : string.Empty;
-            if(companyName == "TibbIT By Garaj")
+            if(companyName == "Tibbit")
             {
                 tibbitFooter.Visible = true;
+
             }
             else if(companyName == "Visionplus")
             {
                 StandardFooter.Visible = true;
 
             }
+            DataBaseDataContext db = new DataBaseDataContext();
+            var userid = AppConfig.UserID;
+            mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == userid select a.mobileno).FirstOrDefault();
+            email.InnerText = (from a in db.aspnet_Memberships where a.UserId == userid select a.Email).FirstOrDefault();
 
         }
 
