@@ -16,7 +16,16 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'EmergencyCase.aspx';
+                        }
+                    },
+                    'copy', 'excel', 'pdf',
+                ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -140,12 +149,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <asp:Button Text="Add New" ID="Button1" CssClass="btn-primry" runat="server" PostBackUrl="~/Modules/PatientManagement/EmergencyCase.aspx" CausesValidation="false" />
-        </div>
-    </div>
-
     <table style="width: 100%;">
         <tr>
             <td>

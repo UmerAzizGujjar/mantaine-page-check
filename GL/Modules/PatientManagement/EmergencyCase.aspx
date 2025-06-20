@@ -5441,10 +5441,15 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-md-2 text-end">
-            <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <div class="row">
+                <div class="col-md-2 text-end">
+                    <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
+                </div>
+            </div>
         </div>
     </div>
+    
 
 
     
@@ -5746,7 +5751,7 @@
         </Triggers>
         <ContentTemplate>
 
-    <div class="row" style="padding: 20px;">
+    <div class="row">
      <!-- Left Card -->
         <div class="col-lg-5 col-md-6 col-sm-12">
        <div class="card">
