@@ -22,7 +22,37 @@
     /*font-weight:  bolder;*/
     color: #fff !important;
 }
+#ctl00_tibbitFooter {
+    margin-left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    background-color: Black !important;
+    color: white;
+    padding: 15px 0;
+    font-size: small;
+    display: flex;
+}
+#ctl00_tibbitFooter a {
+        color: white !important;
+    }
+.swal-big-popup {
+    width: 400px !important;
+    padding: 20px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box;
+}
 
+.swal-big-title {
+    font-size: 22px !important;
+    font-weight: bold;
+}
+
+.swal-big-text {
+    font-size: 16px !important;
+}
 .sidebar {
     display: none;
 }
@@ -48,16 +78,13 @@
 
 .main-content {
     background-color: #fff !important;
-    padding-bottom: 40px !important;
+    padding-bottom: 100px !important;
 }
 
 .page {
 }
 
-.main-content {
-    background-color: #fff;
-    padding-bottom: 40px;
-}
+
 
 .sidebar.h-sidebar .nav-list > li > a {
     text-align: center;
@@ -582,10 +609,7 @@ page-header h1 {
     top: 0;
 }
 
-.main-content {
-    background-color: #fff;
-    padding-bottom: 40px !important;
-}
+
 
 .notif-detail {
     background-color: #ebebeb;

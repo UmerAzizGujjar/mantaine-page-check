@@ -24,7 +24,37 @@
     margin-top: 24px !important;
     color: #c11718 !important;
 }
+#ctl00_tibbitFooter {
+    margin-left: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    background-color: Black !important;
+    color: white;
+    padding: 15px 0;
+    font-size: small;
+    display: flex;
+}
+    #ctl00_tibbitFooter a {
+        color: white !important;
+    }
+.swal-big-popup {
+    width: 400px !important;
+    padding: 20px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box;
+}
 
+.swal-big-title {
+    font-size: 22px !important;
+    font-weight: bold;
+}
+
+.swal-big-text {
+    font-size: 16px !important;
+}
 .sidebar {
     display: none;
 }
@@ -50,16 +80,13 @@
 
 .main-content {
     background-color: #fff !important;
-    padding-bottom: 40px !important;
+    padding-bottom: 100px !important;
 }
 
 .page {
 }
 
-.main-content {
-    background-color: #fff;
-    padding-bottom: 40px;
-}
+
 
 .sidebar.h-sidebar .nav-list > li > a {
     text-align: center;
@@ -424,6 +451,18 @@ input[type="button"][disabled] {
 
 #ctl00_HeadLoginStatus {
     color: Black !important;
+    background-color: #EFA63E !important;
+    border: none !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    padding: 3px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    margin: 0 !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
 }
 
 .dropdown-colorpicker > .dropdown-menu {
@@ -588,10 +627,7 @@ page-header h1 {
     top: 0;
 }
 
-.main-content {
-    background-color: #fff;
-    padding-bottom: 40px !important;
-}
+
 
 .notif-detail {
     background-color: #ebebeb;
@@ -1077,7 +1113,7 @@ page-header h1 {
             .ace-nav > li > a > .ace-icon {
                 display: inline-block;
                 font-size: 24px;
-                color: #c11718;
+                color: black;
                 text-align: center;
                 width: 20px;
                 margin-top: 22px !important;
@@ -8038,7 +8074,7 @@ button.btn:active {
 }
 
 .label-important, .badge-important {
-    background-color: #c11718 !important;
+    background-color: #EFA63E !important;
 }
 
 .label-inverse, .badge-inverse {

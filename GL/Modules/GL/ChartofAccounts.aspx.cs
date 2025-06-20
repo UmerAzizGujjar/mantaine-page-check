@@ -443,7 +443,7 @@ namespace Salon.GL
             else
             {
                 btnDelete.Enabled = true;
-                btnDelete.CssClass = "";
+                btnDelete.CssClass = "btn btn-primry";
             }
             var query = (from coa in db.GL_Accounts
                          where coa.Account_ID == Convert.ToInt32(tn.Value)
@@ -458,9 +458,9 @@ namespace Salon.GL
             else
             {
                 btnAdd.Enabled = true;
-                btnAdd.CssClass = "";
+                btnAdd.CssClass = "btn btn-primry";
                 btnEditSave.Enabled = true;
-                btnEditSave.CssClass = "";
+                btnEditSave.CssClass = "btn btn-primry";
             }
             if (query.Levels == 4)
             {
@@ -470,7 +470,7 @@ namespace Salon.GL
             else
             {
                 btnAddChild.Enabled = true;
-                btnAddChild.CssClass = "";
+                btnAddChild.CssClass = "btn btn-primry";
             }
         }
 

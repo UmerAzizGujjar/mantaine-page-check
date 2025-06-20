@@ -38,14 +38,62 @@
                 });
                 return true;
             }
-            else if (itmCode == "")
-                alert("Please provide Item code");
-            else if (wareHousefrom == "")
-                alert("Please provide warehouse from");
-            else if (date == "")
-                alert("Please provide date");
-            else
-                alert("Please provide batch number");
+            else if (itmCode == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please provide Item code',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+}
+             else if (wareHousefrom == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please provide warehouse from',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+}
+             else if (date == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please provide date',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+}
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please provide batch number',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+}
             return false;
         }
         var _gloabal = '';
@@ -54,8 +102,20 @@
             var warehouse = $('#ctl00_MainContent_Select_wareHouseFrom').val();
             var transferdate = $('#StockTransferDate').val();
             if (warehouse == "0") {
-                alert('Please Select WareHouse From');
-                $('#txtItemCode').tokenInput('clear');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select WareHouse From',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                 $('#txtItemCode').tokenInput('clear');
                 $("#batchnoddl").empty();
                 $("#txttrnsfer_qty").val('');
                 $("#Textquantity").val('');
@@ -63,8 +123,19 @@
                 return false;
             }
             if (transferdate == '' || transferdate == null) {
-                alert('Please Enter Stock Transfer Date');
-            }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Stock Transfer Date',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+             }
             debugger;
             var optionsVen = '';
             PageMethods.getbatchno(itemid, warehouse, transferdate, function (Tests) {
@@ -190,9 +261,21 @@
             $("#btnSave").click(function () {
                 if ($("#stocktable tbody tr").length > 0)
                     AddStockMain();
-                else
-                    alert("Items not found.");
-            });
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Items not found',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+}
+             });
             $("#btnUpdate").click(function () {
                 AddStockDetails(true);
             });
@@ -301,19 +384,54 @@
                         $(this).addClass('dn');
                         $(this).prev().text($(this).val()).show();
                     }
-                    else if (qty > 0)
-                        alert("Quantity must be less than from available Stock.");
-                    else
-                        alert("Quantity must be greater than zero.");
-                }
+                    else if (qty > 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Quantity must be less than from available Stock',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+}
+                     else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Quantity must be greater than zero',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        }); }
+                 }
             });
             $("#stocktable").find(".deleteStkItem").bind('click', function () {
                 debugger;
 
                 var checkstats = $("#txtstatus_trnsfer").val();
                 if (checkstats == 'Approved') {
-                    alert('Cannot Delete Approved STN');
-                    return false;
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Cannot Delete Approved STN',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                     return false;
                 }
                 if (typeof (data) != 'undefined') {
                     var id = $(this).closest("tr").attr('id');
@@ -359,8 +477,19 @@
                 type: "Post",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-                    alert('Successfully Deleted.');
-                    $("#" + id).remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Successfully Deleted.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                     $("#" + id).remove();
                 },
                 error: function (msg) {
                     alert("Could not deleted.");
@@ -388,8 +517,20 @@
                 });
             }
             if (wareHouseTo == "0") {
-                alert('Please Select WareHouse To');
-                return false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select WareHouse To',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 return false;
             }
             var batcNo = $("#batchnoddl :selected").text();
             if (batcNo == "Please Select") {
@@ -404,15 +545,39 @@
             var expDate = $("#expiry").val();
             var find = false;
             if (parseStock < 0) {
-                alert("Stock Must be Greater then Zero");
-                return false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Stock Must be Greater then Zero',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 return false;
             }
             debugger;
             if (itmCode.trim() != "") {
                 $.each($("#stocktable").find('tbody').find('tr'), function (index) {
                     var srNo = $(this).find($('.srNo')).text();
                     if (srNo == concat) {
-                        alert("Item already exist.")
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Item already exist',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         find = true;
                     }
                 });
@@ -443,22 +608,57 @@
                             $("#batchnoddl").empty();
                         }
                         else {
-                            alert("Ware house must not be same.");
-                            $("#ctl00_MainContent_Select_wareHouseTo").val(0);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Ware house must not be same',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                             $("#ctl00_MainContent_Select_wareHouseTo").val(0);
                             $("#ctl00_MainContent_Select_wareHouseTo").trigger('change');
                             return false;
                         }
                     }
                     else {
-                        $("#Textquantity").val(0);
-                        alert("Quantity must be less than Stock and Greater then Zero");
-                        return false;
+                        $("#Textquantity").val(0); Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Quantity must be less than Stock and Greater then Zero',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                         return false;
                     }
                 }
             }
-            else
-                alert("Please provide required fields.");
-            return false;
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please provide required fields',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+ }
+             return false;
         }
         function AddStockMain() {
             debugger;
@@ -514,7 +714,20 @@
                 }
                 else {
                     findInvalid = true;
-                    alert("Data could not be added due to Item Code = " + itemCode + ". \nQuatity must be less than from Stock !");
+                    var msg = "Data could not be added due to Item Code = " + itemCode + ". \nQuatity must be less than from Stock !";
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: msg,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
             if (!findInvalid) {
@@ -528,16 +741,41 @@
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
                         if (typeof (data.d) != 'undefined') {
-                            if (data.d.toString().toLowerCase().indexOf("error") != -1)
-                                alert("Data could not be saved.");
+                            if (data.d.toString().toLowerCase().indexOf("error") != -1) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Data could not be saved',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+
+                            }
                             else {
-                                alert("Data Successfully saved.");
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Data Successfully saved.',
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
                                 window.location = "StoreStockTransferView.aspx";
                                
                             }
                         }
                     },
                     error: function (msg) {
+
                         alert("Error while inserting data");
                     }
                 });
@@ -589,13 +827,45 @@
                 return true;
             }
 
-            else if (itmCode == "")
-                alert("Please provide Item code");
-            else if (wareHousefrom == "")
-                alert("Please provide warehouse from");
-            else if (date == "")
-                alert("Please provide date");
-            else {
+            else if (itmCode == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please provide Item code',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                }); }
+             else if (wareHousefrom == "") Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please provide warehouse from',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+             else if (date == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please provide date',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                }); }
+             else {
                 return true;
             }
             return false;

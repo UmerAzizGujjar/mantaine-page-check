@@ -60,7 +60,19 @@
                     $("#tblDetials tbody").html(row);
                 },
                 failure: function (response) {
-                    alert("Failed to load asset category details.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to load asset category details.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -73,15 +85,51 @@
             var assetSubCategoryDescription = $('#txtAssetSubCategoryDescription').val().trim();
 
             if (assetCategoryValue === "0") {
-                alert("Asset Category is required.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Asset Category is required.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             if (assetSubCategoryName === "") {
-                alert("Asset Sub Category Name is required.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Asset Sub Category Name is required.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             if (assetSubCategoryDescription === "") {
-                alert("Asset Sub Category Description is required.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Asset Sub Category Description is required.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }      
          
@@ -98,7 +146,19 @@
             });
 
             if (duplicateFound) {
-                alert("Asset Category with the same Asset Sub Category Description and Name already exists.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Asset Category with the same Asset Sub Category Description and Name already exists.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
 
@@ -174,7 +234,19 @@
                 }
             });
             if (detailAry.length === 0) {
-                alert("No valid rows to save.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'No valid rows to save.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             $.ajax({
@@ -188,7 +260,18 @@
                 success: function (response) {
                     var res = response.d;
                     if (res.startsWith("Success")) {
-                        alert("Data Inserted Successfully");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Inserted Successfully',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         window.location.reload();
                     } else {
                         alert("Error: " + res);
