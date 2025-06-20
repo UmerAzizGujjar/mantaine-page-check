@@ -1014,7 +1014,7 @@
                         <div id="dvIPDRates">
                             <fieldset class="mt-n3">
                                 <legend>IPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-10px;" onclick="IPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-20px;" onclick="IPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="IPD_Test_Rate_Table">
                                         <thead>
@@ -1035,7 +1035,7 @@
                         <div id="dvOPDRats">
                             <fieldset class="mt-n3">
                                 <legend>OPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-10px;"  onclick="OPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-20px;"  onclick="OPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="OPD_Test_Rate_Table">
                                         <thead>
