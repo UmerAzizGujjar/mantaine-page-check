@@ -1,7 +1,7 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteMaster.master.cs" Inherits="PMS.SiteMaster" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
- <%@ Register Src="~/UserControls/Footer.ascx" TagPrefix="uc" TagName="Footer" %>
+ <%@ Register Src="~/wwwroot/StandardTheme/header-footer/Footer.ascx" TagPrefix="uc" TagName="Footer" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -11,7 +11,7 @@
     <link rel="icon" type="image/x-icon" href="wwwroot/StandardTheme/images/HMIS_Icons/faviconStandard.png" />
     <asp:PlaceHolder ID="PlaceHolder1" runat="server">
         <%--Datatable css--%>
-       
+     
         <%--<link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/toastr.min.css") %>" rel="stylesheet" type="text/css" />--%>
         <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/wwwroot/StandardTheme/Styles/jquery.datetimepicker.css") %>" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
@@ -761,26 +761,8 @@
             </div>
         </div>
         <br />
-        <div class=" row" id="tibbitFooter" runat="server">
-            <div class="col-lg-1 col-sm-1 col-md-1">
-            </div>
-
-            <div class="col-lg-9 col-md-8 col-sm-6">
-                <p><span style="font-weight: bold; font-size: 18px">TibbIT -</span> <span style="font-size: 14px;">Health Platform By Garaj</span></p>
-                <p style="font-size: 14px; margin-top: 5px;">
-                    An all-in-one Hospital Management Information System (HMIS) designed to streamline your hospital operations,<br />
-                    enhance patient care, and drive smarter, faster decision-making — all through one easy-to-use platform.
-                </p>
-            </div>
-            <div class="col-lg-2 col-sm-2 col-md-2">
-                <p style="font-weight: bold; font-size: 18px">Contact Us:</p>
-                <a id="mbl_no" runat="server"></a>
-                <br />
-
-                <a id="email" runat="server"></a>
-            </div>
-        </div>
-        <div class="center" id="StandardFooter" runat="server">
+        
+        <div >
             <uc:Footer runat="server" id="Footer1" />
 
         </div>

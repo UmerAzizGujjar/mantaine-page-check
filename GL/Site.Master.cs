@@ -91,8 +91,8 @@ namespace PMS
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            tibbitFooter.Visible = false;
-            StandardFooter.Visible = false;
+            //tibbitFooter.Visible = false;
+            //StandardFooter.Visible = false;
 
             if (Session["UserName"] == null || Session["Company_Name"] == null || Session["Company_ID"] == null || Session["Book_ID"] == null)
             {
@@ -108,29 +108,29 @@ namespace PMS
                 //UserRightsApprovedPRFSNotifications();
             }
             generateDynamicMenu();
-            string companyName = Session["Company_Name"] != null ? Session["Company_Name"].ToString() : string.Empty;
-            if(companyName == "TibbIT By Garaj")
-            {
-                tibbitFooter.Visible = true;
+            //string companyName = Session["Company_Name"] != null ? Session["Company_Name"].ToString() : string.Empty;
+            //if(companyName == "TibbIT By Garaj")
+            //{
+            //    tibbitFooter.Visible = true;
 
-            }
-            else if(companyName == "Hmis Standard")
-            {
-                StandardFooter.Visible = true;
+            //}
+            //else if(companyName == "Hmis Standard")
+            //{
+            //    StandardFooter.Visible = true;
 
-            }
-            else if(companyName == "Imran Adrees Teaching Hospital")
-            {
-                StandardFooter.Visible = true;
-            }  
-            else if(companyName == "Pakred")
-            {
-                StandardFooter.Visible = true;
-            }
-            DataBaseDataContext db = new DataBaseDataContext();
-            var userid = AppConfig.UserID;
-            mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == userid select a.mobileno).FirstOrDefault();
-            email.InnerText = (from a in db.aspnet_Memberships where a.UserId == userid select a.Email).FirstOrDefault();
+            //}
+            //else if(companyName == "Imran Adrees Teaching Hospital")
+            //{
+            //    StandardFooter.Visible = true;
+            //}  
+            //else if(companyName == "Pakred")
+            //{
+            //    StandardFooter.Visible = true;
+            //}
+            //DataBaseDataContext db = new DataBaseDataContext();
+            //var userid = AppConfig.UserID;
+            //mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == userid select a.mobileno).FirstOrDefault();
+            //email.InnerText = (from a in db.aspnet_Memberships where a.UserId == userid select a.Email).FirstOrDefault();
 
         }
 

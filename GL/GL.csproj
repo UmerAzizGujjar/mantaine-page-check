@@ -563,7 +563,6 @@
     <Content Include="Modules\Administrator\WareHouseWiseUserList.aspx" />
     <Content Include="Modules\Administrator\WithHoldingTaxAccountDefinition.aspx" />
     <Content Include="bin\PMS.dll.config" />
-    <Content Include="UserControls\Footer.ascx" />
     <Content Include="wwwroot\ASsiratTheme\CssJs\select2.min.css" />
     <Content Include="wwwroot\ASsiratTheme\CssJs\select2.min.js" />
     <Content Include="wwwroot\ASsiratTheme\css\ace-ie.min.css" />
@@ -7268,7 +7267,6 @@
     <Content Include="wwwroot\ASsiratTheme\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="wwwroot\ASsiratTheme\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="wwwroot\ASsiratTheme\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="wwwroot\ASsiratTheme\images\dashboard_Icons\dashboard_Icons.rar" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\ckeditor\CHANGES.md" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\ckeditor\LICENSE.md" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\ckeditor\plugins\scayt\CHANGELOG.md" />
@@ -10740,8 +10738,10 @@
     <Content Include="wwwroot\Pakred\Scripts\gridmvc.min.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
+    <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
     <Content Include="wwwroot\StandardTheme\images\HMIS_Icons\favicon.png" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\LoginBackground.jpg" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\logo.PNG" />
@@ -12945,6 +12945,7 @@
     <Content Include="wwwroot\Tibbit_theme\fontawesomes\svgs\solid\z.svg" />
     <Content Include="wwwroot\Tibbit_theme\fonts\fontawesome-webfont.svg" />
     <Content Include="wwwroot\Tibbit_theme\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="wwwroot\Tibbit_theme\header-footer\Footer.ascx" />
     <Content Include="wwwroot\Tibbit_theme\images\avatars\avatar.png" />
     <Content Include="wwwroot\Tibbit_theme\images\avatars\avatar1.png" />
     <Content Include="wwwroot\Tibbit_theme\images\avatars\avatar2.png" />
@@ -14024,7 +14025,6 @@
     <Content Include="wwwroot\IITH_Theme\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="wwwroot\IITH_Theme\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="wwwroot\IITH_Theme\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="wwwroot\IITH_Theme\images\dashboard_Icons\dashboard_Icons.rar" />
     <Content Include="wwwroot\IITH_Theme\Scripts\ckeditor\CHANGES.md" />
     <Content Include="wwwroot\IITH_Theme\Scripts\ckeditor\LICENSE.md" />
     <Content Include="wwwroot\IITH_Theme\Scripts\ckeditor\plugins\scayt\CHANGELOG.md" />
@@ -17701,7 +17701,6 @@
     <Content Include="wwwroot\StandardTheme\Scripts\gridmvc.min.js" />
     <Content Include="wwwroot\StandardTheme\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\StandardTheme\Scripts\jquery-1.11.1.min.js" />
-    <Content Include="wwwroot\StandardTheme\images\dashboard_Icons\dashboard_Icons.rar" />
     <Content Include="wwwroot\Pakred\font-awesome\4.5.0\fonts\fontawesome-webfont.eot" />
     <Content Include="wwwroot\Pakred\font-awesome\4.5.0\fonts\fontawesome-webfont.ttf" />
     <Content Include="wwwroot\Pakred\font-awesome\4.5.0\fonts\fontawesome-webfont.woff" />
@@ -17768,7 +17767,6 @@
     <Content Include="wwwroot\Pakred\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="wwwroot\Pakred\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="wwwroot\Pakred\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="wwwroot\Pakred\images\dashboard_Icons\dashboard_Icons.rar" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\CHANGES.md" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\LICENSE.md" />
     <Content Include="wwwroot\Pakred\Scripts\ckeditor\plugins\scayt\CHANGELOG.md" />
@@ -18405,7 +18403,6 @@
     <Content Include="wwwroot\Tibbit_theme\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="wwwroot\Tibbit_theme\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="wwwroot\Tibbit_theme\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\dashboard_Icons.rar" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\ckeditor\CHANGES.md" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\ckeditor\LICENSE.md" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\ckeditor\plugins\scayt\CHANGELOG.md" />
@@ -20970,13 +20967,6 @@
     <Compile Include="Modules\Administrator\WareHouseWiseUserList.aspx.designer.cs">
       <DependentUpon>WareHouseWiseUserList.aspx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Footer.ascx.cs">
-      <DependentUpon>Footer.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UserControls\Footer.ascx.designer.cs">
-      <DependentUpon>Footer.ascx</DependentUpon>
-    </Compile>
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -21025,6 +21015,20 @@
     </Compile>
     <Compile Include="Modules\Administrator\WithHoldingTaxAccountDefinition.aspx.designer.cs">
       <DependentUpon>WithHoldingTaxAccountDefinition.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wwwroot\StandardTheme\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\StandardTheme\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="wwwroot\Tibbit_theme\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\Tibbit_theme\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
