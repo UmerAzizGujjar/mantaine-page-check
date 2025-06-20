@@ -2426,7 +2426,7 @@
             <input type="button" class="btn-gray"  id="btnResultPrint" value="Print"  onclick="ShowReport()" />
         </div>
         <div class="col-lg-2 col-md-12 mb-2">
-            <asp:Button Text="New" style="color:white !important" class="btn btn-yellow" runat="server" ID="Button1" OnClick="Button1_Click" />
+            <asp:Button Text="New" class="btn btn-gray" runat="server" ID="Button1" OnClick="Button1_Click" />
         </div>
     </div>
         </div>
