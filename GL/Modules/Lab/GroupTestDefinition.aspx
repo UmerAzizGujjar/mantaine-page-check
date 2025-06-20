@@ -143,8 +143,19 @@
             });
         }
         function onSuccess() {
-            alert('Saved Successfully');
-            window.location.href = "GroupTestList.aspx";
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Saved Successfully.',
+                showConfirmButton: false,
+                timer: 2500,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+             window.location.href = "GroupTestList.aspx";
         };
         function onFail() { alert('Error'); };
 
@@ -235,10 +246,26 @@
 
         function DeleteRate(reference) {
             debugger;
-            if (confirm("Are you sure you want to delete")) {
-                $($(reference).parents('tr')[0]).remove();
-
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'This action will delete',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $($(reference).parents('tr')[0]).remove();
+                }
+            });
+            
         }
     </script>
 
@@ -344,10 +371,10 @@
            <tr>
                <td>
                    <div>
-                       <legend>IPD Test Rates</legend>
+                       <legend style=" margin-top: -2px; border-bottom:0">IPD Test Rates</legend>
                        <table class="table" id="IPD_Test_Rate_Table">
                            <thead>
-                               <tr><a href="javascript:void(0)  "onclick="generateIPDRow()" style="width: 64%;" class="mb-5">Add More</a></tr>
+                               <tr><a href="javascript:void(0)" class="fa fa-plus iconAdd" onclick="generateIPDRow()" style="font-size: 20px;float: right;margin-top: -10px;"></a></tr>
                                <tr>
                                    <th style="width: 135px;">Patient Category</th>
                                    <th style="width: 72px;">Rate</th>
@@ -361,10 +388,11 @@
                </td>
                 <td>
                    <div>
-                       <legend style=" margin-top: -2px; margin-left: 183px;">OPD Test Rates</legend>
-                       <table class="table" id="OPD_Test_Rate_Table" style="width: 88%; margin-left: 189px;">
+                       <legend style=" margin-top: -2px; border-bottom:0">OPD Test Rates</legend>
+                       <table class="table" id="OPD_Test_Rate_Table" >
                            <thead>
-                               <tr><a href="javascript:void(0)" onclick="generateOPDRow()" style="margin-left: 193px;">Add More</a></tr>
+                              
+                               <tr> <a href="javascript:void(0)" class="fa fa-plus iconAdd" onclick="generateOPDRow()" style="font-size: 20px;float: right;margin-top: -10px;"></a></tr>
                                <tr>
                                    <th style="width: 135px;">Patient Category</th>
                                    <th style="width: 72px;">Rate</th>
