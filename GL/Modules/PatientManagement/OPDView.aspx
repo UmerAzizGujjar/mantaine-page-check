@@ -51,7 +51,7 @@
                 "lengthChange": true,
                 "buttons": [
                     {
-                    text: 'Add New',
+                    text: 'Add',
                     className: 'dt-button buttons-copy buttons-html5',
                     action: function () {
                         window.location = 'OPD.aspx';
