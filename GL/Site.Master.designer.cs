@@ -438,48 +438,12 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
-        /// tibbitFooter control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tibbitFooter;
-
-        /// <summary>
-        /// mbl_no control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor mbl_no;
-
-        /// <summary>
-        /// email control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor email;
-
-        /// <summary>
-        /// StandardFooter control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl StandardFooter;
-
-        /// <summary>
         /// Footer1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::PMS.UserControls.Footer Footer1;
+        protected global::PMS.wwwroot.StandardTheme.header_footer.Footer Footer1;
     }
 }
