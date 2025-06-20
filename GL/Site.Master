@@ -1,6 +1,7 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteMaster.master.cs" Inherits="PMS.SiteMaster" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+ <%@ Register Src="~/UserControls/Footer.ascx" TagPrefix="uc" TagName="Footer" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -10,7 +11,7 @@
     <link rel="icon" type="image/x-icon" href="/wwwroot/images/favicon.png" />
     <asp:PlaceHolder ID="PlaceHolder1" runat="server">
         <%--Datatable css--%>
-
+       
         <%--<link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/toastr.min.css") %>" rel="stylesheet" type="text/css" />--%>
         <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/wwwroot/StandardTheme/Styles/jquery.datetimepicker.css") %>" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/StandardTheme/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
@@ -780,9 +781,7 @@
             </div>
         </div>
         <div class="center" id="StandardFooter" runat="server">
-            <a href="#" style="padding-right: 225px; color: black !important; font-weight: bold">Our 24/7 support:</a>
-            <span style="font-weight: bold;">Email:</span> <a href="mailto:cloud.support@jazz.com.pk" style="padding-right: 300px; color: black !important; font-weight: bold">cloud.support@jazz.com.pk</a>
-            Contact: <a href="#" style="color: black !important; font-weight: bold">0304 111 0365</a>
+            <uc:Footer runat="server" id="Footer1" />
 
         </div>
     </form>

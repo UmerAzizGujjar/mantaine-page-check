@@ -563,6 +563,7 @@
     <Content Include="Modules\Administrator\WareHouseWiseUserList.aspx" />
     <Content Include="Modules\Administrator\WithHoldingTaxAccountDefinition.aspx" />
     <Content Include="bin\PMS.dll.config" />
+    <Content Include="UserControls\Footer.ascx" />
     <Content Include="wwwroot\ASsiratTheme\CssJs\select2.min.css" />
     <Content Include="wwwroot\ASsiratTheme\CssJs\select2.min.js" />
     <Content Include="wwwroot\ASsiratTheme\css\ace-ie.min.css" />
@@ -20967,6 +20968,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\WareHouseWiseUserList.aspx.designer.cs">
       <DependentUpon>WareHouseWiseUserList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserControls\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
     </Compile>
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
