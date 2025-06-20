@@ -168,8 +168,20 @@
                 document.getElementById("hdnDuplicateCheck").value = "1";
             }
             else {
-                alert("Processing Please Wait");
-                return false;
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Processing Please Wait',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                 return false;
             }
         }
         <%--function Approve() {

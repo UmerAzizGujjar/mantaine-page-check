@@ -385,6 +385,7 @@
     <Content Include="Modules\BloodBank\BloodTransfusionForm.aspx" />
     <Content Include="Modules\BloodBank\BloodTransfusionList.aspx" />
     <Content Include="Modules\Accounts\ChangeAccount.aspx" />
+    <Content Include="Reports\Patients\rptPatientsDetails.rpt" />
     <Content Include="upload\ChartofAccountExcelUpload.aspx" />
     <Content Include="Modules\PatientManagement\ChildBirth.aspx" />
     <Content Include="Modules\PatientManagement\ChildBirthView.aspx" />

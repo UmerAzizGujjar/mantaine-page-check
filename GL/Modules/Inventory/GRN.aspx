@@ -415,8 +415,22 @@
                         var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value=' + value.Item_Code + ']');
 
                         if (test_array.length > 0) {
-                            alert('This Item already added!');
-                            $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This Item already added',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+
+                             $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
                             return false;
                         }
                         else {
@@ -447,8 +461,22 @@
                 });
             }
             else {
-                alert("Please Select PR Number");
-            }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select PR Number',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+
+             }
         }
 
         function ExcludeFromPayment(anchor) {
@@ -515,27 +543,78 @@
 
                 });
                 if (dateStatus == "DateFalse") {
-                    alert("Exp Date must not be less then GRN date");
-                    return false;
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Exp Date must not be less then GRN date',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                     return false;
                 }
                 else if (status == false) {
-                    alert("Acc QTY Must Be greater than 0 OR Acc Qty must not greater then IGP qty");
-                    return false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Acc QTY Must Be greater than 0 OR Acc Qty must not greater then IGP qty',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                     return false;
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
                     var AllItemDetail = { 'GRN_Num': GRN_Num, 'Date': date, 'VendorId': VendorId, 'remarks': Remarks, 'project': project, 'InvOrg': InvOrg, 'ItemList': Item_list };
                     PageMethods.SaveGRNDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
-                        alert('Data Save Successfully');
-                        $('#btnSave').val("Update");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Save Successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                         $('#btnSave').val("Update");
                         window.location = "GRN.aspx?GRN_ID=" + res;
                     });
                 }
             }
             else {
-                alert("Please Add Items");
-            }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add Items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+
+             }
         }
       
         function CulculateRejQty(anchor) {
@@ -603,6 +682,7 @@
                     }
                 },
                 failure: function (response) {
+
                     alert("Failed to retrieve User UnApprove Button Rights.");
                 }
             });
