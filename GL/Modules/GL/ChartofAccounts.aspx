@@ -12,6 +12,7 @@
             border-radius:10px;
             margin-left:3px;
         }
+        
 
             .buttonDisabled:hover {
                 cursor: not-allowed;
@@ -21,6 +22,16 @@
                 width:150px !important;
                 margin-left:19px
             }
+
+     .radio-group {
+         display: flex;
+         align-items: center;
+         gap: 20px;
+     }
+
+     .custom-radio {
+         margin-right: 10px;
+     }
     </style>
     <script type="text/javascript">
         var treeView;
@@ -96,9 +107,9 @@
                             </fieldset>
                         </ContentTemplate>
                         <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="btnEditSave"  EventName="Click" />
-                            <asp:AsyncPostBackTrigger ControlID="btnDelete" EventName="Click" />
-                            <asp:AsyncPostBackTrigger ControlID="btnCancel" EventName="Click" />
+                            <asp:AsyncPostBackTrigger ControlID="btnEditSave"  EventName="Click"  />
+                            <asp:AsyncPostBackTrigger ControlID="btnDelete"  EventName="Click" />
+                            <asp:AsyncPostBackTrigger ControlID="btnCancel"  EventName="Click" />
                         </Triggers>
                     </asp:UpdatePanel>
                 </div>
@@ -135,7 +146,7 @@
                                             </tr>
                                             <tr>
                                                 <td></td>
-                                                <td>
+                                                <td class="radio-group">
                                                     <asp:RadioButton Text="Bank" runat="server" GroupName="a" ID="rbtnBank" Visible="false" />
                                                     &nbsp;
                                                     <asp:RadioButton Text="Cash" runat="server" GroupName="a" ID="rbtnCash" Visible="false" />
@@ -144,7 +155,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="popupButtonWraper">
+                                <div >
                                     <asp:Button ID="btnEditSave" Style="width:100px !important;"  runat="server" CssClass="btn btn-primry" Text="Update" OnClick="btnEditSave_Click" />&nbsp;
                                     <asp:Button ID="btnEditCancel" runat="server" Visible="false" Text="Cancel" CssClass="popupButton"
                                         OnClick="btnEditCancel_Click" OnClientClick="return enableAllNodes()" ClientIDMode="Static" />
