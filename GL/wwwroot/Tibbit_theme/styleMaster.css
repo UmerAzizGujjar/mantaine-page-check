@@ -24,6 +24,9 @@
     margin-top: 24px !important;
     color: #EFA63E  !important;
 }*/
+.iconAdd{
+    color: black !important
+}
 .swal-big-popup {
     width: 400px !important;
     padding: 20px !important;
@@ -6620,7 +6623,7 @@ button.btn:active {
 .btn-primry, .btn-primary:focus {
     background-color: #EFA63E !important;
     border: none !important;
-    color: white !important;
+    color: black !important;
     padding: 10px 20px !important;
     font-weight: bold !important;
     border-radius: 8px !important;
@@ -6630,7 +6633,8 @@ button.btn:active {
 
     /* Hover effect */
     .btn-primry:hover, .btn-primary:hover {
-        background-color: #9e1b1c !important; /* Slightly darker orange */
+        background-color: black !important; /* Slightly darker orange */
+        color : white !important;
         box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3) !important;
     }
 
