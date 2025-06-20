@@ -51,6 +51,37 @@
                 separator: '/'
             });
 
+            var Reg_ID = '<%= Request.QueryString["Reg_ID"] %>';
+
+            if (Reg_ID && Reg_ID !== "undefined" && Reg_ID.trim() !== "") {
+                $('#hdfPatient_ID').val(Reg_ID);
+
+                setTimeout(function () {
+                    selectPatient(Reg_ID);
+                }, 1000);
+            } else {
+            }
+
+            fillmartial();
+            fillgender();
+
+            jQuery(function ($) {
+                MaskedInput({
+                    elm: document.getElementById('txtSearch'), 
+                    format: '+92__________',
+                    separator: '-'
+                });
+                var phoneInput = document.getElementById('txtSearch');
+                var cursorPosition = 3;
+                phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+            });
+
+            $("#txtSearch").keyup(function (event) {
+                var SearchString = $('#txtSearch').val();
+                event.preventDefault();
+                if (SearchString === '')
+                    FillPatientsList();
+            });
 
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").select2();
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr2").select2();
@@ -5032,6 +5063,346 @@
         $(".js-example-responsive").select2({
             width: 'resolve'
         });
+
+        function OpenModal() {
+            debugger;
+            $('#PatientsSearchModel').modal({
+                backdrop: 'static'
+            });
+            FillPatientsList();
+            $('#srchpat').text("Search Your Patients:");
+            $('#txtSearch').unmask();
+            $('#ClosePatientsSearchModel').show();
+        }
+
+        function FillPatientsList() {
+            debugger;
+            $('#tblPatientsResult tbody').empty();
+            var SearchString = '';
+            PageMethods.AddPatient(SearchString, OnFilterPatients, OnFailPatients);
+        }
+        function OnFilterPatients(data) {
+
+            ClearPatientResults();
+
+            for (var i = 0; i < data.length; i++) {
+                AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].NIC, data[i].Mobile1, data[i].Father_Name);
+            }
+        }
+
+        function ClearPatientResults() {
+            while (tblPatientsResult.rows.length > 1) {
+                tblPatientsResult.deleteRow(1);
+            }
+        }
+
+        function OnFailPatients(exc) {
+            alert(exc.get_message());
+        }
+
+        function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
+            debugger;
+            tblLength = tblPatientsResult.rows.length;
+            var row = iPatientsBody.insertRow(-1);
+            var cell;
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span spnPatID' + tblLength + '>' + Reg_Patient_ID + '</span>';
+            cell.className = "hide";
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+            cell = row.insertCell(-1);
+            var actions = ''
+            actions += '<a style="color:#438eb9 ;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i></a>&nbsp;|&nbsp;&nbsp;';
+            actions += '<a style="color:#FDC303;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick=EditPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-pencil-square-o"></i></a>';
+            cell.innerHTML = actions;
+        }
+
+        function AddPatientDetail(Reg_Patient_ID) {
+            debugger;
+            try {
+                isAdd = true;
+                window.location.href = "EmergencyCase.aspx?Reg_ID=" + Reg_Patient_ID + "&isAdd=" + isAdd;
+
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+
+        function addfunc() {
+            debugger;
+            var maskedValue = $('#txtSearch').val();
+            var unmaskedValue = maskedValue.replace(/_/g, '');
+            var Ph_sNOs = unmaskedValue.length;
+
+
+            if (Ph_sNOs === 13) {
+                $('#addNewbtn').attr("disabled", false);
+                AddNewPatient();
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Complete Mobile Number First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                return;
+            }
+            $('#ClosePatientsSearchModel').click();
+            //fillmrnos();
+            setTimeout(function () {
+                $('#txt_mobile').val(unmaskedValue);
+            }, 100);
+            $('#txt_name').focus();
+        }
+
+        function AddNewPatient() {
+            debugger;
+            $('#ddl_pnl_cpy').next(".select2-container").hide();
+            clearPatient();
+            $('#hdfPatient_ID').val('(New)');
+            $('#PatientModel').modal({
+                backdrop: 'static'
+            });
+            $("#ddl_name").focus();
+            MaskedInput({
+                elm: document.getElementById('txt_cnic'),
+                format: '_____-_______-_',
+                separator: '-'
+
+            });
+        }
+
+        function clearPatient() {
+            $('#txt_name').val("");
+            $('#txt_relation').val("");
+            $('#txt_mobile').val("");
+            $('#txt_dob').val("");
+            $('#txt_cnic').val("");
+            $('#txt_Address').val('');
+            $('#updatePatient_Data').hide();
+            $('#RevistPat').hide();
+        }
+
+        function fillmartial() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetMartailStatus(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddl_status').html(options);
+            });
+            return options;
+        }
+        function fillgender() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetGender(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddl_Gender').html(options);
+            });
+            return options;
+        }
+
+        debugger;
+        function SavePatient() {
+            debugger;
+            $('#SavePatient_Data').attr('disabled', true);
+            var Prefix_PatientName = $('#ddl_name').val();
+            var PatientName = $('#txt_name').val();
+            var PatientID = $('#hdfPatient_ID').val();
+            var Full_Name = Prefix_PatientName + PatientName;
+            debugger;
+            var RelationType = $('#ddlRelation').val();
+            var Relation = $('#txt_relation').val();
+            var Gender = $('#ddl_Gender').val();
+            var Mobile = $('#txt_mobile').val();
+            var PreFix_DOB = $('#ddl_dob').val();
+            var Age = $('#txt_dob').val();
+            var Date_Of_Birth = $('#txtAge_yearss').val();
+            var CNIC = $('#txt_cnic').val();
+            var Address = $('#txt_Address').val();
+            var martail_status = $('#ddl_status').val();
+            if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || Address == "")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter compulsory Fields',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                $('#SavePatient_Data').attr('disabled', false);
+                return;
+            }
+            var data = JSON.stringify({
+                "Full_Name": Full_Name,
+                "RelationType": RelationType,
+                "Relation": Relation,
+                "Gender": Gender,
+                "Mobile": Mobile,
+                "Date_Of_Birth": Date_Of_Birth,
+                "CNIC": CNIC,
+                "Address": Address,
+                "PatientID": PatientID,
+                "martail_status": martail_status,
+                "Age": Age,
+
+            });
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/SavePatientDetail",
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    var Reg_Patient_ID = data.d;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Your Record Save and Load Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    $('#PatientModel').modal('hide');
+                    AddPatientDetail(Reg_Patient_ID)
+                },
+                error: function (response) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function CalculateDateOfBirth() {
+            debugger;
+            var now = moment();
+            var year = $('#txt_dob').val();
+            var calcualteDate = now.subtract('years', year);
+            var finalDate = calcualteDate.format("M/D/YYYY");
+            var $datepicker = $('#txtAge_yearss');
+            $datepicker.datepicker();
+            $('#txtAge_yearss').unmask("99/99/9999");
+            $datepicker.datepicker('setDate', finalDate);
+            $('#txtAge_yearss').unmask("99/99/9999");
+            $("#txtAge_yearss").mask("99/99/9999");
+        }
+
+        function EditPatientDetail(id) {
+            var Patient_ID = $('#hdfPatient_ID').val();
+            $('#CloseSearchModel').click(function () {
+                window.location.href = "EmergencyCase.aspx";
+            });
+            $('#CloseSearchModels').click();
+            $("#SavePatient_Data").hide();
+            $("#PatientsSearchModel").hide();
+            $('#updatePatient_Data').show();
+            $("#SavePatient_Data").hide();
+            $('#RevistPat').show();
+            $('#updatePatient_Data').show();
+            $('#PatientModel').modal({
+                backdrop: 'static'
+            });
+            var ajaxFn = function () {
+                $.ajax({
+                    type: "POST",
+                    url: "EmergencyCase.aspx/GetEditPatientDetails",
+                    data: "{'Reg_Patient_ID':" + id + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccessEdit,
+                    failure: function (response) {
+                        alert(response.d);
+                    }
+                });
+            }
+            setTimeout(ajaxFn, 3000);
+        }
+
+        var inPatientID;
+        var Discharged;
+        debugger;
+        function OnSuccessEdit(data) {
+            debugger;
+            if (data.d != '') {
+                debugger;
+                inPatientID = data.d.Inpat;
+                Discharged = data.d.Discharged;
+                $("#txt_Mrno").val(data.d.Mr_No);
+                $("#txt_name").val(data.d.Name);
+                $("#ddl_Gender").val(data.d.Gender).change();
+                var newValue = data.d.Age.replace('Y', '');
+                $("#txt_dob").val(newValue);
+                $("#ddl_status").val(data.d.MaritalStatus);
+                $("#ddl_ctgry").val(data.d.Patient_Type).change();
+                $("#ddl_Doc").val(data.d.DocID).change();
+                $('#ddl_pnl_cpy').hide();
+                //if (data.d.DOB != null) {
+                //    stDate = new Date(parseInt(data.d.DOB.substr(6)));
+                //    stDate = moment(stDate).format('L');
+                //}
+
+                if (data.d.Age != null) {
+                    setTimeout(function () {
+                        var age = parseInt(data.d.Age.replace(/\D/g, ''));
+
+                        var dob = moment().subtract(age, 'years');
+                        var formattedDOB = dob.format('YYYY-MM-DD');
+
+                        $("#txt_dob").val(age);
+                        $("#txtAge_yearss").val(formattedDOB);
+                    }, 300);
+                }
+
+
+
+                $("#ddltest_main_dpt").val(data.d.department).change();
+                $('#ddlRelation').val(data.d.Relation).trigger('change');
+                $('#ddl_name').val(data.d.Title).trigger('change');
+                $("#txt_relation").val(data.d.FatherName);
+                $("#txt_mobile").val(data.d.Mobile);
+                $("#txt_cnic").val(data.d.CNIC);
+                $("#txt_Address").val(data.d.Address);
+                $("#ddl_bld_grp").val(data.d.Blood_Group).change();
+                $("#ddlRhFactor").val(data.d.Rh_Factor);
+                if (data.d.Patient_Type == "02") {
+                    $("#ddl_pnl_cpy").val(data.d.PanelComany).change();
+                    $("#txt_Emp").val(data.d.TxtEmp);
+                    $("#txt_Ref").val(data.d.TxtRef);
+                }
+                $('#hdfPatient_ID').val(data.d.Reg_PatientID);
+            }
+
+        }
+
     </script>
 
     <style type="text/css">
@@ -5069,6 +5440,191 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="row">
+        <div class="col-md-2 text-end">
+            <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
+        </div>
+    </div>
+
+
+    
+    <div id="PatientsSearchModel" data-backdrop="static" class="modal fade-in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
+            <fieldset style="padding-top: 20px; padding-left: 14px;">
+                <div class="col-lg-3 col-md-4 col-sm-6">                           
+                <label id="srchpat">Search Your Patients: </label>
+                    <input type="text" id="txtSearch" style="margin-left: 2px;" autocomplete="off" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label></label>
+                    <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New" />
+                </div>
+                
+            </fieldset>
+            <div style="overflow: scroll; height: 460px; padding: 10px;">
+                <table class="table table-hover table-striped table-bordered" id="tblPatientsResult" style="overflow: scroll; height: auto;">
+                    <thead id="Thead1">
+                        <tr>
+                            <th style="display: none;">Patient ID</th>
+                            <th>MR No</th>
+                            <th>Patient Name</th>
+                            <th>Father Name</th>
+                            <th>CNIC</th>
+                            <th>Contact No</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="iPatientsBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" style="width:13% !important" id="ClosePatientsSearchModel" class="btn-gray" name="saveENT" value="Close" data-dismiss="modal" />
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+      <div id="PatientModel" class="modal fade-in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content modalSize" style="width: 1104px; margin-left: -77px; height: 308px; margin-top: 117px; /* 316px */">
+
+            <form>
+                <div class="container-fluid">
+                    <div class="row" style="margin-top: 40px!important;">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>MR No</label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
+                        </div>
+
+
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>Gender<span style="color:red;">*</span></label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <select id="ddl_Gender" tabindex="4" style="width: 197px;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Name<span style="color:red;">*</span></label>
+                        </div>
+
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <select class="impo-drop1 fcux" name="name" id="ddl_name">
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="B/O.">B/O.</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input name="dob"  type="text" id="txt_name" tabindex="1" style="margin-left: -12px !important" />
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>Martial Status<span style="color:red;">*</span></label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <select  tabindex="5" id="ddl_status" style="width: 197px;">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Relation<span style="color:red;">*</span></label>
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <select class="impo-drop fcux" name="name" id="ddlRelation">
+                                <option value="S/O">S/O</option>
+                                <option value="W/O">W/O</option>
+                                <option value="D/O">D/O</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" id="txt_relation" tabindex="2" style="margin-left: -12px !important" />
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>Mobile<span style="color:red;">*</span></label>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" tabindex="6" id="txt_mobile" style="width: 197px !important;" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Age/DOB<span style="color:red;">*</span></label>
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <select name="name" id="PrefixAge" >
+                                <option value="Year">Year</option>
+                                <option value="Month">Month</option>
+                                <option value="Day">Day</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" id="txt_dob" tabindex="3" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
+                            <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>CNIC<span style="color:red;">*</span></label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input tabindex="7"  type="text" id="txt_cnic" style="width: 200px !important" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Address<span style="color:red;">*</span></label>
+                        </div>
+
+                        <div class="col-lg-6 col-md-3 col-sm-4">
+                            <input type="text" tabindex="8" id="txt_Address"  />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="modal-footer" style="margin-top: 6%;">
+                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="9" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
+                <%-- <input type="button" id="RevistPat" name="RevistPat" value="Revist" onclick="SaveRevist_Patient();" />--%>
+                <input type="button" id="updatePatient_Data" class="btn btn-primry"  name="updatePatient_Data" style="text-transform: capitalize;width:10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
+                <input type="button" id="CloseSearchModel" class="btn-gray" style="width:10% !important" name="saveENT" value="Close" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
 
    <div id="MedicationModel" class="modal fade" role="dialog">
         <div class="modal-dialog">
