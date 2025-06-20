@@ -87,13 +87,13 @@ namespace PMS.Account
         protected global::System.Web.UI.WebControls.Button btnBack;
 
         /// <summary>
-        /// btnSave1 control.
+        /// btnSave control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSave1;
+        protected global::System.Web.UI.WebControls.Button btnSave;
 
         /// <summary>
         /// tvMenus control.
