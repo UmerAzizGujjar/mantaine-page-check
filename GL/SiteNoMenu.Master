@@ -293,7 +293,7 @@
 
             <div>
                 <asp:Image
-                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/StandardTheme/images/StandardTheme_icons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
+                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/StandardTheme/images/Standard_icons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
                 <div class="page">
 
                     <h4 id="id-company-text" style="color: #484B4D; font-size: 18px; margin-left: 3%; margin-top: -1px; font-weight: bold;display:none">@Health Tech Platform</h4>
