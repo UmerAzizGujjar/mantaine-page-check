@@ -10742,6 +10742,7 @@
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
+    <Content Include="wwwroot\StandardTheme\images\HMIS_Icons\favicon.png" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\LoginBackground.jpg" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\logo.PNG" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\Logoheader.png" />
