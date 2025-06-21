@@ -957,19 +957,7 @@
                     processData: false,
                     contentType: false,
                     error: function () {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: ' something went wrong!',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-
+                        alert(" something went wrong!");
                     }
                 });
             }
