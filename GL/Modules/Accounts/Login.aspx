@@ -30,7 +30,7 @@
                         <div class="accountInfo" style="">
                             <fieldset class="login">
                                 <h2 class="header_login">Log In</h2>
-                                <span style="    margin-left: -6px;font-size: 14px;">Enter Your username and Password to sign in!</span>
+                                <span style="    margin-left: -6px;font-size: 14px;font-weight:bold;">Enter Your username and Password to sign in!</span>
                                 <hr />
                                 <div class="row">
                                     <div class="col-lg-2 col-md-4 col-sm-6">
@@ -80,7 +80,7 @@
                                     <asp:LinkButton ID="forgetPassword" runat="server" OnClick="forgetPassword_Click" Style="color: black !important; font-size: 12px;" CssClass="forgot-password-link">
                                         <br />
                                         <i class="ace-icon fa fa-arrow-left"></i>
-                                        Forgot Password ?
+                                        <span style="font-weight:bold">Forgot Password ?</span>
                                         
                                     </asp:LinkButton>
                                 </a>

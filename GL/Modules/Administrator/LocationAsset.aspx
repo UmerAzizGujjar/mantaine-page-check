@@ -44,7 +44,18 @@
                     $("#txtLocation_No").val(id);
                 },
                 failure: function (response) {
-                    alert("In failure method");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'In failure method',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 }
             });
         }
@@ -55,8 +66,19 @@
             var Location_Description = $('#txtLocation_Description').val();
             var btnValue = $("#btnSave").val();
             if (!Location_Code) {
-                alert("Please Enter Location Code.");
-                return false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Location Code.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                 return false;
             }
             $.ajax({
                 type: "POST",
@@ -73,8 +95,19 @@
                     debugger;
                     var res = response.d;
                     if (res.startsWith("Success")) {
-                        alert("Data Inserted Successfully");
-                        window.location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Inserted Successfully',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                         window.location.reload();
                     } else {
                         alert("Error: " + res);
                     }
@@ -102,8 +135,22 @@
                     $('#txtLocation_Description').val(parse.Location_Description);
                 },
                 failure: function (response) {
-                    alert("In failure method");
-                }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'In failure method',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                 }
             });
         }
     </script>

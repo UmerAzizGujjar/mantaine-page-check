@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -230,6 +231,189 @@ namespace PMS
 
         }
 
+        public class PatientsResult
+        {
+            public string Full_Name;
+            public string NIC;
+            public string Reg_Patient_ID;
+            public string Age_years;
+            public string Patient_No;
+            public string Mobile1;
+            public string Father_Name;
+
+        }
+        [WebMethod]
+        public static List<PatientsResult> AddPatient(string SearchString)
+        {
+
+            string SearchSql = "";
+            if (SearchString == "")
+                SearchSql = "SELECT top 10 pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 order by pat_id desc";
+            else
+                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
+
+            DataTable dt = DBClass.getDataTable(SearchSql);
+
+            List<PatientsResult> list = new List<PatientsResult>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                PatientsResult rslt = new PatientsResult()
+                {
+                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : (string)dr[0].ToString(),
+                    Patient_No = dr[1] == DBNull.Value ? "" : (string)dr[1].ToString(),
+                    Full_Name = dr[2] == DBNull.Value ? "" : (string)dr[2],
+                    NIC = dr[3] == DBNull.Value ? "" : (string)dr[3],
+                    Mobile1 = dr[4] == DBNull.Value ? "" : (string)dr[4],
+                    Father_Name = dr[5] == DBNull.Value ? "" : (string)dr[5],
+                };
+                list.Add(rslt);
+                int number;
+                string value = "Hello";
+                bool result = Int32.TryParse(value, out number);
+            }
+            return list;
+        }
+
+        [WebMethod]
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            Reg_patient pat = null;
+            if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
+            {
+                pat = db.Reg_patients.Where(w => w.pat_id == Convert.ToInt32(PatientID)).FirstOrDefault();
+
+                if (pat != null)
+                {
+                    pat.Relation_prefix = RelationType;
+                    pat.Full_Name = Full_Name;
+                    pat.Father_Name = Relation;
+                    pat.Gender = Gender;
+                    pat.Mobile1 = Mobile;
+                    pat.Age_years = Age;
+                    pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                    pat.NIC = CNIC;
+                    pat.Permanent_Address = Address;
+                    pat.Martial_Status = martail_status;
+                    pat.walkin = true;
+                    db.SubmitChanges();
+                }
+            }
+            else
+            {
+                pat = new Reg_patient();
+                pat.Patient_No = DBClass.getMaxEntry_No("Reg_patient", "Patient_No");
+                pat.Full_Name = Full_Name;
+                pat.Father_Name = Relation;
+                pat.Relation_prefix = RelationType;
+                pat.Gender = Gender;
+                pat.Mobile1 = Mobile;
+                pat.Age_years = Age;
+                pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                pat.NIC = CNIC;
+                pat.Permanent_Address = Address;
+                pat.Created_time = DateTime.Now;
+                pat.Created_by = AppConfig.UserID;
+                pat.iscancel = false;
+                pat.Martial_Status = martail_status;
+                pat.mr_no_sequence = db.GetSequentialMrNo();
+                pat.walkin = true;
+                db.Reg_patients.InsertOnSubmit(pat);
+                db.SubmitChanges();
+            }
+            return pat.pat_id.ToString();
+        }
+
+        public class PatientDetail_Reg
+        {
+            public string Name;
+            public string Title;
+            public string Gender;
+            public string Age;
+            public DateTime DOB;
+            public string Mobile;
+            public string Address;
+            public string Mr_No { get; set; }
+            public string MaritalStatus { get; set; }
+            public string FatherName { get; set; }
+            public string Relation { get; set; }
+            public string CNIC { get; set; }
+            public string Reg_PatientID { get; set; }
+        }
+
+        [WebMethod]
+        public static PatientDetail_Reg GetEditPatientDetails(string Reg_Patient_ID)
+        {
+            PatientDetail_Reg pts = new PatientDetail_Reg();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            Reg_patient pat = new Reg_patient();
+            pat = (from tbl in db.Reg_patients
+                   where tbl.pat_id == Convert.ToInt32(Reg_Patient_ID)
+                   orderby tbl.Created_time descending
+                   select tbl).FirstOrDefault();
+            if (pat != null)
+            {
+                string[] PatientName = pat.Full_Name.Split('.');
+                pts.Title = PatientName[0] + ".";
+                pts.Name = PatientName[PatientName.Length - 1];
+                pts.FatherName = pat.Father_Name;
+                pts.Gender = pat.Gender;
+                pts.Relation = pat.Relation_prefix;
+                pts.DOB = Convert.ToDateTime(pat.DOB);
+                pts.Age = pat.Age_years.ToString();
+                pts.MaritalStatus = pat.Martial_Status;
+                pts.Mr_No = Convert.ToString(pat.mr_no_sequence);
+                pts.Address = pat.Permanent_Address;
+                pts.Mobile = pat.Mobile1;
+                pts.CNIC = pat.NIC;
+                pts.Gender = pat.Gender;
+                pts.Reg_PatientID = Reg_Patient_ID;
+                return pts;
+            }
+            return pts;
+        }
+
+        [WebMethod]
+        public static string GetMartailStatus()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Marital Status"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetGender()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Gender"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         public void BlankForm()
         {
             ddlIssuance_Of.SelectedIndex = 0;
@@ -1407,7 +1591,17 @@ namespace PMS
                     OPD.FollowUpPlanInstructions = FollowUpPlanInstructions;
                     OPD.CauseOfReferral = CauseOfReferral;
                     OPD.ReferredTo = ReferredTo;
-                    OPD.TreatmentTime = Convert.ToDateTime(TreatmentTime);
+                    DateTime parsedTime;
+                    if (DateTime.TryParse(TreatmentTime, out parsedTime))
+                    {
+                        OPD.TreatmentTime = parsedTime;
+                    }
+                    else
+                    {
+                        
+                        OPD.TreatmentTime = DateTime.Now; 
+                    }
+                    //OPD.TreatmentTime = Convert.ToDateTime(TreatmentTime);
                     OPD.CNS_Value = TextBoxCns;
                     OPD.CVS_Value = TextBoxCvs;
                     OPD.RESP_Value = TextBoxResp;

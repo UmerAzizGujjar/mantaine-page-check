@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -34,6 +34,7 @@
                 else {
                     id = "";
                 }
+                var valid = true;
                 var btnValue = $("#btnSave").val();
                 var cmp_name = $("#txtCompanyName").val();
                 var no_of_emp = $("#txtEmpNo").val();
@@ -50,6 +51,40 @@
                 var contact_noV = $("#txtContactNo");
                 var addressV = $("#txtAddress");
                 var discountV = $("#txtDiscount");
+                
+                if (cmp_name == "") {
+                    valid = false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter Company Name.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                }
+                else if (Glcode == 0) {
+                    valid = false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter GL Account.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                }
                 if ($(cmp_nameV).val() == '') $(cmp_nameV).addClass('ErrorAlert'); else $(cmp_nameV).removeClass('ErrorAlert');
                 if ($(no_of_empV).val() == '') $(no_of_empV).addClass('ErrorAlert'); else $(no_of_empV).removeClass('ErrorAlert');
                 if ($(emailV).val() == '') $(emailV).addClass('ErrorAlert'); else $(emailV).removeClass('ErrorAlert');
@@ -76,31 +111,32 @@
                         servicesList[i] = new Array(serviceID, serviceRate, groupCategory, testID);
                     }
 
-
-                    $.ajax({
-                        type: "POST",
-                        url: "panelagreement.aspx/Save",
-                        data: JSON.stringify({
-                            'cmp_name': cmp_name,
-                            'no_of_emp': no_of_emp,
-                            'email': email,
-                            'contact_no': contact_no,
-                            'address': address,
-                            'discount': discount,
-                            'panelrate': panelrate,
-                            "btnValue": btnValue,
-                            "Glcode": Glcode,
-                            "id": id,
-                            "rateDetail": servicesList
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
-                            var data = response.d;
-                            alert("Data has been saved successfully");
-                            window.location.href = "panelagreement.aspx?ID=" + data;
-                        }, error: function () { }
-                    });
+                    if (valid) {
+                        $.ajax({
+                            type: "POST",
+                            url: "panelagreement.aspx/Save",
+                            data: JSON.stringify({
+                                'cmp_name': cmp_name,
+                                'no_of_emp': no_of_emp,
+                                'email': email,
+                                'contact_no': contact_no,
+                                'address': address,
+                                'discount': discount,
+                                'panelrate': panelrate,
+                                "btnValue": btnValue,
+                                "Glcode": Glcode,
+                                "id": id,
+                                "rateDetail": servicesList
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                var data = response.d;
+                                alert("Data has been saved successfully");
+                                window.location.href = "panelagreement.aspx?ID=" + data;
+                            }, error: function () { }
+                        });
+                    }
 
                 }
             })

@@ -192,8 +192,20 @@
                     }
                     var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value=' + value.itemcode + ']');
                     if (test_array.length > 0) {
-                        alert('This Item already added!');
-                        $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This Item already added',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                         $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
                         return false;
                     }
                     else {
@@ -246,8 +258,20 @@
             var batch_no = $(_this).find('td input[name="BatchNo"]').val();
             if (batch == "false" || batch == 'null' || batch == null) {
                 if (batch_no != "") {
-                    alert("Please enable Batch checkbox from item form");
-                    $(_this).find('td input[name=BatchNo]').val('');
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please enable Batch checkbox from item form',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                     $(_this).find('td input[name=BatchNo]').val('');
                     $(_this).find('td input[name=BatchNo]').prop('readonly', true);
                 }
             }
@@ -294,8 +318,20 @@
             var tblLength = $("#tblItemDescription tr:gt(0)").length;
             if (tblLength == '0') {
                 $('#tblItemDescription').addClass('ErrorAlert');
-                alert("Please Add items");
-                proceed = false;
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                 proceed = false;
             }
             else {
                 $('#tblItemDescription').removeClass('ErrorAlert');
@@ -318,39 +354,130 @@
 
                     if (igpQTy <= 0) {
                         proceed = false;
-                        alert("IGP Quantity must be greater then 0");
-                    }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'IGP Quantity must be greater then 0',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                     }
                     if (igpQTy == "") {
                         proceed = false;
-                        alert("Please Enter Igp Quantity");
-                    }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Enter Igp Quantity',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                     }
                     if (igpQTy > poQty) {
                         proceed = false;
-                        alert("IGP Quantity must be less then or Equal to PO Quantity");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'IGP Quantity must be less then or Equal to PO Quantity',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                     }
                     debugger;
                     if (Isbatch == "true") {
                         if (BatchNo == "") {
                             proceed = false;
-                            alert("Please Enter Batch No");
-                        }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Enter Batch No',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                         }
                         if (!MfgDate) {
                             proceed = false;
-                            alert("Please Enter Mfg Date");
-                        }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Enter Mfg Date',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                         }
                         if (!ExpDate) {
                             proceed = false;
-                            alert("Please Enter Expiry Date");
-                        }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Enter Expiry Date',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                         }
                         if (ExpDate && GRNdate > ExpDate) {
                             proceed = false;
-                            alert("Exp Date must not be less than GRN date");
-                        }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Exp Date must not be less than GRN date',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                         }
                     }
                     if (Isbatch == "false" || Isbatch == 'null' || Isbatch == null) {
                         debugger;
+                        var message = "Batch is false,You can't enter batch number against Item Code " + item_code + ",Please check batch to true in items";
                         if (BatchNo != "") {
-                            alert("Batch is false,You can't enter batch number against Item Code " + item_code + ",Please check batch to true in items");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: message,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                             $($(value).find('td input[name=BatchNo]')[0]).val('');
                             $($(value).find('td input[name=BatchNo]')[0]).prop('readonly', true);
                             proceed = false;
@@ -386,8 +513,20 @@
                 var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'ItemList': Item_list };
                 PageMethods.SaveIgpDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     debugger;
-                    alert('Data Save Successfully');
-                    sendFile(res);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Save Successfully.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                     sendFile(res);
                     $('#btnSave').val("Update");
                     window.location = "InversionGatePass.aspx?IGP_ID=" + res;
                     $('#btnSave').val("Update");
@@ -549,8 +688,21 @@
                 });
             }
             else {
-                alert("Please Select PR Number");
-            }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select PR Number',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+             }
         }
         function ExcludeFromPayment(anchor) {
             debugger;
@@ -603,8 +755,21 @@
         function ApproveInspecModal() {
             debugger;
             if ($('#tblItemDescription tbody tr').length === 0) {
-                alert('Please select items first.');
-                return;
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select items first',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 return;
             }
             $('#InspmodalItemDescription tbody').empty();
             debugger;
@@ -634,8 +799,21 @@
 
             if (tblLength == '0') {
                 $('#InspmodalItemDescription').addClass('ErrorAlert');
-                alert("Please Add items");
-                isValid = false;
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                 isValid = false;
                 return false;
             } else {
                 $('#InspmodalItemDescription').removeClass('ErrorAlert');
@@ -647,7 +825,21 @@
                     var inspQty = parseFloat($(value).find('td input[name=InspQty]').val());
 
                     if (isNaN(inspQty) || inspQty <= 0 || inspQty > igpQty) {
-                        alert("Please enter a valid Inspection Quantity for Item in Row " + (key + 1));
+                        var message = "Please enter a valid Inspection Quantity for Item in Row " + (key + 1);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         isValid = false;
                         return false;
                     }
@@ -679,22 +871,70 @@
                             debugger;
                             var message = JSON.parse(Tests);
                             if (message[0].Column1 == "1" || message[0].Column1 === "1") {
-                                alert("Inspection Approved Done Successfully");
-                                location.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Inspection Approved Done Successfully.',
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                                 location.reload();
                             } else {
                                 if (message == "1") {
-                                    alert("Inspection Approved Done Successfully");
-                                    location.reload();
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Inspection Approved Done Successfully.',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+                                     location.reload();
                                 }
                                 else {
-                                    alert("An error occurred while Approving Inspection.");
-                                }
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: 'An error occurred while Approving Inspection',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
+                                 }
 
                             }
                         });
                     } else {
-                        alert("An error occurred while Updating Inspection details.");
-                    }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'An error occurred while Updating Inspection details',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                     }
                 });
             }
         }

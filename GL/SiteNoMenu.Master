@@ -6,11 +6,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1" runat="server">
     <title>TIBBIT</title>
-    <link rel="icon" type="image/x-icon" href="/wwwroot/images/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="wwwroot/StandardTheme/images/HMIS_Icons/faviconStandard.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="wwwroot/StandardTheme/Styles/ace-rtl.min.css" rel="stylesheet" />
     <link href="wwwroot/StandardTheme/Styles/bootstrap.min.css" rel="stylesheet" />
-    <link href="wwwroot/StandardTheme/Styles/style.css" rel="stylesheet" />
+    <link href="wwwroot/StandardTheme/css/CustomCss/LoginPage.css" rel="stylesheet" />
+
+
+
     <link href="wwwroot/StandardTheme/Styles/loader.css" rel="stylesheet" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -18,92 +21,8 @@
         /* Import Google Fonts */
         @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Open Sans", sans-serif;
-        }
-
-        /* Ensure body covers viewport and has background */
       
-
-        /* Styling for the main wrapper */
-        .wrapper {
-            max-width: 400px;
-            padding: 30px;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-        /* Form styling */
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Link styling */
-        .wrapper a {
-            color: #efefef;
-            text-decoration: none;
-        }
-
-            .wrapper a:hover {
-                text-decoration: underline;
-            }
-
-        /* Input field styling */
-        .input-field {
-            position: relative;
-        }
-
-            .input-field label {
-                position: absolute;
-                top: 50%;
-                left: 0;
-                transform: translateY(-50%);
-                color: #fff;
-                font-size: 16px;
-                pointer-events: none;
-                transition: 0.15s ease;
-            }
-
-            .input-field input {
-                width: 100%;
-                height: 40px;
-                border: none;
-                outline: none;
-                font-size: 16px;
-                color: #fff;
-            }
-
-                .input-field input:focus ~ label,
-                .input-field input:valid ~ label {
-                    font-size: 0.8rem;
-                    top: 10px;
-                    transform: translateY(-120%);
-                }
-
-        /* Button styling */
-        button {
-            background: #fff;
-            color: #000;
-            font-weight: 600;
-            border: none;
-            padding: 12px 20px;
-            cursor: pointer;
-            border-radius: 3px;
-            font-size: 16px;
-            border: 2px solid transparent;
-            transition: 0.3s ease;
-        }
-
-            button:hover {
-                color: #fff;
-                border-color: #fff;
-                background: rgba(255, 255, 255, 0.15);
-            }
+      
 
         /* Responsive design */
         @media (max-width: 1280px) {
@@ -293,7 +212,7 @@
 
             <div>
                 <asp:Image
-                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/StandardTheme/images/StandardTheme_icons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
+                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/StandardTheme/images/Standard_icons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
                 <div class="page">
 
                     <h4 id="id-company-text" style="color: #484B4D; font-size: 18px; margin-left: 3%; margin-top: -1px; font-weight: bold;display:none">@Health Tech Platform</h4>

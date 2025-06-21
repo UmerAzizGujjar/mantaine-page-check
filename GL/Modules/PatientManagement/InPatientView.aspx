@@ -18,7 +18,16 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'InPatientsCase.aspx';
+                        }
+                    },
+                    'copy', 'excel', 'pdf',
+                ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -130,12 +139,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="POdetails" style="margin-top: 15px;">
-        <div class="row">
-            <div class="col-md-2" style="margin-bottom:1%">
-                <label></label>
-                <input type="button" class="btn-primry" value="Add New" style="text-align: center" onclick=" window.location.href = 'InPatientsCase.aspx'" />               
-            </div>
-        </div>
         <div>
 
             <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">

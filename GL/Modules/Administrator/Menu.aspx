@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Menu.aspx.cs" Inherits="PMS.Menu" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <style type="text/css">
         .card {
             border: 1px solid #ccc;
@@ -121,24 +122,77 @@
             var BtnText = $('#btnSave').val();
             var id = '<%= Request.QueryString["ID"] %>';
             if (MenuName == "") {
-                $('#txtMenu_Name-error').show();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Menu Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 valid = false;
             }
-            if (MenuDescription == "") {
-                $('#txtMenu_Discription-error').show();
+            else if (MenuDescription == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Menu Description',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 valid = false;
             }
-            if (URL == "") {
-                $('#txtMenu_Url-error').show();
-                valid = false;
+            else if (URL == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter URL',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });                valid = false;
             }
-            if (ParentID == 0) {
-                $('#ddlParent_Menu-error').show();
-                valid = false;
+            else if (ParentID == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: ' Please Select Parent Menu',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });                valid = false;
             }
-            if (OrderBy == "") {
-                $('#txtOrder_By-error').show();
-                valid = false;
+            else if (OrderBy == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Order By',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });                valid = false;
             }
             var dataObj = {
                 "MenuName": MenuName,

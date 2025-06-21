@@ -132,7 +132,20 @@
             var btnValue = $("#btnSave").val();
 
             if (!Asset_Cat_Name) {
-                alert("Please enter Asset Category Name.");
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Asset Category Name.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                
                 isSaving = false;
                 return false;
             }
@@ -155,7 +168,18 @@
                     var res = response.d;
                     if (res.startsWith("Success")) {
                         var message = (btnValue === "Update") ? "Data updated successfully" : "Data saved successfully";
-                        alert(message);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: message,
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         window.location.reload();
                     } else {
                         alert("Error: " + res);
@@ -163,6 +187,7 @@
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX error: ", xhr, status, error);
+                   
                     alert("Error: Failed to Save Asset. " + error);
                 },
                 complete: function () {

@@ -144,7 +144,18 @@
             var Trans_Type = $("#ddl_transType").val();
 
             if (Trans_Type == 0 || Trans_Type == "0" || Trans_Type == '0' || Trans_Type == "") {
-                alert("Fill mandatory fields");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Fill mandatory fields',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 console.error("Error: Trans_Type is required.");
                 return;
             }
@@ -197,13 +208,35 @@
                     function (response) {
                         if (response.startsWith("DUPLICATE:")) {
                             var message = response.replace("DUPLICATE:", "");
-                            alert(message);
-                            return;
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: message,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                             return;
                         }
 
                         if (response !== '-1') {
-                            alert("Data has been saved successfully");
-                            window.location.href = "AssetDepereciation.aspx";
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data has been saved successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                             window.location.href = "AssetDepereciation.aspx";
                         }
                     }
                 );
@@ -528,8 +561,21 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve depreciation policies.");
-                }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve depreciation policies',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+
+                 }
             });
         }
 
@@ -542,8 +588,19 @@
                 PageMethods.approveAssetDep(assetDetailId, function (response) {
                     var data = response;
                     if (data == "Success") {
-                        alert("Approve Depereciation Successfully")
-                    }
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Approve Depereciation Successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                     }
                 });
             });
 
@@ -557,7 +614,18 @@
                 PageMethods.UnapproveAssetDep(assetDetailId, function (response) {
                     var data = response;
                     if (data == "Success") {
-                        alert("Approve Depereciation Successfully")
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Approve Depereciation Successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                     }
                 });
             });
