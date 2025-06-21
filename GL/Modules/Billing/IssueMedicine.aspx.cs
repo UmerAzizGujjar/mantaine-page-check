@@ -138,26 +138,26 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string loadMedicine(string ItemName, string isbatch)
+        public static string loadMedicine(string ItemName)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spPharmacyitem(ItemName, isbatch).ToList();
+                var query = db.spPharmacyitem(ItemName).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
         }
 
         [WebMethod]
-        public static string MedicineDetail(int itemId, string Batch)
+        public static string MedicineDetail(int itemId)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, Batch).ToList();
+                var query = db.spMedicinesDetails(itemId).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -234,18 +234,18 @@ namespace PMS
 
             return new JavaScriptSerializer().Serialize(combinedResult);
         }
-        [WebMethod]
-        public static string GetStockByBatch(int itemId, string batchNumber)
-        {
-            string result = string.Empty;
+        //[WebMethod]
+        //public static string GetStockByBatch(int itemId, string batchNumber)
+        //{
+        //    string result = string.Empty;
 
-            using (DataBaseDataContext db = new DataBaseDataContext())
-            {
-                var query = db.spMedicinesDetails(itemId, batchNumber).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query).ToString();
-            }
-            return result;
-        }
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var query = db.spMedicinesDetails(itemId, batchNumber).ToList();
+        //        result = (new JavaScriptSerializer()).Serialize(query).ToString();
+        //    }
+        //    return result;
+        //}
         public class Medicines
         {
             public int Bill_ID { get; set; }
