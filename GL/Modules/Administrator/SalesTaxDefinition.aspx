@@ -38,7 +38,19 @@
             var AllItemDetail = { 'btnSave': btnSave, 'AccountList': Account_list };
             PageMethods.savewithholdtaxinfo(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
-                alert('Data Save Successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 window.location.href = 'SalesTaxDefinition.aspx';
                 $('#btnSave').val("Update");
             });

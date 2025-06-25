@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Panel_Packages_List.aspx.cs" Inherits="PMS.Modules.Inventory.Panel_Packages_List" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-       <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+       <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
   <script type="text/javascript">
       $(document).ready(function () {
           debugger;

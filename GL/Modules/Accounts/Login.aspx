@@ -5,7 +5,7 @@
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/login.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/login.css" rel="stylesheet" />
     
 
 
@@ -29,8 +29,8 @@
                     
                         <div class="accountInfo" style="">
                             <fieldset class="login">
-                                <h2 class="header_login">Log In</h2>
-                                <span style="    margin-left: -6px;font-size: 14px;font-weight:bold;">Enter Your username and Password to sign in!</span>
+                                <h2 class="header_login">Login</h2>
+                                <span style="margin-left: -20%;font-size: 14px;font-weight:bold;">Enter Your username and Password to sign in!</span>
                                 <hr />
                                 <div class="row">
                                     <div class="col-lg-2 col-md-4 col-sm-6">
@@ -80,7 +80,7 @@
                                     <asp:LinkButton ID="forgetPassword" runat="server" OnClick="forgetPassword_Click" Style="color: black !important; font-size: 12px;" CssClass="forgot-password-link">
                                         <br />
                                         <i class="ace-icon fa fa-arrow-left"></i>
-                                        <span style="font-weight:bold">Forgot Password ?</span>
+                                        <span style="font-weight:bold;margin-left:70%">Forgot Password ?</span>
                                         
                                     </asp:LinkButton>
                                 </a>

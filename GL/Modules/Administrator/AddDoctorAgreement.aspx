@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddDoctorAgreement.aspx.cs" Inherits="PMS.Inventory.AddDoctorAgreement" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/DoctorAgrement.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/DoctorAgrement.css" rel="stylesheet" />
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {

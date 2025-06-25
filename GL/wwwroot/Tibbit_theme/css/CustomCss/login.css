@@ -1,4 +1,8 @@
 .header_login {
+    text-align: left;
+}
+
+.header_login {
     color: #EFA63E !important;
     text-align:left;
 }
@@ -27,7 +31,7 @@ input.passwordEntry {
     margin-top: 10px;
     width: 100% !important;
     border-radius: 12px !important;
-    height: 40px;
+    height: 49px;
 }
 
 
@@ -121,9 +125,8 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     box-shadow: 0 0 20px #fff;
     border-radius: 14px !important;
     display: block;
-    width: 50% !important;
+    width: 100% !important;
     height: 40px;
-    margin-left: 85px;
 }
 
     #ctl00_MainContent_UserLogin_LoginButton:hover {
@@ -139,7 +142,8 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
 }
 
 .labels {
-    color: #EFA63E  !important;
+    color: #EFA63E !important;
+    font-size: 15px !important;
 }
 
 .selectlogin {

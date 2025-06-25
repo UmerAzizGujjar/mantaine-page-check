@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseRequistion.aspx.cs" Inherits="PMS.AP.PurchaseRequistion" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-       <link href="../../wwwroot/StandardTheme/css/CustomCss/PR.css" rel="stylesheet" />
+       <link href="../../wwwroot/Tibbit_theme/css/CustomCss/PR.css" rel="stylesheet" />
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1034,14 +1034,14 @@
                 <input style="" type="text" class="form-control" id="txtItem" name="txtItem" placeholder="item" />
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
-                <span class="btn-item" id="btnGetAllItems"><i id="faGetAllItems" class="fa fa-check-square btn-gray">Items</i></span>
+                <span class="btn-item" id="btnGetAllItems"><i id="faGetAllItems" class="fa fa-check-square btn-gray btntop">Items</i></span>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <label id="lblGIR">GIR</label>
                 <asp:DropDownList runat="server" ID="ddlGIR" class="form-select"></asp:DropDownList>
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
-                <span class="btn-item" id="btnGIR"><i id="fabtnGIR" class="fa fa-plus btn-gray">GIR</i></span>
+                <span class="btn-item" id="btnGIR"><i id="fabtnGIR" class="fa fa-plus btn-gray btntop">GIR</i></span>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                 <label id="LblRef_Num">Ref #</label>
