@@ -10817,6 +10817,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Userview.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\vendor.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\voucher.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\Dashboardfontawesome.css" />
     <Content Include="wwwroot\Tibbit_theme\css\dataTables.jqueryui.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\daterangepicker.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\dropzone.min.css" />
@@ -10831,6 +10832,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\jquery-ui.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\jquery.gritter.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Loader\Loader.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\prettify.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\RegPat.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Report.css" />

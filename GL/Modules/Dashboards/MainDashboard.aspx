@@ -1,11 +1,30 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MainDashboard.aspx.cs" Inherits="PMS.MainDashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />--%>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
- 
+    <link href="../../wwwroot/Tibbit_theme/css/MainDashboard.min.css" rel="stylesheet" />
+    <%--<link href="../../wwwroot/Tibbit_theme/css/Dashboardfontawesome.css" rel="stylesheet" />--%>
 
   <style type="text/css">
+
+      .completecard{
+          height: 160px; width: 71%;
+          border-radius: 10px; 
+          overflow: hidden;
+      }
+
+      .headercolor {
+          background-color: #EFA63E !important;
+          height:45px !important;
+      }
+
+      .iconcolor{
+          font-size: 33px !important; 
+          color: white !important;
+      }
+
     span {
         font-size: 13px;
     }
@@ -28,9 +47,9 @@
     
     .yellow-icon {
         color: #EFA63E !important;
-        font-size: 40px;
-        margin-right: 20px;
-        margin-top: 10px;
+        font-size: 34px !important;
+        margin-right: 0px;
+        margin-top: 0px;
     }
     
     .black-text {
@@ -415,274 +434,289 @@
     <br />
 
     <div class="container-fluid">
-       <div class="col-md-12">
+       <div class="col-md-12" style="padding-left:10%">
     <div class="row">
         <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="fas fa-user yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">General Patients</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0 black-text">Total Patients</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="total_opd" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0">
-                                <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingPatientsList()">Pending</a>
-                            </h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="total_Pending" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0">
-                                <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillcheckedpatient()">Checked</a>
-                            </h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="total_checked" class="black-text"></span>
-                        </div>
-                    </div>
+    <div class="card card-outline-yellow completecard" >
+
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2  headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">General Patients</h3>
+            <i class="far fa-user-md iconcolor" ></i>
+        </div>
+        
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patients</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="total_opd" class="black-text font-weight-bold">0</span>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="far fa-user-md yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">Doctor Wise</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0 black-text">Total Patient</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="total_prvt" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0">
-                                <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingPrivatePatientsList();">Pending</a>
-                            </h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="tot_pending" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0">
-                                <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="CheckPrivate()">Checked</a>
-                            </h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="tot_checked" class="black-text"></span>
-                        </div>
-                    </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0">
+                        <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingPatientsList()">Pending</a>
+                    </h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="total_Pending" class="black-text font-weight-bold">0</span>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="fas fa-bed yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">IPD</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0 black-text">Total Patient</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="total_prvts" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0 black-text">Total Pending</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="tot_pendings" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0 black-text">Total Checked</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="tot_checkeds" class="black-text"></span>
-                        </div>
-                    </div>
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h3 class="mb-0">
+                        <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillcheckedpatient()">Checked</a>
+                    </h3>
                 </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="fas fa-ambulance yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">Emergency</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0 black-text">Total Patients</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="Emergency_total" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h3 class="d-flex align-items-center mb-0 black-text">Short Stay</h3>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="ShortStay" class="black-text"></span>
-                        </div>
-                    </div>
+                <div class="col-4 text-right">
+                    <span id="total_checked" class="black-text font-weight-bold">0</span>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+        <div class="col-xl-3 col-lg-6">
+    <div class="card card-outline-yellow completecard" >
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">Doctor Wise</h3>
+            <i class="far fa-user-md iconcolor" ></i>
+        </div>
+        
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patient</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="total_prvt" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0">
+                        <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingPrivatePatientsList();">Pending</a>
+                    </h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="tot_pending" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h3 class="mb-0">
+                        <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="CheckPrivate()">Checked</a>
+                    </h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="tot_checked" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="col-xl-3 col-lg-6">
+    <div class="card card-outline-yellow completecard" >
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">IPD</h3>
+            <i class="fas fa-bed iconcolor" ></i>
+        </div>
+
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patient</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="total_prvts" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Pending</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="tot_pendings" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Checked</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="tot_checkeds" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="col-xl-3 col-lg-6">
+    <div class="card card-outline-yellow completecard" >
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">Emergency</h3>
+            <i class="fas fa-hospital-alt iconcolor" ></i>
+        </div>
+
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patients</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="Emergency_total" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Short Stay</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="ShortStay" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
     <div class="row">
         <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="fas fa-flask yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">Lab</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h2 class="d-flex align-items-center mb-0 black-text">Total Patients</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="LabTotal" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h2 class="d-flex align-items-center mb-0 black-text">Checked</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="LabChecked" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendinglabList();"><h2 class="d-flex align-items-center mb-0">Pending</h2></a>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="labpending" class="black-text"></span>
-                        </div>
-                    </div>
+    <div class="card card-outline-yellow completecard" >
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">Lab</h3>
+            <i class="fas fa-flask iconcolor" ></i>
+        </div>
+
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patients</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="LabTotal" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Checked</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="LabChecked" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendinglabList();">
+                        <h3 class="mb-0">Pending</h3>
+                    </a>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="labpending" class="black-text font-weight-bold">0</span>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
         <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="fas fa-tint yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">Blood Bank</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h2 class="d-flex align-items-center mb-0 black-text">Total Patients</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="BloodBankTotal" class="black-text"></span>
-                        </div>
-                    </div>
+    <div class="card card-outline-yellow completecard" >
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">Blood Bank</h3>
+            <i class="fas fa-tint iconcolor" ></i>
+        </div>
+
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patients</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="BloodBankTotal" class="black-text font-weight-bold">0</span>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
         <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="fas fa-desktop-alt yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">UltraSound</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h2 class="d-flex align-items-center mb-0 black-text">Total Patients</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="ultraTotal" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h2 class="d-flex align-items-center mb-0 black-text">Checked</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="ultrachecked" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingultralist();"><h2 class="d-flex align-items-center mb-0">Pending</h2></a>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="ultrapending" class="black-text"></span>
-                        </div>
-                    </div>
+    <div class="card card-outline-yellow completecard" >
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">UltraSound</h3>
+            <i class="fas fa-desktop-alt iconcolor" ></i>
+        </div>
+
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patients</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="ultraTotal" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Checked</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="ultrachecked" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingultralist();">
+                        <h3 class="mb-0">Pending</h3>
+                    </a>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="ultrapending" class="black-text font-weight-bold">0</span>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
         <div class="col-xl-3 col-lg-6">
-            <div class="card card-outline-yellow" style="height: 230px; width: 240px;">
-                <div class="card-statistic-3 p-4">
-                    <div class="card-icon card-icon-large"><i class="fas fa-x-ray yellow-icon"></i></div>
-                    <div class="mb-4">
-                        <h3 class="card-title mb-0 font-weight-bold black-text">X-Ray</h3>
-                        <hr class="yellow-hr"/>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h2 class="d-flex align-items-center mb-0 black-text">Total Patients</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="X-RayTotal" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <h2 class="d-flex align-items-center mb-0 black-text">Checked</h2>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="xraychecked" class="black-text"></span>
-                        </div>
-                    </div>
-                    <div class="row align-items-center mb-2 d-flex">
-                        <div class="col-8">
-                            <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingxraylist();"><h2 class="d-flex align-items-center mb-0">Pending</h2></a>
-                        </div>
-                        <div class="col-4 text-right">
-                            <span id="xraypending" class="black-text"></span>
-                        </div>
-                    </div>
+    <div class="card card-outline-yellow completecard" >
+        <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
+            <h3 class="card-title mb-0 font-weight-bold black-text">X-Ray</h3>
+            <i class="fas fa-x-ray iconcolor" ></i>
+        </div>
+
+        <div class="card-statistic-3 px-3 pt-3">
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Total Patients</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="X-RayTotal" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <h3 class="mb-0 black-text">Checked</h3>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="xraychecked" class="black-text font-weight-bold">0</span>
+                </div>
+            </div>
+            <div class="row align-items-center mb-2">
+                <div class="col-8">
+                    <a class="black-text" style="text-decoration: none; cursor: pointer;" onclick="fillPendingxraylist();">
+                        <h3 class="mb-0">Pending</h3>
+                    </a>
+                </div>
+                <div class="col-4 text-right">
+                    <span id="xraypending" class="black-text font-weight-bold">0</span>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
         <br />

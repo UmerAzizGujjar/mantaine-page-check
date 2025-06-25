@@ -99,7 +99,7 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(4px);
             position: absolute;
-            right: 12%;
+            right: 10%;
             margin-top:-40px !important;
             border: 1px solid #e3dddd;
             border-radius: 12px;
