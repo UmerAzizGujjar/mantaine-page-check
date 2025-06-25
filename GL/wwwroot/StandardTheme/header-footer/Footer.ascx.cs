@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace PMS.wwwroot.Tibbit_theme.header_footer
+namespace PMS.wwwroot.StandardTheme.header_footer
 {
     public partial class Footer : System.Web.UI.UserControl
     {

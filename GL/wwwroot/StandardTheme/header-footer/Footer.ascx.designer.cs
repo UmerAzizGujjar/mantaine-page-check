@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.wwwroot.Tibbit_theme.header_footer
+namespace PMS.wwwroot.StandardTheme.header_footer
 {
 
 
