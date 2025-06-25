@@ -123,7 +123,8 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     border-radius: 14px !important;
     display: block;
     width: 100% !important;
-    height: 40px;
+    height: 50px;
+    margin-top:3% !important;
 }
 
     #ctl00_MainContent_UserLogin_LoginButton:hover {
@@ -140,5 +141,5 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
 
 .labels {
     color: #438eb9 !important;
-    font-size:15px !important;
+    font-size:large;
 }

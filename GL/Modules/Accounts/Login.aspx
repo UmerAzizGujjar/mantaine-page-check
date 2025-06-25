@@ -30,7 +30,7 @@
                         <div class="accountInfo" style="">
                             <fieldset class="login">
                                 <h2 class="header_login">Login</h2>
-                                <span style="margin-left: -20%;font-size: 14px;font-weight:bold;">Enter Your username and Password to sign in!</span>
+                                <span style="margin-left: -23%;font-size: 14px;font-weight:bold;">Enter Your username and Password to sign in!</span>
                                 <hr />
                                 <div class="row">
                                     <div class="col-lg-2 col-md-4 col-sm-6">
