@@ -46,7 +46,7 @@ namespace PMS
 
             }
             return result;
-        }  
+        }
         [WebMethod]
         public static string PendingPrivatePatients()
         {
@@ -72,7 +72,7 @@ namespace PMS
 
             }
             return result;
-        } 
+        }
         [WebMethod]
         public static string PendingUltraPatients()
         {
@@ -85,7 +85,7 @@ namespace PMS
 
             }
             return result;
-        }  
+        }
         [WebMethod]
         public static string PendingXrayPatients()
         {
@@ -98,7 +98,7 @@ namespace PMS
 
             }
             return result;
-        } 
+        }
         [WebMethod]
         public static string CheckedFilterPatient()
         {
@@ -111,7 +111,7 @@ namespace PMS
 
             }
             return result;
-        } 
+        }
         [WebMethod]
         public static string checkedPvtPatient()
         {

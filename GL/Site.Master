@@ -528,7 +528,7 @@
                         <!-- Left Side Logo + Company -->
                         <div class="col-lg-8 col-md-4  col-sm-3">
                             <a href="~/Modules/Dashboards/ShortCuts.aspx" runat="server" id="IHome" title="Haroon Estates">
-                                <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 108px;" ImageUrl="~/wwwroot/Tibbit_theme\images\TibbIT_icons/logo.jpg" />
+                                <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 108px;" ImageUrl="~/wwwroot/Tibbit_theme\images\TibbIT_icons/logo.png" />
                                 <asp:Label ID="lblCompanyName" runat="server" Text="" Style="margin-left: 20px; display: none; font-weight: bold"></asp:Label>
                             </a>
 
