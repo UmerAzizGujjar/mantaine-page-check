@@ -6,15 +6,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1" runat="server">
     <title>TIBBIT</title>
-    <link rel="icon" type="image/x-icon" href="wwwroot/IITH_Theme/images/HMIS_Icons/Icon.png" />
+    <link rel="icon" type="image/x-icon" href="wwwroot/Tibbit_theme/images/HMIS_Icons/Icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="wwwroot/IITH_Theme/Styles/ace-rtl.min.css" rel="stylesheet" />
-    <link href="wwwroot/IITH_Theme/Styles/bootstrap.min.css" rel="stylesheet" />
-    <link href="wwwroot/IITH_Theme/css/CustomCss/LoginPage.css" rel="stylesheet" />
+    <link href="wwwroot/Tibbit_theme/Styles/ace-rtl.min.css" rel="stylesheet" />
+    <link href="wwwroot/Tibbit_theme/Styles/bootstrap.min.css" rel="stylesheet" />
+    <link href="wwwroot/Tibbit_theme/css/CustomCss/LoginPage.css" rel="stylesheet" />
 
 
 
-    <link href="wwwroot/IITH_Theme/Styles/loader.css" rel="stylesheet" />
+    <link href="wwwroot/Tibbit_theme/Styles/loader.css" rel="stylesheet" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <style type="text/css">
@@ -186,7 +186,7 @@
             justify-content: center;
             min-height: 96vh;
             width: 100%;
-            background: url(../../wwwroot/IITH_Theme/images/IITHIcons/LoginBackground.jpg) no-repeat;
+            background: url(../../wwwroot/Tibbit_theme/images/TibbIT_icons/LoginBackground.jpg) no-repeat;
             background-position: center;
             background-size: cover;
         }
@@ -207,7 +207,7 @@
 
             <div>
                 <asp:Image
-                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/IITH_Theme/images/IITHIcons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
+                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/Tibbit_theme/images/TibbIT_icons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
                 <div class="page">
 
                     <h4 id="id-company-text" style="color: #484B4D; font-size: 18px; margin-left: 3%; margin-top: -1px; font-weight: bold;display:none">@Health Tech Platform</h4>

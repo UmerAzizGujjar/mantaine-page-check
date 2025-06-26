@@ -123,7 +123,7 @@ namespace PMS
             //{
             //    StandardFooter.Visible = true;
             //}  
-            //else if(companyName == "IITH_Theme")
+            //else if(companyName == "Tibbit_theme")
             //{
             //    StandardFooter.Visible = true;
             //}

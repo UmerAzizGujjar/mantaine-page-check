@@ -1,10 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EMR.aspx.cs" Inherits="PMS.Modules.Dashboards.EMR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="../../wwwroot/IITH_Theme/Scripts/jquery-1.11.1.min.js"></script>
-    <script src="../../wwwroot/IITH_Theme/Scripts/jquery.canvasjs.min.js"></script>
-    <link href="../../wwwroot/IITH_Theme/css/CustomCss/EMR.css" rel="stylesheet" />
-    <script src="../../wwwroot/IITH_Theme/js/apexchart.js"></script>
+    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
+    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
@@ -793,7 +793,7 @@
         <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="card3">
                 <div class="profile-info">
-                    <img src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
+                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
                     <div class="profile-details">
                         <span class="profile-name" id="patname"></span>
                         <p><strong class="labelcolor">MR No:</strong> &nbsp; &nbsp; <span id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong class="labelcolor">Age:</strong> &nbsp; &nbsp; <span id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong class="labelcolor">Gender:</strong> &nbsp; &nbsp; <span id="gender"></span></p>

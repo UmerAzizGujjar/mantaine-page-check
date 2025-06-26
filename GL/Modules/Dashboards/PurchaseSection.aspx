@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseSection.aspx.cs" Inherits="PMS.Modules.Dashboards.PurchaseSection" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/IITH_Theme/css/Shortcuts.css" rel="stylesheet" />
+     <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -25,25 +25,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/AP/PurchaseRequistion.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/request.png" alt="Request" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/request.png" alt="Request" style="object-fit: contain;" />
                     <h5 class="cocotxt">Purchase Request</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/AP/PurchaseOrder.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/compliant.png" alt="Order" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/compliant.png" alt="Order" style="object-fit: contain;" />
                     <h5 class="cocotxt">Purchase Order</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/AP/RequestForQuotation.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/quotations.png" alt="Request" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/quotations.png" alt="Request" style="object-fit: contain;" />
                     <h5 class="cocotxt">Quotation Request</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/AP/ComparativeStatementVendor.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/CsState.png" alt="Statement" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CsState.png" alt="Statement" style="object-fit: contain;" />
                     <h5 class="cocotxt">Compartv Statement</h5>
                 </a>
             </div>

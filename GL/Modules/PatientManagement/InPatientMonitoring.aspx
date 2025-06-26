@@ -4,7 +4,7 @@
 <%@ Register Src="~/LookupControl.ascx" TagName="LookupControl" TagPrefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/IITH_Theme/css/CustomCss/ipdmonitoring.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/ipdmonitoring.css" rel="stylesheet" />
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 
@@ -2028,7 +2028,7 @@
                             <div class="row">
                                 <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                     <div class="image-container">
-                                        <img src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/Addmittiedpatient.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Addmittiedpatient.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                                     </div>
                                 </div>
                                 <div class="col-lg-8 col-md-7 col-sm-6">
@@ -3140,7 +3140,7 @@
                     <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Page Errors" ShowSummary="true" DisplayMode="List" />
                 </div>
                 <div id="loadingimage" style="display: none">
-                    <asp:Image ID="image" ImageUrl="~../../../../wwwroot/IITH_Theme/images/loading.gif" runat="server" Width="32px" />
+                    <asp:Image ID="image" ImageUrl="~../../../../wwwroot/Tibbit_theme/images/loading.gif" runat="server" Width="32px" />
                 </div>
             </div>
         </div>

@@ -2,9 +2,9 @@
     CodeBehind="Register.aspx.cs" Inherits="PMS.Account.Register" %>
         
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link href="../../wwwroot/IITH_Theme/css/CustomCss/registeruser.css" rel="stylesheet" />
-     <link href="../../wwwroot/IITH_Theme/css/CustomCss/swalalert.css" rel="stylesheet" />
-         <script type="text/javascript" src="../../wwwroot/IITH_Theme/js/swalalert.js"></script>
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/registeruser.css" rel="stylesheet" />
+     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+         <script type="text/javascript" src="../../wwwroot/Tibbit_theme/js/swalalert.js"></script>
 
 
     <script type="text/javascript">

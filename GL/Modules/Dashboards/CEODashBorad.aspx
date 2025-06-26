@@ -4,7 +4,7 @@
 
 
 
-    <script src="../../wwwroot/IITH_Theme/js/apexchart.js"></script>
+    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
 
 
     <style type="text/css">

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseRequistionView.aspx.cs" Inherits="PMS.AP.PurchaseRequistionView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-<link href="../../wwwroot/IITH_Theme/css/tablestyle.css" rel="stylesheet" />
+<link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     

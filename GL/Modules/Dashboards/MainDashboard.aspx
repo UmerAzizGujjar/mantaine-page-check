@@ -4,7 +4,7 @@
 
 
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-    <link href="../../wwwroot/IITH_Theme/css/MainDashboard.min.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/MainDashboard.min.css" rel="stylesheet" />
 
 
   <style type="text/css">
