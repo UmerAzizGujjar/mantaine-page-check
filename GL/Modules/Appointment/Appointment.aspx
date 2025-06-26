@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Appointment.aspx.cs" Inherits="PMS.Appointment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/Appointment.css" rel="stylesheet" />
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/Pakred/css/CustomCss/Appointment.css" rel="stylesheet" />
+    <link href="../../wwwroot/Pakred/css/CustomCss/swalalert.css" rel="stylesheet" />
     
     
     <script type="text/javascript">

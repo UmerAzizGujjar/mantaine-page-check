@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountSection.aspx.cs" Inherits="PMS.Modules.Dashboards.AccountSection" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   <link href="../../wwwroot/StandardTheme/css/Shortcuts.css" rel="stylesheet" />
+   <link href="../../wwwroot/Pakred/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -24,25 +24,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPurchaseInvoice.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/inv_pur.png" alt="Purchase" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/inv_pur.png" alt="Purchase" style="object-fit: contain;" />
                     <h5 class="cocotxt">Purchase Invoice</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPaymentInvoice.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/pay_inv.png" alt="Payment" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/pay_inv.png" alt="Payment" style="object-fit: contain;" />
                     <h5 class="cocotxt">Payment Invoice</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CPV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/CPV_V.png" alt="CPV" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/CPV_V.png" alt="CPV" style="object-fit: contain;" />
                     <h5 class="cocotxt">CPV</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BPV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/bpv_v.png" alt="BPV" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/bpv_v.png" alt="BPV" style="object-fit: contain;" />
                     <h5 class="cocotxt">BPV</h5>
                 </a>
             </div>
@@ -51,25 +51,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CRV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/CRV_v.png" alt="CRV" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/CRV_v.png" alt="CRV" style="object-fit: contain;" />
                     <h5 class="cocotxt">CRV</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BRV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/bank-note.png" alt="BRV" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/bank-note.png" alt="BRV" style="object-fit: contain;" />
                    <h5 class="cocotxt">BRV</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddManualInvoice.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/manual_inv.png" alt="Manual" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/manual_inv.png" alt="Manual" style="object-fit: contain;" />
                     <h5 class="cocotxt">Manual Invoice</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AdvancePayment.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/payment-method.png" alt="Advance" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/payment-method.png" alt="Advance" style="object-fit: contain;" />
                     <h5 class="cocotxt">Advance Payment</h5>
                 </a>
             </div>
@@ -78,7 +78,7 @@
          <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=JV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/jv_v.png" alt="JV" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/jv_v.png" alt="JV" style="object-fit: contain;" />
                     <h5 class="cocotxt">JV</h5>
                 </a>
             </div>

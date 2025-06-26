@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InventorySection.aspx.cs" Inherits="PMS.Modules.Dashboards.InventorySection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/Pakred/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -25,25 +25,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/GoodsIssuanceRequest.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/GIR2.png" alt="GIR" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/GIR2.png" alt="GIR" style="object-fit: contain;" />
                     <h5 class="cocotxt">GIR</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/GoodsIssuanceNote.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Sin.png" alt="GIN" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/Sin.png" alt="GIN" style="object-fit: contain;" />
                     <h5 class="cocotxt">GIN</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/InversionGatePass.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/border.png" alt="IGP" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/border.png" alt="IGP" style="object-fit: contain;" />
                     <h5 class="cocotxt">IGP</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/GoodRecevied.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/receiver.png" alt="GRN" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/receiver.png" alt="GRN" style="object-fit: contain;" />
                     <h5 class="cocotxt">GRN</h5>
                 </a>
             </div>
@@ -52,13 +52,13 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/StockAdjustment.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/inventory-management.png" alt="Adjustment" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/inventory-management.png" alt="Adjustment" style="object-fit: contain;" />
                     <h5 class="cocotxt">Stock Adjustment</h5>
                 </a>
             </div> 
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/StoreStockTransfer.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/stocktrans.png" alt="Transfer" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/stocktrans.png" alt="Transfer" style="object-fit: contain;" />
                     <h5 class="cocotxt">Stock Transfer</h5>
                 </a>
             </div>

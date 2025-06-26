@@ -2,9 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
    <%-- <script type="../../text/javascript" src="Scripts/upload.js"></script>--%>
-    <script src="../../wwwroot/StandardTheme/Scripts/timepicki/timepicki.js"></script>
-      <link href="../../wwwroot/StandardTheme/css/timepicki.css" rel="stylesheet" />
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/OT.css" rel="stylesheet" />
+    <script src="../../wwwroot/Pakred/Scripts/timepicki/timepicki.js"></script>
+      <link href="../../wwwroot/Pakred/css/timepicki.css" rel="stylesheet" />
+    <link href="../../wwwroot/Pakred/css/CustomCss/OT.css" rel="stylesheet" />
     <script type="text/javascript">
 
 
@@ -1752,7 +1752,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                         <div class="image-container">
-                            <img src="~../../../../wwwroot/StandardTheme/images/HMIS_Icons/ot.jpg" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                            <img src="~../../../../wwwroot/Pakred/images/HMIS_Icons/ot.jpg" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-6">

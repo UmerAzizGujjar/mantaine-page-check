@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminSection.aspx.cs" Inherits="PMS.Modules.Dashboards.AdminSection" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/StandardTheme/css/Shortcuts.css" rel="stylesheet" />
+     <link href="../../wwwroot/Pakred/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -25,25 +25,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Accounts/Register.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/add-user.png" alt="Request" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/add-user.png" alt="Request" style="object-fit: contain;" />
                     <h5 class="cocotxt">Add User</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Accounts/Roles.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/newrole.png" alt="Order" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/newrole.png" alt="Order" style="object-fit: contain;" />
                     <h5 class="cocotxt">Add New Role</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Accounts/RoleAssignment.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/coordinate.png" alt="Request" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/coordinate.png" alt="Request" style="object-fit: contain;" />
                     <h5 class="cocotxt">Role Assignment</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Accounts/ChangePassword.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/reset-password.png" alt="Statement" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/Pakred/images/dashboard_Icons/reset-password.png" alt="Statement" style="object-fit: contain;" />
                     <h5 class="cocotxt">Change Password</h5>
                 </a>
             </div>

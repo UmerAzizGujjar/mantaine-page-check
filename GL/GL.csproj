@@ -7557,6 +7557,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Appointment.css" />
@@ -9730,6 +9731,7 @@
     <Content Include="wwwroot\Pakred\fontawesomes\svgs\solid\z.svg" />
     <Content Include="wwwroot\Pakred\fonts\fontawesome-webfont.svg" />
     <Content Include="wwwroot\Pakred\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="wwwroot\Pakred\header-footer\Footer.ascx" />
     <Content Include="wwwroot\Pakred\images\avatars\avatar1.png" />
     <Content Include="wwwroot\Pakred\images\avatars\avatar2.png" />
     <Content Include="wwwroot\Pakred\images\avatars\avatar3.png" />
@@ -21025,6 +21027,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wwwroot\IITH_Theme\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="wwwroot\Pakred\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\Pakred\header-footer\Footer.ascx.designer.cs">
       <DependentUpon>Footer.ascx</DependentUpon>
     </Compile>
     <Compile Include="wwwroot\StandardTheme\header-footer\Footer.ascx.cs">
