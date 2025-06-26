@@ -6185,6 +6185,7 @@
     <Content Include="wwwroot\IITH_Theme\fontawesomes\svgs\solid\z.svg" />
     <Content Include="wwwroot\IITH_Theme\fonts\fontawesome-webfont.svg" />
     <Content Include="wwwroot\IITH_Theme\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="wwwroot\IITH_Theme\header-footer\Footer.ascx" />
     <Content Include="wwwroot\IITH_Theme\images\avatars\avatar.png" />
     <Content Include="wwwroot\IITH_Theme\images\avatars\avatar1.png" />
     <Content Include="wwwroot\IITH_Theme\images\avatars\avatar2.png" />
@@ -6775,6 +6776,7 @@
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\jszip.min.js" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\vfs_fonts.js" />
+    <Content Include="wwwroot\IITH_Theme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\IITH_Theme\Scripts\angular-ui\ui-bootstrap-tpls.js" />
     <Content Include="wwwroot\IITH_Theme\Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
     <Content Include="wwwroot\IITH_Theme\Scripts\angular-ui\ui-bootstrap.js" />
@@ -7612,6 +7614,7 @@
     <Content Include="wwwroot\Pakred\css\jquery-ui.min.css" />
     <Content Include="wwwroot\Pakred\css\jquery.gritter.min.css" />
     <Content Include="wwwroot\Pakred\css\Loader\Loader.css" />
+    <Content Include="wwwroot\Pakred\css\MainDashboard.min.css" />
     <Content Include="wwwroot\Pakred\css\prettify.min.css" />
     <Content Include="wwwroot\Pakred\css\RegPat.css" />
     <Content Include="wwwroot\Pakred\css\Report.css" />
@@ -10741,6 +10744,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
+    <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
     <Content Include="wwwroot\StandardTheme\images\HMIS_Icons\favicon.png" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\LoginBackground.jpg" />
@@ -10817,7 +10821,6 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Userview.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\vendor.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\voucher.css" />
-    <Content Include="wwwroot\Tibbit_theme\css\Dashboardfontawesome.css" />
     <Content Include="wwwroot\Tibbit_theme\css\dataTables.jqueryui.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\daterangepicker.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\dropzone.min.css" />
@@ -13219,7 +13222,6 @@
     <Content Include="wwwroot\Tibbit_theme\images\StudentImages\1.png" />
     <Content Include="wwwroot\Tibbit_theme\images\StudentImages\3.jpg" />
     <Content Include="wwwroot\Tibbit_theme\images\StudentImages\3631.png" />
-    <Content Include="wwwroot\Tibbit_theme\images\TibbIT_icons\LoginBackground.png" />
     <Content Include="wwwroot\Tibbit_theme\javascripts\arrow-table.js" />
     <Content Include="wwwroot\Tibbit_theme\javascripts\CalendarPopup.js" />
     <Content Include="wwwroot\Tibbit_theme\javascripts\DataTable\ColReorderWithResize.js" />
@@ -21019,6 +21021,13 @@
     <Compile Include="Modules\Administrator\WithHoldingTaxAccountDefinition.aspx.designer.cs">
       <DependentUpon>WithHoldingTaxAccountDefinition.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wwwroot\IITH_Theme\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\IITH_Theme\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+    </Compile>
     <Compile Include="wwwroot\StandardTheme\header-footer\Footer.ascx.cs">
       <DependentUpon>Footer.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -21053,6 +21062,7 @@
     <Folder Include="upload\UploadVouchers\" />
     <Folder Include="wwwroot\StandardTheme\images\email\" />
     <Folder Include="wwwroot\StandardTheme\images\placeholder\" />
+    <Folder Include="wwwroot\Tibbit_theme\images\TibbIT_icons\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Themes\Default_Theme\Skin1.skin" />

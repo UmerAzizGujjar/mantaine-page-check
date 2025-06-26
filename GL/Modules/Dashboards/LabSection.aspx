@@ -2,7 +2,7 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -27,25 +27,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/SampleCollectionFrom.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blood-sample.png" alt="Collection" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/blood-sample.png" alt="Collection" style="object-fit: contain;" />
                     <h5 class="cocotxt">Sample Collection</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/LaboratoryTest.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blood-test.png" alt="Aknowledgment" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/blood-test.png" alt="Aknowledgment" style="object-fit: contain;" />
                     <h5 class="cocotxt">Aknowledgment</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/LabReportPreview.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Lab2.png" alt="Report" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Lab2.png" alt="Report" style="object-fit: contain;" />
                     <h5 class="cocotxt">Lab Report</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/TestApproval.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/search.png" alt="Approval" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/search.png" alt="Approval" style="object-fit: contain;" />
                     <h5 class="cocotxt">Review/Approval</h5>
                 </a>
             </div>
@@ -54,7 +54,7 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/TestApproval.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/qualitative-research.png" alt="Aopproved" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/qualitative-research.png" alt="Aopproved" style="object-fit: contain;" />
                     <h5 class="cocotxt">Aopproved Test</h5>
                 </a>
             </div>
