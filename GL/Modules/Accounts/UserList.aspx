@@ -2,8 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Pakred/css/tablestyle.css" rel="stylesheet" />
-    <link href="../../wwwroot/Pakred/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             LoadTable();

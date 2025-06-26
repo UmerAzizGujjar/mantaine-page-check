@@ -1,8 +1,8 @@
 ﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsAdmission.aspx.cs" Inherits="PMS.InPatientsAdmission" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/CustomCss/ipdadmission.css" rel="stylesheet" />
-    <link href="../../wwwroot/Pakred/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/ipdadmission.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
@@ -6036,7 +6036,7 @@
                  <div class="row">
                      <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                          <div class="image-container">
-                             <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/IpdAdmissions.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                             <img src="~../../../../wwwroot/IITH_Theme/images/dashboard_Icons/IpdAdmissions.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                          </div>
                      </div>
                      <div class="col-lg-8 col-md-7 col-sm-6">

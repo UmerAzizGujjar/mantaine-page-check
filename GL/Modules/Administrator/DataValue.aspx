@@ -2,7 +2,7 @@
     CodeBehind="DataValue.aspx.cs" Inherits="PMS.DataValue" Theme="Default_Theme" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/CustomCss/Datavalue.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/Datavalue.css" rel="stylesheet" />
 
     <script type="text/javascript" clientidmode="Predictable">
         $(document).ready(function () {

@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SubjectList.aspx.cs" Inherits="PMS.SubjectList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">   
-    <link href="../../wwwroot/Pakred/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/tablestyle.css" rel="stylesheet" />
        <script type="text/javascript">
            $(document).ready(function () {
                debugger;

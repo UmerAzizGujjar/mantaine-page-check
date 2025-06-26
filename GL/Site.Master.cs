@@ -123,7 +123,7 @@ namespace PMS
             //{
             //    StandardFooter.Visible = true;
             //}  
-            //else if(companyName == "Pakred")
+            //else if(companyName == "IITH_Theme")
             //{
             //    StandardFooter.Visible = true;
             //}

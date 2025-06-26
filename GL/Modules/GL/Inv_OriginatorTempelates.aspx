@@ -1,9 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inv_OriginatorTempelates.aspx.cs" Inherits="PMS.GL.Inv_OriginatorTempelates" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/Pakred/css/CustomCss/swalalert.css" rel="stylesheet" />
+     <link href="../../wwwroot/IITH_Theme/css/CustomCss/swalalert.css" rel="stylesheet" />
 
-    <link href="../../wwwroot/Pakred/css/CustomCss/inv_org.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/inv_org.css" rel="stylesheet" />
     <script type="text/javascript">   
         $(document).ready(function () {
             $('select').select2();

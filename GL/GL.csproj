@@ -4034,6 +4034,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\LabReportPreview.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\LabSample.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\login.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\MEdTemplate.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\OPD.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\OT.css" />

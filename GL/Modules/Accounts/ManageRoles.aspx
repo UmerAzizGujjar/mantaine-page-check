@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ManageRoles.aspx.cs" Inherits="PMS.Account.ManageRoles" Theme="Default_Theme" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Pakred/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/IITH_Theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <style type="text/css">
     #ctl00_MainContent_ddlCompany{
         width:200px !important;
