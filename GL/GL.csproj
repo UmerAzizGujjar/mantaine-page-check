@@ -10746,7 +10746,6 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
-    <Content Include="wwwroot\StandardTheme\images\HMIS_Icons\favicon.png" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\LoginBackground.jpg" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\logo.PNG" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\Logoheader.png" />
