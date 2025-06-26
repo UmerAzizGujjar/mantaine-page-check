@@ -6640,13 +6640,13 @@ button.btn:active {
 
     /* Active state */
     .btn-primry:active, .open .btn-primary.dropdown-toggle {
-        background-color: #9e1b1c !important; /* Even darker orange for pressed effect */
+        background-color: black !important; /* Even darker orange for pressed effect */
         box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
     }
 
     /* No-border buttons on hover and active states */
     .btn-primry.no-border:hover, .btn-primary.no-border:active {
-        border-color: #9e1b1c !important; /* Darker orange instead of blue */
+        border-color: black !important; /* Darker orange instead of blue */
     }
 
     .btn-primry.no-hover:hover, .btn-primary.no-hover:active {

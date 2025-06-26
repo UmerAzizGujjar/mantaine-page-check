@@ -2,10 +2,10 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />--%>
+
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link href="../../wwwroot/Tibbit_theme/css/MainDashboard.min.css" rel="stylesheet" />
-    <%--<link href="../../wwwroot/Tibbit_theme/css/Dashboardfontawesome.css" rel="stylesheet" />--%>
+
 
   <style type="text/css">
 
