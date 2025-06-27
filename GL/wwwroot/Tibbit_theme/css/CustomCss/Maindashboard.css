@@ -11,9 +11,9 @@
     height: 45px !important;
 }
 
-.iconcolor {
-    font-size: 33px !important;
-    color: white !important;
+.icons {
+    width: 30px !important;
+    height: 30px !important;
 }
 
 span {
