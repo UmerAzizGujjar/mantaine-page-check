@@ -12990,6 +12990,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\billing2.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\blood-sample.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\blood-test.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\blooddonation.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\border.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\BPV.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\bpv_v.png" />
@@ -13010,6 +13011,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\dashboard-100.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\dashboard-50.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\diagnosis.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\doctor.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\DoctorAppointment.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Emergency.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\first-aid-box.png" />
@@ -13018,6 +13020,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\GIR.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\GIR2.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\GoodRecevied.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\hospital.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\IGP.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\images.jpg" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\inpatient.png" />
@@ -13032,6 +13035,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\jv_v.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Lab.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Lab2.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\lab3.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Labreport.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\ManualInvoice.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\manual_inv.png" />
@@ -13050,6 +13054,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\order.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Patient.jpg" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Patient.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\patient_bed.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\payment-method.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\paymentInvoice.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\pay_inv.png" />
@@ -13089,7 +13094,9 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\stocktrans.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\StockTransfer.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Stock_Adj.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\ultrasound.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\userpharma.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\xrays.png" />
     <Content Include="wwwroot\Tibbit_theme\images\HMIS_Icons\1.png" />
     <Content Include="wwwroot\Tibbit_theme\images\HMIS_Icons\2.png" />
     <Content Include="wwwroot\Tibbit_theme\images\HMIS_Icons\3.png" />
