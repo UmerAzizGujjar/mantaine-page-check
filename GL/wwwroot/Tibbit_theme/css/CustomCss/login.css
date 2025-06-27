@@ -32,13 +32,11 @@ input.passwordEntry {
     margin-top: 10px;
     width: 100% !important;
     border-radius: 12px !important;
-    height: 49px;
+    height: 40px;
 }
 
 
-p.submitButton {
-    padding-top: 15px;
-}
+
 
 .main .submitButton input {
     border-radius: 3px;
@@ -46,8 +44,7 @@ p.submitButton {
     line-height: 1.5;
     padding: 5px 10px;
     background-color: #EFA63E !important;
-    border-color: #EFA63E !important;
-    color: white;
+    color: black !important;
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
@@ -64,9 +61,11 @@ p.submitButton {
     margin-right: 14%;
 }
 
-    .main .submitButton input:focus {
-        background-color: #EFA63E !important;
+    .main .submitButton input:hover {
+        background-color: black !important;
+        color:white !important;
     }
+
 
 .toolbar {
     padding-left: 20px;
@@ -127,7 +126,7 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     border-radius: 14px !important;
     display: block;
     width: 100% !important;
-    height: 50px;
+    height: 40px;
     margin-top:3% !important;
 }
 
@@ -145,7 +144,7 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
 
 .labels {
     color: #EFA63E !important;
-    font-size: large;
+    font-size: medium;
 }
 
 .selectlogin {
