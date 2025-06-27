@@ -3,103 +3,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
 
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link href="../../wwwroot/Tibbit_theme/css/MainDashboard.min.css" rel="stylesheet" />
 
-
-  <style type="text/css">
-
-      .completecard{
-          height: 160px; width: 71%;
-          border-radius: 10px; 
-          overflow: hidden;
-      }
-
-      .headercolor {
-          background-color: #EFA63E !important;
-          height:45px !important;
-      }
-
-      .iconcolor{
-          font-size: 33px !important; 
-          color: white !important;
-      }
-
-    span {
-        font-size: 13px;
-    }
-    
-    .card {
-        background-color: #fff;
-        border-radius: 10px;
-        position: relative;
-        margin-bottom: 30px;
-        box-shadow: 0 0.46875rem 2.1875rem rgba(90,97,105,0.1), 
-                    0 0.9375rem 1.40625rem rgba(90,97,105,0.1), 
-                    0 0.25rem 0.53125rem rgba(90,97,105,0.12), 
-                    0 0.125rem 0.1875rem rgba(90,97,105,0.1);
-    }
-    
-    .card-outline-yellow {
-        border: 2px solid #EFA63E;
-        background-color: white !important;
-    }
-    
-    .yellow-icon {
-        color: #EFA63E !important;
-        font-size: 34px !important;
-        margin-right: 0px;
-        margin-top: 0px;
-    }
-    
-    .black-text {
-        color: black !important;
-    }
-    
-    .yellow-hr {
-        border-top: 1px solid #EFA63E;
-    }
-    
-    .card .card-statistic-3 .card-icon-large .fas, 
-    .card .card-statistic-3 .card-icon-large .far, 
-    .card .card-statistic-3 .card-icon-large .fab, 
-    .card .card-statistic-3 .card-icon-large .fal {
-        font-size: 90px;
-    }
-    
-    .card .card-statistic-3 .card-icon {
-        text-align: center;
-        line-height: 50px;
-        margin-left: 15px;
-        position: absolute;
-        right: -5px;
-        top: 125px;
-        opacity: 1;
-    }
-    
-    .progress {
-        display: none;
-    }
-    
-    h2, h3 {
-        color: black !important;
-        font-size: 14px;
-    }
-    
-    .card-title {
-        font-size: 16px !important;
-    }
-    
-    a {
-        color: black !important;
-    }
-    
-    a:hover {
-        color: #EFA63E !important;
-        text-decoration: none;
-    }
-</style>
-
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Maindashboard.css" rel="stylesheet" />
 
     <script type="text/javascript">
 
@@ -441,7 +347,7 @@
 
         <div  class="d-flex align-items-center justify-content-between px-3 py-2  headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">General Patients</h3>
-            <i class="far fa-user-md iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/doctor.png" alt="doctor" />
         </div>
         
         <div class="card-statistic-3 px-3 pt-3">
@@ -481,10 +387,12 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Doctor Wise</h3>
-            <i class="far fa-user-md iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/doctor.png" alt="doctor" />
+
         </div>
         
         <div class="card-statistic-3 px-3 pt-3">
+
             <div class="row align-items-center mb-2">
                 <div class="col-8">
                     <h3 class="mb-0 black-text">Total Patient</h3>
@@ -521,7 +429,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">IPD</h3>
-            <i class="fas fa-bed iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/patient_bed.png" alt="ipd" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -557,7 +465,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Emergency</h3>
-            <i class="fas fa-hospital-alt iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/hospital.png" alt="hospital" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -587,7 +495,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Lab</h3>
-            <i class="fas fa-flask iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/lab3.png" alt="lab" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -625,7 +533,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Blood Bank</h3>
-            <i class="fas fa-tint iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blooddonation.png" alt="blood" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -645,7 +553,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">UltraSound</h3>
-            <i class="fas fa-desktop-alt iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/ultrasound.png" alt="ultrasound" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -683,7 +591,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">X-Ray</h3>
-            <i class="fas fa-x-ray iconcolor" ></i>
+            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/xrays.png" alt="xrays" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
