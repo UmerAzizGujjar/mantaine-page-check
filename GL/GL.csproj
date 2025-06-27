@@ -4038,6 +4038,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\LabSample.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\login.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\LoginPage.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\MEdTemplate.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\OPD.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\OT.css" />
@@ -7563,6 +7564,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Appointment.css" />

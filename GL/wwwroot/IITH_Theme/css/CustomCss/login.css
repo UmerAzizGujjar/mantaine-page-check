@@ -1,9 +1,11 @@
 ﻿.login {
-    font-family: "Open Sans";
+        font-family: "Open Sans";
 }
 
 .header_login {
+    color: #438eb9 !important;
     text-align: left;
+    font-size: 32px !important;
 }
 
 .header h1 {
@@ -26,14 +28,12 @@ input.passwordEntry {
     margin-top: 10px;
     width: 100% !important;
     border-radius: 12px !important;
-    height: 49px
+    height: 40px
 }
 
 
 
-p.submitButton {
-    padding-top: 15px;
-}
+
 
 .main .submitButton input {
     border-radius: 3px;
@@ -122,7 +122,7 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     border-radius: 14px !important;
     display: block;
     width: 100% !important;
-    height: 50px;
+    height: 40px;
     margin-top:3% !important;
 }
 
@@ -140,5 +140,5 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
 
 .labels {
     color: #438eb9 !important;
-    font-size: large;
+    font-size: medium;
 }
