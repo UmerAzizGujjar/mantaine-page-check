@@ -86,11 +86,35 @@
             var warehouse_name = $('#ddlwarehouse :selected').text();
             if (warehouse_id == 0) warehouse_name = '';
             if (main_type == 0) {
-                alert("Please Select User ");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select User',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (branch_id == 0) {
-                alert("Please Select Branch ");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Branch',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             else {
@@ -132,7 +156,19 @@
                 $('#ddl_users').removeClass('ErrorAlert');
             if (document.getElementById('tblItemDescription').rows.length == 1) {
                 proceed = false;
-                alert('Please Add Sub Type Defination.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add Sub Type Defination',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
          
             return proceed;
@@ -174,9 +210,33 @@
                     success: function (data) {
                         var id = data.d;
                         if (id == "-1") {
-                            alert("User already Exists");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'User already Exists',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         } else {
-                            alert("Date has been saved successfully");
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Date has been saved successfully',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                             window.location.href = "UserControl.aspx";
                         }
                     }, error: function () {

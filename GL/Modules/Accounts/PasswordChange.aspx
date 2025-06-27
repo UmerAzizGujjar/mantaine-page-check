@@ -14,7 +14,7 @@
             var ConfirmNewPassword = $('#ConfirmNewPassword').val();
 
 
-
+            
             var dataObj = {
                 "OldPassword": OldPassword,
                 "NewPassword": NewPassword,

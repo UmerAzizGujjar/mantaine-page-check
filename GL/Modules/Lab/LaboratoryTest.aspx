@@ -403,7 +403,19 @@
 
                 var patientID = $('#<%= txtPatient_ID.ClientID %>').val();
                 if (patientID == "") {
-                    alert("Please Select MR No.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select MR No.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 var test = $('#main-departments').val();
@@ -443,7 +455,19 @@
 
                         var test_array = $('#tbltestDetail').find('input[name=testID][value="' + value.TestID + '"]');
                         if (test_array.length > 0) {
-                            alert('This test already added!');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This test already added!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         } else {
                             $('#MedicationModel').modal('hide');
                             $('#tbltestDetail').append(row);
@@ -493,7 +517,19 @@
                         var row = '<tr><td><input type="hidden" name="LabTestDetali" value="0"><input type="hidden" name="testDate" value="0">' + datetime + '</td><td><input type="hidden" name="testID"  value="' + testd + '" /> <input type="hidden" name="txtRotation" value="' + Rotation_ID + '"><input type="hidden" name="txtddlXRayLF_Name" value="' + ddl_XRayLF_Name + '">' + TestMainDepartmentName + ', ' + $('#groupsCat').find('option:selected').text() + ', ' + Rotation_Name + ddlXRayLF_Name + '</td><td></td><td><input type="checkbox" id="Payment' + df + '" name="payment" checked/></td><td> <input name="Type" value="Direct To Lab" style="display:none"/><input type="text"  value="" id="txtCollectionDate' + df + '" name="txtCollectionDate" disabled="disabled"  style="width:167px !important;"/></td><td>  <input type="text" id="txtReadyBy' + df + '" name="txtReadyBy" style="width:167px !important;"/></td><td> <input type="text" id="txtCollectionBy"  name="txtCollectionBy" style="width:100px !important;"  value="' + userName + '"/></td><td> <input type="text" id="txtPerformedBy" name="txtPerformedBy" style="width:100px !important;"  value="' + userName + '"/></td><td><input type="checkbox"  id="Emergancy' + df + '" onclick="EnableRemarks(this)" name="Emergancy"  style="width: 92px;height: 17px;"></input></td><td><input  type="text" name="txtRemarks" style="width: 138px !important;display:none"></input></td><td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
                         var test_array = $('.tests-table').find('input[name=testID][value=' + $('#groupsCat').val() + ']');
                         if (test_array.length > 0) {
-                            alert('This test already added!');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This test already added!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         } else {
                             $('#MedicationModel').modal('hide');
                             $('#tbltestDetail').append(row);
@@ -1069,7 +1105,19 @@
             var trnsid = $($(row).find('td input[name=OPD]')[0]).val();
             var Paymentcheck = $($(row).find('td input[name=Paymentcheck]')[0]).val();
             if (Paymentcheck != 'true') {
-                alert('Payment Not Done');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Payment Not Done',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             var LTestid = $($(row).find('td input[name=Detail]')[0]).val();
@@ -1092,7 +1140,19 @@
 
                 loadAjax();
                 if (existingID != ComingID) {
-                    alert('Please Select Test of Same Bill No');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Test of Same Bill No',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
             }
@@ -1112,7 +1172,19 @@
             else {
 
                 if (test_array.length == 0) {
-                    alert('Please Select Test of Same Bill');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Test of Same Bill',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                    
                 }

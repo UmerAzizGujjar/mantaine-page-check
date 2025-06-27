@@ -133,7 +133,19 @@
             PageMethods.SaveAdvancePayment(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
                 sendFile(res);
-                alert('Data Save Successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btn_Save').val("Update");
                 window.location = "AdvancePayment.aspx?Adv_ID=" + res;
                 $('#btn_Save').val("Update");

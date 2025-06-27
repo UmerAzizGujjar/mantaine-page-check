@@ -598,6 +598,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\DoctorAgrement.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\EMR.css" />
@@ -4021,6 +4022,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\DoctorAgrement.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\EMR.css" />
@@ -7558,6 +7560,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Advance.css" />
@@ -10744,6 +10747,7 @@
     <Content Include="wwwroot\Pakred\Scripts\gridmvc.min.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
@@ -10788,6 +10792,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\DoctorAgrement.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\EMR.css" />

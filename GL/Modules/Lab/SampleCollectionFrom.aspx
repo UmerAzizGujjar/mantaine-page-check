@@ -538,7 +538,19 @@
                             });
                         }
                         else {
-                            alert("No record exist");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'No record exist',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         }
                     },
                     failure: function (response) {
@@ -548,7 +560,19 @@
                 });
             }
             else {
-                alert("please enter Patient ID");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Patient ID',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
         }
 
@@ -703,7 +727,19 @@
             var ddlPat_type = $("#ddlPat_type").val();
 
             if (ddlPat_type == 0 || ddlPat_type == "0" || ddlPat_type == '0' || ddlPat_type == null) {
-                alert('Please Select Patient Type ');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Patient Type',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
 
@@ -717,7 +753,19 @@
             debugger;
             if (collectedDate != "" && mrNo != "") {
                 if (length == 0) {
-                    alert("Select at least one test");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Select at least one test',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
                 else {
                     debugger;
@@ -745,7 +793,19 @@
                                 var splitted = response.d.split('-')[0];
                                 var id = response.d.split('-')[1];
                                 if (splitted == "Save") {
-                                    alert("Save successfully");
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Save successfully',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
                                     debugger;
 
                                     window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
@@ -781,7 +841,19 @@
                             success: function (response) {
                                 debugger;
                                 if (response.d == "Update") {
-                                    alert("Updated successfully");
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Updated successfully',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
                                     debugger;
                                     window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
 
@@ -803,7 +875,19 @@
                 }
             }
             else {
-                alert("MR No. missing");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'MR No. missing',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
         }
 

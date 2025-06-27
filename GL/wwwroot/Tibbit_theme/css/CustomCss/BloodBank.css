@@ -1,25 +1,26 @@
+.mrgn {
+    margin-left:0% !important;
+}
+
+.chkmrgn {
+    margin-left: -27% !important;
+}
 
 .forcolor {
-    background: #EFA63E   !important;
+    background: #EFA63E !important;
     height: 50px;
 }
 
 
-
+#token-input-ctl00_MainContent_txtPatient_ID {
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+}
 
 .main textarea {
     width: 100%;
     height: 60px;
     margin-left: -5px;
 }
-
-
-
-
-
-
-
-
 
 
 div.token-input-dropdown {

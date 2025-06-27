@@ -127,7 +127,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve user rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve user rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -308,14 +320,39 @@
                 $('#select2-ddl_bankCash-container').parent().css('border-color', ' rgb(206, 191, 191)');
             }
             if (WTaxAmount < 0) {
-                alert("WTaxAmount always greater than zero");
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'WTaxAmount always greater than zero',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 proceed = false;
             }
             var tblLength = $("#tblItemDescription tr:gt(0)").length;
             if (tblLength == '0') {
 
                 $('#tblItemDescription').addClass('ErrorAlert');
-                alert("Please Add items");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 proceed = false;
             } else {
                 $('#tblItemDescription').removeClass('ErrorAlert');
@@ -328,7 +365,19 @@
                     var adjAmt = parseFloat($(value).find('input[name="txtAdjusted"]').val()) || 0;
                     if (adjAmt > blnceamt) {
                         proceed = false;
-                        alert("Adjustment Amount must be less then or Equal to Balance Amount");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Adjustment Amount must be less then or Equal to Balance Amount',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                 });
             }
@@ -374,7 +423,18 @@
                 $('#btnSave').attr('disabled', true);
                 var AllItemDetail = { 'PaymentNum': PaymentNo, 'PaymentDate': PaymentDate, 'AccountId': AccountId, 'PaymentModeId': PaymentMode, 'DocumentNum': DocumentNo, 'DocumentDate': DocumentDate, 'Vendorid': VendorId, 'PaidAmount': PaidAmount, 'InvoiceAdjusted': InvoiceAdjusted, 'WTaxAmount': WTaxAmount, 'Remarks': Remarks, 'ItemList': Item_list };
                 PageMethods.SavePaymentInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                    alert('Data Save Successfully');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Save Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     sendFile(res);
                     setTimeout(function () {
                         debugger;
@@ -513,7 +573,19 @@
             }
             var test_array = $('#tblItemDescription').find('input[name=txtInvoiceNum][value=' + Invoicenum + ']');
             if (test_array.length > 0) {
-                alert('This Item already added!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Item already added!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
                 return false;
             }
@@ -586,7 +658,19 @@
                 var InvoiceDeduction = parseFloat($($(value).find('td input[name=txtDedcution]')[0]).val()) || 0;
                 // Check if InvoiceAjust is greater than balance
                 if (InvoiceAjust > balance) {
-                    alert("Adjusted amount cannot be greater than the balance.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Adjusted amount cannot be greater than the balance.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $(value).find('td input[name=txtAdjusted]').val(0);
                     InvoiceAjust = 0;
                 }
@@ -699,13 +783,25 @@
                         }
                     },
                     failure: function (response) {
-                        alert("Failed to retrieve User UnApprove Button Rights.");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to retrieve User UnApprove Button Rights.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                 });
             }
 
 
-    </script>
+        </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="item">
