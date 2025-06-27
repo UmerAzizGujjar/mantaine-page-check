@@ -10753,6 +10753,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
