@@ -41,7 +41,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'panelagreement.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({

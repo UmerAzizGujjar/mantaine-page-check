@@ -16,7 +16,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'PharmacyItems.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -125,9 +125,7 @@
     
     <table>
         <tr>
-            <td>
-                <asp:Button Text="Add New" CssClass="btn btn-primry" ID="Button1" runat="server" PostBackUrl="../../Modules/Inventory/Items.aspx" CausesValidation="false" Style="margin-bottom:15% !important" />
-            </td>
+            
             <td>
                 <div id="loadingimage" style="margin-left: -1081px; display: none">
                     <asp:Image ID="image2" ImageUrl="~/images/loading.gif" runat="server" Width="32px" />

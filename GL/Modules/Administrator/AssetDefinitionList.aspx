@@ -50,7 +50,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'AddAssetSelection.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -128,14 +128,7 @@
     </script>
 </asp:Content>
   <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-
-        <div class="col-lg-8 col-md-8 col-sm-8">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn-primry mrg" value="Add New" onclick="window.location = 'AddAssetSelection.aspx'" />
-        </div>
-        </div>
-    </div>
+    
     <div style="margin-top: 15px;">
 
         <div class="row">

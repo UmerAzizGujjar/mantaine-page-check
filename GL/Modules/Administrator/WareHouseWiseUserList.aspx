@@ -12,7 +12,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'WareHouseWiseUser.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -112,11 +112,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="PurchaseRequistiondetails" style="margin-top: 15px;">
-        <fieldset>
-            <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom:1%">
-                <input type="button" name="btn_Add" class="btn btn-primry" id="btn_Add" value="Add New" onclick="window.location = 'WareHouseWiseUser.aspx'" />
-            </div>
-        </fieldset>
+         
 
         <div class="table-container">
             <div class="table-responsive">

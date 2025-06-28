@@ -16,7 +16,7 @@
             "serverSide": true,
             "dom": 'lBfrtip',
             "lengthChange": true,
-            "buttons": ['copy', 'excel', 'pdf'],
+            "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'LaboratoryTest.aspx'; } }, 'copy', 'excel', 'pdf'],
             "filter": true,
             "ajax": function (data, callback, settings) {
                 $.ajax({
@@ -116,11 +116,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
      <div id="OutPatdetails" > 
-         <div class="row">
-              <div class="col-lg-2 col-md-3 col-sm-4" style="margin-bottom: 1%;">
-             <input type="button" class="btn btn-primry" name="name"  value="Add New" onclick="gotolab();" />
-                  </div>        
-                </div>
+         
            <div class="row">
         <div class="table-container">
         <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow:scroll; height:auto;">

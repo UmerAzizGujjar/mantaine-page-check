@@ -37,7 +37,7 @@
                     "serverSide": true,
                     "dom": 'lBfrtip',
                     "lengthChange": true,
-                    "buttons": ['copy', 'excel', 'pdf'],
+                    "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Refund.aspx'; } }, 'copy', 'excel', 'pdf'],
                     "filter": true,
                     "ajax": function (data, callback, settings) {
                         $.ajax({
@@ -123,11 +123,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-    <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom:1%">
-        <input type="button" value="Add New" class="btn btn-primry"  onclick=" window.location.href = 'Refund.aspx'"  />
-    </div>
-    </div>
+    
 
     <div>
         <table id="tblAdvanceView" class="table table-hover table-striped table-bordered">

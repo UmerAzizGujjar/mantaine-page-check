@@ -17,7 +17,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'WardDefinition.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -100,9 +100,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <input type="button" onclick="redirecttonew()" class="btn-primry" value="Add New"  />  
-    <br />
-    <br />
+     
     <div class="table-container">        
                 <table id="example" class="table table-hover table-bordered">
                     <thead>

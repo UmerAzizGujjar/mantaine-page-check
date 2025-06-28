@@ -19,7 +19,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Doctor_Template.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -119,11 +119,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-           <input type="button" value="Add New" class="btn-primry" id="btnnew" tabindex="14" onclick="window.location = 'Doctor_Template.aspx'" />
-        </div>
-    </div>
+    
     <%--table-container--%>
     <div class="">
         <div class="row">

@@ -14,7 +14,7 @@
               "serverSide": true,
               "dom": 'lBfrtip',
               "lengthChange": true,
-              "buttons": ['copy', 'excel', 'pdf'],
+              "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'AddPanel_Packages.aspx'; } }, 'copy', 'excel', 'pdf'],
               "filter": true,
               "ajax": function (data, callback, settings) {
                   $.ajax({
@@ -89,12 +89,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-      <div class="row">
-      <div class="col-lg-1 col-md-2 col-sm-3">
-           <input type="button" class="btn-primry mrg" onclick="window.location ='AddPanel_Packages.aspx'" value="Add New" />
-      </div>
-  </div>
-  <br />
+      
     <div class="table-container">
               <table id="example" class="table table-hover table-bordered"  style="width:100% !important">
                   <thead>

@@ -30,7 +30,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'ComparativeStatementVendor.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -123,11 +123,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-     <div class="row">
-    <div class="col-lg-2 col-md-4 col-sm-12" style="margin-bottom:1%">
-        <input type="button" class="btn btn-primry" id="aadnew" style="margin-left:-15px" value="Add New" onclick="location.href='ComparativeStatementVendor.aspx';" />
-    </div>
-    </div>
+      
     <div class="row">
     <div class="table-container">
                 <table class="table table-responsive table-hover table-bordered" id="tblResult">
