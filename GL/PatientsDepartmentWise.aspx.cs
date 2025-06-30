@@ -1420,11 +1420,18 @@ namespace PMS
 
                     AllowPatientRecord = false;
                     tr_Summary.Visible = false;
-
-
-
                     lblMultiSelect.Visible = true;
                     ddlPatientType.Visible = false;
+                    //Mohsin
+                    DateDiv.Visible = true;
+                    sttDate.Text = "Admission Date";
+                    Time_Row.Visible = true;
+                    endDate.Text = "Discharge Date";
+                    sttTime.Text = "Admission Time";
+                    endTime.Text = "Discharge Time";
+
+                    //Mohsin
+
                 }
                 else if (this.PageTitle == "OutPatientsINP")
                 {

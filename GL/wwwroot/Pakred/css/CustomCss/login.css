@@ -1,3 +1,9 @@
+.header_login {
+    color: #c11718 !important;
+    text-align: left;
+    font-size: 32px !important;
+}
+
 .header {
     color: #c11718 !important;
     text-align: left;
@@ -31,9 +37,7 @@ input.passwordEntry {
 }
 
 
-p.submitButton {
-    padding-top: 15px;
-}
+
 
 .main .submitButton input {
     border-radius: 3px;
@@ -121,9 +125,9 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     box-shadow: 0 0 20px #fff;
     border-radius: 14px !important;
     display: block;
-    width: 50% !important;
+    width: 100% !important;
     height: 40px;
-    margin-left: 85px;
+    margin-top:3% !important;
 }
 
     #ctl00_MainContent_UserLogin_LoginButton:hover {
@@ -140,6 +144,7 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
 
 .labels {
     color: #c11718 !important;
+    font-size: medium;
 }
 
 .selectlogin {

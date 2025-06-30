@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Voucher.aspx.cs" Inherits="PMS.Voucher" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/voucher.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/voucher.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(function () {
@@ -329,15 +329,50 @@
             var debitamount = $('#txt_debitamount').val();
             var creditamount = $('#txt_creditamount').val();
             if (txtaccountsname == "") {
-                alert('Please Select Account');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Account',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return false;
             }
             if ((debitamount !== "" && debitamount !== "0") && (creditamount !== "" && creditamount !== "0")) {
-                alert('Enter Only Debit Or Credit Amount in Single Entry');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Enter Only Debit Or Credit Amount in Single Entry',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (debitamount == "" && creditamount == "") {
-                alert('Please Enter Debit Or Credit Amount');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Debit Or Credit Amount',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             $('#txtAccountName').tokenInput('clear');
@@ -458,7 +493,19 @@
             var totalcredit = $('#txt_credit').val();
             var difference = $('#txt_diff').val();
             if (difference > 0 || difference < 0) {
-                alert('Difference Should Be Zero');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Difference Should Be Zero',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnsave').attr('disabled', false);
                 return false;
             }
@@ -487,10 +534,34 @@
             PageMethods.Savealldata(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
                 if (res == "Period closed for this month. You cannot add or edit Voucher.") {
-                    alert('Period closed for this month. You cannot add or edit Voucher.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Period closed for this month. You cannot add or edit Voucher.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
-                alert('Data Save Successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 var getype = '<% =Request.QueryString["VoucherType"] %>';
                 window.location.href = "Voucher.aspx?VoucherType=" + getype + "&VID=" + res;
             });
@@ -513,7 +584,19 @@
             var VID = '<% =Request.QueryString["VID"] %>';
             PageMethods.UnApproveVoucher(VID, function (Tests) {
                 debugger
-                alert('UnApproved Done Successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'UnApproved Done Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 location.reload();
             });
         }

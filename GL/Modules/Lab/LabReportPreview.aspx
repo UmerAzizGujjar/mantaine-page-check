@@ -4,7 +4,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">    
 
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/LabReportPreview.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
         var GrowthTypeGlobal = '';
         var OrganismTypeGlobal = '';
@@ -48,7 +48,19 @@
                         }
                     });
                 } else {
-                    alert("This browser does not support HTML5 FileReader.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This browser does not support HTML5 FileReader.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         });
@@ -101,7 +113,19 @@
             });
 
             if (CheckUnApprove > 0) {
-                alert("Please Approve The Test First");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Approve The Test First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             else {
@@ -129,7 +153,19 @@
                             //$(this).find('td:eq(11) #Report_Column').val();
                             Chk_IsApprove = $(this).find('td:eq(8) #isApprove').attr('value');
                             if (Report_Column == "null" || Report_Column == '') {
-                                alert("Please Verify Report Again this Test ")
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Please Verify Report Again this Test',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+
                                 return false;
                             }
                             debugger;
@@ -543,7 +579,19 @@
                         success: function (data) {
 
                             if (data.d == 'Successfull') {
-                                alert("Saved");
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Saved',
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+
                             }
                             setTimeout(function () { $('#myModal').modal('hide'); }, 3000);
                         },
@@ -655,10 +703,34 @@
                         '<a href="#" onclick="deleteImage(this)">Delete</a>'
                     }
                 } else {
-                    alert("This browser does not support FileReader.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This browser does not support FileReader.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             } else {
-                alert("Pls select only images");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Pls select only images',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
         }
         function readIMGsingle(input) {
@@ -689,10 +761,34 @@
                         '<a href="#" onclick="deleteImage(this)">Delete</a>'
                     }
                 } else {
-                    alert("This browser does not support FileReader.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This browser does not support FileReader.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             } else {
-                alert("Pls select only images");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Pls select only images',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
 
         }
@@ -733,8 +829,19 @@
                 check = false;
 
             if (check == false) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Only numeric values allowed',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
-                alert("Only numeric values allowed");
                 e.preventDefault();
             }
         }
@@ -1975,8 +2082,19 @@
                 dataType: "json",
                 success: function (data) {
                     if (data.d == 'Successfull') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Saved',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
-                        alert("Saved");
                     }
                     setTimeout(function () { $('#myModal').modal('hide'); }, 3000);
                     location.reload()
@@ -2117,7 +2235,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-6">

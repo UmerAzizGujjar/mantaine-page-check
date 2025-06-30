@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Vendor.aspx.cs" Inherits="PMS.Vendor" Theme="Default_Theme" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/vendor.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/vendor.css" rel="stylesheet" />
     
     <script type="text/javascript">
         var selectedOptions = '';
@@ -383,7 +383,19 @@
                         }
                     });
                     if (find == true) {
-                        alert("Item already exists")
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Item already exists',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                     else {
                         rows += '<tr>' +
@@ -404,7 +416,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("In failure method");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'In failure method',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -435,7 +459,19 @@
                         }
                     });
                     if (find == true) {
-                        alert("Item already exists")
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Item already exists',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                     else {
                         rows += '<tr>' +
@@ -455,7 +491,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("In failure method");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'In failure method',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -464,12 +512,35 @@
             var btnSave = $('#btnSave').val();
             var VendorName = $('#txtVendorName').val();
             if (VendorName == '') {
-                alert('Please Enter Supplier/Vendor Name');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Supplier/Vendor Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             var VendorType = $('#ddlVendorType').val();
             if (VendorType == 0) {
-                alert('Please Select Supplier/Vendor Type');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Supplier/Vendor Type',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return false;
             }
             var Address = $('#txtAddress').val();
@@ -491,7 +562,19 @@
             var active = $('#Active').prop('checked');
             var Chkmanual = $('#chkmanual').prop('checked');
             if (Chkmanual == true && AccountId == 0) {
-                alert('Please Select Payable Account Code');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Payable Account Code',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             var table = $('#tblItemDescription');
@@ -532,7 +615,19 @@
             $('#btnsave').attr('disabled', true);
             var AllItemDetail = { 'IsActive': active, 'Ismanual': Chkmanual, 'VendorId': VendorId, 'VendorName': VendorName, 'VendorType': VendorType, 'Address': Address, 'CreditDays': CreditDays, 'Country': Country, 'Region': Region, 'City': City, 'MobNo': MobNo, 'PhnNo': PhnNo, 'DrugLicenceNo': DrugLicenceNo, 'Stn': Stn, 'Ntn': Ntn, 'Cnic': Cnic, 'Email': Email, 'FocalPerson': Foc, 'PayablCode': AccountId, 'TaxTyp': TaxTyp, 'VendorCode': VendorCode, 'CompanyTyp': CompanyTyp, 'PersonList': Person_list, 'GeneralItemlist': GeneralItem_list, 'PharmacyItemlist': PharmacyItem_list, 'Companylist': Company_list };
             PageMethods.SaveVendor(btnSave, JSON.stringify(AllItemDetail), function (res) {
-                alert('Data Save Successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').val("Update");
                 window.location = "Vendor.aspx?ID=" + res;
                 $('#btnSave').val("Update");

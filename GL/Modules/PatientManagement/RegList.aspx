@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegList.aspx.cs" Inherits="PMS.RegList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 
 
     <script type="text/javascript">
@@ -102,11 +102,7 @@
 </asp:Content>
 <%--kk--%>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-1 col-md-2 col-sm-3">
-            <input type="button" class="btn-primry mrg" onclick="window.location ='RegisterPatient.aspx'" value="Add New" />
-        </div>
-    </div>
+
     <br />
     <div class="row">
         <div class="table-container col-lg-12 col-md-12 col-sm-12">

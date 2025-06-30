@@ -49,9 +49,33 @@
                 success: function (data) {
                     var id = data.d;
                     if (id == "-1") {
-                        alert("User already Exists");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'User already Exists',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     } else {
-                        alert("Date has been saved successfully");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data has been saved successfully',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         window.location.href = "WareHouseWiseUser.aspx";
                     }
                 }, error: function () {
@@ -119,11 +143,35 @@
             var WareHouse = $('#ddlWareHouse :selected').text();
             var WareHouse_Id = $('#ddlWareHouse').val();
             if (user_id == 0) {
-                alert("Please Select User ");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select User',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (WareHouse_Id == 0) {
-                alert("Please Select WareHouse ");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select WareHouse',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             else {

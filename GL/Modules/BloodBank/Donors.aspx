@@ -1,18 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Donors.aspx.cs" Inherits="PMS.Donors" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-    .checkbox-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px; /* Space between "Yes" and "No" options */
-    }
-    .checkbox-item {
-        display: flex;
-        align-items: center;
-        gap: 5px; /* Space between label and checkbox */
-    }
-</style>
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Donor.css" rel="stylesheet" />
 
     <script type="text/javascript">
 
@@ -1728,8 +1717,12 @@
                         </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" class="btn btn-yellow" id="btnSaveTabFirst" value="Save" />
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-4 col-sm-12">
+                                <input type="button" class="btn btn-yellow" id="btnSaveTabFirst" value="Save" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1808,46 +1801,52 @@
                     </div>
                 </div>
                
-
-
+            <div class="row mrgn">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                 <h2>Donation Record</h2>
-                <div class="row">
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label>DATE *</label>
-                         <input type="text" name="date" id="txtdate"/>
-                        </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label>BLOOD DRAWN *</label>
-                        <input type="text" name="blooddrawn" id="txtbdrawn"/>
-                        </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <label>BAG NO. *</label>
-                        <input type="text" name="bagno" id="txtbgno"/>
-                        </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                       <label> SIGNATURE BTO *</label>
-                        <input type="text" name="signbto" id="txtsignbto"/>
-                        </div>
                 </div>
+                </div>
+            <div class="row mrgn">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label>DATE *</label>
+                    <input type="text" name="date" id="txtdate" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label>BLOOD DRAWN *</label>
+                    <input type="text" name="blooddrawn" id="txtbdrawn" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label>BAG NO. *</label>
+                    <input type="text" name="bagno" id="txtbgno" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label>SIGNATURE BTO *</label>
+                    <input type="text" name="signbto" id="txtsignbto" />
+                </div>
+            </div>
             <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <input type="button" id="btnSaveSecondTab" class="btn btn-yellow" value="Save" />
+                <div class="col-lg-8 col-md-4 col-sm-6">
+                    <div class="row mrgn">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" id="btnSaveSecondTab" class="btn btn-yellow" value="Save" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
-
-
-        <br />                
+        <br />
+        <div class="row">
+            <div class="col-lg-8 col-md-4 col-sm-6">
                 <div class="row">
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" value="View" class="btn btn-yellow" onclick="redirect()" id="btnRedirect" />
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" value="View" class="btn btn-yellow" onclick="redirect()" id="btnRedirect" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" value="Print" class="btn btn-yellow" onclick="prints()" id="btnPrint" />
                     </div>
-                    </div>
-    
+                </div>
+            </div>
+        </div>
     <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" ClientIDMode="Static" />
     <asp:HiddenField ID="hdnUpdateVal" Value="(New)" runat="server" ClientIDMode="Static" />
 </asp:Content>

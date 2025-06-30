@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceNoteView.aspx.cs" Inherits="PMS.GoodsIssuanceNoteView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -37,7 +37,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'GoodsIssuanceNote.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -130,11 +130,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" onclick="redirecttonew()" value="Add New" class="btn btn-primry" style="text-align: center;margin-bottom: 1% !important" />
-        </div>
-    </div>
+     
     <div class="table-container">
         <table id="example" class="table table-hover table-bordered" style="width: 100%">
             <thead>

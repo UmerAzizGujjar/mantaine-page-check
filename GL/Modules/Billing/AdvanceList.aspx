@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 <script src="<%= Page.ResolveClientUrl("~/javascripts/stocktransfer.js") %>" type="text/javascript"></script>
       <%--<link href="../../css/stock.css" rel="stylesheet" />--%>
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
         <script type="text/javascript">
 
 
@@ -53,7 +53,7 @@
                     "serverSide": true,
                     "dom": 'lBfrtip',
                     "lengthChange": true,
-                    "buttons": ['copy', 'excel', 'pdf'],
+                    "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'AddNewAdvance.aspx'; } }, 'copy', 'excel', 'pdf'],
                     "filter": true,
                     "ajax": function (data, callback, settings) {
                         $.ajax({
@@ -138,12 +138,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-        <div class="row">
-    <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom:1%">
-        <input type="button" class="btn-primry" value="Add New" onclick="window.location = 'AddNewAdvance.aspx'"/>
-    </div>
-</div>
-
+      
     <div>
         <table id="tblAdvanceView" class="table table-hover table-striped table-bordered">
             <thead>

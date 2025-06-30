@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseRequistion.aspx.cs" Inherits="PMS.AP.PurchaseRequistion" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-       <link href="../../wwwroot/StandardTheme/css/CustomCss/PR.css" rel="stylesheet" />
+       <link href="../../wwwroot/Tibbit_theme/css/CustomCss/PR.css" rel="stylesheet" />
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -178,7 +178,19 @@
                 }
             });
             if (exists) {
-                alert('Item already Exists in the table.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Item already Exists in the table.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             var length = $("#tblbodyPackage tr").length;
@@ -211,7 +223,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve user rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'd to retrieve user rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -233,7 +257,19 @@
                 }
             });
             if (exists) {
-                alert('Item already Exists in the table.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Item already Exists in the table.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             var length = $("#tblbodyPackage tr").length;
@@ -322,7 +358,19 @@
                     }
                     var test_array = $('#tblbodyPackage').find('input[name=txtItemID][value=' + itemID + ']');
                     if (test_array.length > 0) {
-                        alert('This Item already added!');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This Item already added!',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         return false;
                     }
                     else {
@@ -344,7 +392,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("In failure method");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'In failure method',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -387,14 +447,38 @@
             var dept = $('#ddldept').val();
 
             if (Pirority == '0') {
-                alert("Please Select Priority");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Priority',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $("#btnSave").prop("disabled", false);
                 $('#ddlPriority').select2().focus();
                 $('#ddlPriority').select2('open');
                 return false;
             }
             if (dept == '0') {
-                alert("Please Select Department");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Department',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $("#btnSave").prop("disabled", false);
                 $('#ddldept').select2().focus();
                 $('#ddldept').select2('open');
@@ -402,7 +486,19 @@
             }
             var tblLength = $("#tblPackage tr:gt(0)").length;
             if (tblLength == '0') {
-                alert("Please Add Items");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add Items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#tblPackage').addClass('ErrorAlert');
                 $("#btnSave").prop("disabled", false);
                 return false;
@@ -425,20 +521,56 @@
                         datecheck = true;
                     }
                     if (RDate == "") {
-                        alert("Please Enter Required Date");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Enter Required Date',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         $("#btnSave").prop("disabled", false);
                         qtyOrAmtChck = true;
                         return false;
 
                     }
                     if (Qty == "" || Qty == 0 || Qty < 0) {
-                        alert("Please Enter Qty Or Qty Must be Greater than zero");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Enter Qty Or Qty Must be Greater than zero',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         qtyOrAmtChck = true;
                         $("#btnSave").prop("disabled", false);
                         return false;
                     }
                     if (unitprice == "" || unitprice == 0 || unitprice < 0) {
-                        alert("Please Enter UnitPrice Or UnitPrice Must be Greater than zero");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Enter UnitPrice Or UnitPrice Must be Greater than zero',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         $("#btnSave").prop("disabled", false);
                         qtyOrAmtChck = true;
                         return false;
@@ -446,7 +578,19 @@
 
 
                     if (estimatecost == "" || estimatecost == 0 || estimatecost < 0) {
-                        alert("Please Enter EstimateCost Or EstimateCost Must be Greater than zero");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Enter EstimateCost Or EstimateCost Must be Greater than zero',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         $("#btnSave").prop("disabled", false);
                         qtyOrAmtChck = true;
                         return false;
@@ -454,12 +598,36 @@
                 });
                 var totalamt = parseFloat(totCost);
                 if (totalamt > 50000 && Pirority === '004') {
-                    alert("For Low Priority Total Amount Must be Less then 50000");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'For Low Priority Total Amount Must be Less then 50000',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $("#btnSave").prop("disabled", false);
                     return false;
                 }
                 if (datecheck == false) {
-                    alert("Required Date must be greater than Purchase Date");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Required Date must be greater than Purchase Date',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $("#btnSave").prop("disabled", false);
                     return false;
                 }
@@ -531,7 +699,19 @@
                 }
             });
             if (detailAry.length === 0) {
-                alert("No Valid Rows to Save.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'No Valid Rows to Save.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $("#btnSave").prop("disabled", false);
                 return false;
             }
@@ -550,9 +730,33 @@
                     if (res.startsWith("Success")) {
                         var arr = res.split('-')[1];
                         if (btnValue == "Save") {
-                            alert("Data Inserted Successfully!");
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Inserted Successfully',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         } else {
-                            alert("Data Updated Successfully!");
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Updated Successfully',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         }
                         window.location = 'PurchaseRequistion.aspx?ID=' + id;
                         $("#btnsave").prop("disabled", true);
@@ -774,7 +978,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve User UnApprove Button Rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve User UnApprove Button Rights',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -818,14 +1034,14 @@
                 <input style="" type="text" class="form-control" id="txtItem" name="txtItem" placeholder="item" />
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
-                <span class="btn-item" id="btnGetAllItems"><i id="faGetAllItems" class="fa fa-check-square btn-gray">Items</i></span>
+                <span class="btn-item" id="btnGetAllItems"><i id="faGetAllItems" class="fa fa-check-square btn-gray btntop">Items</i></span>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <label id="lblGIR">GIR</label>
                 <asp:DropDownList runat="server" ID="ddlGIR" class="form-select"></asp:DropDownList>
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
-                <span class="btn-item" id="btnGIR"><i id="fabtnGIR" class="fa fa-plus btn-gray">GIR</i></span>
+                <span class="btn-item" id="btnGIR"><i id="fabtnGIR" class="fa fa-plus btn-gray btntop">GIR</i></span>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                 <label id="LblRef_Num">Ref #</label>

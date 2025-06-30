@@ -73,7 +73,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve user rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve user rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -183,7 +195,19 @@
                 var tblLength = $("#tblItemDescription tr:gt(0)").length;
                 if (tblLength == '0') {
                     $('#tblItemDescription').addClass('ErrorAlert');
-                    alert("Please Add items");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Add Vendor',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     proceed = false;
                 } else {
                     $('#tblItemDescription').removeClass('ErrorAlert');
@@ -197,15 +221,49 @@
 
                         if (AccountId == "0" || AccountId == "") {
                             proceed = false;
-                            alert("Please Select Account");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Select Account',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                         }
                         else if (QTy == "0" || QTy < 0 || QTy == "") {
                             proceed = false;
-                            alert("QTY must be greater than 0");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'QTY must be greater than 0',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         }
                         else if (Rate == "0" || Rate < 0 || Rate == "") {
                             proceed = false;
-                            alert("Rate must be greater than 0");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Rate must be greater than 0',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                         }
                         else {
                             proceed = true;
@@ -273,7 +331,19 @@
                     PageMethods.SaveInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         sendFile(res);
-                        alert('Data Save Successfully');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Save Successfully',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                         $('#btn_Save').val("Update");
                         window.location = 'AddManualInvoice.aspx?Inv_ID=' + res;
                     });
@@ -441,7 +511,19 @@
                         }
                     },
                     failure: function (response) {
-                        alert("Failed to retrieve User UnApprove Button Rights.");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to retrieve User UnApprove Button Rights.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                 });
             }

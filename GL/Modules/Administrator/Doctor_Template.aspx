@@ -471,7 +471,19 @@
             console.log(testList);
             console.log(medList);
             if (Doctor_Id == '0' && Tem_Name == '') {
-                alert('Please Select Doctor OR Template')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Doctor OR Template',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return
             }
 
@@ -491,7 +503,19 @@
                 dataType: "json",
                 success: function (response) {
                     var data = response.d;
-                    alert("Data has been saved successfully");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data has been saved successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     window.location.href = "Doctor_Template.aspx?ID=" + data;
                 },
                 error: function (xhr, status, error) {

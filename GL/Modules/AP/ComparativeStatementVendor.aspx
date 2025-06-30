@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ComparativeStatementVendor.aspx.cs" Inherits="PMS.AP.ComparativeStatementVendor" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/CRV.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/CRV.css" rel="stylesheet" />
     <script type="text/javascript">
         var amount1 = 0;
         var amount2 = 0;
@@ -118,7 +118,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve user rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve user rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -182,7 +194,19 @@
 
             var test_array = $('#tblItemDescription').find('input[name=txt_itemcode][value=' + itemcode + ']');
             if (test_array.length > 0) {
-                alert('This Item already added!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Item already added!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             else {
@@ -704,7 +728,19 @@
                 return vendor !== '0';
             }).length;
             if (selectedVendorsCount < 2) {
-                alert("Please Select at least Two Vendors for CS");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select at least Two Vendors for CS',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $($this).val(''); 
                 return false;
             }
@@ -719,23 +755,80 @@
             var qty5 = $('#tblItemDescription5 tr:eq(' + index + ') input[name=txt_qty]').val();           
 
             if (qty1 > parseFloat(totalqty)) {
-                alert("Vendor 1 Item Quantity cannot be greater than Total Item Quantity.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Vendor 1 Item Quantity cannot be greater than Total Item Quantity.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return false;
             }
             if (qty2 > parseFloat(totalqty)) {
-                alert("Vendor 2 Item Quantity cannot be greater than Total Item Quantity.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Vendor 2 Item Quantity cannot be greater than Total Item Quantity.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return false;
             }
             if (qty3 > parseFloat(totalqty)) {
-                alert("Vendor 3 Item Quantity cannot be greater than Total Item Quantity.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Vendor 3 Item Quantity cannot be greater than Total Item Quantity.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return false;
             }
-            if (qty4  > parseFloat(totalqty)) {
-                alert("Vendor 4 Item Quantity cannot be greater than Total Item Quantity.");
+            if (qty4 > parseFloat(totalqty)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Vendor 4 Item Quantity cannot be greater than Total Item Quantity.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (qty5 > parseFloat(totalqty)) {
-                alert("Vendor 5 Item Quantity cannot be greater than Total Item Quantity.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Vendor 5 Item Quantity cannot be greater than Total Item Quantity.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
@@ -770,7 +863,19 @@
 
             if (tableid == 'tblItemDescription1') {
                 if ($('#txt_vendorName_vendor1').val() == 0) {
-                    alert('Please Select Vendor 1');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Vendor 1',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#tblItemDescription1 tr:eq(' + index + ') input[name=txt_qty]').val(0);
                     return false;
                 }
@@ -787,7 +892,19 @@
 
             if (tableid == 'tblItemDescription2') {
                 if ($('#txt_vendorName_vendor2').val() == 0) {
-                    alert('Please Select Vendor 2');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Vendor 2',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#tblItemDescription2 tr:eq(' + index + ') input[name=txt_qty]').val(0);
                     return false;                    
                 }
@@ -804,7 +921,19 @@
 
             if (tableid == 'tblItemDescription3') {
                 if ($('#txt_vendorName_vendor3').val() == 0) {
-                    alert('Please Select Vendor 3');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Vendor 3',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#tblItemDescription3 tr:eq(' + index + ') input[name=txt_qty]').val(0);
                     return false;
                 }
@@ -821,7 +950,19 @@
 
             if (tableid == 'tblItemDescription4') {
                 if ($('#txt_vendorName_vendor4').val() == 0) {
-                    alert('Please Select Vendor 4');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Vendor 4',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#tblItemDescription4 tr:eq(' + index + ') input[name=txt_qty]').val(0);
                     return false;
                 }
@@ -837,7 +978,19 @@
             }
             if (tableid == 'tblItemDescription5') {
                 if ($('#txt_vendorName_vendor5').val() == 0) {
-                    alert('Please Select Vendor 5');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Vendor 5',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#tblItemDescription5 tr:eq(' + index + ') input[name=txt_qty]').val(0); 
                     return false;
                 }
@@ -923,13 +1076,37 @@
 
             if (Rate == null || Rate <= 0 || Rate == '') {
                 row.find('input[name=chkselect]').prop('checked', false);
-                alert('Please Enter Rate to select Vendor for Item');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Rate to select Vendor for Item',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
             if (Qty == null || Qty <= 0 || Qty == '') {
                 row.find('input[name=chkselect]').prop('checked', false);
-                alert('Please Enter Qty to select Vendor for Item');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Qty to select Vendor for Item',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             var rowIndex =row.index() + 1;
@@ -983,33 +1160,116 @@
             var txt_vendorName_vendor5 = $('#txt_vendorName_vendor5').val() || 0;
 
             if (txt_vendorName_vendor1 == 0 && txt_vendorName_vendor2 == 0 && txt_vendorName_vendor3 == 0 && txt_vendorName_vendor4 == 0 && txt_vendorName_vendor5 == 0) {
-                alert("Please Select at least Two Vendors for CS");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select at least Two Vendors for CS',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (txt_vendorName_vendor2 == 0 && txt_vendorName_vendor3 == 0 && txt_vendorName_vendor4 == 0 && txt_vendorName_vendor5 == 0) {
-                alert("Please Select at least Two Vendors for CS");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select at least Two Vendors for CS',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return false;
             }
             if (txt_vendorName_vendor1 == 0 && txt_vendorName_vendor3 == 0 && txt_vendorName_vendor4 == 0 && txt_vendorName_vendor5 == 0) {
-                alert("Please Select at least Two Vendors for CS");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select at least Two Vendors for CS',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (txt_vendorName_vendor1 == 0 && txt_vendorName_vendor2 == 0 && txt_vendorName_vendor4 == 0 && txt_vendorName_vendor5 == 0) {
-                alert("Please Select at least Two Vendors for CS");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select at least Two Vendors for CS',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (txt_vendorName_vendor1 == 0 && txt_vendorName_vendor2 == 0 && txt_vendorName_vendor3 == 0 && txt_vendorName_vendor5 == 0) {
-                alert("Please Select at least Two Vendors for CS");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select at least Two Vendors for CS',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             if (txt_vendorName_vendor1 == 0 && txt_vendorName_vendor2 == 0 && txt_vendorName_vendor3 == 0 && txt_vendorName_vendor4 == 0) {
-                alert("Please Select at least Two Vendors for CS");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select at least Two Vendors for CS',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
 
             if ($('#tblItemDescription11 tr').length === 0 || $('#tblItemDescription21 tr').length === 0 || $('#tblItemDescription31 tr').length === 0 || $('#tblItemDescription41 tr').length === 0 || $('#tblItemDescription51 tr').length === 0) {
-                alert("Please add at Least one Row");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please add at Least one Row',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
@@ -1195,7 +1455,19 @@
                 debugger;
                 var ID = res;
                 sendFile(ID);
-                alert('Data Save Successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btn_Save').val("Update");
                 window.location = "ComparativeStatementVendorView.aspx";
                 $('#btn_Save').val("Update");
@@ -1237,7 +1509,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve User UnApprove Button Rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve User UnApprove Button Rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }
@@ -1285,7 +1569,19 @@
                       if (message.error) {
                           alert("Error Occurred While Cancelling: " + message.error);
                       } else if (message[0].Column1 == "1") {
-                          alert("CS Cancelled Successfully");
+                          Swal.fire({
+                              icon: 'success',
+                              title: 'Success!',
+                              text: 'CS Cancelled Successfully',
+                              showConfirmButton: false,
+                              timer: 2500,
+                              customClass: {
+                                  popup: 'swal-big-popup',
+                                  title: 'swal-big-title',
+                                  htmlContainer: 'swal-big-text'
+                              }
+                          });
+
                           location.reload();
                       } else {
                           alert("Unexpected response format");

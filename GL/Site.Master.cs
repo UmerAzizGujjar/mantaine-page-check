@@ -123,7 +123,7 @@ namespace PMS
             //{
             //    StandardFooter.Visible = true;
             //}  
-            //else if(companyName == "Pakred")
+            //else if(companyName == "Tibbit_theme")
             //{
             //    StandardFooter.Visible = true;
             //}

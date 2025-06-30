@@ -587,6 +587,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\colorbox.min.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\AddNewLabTest.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\AddpurchaseInvoice.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Appointment.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\approveinvtemp.css" />
@@ -598,6 +599,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\DoctorAgrement.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\EMR.css" />
@@ -4021,6 +4023,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\DoctorAgrement.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\EMR.css" />
@@ -4034,6 +4037,8 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\LabReportPreview.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\LabSample.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\login.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\LoginPage.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\MEdTemplate.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\OPD.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\OT.css" />
@@ -6185,6 +6190,7 @@
     <Content Include="wwwroot\IITH_Theme\fontawesomes\svgs\solid\z.svg" />
     <Content Include="wwwroot\IITH_Theme\fonts\fontawesome-webfont.svg" />
     <Content Include="wwwroot\IITH_Theme\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="wwwroot\IITH_Theme\header-footer\Footer.ascx" />
     <Content Include="wwwroot\IITH_Theme\images\avatars\avatar.png" />
     <Content Include="wwwroot\IITH_Theme\images\avatars\avatar1.png" />
     <Content Include="wwwroot\IITH_Theme\images\avatars\avatar2.png" />
@@ -6775,6 +6781,7 @@
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\jszip.min.js" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\vfs_fonts.js" />
+    <Content Include="wwwroot\IITH_Theme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\IITH_Theme\Scripts\angular-ui\ui-bootstrap-tpls.js" />
     <Content Include="wwwroot\IITH_Theme\Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
     <Content Include="wwwroot\IITH_Theme\Scripts\angular-ui\ui-bootstrap.js" />
@@ -7555,6 +7562,9 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\Donor.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Appointment.css" />
@@ -7612,6 +7622,7 @@
     <Content Include="wwwroot\Pakred\css\jquery-ui.min.css" />
     <Content Include="wwwroot\Pakred\css\jquery.gritter.min.css" />
     <Content Include="wwwroot\Pakred\css\Loader\Loader.css" />
+    <Content Include="wwwroot\Pakred\css\MainDashboard.min.css" />
     <Content Include="wwwroot\Pakred\css\prettify.min.css" />
     <Content Include="wwwroot\Pakred\css\RegPat.css" />
     <Content Include="wwwroot\Pakred\css\Report.css" />
@@ -9727,6 +9738,7 @@
     <Content Include="wwwroot\Pakred\fontawesomes\svgs\solid\z.svg" />
     <Content Include="wwwroot\Pakred\fonts\fontawesome-webfont.svg" />
     <Content Include="wwwroot\Pakred\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="wwwroot\Pakred\header-footer\Footer.ascx" />
     <Content Include="wwwroot\Pakred\images\avatars\avatar1.png" />
     <Content Include="wwwroot\Pakred\images\avatars\avatar2.png" />
     <Content Include="wwwroot\Pakred\images\avatars\avatar3.png" />
@@ -10738,11 +10750,13 @@
     <Content Include="wwwroot\Pakred\Scripts\gridmvc.min.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
+    <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
-    <Content Include="wwwroot\StandardTheme\images\HMIS_Icons\favicon.png" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\LoginBackground.jpg" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\logo.PNG" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\Logoheader.png" />
@@ -10782,6 +10796,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\DoctorAgrement.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\EMR.css" />
@@ -10794,6 +10809,8 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\LabReportPreview.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\LabSample.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\login.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\LoginPage.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\MEdTemplate.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\OPD.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\OT.css" />
@@ -10830,6 +10847,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\jquery-ui.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\jquery.gritter.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Loader\Loader.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\prettify.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\RegPat.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Report.css" />
@@ -12982,6 +13000,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\billing2.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\blood-sample.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\blood-test.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\blooddonation.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\border.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\BPV.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\bpv_v.png" />
@@ -13002,6 +13021,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\dashboard-100.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\dashboard-50.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\diagnosis.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\doctor.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\DoctorAppointment.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Emergency.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\first-aid-box.png" />
@@ -13010,6 +13030,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\GIR.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\GIR2.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\GoodRecevied.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\hospital.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\IGP.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\images.jpg" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\inpatient.png" />
@@ -13024,6 +13045,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\jv_v.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Lab.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Lab2.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\lab3.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Labreport.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\ManualInvoice.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\manual_inv.png" />
@@ -13042,6 +13064,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\order.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Patient.jpg" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Patient.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\patient_bed.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\payment-method.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\paymentInvoice.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\pay_inv.png" />
@@ -13081,7 +13104,9 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\stocktrans.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\StockTransfer.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Stock_Adj.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\ultrasound.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\userpharma.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\xrays.png" />
     <Content Include="wwwroot\Tibbit_theme\images\HMIS_Icons\1.png" />
     <Content Include="wwwroot\Tibbit_theme\images\HMIS_Icons\2.png" />
     <Content Include="wwwroot\Tibbit_theme\images\HMIS_Icons\3.png" />
@@ -13216,7 +13241,6 @@
     <Content Include="wwwroot\Tibbit_theme\images\StudentImages\1.png" />
     <Content Include="wwwroot\Tibbit_theme\images\StudentImages\3.jpg" />
     <Content Include="wwwroot\Tibbit_theme\images\StudentImages\3631.png" />
-    <Content Include="wwwroot\Tibbit_theme\images\TibbIT_icons\LoginBackground.png" />
     <Content Include="wwwroot\Tibbit_theme\javascripts\arrow-table.js" />
     <Content Include="wwwroot\Tibbit_theme\javascripts\CalendarPopup.js" />
     <Content Include="wwwroot\Tibbit_theme\javascripts\DataTable\ColReorderWithResize.js" />
@@ -21016,6 +21040,20 @@
     <Compile Include="Modules\Administrator\WithHoldingTaxAccountDefinition.aspx.designer.cs">
       <DependentUpon>WithHoldingTaxAccountDefinition.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wwwroot\IITH_Theme\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\IITH_Theme\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="wwwroot\Pakred\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\Pakred\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+    </Compile>
     <Compile Include="wwwroot\StandardTheme\header-footer\Footer.ascx.cs">
       <DependentUpon>Footer.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -21050,6 +21088,7 @@
     <Folder Include="upload\UploadVouchers\" />
     <Folder Include="wwwroot\StandardTheme\images\email\" />
     <Folder Include="wwwroot\StandardTheme\images\placeholder\" />
+    <Folder Include="wwwroot\Tibbit_theme\images\TibbIT_icons\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Themes\Default_Theme\Skin1.skin" />

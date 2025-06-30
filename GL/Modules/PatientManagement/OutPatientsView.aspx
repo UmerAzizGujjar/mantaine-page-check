@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
 
 
@@ -47,7 +47,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'OutPatients.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -132,9 +132,7 @@
     <div id="OutPatdetails" >
 
         <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn-primry mrg" value="Add New" onclick="window.location = 'OutPatients.aspx'" />
-            </div>
+            
             <div class="table-container col-lg-12 col-md-12 col-sm-10" style="margin-top: 15px;">
                 <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
                     <thead id="ihead">

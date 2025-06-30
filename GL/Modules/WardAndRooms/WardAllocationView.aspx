@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="WardAllocationView.aspx.cs" Inherits="PMS.WardAllocationView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 <script type="text/javascript">
       $(document).ready(function () {
       LoadPage();
@@ -13,7 +13,7 @@
           "serverSide": true,
           "dom": 'lBfrtip',
           "lengthChange": true,
-          "buttons": ['copy', 'excel', 'pdf'],
+          "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'WardAllocation.aspx'; } }, 'copy', 'excel', 'pdf'],
           "filter": true,
           "ajax": function (data, callback, settings) {
               $.ajax({
@@ -120,12 +120,7 @@
 </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-     <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" value="Add New" " class="btn-primry" onclick="window.location = 'WardAllocation.aspx'" />
-        </div>
-    </div>
-<br />
+      
 <div class="row">
         <div class="table-container">
         <table id="tbl"  class="table table-bordered table-hover table-striped">

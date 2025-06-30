@@ -438,12 +438,12 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
-        /// Footer1 control.
+        /// Footer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::PMS.wwwroot.StandardTheme.header_footer.Footer Footer1;
+        protected global::PMS.wwwroot.Tibbit_theme.header_footer.Footer Footer;
     }
 }

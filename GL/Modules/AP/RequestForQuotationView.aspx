@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RequestForQuotationView.aspx.cs" Inherits="PMS.AP.RequestForQuotationView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+   <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
@@ -56,7 +56,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'RequestForQuotation.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -139,11 +139,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-     <div class="table-container">
- <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    <div id="OutPatdetails" style="margin-bottom: 1%;">
-            <input type="button" id="aadnew" class="btn btn-primry" value="Add New" onclick="location.href = 'RequestForQuotation.aspx';" />
-    </div>
+      
             
                 <table id="example"  class="table table-bordered table-hover">
                     <thead>
