@@ -396,7 +396,7 @@ namespace PMS
                 newBillDetails.Discount_Amount = dtls.DiscAmount;
                 newBillDetails.Net_Amount = dtls.NetAmount;
                 newBillDetails.Qty = dtls.Qty;
-                newBillDetails.Batch_No = dtls.batchno;
+                //newBillDetails.Batch_No = dtls.batchno;
                 var TotalRemainStock = dtls.Stock - dtls.Qty;
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);
 
@@ -630,8 +630,7 @@ namespace PMS
                     Amount = decimal.Parse(item.Rate),
                     Disc_Per = decimal.Parse(item.DisPer),
                     Disc_Amount = decimal.Parse(item.DisAmt),
-                    Net_Amount = decimal.Parse(item.NetAmt),
-                    Batch_No = item.Batch_No
+                    Net_Amount = decimal.Parse(item.NetAmt)
                 };
                 db.Pharmacy_SaleReturn_Details.InsertOnSubmit(detail);
                 db.SubmitChanges();

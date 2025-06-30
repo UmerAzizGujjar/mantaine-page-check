@@ -548,7 +548,6 @@
                                 '<td><input type="text" name="txtRDisAmount" value="' + item.Discount_Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td><input type="text" name="txtRnet" value="' + item.Net_Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td style="display: none"><input type="hidden" value="' + item.Item_ID + '" name="txtRItemID" id="txtRItemID"></td>' +
-                                '<td ><input type="text" name="txtRBatch_No" value="' + item.Batch_No + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
                             $('#saleReturnTableBody').append(row);
@@ -607,9 +606,7 @@
                                 '<td><input type="text" name="txtRDisPer" value="0" style="width: 100% !important; height: 22px; text-align: right;"  autocomplete="off"></td>' +
                                 '<td><input type="text" name="txtRDisAmount" style="width: 100% !important; height: 22px; text-align: right;"></td>' +
                                 '<td><input type="text" name="txtRnet" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-                                '<td><select id="txtRBatch_Nos' + (rowIndex + 1) + '" name="txtRBatch_Nos" onchange="updateReturnStock(this)" ></select></td>' +
                                 //'<td><input type="text" name="txtRBatch_No" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
-                                '<td style="display:none;"><input type="text"  id="txtRBatch_No' + (rowIndex + 1) + '" name="txtRBatch_No"  value=""/> </td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
                         },
@@ -618,25 +615,7 @@
                     $('#ddlInvoiceNumber').val(0);
                     $('#ddlInvoiceNumber').prop('disabled', true);
                     $("#txtSaleReturnDisPer").prop('readonly', false);
-                    PageMethods.GetBatchNumbersforReturn(itemId, function (data) {
-                        debugger;
-                        var parsedData = JSON.parse(data);
-                        console.log(parsedData)
-                        var options = '<option value="0" >Please Select</option>';
-
-                        // Process GRN_Details
-                        $.each(parsedData.GRN_Details, function (key, value) {
-                            options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
-                        });
-
-                        // Process Stock_Adjustment_Details
-                        $.each(parsedData.Stock_Adjustment_Details, function (key, value) {
-                            options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
-                        });
-                        $('#txtRBatch_Nos' + (rowIndex + 1)).html(options);
-                    }, function (error) {
-                        alert(error.get_message());
-                    })
+                  
 
 
                     $('#saleReturnTableBody').on('change keyup', 'input[name="txtRQty"], input[name="txtRSalerate"], input[name="txtRDisPer"]', function () {
@@ -651,50 +630,7 @@
                 }
             }
         }
-        function updateReturnStock(anchors) {
-            debugger;
-            var row = $(anchors).closest('tr');
-            var rowIndex = row.index();
-            debugger;
-            var selectId = $(anchors).attr('id');
-            var idParts = selectId.split('txtRBatch_Nos');
-            if (idParts.length > 1) {
-                var counter = idParts[1];
-            } else {
-                var counter = null;
-            }
-            var itemId = $(row).find('td:eq(0)').text().trim();
-            var batchNumber = $(anchors).find('option:selected').text().trim();
-
-            $('#txtRBatch_No' + counter).val(batchNumber);
-            $.ajax({
-                type: "post",
-                url: "IssueMedicine.aspx/GetStockByBatch",
-                data: JSON.stringify({
-                    "itemId": itemId,
-                    "batchNumber": batchNumber
-                }),
-                dataType: 'JSON',
-                contentType: "application/json; charset=utf-8",
-                async: false,
-                success: function (stockMsg) {
-                    debugger;
-                    var stockData = JSON.parse(stockMsg.d);
-                    var stock = stockData[0].Total_Stock || 0;
-                    var rate = stockData[0].Sale_Rate || 0;
-                    var date = stockData[0].ExpiryDate;
-                    var Mini_Stocks = stockData[0].Mini_stock;
-
-                    date = moment(date).format('D-MMM-YYYY');
-                    debugger;
-                    $('#txtRStock' + counter).val(stock);
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error fetching stock: " + error);
-                }
-            });
-        }
-
+       
 
         function calculateNetAmount($row) {
             var CheckQty = parseFloat($row.find('input[name="txtRCheckQty"]').val()) || 0;
@@ -908,66 +844,7 @@
             });
             return proceed;
         }
-        //function SaveSaleReturn() {
-        //    debugger
-        //    $('#btnSaveSaleReturn').attr('disabled', true);
-        //    if (validateSaleReturn()) {
-        //        debugger
-        //        var BillId = $('#ddlInvoiceNumber').val() || 0;
-        //        var InvNo = $('#ddlInvoiceNumber option:selected').text()||'';
-        //        var TotalPayable = $('#txtSaleReturnTotalPayable').val() || 0;
-        //        var TotalLineDisc = $('#txtSaleReturnLineDisc').val() || 0;
-        //        var DisPer = $('#txtSaleReturnDisPer').val() || 0;
-        //        var TotalDisAmt = $('#txtSaleReturnDisAmt').val() || 0;
-        //        var AdjustmentAmt = $('#txtSaleReturnFlatDisc').val() || 0;
-        //        var Total = $('#txtSaleReturnTotal').val() || 0;
-        //        var table = $('#saleReturnTableBody');
-        //        var Item_list = [];
-
-        //        table.find('tr').each(function () {
-        //            var itemID = $(this).find('input[name="txtRItemID"]').val() || 0;
-        //            var billDetailsID = $(this).find('input[name="txtRBill_Details_ID"]').val() || 0;
-        //            var itemName = $(this).find('input[name="txtRItemDescription"]').val() || 0;
-        //            var qty = $(this).find('input[name="txtRQty"]').val() || 0;
-        //            var rate = $(this).find('input[name="txtRSalerate"]').val() || 0;
-        //            var disPer = $(this).find('input[name="txtRDisPer"]').val() || 0;
-        //            var disAmt = $(this).find('input[name="txtRDisAmount"]').val() || 0;
-        //            var netAmt = $(this).find('input[name="txtRnet"]').val() || 0;
-        //            var Batch_No = $(this).find('input[name="txtRBatch_No"]').val();
-
-        //            Item_list.push({
-        //                'ItemID': itemID,
-        //                'Bill_Details_ID': billDetailsID,
-        //                'ItemName': itemName,
-        //                'Qty': qty,
-        //                'Rate': rate,
-        //                'DisPer': disPer,
-        //                'DisAmt': disAmt,
-        //                'NetAmt': netAmt,
-        //                'Batch_No': Batch_No
-        //            });
-        //        });
-        //        debugger
-        //        $('#btnSaveSaleReturn').attr('disabled', true);
-        //        var AllItemDetail = {
-        //            'BillId': BillId,
-        //            'InvNo': InvNo,
-        //            'TotalPayable': TotalPayable,
-        //            'TotalLineDisc': TotalLineDisc,
-        //            'DisPer': DisPer,
-        //            'TotalDisAmt': TotalDisAmt,
-        //            'AdjustmentAmt': AdjustmentAmt,
-        //            'Total': Total,
-        //            'ItemList': Item_list
-        //        };
-
-        //        PageMethods.SaveSaleReturnData(JSON.stringify(AllItemDetail), function (res) {
-        //            debugger
-        //            alert('Data Inserted Successfully');
-        //            window.location = "IssueMedicine.aspx";
-        //        });
-        //    }
-        //}
+       
         function SearchReturnPop() {
             debugger;
             $('#SearchReturnModel').modal({
@@ -1116,13 +993,7 @@
             if (ItemName === undefined) {
                 ItemName = '';
             }
-            //var isbatch = $('#chkbatch').prop("checked");
-            //if (isbatch == true) {
-            //    $('.batchdiv').show();
-            //}
-            //else {
-            //    $('.batchdiv').hide();
-            //}
+            
             $.ajax({
                 type: "post",
                 url: "IssueMedicine.aspx/loadMedicine",
@@ -1627,7 +1498,6 @@
                         '<td><input type="text" readonly name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" readonly name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
@@ -1968,7 +1838,6 @@
                             '<td><input type="text" readonly name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
 
                             '<td style="text-align:Right;"></td>' +
-                            '<td><input type="text" readonly name="exp_date" id="exp_date' + (rowIndex + 1) + '" value="' + date +'" class=""  style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
 
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';
@@ -2326,8 +2195,6 @@
                     <th style="width: 60px; text-align: left;">Dis % </th>
                     <th style="width: 60px; text-align: left;">Dis Amount </th>
                     <th style="width: 60px; text-align: left;">Net Amount </th>
-                    <th style="width: 60px; text-align: left;">BatchNo</th>
-                    <th style="width: 60px; text-align: left;">Expiry Date </th>
                     <th style="width: 53px; text-align: left;">Action </th>
                 </tr>
             </thead>

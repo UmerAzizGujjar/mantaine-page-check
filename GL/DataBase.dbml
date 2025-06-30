@@ -8404,44 +8404,6 @@
       <Column Name="StockTotal" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spMedicinesDetailsfromopd" Method="spMedicinesDetailsfromopd">
-    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="spMedicinesDetailsfromopdResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.spPharmacyitem" Method="spPharmacyitem">
-    <Parameter Name="ItemName" Parameter="itemName" Type="System.String" DbType="NVarChar(500)" />
-    <Parameter Name="isbatch" Type="System.String" DbType="NVarChar(500)" />
-    <ElementType Name="spPharmacyitemResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.spMedicinesDetails" Method="spMedicinesDetails">
-    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="Batch" Parameter="batch" Type="System.String" DbType="NVarChar(150)" />
-    <ElementType Name="spMedicinesDetailsResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="BatchNum" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="ExpiryDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_AutoPO" Method="sp_AutoPO">
     <Parameter Name="csid" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="User_Id" Parameter="user_Id" Type="System.String" DbType="NVarChar(MAX)" />
@@ -10191,6 +10153,44 @@
     <Parameter Name="user_id" Type="System.String" DbType="VarChar(450)" />
     <ElementType Name="spUnApprovePaymentResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spPharmacyitem" Method="spPharmacyitem">
+    <Parameter Name="ItemName" Parameter="itemName" Type="System.String" DbType="NVarChar(500)" />
+    <ElementType Name="spPharmacyitemResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spMedicinesDetails" Method="spMedicinesDetails">
+    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spMedicinesDetailsResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="BatchNum" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spMedicinesDetailsfromopd" Method="spMedicinesDetailsfromopd">
+    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spMedicinesDetailsfromopdResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="BatchNum" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
