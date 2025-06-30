@@ -438,39 +438,12 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
-        /// tibbitFooter control.
+        /// Footer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tibbitFooter;
-
-        /// <summary>
-        /// mbl_no control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor mbl_no;
-
-        /// <summary>
-        /// email control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor email;
-
-        /// <summary>
-        /// StandardFooter control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl StandardFooter;
+        protected global::PMS.wwwroot.Tibbit_theme.header_footer.Footer Footer;
     }
 }

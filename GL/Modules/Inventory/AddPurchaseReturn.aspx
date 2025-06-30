@@ -87,7 +87,19 @@
                     LoadGRNDetail(vendorId, ddltype, InvOrgId)
                 }
                 else {
-                    alert("Please Select Vendor,Type and WareHouse");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Vendor,Type and WareHouse',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         });
@@ -283,7 +295,19 @@
             }
             var test_array = $('#tblItemDescription').find('input[name=txtitemcode][value=' + itemCode + ']');
             if (test_array.length > 0) {
-                alert('This Item already added!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Item already added!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
                 return false;
             }
@@ -339,7 +363,19 @@
                 var AllItemDetail = { 'VendorId': VendorId, 'PurchaseReturnNum': PurchaseReturnNum, 'PurchaseReturndate': PurchaseReturndate, 'ReturnFormInventoryOrg': ReturnFormInventoryOrg, 'InvoiceType': InvoiceType, 'Remarks': Remarks, 'ItemList': Item_list };
                 PageMethods.SavePurchaseReturn(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     debugger;
-                    alert('Data Save Successfully');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Save Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     window.location = "PurchaseReturnList.aspx";
                 });
             }
@@ -350,7 +386,19 @@
             var proceed = true;
             if (document.getElementById('tblItemDescription').rows.length == 1) {
                 proceed = false;
-                alert('Items List Should have Items.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Items List Should have Items.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             if (document.getElementById('tblItemDescription').rows.length > 1) {
                 table.find('tr').each(function (key, value) {
@@ -359,14 +407,38 @@
                     var TransQty = $(value).find('td input[name=txtTransQty]').val();
                     if (!TransQty) {
                         proceed = false;
-                        alert("Please Enter Qty");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Enter Qty',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
 
 
                     if (parseFloat(TransQty) > parseFloat(Qty)) {
                         debugger;
                         proceed = false;
-                        alert("Qty Must Be Less Than Total Stock");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Qty Must Be Less Than Total Stock',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                 });
             }
@@ -407,7 +479,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve User UnApprove Button Rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve User UnApprove Button Rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RolesView.aspx.cs" Inherits="PMS.Account.RolesView" Theme="Default_Theme" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
@@ -16,7 +16,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Roles.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -95,11 +95,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
- <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom:1%;margin-left:3%">
-    <input type="button" class="btn btn-primry" value="Add New" id="btnnew" onclick="window.location = 'Roles.aspx'" />
-</div>
-        </div>
+     
   <div class="table-container container-fluid">
         <div class="row">
             <div class="col-12">

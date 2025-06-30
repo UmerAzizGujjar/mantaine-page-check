@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="VendorView.aspx.cs" Inherits="PMS.AP.VendorView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
@@ -19,7 +19,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Vendor.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -116,13 +116,7 @@
 
     </script>
 
-    <div id="PurchaseRequistiondetails" >
-        <div class="row">
-            <div class="col-md-1">
-                <input type="button" id="aadnew" value="Add New" class="btn btn-primry" onclick="location.href = 'Vendor.aspx';" style="margin-left: 18%;margin-bottom:2% !important" />              
-            </div>
-        </div>
-    </div>
+    
 
     <div class="table-container">
         <table class="table table-hover table-bordered" id="tblResult">

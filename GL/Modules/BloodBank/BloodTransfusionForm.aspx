@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BloodTransfusionForm.aspx.cs" Inherits="PMS.BloodTransfusionForm" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/BloodBank.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/BloodBank.css" rel="stylesheet" />
     <style type="text/css">
       
     </style>
@@ -304,7 +304,19 @@
                         success: function (response) {
                             var master_id = response.d;
                             if (master_id != '-1') {
-                                alert("Data has been saved successfully");
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Data has been saved successfully',
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+
                                 window.location.href = "BloodTransfusionForm.aspx?ID=" + master_id;
                             }
 
@@ -314,7 +326,19 @@
                     });
                 }
                 else {
-                    alert("Please Fill All Mendotary Fields");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Fill All Mendotary Fields',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return true;
                 }
 
@@ -505,7 +529,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                         <div class="image-container">
-                            <img src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-6">
@@ -647,33 +671,33 @@
                     <br />
                     <div class="row">
                         <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="row">
+                            <div class="row mrgn">
                                 <label>Previous Transfusion Reaction *</label>
                             </div>
                             <div class="row">
                                 <div class="col-lg-2 col-md-6 col-sm-6">
                                     <label for="yreaction">Yes</label>
-                                    <input type="checkbox" name="yreaction" value="yreaction" id="yreaction" />
+                                    <input type="checkbox" name="yreaction" class="chkmrgn" value="yreaction" id="yreaction" />
                                 </div>
                                 <div class="col-lg-2 col-md-6 col-sm-6">
                                     <label for="nreaction">No</label>
-                                    <input type="checkbox" name="nreaction" value="nreaction" id="nreaction" />
+                                    <input type="checkbox" name="nreaction" class="chkmrgn" value="nreaction" id="nreaction" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="row">
+                            <div class="row mrgn">
                                 <label>Previous Pregnancy *</label>
                             </div>
                             <div class="row">
                                 <div class="col-lg-2 col-md-6 col-sm-6">
                                     <label for="ypregnancy">Yes</label>
-                                    <input type="checkbox" name="ypregnancy" value="ypregnancy" id="ypregnancy" />
+                                    <input type="checkbox" name="ypregnancy" class="chkmrgn" value="ypregnancy" id="ypregnancy" />
                                 </div>
                                 <div class="col-lg-2 col-md-6 col-sm-6">
                                     <label for="npregnancy">No</label>
-                                    <input type="checkbox" name="npregnancy" value="npregnancy" id="npregnancy" />
+                                    <input type="checkbox" name="npregnancy" class="chkmrgn" value="npregnancy" id="npregnancy" />
                                 </div>
                             </div>
                         </div>
@@ -872,10 +896,14 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-            <input type="button" value="Print" onclick="prints()" id="btnPrint" />
-                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-4 col-sm-6">
+                                <input type="button" value="Print" class="btn btn-yellow" onclick="prints()" id="btnPrint" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
         </div>
     </div>

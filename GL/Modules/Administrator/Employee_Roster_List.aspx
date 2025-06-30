@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Employee_Roster_List.aspx.cs" Inherits="PMS.Employee_Roster_List" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 
     <script type="text/javascript">
 
@@ -23,7 +23,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Employee_Roster.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -120,11 +120,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div >
-        <div class="row mb-3">
-            <div class="col-lg-1 col-md-3 col-sm-4" style="margin-bottom:1%">
-                <input type="button" value="Add New" id="btnnew" class="btn-primry"  tabindex="14" onclick="window.location = 'Employee_Roster.aspx'" />
-            </div>
-        </div>
+         
         <div class="row">
          
                 <table id="example" class="table table-striped table-bordered table-responsive-md w-100">

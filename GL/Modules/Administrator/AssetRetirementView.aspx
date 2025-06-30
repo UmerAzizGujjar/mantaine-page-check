@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AssetRetirementView.aspx.cs" Inherits="PMS.Modules.Administrator.AssetRetirementView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-      <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+      <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -14,7 +14,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'AssetRetirement.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "order": [[1, "asc"]], 
                 "ajax": function (data, callback, settings) {
@@ -94,12 +94,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-     <div class="row">
-        <div class="col-lg-1 col-md-2 col-sm-3">
-             <input type="button" class="btn-primry mrg" onclick="window.location ='AssetRetirement.aspx'" value="Add New" />
-        </div>
-    </div>
-    <br />
+      
         <div class="row">
             <div class="table-container col-lg-12 col-md-12 col-sm-12">
                 <table id="example" class="table table-striped table-bordered display">

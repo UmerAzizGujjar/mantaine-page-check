@@ -2,7 +2,7 @@
 
 <%@ Register Src="~/LookupControl.ascx" TagName="LookupControl" TagPrefix="uc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <style type="text/css">
         input[type="checkbox"] {
             width: 20% !important;
@@ -15,7 +15,7 @@
                 width: 300px !important;
 margin-left: 10px;
         }
-        #btnSave,#ctl00_MainContent_btnBack{
+        #ctl00_MainContent_btnSave,#ctl00_MainContent_btnBack{
             width:100px !important;
 
             margin-top:10px;
@@ -45,61 +45,6 @@ margin-left: 10px;
             
             
         });
-        function labelSwal() {
-            var label = $('#<%= lblMessage.ClientID %>').text();
-            if (label != "") {
-                if (label == "Data has been sucessfully save") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: label,
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: label,
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-
-                }
-
-            }
-        }
-        function validator() {
-            var roleName = $('#<%= txtRoleName.ClientID %>').val();
-            labelSwal();
-            if (roleName == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Role Name is Required!',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-            } else {
-                // If input is not empty, click the hidden ASP.NET button
-                $('#<%= btnSave1.ClientID %>').click();
-            }
-        }
         function fillDepts() {
 
             PageMethods.FillDepts(function (data) {
@@ -276,8 +221,7 @@ margin-left: 10px;
                 <asp:Button Text="Back" CssClass="btn btn-gray" ID="btnBack" PostBackUrl="~/Modules/Accounts/RolesView.aspx" CausesValidation="false" runat="server"  />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry" value="Save" onclick="validator()" id="btnSave" />
-                <asp:Button ID="btnSave1" runat="server" Text="Save" OnClick="btnSave_Click"  Visible="false" />
+                <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="btn btn-primry"  />
             </div>
         </div>
     </div>

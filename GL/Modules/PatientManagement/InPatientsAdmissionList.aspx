@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsAdmissionList.aspx.cs" Inherits="PMS.InPatientsAdmissionList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server"> 
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
@@ -14,7 +14,16 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'InPatientsAdmission.aspx';
+                        }
+                    },
+                    'copy', 'excel', 'pdf',
+                ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -131,12 +140,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="POdetails" style="margin-top: 15px;">
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry"  value="Add New" style="text-align: center"  onclick=" window.location.href = 'InPatientsAdmission.aspx'"  />
-            </div>
-        </div>
-        <br />
         <div>
        <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow:scroll; height:auto;">
              <thead id="ihead">

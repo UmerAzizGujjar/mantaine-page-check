@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TestDefination.aspx.cs" Inherits="PMS.TestDefination" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/TestDefinition.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/TestDefinition.css" rel="stylesheet" />
     <script type="text/javascript">
         function FillOutSourceLabs() {
 
@@ -267,7 +267,18 @@
             });
             PageMethods.SaveUltraSound((Ultra_value),
                 function (res) {
-                    alert('Data Has been Successfully Saved');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Has been Successfully Saved.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 });
         }
         function test_delete() {
@@ -523,8 +534,19 @@
 
             if (SelectedDepartmentID == "Radialogy") {
                 if ($(main_departments).val() == '' && $(test_rate).val() == '') {
-                    alert("please fill main department")
-                    return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'please fill main department',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                     return;
                 }
             }
 
@@ -574,8 +596,19 @@
             var labTest = { 'ID': $(test_id).val(), 'Name': $(test_name).val(), 'MainDepartment': $(main_departments).val(), 'GroupDepartment': $(group_departments).val(), 'Group': $(groups).val(), 'Unit': $(units).val(), 'Note': $(test_note).val(), 'ValueType': $(value_type).val(), 'Rate': $(test_rate).val(), 'Active': $(test_active)[0].checked, 'cultural': $(Test_cultural)[0].checked, 'reportColums': $("#ddlrptColumns").val(), 'FixedValue': valueofTemplate, 'TestValues': test_values, 'IPDTestRates': IPD_Test_Rates, 'OPDTestRates': OPD_Test_Rates, 'SelectedDepartment': SelectedDepartment, 'out_source_lab_id': out_source_lab_id, 'reporthour': reporthour, 'reportDays': reportDays, 'GroupOrder': GroupOrder, 'Genre': $(genre).val(), 'Qty': $(qty).val(), 'Designation': $(Designation).val(), 'Group_Header_L1': Group_Header_L1, 'Altrasound_Level': Altrasound_Level, 'chk_value': chk_value, 'chk_template': chk_template, 'chk_listchooseresult': chk_listchooseresult, 'chk_resultTypeImage': chk_resultTypeImage, 'UltraValues': Ultra_value, 'chk_Levels': chk_Levels, 'chk_Payment': chk_Payment, 'Special_Test': Special_Test };
             PageMethods.SaveTest(JSON.stringify(labTest), test_extra_values,
                 function (res) {
-                    alert('Data Has been Successfully Saved');
-                    location.href = "TestDefinationList.aspx";
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Has been Successfully Saved.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                     location.href = "TestDefinationList.aspx";
                     
                 });
             
@@ -739,9 +772,26 @@
         }
         function DeleteIPDTestRates(reference) {
             debugger;
-            if (confirm("Are you sure you want to delete")) {
-                $($(reference).parents('tr')[0]).remove();
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'This action will delete',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $($(reference).parents('tr')[0]).remove();
+                }
+            });
+            
         }
         function OPD_value() {
             debugger;
@@ -779,9 +829,26 @@
         }
         function DeleteOPDTestRates(reference) {
             debugger;
-            if (confirm("Are you sure you want to delete")) {
-                $($(reference).parents('tr')[0]).remove();
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'This action will delete',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $($(reference).parents('tr')[0]).remove();
+                }
+            });
+            
         }
         $(function () {
             $("#tabs").tabs();
@@ -947,7 +1014,7 @@
                         <div id="dvIPDRates">
                             <fieldset class="mt-n3">
                                 <legend>IPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-10px;" onclick="IPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-20px;" onclick="IPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="IPD_Test_Rate_Table">
                                         <thead>
@@ -968,7 +1035,7 @@
                         <div id="dvOPDRats">
                             <fieldset class="mt-n3">
                                 <legend>OPD Test Rates</legend>
-                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-10px;"  onclick="OPD_value()"></a>
+                                <a href="javascript:void(0)" class="fa fa-plus iconAdd" style="font-size: 20px;float:right;margin-top:-20px;"  onclick="OPD_value()"></a>
                                 <div class="table-responsive" style="max-height: 217px;">
                                     <table class="table" id="OPD_Test_Rate_Table">
                                         <thead>

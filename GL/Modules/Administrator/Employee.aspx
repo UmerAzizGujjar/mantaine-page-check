@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Employee.aspx.cs" Inherits="PMS.Employee" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/Employee.css" rel="stylesheet" />
-        <link href="../../wwwroot/StandardTheme/css/CustomCss/Toaster.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Employee.css" rel="stylesheet" />
+        <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Toaster.css" rel="stylesheet" />
  
       <script type="text/javascript">
 

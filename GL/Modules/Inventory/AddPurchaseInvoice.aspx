@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/AddpurchaseInvoice.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/AddpurchaseInvoice.css" rel="stylesheet" />
     <script type="text/javascript">
 
         var vendor_Id_Global = 0;
@@ -172,7 +172,18 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve user rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve user rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 }
             });
         }
@@ -213,7 +224,18 @@
             var tblLength = $("#tblItemDescription tr:gt(0)").length;
             if (tblLength == '0') {
                 $('#tblItemDescription').addClass('ErrorAlert');
-                alert("Please Add items");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add items',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 proceed = false;
             } else {
                 $('#tblItemDescription').removeClass('ErrorAlert');
@@ -359,7 +381,19 @@
             var test_GRN = $('#tblItemDescription').find('input[name=txtGRNNum][value=' + GRNNum + ']');
             if (test_GRN.length > 0) {
                 if (test_array.length > 0) {
-                    alert('This Item already added!');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This Item already added!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
                     return false;
                 }
@@ -423,7 +457,19 @@
             }
             var totaladvfinaladjustedcheck = $('#tot_adjusted_advance').val();
             if (parseFloat(totalfinalinvamountcheck) < parseFloat(totaladvfinaladjustedcheck)) {
-                alert('Adjusted Amount Can not be greater than Invoice Amount');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Adjusted Amount Can not be greater than Invoice Amount',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $(row).closest('tr').find('td input[name=adjusted_Amount]').val('');
                 $('#tot_adjusted_advance').val(0);
                 $('#net_amount').val(totalfinalinvamountcheck);
@@ -650,7 +696,19 @@
                 var AllItemDetail = { 'disc_amount': disc_amount, 'totalnetamount': totalnetamount, 'totaladvanceadjusted': totaladvanceadjusted, 'totalinvoiceamount': totalinvoiceamount, 'InvoiceNum': InvoiceNum, 'InvoiceType': InvoiceTyp, 'VendorId': VendorId, 'RefInvoiceNum': RefInvoiceno, 'SalTaxInvoiceNum': StaxInvoice, 'InvoiceDate': InvoiceDate, 'AccountingDate': AccountingDate, 'DueDate': DueDate, 'Currency': CurrencyId, 'ExRate': ExRate, 'Remarks': Remarks, 'ExDate': ExDate, 'ItemList': Item_list, 'Itemlist2': Item_list2 };
                 PageMethods.SaveInvoice(btnSave, JSON.stringify(AllItemDetail), function (res) {
                     debugger;
-                    alert('Data Save Successfully');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Save Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     sendFile(res);
                     $('#btnSave').val("Update");
                     window.location = "AddPurchaseInvoice.aspx?Inv_ID=" + res;
@@ -690,7 +748,19 @@
                     }
                 },
                 failure: function (response) {
-                    alert("Failed to retrieve User UnApprove Button Rights.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to retrieve User UnApprove Button Rights.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
             });
         }   
@@ -825,7 +895,19 @@
             }
             var totaladvfinaladjustedcheck = $('#tot_adjusted_advance').val();
             if (parseFloat(totalfinalinvamountcheck) < parseFloat(totaladvfinaladjustedcheck)) {
-                alert('Adjusted Amount Can not be greater than Invoice Amount');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Adjusted Amount Can not be greater than Invoice Amount',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $(row).closest('tr').find('td input[name=adjusted_Amount]').val('');
                 $('#tot_adjusted_advance').val(0);
                 $('#net_amount').val(totalfinalinvamountcheck);

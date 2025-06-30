@@ -2230,17 +2230,6 @@ html {
     position: relative;
 }
 
-body {
-    background-color: #fff;
-    min-height: 100%;
-    padding-bottom: 0;
-    font-family: 'Open Sans';
-    font-size: 13px;
-    color: black !important;
-    line-height: 1.5;
-    font-weight: bold;
-}
-
 .main-container:before {
     display: block;
     content: "";
@@ -2327,12 +2316,7 @@ h1 {
         margin-bottom: 16px;
     }
 
-h2 {
-    font-size: 26px;
-    font-weight: normal;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: bold;
-}
+
 
     h2.smaller {
         font-size: 25px;
@@ -8610,64 +8594,6 @@ label.inline {
     margin-bottom: 3px;
 }
 
-textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
-    border-radius: 0 !important;
-    color: #060606 !important;
-    font-weight: bold !important;
-    background-color: #fff;
-    border: 1px solid #d5d5d5 !important;
-    padding: 5px 4px 6px;
-    font-size: 14px;
-    font-family: inherit;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    -webkit-transition-duration: .1s;
-    transition-duration: .1s;
-}
-
-    textarea:hover, input[type="text"]:hover, input[type="password"]:hover, input[type="datetime"]:hover, input[type="datetime-local"]:hover, input[type="date"]:hover, input[type="month"]:hover, input[type="time"]:hover, input[type="week"]:hover, input[type="number"]:hover, input[type="email"]:hover, input[type="url"]:hover, input[type="search"]:hover, input[type="tel"]:hover, input[type="color"]:hover {
-        border-color: #b5b5b5;
-    }
-
-    textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus {
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        color: #696969;
-        border-color: #f59942;
-        background-color: #fff;
-        outline: none;
-    }
-
-.form-control, select {
-    border-radius: 0;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;    
-    background-color: #fff;
-    border: 1px solid #d5d5d5;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-    display: block;
-    font-size: 14px;
-    line-height: 1.42857;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 100%;
-    color: #060606 !important;
-    font-weight: bold !important;
-}
-
-    .form-control:focus, select:focus {
-        color: #696969;
-        border-color: #f59942;
-        background-color: #fff;
-        outline: none;
-    }
-
-textarea.form-control {
-    padding: 5px 9px;
-}
-
-select {
-    padding: 3px 4px;
-}
 
     select.form-control {
         padding: 4px 6px;

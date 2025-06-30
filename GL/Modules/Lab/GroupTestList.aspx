@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GroupTestList.aspx.cs" Inherits="PMS.GroupTestList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
          <script type="text/javascript">
              $(document).ready(function () {
                  LoadPage();
@@ -14,7 +14,7 @@
                      "serverSide": true,
                      "dom": 'lBfrtip',
                      "lengthChange": true,
-                     "buttons": ['copy', 'excel', 'pdf'],
+                     "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'GroupTestDefinition.aspx'; } }, 'copy', 'excel', 'pdf'],
                      "filter": true,
                      "ajax": function (data, callback, settings) {
                          $.ajax({
@@ -96,11 +96,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server"> 
     <div id="MainDiv">
-         <div class="row">
-     <div class="col-lg-2 col-md-4 col-m-6" style="margin-bottom:1%">
-         <input type="button" value="Add New" class="btn btn-primry"  onclick=" window.location.href = 'GroupTestDefinition.aspx'"  />
-         </div>
-             </div>
+         
     <table class="table table-hover table-striped table-bordered" id="Data" >
       <thead>
         <tr>

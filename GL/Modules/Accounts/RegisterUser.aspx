@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegisterUser.aspx.cs" Inherits="PMS.Modules.Accounts.RegisterUser" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/registeruser.css" rel="stylesheet" />
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/registeruser.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -25,46 +25,46 @@
                 dataType: "json",
                 success: function (response) {
                     var data = JSON.parse(response.d);
-                        $('#saveBtn').val('Update User');
+                    $('#saveBtn').val('Update User');
                     // Disable password fields
-                        $('#Password').prop('disabled', true);
-                        $('#ConfirmPassword').prop('disabled', true);
+                    $('#Password').prop('disabled', true);
+                    $('#ConfirmPassword').prop('disabled', true);
                     // Text inputs
-                        $('#UserName').val(data.UserName);
-                        $('#Email').val(data.Email);
-                        $('#Mobile').val(data.mobileno);
-                        $('#EmpCode').val(data.EmpCode);
+                    $('#UserName').val(data.UserName);
+                    $('#Email').val(data.Email);
+                    $('#Mobile').val(data.mobileno);
+                    $('#EmpCode').val(data.EmpCode);
                     // Checkboxes
-                        $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
-                        $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
-                        $('#AllPatientRecords').prop('checked', data.AllPatientRecords);
-                        $('#AllowUnapproveVouchers').prop('checked', data.AllowUnapproveVoucher);
-                        $('#OTPUsers').prop('checked', data.OTPUsers);
-                        $('#AllowBillDelete').prop('checked', data.AllowBillDelete);
-                        $('#AllowTestRate').prop('checked', data.AllowTestRate);
-                        $('#AllowOPD').prop('checked', data.OpdAllow);
-                        $('#AllowLab').prop('checked', data.allow_lab);
-                        $('#AllowUltra').prop('checked', data.allow_ultra);
-                        $('#AllowCtscan').prop('checked', data.allow_ctscan);
-                        $('#AllowXray').prop('checked', data.allow_xray);
-                        $('#AllowB_Bank').prop('checked', data.allow_b_bank);
-                        $('#AllowPharmacy').prop('checked', data.AllowPharmacy);
-                        $('#GeneralItems').prop('checked', data.AllowGeneralItems);
-                        $('#ShowBudgetBtn').prop('checked', data.IsShowBudget);
-                        $('#InventoryUnApprove').prop('checked', data.IsInventoryUnApprove);
-                        $('#PRFsNotifications').prop('checked', data.IsNotificationViewed);
-                        $('#RateBox').prop('checked', data.allowtestbox);
-                        $('#AllowToAccessAllTest').prop('checked', data.AllowToAccessAllTest);
-                        $('#AllowCardio').prop('checked', data.allow_cardio);
-                        $('#IsAnonymous').prop('checked', data.IsAnonymous);
-                        $('#BlockUser').prop('checked', data.BlockUser);
+                    $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
+                    $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
+                    $('#AllPatientRecords').prop('checked', data.AllPatientRecords);
+                    $('#AllowUnapproveVouchers').prop('checked', data.AllowUnapproveVoucher);
+                    $('#OTPUsers').prop('checked', data.OTPUsers);
+                    $('#AllowBillDelete').prop('checked', data.AllowBillDelete);
+                    $('#AllowTestRate').prop('checked', data.AllowTestRate);
+                    $('#AllowOPD').prop('checked', data.OpdAllow);
+                    $('#AllowLab').prop('checked', data.allow_lab);
+                    $('#AllowUltra').prop('checked', data.allow_ultra);
+                    $('#AllowCtscan').prop('checked', data.allow_ctscan);
+                    $('#AllowXray').prop('checked', data.allow_xray);
+                    $('#AllowB_Bank').prop('checked', data.allow_b_bank);
+                    $('#AllowPharmacy').prop('checked', data.AllowPharmacy);
+                    $('#GeneralItems').prop('checked', data.AllowGeneralItems);
+                    $('#ShowBudgetBtn').prop('checked', data.IsShowBudget);
+                    $('#InventoryUnApprove').prop('checked', data.IsInventoryUnApprove);
+                    $('#PRFsNotifications').prop('checked', data.IsNotificationViewed);
+                    $('#RateBox').prop('checked', data.allowtestbox);
+                    $('#AllowToAccessAllTest').prop('checked', data.AllowToAccessAllTest);
+                    $('#AllowCardio').prop('checked', data.allow_cardio);
+                    $('#IsAnonymous').prop('checked', data.IsAnonymous);
+                    $('#BlockUser').prop('checked', data.BlockUser);
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
                 }
             });
         }
-        
+
         function CreateUser() {
             var Valid = true;
             var UserIDfromURL = '<%= Request.QueryString["UserID"] %>';
@@ -309,14 +309,14 @@
                             </div>
                             <div class="input-field">
                                 <input autocomplete="off" type="text" id="Mobile" name="UserName" class="textEntry" style="border-radius: 10px !important; width: 55% !important; margin-right: 5px" />
-                                <input type="button" value="User Rights" class="btn-primry" onclick="showmodal()" style="border-radius: 50px !important; margin-top: 10px;width: 34% !important;" />
+                                <input type="button" value="User Rights" class="btn-primry" onclick="showmodal()" style="border-radius: 50px !important; margin-top: 10px; width: 34% !important;" />
                             </div>
                         </div>
                         <!-- Buttons -->
-                       
-                            <input id="saveBtn" class="btn-primry" type="button" value="Create User"  onclick="CreateUser()" style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
-                            <input type="button" class="btn-primry" value="Back" onclick="window.location.href='UserView.aspx'"  style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
-                        
+
+                        <input id="saveBtn" class="btn-primry" type="button" value="Create User" onclick="CreateUser()" style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
+                        <input type="button" class="btn-primry" value="View" onclick="window.location.href='UserList.aspx'" style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
+
                         <%--patient modal--%>
                         <div id="UserModel" class="modal fade" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-lg" role="document">
@@ -331,7 +331,7 @@
                                     <div class="modal-body">
                                         <div class="container-fluid">
                                             <div class="row">
-                                               <div class="col-md-1">
+                                                <div class="col-md-1">
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowPatientEdit" name="AllowPatientEdit" />
                                                     </div>
@@ -411,45 +411,45 @@
                                                 </div>
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-1">
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="AllowB_Bank" name="AllowB_Bank" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="AllowPharmacy" name="AllowPharmacy" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="AllowUnapproveVouchers" name="AllowUnapproveVouchers" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="GeneralItems" name="GeneralItems" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="ShowBudgetBtn" name="ShowBudgetBtn" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="InventoryUnApprove" name="InventoryUnApprove" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="PRFsNotifications" name="PRFsNotifications" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="OTPUsers" name="OTPUsers" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="RateBox" name="RateBox" />
-    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowB_Bank" name="AllowB_Bank" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowPharmacy" name="AllowPharmacy" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowUnapproveVouchers" name="AllowUnapproveVouchers" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="GeneralItems" name="GeneralItems" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="ShowBudgetBtn" name="ShowBudgetBtn" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="InventoryUnApprove" name="InventoryUnApprove" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="PRFsNotifications" name="PRFsNotifications" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="OTPUsers" name="OTPUsers" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="RateBox" name="RateBox" />
+                                                    </div>
 
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="BlockUser" name="OTPUsers" />
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="IsAnonymous" name="RateBox" />
-    </div>
-    <div class="form-check">
-        <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
-    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="BlockUser" name="OTPUsers" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="IsAnonymous" name="RateBox" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
+                                                    </div>
 
-</div>
+                                                </div>
                                                 <div class="col-md-3">
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowB_Bank">Allow B_Bank</label>
@@ -489,7 +489,7 @@
                                                         <label class="form-check-label" for="EmpCode">Employee Code</label>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="col-md-2"></div>
                                             </div>
                                         </div>

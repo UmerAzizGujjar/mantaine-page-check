@@ -195,24 +195,72 @@
 
             if ($('#tblItemDescription tr').length <= 1) {
                 proceed = false;
-                alert('Items List Should have Items.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Items List Should have Items.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             else {
                 table.find('tr').each(function (key, value) {
                     var Qty = $(value).find('td input[name=txtQty]').val();
                     if (Qty == 0 || Qty == "" || Qty < 0) {
                         proceed = false;
-                        alert("Please Check Qty it must be Greater than zero");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Check Qty it must be Greater than zero',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                 });
             }
             if (new Date(DueDate) < new Date(RFQDate)) {
                 proceed = false;
-                alert('Due Date must be greater than RFQ Date.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Due Date must be greater than RFQ Date.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             if ($('#tblVendorDetails tr').length <= 1) {
                 proceed = false;
-                alert('Please Select Vendor');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Vendor',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             return proceed;
         }
@@ -247,7 +295,19 @@
                     Vendor_list.push({ 'VendorID': $(value).find('td input[name=txt_Vendor_id]').val(), 'VendorName': $(value).find('td input[name=txt_vendorName]').val() });
                 });
                 if (status == false) {
-                    alert("Required Date must be greater than Request For Quotation Date");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Required Date must be greater than Request For Quotation Date',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 else {
@@ -256,10 +316,34 @@
                     PageMethods.SaveRFQItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         if (btnSave == "Update") {
-                            alert('Data Updated Successfully');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Updated Successfully',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         }
                         else {
-                            alert('Data Save Successfully');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Save Successfully',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
                         }
                         sendFile(res);
                         window.location = "RequestForQuotation.aspx?RFQ_ID=" + res;
@@ -319,7 +403,19 @@
 
             var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value=' + itemcode + ']');
             if (test_array.length > 0) {
-                alert('This Item already added!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Item already added!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             else {
@@ -407,13 +503,37 @@
             var vendorName = $('#ctl00_MainContent_ddlVendors :selected').text();
             var Vendor_id = $('#ctl00_MainContent_ddlVendors').val();
             if (Vendor_id == 0) {
-                alert("Please Select Vendor");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Vendor',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
             var test_array = $('#tblVendorDetails').find('input[name=txt_Vendor_id][value=' + Vendor_id + ']');
             if (test_array.length > 0) {
-                alert('This Vendor Already Added!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Vendor Already Added!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
             else {
