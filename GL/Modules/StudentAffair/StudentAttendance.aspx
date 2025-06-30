@@ -730,20 +730,56 @@
                 debugger;
             });
             if (Update_list.length == 0) {
-                alert("Please Check Any Student");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Check Any Student',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             else {
                 var Parameters = { "Update_list": Update_list, };
             }
 
             if (ups == false) {
-                alert("You Dont Have Rights To Update Attendance");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'You Dont Have Rights To Update Attendance',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#Update').attr('disabled', true)
                 return;
             }
 
             PageMethods.UpdateAttendance(JSON.stringify(Parameters), function () {
-                alert("Update Data Successfully");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Update Data Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             });
         }
         var clasvalue;
@@ -878,7 +914,19 @@
                     $('#Update').show();
 
                 });
-                alert("Save Data Successfully");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Save Data Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             });
         }
 

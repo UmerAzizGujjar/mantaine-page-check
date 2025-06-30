@@ -324,12 +324,36 @@
 
 
             if (ddl_rollno == '0') {
-                alert('Please Select Roll No');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Roll No',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
             if (ddlstu_class == '0') {
-                alert('Please Select Student Class');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Student Class',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
 
@@ -366,8 +390,18 @@
             var AllItemDetail = { 'txt_feecode': txt_feecode, 'txt_feedate': txt_feedate, 'ddl_rollno': ddl_rollno, 'txt_studentname': txt_studentname, 'txt_fname': txt_fname, 'ddlstu_class': ddlstu_class, 'txt_Total_amount': txt_Total_amount, 'txt_status': txt_status, 'txt_st_gl_Acc': txt_st_gl_Acc, 'ItemList': ItemList };
             PageMethods.SaveStudentFee(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
-                alert('Data Save Successfully');
-
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
                 window.location = "StudentFeeDefinition.aspx?Fee_ID=" + res;
                 $('#savebtn').val("Update");

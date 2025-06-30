@@ -169,12 +169,36 @@
             var ddlClass = $('#ddlClass').val();
             var newSelect = $('#inpval').val();
             if (newSelect == "0" && ddlProgram == "0") {
-                alert("Please Select Program");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Program',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').attr('disabled', false);
                 return;
             }
             if (newSelect == "0" && ddlClass == "0") {
-                alert("please Select Class");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Class',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').attr('disabled', false);
                 return;
             }
@@ -239,7 +263,19 @@
 
 
             PageMethods.SaveSubject(JSON.stringify(AllSubject), btnSave, function () {
-                alert("Save Data Successfully");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 window.location = "SubjectList.aspx";
             });
         }
@@ -835,7 +871,7 @@
                         <input class="sbj" name="hdnsubject" id="hdnsubject2" value="" type="hidden" />
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-6">
-                        <a href="#" id="addButton" style="margin-top:10px;" onclick="addSubject()">
+                        <a href="#" id="addButton" style="margin-top:10px;font-size:x-large;" onclick="addSubject()">
                             <i class="fa fa-plus-circle"></i>
                         </a>
                     </div>

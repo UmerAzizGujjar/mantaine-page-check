@@ -456,7 +456,19 @@
             var components = $('#ddlComponents').val();
             var donation = $('#ddldonation').val();
             if (donation === "Please Select") {
-                alert("Please select Donation value");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select Donation value',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return false;
             }
           
@@ -466,12 +478,26 @@
             if (dateE <= now) {
 
                 isExpired = false;
-                alert("Blood Is Expired");
-              
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Blood Is Expired',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             } else {
                
             }
-           
+
+
+
+
             if (typeof components === 'undefined' || components == '') components = 0;
             if ($("#ddlBlood_Group").val().trim() == "Please Select" || $("#ddlrhtype").val().trim() == "Please Select" || $("#dllbagnum").val() == "Please Select" || $("#dllbagnum").val() == null || $("#txtBlood_Charges").val() == "") {
                 debugger;
@@ -487,8 +513,19 @@
             var outdoor = $('#token-input-txtPatient_ID').val();
             if (Patient_id == "" && outdoor != "Outdoor")
             {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Choose Either Mr No Or OutDoor',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
-                alert("Please Choose Either Mr No Or OutDoor");
                 return true;
 
             }
@@ -514,7 +551,19 @@
             }
             else {
                 if (isProceed == false) {
-                    alert("Please Provide Name from Outdoor person");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Provide Name from Outdoor person',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
                 return true;
             }
@@ -830,20 +879,23 @@
 
     </table>
     <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-             <input type="button" value="New"  id="btnNew" onclick="window.location = 'BloodBank.aspx'" />      
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" value="New" class="btn btn-yellow" id="btnNew" onclick="window.location = 'BloodBank.aspx'" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" value="Back" class="btn btn-yellow" id="btnBack" onclick="window.location = 'BloodBank.aspx'" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" value="Save" class="btn btn-primry" id="btnSave" onclick="SaveAllRecord()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" id="btnListView" class="btn btn-primry" name="btnListView" onclick="window.location = 'BloodBankView.aspx'" value="Save List View" />
+                </div>
+            </div>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" value="Back"  id="btnBack" onclick="window.location = 'BloodBank.aspx'" />
     </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" value="Save"  id="btnSave" onclick="SaveAllRecord()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-             <input type="button" id="btnListView" name="btnListView" onclick="window.location = 'BloodBankView.aspx'" value="Save List View"/>
-        </div>
-        </div>
-
     <div class="row">
         <label id="lblMessage"></label> 
     </div>

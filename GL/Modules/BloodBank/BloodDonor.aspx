@@ -279,24 +279,24 @@
             <td colspan="6">
                 <br />
                 <div class="col-lg-2 col-md-6 col-sm-6">
-                <asp:Button Text="New" Width="94px" runat="server" ID="btnNew" CausesValidation="false" OnClick="btnNew_Click" />
+                <asp:Button Text="New" CssClass="btn btn-yellow" runat="server" ID="btnNew" CausesValidation="false" OnClick="btnNew_Click" />
                 &nbsp;
                     </div>
                 <div class="col-lg-2 col-md-6 col-sm-6">
-                <asp:Button Text="Back" Width="94px" runat="server" ID="btnBack" CausesValidation="false" PostBackUrl="~/Modules/BloodBank/BloodDonorView.aspx" />
+                <asp:Button Text="Back" CssClass="btn btn-yellow" runat="server" ID="btnBack" CausesValidation="false" PostBackUrl="~/Modules/BloodBank/BloodDonorView.aspx" />
                 &nbsp;
                     </div>
                 <div class="col-lg-2 col-md-6 col-sm-6">
-                 <asp:Button Text="Save" Width="94px" runat="server" ID="btnSave" OnClick="btnSave_Click" />
+                 <asp:Button Text="Save" CssClass="btn btn-primry" runat="server" ID="btnSave" OnClick="btnSave_Click" />
                 &nbsp;                   
                 &nbsp;
                     </div>
                  <div class="col-lg-2 col-md-6 col-sm-6">
-                 <asp:Button Text="Print" Width="94px" runat="server" ID="btnPrint" CausesValidation="false" OnClick="btnPrint_Click" />
+                 <asp:Button Text="Print" CssClass="btn btn-primry" runat="server" ID="btnPrint" CausesValidation="false" OnClick="btnPrint_Click" />
                 &nbsp;
                      </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
-                 <asp:Button Text="Compatibility Report" Width="157px" runat="server" ID="btnCompatibilityReport" CausesValidation="false" OnClick="btnCompatibilityReport_Click" />
+                 <asp:Button Text="Compatibility Report" CssClass="btn btn-primry"  runat="server" ID="btnCompatibilityReport" CausesValidation="false" OnClick="btnCompatibilityReport_Click" />
                     </div>
             </td>
 

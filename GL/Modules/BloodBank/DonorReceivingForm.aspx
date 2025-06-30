@@ -191,7 +191,19 @@
                 $("#txtExpDate").val(current_Date_s);
                 
             } else {
-                alert("Invalid Date");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Invalid Date',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
 
             append_ddl();
@@ -273,7 +285,19 @@
                         $("#txtExpDate").val(current_Date_s);
                       
                     } else {
-                        alert("Invalid Date");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Invalid Date',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
 
                 }
@@ -300,7 +324,18 @@
                     debugger;
                     var Platelets_id_compare = $(this).find('td:eq(0)').text();
                     if (Platelets_id == Platelets_id_compare) {
-                        alert("Selected value already exist");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: '"Selected value already exist',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         isFalse = true;
                         return false;
                     }
@@ -327,7 +362,19 @@
                     current_Date = moment(date.toInputFormat()).format('D MMMM YYYY');
                    
                 } else {
-                    alert("Invalid Date");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Invalid Date',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                 }
                 var rows = '';
 
@@ -370,12 +417,36 @@
                 var id = '<%= Request.QueryString["ID"]%>'
                 if (id == "") id = 0;
                 if (donor_id == '') {
-                    alert("Please Enter Donor");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Enter Donor',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 var length = $('#tblBloodChunks tr').length;
                 if (length == 1) {
-                    alert("Please Add Detail");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Add Detail',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
                 var blood_check = false;
@@ -410,7 +481,19 @@
                 if (blood_check == true) {
                     if (Expiry_date == "") {
                         isProceed = false;
-                        alert("Please Add Expiry Date");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Add Expiry Date',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
 
                     }
                 }
@@ -429,7 +512,19 @@
                 }
                 else {
                     if (isDetailExp == false) {
-                        alert("Please Select Expiry Date From Blood Component");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Select Expiry Date From Blood Component',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
                     }
                     return true;
 
@@ -593,7 +688,7 @@
                                 <select id="ddlBlood" name="ddlBlood">
                                 </select></td>
                             <td>
-                                <input type="button" id="btnAdd" name="btnAdd" value="Add" style="margin-left:8%" /></td>
+                                <input type="button" id="btnAdd" class="btn btn-primry" name="btnAdd" value="Add" style="margin-left:8%" /></td>
                         </tr>
                     </table>
                 </div>
@@ -615,15 +710,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6" style="margin-top: 4%; float: right;">
+            <div class="col-lg-6" style="margin-top: 4%; float: right;">
                 <div class="col-lg-3 col-md-6 col-sm-6">
-                <input type="button" name="btnSave" id="btnSave" value="Save" />
+                <input type="button" class="btn btn-primry" name="btnSave" id="btnSave" value="Save" />
                     </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
-                <input type="button" name="btnNew" id="btnNew" value="New" onclick="window.location = 'DonorReceivingForm.aspx'" />
+                <input type="button" name="btnNew" id="btnNew" class="btn btn-yellow" value="New" onclick="window.location = 'DonorReceivingForm.aspx'" />
                     </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
-                <input type="button" name="btnListView" id="btnListView" onclick="window.location = 'DonorReceivingList.aspx'" value="List View" />
+                <input type="button" name="btnListView" id="btnListView" class="btn btn-yellow" onclick="window.location = 'DonorReceivingList.aspx'" value="List View" />
             </div>
                 </div>
         </div>

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentReceipt.aspx.cs" Inherits="PMS.Modules.StudentAffair.StudentReceipt" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/css/CustomCss/studentReceipt.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/studentReceipt.css" rel="stylesheet" />
         <script type="text/javascript">
 
             $(document).ready(function () {
@@ -377,8 +377,18 @@
 
 
                 if (checkbankcash == 0) {
-
-                    alert('Please Select Cash/Bank');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Cash/Bank',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
                     return false;
 
@@ -422,7 +432,19 @@
                 PageMethods.SaveStudentReceipt(btnSave,JSON.stringify(AllItemDetail), function (res) {
 
                     debugger;
-                    alert('Data Saved Successfully');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Saved Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
 
                     var studentidfor_res = $("#ddlStu_roll_no").val();
                     window.location = "StudentReceiptView.aspx";
@@ -672,7 +694,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                     <div class="image-container">
-                        <img src="~../../../../wwwroot/images/dashboard_Icons/Addrecepit.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Addrecepit.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-7 col-sm-6">

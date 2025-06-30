@@ -69,8 +69,19 @@
 
             var Student_ID = $('#ddl_rollno').val();
             if (Student_ID == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Roll No Before Save',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
-                alert('Please Select Roll No Before Save');
 
                 return false;
             }
@@ -85,8 +96,19 @@
                 if (parseInt(res) <= 0) {
 
                     checkedstudent = true;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'First create receviable against that student',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
-                    alert('First create receviable against that student');
 
                     checkedstudent = true;
                     SaveAllRecord();
@@ -115,8 +137,18 @@
 
             var Student_ID = $('#ddl_rollno').val();
             if (Student_ID == 0) {
-
-                alert('Please Select Roll No Before Save');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Roll No Before Save',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
                 return false;
             }
@@ -214,8 +246,21 @@
                 if (parseInt(totalamount) > parseFloat(res)) {
 
                     debugger;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Challan amount cannot be greater than receivable amount' + res,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
-                    alert('Challan amount cannot be greater than receivable amount ' + res);
+
+                   // alert('Challan amount cannot be greater than receivable amount ' + res);
 
                     checkedstudent = true;
                     SaveAllRecord();
@@ -248,8 +293,18 @@
 
             var Student_ID = $('#ddl_rollno').val();
             if (Student_ID == 0) {
-
-                alert('Please Select Roll No Before Save');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Roll No Before Save',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
                 return false;
             }
@@ -288,7 +343,19 @@
             var AllItemDetail = { 'Student_ID': Student_ID, 'txthiddenchallanno': txthiddenchallanno, 'Challan_ID': Challan_ID, 'txt_issueDate': txt_issueDate, 'txt_dueDate': txt_dueDate, 'txt_challanNo': txt_challanNo, 'Admission_Fee': Admission_Fee, 'Tuition_Fee': Tuition_Fee, 'Library_Magazine_Fund': Library_Magazine_Fund, 'Reg_Fee': Reg_Fee, 'Degree_Fee': Degree_Fee, 'Security_Fee': Security_Fee, 'Hostel_Fee': Hostel_Fee, 'Examination_Fee': Examination_Fee, 'Remaining_Tuition_Fee': Remaining_Tuition_Fee, 'Other_Fee': Other_Fee, 'Student_Card_Fee': Student_Card_Fee, 'Remaining_Hostel_Fee': Remaining_Hostel_Fee, 'Prospectus_Fee': Prospectus_Fee, 'Test_Fee': Test_Fee, 'Misc_Fee': Misc_Fee };
             PageMethods.SaveChallanAmount(btnsave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
-                alert('Challan Amounts Saved Successfully');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Challan Amounts Saved Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
                 window.location = "AddStudentChallan.aspx?Challan_ID=" + res;
 

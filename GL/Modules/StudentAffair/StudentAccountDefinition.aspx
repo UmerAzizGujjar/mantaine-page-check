@@ -86,7 +86,20 @@
             var AllItemDetail = { 'btnSave': btnSave, 'AccountList': Account_list };
             PageMethods.SaveAccount(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
-                alert('Data Save Successfully');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').val("Update");
                 location.reload();
             });
@@ -107,11 +120,11 @@
                     rows += '<tr>' +
                         '<td style="display:none"><input type=text class="form-control" id="AccountId' + (key + 1) + '" name="AccountId" style="width:164px !important;font-size: 10px !important;height:10px!important;"  value=' + data[key].Account_Category_Id + ' readonly=readonly /></td>' +
 
-                        '<td><input type=text class="form-control" id="Id' + (key + 1) + '" name="Id" style="width:164px !important;font-size: 10px !important;height:10px!important;"  value=' + (key + 1) + ' readonly=readonly /></td>' +
+                        '<td><input type=text class="form-control" id="Id' + (key + 1) + '" name="Id" style="width:164px !important;font-size: 10px !important;height:30px!important;"  value=' + (key + 1) + ' readonly=readonly /></td>' +
 
                         //                        '<td><select type=text class="form-control" id="AccruedIncome' + (key + 1) + '" name="AccruedIncome" style="width:164px !important;font-size: 10px !important;height:10px!important;"  value="' + value.Accrued_Income + '" readonly=readonly /></td>' +
 
-                        '<td><input type="text" class="form-control" id="txtCategory' + (key + 1) + '" name="txtCategory" value="' + value.Category_Name + '" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></td>' +
+                        '<td><input type="text" class="form-control" id="txtCategory' + (key + 1) + '" name="txtCategory" value="' + value.Category_Name + '" style="width:164px !important;font-size: 10px !important;height:30px!important;" readonly=readonly ></td>' +
 
 
                         '<td><select class="form-control" id="AccruedIncome' + (key + 1) + '" name="AccruedIncome" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
@@ -120,7 +133,7 @@
                         '<td><select class="form-control" id="NetIncome' + (key + 1) + '" name="NetIncome" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
 
 
-                        '<td><input type="text" class="form-control" id="txtReceivaleFee' + (key + 1) + '" name="txtReceivaleFee" value="' + value.Receivable_Fee + '" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></td>' +
+                        '<td><input type="text" class="form-control" id="txtReceivaleFee' + (key + 1) + '" name="txtReceivaleFee" value="' + value.Receivable_Fee + '" style="width:164px !important;font-size: 10px !important;height:30px!important;" readonly=readonly ></td>' +
 
                         '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#438eb9 ;position:relative;" i="">' +
                         '</td>'
