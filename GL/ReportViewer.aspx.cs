@@ -442,18 +442,27 @@ namespace PMS
                 string rptFileName = "Patients/OPDDetailReport.rpt";
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
-                string departmentID = Request.QueryString["Department"].ToString();
+                //Mohsin
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");               
+                string departmentID = Request.QueryString["Department"].ToString();               
+                if(departmentID == "0")
+                {
+                    departmentID = "All";
+                }
+                //Mohsin
                 string FilterClinic = Request.QueryString["FilterClinic"].ToString();
                 string Doctor = Request.QueryString["Doctor"].ToString();
+                string Operator = Request.QueryString["Operator"].ToString();
                 reportPath += rptFileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("@FromDate", StartDateTime);
-                rd.SetParameterValue("@ToDate", EndDateTime);
-                rd.SetParameterValue("@Operator", Request.QueryString["Operator"]);
-                rd.SetParameterValue("@Department", departmentID);
+                rd.SetParameterValue("@FromDate", sqlStartDateTime);
+                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Department", departmentID);             
                 rd.SetParameterValue("@FilterClinic", FilterClinic);
                 rd.SetParameterValue("@DoctorName", Doctor);
             }
@@ -2284,70 +2293,74 @@ namespace PMS
                     string edateTime = Convert.ToDateTime(Request.QueryString["eDate"].ToString()).ToString(DateFormate);
                     edateTime += " " + Regex.Replace(Request.QueryString["ETime"].ToString(), @"\s+", "");
 
-
-                    string deptID = Request.QueryString["DepartmentID"].ToString();
-                    string PatType = Request.QueryString["PatientType"].ToString();
-                    string ALLValues = Request.QueryString["ALLValues"].ToString();
-
-
-                    string[] ALlarry;
-                    string[] arry;
-                    arry = PatType.Split(',');
+                    //Mohsin: Starting from here on Monday 30th June,2025 from end and back end is developed.
+                    //Below code is irrelevant Therefore it is commented.
+                    //string deptID = Request.QueryString["DepartmentID"].ToString();
+                    //string PatType = Request.QueryString["PatientType"].ToString();
+                    //string ALLValues = Request.QueryString["ALLValues"].ToString();
 
 
-                    SqlConnection con = new SqlConnection(DBClass.ConnectionString());
-                    con.Open();
-                    var delete = ("Delete  rptSetParameter");
-                    SqlCommand cmdd = new SqlCommand(delete, con);
-                    cmdd.ExecuteNonQuery();
-
-                    if (PatType == "null")
-                    {
-                        //ALlarry = ALLValues.Split(',');
-                        DataTable dt = DBClass.getDataTable("select distinct Patient_Type from Patients");
+                    //string[] ALlarry;
+                    //string[] arry;
+                    //arry = PatType.Split(',');
 
 
-                        for (int i = 0; i < dt.Rows.Count; i++)
-                        {
-                            var sql = ("insert into rptSetParameter (Code) Values('" + dt.Rows[i]["Patient_Type"].ToString() + "')");
-                            SqlCommand cmd = new SqlCommand(sql, con);
-                            cmd.ExecuteNonQuery();
-                        }
+                    //SqlConnection con = new SqlConnection(DBClass.ConnectionString());
+                    //con.Open();
+                    //var delete = ("Delete  rptSetParameter");
+                    //SqlCommand cmdd = new SqlCommand(delete, con);
+                    //cmdd.ExecuteNonQuery();
 
-                        PatType = "0";
-                        joined = "All";
+                    //if (PatType == "null")
+                    //{
+                    //    //ALlarry = ALLValues.Split(',');
+                    //    DataTable dt = DBClass.getDataTable("select distinct Patient_Type from Patients");
 
-                    }
-                    else
-                    {
-                        List<string> termsList = new List<string>();
-                        DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                        for (int i = 0; i < arry.Length; i++)
-                        {
-                            var sql = ("insert into rptSetParameter (Code) Values('" + arry[i] + "')");
-                            SqlCommand cmd = new SqlCommand(sql, con);
-                            cmd.ExecuteNonQuery();
 
-                            var data = db.GetDataValueName("Patient Type", arry[i]);
-                            termsList.Add(data);
-                        }
-                        string[] terms = termsList.ToArray();
-                        joined = string.Join(",", terms);
-                    }
-                    con.Close();
+                    //    for (int i = 0; i < dt.Rows.Count; i++)
+                    //    {
+                    //        var sql = ("insert into rptSetParameter (Code) Values('" + dt.Rows[i]["Patient_Type"].ToString() + "')");
+                    //        SqlCommand cmd = new SqlCommand(sql, con);
+                    //        cmd.ExecuteNonQuery();
+                    //    }
 
-                    reportPath += "rptGetPatientsTypesDetails.rpt";
-                    rd.Load(reportPath);
-                    rd.SummaryInfo.ReportTitle = reportTitle;
-                    rd.SetParameterValue("@sDate", sdateTime);
-                    rd.SetParameterValue("@eDate", edateTime);
-                    rd.SetParameterValue("@DepartmentID", deptID);
-                    rd.SetParameterValue("@PatientType", PatType);
+                    //    PatType = "0";
+                    //    joined = "All";
 
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
-                    rd.SetParameterValue("Title", reportTitle);
-                    rd.SetParameterValue("PatientType", joined);
+                    //}
+                    //else
+                    //{
+                    //    List<string> termsList = new List<string>();
+                    //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    //    for (int i = 0; i < arry.Length; i++)
+                    //    {
+                    //        var sql = ("insert into rptSetParameter (Code) Values('" + arry[i] + "')");
+                    //        SqlCommand cmd = new SqlCommand(sql, con);
+                    //        cmd.ExecuteNonQuery();
+
+                    //        var data = db.GetDataValueName("Patient Type", arry[i]);
+                    //        termsList.Add(data);
+                    //    }
+                    //    string[] terms = termsList.ToArray();
+                    //    joined = string.Join(",", terms);
+                    //}
+                    //con.Close();
+
+                    //reportPath += "rptGetPatientsTypesDetails.rpt";
+                    //rd.Load(reportPath);
+                    //rd.SummaryInfo.ReportTitle = reportTitle;
+                    //rd.SetParameterValue("@sDate", sdateTime);
+                    //rd.SetParameterValue("@eDate", edateTime);
+                    //rd.SetParameterValue("@DepartmentID", deptID);
+                    //rd.SetParameterValue("@PatientType", PatType);
+
+                    //rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    //rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                    //rd.SetParameterValue("Title", reportTitle);
+                    //rd.SetParameterValue("PatientType", joined);
+                    //Mohsin
+
+
                 }
                 catch (Exception ex)
                 {
