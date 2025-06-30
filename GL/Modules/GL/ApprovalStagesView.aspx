@@ -48,7 +48,7 @@
                            
                             '<td>' + finalcheckbox + '</td>' +
                             '<td>' + parsed_data[key].CompanyName + '</td>' +
-                            '<td class="actions"><a href="javascript:void(0)" onclick="Edit(' + parsed_data[key].StageID + ')">Edit</a>|<a href="javascript:void(0)" onclick="Delete(' + parsed_data[key].StageID + ')">Delete</a></td>' +
+                        '<td class="actions"><a href="javascript:void(0)" style="border-radius: 4px; margin-right: 4px; background-color: #EFA63E !important; color: white; padding: 5px 8px;" onclick="Edit(' + parsed_data[key].StageID + ')"><i style="color:white !important;" class="fa fa-pencil"></a><a href="javascript:void(0)" style="border-radius: 4px; margin-right: 4px; background-color: #ad170c !important; color: white; padding: 5px 8px;" onclick="Delete(' + parsed_data[key].StageID + ')"><i style="color:white !important;" class="fa fa-trash"></i></a></td>' +
                             '</tr>';
                     });
                     $('#tblApprovalStagesView tbody').append(row);

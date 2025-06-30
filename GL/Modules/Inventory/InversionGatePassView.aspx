@@ -114,7 +114,7 @@
                                 }
                             }
 
-                            var actionButtons = '<a href="#" onclick="Edit(' + full.Igp_Id + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px 4px 11px;">View</a> <a href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
+                            var actionButtons = '<a href="#" onclick="Edit(' + full.Igp_Id + ')" style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;"><i style="color:white !important;" class="fa fa-pencil"></i></a> <a href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
                            
 
                             return actionButtons;
@@ -132,7 +132,7 @@
                                     viewGRNVisible = '';
                                 }
                             }                           
-                            var grnbtn = '<a href="#" id="viewgrn' + full.Igp_Id + '" ' + viewGRNVisible + ' onclick="EditGRN(' + full.Grn_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px 4px 11px;">View</a>';
+                            var grnbtn = '<a href="#" id="viewgrn' + full.Igp_Id + '" ' + viewGRNVisible + ' onclick="EditGRN(' + full.Grn_ID + ')" style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
 
                             return grnbtn;
                         }, "orderable": false
