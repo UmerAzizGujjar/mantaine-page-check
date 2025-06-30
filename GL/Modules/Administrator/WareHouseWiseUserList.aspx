@@ -56,7 +56,7 @@
                     {
                         render: function (data, type, full) {
                             debugger;
-                            var res = '<a href="#" onclick="Edit(\'' + full.WareHouse_wise_User_Id + '\')" style="border-radius: 4px; margin-right: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
+                            var res = '<a href="#" onclick="Edit(\'' + full.WareHouse_wise_User_Id + '\')" style="border-radius: 4px; margin-right: 4px; background-color: #EFA63E !important; color: white; padding: 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
                             var Delete = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.WareHouse_wise_User_Id + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"style="color:white !important;"></i></a>';
                             var result;
                             result = res + Delete;

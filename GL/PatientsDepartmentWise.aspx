@@ -356,9 +356,12 @@
 
                     else if (rptTitle == "PatientsTypesDetails") {
                         debugger;
+                        
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-
-                        var url = 'ReportViewer.aspx?ReportName=PatientsTypesDetails&ReportTitle=Patients Category Wise OPD Summary from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_lblMultiSelect').val() + '&ALLValues=' + Allvalues + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
+                        //Mohsin: 25 JULY WEDNESDAY, the report doesnot exists front and back end donot match.
+                        //var url = 'ReportViewer.aspx?ReportName=PatientsTypesDetails&ReportTitle=Patients Category Wise OPD Summary from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_lblMultiSelect').val() + '&ALLValues=' + Allvalues + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
+                        var url = 'ReportViewer.aspx?ReportName=PatientsTypesDetails&ReportTitle=Patients Category Wise OPD Summary from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
+                        //Mohsin
                         window.open(url, '_blanks');
                     }
 
@@ -603,7 +606,9 @@
                     }
                     else if (rptTitle == "OPD_Detail_Report") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=OPDDetailReport&ReportTitle=OPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + $("#ctl00_MainContent_ddlDepartments option:selected").val() + '&FilterClinic=' + $("#ctl00_MainContent_ddlFilterClinic").val() + '&Doctor=' + $("#ctl00_MainContent_ddlPanelCompany").val();
+                        //Mohsin
+                        var url = 'ReportViewer.aspx?ReportName=OPDDetailReport&ReportTitle=OPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&FilterClinic=' + $("#ctl00_MainContent_ddlFilterClinic").val() + '&Doctor=' + $("#ctl00_MainContent_ddlPanelCompany").val();
+                        //Mohsin
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "APL") {
@@ -1071,9 +1076,11 @@
              </div>
          </div>
          &nbsp;&nbsp;
-         <div class="row">
+         <div class="row">            
              <div class="col-lg-2">
+                 
                 <asp:Button Text="Preview" CssClass="btn btn-primry" ID="btnPreview" runat="server" OnClientClick="return false;" />
+              
              </div>
              <div class="col-lg-2">
                  <asp:Button Text="Reset" ID="btnReset" CssClass="btn btn-gray" runat="server" CausesValidation="false" />
