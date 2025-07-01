@@ -162,7 +162,7 @@
         function loadtokenInputsDefault() {
 
 
-            $('#txtPatient_ID').tokenInput("json.aspx?Table=PatientsForDonor",
+            $('#txtPatient_ID').tokenInput("../../json.aspx?Table=PatientsForDonor",
              {
                  tokenLimit: 1,
              });
@@ -170,7 +170,7 @@
 
         function loadtokenInputs(data) {
             ;
-            $("#txtPatient_ID").tokenInput("json.aspx?Table=Patients",
+            $("#txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
                 {
                     prePopulate: data,
                     tokenLimit: 1,
@@ -501,13 +501,69 @@
             if (typeof components === 'undefined' || components == '') components = 0;
             if ($("#ddlBlood_Group").val().trim() == "Please Select" || $("#ddlrhtype").val().trim() == "Please Select" || $("#dllbagnum").val() == "Please Select" || $("#dllbagnum").val() == null || $("#txtBlood_Charges").val() == "") {
                 debugger;
-                if ($("#ddlBlood_Group").val().trim() == "Please Select") alert("Please select ABO Type");
-                if ($("#ddlrhtype").val().trim() == "Please Select") alert("Please select RH Type");
-                if ($("#txtBlood_Charges").val() == "") alert("Please select Received By");
-                if ($("#dllbagnum").val() == "Please Select" || $("#dllbagnum").val() == null) alert("Please select Bag Number");
+                if ($("#ddlBlood_Group").val().trim() == "Please Select") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please select ABO Type',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return true;
+                }
 
+                if ($("#ddlrhtype").val().trim() == "Please Select") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please select RH Type',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return true;
+                }
 
-                return true;
+                if ($("#txtBlood_Charges").val() == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please select Received By',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return true;
+                }
+
+                if ($("#dllbagnum").val() == "Please Select" || $("#dllbagnum").val() == null) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please select Bag Number',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return true;
+                }
             }
             var Patient_id = $('#txtPatient_ID').val();
             var outdoor = $('#token-input-txtPatient_ID').val();
@@ -583,7 +639,7 @@
 
 
         function LoadBloodData(ID) {
-
+            debugger;
             PageMethods.loadheaderdata(ID, function (resp) {
                 var data = JSON.parse(resp);
                 var component = data.Component;
@@ -619,7 +675,7 @@
 
 
                     $('#txtPatient_ID').tokenInput('clear');
-                    var tokenData = httpGet("json.aspx?Table=Patients&Record=Edit&q=" + data.Patient_ID);
+                    var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + data.Patient_ID);
                     var parsedData = JSON.parse(tokenData);
                     $('#txtPatient_ID').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
                 }
@@ -710,193 +766,98 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblBlood_ID">Blood ID </label>
+            <input type="text" id="txtBlood_ID" name="txtBlood_ID" readonly="readonly" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblPatien_ID">Patient ID </label>
+            <input type="text" id="txtPatient_ID" />
+            <input type="hidden" id="hdfPatient_ID" value="(New)" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblBlood_Group">ABO Type *</label>
+            <select id="ddlBlood_Group" onchange="getsumofbloodbottle()"></select>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblrhtype">RH Type * </label>
+            <select id="ddlrhtype" name="ddlrhtype" onchange="getsumofbloodbottle()"></select>
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-5">
+            <label style="margin-top:20%">(OutDoor)</label>
+            </div>
+        <div class="col-lg-1 col-md-4 col-sm-6">
+            <input type="checkbox" id="chkCustomer" onchange="abc()"  style="margin-left:-40%;margin-top:24%;"/>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-5">
+            <label></label>
+            <input type="text" id="txtName" />
+        </div>
+        </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lbldonation">Donation * </label>
+            <select id="ddldonation" name="ddldonation"></select>
+            </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+              <label id="lblNo_Of_Bags">No. Of Bags *</label>
+             <input type="text" id="txtNo_Of_Bags" value="1" disabled />
+            </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="Label1">Received By </label>
+            <input type="text" id="txtBlood_Charges" />
+            </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+             <label id="lblExpiry_Date">Expiry Date </label>
+             <input type="text" id="txtExpiry_Date" readonly="readonly" />
+            </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblReceiving_Date">Receiving Date </label>
+            <input type="text" id="txtReceiving_Date" readonly="readonly" />
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblbagnumber">Bag Number </label>
+            <select id="dllbagnum" name="ddlbagnum"></select>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblbagrecv">(Empty Bag Received)</label>
+        </div>
+        <div class="col-lg-1 col-md-4 col-sm-6">
+            <input type="checkbox" id="bagrecv_chck" style="margin-left:-83% !important" />
+            </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label id="lblComponents">Blood Components</label>
+            <select id="ddlComponents" name="ddlComponents"></select>
+            </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+             <label id="lblavalblood" style="display: none;">Avalaible Blood</label>
+            <input type="text" id="txtAvailableBlood" readonly="readonly" value="0" style="display: none;" />
+            </div>
+    </div>
 
-    <table style="padding: 20px; width: 966px;">
-
-        <tr>
-            <td style="width: 105px;">
-                <label id="lblBlood_ID">Blood ID </label>
-
-            </td>
-            <td style="width: 205px;">
-              
-                <input type="text" id="txtBlood_ID" name="txtBlood_ID" readonly="readonly" />
-            </td>
-            <td style="width: 77px;"></td>
-            <td style="width: 105px;">               
-                <label id="lblPatien_ID">Patient ID </label>
-
-            </td>
-            <td style="width: 207px;">
-             
-                <input type="text" id="txtPatient_ID" />
-                <input type="hidden" id="hdfPatient_ID" value="(New)" />
-
-            </td>
-            <td style="width: 149px;">
-
-                <input type="checkbox" id="chkCustomer" onchange="abc()" />
-                <label>(OutDoor)</label>
-
-
-                <input type="text" id="txtName" />
-                
-            </td>
-            <td>
-               
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <label id="lblBlood_Group">ABO Type *</label>
-              
-            </td>
-            <td style="width: 203px;">
-
-                <select id="ddlBlood_Group" onchange="getsumofbloodbottle()"></select>
-
-                
-            </td>
-
-            <td>
-                <label id="lblrhtype">RH Type * </label>
-            </td>
-            <td>
-                <select id="ddlrhtype" name="ddlrhtype" onchange="getsumofbloodbottle()"></select>
-            </td>
-            <td>
-                <label id="lbldonation">Donation * </label>
-            </td>
-            <td>
-                <select id="ddldonation" name="ddldonation"></select>
-
-            </td>
-
-        </tr>
-
-        <tr>
-            <td>
-
-                <label id="lblNo_Of_Bags">No. Of Bags *</label>
-              
-            </td>
-            <td style="width: 203px;">
-
-
-                <input type="text" id="txtNo_Of_Bags" value="1" disabled />
-
-             
-            </td>
-            <td>
-             
-            </td>
-
-
-            <td>
-
-                <label id="Label1">Received By </label>
-
-              
-            </td>
-            <td style="width: 203px;">
-
-                <input type="text" id="txtBlood_Charges" />
-
-           
-            </td>
-
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>
-                <label id="lblExpiry_Date">Expiry Date </label>
-
-               
-            </td>
-            <td style="width: 203px;">
-
-                <input type="text" id="txtExpiry_Date" readonly="readonly" />
-
-               
-            </td>
-            <td></td>
-
-            <td>
-
-                <label id="lblReceiving_Date">Receiving Date </label>
-
-              
-            </td>
-            <td style="width: 203px;">
-
-
-                <input type="text" id="txtReceiving_Date" readonly="readonly" />
-
-             
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label id="lblbagnumber">Bag Number  </label>
-
-            </td>
-            <td>
-                <select id="dllbagnum" name="ddlbagnum"></select>
-
-            </td>
-            <td></td>
-
-            <td>
-
-                <label id="lblavalblood" style="display: none;">Avalaible Blood</label>
-                
-
-            </td>
-            <td style="width: 203px; display: none;">
-
-
-                <input type="text" id="txtAvailableBlood" readonly="readonly" value="0" style="display: none;" />
-
-               
-            </td>
-
-            <td>
-
-
-                <input type="checkbox" id="bagrecv_chck" />
-                <label id="lblbagrecv">(Empty Bag Received)</label>          
-            </td>
-
-        </tr>
-        <tr>
-            <td>
-                <label id="lblComponents">Blood Components</label></td>
-            <td>
-                <select id="ddlComponents" name="ddlComponents"></select></td>
-        </tr>
-
-    </table>
+  
     <div class="row">
         <div class="col-lg-8">
             <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" value="New" class="btn btn-yellow" id="btnNew" onclick="window.location = 'BloodBank.aspx'" />
+                <div class="col-lg-2 col-md-3 col-sm-5">
+                    <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'BloodBank.aspx'" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-3 col-sm-5">
                     <input type="button" value="Back" class="btn btn-yellow" id="btnBack" onclick="window.location = 'BloodBank.aspx'" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-3 col-sm-5">
                     <input type="button" value="Save" class="btn btn-primry" id="btnSave" onclick="SaveAllRecord()" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-3 col-sm-5">
                     <input type="button" id="btnListView" class="btn btn-primry" name="btnListView" onclick="window.location = 'BloodBankView.aspx'" value="Save List View" />
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <label id="lblMessage"></label> 
+        <label id="lblMessage"></label>
     </div>
 </asp:Content>

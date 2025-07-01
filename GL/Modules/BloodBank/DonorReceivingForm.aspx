@@ -1,7 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DonorReceivingForm.aspx.cs" Inherits="PMS.DonorReceivingForm" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-  
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/DonorReceiving.css" rel="stylesheet" />
+    
     <script type="text/javascript">
         var wholeBlood = 30;
         function loadtokenInputsDefault() {
@@ -580,93 +581,200 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container">
+    <div class="row">
+<!-- Left Card -->
+      <div class="col-lg-4 col-md-5 col-sm-12">
+          <div class="card">
+    <div class="card-body">
         <div class="row">
-            <div class="col-sm-6">
-                <label>Search</label>
-                <input type="text" id="txtDonor" style="margin-left: 100px;" />
-                </>
-                <table style="width: 110%!important;" id="tblDonorDetail">
-                    <tr>
-                        <th>Donor Name :</th>
-                        <th>
-                            <label id="lblDonorName"></label>
-                        </th>
-                        <th>S/O, D/O, W/Os :</th>
-                        <th>
-                            <label id="lblRelationship"></label>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Address / Phone No # :</th>
-                        <th>
-                            <label id="lblAddress"></label>
-                        </th>
-                        <th>Age / Sex :</th>
-                        <th>
-                            <label id="lblage"></label>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Occuption :</th>
-                        <th>
-                            <label id="lbloccupation"></label>
-                        </th>
-                        <th>State Of Health :</th>
-                        <th>
-                            <label id="lblSOH"></label>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>ABO group :</th>
-                        <th>
-                            <label id="lblABO"></label>
-                        </th>
-                        <th>Rh Type :</th>
-                        <th>
-                            <label id="lblRH"></label>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Date Of Last Donation :</th>
-                        <th>
-                            <label id="lblDobation"></label>
-                        </th>
-                        <th>Center Of Donation :</th>
-                        <th>
-                            <label id="lblCenterDonation"></label>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Bag No :</th>
-                        <th>
-                            <label id="lblBagNo"></label>
-                        </th>
-                    </tr>
+            <div class="col-lg-4 col-md-5 col-sm-6 text-center">
+                <div class="image-container">
+                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <div class="row mb-3">
+                    <div class="col-lg-5 col-md-5 col-sm-6 top">
+                        <label>Search</label>
+
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                        <input type="text" id="txtDonor" />
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                       <label>Donor Name :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                        <label id="lblDonorName"></label>
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <label>S/O, D/O, W/Os :</label>
+                        </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                         <label id="lblRelationship"></label>
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <label>Address /Phone No:</label>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                        <label id="lblAddress"></label>
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <label>Age / Sex :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                        <label id="lblage"></label>
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <label>Occuption :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                        <label id="lbloccupation"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+          </div>
+      </div>
+          <!-- Right Card -->
+    <div class="col-lg-4 col-md-5 col-sm-12">
+        <div class="card2">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <label>State Of Health :</label>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-6">
+                           <label id="lblSOH"></label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                          <label>ABO group :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-5 col-sm-6">
+                     <label id="lblABO"></label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                      <label>Rh Type :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-5 col-sm-6 detail">
+                        <label id="lblRH"></label>
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <label>Date Of Last Donation :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                      <label id="lblDobation"></label>
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                        <label>Center Of Donation :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                        <label id="lblCenterDonation"></label>
+                    </div>
+                </div>
+                <div class="row mb-3 mtt">
+                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn1">
+                        <label>Bag No :</label>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6 top">
+                      <label id="lblBagNo"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="col-lg-4 col-md-5 col-sm-12">
+            <div class="table-responsive table-responsive-custom">
+                <table id="tblDonorInformation" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Donor #</th>
+                            <th>Bag No</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Occupation</th>
+                            <th>ABO</th>
+                            <th>RH Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
                 </table>
             </div>
-            <div class="col-sm-6.8" style="height: 300px; overflow: auto; overflow-y: auto;">
-                <div class="container mt-4">
-                    <div class="table-responsive table-responsive-custom">
-                        <table id="tblDonorInformation" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Donor #</th>
-                                    <th>Bag No</th>
-                                    <th>Name</th>
-                                    <th>Age</th>
-                                    <th>Occupation</th>
-                                    <th>ABO</th>
-                                    <th>RH Type</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-4 col-sm-6">
+                <div id="showHide">
+                        <table id="tbldesign" style="width:100%">
+                            <tr>
+                                <td style="width: 14%;padding-left: 1%;padding-right: 1%;">
+                                    <select id="ddlBlood" name="ddlBlood"  ></select></td>
+                                <td>
+                                    <input type="button" id="btnAdd" name="btnAdd"  value="Add" style="width:10% !important" class="btn btn-yellow" />
+                                       </td>
+                            </tr>
                         </table>
                     </div>
                 </div>
             </div>
+
+        
+
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="tblBloodChunks" class="table responstable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th style="text-align: center;">Qty</th>
+                                        <th style="text-align: center;">Expiry Date</th>
+                                        <th style="text-align: center;">IsExpired</th>
+                                        <th style="text-align: center;">Comments</th>
+                                        <th style="text-align: center;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+    <div class="col-sm-6">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <input type="button" name="btnSave" id="btnSave" class="btn btn-primry" value="Save" />
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <input type="button" name="btnNew" id="btnNew" class="btn btn-yellow" value="New" onclick="window.location = 'DonorReceivingForm.aspx'" />
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <input type="button" name="btnListView" id="btnListView" class="btn btn-yellow" onclick="window.location = 'DonorReceivingList.aspx'" value="List View" />
+        </div>
+    </div>
+
             <div class="col-sm-6">
                 <li style="background: #cbe2e6; margin-left: -9px; border-radius: 1em; padding-left: 33px; display: none;">
                     <label for="Blood">
@@ -680,48 +788,7 @@
                     <label for="txtComment" id="lblComment">Comment<input type="text" id="txtComment" /></label>
                 </li>
             </div>
-            <div id="showHide">
-                <div class="col-sm-6" style="margin-top: -6%;">
-                    <table id="tbldesign">
-                        <tr>
-                            <td>
-                                <select id="ddlBlood" name="ddlBlood">
-                                </select></td>
-                            <td>
-                                <input type="button" id="btnAdd" class="btn btn-primry" name="btnAdd" value="Add" style="margin-left:8%" /></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col-sm-12">
-                    <div class="table-responsive">
-                        <table id="tblBloodChunks" class="table responstable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th style="text-align: center;">Qty</th>
-                                    <th style="text-align: center;">Expiry Date</th>
-                                    <th style="text-align: center;">IsExpired</th>
-                                    <th style="text-align: center;">Comments</th>
-                                    <th style="text-align: center;">Actions</th>
-                                </tr>
-                            </thead>
-                           <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6" style="margin-top: 4%; float: right;">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                <input type="button" class="btn btn-primry" name="btnSave" id="btnSave" value="Save" />
-                    </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                <input type="button" name="btnNew" id="btnNew" class="btn btn-yellow" value="New" onclick="window.location = 'DonorReceivingForm.aspx'" />
-                    </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                <input type="button" name="btnListView" id="btnListView" class="btn btn-yellow" onclick="window.location = 'DonorReceivingList.aspx'" value="List View" />
-            </div>
-                </div>
-        </div>
-    </div>
+          
+            
     <input type="hidden" id="hdfDonor_Id" />
 </asp:Content>
