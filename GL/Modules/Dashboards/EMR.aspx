@@ -1,18 +1,23 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EMR.aspx.cs" Inherits="PMS.Modules.Dashboards.EMR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery-1.11.1.min.js"></script>
-    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
+    <script src="~../../wwwroot/Tibbit_theme/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="~../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
-    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
+    <script src="~../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
+           
+
             loadtokenInputsByMrNo();
             FillModePresentation();
             $("#ipdvitals").hide();
             $("#emergencyVital").hide();
             $("#opdvitals").hide();
+            $('#token-input-ctl00_MainContent_txtPatNO').attr('placeholder', 'Enter MR No');
         });
         function loadtokenInputsByMrNo(data) {
             debugger;
@@ -81,6 +86,7 @@
                     var data = JSON.parse(resp.d);
                     console.log(data);
                     if (data && data.doctor) {
+
                         $('#doctorname').text(data.doctor.Emp_Name);
                     } else {
                         $('#doctorname').text("");
@@ -159,7 +165,7 @@
 
         }
         function FillModePresentation() {
-            var options = '<option value="0">Please Select</option>';
+            var options = '<option value="0">Department</option>';
 
             $.ajax({
                 url: 'EMR.aspx/ModePresentation',
@@ -182,8 +188,6 @@
 
             return options;
         }
-
-
         function LoadVitalParameters() {
             debugger;
             var patid = $("#hdfReg_ID").val();
@@ -784,13 +788,13 @@
     <input type="hidden" id="hdfReg_ID" />
     <div class="row">
         <div class="col-lg-2">
-            <h4>Enter Patient No Here</h4>
-            <asp:TextBox ID="txtPatNO" runat="server" class="form-control" />
+            
+            <asp:TextBox ID="txtPatNO" runat="server" class="form-control"  />
         </div>
     </div>
     <div class="row">
         <!-- Left Column: Profile Information -->
-        <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card3">
                 <div class="profile-info">
                     <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
@@ -807,13 +811,16 @@
 
         <!-- Right Column: Appointment Information -->
         <div class="col-lg-7 col-md-7 col-sm-7">
-            <div class="card3">
+            <div class="appointmentcard">
                 <div class="appointment-info">
-                    <h5><strong class="labelcolor">Upcoming Appointment</strong></h5>
+                    <h5 style="margin-right:45px;font-size:1.3em">
+                        <strong class="labelcolor">Upcoming Appointment</strong>
+
+                    </h5>
                     <span class="badge" style="cursor: pointer;"><span id="appdate">Appointment Date</span></span>
-                    <h5><strong class="labelcolor">Consultant:&nbsp;<span id="doctorname"></span></strong></h5>
+                    <h5 style="margin-left:45px"><strong class="labelcolor">Consultant:&nbsp;<span id="doctorname"></span></strong></h5>
                 </div>
-                <hr />
+                
                 <div class="appointment-details">
                     <div class="row-details">
                         <p><strong class="labelcolor">Last Visit:&nbsp;</strong><span id="prv_visit"></span></p>
@@ -826,16 +833,15 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-bottom:15px">
             <div class="col-lg-2 col-md-3 col-sm-3">
                 <h4>Main Department</h4>
                 <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
             </div>
     </div>
-    <hr />
-    <div class="main-row">
-        <div class="row" id="opdvitals" style="overflow: scroll; height: 230px;margin-left:-2px;">
-            <h4>OPD Vitals</h4>
+    <div class="main-row ">
+        <div class="row vitalsTable" id="opdvitals" style="overflow: scroll; height: 230px;margin-left:-2px;">
+            <h4 style="height: 30px;background-color: #f0f1f3;width: 120px;padding: 5px 12px;border-radius: 8px;">OPD Vitals</h4>
             <table class="table" id="tblVitalParametersHistory">
                 <thead>
                     <tr>
@@ -857,8 +863,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="roww" id="ipdvitals" style="overflow: scroll; height: 200px;margin-left:-2px;">
-            <h4>IPD Vitals</h4>
+        <div class="roww vitalsTable" id="ipdvitals" style="overflow: scroll; height: 200px;margin-left:-2px;">
+            <h4 style="height: 30px;background-color: #f0f1f3;width: 103px;padding: 5px 12px;border-radius: 8px;">IPD Vitals</h4>
             <table class="table" id="tblVitalParametersHistoryIPD">
                 <thead>
                     <tr>
@@ -875,8 +881,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="roww" id="emergencyVital" style="overflow: scroll; height: 200px;margin-left:-2px;">
-            <h4>Emergency Vitals</h4>
+        <div class="roww vitalsTable" id="emergencyVital" style="overflow: scroll; height: 200px;margin-left:-2px;">
+            <h4 style="height: 30px;background-color: #f0f1f3;width: 167px;padding: 5px 12px;border-radius: 8px;">Emergency Vitals</h4>
             <table class="table" id="tblVitalParametersHistoryEmergency">
                 <thead>
                     <tr>
@@ -896,8 +902,12 @@
     </div>
     <div class="row g-3">
         <div class="col-lg-4 col-md-4 col-sm-6">
-            <div class="card">
-                <h4>Visits</h4>
+            <div class="card statusCards">
+                <div style="display: flex;align-items: center;margin-top: -10px;">
+<img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/appointmentStats.png" alt="lab"/>
+<h4>Visits</h4>
+    </div>
+                
                 <hr />
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
@@ -926,16 +936,22 @@
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="card">
+            <div class="card statusCards">
+                <div style="display: flex;align-items: center;margin-top: -10px;">
+                <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab"/>
                 <h4>OPD Patient Status</h4>
+                    </div>
                 <hr />
                 <div id="boxContainer" class="box-container"></div>
             </div>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="card">
+            <div class="card statusCards">
+                <div style="display: flex;align-items: center;margin-top: -10px;">
+                <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab"/>
                 <h4>IPD Patient Status</h4>
+                    </div>
                 <hr />
                 <div id="boxContainer_IPD" class="box-container"></div>
 
@@ -944,18 +960,18 @@
     </div>
 
     <div class="row" style="margin-top: 10px;">
-        <div class="col-lg-6 col-md-6 col-sm-6 cardcard">
+        <div class="col-lg-6 col-md-6 col-sm-6 cardcard statusCards">
             <div>
-                <h5 class="labelcolor" style="font-size: 24px">Graph</h5>
-                <hr />
+                <h4 class="labelcolor" style="font-size: 24px">Monthly Wise Visit</h4>
+                
             </div>
             <div id="VisitGrapgh" style="height: 300px; width: 100%;"></div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6" style="margin-left: -10px;">
-            <div class="card2">
-                <h5 class="labelcolor" style="font-size: 24px">Test List</h5>
+            <div class="card2 statusCards">
+                <h4 class="labelcolor" style="font-size: 24px">Test List</h4>
                 <hr />
-                <div class="table table-container" style="overflow-y: scroll; height: 266px">
+                <div class="table table-container" style="overflow-y: scroll; height: 400px">
                     <table id="tblLabtest" class="table table-bordered table-custom tests-table">
                         <thead>
                             <tr style="position: sticky; top: 0; z-index: 10;">

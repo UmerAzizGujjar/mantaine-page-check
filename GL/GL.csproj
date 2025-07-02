@@ -12993,6 +12993,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\administrator.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\advancePayment.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\aknowledge.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\appointmentStats.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Approved Test.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Approvedtest.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\bank-note.png" />
@@ -13101,6 +13102,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\shopping-basket.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\shopping-cart.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Sin.png" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\statistics.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\stocktrans.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\StockTransfer.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\Stock_Adj.png" />
