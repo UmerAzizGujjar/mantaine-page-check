@@ -533,6 +533,7 @@
                     return true;
                 }
 
+
                 if ($("#txtBlood_Charges").val() == "") {
                     Swal.fire({
                         icon: 'error',

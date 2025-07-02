@@ -120,11 +120,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-12" style="margin-bottom:1%">
-            <input type="button" class="btn btn-primry" id="aadnew" value="Add New" onclick="location.href = 'AddPurchaseInvoice.aspx';" />
-        </div>
-    </div>
-    <div class="row">
     <div class="table-container">
         <table class="table table-hover table-bordered" id="example" style="width: 100%">
             <thead id="ihead">

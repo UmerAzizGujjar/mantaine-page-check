@@ -7,7 +7,7 @@
         var wholeBlood = 30;
         function loadtokenInputsDefault() {
             debugger;
-            $('#txtDonor').tokenInput("json.aspx?Table=Donor",
+            $('#txtDonor').tokenInput("../../json.aspx?Table=Donor",
                 {
                     tokenLimit: 1,
                     onAdd: function (item) {
@@ -108,10 +108,10 @@
                     rows += '<tr>' +
                         '<td style="display:none;">' + data[i].Blood_Platelets_Id + '</td>' +
                         '<td>' + data[i].Blood_Platelets_Name + '</td>' +
-                        '<td><input type="text" value="' + data[i].Qty + '" name="Qty" style="height: 22px;width: 30px!important;"/></td>' +
+                        '<td><input type="text" value="' + data[i].Qty + '" name="Qty" style="height: 22px;width: 50px!important;"/></td>' +
                         '<td><input type="text" value="' + $.datepicker.formatDate('dd M yy', new Date(parseInt(data[i].Expiry_Date.substring(6, 19)))) + '" name="txtExpiryDate"  style="height: 22px;"/></td>' +
                         '<td> <input type="checkbox" id="chkIsExpired' + i + '" name="chkIsExpired"/></td>' +
-                        '<td><input type="text" id="txtComment" name="txtComment" value="' + data[i].Comment + '" style="height: 22px;width: 99px!important;"/></td>' +
+                        '<td><input type="text" id="txtComment" name="txtComment" value="' + data[i].Comment + '" style="height: 22px;"/></td>' +
                         '<td><a href="#" id="linkdelete" onclick="Delete(this)">Delete</a></td>' +
                         '<td style="display:none;"><input type="hidden" id="orgnlQty" name="orgnlQty" value="' + data[i].Original_Qty + '"/> </td>' +
                         '<td style="display:none;"><input type="hidden" id="issueQty" name="issueQty" value="' + data[i].issue_Qty + '"/> </td>' +
@@ -253,7 +253,7 @@
 
 
                     }
-                    var tokendata = httpGet("json.aspx?Table=Donor&q=" + Donor_id);
+                    var tokendata = httpGet("../../json.aspx?Table=Donor&q=" + Donor_id);
                     $('#txtDonor').tokenInput('clear');
                     $('#txtDonor').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].id });
                 });
@@ -382,9 +382,9 @@
                 rows += '<tr>' +
                     '<td style="display:none;">' + Platelets_id + '</td>' +
                     '<td>' + Platelets_name + '</td>' +
-                    '<td><input type="text" value="1" name="Qty" style="height: 22px;width: 30px!important;" onchange="OrgnalQty(this)"/></td>' +
+                    '<td><input type="text" value="1" name="Qty" style="height: 22px;width: 50px!important;" onchange="OrgnalQty(this)"/></td>' +
                     '<td style="padding-left: 0.6em;"><input type="text"  name="txtExpiryDate"  style="height: 22px;" value="' + current_Date + '"/>  </td>' +
-                    '<td style="padding-left: 2.7em;"><input type="checkbox" id="chkIsExpired" name="chkIsExpired"/></td>' + '<td style="padding-left: 0.69em;"><input type="text" id="txtComment" name="txtComment" style="height: 22px;width: 99px!important;"/></td>' +
+                    '<td style="padding-left: 2.7em;"><input type="checkbox" id="chkIsExpired" name="chkIsExpired"/></td>' + '<td style="padding-left: 0.69em;"><input type="text" id="txtComment" name="txtComment" style="height: 22px;"/></td>' +
                     '<td><a href="#" id="linkdelete" onclick="Delete(this)">Delete</a></td>' +
                     '<td style="display:none;"><input type="hidden" id="orgnlQty" name="orgnlQty" value="1"/> </td>' +
                     '<td style="display:none;"><input type="hidden" id="issueQty" name="issueQty" value="0"/> </td>' +
@@ -561,7 +561,7 @@
             debugger;
             var Donor_ID = $($(row).closest('tr')[0]).find('td:eq(0)').text();
           
-            var tokendata = httpGet("json.aspx?Table=Donor&q=" + Donor_ID);
+            var tokendata = httpGet("../../json.aspx?Table=Donor&q=" + Donor_ID);
             $('#txtDonor').tokenInput('clear');
             $('#txtDonor').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].id });
            
