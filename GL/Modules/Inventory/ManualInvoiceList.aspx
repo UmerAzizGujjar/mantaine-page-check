@@ -120,11 +120,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-12" style="margin-bottom:1%">
-            <input type="button" class="btn btn-primry" onclick="redirecttonew()" value="Add New"  />
-        </div>
-    </div>
     <div class="table-container">
         <table id="example" class="table table-hover table-bordered">
             <thead>

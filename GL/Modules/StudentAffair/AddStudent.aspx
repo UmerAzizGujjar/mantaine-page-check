@@ -94,42 +94,114 @@
             debugger;
 
             if (newSelect == "0" && fullname == "") {
-                alert("Please Enter FullName");
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter FullName',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').attr('disabled', false);
                 return;
             }
             if (newSelect == "0" && Rollnum == "") { 
-                alert("please Enter RollNumber");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter RollNumber',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').attr('disabled', false);
                 return;
             }
 
 
             if (newSelect == "0" && ddlProgram == "0") {
-                alert("please Select Program");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Program',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').attr('disabled', false);
                 return;
             }
             if (newSelect == "0" && StdCntct_No == "+92 ___ _______") {
-                alert("please Enter Contact Number");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Contact Number',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').attr('disabled', false);
                 return;
             }
 
             if (newSelect == "0" && ddlClass == "0") {
-                alert("please Select Class");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Class',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 $('#btnSave').attr('disabled', false);
                 return;
             }
 
-            var AllRecords = { 'Student_Id': Student_Id, 'Rollnum':  , 'admission': admission, 'fullname': fullname, 'Father_Name': Father_Name, 'Guard_Name': Guard_Name, 'Cust_Address': Cust_Address, 'StdCntct_No': StdCntct_No, 'Fcntc_No': Fcntc_No, 'Per_Address': Per_Address, 'EmailAdrr': EmailAdrr, 'txt_Date': txt_Date, 'txtadmDate': txtadmDate, 'St_CNIC': St_CNIC, 'Bld_group': Bld_group, 'Domicile': Domicile, 'Ft_CNIC': Ft_CNIC, 'txtDisease_alergy': txtDisease_alergy, 'Std_Status': Std_Status, 'ddlProgram': ddlProgram, 'ddlBatch': ddlBatch, 'ddlGroup': ddlGroup, 'txt_WholeClass': txt_WholeClass, 'ddlClass': ddlClass, 'txtSession': txtSession, 'Gl_code': Gl_code, 'Is_Active': Is_Active };
+            var AllRecords = { 'Student_Id': Student_Id, 'Rollnum': Rollnum  , 'admission': admission, 'fullname': fullname, 'Father_Name': Father_Name, 'Guard_Name': Guard_Name, 'Cust_Address': Cust_Address, 'StdCntct_No': StdCntct_No, 'Fcntc_No': Fcntc_No, 'Per_Address': Per_Address, 'EmailAdrr': EmailAdrr, 'txt_Date': txt_Date, 'txtadmDate': txtadmDate, 'St_CNIC': St_CNIC, 'Bld_group': Bld_group, 'Domicile': Domicile, 'Ft_CNIC': Ft_CNIC, 'txtDisease_alergy': txtDisease_alergy, 'Std_Status': Std_Status, 'ddlProgram': ddlProgram, 'ddlBatch': ddlBatch, 'ddlGroup': ddlGroup, 'txt_WholeClass': txt_WholeClass, 'ddlClass': ddlClass, 'txtSession': txtSession, 'Gl_code': Gl_code, 'Is_Active': Is_Active };
             
             PageMethods.SaveStudentData(btnsave, JSON.stringify(AllRecords), function (res) {
                 debugger;
                
                 sendFile(res);
-               
-                    alert('Save Data Successfully')
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                
                 window.location = "StudentsList.aspx"
                 

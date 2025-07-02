@@ -109,17 +109,53 @@
             debugger;
             if (ClassVal == "0") {
                 $('#tblPerson').attr('disabled', false);
-                alert("Please Select Class");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Class',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             else if (program == "0") {
                 $('#tblPerson').attr('disabled', false);
-                alert("Please Select Program");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Program',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
             else if (ddlWeek == "0") {
                 $('#tblPerson').attr('disabled', false);
-                alert("Please Select Week");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Week',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
 
@@ -711,7 +747,19 @@
                 var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "Save_list": Save_list };
             PageMethods.Replicate(JSON.stringify(StdTimetable), function () {
                 window.location.href = 'StudentTimeTable.aspx'
-                    alert("Replicate Data Successfully");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Replicate Data Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                     window.location = "TimeTableList.aspx";
                 });
         }
@@ -766,7 +814,20 @@
             var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "Save_list": Save_list };
             PageMethods.SaveTimeTable(JSON.stringify(StdTimetable), btnSave, function ()
             {
-                alert("Save Data Successfully");
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Save Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 window.location ="TimeTableList.aspx";
             });
         }

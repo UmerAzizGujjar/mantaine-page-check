@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS {
-    
-    
-    public partial class BloodDonor {
-        
+namespace PMS
+{
+
+
+    public partial class BloodDonor
+    {
+
         /// <summary>
         /// lblBlood_Donor_ID control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblBlood_Donor_ID;
-        
+
         /// <summary>
         /// txtBlood_Donor_ID control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtBlood_Donor_ID;
-        
+
         /// <summary>
         /// lblDonor_Name control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDonor_Name;
-        
+
         /// <summary>
         /// txtDonor_Name control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDonor_Name;
-        
+
         /// <summary>
         /// Label2 control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label2;
-        
+
         /// <summary>
         /// txtFatherName control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFatherName;
-        
+
         /// <summary>
         /// lblBlood_Group control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblBlood_Group;
-        
+
         /// <summary>
         /// ddlBlood_Group control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlBlood_Group;
-        
+
         /// <summary>
         /// rfvBlood_Group control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBlood_Group;
-        
+
         /// <summary>
         /// lblNo_Of_Bags control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblNo_Of_Bags;
-        
+
         /// <summary>
         /// txtNo_Of_Bags control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNo_Of_Bags;
-        
+
         /// <summary>
         /// rfvNo_Of_Bags control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNo_Of_Bags;
-        
+
         /// <summary>
         /// RangeValidator1 control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator RangeValidator1;
-        
+
         /// <summary>
         /// Label3 control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label3;
-        
+
         /// <summary>
         /// txtCNIC control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCNIC;
-        
+
         /// <summary>
         /// lblDonation_Date control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDonation_Date;
-        
+
         /// <summary>
         /// txtDonation_Date control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDonation_Date;
-        
+
         /// <summary>
         /// lblExpiryDate control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblExpiryDate;
-        
+
         /// <summary>
         /// txtExpiryDate control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtExpiryDate;
-        
+
         /// <summary>
         /// Label4 control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label4;
-        
+
         /// <summary>
         /// txtOccupation control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOccupation;
-        
+
         /// <summary>
         /// lblAddress control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAddress;
-        
+
         /// <summary>
         /// txtAddress control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAddress;
-        
+
         /// <summary>
         /// lblMobile control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMobile;
-        
+
         /// <summary>
         /// txtMobile control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMobile;
-        
+
         /// <summary>
         /// Label5 control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label5;
-        
+
         /// <summary>
         /// txtStateOfHealth control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtStateOfHealth;
-        
+
         /// <summary>
         /// lblGender control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblGender;
-        
+
         /// <summary>
         /// ddlGender control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGender;
-        
+
         /// <summary>
         /// rfvGender control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvGender;
-        
+
         /// <summary>
         /// lblDOB control.
         /// </summary>
@@ -290,7 +292,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDOB;
-        
+
         /// <summary>
         /// txtDOB control.
         /// </summary>
@@ -299,7 +301,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDOB;
-        
+
         /// <summary>
         /// Label6 control.
         /// </summary>
@@ -308,7 +310,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label6;
-        
+
         /// <summary>
         /// txtCenterOfDonation control.
         /// </summary>
@@ -317,7 +319,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCenterOfDonation;
-        
+
         /// <summary>
         /// lblDonee_Name control.
         /// </summary>
@@ -326,7 +328,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDonee_Name;
-        
+
         /// <summary>
         /// txtDonee_Name control.
         /// </summary>
@@ -335,7 +337,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDonee_Name;
-        
+
         /// <summary>
         /// hdnDonee_ID control.
         /// </summary>
@@ -344,7 +346,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnDonee_ID;
-        
+
         /// <summary>
         /// Label1 control.
         /// </summary>
@@ -353,7 +355,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label1;
-        
+
         /// <summary>
         /// txtEmail control.
         /// </summary>
@@ -362,7 +364,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
-        
+
         /// <summary>
         /// RegularExpressionValidator1 control.
         /// </summary>
@@ -371,7 +373,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidator1;
-        
+
         /// <summary>
         /// Label7 control.
         /// </summary>
@@ -380,7 +382,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label7;
-        
+
         /// <summary>
         /// txtDateOfLastDonation control.
         /// </summary>
@@ -389,61 +391,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDateOfLastDonation;
-        
-        /// <summary>
-        /// lblRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRemarks;
-        
-        /// <summary>
-        /// txtRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRemarks;
-        
-        /// <summary>
-        /// lblBlood_Condition control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBlood_Condition;
-        
-        /// <summary>
-        /// txtBlood_Condition control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBlood_Condition;
-        
-        /// <summary>
-        /// lblBlood_Pre_Sceening control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBlood_Pre_Sceening;
-        
-        /// <summary>
-        /// ChkBlood_Pre_Sceening control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ChkBlood_Pre_Sceening;
-        
+
         /// <summary>
         /// Label8 control.
         /// </summary>
@@ -452,7 +400,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label8;
-        
+
         /// <summary>
         /// txtAge control.
         /// </summary>
@@ -461,7 +409,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAge;
-        
+
         /// <summary>
         /// RangeValidator2 control.
         /// </summary>
@@ -470,7 +418,61 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator RangeValidator2;
-        
+
+        /// <summary>
+        /// lblBlood_Pre_Sceening control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBlood_Pre_Sceening;
+
+        /// <summary>
+        /// ChkBlood_Pre_Sceening control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ChkBlood_Pre_Sceening;
+
+        /// <summary>
+        /// lblRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRemarks;
+
+        /// <summary>
+        /// txtRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRemarks;
+
+        /// <summary>
+        /// lblBlood_Condition control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBlood_Condition;
+
+        /// <summary>
+        /// txtBlood_Condition control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBlood_Condition;
+
         /// <summary>
         /// btnNew control.
         /// </summary>
@@ -479,7 +481,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnNew;
-        
+
         /// <summary>
         /// btnBack control.
         /// </summary>
@@ -488,7 +490,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBack;
-        
+
         /// <summary>
         /// btnSave control.
         /// </summary>
@@ -497,7 +499,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSave;
-        
+
         /// <summary>
         /// btnPrint control.
         /// </summary>
@@ -506,7 +508,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnPrint;
-        
+
         /// <summary>
         /// btnCompatibilityReport control.
         /// </summary>
@@ -515,7 +517,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCompatibilityReport;
-        
+
         /// <summary>
         /// lblMessage control.
         /// </summary>
@@ -524,7 +526,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMessage;
-        
+
         /// <summary>
         /// ValidationSummary1 control.
         /// </summary>

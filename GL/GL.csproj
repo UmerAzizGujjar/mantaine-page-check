@@ -587,6 +587,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\colorbox.min.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\AddNewLabTest.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\AddpurchaseInvoice.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Appointment.css" />
@@ -4024,6 +4025,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\DoctorAgrement.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Donor.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\EMR.css" />
@@ -7563,6 +7565,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Donor.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
@@ -10797,6 +10800,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\DoctorAgrement.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Donor.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\EMR.css" />

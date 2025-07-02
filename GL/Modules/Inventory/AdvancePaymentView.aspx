@@ -133,12 +133,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="PurchaseRequistiondetails">
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-12" style="margin-bottom:1%">
-                <input type="button" class="btn btn-primry"  id="aadnew" value="Add New" onclick="location.href = 'AdvancePayment.aspx';" />
-            </div>
-        </div>
-
         <div class="table-container">
             <table class="table table-hover table-bordered" id="tblResult">
                 <thead id="ihead">

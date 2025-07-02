@@ -69,8 +69,19 @@
 
                     var Check = response.d;
                     if (Check == false) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Provided Donor No Already Exists Select Other Number',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
-                        alert("Provided Donor No Already Exists Select Other Number");
                         $("#ctl00_MainContent_txtDonorno").val('');
                         return true;
 
@@ -95,8 +106,19 @@
 
                     var Check = response.d;
                     if (Check == false) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Provided Bag No Already Exists Select Other name',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
-                        alert("Provided Bag No Already Exists Select Other name");
                         $("#txtbgno").val('');
                         return true;
 
@@ -822,7 +844,19 @@
                             success: function (response) {
                                 var master_id = response.d;
                                 if (master_id != '-1') {
-                                    alert("Data has been saved successfully");
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Data has been saved successfully',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
                                     window.location.href = "Donors.aspx?ID=" + master_id;
                                     $('#hdnUpdateVal').prop('value', master_id);
                                     $('#btnSaveTabFirst').val('Update');
@@ -975,12 +1009,35 @@
                 pulse == "" || bp == "" || emp == "" || hb == "" || hbs == "0" || hcv == "0" || hiv == "0" || drl == "0" ||
                 mp == "0" || txtfoodtime == "" || txtBlood == "") {
                 isProceed = false;
-                alert("Please Provide All Mendatory Fields");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Provide All Mendatory Fields',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
 
             if (Patient_id == "" && outdoor != "Outdoor") {
                 isProceed = false;
-                alert("Please Choose Either Mr No Or OutDoor");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Choose Either Mr No Or OutDoor',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
             }
 
@@ -1204,7 +1261,18 @@
             var days = Math.floor(monthDifference);
             if (days < 90) {
                 debugger;
-                alert("Last date of donation is less then 3 months")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Last date of donation is less then 3 months',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
             }
             if (cell == "" || sign == "" || donor_name == "" || relation == "" || address == "" || age == "" || occupation == ""
@@ -1212,11 +1280,34 @@
                 bagqty == "" || others == "" || cnic == "") {
 
                 isProceed = false;
-                alert("Please Provide All Mendatory Fields");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Provide All Mendatory Fields',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
             }
             if (Patient_id == "" && outdoor != "Outdoor") {
                 isProceed = false;
-                alert("Please Choose Either Mr No Or OutDoor");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Choose Either Mr No Or OutDoor',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
             }
             return isProceed;
@@ -1313,7 +1404,19 @@
                             success: function (response) {
                                 var master_id = response.d;
                                 if (master_id != '-1') {
-                                    alert("Data has been saved successfully");
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Data has been saved successfully',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
                                     window.location.href = "Donors.aspx?ID=" + master_id;
                                     $('#hdnUpdateVal').prop('value', master_id);
                                     $('#btnSaveSecondTab').val('Update');
@@ -1358,7 +1461,7 @@
                             $("#hdfPatient_ID").val(item.id);
 
                             loadAjax();
-                            loadReferenceInformation();
+                            //loadReferenceInformation();
                         }
                         catch (err) {
                             alert(err.message);
