@@ -2369,7 +2369,7 @@
             $('#txtMedicineName').focus();
         }
         function tblDischargeNote(PatientID) {
-            $('#tblHistoryHeader').html('<h2 style="color:white !important;text-align:center;">Loading Previous History Please Wait....</h2>')
+            $('#tblHistoryHeader').html('<h2 class="color">Loading Previous History Please Wait....</h2>')
             PageMethods.LoadDischargeNoteHistory(PatientID, function (res) {
                 var Data = JSON.parse(res);
                 var rows = '';
@@ -2393,7 +2393,7 @@
                 });
                 $('#tblDischargeNote tbody tr').remove();
                 $('#tblDischargeNote tbody').html(rows);
-                $('#tblHistoryHeader').html('<h2 style="color:white !important;text-align:center;" >Previous History</h2>')
+                $('#tblHistoryHeader').html('<h2 class="color" >Previous History</h2>')
             }, function (e) { });
         }
 
@@ -2431,7 +2431,7 @@
                     $('#tblVitalParametersHistory tbody tr').remove();
                     $('#tblVitalParametersHistory tbody').html(rows);
 
-                    $('#tblHistoryHeader').html('<h2 style="color:white !important;text-align:center;">Previous History</h2>');
+                    $('#tblHistoryHeader').html('<h2 class="color">Previous History</h2>');
 
                     $("#ctl00_MainContent_txtRateBeats").val("");
                     $("#ctl00_MainContent_ddlRhythm").val("");
@@ -2584,7 +2584,7 @@
         function LoadMedicationHistory(PatientID) {
             debugger;
             if (PatientID != '(New)') {
-                $('#HeaderHistoryMedication').html('<h2 style="color:white !important;text-align:center;">Loading Previous History Please Wait....</h2>')
+                $('#HeaderHistoryMedication').html('<h2 class="color">Loading Previous History Please Wait....</h2>')
                 PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
                     debugger;
                     var Medicines = JSON.parse(res);
@@ -2621,7 +2621,7 @@
                     });
                     $('#tblHistoryMedication tbody tr').remove();
                     $('#tblHistoryMedication tbody').html(rows);
-                    $('#HeaderHistoryMedication').html('<h2 style="color:white !important;text-align:center;">Previous History</h2>');
+                    $('#HeaderHistoryMedication').html('<h2 class="color">Previous History</h2>');
                 });
             }
         }
@@ -3754,7 +3754,7 @@
             }
         }
         function LoadClinicalSummaryHistory(PatientID) {
-            $('#tblHistoryClinicalHeader').html('<h2 style="color:white !important;text-align:center;">Loading Previous History Please Wait...</h2>');
+            $('#tblHistoryClinicalHeader').html('<h2 class="color">Loading Previous History Please Wait...</h2>');
             PageMethods.LoadClinicalSummaryHistory(PatientID, function (res) {
 
                 var Data = JSON.parse(res);
@@ -3781,13 +3781,13 @@
                 });
                 $("#tblClinicalHistory tbody tr").remove();
                 $("#tblClinicalHistory tbody").html(rows);
-                $('#tblHistoryClinicalHeader').html('<h2 style="color:white !important;text-align:center;">Previous History</h2>');
+                $('#tblHistoryClinicalHeader').html('<h2 class="color">Previous History</h2>');
             }, function (e) { });
 
         }
         function LoadExaminationTabHistory(PatientID) {
 
-            $('#tblExaminationHistoryHeader').html('<h2 style="color:white !important" >Loading Previous History Please Wait...</h2>');
+            $('#tblExaminationHistoryHeader').html('<h2 class="color" >Loading Previous History Please Wait...</h2>');
 
             PageMethods.LoadExaminationHistory(PatientID, function (res) {
 
@@ -3838,7 +3838,7 @@
 
                 $("#tblExaminationHistory tbody tr").remove();
                 $("#tblExaminationHistory tbody").html(rows);
-                $('#tblExaminationHistoryHeader').html('<h2 style="color:white !important" >Previous History</h2>');
+                $('#tblExaminationHistoryHeader').html('<h2 class="color" >Previous History</h2>');
 
             }, function (e) { });
 
@@ -3939,7 +3939,7 @@
 
         function LoadHistoryTabHistory(PatientID) {
 
-            $('#tblHistoryTabHistoryHeader').html('<h2 style="color:white !important;text-align:center;">Loading Previous History Please Wait....</h2>')
+            $('#tblHistoryTabHistoryHeader').html('<h2 class="color">Loading Previous History Please Wait....</h2>')
             if (PatientID != "(New)") {
                 PageMethods.LoadHistoryTabHistory(PatientID, function (res) {
 
@@ -3964,7 +3964,7 @@
                     });
                     $('#tblHistoryTabHistory tbody tr').remove();
                     $('#tblHistoryTabHistory tbody').html(rows);
-                    $('#tblHistoryTabHistoryHeader').html('<h2 style="color:white !important;Text-align:center;">Previous History</h2>')
+                    $('#tblHistoryTabHistoryHeader').html('<h2 class="color">Previous History</h2>')
                 }, function (e) { });
             }
         }

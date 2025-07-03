@@ -767,7 +767,7 @@
             debugger;
             var PatientId = ($('#<%= hdfPatient_ID.ClientID%>').val())
             if ($("#<%= hdfPatient_ID.ClientID%>").val() !== "(New)") {
-                $('#ServicesHistoryHeader').html('<h2 style="color:white !important">Loading Previous History Please Wait...</h2>');
+                $('#ServicesHistoryHeader').html('<h2 class="headingcolr">Loading Previous History Please Wait...</h2>');
                 PageMethods.LoadServicesDetailforHistory(PatientId, $('#<%= hdfPatient_ID.ClientID%>').val(), function (response) {
                     var Services = JSON.parse(response);
                     var rows = "";
@@ -790,7 +790,7 @@
 
         function LoadVitalParametersHistory(PatientID) {
             if (PatientID != "(New)") {
-                $('#tblHistoryHeader').html('<h2 style="color:white !important">Loading Previous History Please Wait....</h2>')
+                $('#tblHistoryHeader').html('<h2 class="headingcolr">Loading Previous History Please Wait....</h2>')
                 PageMethods.LoadVitalParametersHistory(PatientID, function (res) {
                     debugger;
                     var Data = JSON.parse(res);
@@ -803,7 +803,7 @@
                     });
                     $('#tblVitalParametersHistory tbody tr').remove();
                     $('#tblVitalParametersHistory tbody').html(rows);
-                    $('#tblHistoryHeader').html('<h2 style="color:white !important">Previous History</h2>')
+                    $('#tblHistoryHeader').html('<h2 class="headingcolr">Previous History</h2>')
                 });
             }
         }
@@ -2022,14 +2022,14 @@
 
                 });
                 $('#tblControlHistory tbody').html(rows);
-                $('#tblControlHistoryHeader').html('<h2 style="color:white !important">Previous History</h2>')
+                $('#tblControlHistoryHeader').html('<h2 class="headingcolr">Previous History</h2>')
             });
         }
 
         function LoadMedicationHistory(PatientID) {
             $('#dvHistoryMedication').hide();
             if (PatientID != '(New)') {
-                $('#HeaderHistoryMedication').html('<h2 style="color:white !important">Loading Previous History Please Wait....</h2>')
+                $('#HeaderHistoryMedication').html('<h2 class="headingcolr">Loading Previous History Please Wait....</h2>')
                 PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
                     var Medicines = JSON.parse(res);
                     var rows = '';
@@ -4203,7 +4203,7 @@
         function LoadServices_ProceduresForHistory(PatientId) {
             debugger;
             if ($("#<%= hdfPatient_ID.ClientID%>").val() !== "(New)") {
-                $('#ServicesHistoryHeader').html('<h2 style="color:white !important">Loading Previous History Please Wait...</h2>');
+                $('#ServicesHistoryHeader').html('<h2 class="headingcolr">Loading Previous History Please Wait...</h2>');
                 PageMethods.LoadServicesDetailforHistory(PatientId, $('#<%= hdfPatient_ID.ClientID%>').val(), function (response) {
                     var Services = JSON.parse(response);
                     var rows = "";
@@ -4216,7 +4216,7 @@
                         rowsHistory += '<tr><td style="text-align:left;">' + entryDate + '</td> <td style="text-align:left;"> <input type="hidden" name="hdnItemID" value="' + value.ServiceItemId + '" /> <input type="hidden" name="hdnItemName" value="' + value.Service_ProcedureName + '" /> <input type="hidden" name="hdnNet_Amount" value="' + value.ServiceItemAmount + '" /> <input type="hidden" name="hdnItemType" value="' + value.ServiceItemType + '" /> <input type="hidden" name="hdnPageType" value="' + value.PatientType + '" />' + value.Service_ProcedureName + '</td><td style="text-align:left;">' + value.UserName + '</td></tr>';
                     });
                     $('#tblServicesHistory tbody').append(rowsHistory);
-                    $("#ServicesHistoryHeader").html("<h2 style='color:white !important'>Previous History</h2>");
+                    $("#ServicesHistoryHeader").html("<h2 class='headingcolr'>Previous History</h2>");
                 });
             }
         }
@@ -6352,7 +6352,7 @@
                                              <tr>
                                                  <td colspan="14">
                                                      <div id="tblHistoryHeader">
-                                                         <h3 style="color:white !important;">Previous History</h3>
+                                                         <h3 class="headingcolr" >Previous History</h3>
                                                      </div>
                                                  </td>
                                              </tr>
@@ -6728,7 +6728,7 @@
                                     <tr style="position: sticky; top: 0;z-index: 10;">
                                         <td colspan="12">
                                             <div id="HeaderTests">
-                                                <h2 style="color:white !important;">Previous History</h2>
+                                                <h2 class="headingcolr">Previous History</h2>
                                             </div>
                                         </td>
                                     </tr>
@@ -6883,7 +6883,7 @@
                             <tr>
                                 <td colspan="12">
                                     <div id="tblControlHistoryHeader">
-                                        <h2 style="color:white !important;">Previous History</h2>
+                                        <h2 class="headingcolr">Previous History</h2>
                                     </div>
                                 </td>
                             </tr>
@@ -6924,7 +6924,7 @@
                                 <tr>
                                     <td colspan="12">
                                         <div id="Div3">
-                                            <h2 style="color:white !important;">Previous History</h2>
+                                            <h2 class="headingcolr">Previous History</h2>
                                         </div>
                                     </td>
                                 </tr>
@@ -6980,7 +6980,7 @@
                         <tr style="position: sticky; top: 0;z-index: 10;">
                             <td colspan="12">
                                 <div id="ServicesHistoryHeader">
-                                    <h2 style="color:white !important">Previous History</h2>
+                                    <h2 class="headingcolr">Previous History</h2>
                                 </div>
                             </td>
                         </tr>

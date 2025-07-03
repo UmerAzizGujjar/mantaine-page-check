@@ -2011,7 +2011,7 @@
 
         function LoadExaminationTabHistory(PatientID) {
 
-            $('#tblExaminationHistoryHeader').html('<h2>Loading Previous History Please Wait...</h2>');
+            $('#tblExaminationHistoryHeader').html('<h2 class="heading">Loading Previous History Please Wait...</h2>');
 
             PageMethods.LoadExaminationHistory(PatientID, function (res) {
 
@@ -2055,7 +2055,7 @@
 
                 $("#tblExaminationHistory tbody tr").remove();
                 $("#tblExaminationHistory tbody").html(rows);
-                $('#tblExaminationHistoryHeader').html('<h2 style="text-align:center;color:white !important;">Previous History</h2>');
+                $('#tblExaminationHistoryHeader').html('<h2 class="heading">Previous History</h2>');
 
             }, function (e) { });
 
@@ -2283,7 +2283,7 @@
         function LoadMedicationHistory(PatientID) {
 
             if (PatientID != '(New)') {
-                $('#HeaderHistoryMedication').html('<h2 style="text-align: Center; color: White!important">Loading Previous History Please Wait....</h2>')
+                $('#HeaderHistoryMedication').html('<h2 class="heading">Loading Previous History Please Wait....</h2>')
                 PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
                     var Medicines = JSON.parse(res);
                     var rows = '';
@@ -2304,7 +2304,7 @@
                     });
                     $('#tblHistoryMedication tbody tr').remove();
                     $('#tblHistoryMedication tbody').html(rows);
-                    $('#HeaderHistoryMedication').html('<h2 style="text-align: Center; color: White!important">Previous History</h2>');
+                    $('#HeaderHistoryMedication').html('<h2 style="text-align: Center;" class="heading">Previous History</h2>');
                 });
             }
         }
@@ -2482,7 +2482,7 @@
         function LoadDoctorNote() {
 
             if ($('#<%= hdfPatient_ID.ClientID%>').val() != '(New)') {
-                $('#DoctorHistoryHeader').html('<h2 style="text-align: Center; color: White!important">Loading Previous History Please Wait...</h2>');
+                $('#DoctorHistoryHeader').html('<h2 class="heading">Loading Previous History Please Wait...</h2>');
                 PageMethods.LoadDoctorNoteDetail($('#<%= hdfPatient_ID.ClientID%>').val(), function (res) {
                     var doctorNotes = JSON.parse(res);
                     var rows = '';
@@ -2496,7 +2496,7 @@
                     });
 
                     $('#tblDoctorNotes tbody').append(rows);
-                    $('#DoctorHistoryHeader').html('<h2 style="text-align: Center; color: White!important">Previous History</h2>');
+                    $('#DoctorHistoryHeader').html('<h2 class="heading">Previous History</h2>');
                 });
             }
         }
@@ -3370,7 +3370,7 @@
         }
         function LoadHistoryTabHistory(PatientID) {
 
-            $('#tblHistoryTabHistoryHeader').html('<h2>Loading Previous History Please Wait...</h2>');
+            $('#tblHistoryTabHistoryHeader').html('<h2 class="heading" >Loading Previous History Please Wait...</h2>');
             if (PatientID != "(New)") {
                 PageMethods.LoadHistoryTabHistory(PatientID, function (res) {
 
@@ -3396,7 +3396,7 @@
                     });
                     $('#tblHistoryTabHistory tbody tr').remove();
                     $('#tblHistoryTabHistory tbody').html(rows);
-                    $('#tblHistoryTabHistoryHeader').html('<h2 style="color:white !important;text-align:center;">Previous History</h2>');
+                    $('#tblHistoryTabHistoryHeader').html('<h2 class="heading">Previous History</h2>');
                 }, function (e) { });
             }
         }
@@ -5966,11 +5966,9 @@
         <table class="table" id="dvHistoward">
             <thead>
                 <tr>
-                    <th colspan="7">
-                        <div id="Div3">
+                    <td colspan="7">
                             <h2 class="heading">Ward Previous History</h2>
-                        </div>
-                    </th>
+                    </td>
                 </tr>
                 <tr>
                     <th>Admission Date</th>
@@ -6245,7 +6243,7 @@
                           <tr>
                               <td colspan="12">
                                   <div id="HeaderHistoryMedication">
-                                      <h2 style="color:white !important">Previous History</h2>
+                                      <h2 class="heading">Previous History</h2>
                                   </div>
                               </td>
                           </tr>
@@ -7401,7 +7399,7 @@
                                         <tr>
                                             <td colspan="31">
                                                 <div id="tblExaminationHistoryHeader" style="text-align:center;">
-                                                    <h2 class="heading"  style="text-align:center;color:white !important;">Previous History</h2>
+                                                    <h2 class="heading">Previous History</h2>
                                                 </div>
                                             </td>
                                         </tr>
@@ -7635,7 +7633,7 @@
                                         <tr>
                                             <td colspan="26">
                                                 <div id="tblHistoryTabHistoryHeader">
-                                                    <h2 class="heading" style="color:white;text-align:center;">Previous History</h2>
+                                                    <h2 class="heading">Previous History</h2>
                                                 </div>
                                             </td>
                                         </tr>

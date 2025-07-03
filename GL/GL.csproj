@@ -13038,6 +13038,7 @@
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\hospital.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\IGP.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\images.jpg" />
+    <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\infobutton.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\inpatient.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\inpatienta.png" />
     <Content Include="wwwroot\Tibbit_theme\images\dashboard_Icons\inventory-management.png" />
