@@ -6492,7 +6492,7 @@
                                                 <tr>
                                                     <td colspan="12">
                                                         <div id="Div1">
-                                                            <h2 style="text-align:center;color:white !important;">Room Previous History</h2>
+                                                            <h2 class="headingcolor">Room Previous History</h2>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -6523,7 +6523,7 @@
                                                 <tr>
                                                     <td colspan="12">
                                                         <div id="Div3">
-                                                            <h2 style="text-align:center;color:white !important;">Ward Previous History</h2>
+                                                            <h2 class="headingcolor">Ward Previous History</h2>
                                                         </div>
                                                     </td>
                                                 </tr>
