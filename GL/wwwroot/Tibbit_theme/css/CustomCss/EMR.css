@@ -55,7 +55,7 @@ body {
     border: 2px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
-    height: 350px !important;
+    height: 400px !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -186,22 +186,22 @@ body {
 .box-container {
     display: flex;
     flex-wrap: wrap; 
-    gap: 15px; 
+     
     justify-content: space-between; 
     overflow: auto;
-    height: 234px;
+    height: 300px;
 }
 
 
 .info-box {
-    flex: 0 0 calc(33.33% - 15px); /* Each box takes up 1/3 of the row minus the gap */
-
+    flex: 0 0 calc(50% - 8px); /* This is width */
+    height: 90px; /* Small height for horizontal shape */
     border-radius: 5px;
     padding: 15px;
     text-align: center;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    
+    
     align-items: center;
     background-color: #e9e9e9;
 }
@@ -220,16 +220,18 @@ body {
 }
 
 .info-value {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     color: #333; /* Primary color for values */
     margin-bottom: 10px;
+    margin-right:4px;
 }
+
 
 /* Label styling */
 .info-label {
-    font-size: 1rem;
-    color: #EFA63E  ;
+    font-size: 1.1em;
+    color: black  ;
 }
 .icon {
     font-size: 20px;
@@ -266,11 +268,11 @@ body {
 .number {
     font-size: 50px;
     font-weight: bold;
-    color: #333;
+    color: #707091;
 }
 
 .label {
-    color: #EFA63E   !important;
+    color: #707091   !important;
     background-color:white !important;
     font-weight:bold;
     font-size:20px;
