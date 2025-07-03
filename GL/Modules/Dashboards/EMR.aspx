@@ -5,12 +5,13 @@
     <script src="~../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
     <script src="~../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
-            
+
 
             loadtokenInputsByMrNo();
             FillModePresentation();
@@ -19,6 +20,32 @@
             $("#opdvitals").hide();
             $('#token-input-ctl00_MainContent_txtPatNO').attr('placeholder', 'Enter MR No');
         });
+        function ViewOutPatientData() {
+            var id = $("#hdfoutPatID").val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Are you sure?',
+                text: 'Do you want to view all outpatient data?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, view it',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.open("/Modules/PatientManagement/OutPatients.aspx?ID=" + id + "", '_blank');
+                }
+            });
+
+
+
+
+        }
         function loadtokenInputsByMrNo(data) {
             debugger;
             var newbox = $('#ctl00_MainContent_txtPatNO').val();
@@ -219,8 +246,8 @@
                         $.each(JSON.parse(res.d), function (key, value) {
                             var date = moment(value.Created_Time).format('DD-MM-YY');
                             // console.log(value);
-
-                            rows += '<tr> <td value="' + value.Out_Patient_ID + '"> ' + date + ' </td><td>' + value.Status + '</td> <td> ' + value.Pulse_Min
+                            $("#hdfoutPatID").val(value.Out_Patient_ID);
+                            rows += '<tr><td  value="' + value.Out_Patient_ID + '"> ' + date + ' </td><td>' + value.Status + '</td> <td> ' + value.Pulse_Min
                                 + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Height_Cm + ' </td><td> ' + value.L_M_P + ' </td><td> ' + value.SPO2 + ' </td><td> ' + value.BSR + ' </td><td> ' + value.BMI + ' </td><td> ' + value.BP_mm_Hg + ' </td> <td> ' + value.Respiration_Min + ' </td> <td> ' + value.Weight_Kg + ' </td></tr>';
                         });
 
@@ -786,6 +813,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <input type="hidden" id="hdfPatient_ID" />
     <input type="hidden" id="hdfReg_ID" />
+    <input type="hidden" id="hdfoutPatID" />
     <div class="row">
         <div class="col-lg-2">
 
@@ -835,40 +863,50 @@
 
     <div class="row" style="margin-bottom: 15px">
         <div class="col-lg-2 col-md-3 col-sm-3">
-            <h4>Main Department</h4>
             <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
         </div>
     </div>
     <div class="main-row ">
-        <div class="row vitalsTable" id="opdvitals" style="overflow: scroll; height: 230px; margin-left: -2px;">
-            <h4 style="height: 30px; background-color: #f0f1f3; width: 120px; padding: 5px 12px; border-radius: 8px;">OPD Vitals</h4>
-                <table class="table " id="tblVitalParametersHistory">
+        <div class="row vitalsTable" id="opdvitals" style="margin-left: -2px;">
 
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Pulse</th>
-                            <th>Temp</th>
-                            <th>Height</th>
-                            <th>L.M.P</th>
-                            <th>SPO2</th>
-                            <th>BSR</th>
-                            <th>BMI</th>
-                            <th>BP </th>
-                            <th>Respiration </th>
-                            <th>Weight</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+                </h4>
+                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/infobutton.png" alt="blood" />
+
+            </div>
+            <table class="MyTable " id="tblVitalParametersHistory">
+
+                <thead style="height: 35px;">
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Pulse</th>
+                        <th>Temp</th>
+                        <th>Height</th>
+                        <th>L.M.P</th>
+                        <th>SPO2</th>
+                        <th>BSR</th>
+                        <th>BMI</th>
+                        <th>BP </th>
+                        <th>Respiration</th>
+                        <th>Weight</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
 
 
         </div>
-        <div class="roww vitalsTable" id="ipdvitals" style="overflow: scroll; height: 200px; margin-left: -2px;">
-            <h4 style="height: 30px; background-color: #f0f1f3; width: 103px; padding: 5px 12px; border-radius: 8px;">IPD Vitals</h4>
-            <table class="table" id="tblVitalParametersHistoryIPD">
+        <div class="roww vitalsTable" id="ipdvitals" style="margin-left: -2px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+                </h4>
+                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/infobutton.png" alt="blood" />
+
+            </div>
+            <table class="MyTable" id="tblVitalParametersHistoryIPD">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -884,9 +922,14 @@
                 </tbody>
             </table>
         </div>
-        <div class="roww vitalsTable" id="emergencyVital" style="overflow: scroll; height: 200px; margin-left: -2px;">
-            <h4 style="height: 30px; background-color: #f0f1f3; width: 167px; padding: 5px 12px; border-radius: 8px;">Emergency Vitals</h4>
-            <table class="table" id="tblVitalParametersHistoryEmergency">
+        <div class="roww vitalsTable" id="emergencyVital" style="margin-left: -2px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+                </h4>
+                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/infobutton.png" alt="blood" />
+
+            </div>
+            <table class="MyTable" id="tblVitalParametersHistoryEmergency">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -908,7 +951,7 @@
             <div class="card statusCards">
                 <div style="display: flex; align-items: center; margin-top: -10px;">
                     <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/appointmentStats.png" alt="lab" />
-                    <h4>Visits</h4>
+                    <h4>Visits by Day</h4>
                 </div>
 
                 <hr style="margin-bottom: 35px !important" />
@@ -942,7 +985,7 @@
             <div class="card statusCards">
                 <div style="display: flex; align-items: center; margin-top: -10px;">
                     <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab" />
-                    <h4>OPD Patient Status</h4>
+                    <h4>OPD Patient Stats</h4>
                 </div>
                 <hr />
                 <div id="boxContainer" class="box-container"></div>
@@ -953,7 +996,7 @@
             <div class="card statusCards">
                 <div style="display: flex; align-items: center; margin-top: -10px;">
                     <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab" />
-                    <h4>IPD Patient Status</h4>
+                    <h4>IPD Patient Stats</h4>
                 </div>
                 <hr />
                 <div id="boxContainer_IPD" class="box-container"></div>
@@ -975,8 +1018,8 @@
                 <h4 class="labelcolor" style="font-size: 24px">Test List</h4>
                 <hr />
                 <div class="table table-container" style="overflow-y: scroll; height: 400px">
-                    <table id="tblLabtest" class="table table-bordered table-custom tests-table">
-                        <thead>
+                    <table id="tblLabtest" class="MyTable2 table-bordered table-custom tests-table">
+                        <thead style="height: 35px;">
                             <tr style="position: sticky; top: 0; z-index: 10;">
                                 <th>Date</th>
                                 <th>Test Name</th>
