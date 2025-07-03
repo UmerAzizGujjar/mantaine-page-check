@@ -411,7 +411,7 @@ input[type="button"][disabled] {
     color: #707070;
     font-weight: normal;
     background-repeat: repeat-x;
-    background-image: linear-gradient(to bottom, #EFA63E 0, #1c1c1c 100%) !important;
+    background-image: linear-gradient(to bottom, #EFA63E 0, #EFA63E 100%) !important;
     color: whitesmoke;
     background-attachment: scroll;
 }

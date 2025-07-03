@@ -177,7 +177,7 @@
         }
         function LoadTestsHistory() {
 
-            $('#HeaderTests').html('<h2>Loading Previous History Please Wait....</h2>')
+            $('#HeaderTests').html('<h2 class="headingcolor">Loading Previous History Please Wait....</h2>')
             var hdFile_ID = $("#ctl00_MainContent_txtPatient_ID").val();
             if (hdFile_ID != null || hdFile_ID != " " || hdFile_ID != "undefined") {
                 PageMethods.GetTestListForHistory(hdFile_ID, function (res) {
@@ -215,7 +215,7 @@
                     });
                     $('#tblHistoryTests tbody tr').remove();
                     $('#tblHistoryTests tbody').html(rows);
-                    $('#HeaderTests').html('<h2 style="color:white !important;text-align:center;">Previous History</h2>')
+                    $('#HeaderTests').html('<h2 class="headingcolor">Previous History</h2>')
                 });
             }
         }
@@ -1430,7 +1430,7 @@
                             <table class="table" >
                                 <tr>
                                     <td class="lab-head" >
-                                        <h1 style="text-align:center;color:white !important">Test Calling List</h1>
+                                        <h1 class="headingcolor">Test Calling List</h1>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1496,7 +1496,7 @@
                                         <tr>
                                             <td colspan="12">
                                                 <div id="HeaderTests">
-                                                    <h2 style="color:white !important;text-align:center;">Previous History</h2>
+                                                    <h2 class="headingcolor">Previous History</h2>
                                                 </div>
                                             </td>
                                         </tr>

@@ -1157,7 +1157,7 @@
             }
         }
         function LoadVitalParametersHistory(PatientID) {
-            $('#tblHistoryHeader').html('<h2 style="color:white !important;text-align:center;">Loading Previous History Please Wait....</h2>')
+            $('#tblHistoryHeader').html('<h2 class="hedingcolor">Loading Previous History Please Wait....</h2>')
             PageMethods.LoadMonitertingForHistory(PatientID, function (res) {
 
                 var Data = JSON.parse(res);
@@ -1172,7 +1172,7 @@
 
                 $('#tblVitalParametersHistory tbody tr').remove();
                 $('#tblVitalParametersHistory tbody').html(rows);
-                $('#tblHistoryHeader').html('<h2 style="color:white !important;text-align:center;">Previous History</h2>')
+                $('#tblHistoryHeader').html('<h2 class="hedingcolor">Previous History</h2>')
             }, function (e) { });
         }
         function GetOutput() {
@@ -1699,7 +1699,7 @@
 
             debugger;
             if ($("#ctl00_MainContent_hdnInpatient_id").val() !== "(New)") {
-                $('#ServicesHistoryHeader').html('<h2>Loading Previous History Please Wait...</h2>');
+                $('#ServicesHistoryHeader').html('<h2 class="hedingcolor">Loading Previous History Please Wait...</h2>');
                 PageMethods.LoadServicesDetail(PatientId, $('#ctl00_MainContent_hdnInpatient_id').val(), function (response) {
 
                     debugger;
@@ -1724,7 +1724,7 @@
 
                     $('#tblServices tbody').append(rows);
                     $('#tblServicesHistory tbody').append(rowsHistory);
-                    $("#ServicesHistoryHeader").html("<h2 style= 'color:white !important;text-align:center;'>Previous History</h2>");
+                    $("#ServicesHistoryHeader").html("<h2 class='hedingcolor'>Previous History</h2>");
 
                 });
 
@@ -2431,7 +2431,7 @@
                                         <tr>
                                             <td colspan="12">
                                                 <div id="tblHistoryHeader">
-                                                    <h2 style="color: white !important;text-align:center;">Previous History</h2>
+                                                    <h2 class="hedingcolor">Previous History</h2>
                                                 </div>
                                             </td>
                                         </tr>
@@ -2521,7 +2521,7 @@
                                             <tr>
                                                 <td colspan="10">
                                                     <div id="Div4" style="height: 20px;">
-                                                        <h2 style="color: white !important">Previous History</h2>
+                                                        <h2 class="hedingcolor">Previous History</h2>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -2606,7 +2606,7 @@
                                             <tr>
                                                 <td colspan="3">
                                                     <div id="Div1" style="height: 20px;">
-                                                        <h2 style="color: white !important;text-align">Previous History</h2>
+                                                        <h2 class="hedingcolor">Previous History</h2>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -2718,7 +2718,7 @@
                                         <tr>
                                             <td colspan="10">
                                                 <div id="Div3" style="height: 20px;">
-                                                    <h2 style="color: white !important;text-align:center">Previous History</h2>
+                                                    <h2 class="hedingcolor">Previous History</h2>
                                                 </div>
                                             </td>
                                         </tr>
@@ -2919,7 +2919,7 @@
                             <tr style="position: sticky; top: 0; z-index: 10;">
                                 <td colspan="12">
                                     <div id="ServicesHistoryHeader">
-                                        <h2 style="color:white !important;text-align:center">Previous History</h2>
+                                        <h2 class="hedingcolor">Previous History</h2>
                                     </div>
                                 </td>
                             </tr>
