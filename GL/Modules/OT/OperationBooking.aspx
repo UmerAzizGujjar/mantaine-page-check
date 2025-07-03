@@ -106,7 +106,19 @@
 
 
                 if ($('#txtPharmacyItem').val() == '' || $('#txtPharmacyItem').val() == 'Select Medicine' || $('#txtPharmacyItem').val() == null) {
-                    alert("Please Select Medicine Name");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Medicine Name',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
 
@@ -116,12 +128,25 @@
 
                 var Dosage_Qty = $('#ddlDosage_Qty').val();
                 if (Dosage_Qty == "") {
-                    alert("Please Select Dosage Quantity ");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Dosage Quantity',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
                     return false;
                 }
 
                 var DosageFrom = $('#ddlDosage_From').val();
                 if (DosageFrom == "") {
+
                     alert("Please Select Complete Dosage");
                     return false;
                 }

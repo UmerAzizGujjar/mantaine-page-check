@@ -10,7 +10,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
-           
+            
 
             loadtokenInputsByMrNo();
             FillModePresentation();
@@ -218,7 +218,7 @@
                         var rows = '';
                         $.each(JSON.parse(res.d), function (key, value) {
                             var date = moment(value.Created_Time).format('DD-MM-YY');
-                           // console.log(value);
+                            // console.log(value);
 
                             rows += '<tr> <td value="' + value.Out_Patient_ID + '"> ' + date + ' </td><td>' + value.Status + '</td> <td> ' + value.Pulse_Min
                                 + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Height_Cm + ' </td><td> ' + value.L_M_P + ' </td><td> ' + value.SPO2 + ' </td><td> ' + value.BSR + ' </td><td> ' + value.BMI + ' </td><td> ' + value.BP_mm_Hg + ' </td> <td> ' + value.Respiration_Min + ' </td> <td> ' + value.Weight_Kg + ' </td></tr>';
@@ -788,39 +788,39 @@
     <input type="hidden" id="hdfReg_ID" />
     <div class="row">
         <div class="col-lg-2">
-            
-            <asp:TextBox ID="txtPatNO" runat="server" class="form-control"  />
+
+            <asp:TextBox ID="txtPatNO" runat="server" class="form-control" />
         </div>
     </div>
     <div class="row">
         <!-- Left Column: Profile Information -->
-        <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="card3">
                 <div class="profile-info">
                     <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
                     <div class="profile-details">
                         <span class="profile-name" id="patname"></span>
-                        <p><strong class="labelcolor">MR No:</strong> &nbsp; &nbsp; <span id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong class="labelcolor">Age:</strong> &nbsp; &nbsp; <span id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong class="labelcolor">Gender:</strong> &nbsp; &nbsp; <span id="gender"></span></p>
-                        <p><strong class="labelcolor">Phone Number:</strong> &nbsp; &nbsp;&nbsp; <span id="phonenumber"></span></p>
-                        <p><strong class="labelcolor">CNIC:</strong>&nbsp;&nbsp;&nbsp; <span id="CNIC"></span></p>
-                        <p><strong class="labelcolor">Address:</strong> &nbsp;&nbsp;&nbsp;<span id="address"></span></p>
+                        <p><strong class="">MR No:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong class="">Age:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong class="">Gender:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="gender"></span></p>
+                        <p><strong class="">Phone Number:</strong> &nbsp; &nbsp;&nbsp; <span style="font-weight: 500 !important" id="phonenumber"></span></p>
+                        <p><strong class="">CNIC:</strong>&nbsp;&nbsp;&nbsp; <span style="font-weight: 500 !important" id="CNIC"></span></p>
+                        <p><strong class="">Address:</strong> &nbsp;&nbsp;&nbsp;<span style="font-weight: 500 !important" id="address"></span></p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Right Column: Appointment Information -->
-        <div class="col-lg-7 col-md-7 col-sm-7">
+        <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="appointmentcard">
                 <div class="appointment-info">
-                    <h5 style="margin-right:45px;font-size:1.3em">
-                        <strong class="labelcolor">Upcoming Appointment</strong>
+                    <h5 style="margin-right: 45px; font-size: 1.3em">
+                        <strong class="">Upcoming Appointment</strong>
 
                     </h5>
                     <span class="badge" style="cursor: pointer;"><span id="appdate">Appointment Date</span></span>
-                    <h5 style="margin-left:45px"><strong class="labelcolor">Consultant:&nbsp;<span id="doctorname"></span></strong></h5>
+                    <h5 style="margin-left: 45px"><strong class="">Consultantaion with &nbsp;<span id="doctorname"></span></strong></h5>
                 </div>
-                
+
                 <div class="appointment-details">
                     <div class="row-details">
                         <p><strong class="labelcolor">Last Visit:&nbsp;</strong><span id="prv_visit"></span></p>
@@ -833,38 +833,41 @@
         </div>
     </div>
 
-    <div class="row" style="margin-bottom:15px">
-            <div class="col-lg-2 col-md-3 col-sm-3">
-                <h4>Main Department</h4>
-                <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
-            </div>
+    <div class="row" style="margin-bottom: 15px">
+        <div class="col-lg-2 col-md-3 col-sm-3">
+            <h4>Main Department</h4>
+            <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
+        </div>
     </div>
     <div class="main-row ">
-        <div class="row vitalsTable" id="opdvitals" style="overflow: scroll; height: 230px;margin-left:-2px;">
-            <h4 style="height: 30px;background-color: #f0f1f3;width: 120px;padding: 5px 12px;border-radius: 8px;">OPD Vitals</h4>
-            <table class="table" id="tblVitalParametersHistory">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Pulse</th>
-                        <th>Temp</th>
-                        <th>Height</th>
-                        <th>L.M.P</th>
-                        <th>SPO2</th>
-                        <th>BSR</th>
-                        <th>BMI</th>
-                        <th>BP </th>
-                        <th>Respiration </th>
-                        <th>Weight</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="row vitalsTable" id="opdvitals" style="overflow: scroll; height: 230px; margin-left: -2px;">
+            <h4 style="height: 30px; background-color: #f0f1f3; width: 120px; padding: 5px 12px; border-radius: 8px;">OPD Vitals</h4>
+                <table class="table " id="tblVitalParametersHistory">
+
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Pulse</th>
+                            <th>Temp</th>
+                            <th>Height</th>
+                            <th>L.M.P</th>
+                            <th>SPO2</th>
+                            <th>BSR</th>
+                            <th>BMI</th>
+                            <th>BP </th>
+                            <th>Respiration </th>
+                            <th>Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+
         </div>
-        <div class="roww vitalsTable" id="ipdvitals" style="overflow: scroll; height: 200px;margin-left:-2px;">
-            <h4 style="height: 30px;background-color: #f0f1f3;width: 103px;padding: 5px 12px;border-radius: 8px;">IPD Vitals</h4>
+        <div class="roww vitalsTable" id="ipdvitals" style="overflow: scroll; height: 200px; margin-left: -2px;">
+            <h4 style="height: 30px; background-color: #f0f1f3; width: 103px; padding: 5px 12px; border-radius: 8px;">IPD Vitals</h4>
             <table class="table" id="tblVitalParametersHistoryIPD">
                 <thead>
                     <tr>
@@ -881,8 +884,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="roww vitalsTable" id="emergencyVital" style="overflow: scroll; height: 200px;margin-left:-2px;">
-            <h4 style="height: 30px;background-color: #f0f1f3;width: 167px;padding: 5px 12px;border-radius: 8px;">Emergency Vitals</h4>
+        <div class="roww vitalsTable" id="emergencyVital" style="overflow: scroll; height: 200px; margin-left: -2px;">
+            <h4 style="height: 30px; background-color: #f0f1f3; width: 167px; padding: 5px 12px; border-radius: 8px;">Emergency Vitals</h4>
             <table class="table" id="tblVitalParametersHistoryEmergency">
                 <thead>
                     <tr>
@@ -903,12 +906,12 @@
     <div class="row g-3">
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="card statusCards">
-                <div style="display: flex;align-items: center;margin-top: -10px;">
-<img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/appointmentStats.png" alt="lab"/>
-<h4>Visits</h4>
-    </div>
-                
-                <hr />
+                <div style="display: flex; align-items: center; margin-top: -10px;">
+                    <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/appointmentStats.png" alt="lab" />
+                    <h4>Visits</h4>
+                </div>
+
+                <hr style="margin-bottom: 35px !important" />
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="visits-cards stat-item">
@@ -937,10 +940,10 @@
 
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card statusCards">
-                <div style="display: flex;align-items: center;margin-top: -10px;">
-                <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab"/>
-                <h4>OPD Patient Status</h4>
-                    </div>
+                <div style="display: flex; align-items: center; margin-top: -10px;">
+                    <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab" />
+                    <h4>OPD Patient Status</h4>
+                </div>
                 <hr />
                 <div id="boxContainer" class="box-container"></div>
             </div>
@@ -948,10 +951,10 @@
 
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card statusCards">
-                <div style="display: flex;align-items: center;margin-top: -10px;">
-                <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab"/>
-                <h4>IPD Patient Status</h4>
-                    </div>
+                <div style="display: flex; align-items: center; margin-top: -10px;">
+                    <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab" />
+                    <h4>IPD Patient Status</h4>
+                </div>
                 <hr />
                 <div id="boxContainer_IPD" class="box-container"></div>
 
@@ -963,7 +966,7 @@
         <div class="col-lg-6 col-md-6 col-sm-6 cardcard statusCards">
             <div>
                 <h4 class="labelcolor" style="font-size: 24px">Monthly Wise Visit</h4>
-                
+
             </div>
             <div id="VisitGrapgh" style="height: 300px; width: 100%;"></div>
         </div>

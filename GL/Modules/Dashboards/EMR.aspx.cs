@@ -148,51 +148,51 @@ namespace PMS.Modules.Dashboards
         public static string LoadVitalParametersHistory(int patid)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var outpatientlist = (from op in db.Out_Patients
-                                  where op.Reg_PatId == patid
+            var latestItem = (from op in db.Out_Patients
+                              where op.Reg_PatId == patid
+                              orderby op.Created_Time descending
+                              select new
+                              {
+                                  op.Out_Patient_ID,
+                                  op.pulse_Min,
+                                  op.BP_mm_Hg,
+                                  op.Weight_Kg,
+                                  op.Height_Cm,
+                                  op.Respiration_Min,
+                                  op.Temp_C,
+                                  op.L_M_P,
+                                  op.spo2,
+                                  op.BSR,
+                                  op.EDD,
+                                  op.BMI,
+                                  op.MUAC,
+                                  op.OFC,
+                                  op.Created_Time
+                              }).FirstOrDefault(); // Only the latest record
 
-                                  select new
-                                  {
-                                      op.Out_Patient_ID,
-                                      op.pulse_Min,
-                                      op.BP_mm_Hg,
-                                      op.Weight_Kg,
-                                      op.Height_Cm,
-                                      op.Respiration_Min,
-                                      op.Temp_C,
-                                      op.L_M_P,
-                                      op.spo2,
-                                      op.BSR,
-                                      op.EDD,
-                                      op.BMI,
-                                      op.MUAC,
-                                      op.OFC,
-                                  
-                                      op.Created_Time
-                                  }).ToList();
             List<VitalParameterClass> list = new List<VitalParameterClass>();
-            foreach (var item in outpatientlist)
+
+            if (latestItem != null)
             {
                 VitalParameterClass obj = new VitalParameterClass();
-                obj.Pulse_Min = item.pulse_Min;
-                obj.Out_Patient_ID = item.Out_Patient_ID;
-                obj.BP_mm_Hg = item.BP_mm_Hg;
-                obj.Weight_Kg = item.Weight_Kg;
-                obj.Height_Cm = item.Height_Cm;
-                obj.Respiration_Min = item.Respiration_Min;
-                obj.Temp_C = item.Temp_C;
-                obj.L_M_P = item.L_M_P;
-                obj.SPO2 = item.spo2;
-                obj.BMI = item.BMI;
-                obj.MUAC = item.MUAC;
-                obj.OFC = item.OFC;
+                obj.Pulse_Min = latestItem.pulse_Min;
+                obj.Out_Patient_ID = latestItem.Out_Patient_ID;
+                obj.BP_mm_Hg = latestItem.BP_mm_Hg;
+                obj.Weight_Kg = latestItem.Weight_Kg;
+                obj.Height_Cm = latestItem.Height_Cm;
+                obj.Respiration_Min = latestItem.Respiration_Min;
+                obj.Temp_C = latestItem.Temp_C;
+                obj.L_M_P = latestItem.L_M_P;
+                obj.SPO2 = latestItem.spo2;
+                obj.BMI = latestItem.BMI ?? "";
+                obj.MUAC = latestItem.MUAC;
+                obj.OFC = latestItem.OFC;
                 obj.Receiving_date = DateTime.Now;
                 obj.RN_Special_Instruction = "";
                 obj.RN_Patient_General_Condition = "";
-                obj.Created_Time = Convert.ToDateTime(item.Created_Time);
-                obj.BSR = (item.BSR != null) ? item.BSR : "";
-                obj.EDD = (item.EDD != null) ? item.EDD : "";
-                obj.BMI = (item.BMI != null) ? item.BMI : "";
+                obj.Created_Time = Convert.ToDateTime(latestItem.Created_Time);
+                obj.BSR = latestItem.BSR ?? "";
+                obj.EDD = latestItem.EDD ?? "";
                 obj.Status = "OutPatient";
 
                 list.Add(obj);
