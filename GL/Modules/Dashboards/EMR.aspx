@@ -1,13 +1,12 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EMR.aspx.cs" Inherits="PMS.Modules.Dashboards.EMR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery-1.11.1.min.js"></script>
+
     <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
-    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  
+
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
@@ -530,191 +529,310 @@
                 });
             }
         }
-
-        let chart;
+        // Declare globally
+        var chart;
 
         function createChartOPD() {
             debugger;
             var patid = $("#hdfReg_ID").val();
             var category = $('#ddlmaindepartment').val();
 
-
             if (chart) {
                 chart.destroy();
                 chart = null;
             }
 
-            if (category == "01") {
-                PageMethods.GetTotalVisits(patid, function (resp) {
-                    debugger;
-                    var data = JSON.parse(resp);
+            function buildChart(data, seriesName) {
+                var monthData = data[0] || {};
 
-                    var labDataset = {
-                        name: 'OutPatient',
-                        data: [
-                            data[0].January,
-                            data[0].February,
-                            data[0].March,
-                            data[0].April,
-                            data[0].May,
-                            data[0].June,
-                            data[0].July,
-                            data[0].August,
-                            data[0].September,
-                            data[0].October,
-                            data[0].November,
-                            data[0].December
+                var labDataset = {
+                    name: seriesName,
+                    data: [
+                        monthData.January ?? 0,
+                        monthData.February ?? 0,
+                        monthData.March ?? 0,
+                        monthData.April ?? 0,
+                        monthData.May ?? 0,
+                        monthData.June ?? 0,
+                        monthData.July ?? 0,
+                        monthData.August ?? 0,
+                        monthData.September ?? 0,
+                        monthData.October ?? 0,
+                        monthData.November ?? 0,
+                        monthData.December ?? 0
+                    ],
+                    color: '#438eb9'
+                };
+
+                console.log("Chart Data:", labDataset.data); // Debug output
+
+                var options = {
+                    series: [labDataset],
+                    chart: {
+                        type: 'bar',
+                        height: 350
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '55%',
+                            endingShape: 'rounded'
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+                    xaxis: {
+                        categories: [
+                            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
                         ],
-                        color: '#438eb9 '
-                    };
+                    },
+                };
 
-                    var options = {
-                        series: [labDataset],
-                        chart: {
-                            type: 'bar',
-                            height: 350
-                        },
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                columnWidth: '55%',
-                                endingShape: 'rounded'
-                            },
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            show: true,
-                            width: 2,
-                            colors: ['transparent']
-                        },
-                        xaxis: {
-                            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        },
-                    };
-
-                    chart = new ApexCharts(document.querySelector("#VisitGrapgh"), options);
-                    chart.render();
-                }, function (error) {
-                    alert(error.get_message());
-                });
+                chart = new ApexCharts(document.querySelector("#VisitGrapgh"), options);
+                chart.render();
             }
 
-            if (category == "03") {
-                PageMethods.GetTotalVisitsIPD(patid, function (resp) {
-                    debugger;
-                    var data = JSON.parse(resp);
-
-                    var labDataset = {
-                        name: 'InPatient',
-                        data: [
-                            data[0].January,
-                            data[0].February,
-                            data[0].March,
-                            data[0].April,
-                            data[0].May,
-                            data[0].June,
-                            data[0].July,
-                            data[0].August,
-                            data[0].September,
-                            data[0].October,
-                            data[0].November,
-                            data[0].December
-                        ],
-                        color: '#438eb9 '
-                    };
-
-                    var options = {
-                        series: [labDataset],
-                        chart: {
-                            type: 'bar',
-                            height: 350
-                        },
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                columnWidth: '55%',
-                                endingShape: 'rounded'
-                            },
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            show: true,
-                            width: 2,
-                            colors: ['transparent']
-                        },
-                        xaxis: {
-                            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        },
-                    };
-
-                    chart = new ApexCharts(document.querySelector("#VisitGrapgh"), options);
-                    chart.render();
-                }, function (error) {
-                    alert(error.get_message());
-                });
-            }
-
-            if (category == "02") {
-                PageMethods.GetTotalVisitsEmergency(patid, function (resp) {
-                    debugger;
-                    var data = JSON.parse(resp);
-
-                    var labDataset = {
-                        name: 'Emergency',
-                        data: [
-                            data[0].January,
-                            data[0].February,
-                            data[0].March,
-                            data[0].April,
-                            data[0].May,
-                            data[0].June,
-                            data[0].July,
-                            data[0].August,
-                            data[0].September,
-                            data[0].October,
-                            data[0].November,
-                            data[0].December
-                        ],
-                        color: '#438eb9 '
-                    };
-
-                    var options = {
-                        series: [labDataset],
-                        chart: {
-                            type: 'bar',
-                            height: 350
-                        },
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                columnWidth: '55%',
-                                endingShape: 'rounded'
-                            },
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            show: true,
-                            width: 2,
-                            colors: ['transparent']
-                        },
-                        xaxis: {
-                            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        },
-                    };
-
-                    chart = new ApexCharts(document.querySelector("#VisitGrapgh"), options);
-                    chart.render();
-                }, function (error) {
-                    alert(error.get_message());
-                });
+            if (category === "01") {
+                PageMethods.GetTotalVisits(
+                    patid,
+                    function (resp) {
+                        debugger;
+                        var data = JSON.parse(resp);
+                        buildChart(data, 'OutPatient');
+                    },
+                    function (error) {
+                        alert(error.get_message());
+                    }
+                );
+            } else if (category === "02") {
+                PageMethods.GetTotalVisitsEmergency(
+                    patid,
+                    function (resp) {
+                        debugger;
+                        var data = JSON.parse(resp);
+                        buildChart(data, 'Emergency');
+                    },
+                    function (error) {
+                        alert(error.get_message());
+                    }
+                );
+            } else if (category === "03") {
+                PageMethods.GetTotalVisitsIPD(
+                    patid,
+                    function (resp) {
+                        debugger;
+                        var data = JSON.parse(resp);
+                        buildChart(data, 'InPatient');
+                    },
+                    function (error) {
+                        alert(error.get_message());
+                    }
+                );
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //let chart;
+        //function createChartOPD() {
+        //    debugger;
+        //    var patid = $("#hdfReg_ID").val();
+        //    var category = $('#ddlmaindepartment').val();
+
+
+        //    if (chart) {
+        //        chart.destroy();
+        //        chart = null;
+        //    }
+
+        //    if (category == "01") {
+        //        PageMethods.GetTotalVisits(patid, function (resp) {
+        //            debugger;
+        //            var data = JSON.parse(resp);
+
+        //            var labDataset = {
+        //                name: 'OutPatient',
+        //                data: [
+        //                    data[0].January,
+        //                    data[0].February,
+        //                    data[0].March,
+        //                    data[0].April,
+        //                    data[0].May,
+        //                    data[0].June,
+        //                    data[0].July,
+        //                    data[0].August,
+        //                    data[0].September,
+        //                    data[0].October,
+        //                    data[0].November,
+        //                    data[0].December
+        //                ],
+        //                color: '#438eb9 '
+        //            };
+
+        //            var options = {
+        //                series: [labDataset],
+        //                chart: {
+        //                    type: 'bar',
+        //                    height: 350
+        //                },
+        //                plotOptions: {
+        //                    bar: {
+        //                        horizontal: false,
+        //                        columnWidth: '55%',
+        //                        endingShape: 'rounded'
+        //                    },
+        //                },
+        //                dataLabels: {
+        //                    enabled: false
+        //                },
+        //                stroke: {
+        //                    show: true,
+        //                    width: 2,
+        //                    colors: ['transparent']
+        //                },
+        //                xaxis: {
+        //                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        //                },
+        //            };
+
+        //            chart = new ApexCharts(document.querySelector("#VisitGrapgh"), options);
+        //            chart.render();
+        //        }, function (error) {
+        //            alert(error.get_message());
+        //        });
+        //    }
+
+        //    if (category == "03") {
+        //        PageMethods.GetTotalVisitsIPD(patid, function (resp) {
+        //            debugger;
+        //            var data = JSON.parse(resp);
+
+        //            var labDataset = {
+        //                name: 'InPatient',
+        //                data: [
+        //                    data[0].January,
+        //                    data[0].February,
+        //                    data[0].March,
+        //                    data[0].April,
+        //                    data[0].May,
+        //                    data[0].June,
+        //                    data[0].July,
+        //                    data[0].August,
+        //                    data[0].September,
+        //                    data[0].October,
+        //                    data[0].November,
+        //                    data[0].December
+        //                ],
+        //                color: '#438eb9 '
+        //            };
+
+        //            var options = {
+        //                series: [labDataset],
+        //                chart: {
+        //                    type: 'bar',
+        //                    height: 350
+        //                },
+        //                plotOptions: {
+        //                    bar: {
+        //                        horizontal: false,
+        //                        columnWidth: '55%',
+        //                        endingShape: 'rounded'
+        //                    },
+        //                },
+        //                dataLabels: {
+        //                    enabled: false
+        //                },
+        //                stroke: {
+        //                    show: true,
+        //                    width: 2,
+        //                    colors: ['transparent']
+        //                },
+        //                xaxis: {
+        //                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        //                },
+        //            };
+
+        //            chart = new ApexCharts(document.querySelector("#VisitGrapgh"), options);
+        //            chart.render();
+        //        }, function (error) {
+        //            alert(error.get_message());
+        //        });
+        //    }
+
+        //    if (category == "02") {
+        //        PageMethods.GetTotalVisitsEmergency(patid, function (resp) {
+        //            debugger;
+        //            var data = JSON.parse(resp);
+
+        //            var labDataset = {
+        //                name: 'Emergency',
+        //                data: [
+        //                    data[0].January,
+        //                    data[0].February,
+        //                    data[0].March,
+        //                    data[0].April,
+        //                    data[0].May,
+        //                    data[0].June,
+        //                    data[0].July,
+        //                    data[0].August,
+        //                    data[0].September,
+        //                    data[0].October,
+        //                    data[0].November,
+        //                    data[0].December
+        //                ],
+        //                color: '#438eb9 '
+        //            };
+
+        //            var options = {
+        //                series: [labDataset],
+        //                chart: {
+        //                    type: 'bar',
+        //                    height: 350
+        //                },
+        //                plotOptions: {
+        //                    bar: {
+        //                        horizontal: false,
+        //                        columnWidth: '55%',
+        //                        endingShape: 'rounded'
+        //                    },
+        //                },
+        //                dataLabels: {
+        //                    enabled: false
+        //                },
+        //                stroke: {
+        //                    show: true,
+        //                    width: 2,
+        //                    colors: ['transparent']
+        //                },
+        //                xaxis: {
+        //                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        //                },
+        //            };
+
+        //            chart = new ApexCharts(document.querySelector("#VisitGrapgh"), options);
+        //            chart.render();
+        //        }, function (error) {
+        //            alert(error.get_message());
+        //        });
+        //    }
+        //}
         function fetchPatientDepOPD() {
             debugger;
             var Patient_ID = $("#hdfReg_ID").val();
