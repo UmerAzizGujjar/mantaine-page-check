@@ -11,7 +11,9 @@
 
         });
 
-
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
         function LoadPage() {
             $("#tbloutPatients").DataTable({
                 "processing": true,
@@ -62,10 +64,10 @@
                     { "data": "MrNo", "name": "MrNo", "width": "8%", "orderable": true },
                     { "data": "Full_Name", "width": "13%", "orderable": false },
                     { "data": "Total_Amount", "width": "7%", "orderable": false },
-                    { "data": "Discount_Percentage", "width": "10%", "orderable": false },
-                    { "data": "Discount_Amount", "width": "9%", "orderable": false },
+                    { "data": "Discount_Percentage", "width": "8%", "orderable": false },
+                    { "data": "Discount_Amount", "width": "8%", "orderable": false },
                     { "data": "Net_Amount", "width": "8%", "orderable": false  },
-                    { "data": "Received_Amount", "name": "Received_Amount", "width": "10%", "orderable": false },
+                    { "data": "Received_Amount", "name": "Received_Amount", "width": "8%", "orderable": false },
                     { "data": "Balance_Amount", "width": "8%", "orderable": false },
                     { "data": "Operator", "width": "9%", "orderable": false },
                     
@@ -74,11 +76,12 @@
                             debugger;
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Bill_ID + ')" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
                             var Del = '<a href="#" style="border-radius: 4px; background-color: #ad170c;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
-
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
                             var result;
-                            result = res + Del;
+                            result = res + Del + print;
                             return result;
-                        }, "width": "18%", "orderable": false
+;
+                        }, "width": "23%", "orderable": false
                     }
 
                 ],

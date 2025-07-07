@@ -13,7 +13,9 @@
 
 
         });
-
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
         function editOpen(Emp_ID) {
             window.open("Employee.aspx?ID=" + Emp_ID);
         }
@@ -78,9 +80,9 @@
                             debugger;
                             var res = '<a class="editListBtn"  href="#" onclick="editOpen(' + full.Emp_id + ')" style="border-radius: 4px;margin-right: 4px;color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
                             var Delete = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#"  onclick="deleteConfirm(' + full.Emp_id + ')"><i class="fa fa-trash"style="color:white !important;"></i></a>';
-
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
                             var result;
-                            result = res + Delete;
+                            result = res + Delete + print;
                             return result;
                         }, "width": "10%", "orderable": false
                     }

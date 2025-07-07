@@ -965,7 +965,7 @@
 
                     </h5>
                     <span class="badge" style="cursor: pointer;"><span id="appdate">Appointment Date</span></span>
-                    <h5 style="margin-left: 45px"><strong class="">Consultantaion with &nbsp;<span id="doctorname"></span></strong></h5>
+                    <h5 style="margin-left: 45px"><strong class="">Consultation with &nbsp;<span id="doctorname"></span></strong></h5>
                 </div>
 
                 <div class="appointment-details">

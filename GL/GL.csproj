@@ -331,24 +331,11 @@
     <Content Include="bin\AjaxControlToolkit.dll" />
     <Content Include="bin\CKEditor.NET.dll" />
     <Content Include="bin\CrystalDecisions.CrystalReports.Engine.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.ClientDoc.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.CommLayer.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.CommonControls.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.CommonObjectModel.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.Controllers.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.CubeDefModel.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.DataDefModel.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.DataSetConversion.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.ObjectFactory.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.Prompting.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.ReportDefModel.dll" />
-    <Content Include="bin\CrystalDecisions.ReportAppServer.XmlSerialize.dll" />
     <Content Include="bin\CrystalDecisions.ReportSource.dll" />
     <Content Include="bin\CrystalDecisions.Shared.dll" />
     <Content Include="bin\CrystalDecisions.Web.dll" />
     <Content Include="bin\EntityFramework.dll" />
     <Content Include="bin\EntityFramework.SqlServer.dll" />
-    <Content Include="bin\EntityFramework.xml" />
     <Content Include="bin\EnvDTE.dll" />
     <Content Include="bin\GridMvc.dll" />
     <Content Include="bin\Infragistics35.WebUI.WebHtmlEditor.v12.1.dll" />
@@ -358,25 +345,18 @@
     <Content Include="bin\Infragistics4.WebUI.Documents.IO.v12.1.dll" />
     <Content Include="bin\Infragistics4.WebUI.Documents.Reports.v12.1.dll" />
     <Content Include="bin\Infragistics4.WebUI.Documents.Word.v12.1.dll" />
-    <Content Include="bin\Microsoft.ReportViewer.Common.dll" />
-    <Content Include="bin\Microsoft.ReportViewer.ProcessingObjectModel.dll" />
     <Content Include="bin\Microsoft.ReportViewer.WebForms.dll" />
-    <Content Include="bin\Microsoft.SqlServer.Types.dll" />
     <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
     <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Newtonsoft.Json.xml" />
     <Content Include="bin\PMS.dll" />
     <Content Include="bin\PMS.pdb" />
     <Content Include="bin\stdole.dll" />
     <Content Include="bin\System.Data.SqlServerCe.dll" />
     <Content Include="bin\System.Net.Http.dll" />
     <Content Include="bin\System.Net.Http.Formatting.dll" />
-    <Content Include="bin\System.Net.Http.Formatting.xml" />
     <Content Include="bin\System.Net.Http.WebRequest.dll" />
     <Content Include="bin\System.Web.Http.dll" />
     <Content Include="bin\System.Web.Http.WebHost.dll" />
-    <Content Include="bin\System.Web.Http.WebHost.xml" />
-    <Content Include="bin\System.Web.Http.xml" />
     <Content Include="bin\Telerik.Web.UI.dll" />
     <Content Include="Modules\BloodBank\BloodBank.aspx" />
     <Content Include="Modules\BloodBank\BloodBankView.aspx" />
@@ -532,7 +512,6 @@
     <Content Include="Modules\Administrator\Pharmacy_Users.aspx" />
     <Content Include="Modules\Administrator\Pharmacy_UserView.aspx" />
     <Content Include="Modules\GL\PostVouchers.aspx" />
-    <Content Include="Properties\PublishProfiles\chris.pubxml.user" />
     <Content Include="Modules\Billing\Receipts.aspx" />
     <Content Include="Modules\Billing\ReceiptsView.aspx" />
     <Content Include="Modules\Others\ReceivedFromLaundry.aspx" />
@@ -18078,11 +18057,6 @@
     <Content Include="upload\ExcelUploadSamples\COAExcelUploadSample.xlsx" />
     <Content Include="upload\ExcelUploadSamples\StockUploadSample.xlsx" />
     <Content Include="upload\ExcelUploadSamples\VoucherUploadSample.xlsx" />
-    <None Include="Properties\PublishProfiles\ABDUL HASEEB.pubxml" />
-    <None Include="Properties\PublishProfiles\adeel.pubxml" />
-    <None Include="Properties\PublishProfiles\chris.pubxml" />
-    <None Include="Properties\PublishProfiles\Leons.pubxml" />
-    <None Include="Properties\PublishProfiles\rehan.pubxml" />
     <Content Include="Reports\Inventory\rptBatchExpiry.rpt" />
     <Content Include="Reports\Inventory\rptMinimumStock.rpt" />
     <Content Include="Reports\Inventory\rptMIR_Summary_Department_Wise.rpt" />
@@ -21078,6 +21052,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IGPFileImages\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Reports\Billings\" />
     <Folder Include="Reports\InventoryModules\" />
     <Folder Include="upload\UploadAdvancePaymentFilesImages\" />
@@ -21112,8 +21087,6 @@
     <None Include="PMSDataSet.xss">
       <DependentUpon>PMSDataSet.xsd</DependentUpon>
     </None>
-    <None Include="Properties\PublishProfiles\Atif.pubxml" />
-    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

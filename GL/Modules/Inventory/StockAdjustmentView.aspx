@@ -14,7 +14,9 @@
             function redirecttonew() {
                 window.location.href = "StockAdjustment.aspx";
             }  
-
+            function PrintTest(id) {
+                window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+            }
             var isDele = '';
             function LoadPage() {
                 $("#tblexample").DataTable({
@@ -69,7 +71,11 @@
                         {
                             "data": null,
                             "render": function (data, type, full) {
-                                return '<a href="#"  class="editListBtn" onclick="Edit(' + full.Adjustment_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
+                                var res =  '<a href="#"  class="editListBtn" onclick="Edit(' + full.Adjustment_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
+                                var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                                var result;
+                                result = res  + print;
+                                return result;
                             }, "orderable": false
                         }
                     ],

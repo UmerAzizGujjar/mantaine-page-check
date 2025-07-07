@@ -7,6 +7,9 @@
     <script type="text/javascript">
         var year = false;
         debugger;
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
 
         function LoadPage() {
             if ($.fn.DataTable.isDataTable('#example')) {
@@ -105,7 +108,10 @@
                                 actionButtons += `
                             <a href="#" onclick="deleteConfirm(${full.Budget_ID})" style="border-radius: 4px; background-color: red; color: white; padding: 5px 8px;"><i class="fa fa-trash-o" style="color:white !important;"></i></a>`;
                             }
-                            return actionButtons;
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            var result;
+                            result = actionButtons  + print;
+                            return result;
                         }, width: "15%"
                     }
                 ],

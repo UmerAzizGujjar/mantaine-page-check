@@ -11,7 +11,9 @@
 
 
         });
-
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
         function editOpen(id) {
 
             window.open("OPD.aspx?OPDID=" + id + "");
@@ -112,10 +114,12 @@
                             debugger;
                             var res = '<a href="#" onclick="editOpen(' + full.Patient_ID + ')" class="editListBtn" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
                             var Del = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Patient_ID + '" onclick="cancelPatient( ' + full.Patient_ID + ', \'' + full.Full_Name + '\')"><i class="fa fa-trash" style="color:white !important;"></i></a>';
-
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Patient_IDD + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
                             var result;
-                            result = res + Del;
+                            result = res + Del + print;
                             return result;
+                            
+                            
                         }, "width": "13%", "orderable": false
                     }
                 ],

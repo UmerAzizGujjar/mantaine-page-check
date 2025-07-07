@@ -11,7 +11,9 @@
         function Edit(ID) {
             window.location.href = "InversionGatePass.aspx?IGP_Id=" + ID;
         }
-
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
         function AutoGRN(ID) {
             var IgpId = ID;
             PageMethods.AutoGRN(IgpId, function (Tests) {
@@ -114,11 +116,13 @@
                                 }
                             }
 
-                            var actionButtons = '<a href="#" onclick="Edit(' + full.Igp_Id + ')" style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;"><i style="color:white !important;" class="fa fa-pencil"></i></a> <a href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
-                           
+                            var res = '<a href="#" onclick="Edit(' + full.Igp_Id + ')" style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;"><i style="color:white !important;" class="fa fa-pencil"></i></a> <a href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            var result;
+                            result = res + print;
+                            return result;
 
-                            return actionButtons;
-                        }, "width": "15%", "orderable": false
+                         }, "width": "15%", "orderable": false
                     },
                     {
                         "render": function (data, type, full) {

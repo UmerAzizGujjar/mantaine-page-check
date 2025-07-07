@@ -9,6 +9,10 @@
                 window.location.href = "ApprovalStages.aspx";
             });
         });
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
+
         function Edit(id) {
             window.location.href = "ApprovalStages.aspx?ID=" + id;
         }
