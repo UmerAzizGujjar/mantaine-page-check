@@ -521,31 +521,8 @@ namespace PMS
                     dataa.lblMessage = "Data Updated Successfully";
                 }
                 db.SubmitChanges();
-                //dataa.hdnEmp = employee.Emp_ID.ToString();
+               
 
-                //DataTable data = JsonConvert.DeserializeObject<DataTable>(dataa.CustomerJSON);
-                //var Query = db.Test_Defination_Detail_Rates.Where(t => t.Test_ID == Convert.ToInt32(dataa.hdnEmp) && t.Patient_Type == "Panel").ToList();
-                //if (Query.Count > 0)
-                //{
-                //    db.Test_Defination_Detail_Rates.DeleteAllOnSubmit(Query);
-                //    db.SubmitChanges();
-                //}
-
-
-                //for (int i = 0; i < data.Rows.Count; i++)
-                //{
-
-                //    Test_Defination_Detail_Rate s = new Test_Defination_Detail_Rate();
-                //    s.Test_ID = Convert.ToInt32(dataa.hdnEmp);
-                //    s.Patient_Category = Convert.ToString(data.Rows[i].ItemArray[0]);
-                //    s.Test_Rate = Convert.ToInt32(data.Rows[i].ItemArray[1]);
-                //    s.Patient_Type = "Panel";
-                //    s.Created_By = AppConfig.UserID.ToString();
-                //    s.Created_Time = DateTime.Now;
-
-                //    db.Test_Defination_Detail_Rates.InsertOnSubmit(s);
-                //    db.SubmitChanges();
-                //}
 
 
 
@@ -567,7 +544,7 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             sys_Parm AccountPram = new sys_Parm();
             AccountPram = (from tbl in db.sys_Parms
-                           where tbl.Name == "Doctors Payable"
+                           where tbl.Name == "Trade & Other Payables"
 
                            select tbl).FirstOrDefault();
             if (AccountPram != null && AccountPram.Code != null)
