@@ -1,13 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EMR.aspx.cs" Inherits="PMS.Modules.Dashboards.EMR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <script src="~../../wwwroot/Tibbit_theme/Scripts/jquery-1.11.1.min.js"></script>
-    <script src="~../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
+    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
-    <script src="~../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
+    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
+  
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
