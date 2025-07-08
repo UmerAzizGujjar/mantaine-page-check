@@ -37,6 +37,7 @@
                     loadPatientDetail(OPDID);
 
                     $('#btn-opdprint').show();
+                    $('#btn-opdFormprint').show();
                 }, 1500);
             }
             else {
@@ -141,10 +142,24 @@
                  var urlInfo = window.location.href.split('/');
                  var ip = urlInfo[2];
                  var foldername = urlInfo[3];
-                url = 'http://' + ip +  '/' + foldername +  "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
+                url = 'http://' + ip +  "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
              }
              window.open(url, '_blank');
         }
+
+        function OPD_Form_Print() {
+            debugger;
+            var ID = '<%= Request.QueryString["OPDID"]%>';
+                    var locationInfo = window.location;
+            var url = "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
+                    if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                        var urlInfo = window.location.href.split('/');
+                        var ip = urlInfo[2];
+                        var foldername = urlInfo[3];
+                        url = 'http://' + ip + "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
+                    }
+                    window.open(url, '_blank');
+                }
         debugger
         function PrintPatientCard() {
             debugger
@@ -409,6 +424,9 @@
             </div>
             <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                 <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint">
+                <input type="button" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6" id="divvoucher">
                 <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" />

@@ -123,9 +123,9 @@
            
             debugger;
             var ReportTitle = '<%= Request.QueryString["rptTitle"]%>';
-            if (ReportTitle == "Lab_Cash_Collection") {
-                FillLabTests();
-            }
+            //if (ReportTitle == "Lab_Cash_Collection") {
+            //    FillLabTests();
+            //}
             loadMRNo();
             LoadInvNo();
             loadmed();
@@ -482,7 +482,8 @@
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == "Lab_Cash_Collection") {
-                        var url = 'ReportViewer.aspx?ReportName=LabCashCollection&ReportTitle=LabCashCollection from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0");
+                       //<%-- var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;--%>
+                        var url = 'ReportViewer.aspx?ReportName=LabCashCollection&ReportTitle=LabCashCollection from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0"); //+ '&Summary=' + summary ;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == "Blood_Bank_Lab_Test_Details") {
@@ -537,16 +538,22 @@
                         window.open(url, '_blanks');
                     }
 
+
+                    else if (rptTitle == 'Total_Income') {
+                        debugger;
+                        window.location.href = 'ReportViewer.aspx?ReportName=TotalIncome&ReportTitle=Report Total Income from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                    }
+
                     else if (rptTitle == "Lab_Cash_Receiving_Collection") {
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=LabCashReceivingCollection&ReportTitle=LabCashReceivingCollection from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked + '&Discount=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0") + '&Summary=' + summary + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect").val()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect").val() : "0") + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'Service_Charges_Detail') {
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=ServiceChargesDetail&ReportTitle=Service Charges Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&ServiceID=' + $('#ctl00_MainContent_ddlTestName').val() + '&Summary=' + summary + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect option:selected").text() : "0") + '&Discount=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0") + '&ExportPDF=' + exporttopdf;
+       
+                        var url = 'ReportViewer.aspx?ReportName=ServiceChargesDetail&ReportTitle=Service Charges Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&ServiceID=' + $('#ctl00_MainContent_ddlTestName').val() + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect option:selected").text() : "0") + '&Discount=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0");// + '&Summary=' + summary + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'ConsolidateMedicalSubsidy') {
