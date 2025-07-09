@@ -3497,6 +3497,95 @@ namespace PMS
                     rd.RecordSelectionFormula = "{spAdmissionCharges;1.Discount} = 0";
                 }
             }
+
+            else if (reportName == "CancelBill")
+            {
+                reportPath += "TransactionalDetails/rptBillCancelReport.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string stTime = Request.QueryString["StartTime"].ToString();
+
+                string endDate = Request.QueryString["EndDate"].ToString();
+                string endTime = Request.QueryString["EndTime"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+            }
+            else if (reportName == "AdvanceReport")
+            {
+                reportPath += "TransactionalDetails/rptAdvancePaymentReport.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string stTime = Request.QueryString["StartTime"].ToString();
+
+                string endDate = Request.QueryString["EndDate"].ToString();
+                string endTime = Request.QueryString["EndTime"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+
+                rd.SetParameterValue("@FromDate", parameterStDate);
+                rd.SetParameterValue("@ToDate", parameterEndDate);
+            }
+            else if (reportName == "RefundReport")
+            {
+                reportPath += "TransactionalDetails/rptRefundReport.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string stTime = Request.QueryString["StartTime"].ToString();
+
+                string endDate = Request.QueryString["EndDate"].ToString();
+                string endTime = Request.QueryString["EndTime"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+
+                rd.SetParameterValue("@FromDate", parameterStDate);
+                rd.SetParameterValue("@ToDate", parameterEndDate);
+            }
+            else if (reportName == "ReceiptCollectionReport")
+            {
+                reportPath += "TransactionalDetails/rptReceiptCollectionReport.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string stTime = Request.QueryString["StartTime"].ToString();
+
+                string endDate = Request.QueryString["EndDate"].ToString();
+                string endTime = Request.QueryString["EndTime"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+
+                rd.SetParameterValue("@FromDate", parameterStDate);
+                rd.SetParameterValue("@ToDate", parameterEndDate);
+            }
             else if (reportName == "DailyRevenue")
             {
                 reportPath += "rptDailyRevenue.rpt";

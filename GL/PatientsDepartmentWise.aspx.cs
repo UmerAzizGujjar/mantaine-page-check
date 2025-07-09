@@ -2503,6 +2503,81 @@ namespace PMS
                     SetDepartent();
 
                 }
+                else if (PageTitle == "AdvanceReport")
+                {
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    dpROw.Visible = false;
+                    AllowPatientRecord = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                }
+
+                else if (PageTitle == "RefundReport")
+                {
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    dpROw.Visible = false;
+                    AllowPatientRecord = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                }
+
+                else if (PageTitle == "CancelBill")
+                {
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    dpROw.Visible = false;
+                    AllowPatientRecord = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                }
+
+                else if (PageTitle == "ReceiptCollectionReport")
+                {
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    dpROw.Visible = false;
+                    AllowPatientRecord = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                }
                 else if (this.PageTitle == "PharmacySaleReport")
                 {
                     string x = "Pharmacy Sale Report";
