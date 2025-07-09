@@ -10,6 +10,7 @@
             $('#ctl00_lblMessage').hide();
             LoadPage();
         });
+
         function PrintTest(id) {
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }

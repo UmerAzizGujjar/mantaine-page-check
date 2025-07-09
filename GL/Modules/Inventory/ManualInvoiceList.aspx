@@ -90,9 +90,11 @@
                     {
                         "data": null,
                         "render": function (data, type, full) {
-                            var Edit = '<a class="editListBtn" href="#" onclick="Edit(' + full.ManualInvoiceId + ')" style="border-radius: 4px;margin-right: 4px;  color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
-                            var Del = '<a href="#" onclick="deleteConfirm(' + full.ManualInvoiceId + ')" id="btnDel"   name="btnDel" style="border-radius: 4px;margin-right: 4px; background-color: #ad170c; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-trash"></i></a>'
-                            var Print = '<a href="#" onclick="PrintReport(' + full.ManualInvoiceId + ')" id="btnprint"  name="btnprint" style="border-radius: 4px;margin-right: 4px; background-color: #387024; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-print"></i></a>'
+                            var Edit = '<a class="editListBtn" href="#" onclick="Edit(' + full.ManualInvoiceId + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
+
+                            var Del = '<a href="#" class="delListBtn"  onclick="deleteConfirm(' + full.ManualInvoiceId + ')" id="btnDel" name="btnDel" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-trash"></i></a>'
+
+                            var Print = '<a href="#" class="printListBtn" onclick="PrintReport(' + full.ManualInvoiceId + ')" id="btnprint"  name="btnprint" style="border-radius: 4px;margin-right: 4px;color: white; padding: 5px 8px 5px 8px;"><i  class="fa fa-print"></i></a>'
                             var result;
                             result = Edit + Del + Print ;
                             return result;

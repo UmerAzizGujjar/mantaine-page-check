@@ -6,13 +6,8 @@
         $(document).ready(function () {
             getClinicalFinancialAcoountsDropdown();
 
-            //OPD_ClinicalFinancialDepartment working
-
-            setTimeout(function () {
-                $('#OPD_ClinicalFinancialDepartment option[value="001"]')
-                    .prop('selected', true)
-
-            }, 500);
+            
+           
         });
         $(function () {
             $("#tabs").tabs();
@@ -33,6 +28,8 @@
             rows.each(function () {
                 let row = $(this);
                 let rowData = {
+                    
+                    financialdepartment: row.find('.financialDepartment').val(),
                     categoryname: row.find('.categoryname').val(),
                     cashinhand: row.find('.cashinhand').val(),
                     discount: row.find('.discount').val(),
@@ -119,10 +116,16 @@
             row.remove();
         }
         function addNewRow() {
-            getPatientTypes(function (categoryOptions) {
-                getAccounts(function (optionsVen) {
-                    let newRow = `
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getPatientTypes(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
                 <tr class="data-row">
+                    <td style="display: none">
+                        <select class="financialDepartment">
+                            ${options}
+                        </select>
+                    
                     <td>
                         <select class="categoryname select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
@@ -150,8 +153,10 @@
                     </td>
                 </tr>
             `;
-                    $('#tableOPD tbody').append(newRow);
-                    $('.select2select').select2(); // initialize Select2
+                        $('#tableOPD tbody').append(newRow);
+                        $('.financialDepartment option[value="001"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                    });
                 });
             });
         }
@@ -195,7 +200,7 @@
                 }
             });
         }
-        function getClinicalFinancialAcoountsDropdown() {
+        function getClinicalFinancialAcoountsDropdown(callback) {
             var options = '<option value="0">Please Select</option>';
 
             $.ajax({
@@ -208,6 +213,8 @@
                     $.each(data, function (key, value) {
                         options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
                     });
+                    callback(options);
+
                     $('#OPD_ClinicalFinancialDepartment').html(options);
 
 
@@ -280,6 +287,7 @@
             <table id="tableOPD" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
           <thead id="theadOPD">
             <tr>
+              <th style=" display:none">Financial Department  </th>
               <th style="width: 20%;">Category Name         </th>
               <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
               <th style="width: 25%;">Discount              </th>
