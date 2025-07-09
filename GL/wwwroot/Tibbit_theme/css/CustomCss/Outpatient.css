@@ -297,7 +297,7 @@ select {
 }
 
 .forcolor li a:hover {
-    color: #FFC000 !important;
+    color: Black !important;
 }
 
 #tabs ul {
@@ -308,7 +308,7 @@ select {
 
 #tabs ul li a {
     background-color: #EFA63E   !important;
-    color: white;
+    color: Black;
     background: none;
     border: none;
     padding: 10px;
