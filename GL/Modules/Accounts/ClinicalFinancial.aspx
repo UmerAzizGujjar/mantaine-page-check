@@ -4,6 +4,10 @@
    
     <script type="text/javascript">
         $(document).ready(function () {
+            getClinicalFinancialAcoountsDropdown();
+
+            
+           
         });
         $(function () {
             $("#tabs").tabs();
@@ -12,12 +16,40 @@
         function submitData() {
             let isEmptyFound = false;
             let allData = [];
-
+            let categoryNames = new Set();
+            let duplicateFound = false;
             let rows = $('#tableOPD .data-row');
 
             // Check if any rows exist
             if (rows.length === 0) {
                 isEmptyFound = true;
+            }
+
+            rows.each(function () {
+                let row = $(this);
+                let rowData = {
+                    
+                    financialdepartment: row.find('.financialDepartment').val(),
+                    categoryname: row.find('.categoryname').val(),
+                    cashinhand: row.find('.cashinhand').val(),
+                    discount: row.find('.discount').val(),
+                    revenue: row.find('.revenue').val()
+                };
+                // Check if any value is empty
+                if (rowData.categoryname == 0 || rowData.cashinhand == 0 || rowData.discount == 0 || rowData.revenue == 0)
+                {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNames.has(rowData.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNames.add(rowData.categoryname);
+                }
+                allData.push(rowData);
+            });
+
+            if (isEmptyFound) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -30,37 +62,13 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
+
             }
-
-            
-
-            rows.each(function () {
-                let row = $(this);
-                let rowData = {
-                    categoryname: row.find('.categoryname').val(),
-                    cashinhand: row.find('.cashinhand').val(),
-                    discount: row.find('.discount').val(),
-                    revenue: row.find('.revenue').val()
-                };
-
-                // Check if any value is empty
-                if (
-                    !rowData.categoryname ||
-                    !rowData.cashinhand ||
-                    !rowData.discount ||
-                    !rowData.revenue
-                ) {
-                    isEmptyFound = true;
-                }
-
-                allData.push(rowData);
-            });
-
-            if (!isEmptyFound) {
+            if (duplicateFound) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Please fill all fields in each row before submitting.',
+                    text: 'Categories must be different.',
                     showConfirmButton: false,
                     timer: 2000,
                     customClass: {
@@ -73,7 +81,11 @@
             }
 
             console.log(allData);
-            if (!isEmptyFound) { 
+            console.log(duplicateFound);
+            console.log(isEmptyFound);
+
+
+            if (!isEmptyFound && !duplicateFound) { 
             $.ajax({
                 type: "POST",
                 url: "ClinicalFinancial.aspx/InsertData",
@@ -103,62 +115,118 @@
             let row = anchor.closest('tr');
             row.remove();
         }
-        function GetAccounts(callback) {
-            $.ajax({
-                type: "POST",
-                url: "ClinicalFinancial.aspx/filldropdowns",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var optionsVen = '<option value="0">Please Select</option>';
-                    var accounts = JSON.parse(response.d);
-
-                    $.each(accounts, function (key, value) {
-                        optionsVen += '<option value="' + value.Account_ID + '">' + value.Account_Code + ' - ' + value.Account_Name + '</option>';
+        function addNewRow() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getPatientTypes(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                        <select class="financialDepartment">
+                            ${options}
+                        </select>
+                    
+                    <td>
+                        <select class="categoryname select2select" style="background-color: white; height:32px;">
+                            ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="cashinhand select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="discount select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenue select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+                            <i class="fa fa-trash fa-2x" style="color: red;"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+                        $('#tableOPD tbody').append(newRow);
+                        $('.financialDepartment option[value="001"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
                     });
-
-                    callback(optionsVen); // Return options to caller
+                });
+            });
+        }
+        function getPatientTypes(callback) {
+            $.ajax({
+                url: 'ClinicalFinancial.aspx/PatientType',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    let options = '<option value="0">Please Select</option>';
+                    let data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
+                    });
+                    callback(options);
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error: " + error);
-                    callback('<option value="0">Error loading</option>');
+                    console.error('Error fetching patient types:', error);
+                    callback('<option value="0">Error</option>');
                 }
             });
         }
-
-        function addNewRow() {
-            GetAccounts(function (optionsVen) {
-                let newRow = `
-  <tr class="data-row">
-    <td>
-      <input type="text" class="categoryname"] style="height:32px" placeholder="Enter category"/>
-    </td>
-    <td>
-      <select class="cashinhand"] style="background-color: white;">
-        ${optionsVen}
-      </select>
-    </td>
-    <td>
-      <select class="discount"] style="background-color: white;">
-        ${optionsVen}
-      </select>
-    </td>
-    <td>
-      <select class="revenue" style="background-color: white;">
-        ${optionsVen}
-      </select>
-    </td>
-    <td>
-      <a href="#" onclick="removeRow(this)">
-        <i class="fa fa-trash fa-2x" style="color: red;"></i>
-      </a>
-    </td>
-  </tr>
-`;
-                $('#tableOPD tbody').append(newRow);
-                $('select').select2();
+        function getAccounts(callback) {
+            $.ajax({
+                url: 'ClinicalFinancial.aspx/filldropdowns',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    let options = '<option value="0">Please Select</option>';
+                    let data = JSON.parse(response.d);
+                    $.each(data, function (key, value) {
+                        options += `<option value="${value.Account_ID}">${value.Account_Code} - ${value.Account_Name}</option>`;
+                    });
+                    callback(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching accounts:', error);
+                    callback('<option value="0">Error</option>');
+                }
             });
         }
+        function getClinicalFinancialAcoountsDropdown(callback) {
+            var options = '<option value="0">Please Select</option>';
+
+            $.ajax({
+                url: 'ClinicalFinancial.aspx/ClinicalFinancialDepartmentDropdown',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    callback(options);
+
+                    $('#OPD_ClinicalFinancialDepartment').html(options);
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+
+            return options;
+        }
+
 
     </script>
     <style type="text/css">
@@ -204,7 +272,12 @@
 
         <div id="Tab-1">
             <div class="row">
-                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <select style="display:none" id="OPD_ClinicalFinancialDepartment">
+
+                    </select>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-9"></div>
                 <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;" >
                     <a href="#" id="btnaddrow" onclick="addNewRow()" >
                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
@@ -214,6 +287,7 @@
             <table id="tableOPD" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
           <thead id="theadOPD">
             <tr>
+              <th style=" display:none">Financial Department  </th>
               <th style="width: 20%;">Category Name         </th>
               <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
               <th style="width: 25%;">Discount              </th>

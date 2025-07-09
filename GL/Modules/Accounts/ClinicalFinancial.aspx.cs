@@ -16,6 +16,46 @@ namespace PMS.Modules.Accounts
 
         }
         [WebMethod]
+        public static string ClinicalFinancialDepartmentDropdown()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Clinical Financial Department"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string PatientType()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
         public static string filldropdowns()
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -38,7 +78,7 @@ namespace PMS.Modules.Accounts
             foreach (RowData row in rows)
             {
                 string category = row.categoryname;
-
+                string financialDept = row.financialdepartment;
                 int cash = 0, discount = 0, revenue = 0;
                 int.TryParse(row.cashinhand, out cash);
                 int.TryParse(row.discount, out discount);
@@ -46,6 +86,7 @@ namespace PMS.Modules.Accounts
 
                 ClinicalAccountCategory table = new ClinicalAccountCategory
                 {
+                    Fn_Department = financialDept,
                     CategoryName = category,
                     CashInHand = cash,
                     Discount = discount,
@@ -53,6 +94,7 @@ namespace PMS.Modules.Accounts
                     CreatedBy = AppConfig.UserID, 
                     CreatedDate = DateTime.Now,
                     IsCancel = false,
+                    
                 };
 
                 db.ClinicalAccountCategories.InsertOnSubmit(table);
@@ -65,6 +107,8 @@ namespace PMS.Modules.Accounts
         // Create a class to receive row data
         public class RowData
         {
+            
+                public string financialdepartment { get; set; }
             public string categoryname { get; set; }
             public string cashinhand { get; set; }
             public string discount { get; set; }
