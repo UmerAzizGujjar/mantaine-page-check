@@ -1,10 +1,10 @@
 /* Example tokeninput style #1: Token vertical list*/
 ul.token-input-list {
-    /*overflow: hidden; */
+    overflow: hidden;
     height: auto !important;
     height: 1%;
     border-radius: 5px;
-    
+    border: 1px solid #999;
     cursor: text;
     font-size: 12px;
     /*font-family: Verdana, sans-serif;*/

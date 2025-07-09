@@ -7,7 +7,9 @@
         $(document).ready(function () {
             LoadPage();
         });
-
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
         function LoadPage() {
             $('#tblResult').DataTable({
                 "processing": true,
@@ -60,8 +62,9 @@
                             debugger;
                             var res = '<a href="#" onclick="Edit(\'' + full.Dept_Wise_User_Id + '\')" style="border-radius: 4px; margin-right: 4px; background-color: #EFA63E !important; color: white; padding: 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
                             var Delete = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Dept_Wise_User_Id + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"style="color:white !important;"></i></a>';
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
                             var result;
-                            result = res + Delete;
+                            result = res + Delete + print;
                             return result;
                         }, "width": "10%"
                     }

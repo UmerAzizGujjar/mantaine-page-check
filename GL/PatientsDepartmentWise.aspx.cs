@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using Infragistics.Web.UI.GridControls;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -1388,6 +1389,28 @@ namespace PMS
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
+
+                if (this.PageTitle == "Total_Income")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+                }
+
                 else if (PageTitle == "PatientsTypesDetails")
                 {
                     object valusets;
@@ -2060,11 +2083,18 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
                     ddlPatientType.DataBind();
                     optRw.Visible = true;
-                    lblDepartment.Text ="Test Name";
-                    
-                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "001" });
-                    ddlDepartments.Visible=true;
-                    ddlDepartments.Visible = true;
+                    lblDepartment.Text ="Department";
+
+                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+
+
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    ddlDepartments.DataBind();
+
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
                                select new { d.UserName, d.UserId };
@@ -2081,6 +2111,7 @@ namespace PMS
                     tr_Export.Visible = false;
                     ddlPatientType.Visible = true;
                     lblMultiSelect.Visible = false;
+                    tr_Summary.Visible = false;
                     GetLabTests();
                 }
                 
@@ -2320,8 +2351,10 @@ namespace PMS
                     if (this.PageTitle == "Service_Charges_Detail")
                     {
                         tr1MedicalSubsidy.Visible = true;
-                        lblTestName.Visible = true;
-                        ddlTestName.Visible = true;
+                        lblMainDepartment.Visible = true;
+                        ddlDepartments.Visible = true;
+                        lblTestName.Visible = false;
+                        ddlTestName.Visible = false;
                         tr_Summary.Visible = true;
                         DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                         var serviceList = (from sl in db.INV_Items
@@ -2334,6 +2367,14 @@ namespace PMS
 
                         ddlTestName.DataValueField = "Item_ID";
                         ddlTestName.DataTextField = "Description";
+
+                        ddlShift.Visible = false;
+                        lbShift.Visible = false;
+                        DateDiv.Visible = true;
+                        Time_Row.Visible = true;
+                        dpROw.Visible = true;
+                        optRw.Visible = true;
+                        tr_Summary.Visible = false;
                         ddlTestName.DataBind();
                     }
                     if (this.PageTitle == "Daily_Revenue")
@@ -2376,8 +2417,14 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
 
+                    object valusetss;
+                    valusetss = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusetss;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
+                    ddlPatientType.DataBind();
                     if (AllowPatientRecord)
                     {
                         optRw.Visible = true;

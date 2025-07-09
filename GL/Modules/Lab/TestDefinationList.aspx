@@ -124,8 +124,8 @@
 
         function PrintTest(row) {
             debugger;
-            var Test_ID = $(row).parents('tr:first').children('td').first().next().text();
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + Test_ID);
+            //var Test_ID = $(row).parents('tr:first').children('td').first().next().text();
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + row);
         }
     </script>
 </asp:Content>

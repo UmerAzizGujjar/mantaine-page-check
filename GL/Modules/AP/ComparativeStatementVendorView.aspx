@@ -21,6 +21,9 @@
                 }
             });
         }
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
 
 
 
@@ -90,7 +93,9 @@
                                 btnPoVisible = 'style="display:none;"';
                             }
                             var create = '<a href="#" class="editListBtn" onclick="AutoPO(' + row.CSVENID + ')" ' + btnPoVisible + ' style = "border-radius: 4px;width:100%; background-color: #438eb9 ; color: White; padding: 4px 11px 4px 11px;" id = "btnPo' + (row + 1) + '" > Create PO</a >';
-                            var result = res + create;
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            var result;
+                            result = res + create + print;
                             return result;
                         }, width: "14%", "orderable": false
                     }

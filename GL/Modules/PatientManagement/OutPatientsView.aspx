@@ -13,7 +13,9 @@
 
 
         });
-
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
         function Edit(id) {
 
             window.open("OutPatients.aspx?ID=" + id + "");
@@ -96,10 +98,10 @@
                         render: function (data, type, full) {
                             debugger;
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Out_Patient_ID + ')" style="border-radius: 4px;margin-right: 4px;color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
-                            var print = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Out_Patient_ID + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"style="color:white !important;"></i></a>';
-
+                            var Del = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Out_Patient_ID + '" onclick="deleteConfirm(this)"><i class="fa fa-trash"style="color:white !important;"></i></a>';
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Out_Patient_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
                             var result;
-                            result = res + print;
+                            result = res + Del+ print;
                             return result;
                         }, "width": "10%", "orderable": false
                     }

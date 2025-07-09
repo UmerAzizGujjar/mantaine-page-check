@@ -1,5 +1,11 @@
-
-.labelcolor {
+ul.token-input-list {
+border : 0px !important
+}
+ul.token-input-list {
+    border: 0px !important;
+        overflow: visible !important;
+}
+    .labelcolor {
     color: #EFA63E !important;
 }
 #token-input-ctl00_MainContent_txtPatNO {

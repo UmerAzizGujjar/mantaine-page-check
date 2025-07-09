@@ -8,6 +8,9 @@
             $('#ctl00_lblMessage').hide();
             LoadPage();
         });
+        function PrintTest(id) {
+            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        }
         function LoadPage() {
             $("#example").DataTable({
                 "processing": true,
@@ -59,7 +62,11 @@
                     {
                         render: function (data, type, full) {
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Asset_Ret_ID + ')" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
-                            return res;
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            var result;
+                            result = res  + print;
+                            return result;
+
                         }, "width": "4%", "orderable": false
                     }
                 ],
