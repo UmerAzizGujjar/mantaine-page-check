@@ -35,8 +35,8 @@
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>
                 <div class="table-container">
-                    <table class="table table-bordered" style="color: white !important">
-                        <thead style="color: white !important">
+                    <table class="table table-bordered" >
+                        <thead >
                             <tr>
                                 <td class="white">Name
                                 </td>

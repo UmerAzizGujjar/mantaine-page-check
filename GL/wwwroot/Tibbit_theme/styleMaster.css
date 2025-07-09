@@ -167,7 +167,9 @@ page-header h1 {
 }
 
 .editListBtn {
-    background-color: #EFA63E !important
+    background-color: #EFA63E !important;
+    color:black !important;
+    
 }
 
 .tooltips {
@@ -285,13 +287,9 @@ body {
     top: -5px !important;
 }
 
-.fa-pencil {
-    color: green !important;
-}
 
-.fa-print {
-    color: darkblue !important;
-}
+
+
 
 td {
     line-height: 15px !important;
@@ -646,6 +644,9 @@ page-header h1 {
 }
 
 .editListBtn {
+    background-color: #EFA63E !important
+}
+.printListBtn {
     background-color: #EFA63E !important
 }
 
