@@ -50,6 +50,11 @@
     font-weight: bold;
 }
 
+.printListBtn {
+    background-color: #399439 !important;
+    color:white !important;
+}
+
 .swal-big-text {
     font-size: 16px !important;
 }
@@ -273,15 +278,11 @@ body {
 
 .delListBtn {
     background-color: #ad170c !important;
-    color: black !important;
+    color: white !important;
 }
 
 .fa-pencil {
     color: green !important;
-}
-
-.fa-print {
-    color: darkblue !important;
 }
 
 td {

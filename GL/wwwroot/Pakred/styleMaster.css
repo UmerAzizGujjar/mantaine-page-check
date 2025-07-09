@@ -283,11 +283,12 @@ body {
 
 .delListBtn {
     background-color: #ad170c !important;
-    color: black !important;
+    color: white !important;
 }
 
-.fa-print {
-    color: darkblue !important;
+.printListBtn {
+    background-color: #399439 !important;
+    color: white !important;
 }
 
 td {

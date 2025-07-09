@@ -282,13 +282,14 @@ body {
     color: green !important;
 }
 
-.delListBtn {
-    background-color: #ad170c !important;
-    color: black !important;
+.printListBtn {
+    background-color: #399439 !important;
+    color: white !important;
 }
 
-.fa-print {
-    color: darkblue !important;
+.delListBtn {
+    background-color: #ad170c !important;
+    color: white !important;
 }
 
 td {
