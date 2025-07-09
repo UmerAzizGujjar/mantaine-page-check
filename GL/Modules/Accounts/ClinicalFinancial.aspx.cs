@@ -16,6 +16,46 @@ namespace PMS.Modules.Accounts
 
         }
         [WebMethod]
+        public static string ClinicalFinancialDepartmentDropdown()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Clinical Financial Department"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string PatientType()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
         public static string filldropdowns()
         {
             DataBaseDataContext db = new DataBaseDataContext();
