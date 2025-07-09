@@ -1,3 +1,8 @@
+.delListBtn {
+    background-color: #ad170c !important;
+    color: black !important;
+}
+
 /*......Custom CSS....*/
 @font-face {
     font-family: 'Open Sans';

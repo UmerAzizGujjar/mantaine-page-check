@@ -89,9 +89,11 @@
                         {
                             render: function (data, type, full) {
                                 debugger;
-                                var res = '<a href="#" onclick="EditAdvance(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
-                                var Del = '<a href="#" style="border-radius: 4px; background-color: #ad170c;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
-                                var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Refund_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                                var res = '<a href="#" onclick="EditAdvance(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
+
+                                var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
+
+                                var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Refund_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                                 var result;
                                 result = res + Del + print;
                                 return result;

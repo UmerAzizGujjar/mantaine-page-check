@@ -79,9 +79,7 @@
                         "render": function (data, type, row) {
                             debugger;
                             var btnPoVisible = '';
-                            var res = '<a class="editListBtn" href="#" onclick="Edit(' + row.CSVENID + ')" ' +
-                                'style="border-radius: 4px; margin-right: 4px;  color: white; padding: 5px 8px;"><i ' +
-                                'style="color:white !important;" class="fa fa-pencil"></i></a>';
+                            var res = '<a class="editListBtn" href="#" onclick="Edit(' + row.CSVENID + ')" ' + 'style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i ' + ' class="fa fa-pencil"></i></a>';
                             if (row.CSVENSTATUS == "Created") {
                                 btnPoVisible = 'style="display:none;"';
                             }
@@ -92,8 +90,9 @@
                             if (row.CSVENSTATUS == "Cancelled") {
                                 btnPoVisible = 'style="display:none;"';
                             }
-                            var create = '<a href="#" class="editListBtn" onclick="AutoPO(' + row.CSVENID + ')" ' + btnPoVisible + ' style = "border-radius: 4px;width:100%; background-color: #438eb9 ; color: White; padding: 4px 11px 4px 11px;" id = "btnPo' + (row + 1) + '" > Create PO</a >';
-                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            var create = '<a href="#" class="editListBtn" onclick="AutoPO(' + row.CSVENID + ')" ' + btnPoVisible + ' style = "border-radius: 4px;width:100%;padding: 4px 11px 4px 11px;" id = "btnPo' + (row + 1) + '" > Create PO</a >';
+
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + row.CSVENID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res + create + print;
                             return result;

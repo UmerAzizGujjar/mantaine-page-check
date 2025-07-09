@@ -116,8 +116,9 @@
                                 }
                             }
 
-                            var res = '<a href="#" onclick="Edit(' + full.Igp_Id + ')" style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;"><i style="color:white !important;" class="fa fa-pencil"></i></a> <a href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
-                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            var res = '<a  href="#" onclick="Edit(' + full.Igp_Id + ')" class="editListBtn" style="border-radius: 4px;padding: 4px 11px 4px 11px;"><i class="fa fa-pencil"></i></a> <a class="editListBtn" href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px;padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
+
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res + print;
                             return result;
@@ -136,7 +137,7 @@
                                     viewGRNVisible = '';
                                 }
                             }                           
-                            var grnbtn = '<a href="#" id="viewgrn' + full.Igp_Id + '" ' + viewGRNVisible + ' onclick="EditGRN(' + full.Grn_ID + ')" style="border-radius: 4px; background-color: #EFA63E !important ; color: white; padding: 4px 11px 4px 11px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
+                            var grnbtn = '<a class="editListBtn href="#" id="viewgrn' + full.Igp_Id + '" ' + viewGRNVisible + ' onclick="EditGRN(' + full.Grn_ID + ')" style="border-radius: 4px;padding: 4px 11px 4px 11px;"><i class="fa fa-pencil"></i></a>';
 
                             return grnbtn;
                         }, "orderable": false

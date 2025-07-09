@@ -126,15 +126,15 @@
                     {
                         "render": function (data, type, full) {
                             var actionButtons = `
-       <a href="#" class="editListBtn" onclick="Edit(${full.Voucher_ID})" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>
-       <a style="border-radius: 4px; background-color:#387024; color: white; padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(${full.Voucher_ID})"><i class="fa fa-print" style="color:white !important;"></i></a>`;
+       <a href="#" class="editListBtn" onclick="Edit(${full.Voucher_ID})" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>
+       <a class="printListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(${full.Voucher_ID})"><i class="fa fa-print" ></i></a>`;
 
                             if (full.Voucher_Status === 'CREATED') {
                                 actionButtons += `
-       <a href="#" onclick="deleteConfirm(${full.Voucher_ID})" style="border-radius: 4px; background-color: red; color: white; padding: 5px 8px;"><i class="fa fa-trash-o" style="color:white !important;"></i></a>`;
+       <a href="#" class="delListBtn" onclick="deleteConfirm(${full.Voucher_ID})" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-trash-o"></i></a>`;
                             }
 
-                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
                             result = actionButtons + print;
                             return result;;

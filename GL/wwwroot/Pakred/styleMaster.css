@@ -281,6 +281,11 @@ body {
     color: green !important;
 }
 
+.delListBtn {
+    background-color: #ad170c !important;
+    color: black !important;
+}
+
 .fa-print {
     color: darkblue !important;
 }

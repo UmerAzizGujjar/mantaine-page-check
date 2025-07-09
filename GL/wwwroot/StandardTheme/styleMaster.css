@@ -271,6 +271,11 @@ body {
     top: -5px !important;
 }
 
+.delListBtn {
+    background-color: #ad170c !important;
+    color: black !important;
+}
+
 .fa-pencil {
     color: green !important;
 }
