@@ -103,7 +103,8 @@ input {
 .buttons-copy {
     background-color: #EFA63E !important;
     border: none !important;
-    color: white !important;
+    color: Black !important;
+    font-weight: bold;
     padding: 10px 20px !important;
     font-weight: bold !important;
     border-radius: 8px !important;
@@ -113,9 +114,10 @@ input {
 }
 
 .buttons-excel {
-    background-color: #399439 !important;
+    background-color: #EFA63E !important;
     border: none !important;
-    color: white !important;
+    color: Black !important;
+    font-weight:bold;
     padding: 10px 20px !important;
     font-weight: bold !important;
     border-radius: 8px !important;
@@ -125,9 +127,10 @@ input {
 }
 
 .buttons-pdf {
-    background-color: #EFA63E  !important;
+    background-color: #EFA63E !important;
     border: none !important;
-    color: white !important;
+    color: Black !important;
+    font-weight: bold;
     padding: 10px 20px !important;
     font-weight: bold !important;
     border-radius: 8px !important;
@@ -135,6 +138,12 @@ input {
     transition: all 0.3s ease-in-out !important;
     width: 13% !important;
 }
+    .buttons-copy:hover,
+    .buttons-excel:hover,
+    .buttons-pdf:hover {
+        background-color: black !important;
+        color: white !important;
+    }
 
 .buttons-colvis {
     width: 38%;
@@ -204,11 +213,16 @@ body {
 }
 
 .fa-pencil {
-    color: green !important;
+    color: black !important;
+    font-weight:bold;
+    font-size:15px;
 }
 
 .fa-print {
-    color: darkblue !important;
+    color: Black !important;
+    font-weight: bold;
+    font-size: 15px;
+
 }
 
 td {
