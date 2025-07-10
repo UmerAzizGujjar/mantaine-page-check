@@ -16,6 +16,25 @@ namespace PMS.Modules.Accounts
 
         }
         [WebMethod]
+        public static List<RowData> loadSavedRowsOPD()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "001"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                cashinhand = x.CashInHand.ToString(),
+                                discount = x.Discount.ToString(),
+                                revenue = x.Revenue.ToString(),
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
+        [WebMethod]
         public static string ClinicalFinancialDepartmentDropdown()
         {
             string data = string.Empty;
@@ -74,7 +93,11 @@ namespace PMS.Modules.Accounts
         public static void InsertData(List<RowData> rows)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.ClinicalAccountCategories.DeleteAllOnSubmit(db.ClinicalAccountCategories);
+            db.SubmitChanges();
 
+            // Reset identity
+            db.ExecuteCommand("DBCC CHECKIDENT ('ClinicalAccountCategory', RESEED, 0)");
             foreach (RowData row in rows)
             {
                 string category = row.categoryname;
