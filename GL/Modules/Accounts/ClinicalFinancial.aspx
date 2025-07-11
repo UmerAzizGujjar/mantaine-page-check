@@ -225,7 +225,7 @@
     <style type="text/css">
         #tabs ul li a {
             background-color: #EFA63E   !important;
-            color: white;
+            color: Black;
             background: none;
             border: none;
             padding: 10px;
@@ -235,7 +235,7 @@
             color: white !important;
         }
         .fa-plus-circle {
-            color: #EFA63E  !important;
+            color: Black  !important;
         }
 
         .table thead th {
