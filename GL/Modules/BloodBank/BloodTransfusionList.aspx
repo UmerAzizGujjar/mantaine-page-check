@@ -16,13 +16,19 @@
             window.location.href = "BloodTransfusionForm.aspx?ID=" + ID;
         }
 
+        function prints(BTR_Id) {
+            debugger;
+            window.open('../../ReportViewer.aspx?ReportName=BasePrintBloodTransfusion&ReportTitle=Department Of Pathology&BTR_Id=' + BTR_Id);
+            
+        }
+
         function LoadPage() {
             $("#tblBloodTransfusionList").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'BloodTransfusionForm.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -60,10 +66,11 @@
                         render: function (data, type, full) {
                             debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.BTR_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
-                            
+
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="prints(' + full.BTR_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';
 
                             var result;
-                            result = res;
+                            result = res + print;
                             return result;
                         }, "width": "10%", "orderable": false
                     }
