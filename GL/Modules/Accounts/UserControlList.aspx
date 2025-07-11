@@ -61,7 +61,7 @@
                     {
                         render: function (data, type, full) {
                             debugger;
-                            var res = '<a class="editListBtn" href="#" onclick="editOpen(\'' + full.User_Branch_Master_Id + '\')" style="border-radius: 4px; margin-right: 4px;  color: white; padding: 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
+                            var res = '<a class="editListBtn" href="#" onclick="editOpen(\'' + full.User_Branch_Master_Id + '\')" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
 
                             var result;
@@ -71,6 +71,16 @@
                     }
 
                 ],
+                "initComplete": function (settings, json) {
+                    var lengthDropdown = document.querySelector('#example_length select');
+                    var label = document.querySelector('#example_length label');
+                    if (lengthDropdown && label) {
+                        label.innerHTML = 'Show entries ';
+                        label.appendChild(lengthDropdown);
+                    } else {
+                        console.log("Length dropdown or label not found");
+                    }
+                }
                 //"createdRow": function (row, data, dataIndex) {
                 //    $(row).find('td:eq(0)').html(dataIndex + 1);
                 //}

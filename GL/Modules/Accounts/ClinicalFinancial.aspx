@@ -4,20 +4,91 @@
    
     <script type="text/javascript">
         $(document).ready(function () {
-            getClinicalFinancialAcoountsDropdown();
-
-            //OPD_ClinicalFinancialDepartment working
-
-            setTimeout(function () {
-                $('#OPD_ClinicalFinancialDepartment option[value="001"]')
-                    .prop('selected', true)
-
-            }, 500);
+ 
+            OPDloadSavedRows();
+           
         });
         $(function () {
             $("#tabs").tabs();
 
         });
+        function OPDloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsOPD",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getPatientTypes(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+<tr class="data-row">
+    <td style="display: none">
+        <select class="financialDepartment" disabled>
+            ${setSelected(options, item.financialdepartment)}
+        </select>
+    </td>
+    <td>
+        <select class="categoryname select2select" style="background-color: white; height:32px;" disabled>
+            ${setSelected(categoryOptions, item.categoryname)}
+        </select>
+    </td>
+    <td>
+        <select class="cashinhand select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.cashinhand)}
+        </select>
+    </td>
+    <td>
+        <select class="discount select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.discount)}
+        </select>
+    </td>
+    <td>
+        <select class="revenue select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <a href="#" onclick="removeRow(this)">
+            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        </a>
+        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        </a>
+    </td>
+</tr>`;
+
+
+                                    $('#tableOPD tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+
+        function setSelected(optionsHtml, selectedValue) {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString('<select>' + optionsHtml + '</select>', 'text/html');
+            let select = doc.querySelector('select');
+
+            select.querySelectorAll('option').forEach(option => {
+                if (option.value === selectedValue) {
+                    option.setAttribute('selected', 'selected');
+                } else {
+                    option.removeAttribute('selected');
+                }
+            }); return Array.from(select.options).map(opt => opt.outerHTML).join('');
+        }
         function submitData() {
             let isEmptyFound = false;
             let allData = [];
@@ -33,6 +104,8 @@
             rows.each(function () {
                 let row = $(this);
                 let rowData = {
+                    
+                    financialdepartment: row.find('.financialDepartment').val(),
                     categoryname: row.find('.categoryname').val(),
                     cashinhand: row.find('.cashinhand').val(),
                     discount: row.find('.discount').val(),
@@ -107,7 +180,11 @@
                             title: 'swal-big-title',
                             htmlContainer: 'swal-big-text'
                         }
-                    });                },
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2500); // Reloads page after 2.5 seconds
+                },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);
                 }
@@ -118,11 +195,22 @@
             let row = anchor.closest('tr');
             row.remove();
         }
+        function enableSelectsInRow(anchor) {
+            let row = anchor.closest('tr');
+            let selects = row.querySelectorAll('select');
+            selects.forEach(select => select.disabled = false);
+        }
         function addNewRow() {
-            getPatientTypes(function (categoryOptions) {
-                getAccounts(function (optionsVen) {
-                    let newRow = `
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getPatientTypes(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
                 <tr class="data-row">
+                    <td style="display: none">
+                        <select class="financialDepartment">
+                            ${options}
+                        </select>
+                    
                     <td>
                         <select class="categoryname select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
@@ -145,13 +233,16 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-                            <i class="fa fa-trash fa-2x" style="color: red;"></i>
-                        </a>
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
+
                     </td>
                 </tr>
             `;
-                    $('#tableOPD tbody').append(newRow);
-                    $('.select2select').select2(); // initialize Select2
+                        $('#tableOPD tbody').append(newRow);
+                        $('.financialDepartment option[value="001"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                    });
                 });
             });
         }
@@ -195,7 +286,7 @@
                 }
             });
         }
-        function getClinicalFinancialAcoountsDropdown() {
+        function getClinicalFinancialAcoountsDropdown(callback) {
             var options = '<option value="0">Please Select</option>';
 
             $.ajax({
@@ -208,6 +299,8 @@
                     $.each(data, function (key, value) {
                         options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
                     });
+                    callback(options);
+
                     $('#OPD_ClinicalFinancialDepartment').html(options);
 
 
@@ -223,6 +316,7 @@
 
     </script>
     <style type="text/css">
+        
         #tabs ul li a {
             background-color: #EFA63E   !important;
             color: Black;
@@ -235,7 +329,7 @@
             color: white !important;
         }
         .fa-plus-circle {
-            color: Black  !important;
+            color: black  !important;
         }
 
         .table thead th {
@@ -265,21 +359,18 @@
 
         <div id="Tab-1">
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <select style="display:none" id="OPD_ClinicalFinancialDepartment">
-
-                    </select>
-                </div>
-                <div class="col-lg-9 col-md-9 col-sm-9"></div>
+               
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
                 <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;" >
                     <a href="#" id="btnaddrow" onclick="addNewRow()" >
-                       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+                       <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
                     </a>
                 </div>
             </div>
             <table id="tableOPD" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
           <thead id="theadOPD">
             <tr>
+              <th style=" display:none">Financial Department  </th>
               <th style="width: 20%;">Category Name         </th>
               <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
               <th style="width: 25%;">Discount              </th>

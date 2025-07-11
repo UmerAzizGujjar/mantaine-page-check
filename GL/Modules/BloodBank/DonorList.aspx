@@ -71,7 +71,7 @@
                     {
                         render: function (data, type, full) {
                             debugger;
-                            var res = '<a href="#" onclick="Edit(' + full.Donor_Id + ')" style="border-radius: 4px; background-color: #1f1fe3; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>'
+                            var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Donor_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
 
                             var result;

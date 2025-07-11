@@ -147608,6 +147608,8 @@ namespace PMS
 
         private System.Nullable<System.Guid> _CancelBy;
 
+        private string _Fn_Department;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -147634,6 +147636,8 @@ namespace PMS
         partial void OnIsCancelChanged();
         partial void OnCancelByChanging(System.Nullable<System.Guid> value);
         partial void OnCancelByChanged();
+        partial void OnFn_DepartmentChanging(string value);
+        partial void OnFn_DepartmentChanged();
         #endregion
 
         public ClinicalAccountCategory()
@@ -147857,6 +147861,26 @@ namespace PMS
                     this._CancelBy = value;
                     this.SendPropertyChanged("CancelBy");
                     this.OnCancelByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Fn_Department", DbType = "NVarChar(100)")]
+        public string Fn_Department
+        {
+            get
+            {
+                return this._Fn_Department;
+            }
+            set
+            {
+                if ((this._Fn_Department != value))
+                {
+                    this.OnFn_DepartmentChanging(value);
+                    this.SendPropertyChanging();
+                    this._Fn_Department = value;
+                    this.SendPropertyChanged("Fn_Department");
+                    this.OnFn_DepartmentChanged();
                 }
             }
         }
