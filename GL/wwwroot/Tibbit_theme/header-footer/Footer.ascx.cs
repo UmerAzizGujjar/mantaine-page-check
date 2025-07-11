@@ -12,8 +12,8 @@ namespace PMS.wwwroot.Tibbit_theme.header_footer
         protected void Page_Load(object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-             mbl_no.InnerText = (from a in db.aspnet_Users where a.UserId == AppConfig.UserID select a.mobileno).FirstOrDefault();
-             email.InnerText = (from a in db.aspnet_Memberships where a.UserId == AppConfig.UserID select a.Email).FirstOrDefault();
+             mbl_no.InnerText = (from a in db.sys_Companies  select a.Company_Phone1).FirstOrDefault();
+             email.InnerText = (from a in db.sys_Companies  select a.Company_Email).FirstOrDefault();
         }
     }
 }
