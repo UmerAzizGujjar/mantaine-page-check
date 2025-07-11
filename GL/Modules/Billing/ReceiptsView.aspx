@@ -10,9 +10,12 @@
 
 
         });
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        function PrintTest(Receipt_ID) {
+            var url = '../../ReportViewer.aspx?ReportName=PrinAllReceiptDetail&ReportTitle=Bill Detail (IPD)  ' + '&PatientID=' + Receipt_ID;
+            window.open(url, '_blank');
+
         }
+
         function LoadPage() {
             $("#tblResult").DataTable({
                 "processing": true,

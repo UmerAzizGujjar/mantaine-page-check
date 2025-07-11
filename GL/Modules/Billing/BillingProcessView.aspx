@@ -11,9 +11,21 @@
 
         });
 
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+
+        function PrintBilling(Bill_ID) {
+            debugger;
+              var locationInfo = window.location;
+            var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
+              if (!locationInfo.origin.includes('localhost')) {
+                  var urlInfo = window.location.href.split('/');
+                  var ip = urlInfo[2];
+                  var foldername = urlInfo[3];
+                  url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
+              }
+              window.open(url, '_blank');
+
         }
+
         function LoadPage() {
             $("#tbloutPatients").DataTable({
                 "processing": true,
@@ -78,7 +90,7 @@
 
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res + Del + print;
                             return result;

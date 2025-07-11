@@ -11,9 +11,14 @@
 
 
         });
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+
+        function PrintInPatient(IN_Patient_ID) {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=InpatientDetail&Title=In Patient Detail Print&InPatient_ID=' + IN_Patient_ID;
+            window.open(url, '_blank');
+
         }
+
         function LoadPage() {
             $("#tblResult").DataTable({
                 "processing": true,
@@ -81,7 +86,7 @@
 
                             var Del = '<a href="#" class="delListBtn" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.IN_Patient_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintInPatient(' + full.IN_Patient_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res + Del + print;
                             return result;

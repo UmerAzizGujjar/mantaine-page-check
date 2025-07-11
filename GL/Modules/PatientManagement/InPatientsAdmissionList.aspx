@@ -7,9 +7,15 @@
             $('#ctl00_lblMessage').hide();
             LoadPage();
         });
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+
+
+        function PrintSlip(In_Patient_ID) {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + In_Patient_ID;
+            window.open(url, '_blank');
+            
         }
+
         function LoadPage() {
             $("#tblResult").DataTable({
                 "processing": true,
@@ -77,7 +83,7 @@
 
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.In_Patient_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintSlip(' + full.In_Patient_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
                             result = res + Del + print;
                             return result;

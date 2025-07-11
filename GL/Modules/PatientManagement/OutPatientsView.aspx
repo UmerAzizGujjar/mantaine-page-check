@@ -13,13 +13,16 @@
 
 
         });
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+
+        function PrintoutPatient(Out_Patient_ID) {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + Out_Patient_ID;
+            window.open(url, '_blanks');
         }
+
+
         function Edit(id) {
-
             window.open("OutPatients.aspx?ID=" + id + "");
-
         }
 
         function deleteConfirm(anchorTag) {
@@ -101,7 +104,7 @@
 
                             var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Out_Patient_ID + '" onclick="deleteConfirm(this)"><i class="fa fa-trash" ></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Out_Patient_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintoutPatient(' + full.Out_Patient_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
                             result = res + Del+ print;
                             return result;

@@ -17,9 +17,13 @@
             window.open("OperationBooking.aspx?ID=" + id + "");
         }
 
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        function Operationprint(Operation_Booking_ID) {
+            var url = '../../ReportViewer.aspx?ReportName=OperationTheater&ReportTitle=Operation Booking&Operation_Booking_ID=' + Operation_Booking_ID;
+            window.open(url, '_blank');
         }
+
+
+
         function LoadPage() {
             $("#patientOT").DataTable({
                 "processing": true,
@@ -77,7 +81,7 @@
                             debugger;
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Operation_Booking_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Operation_Booking_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Operationprint(' + full.Operation_Booking_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
                             result = res + print;
                             return result;

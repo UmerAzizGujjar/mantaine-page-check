@@ -12,9 +12,21 @@
                 debugger;
                 window.open("Refund.aspx?advID=" + advId);
             }
-            function PrintTest(id) {
-                window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+
+
+            function PrintRefund(Refund_ID) {
+                debugger;
+                var locationInfo = window.location;
+                var url = "../../ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + Refund_ID;
+                if (!locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + "../../ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Refund Print &Refund_ID=" + Refund_ID;
+                }
+                window.open(url, '_blank');
             }
+
             function deleteConfirm(anchorTag) {
                 var table = $('#tblAdvanceView').DataTable();
                 var row = $(anchorTag).closest('tr');
@@ -93,7 +105,7 @@
 
                                 var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
-                                var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Refund_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                                var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintRefund(' + full.Refund_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                                 var result;
                                 result = res + Del + print;
                                 return result;

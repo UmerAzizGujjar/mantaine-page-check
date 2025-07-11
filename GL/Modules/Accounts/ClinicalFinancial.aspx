@@ -1,18 +1,94 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClinicalFinancial.aspx.cs" Inherits="PMS.Modules.Accounts.ClinicalFinancial" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   
+
     <script type="text/javascript">
         $(document).ready(function () {
-            getClinicalFinancialAcoountsDropdown();
 
-            
-           
+            OPDloadSavedRows();
+
         });
         $(function () {
             $("#tabs").tabs();
 
         });
+        function OPDloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsOPD",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getPatientTypes(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+<tr class="data-row">
+    <td style="display: none">
+        <select class="financialDepartment" disabled>
+            ${setSelected(options, item.financialdepartment)}
+        </select>
+    </td>
+    <td>
+        <select class="categoryname select2select" style="background-color: white; height:32px;" disabled>
+            ${setSelected(categoryOptions, item.categoryname)}
+        </select>
+    </td>
+    <td>
+        <select class="cashinhand select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.cashinhand)}
+        </select>
+    </td>
+    <td>
+        <select class="discount select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.discount)}
+        </select>
+    </td>
+    <td>
+        <select class="revenue select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <a href="#" onclick="removeRow(this)">
+            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        </a>
+        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        </a>
+    </td>
+</tr>`;
+
+
+                                    $('#tableOPD tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+
+        function setSelected(optionsHtml, selectedValue) {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString('<select>' + optionsHtml + '</select>', 'text/html');
+            let select = doc.querySelector('select');
+
+            select.querySelectorAll('option').forEach(option => {
+                if (option.value === selectedValue) {
+                    option.setAttribute('selected', 'selected');
+                } else {
+                    option.removeAttribute('selected');
+                }
+            }); return Array.from(select.options).map(opt => opt.outerHTML).join('');
+        }
         function submitData() {
             let isEmptyFound = false;
             let allData = [];
@@ -28,7 +104,7 @@
             rows.each(function () {
                 let row = $(this);
                 let rowData = {
-                    
+
                     financialdepartment: row.find('.financialDepartment').val(),
                     categoryname: row.find('.categoryname').val(),
                     cashinhand: row.find('.cashinhand').val(),
@@ -36,8 +112,7 @@
                     revenue: row.find('.revenue').val()
                 };
                 // Check if any value is empty
-                if (rowData.categoryname == 0 || rowData.cashinhand == 0 || rowData.discount == 0 || rowData.revenue == 0)
-                {
+                if (rowData.categoryname == 0 || rowData.cashinhand == 0 || rowData.discount == 0 || rowData.revenue == 0) {
                     isEmptyFound = true;
                 }
                 // Check for duplicate categoryname
@@ -85,35 +160,44 @@
             console.log(isEmptyFound);
 
 
-            if (!isEmptyFound && !duplicateFound) { 
-            $.ajax({
-                type: "POST",
-                url: "ClinicalFinancial.aspx/InsertData",
-                data: JSON.stringify({ rows: allData }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Data Inserted Successfully!',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });                },
-                error: function (xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
+            if (!isEmptyFound && !duplicateFound) {
+                $.ajax({
+                    type: "POST",
+                    url: "ClinicalFinancial.aspx/InsertData",
+                    data: JSON.stringify({ rows: allData }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Inserted Successfully!',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2500); // Reloads page after 2.5 seconds
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
             }
         }
         function removeRow(anchor) {
             let row = anchor.closest('tr');
             row.remove();
+        }
+        function enableSelectsInRow(anchor) {
+            let row = anchor.closest('tr');
+            let selects = row.querySelectorAll('select');
+            selects.forEach(select => select.disabled = false);
         }
         function addNewRow() {
             getClinicalFinancialAcoountsDropdown(function (options) {
@@ -148,8 +232,9 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-                            <i class="fa fa-trash fa-2x" style="color: red;"></i>
-                        </a>
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
+
                     </td>
                 </tr>
             `;
@@ -231,18 +316,20 @@
     </script>
     <style type="text/css">
         #tabs ul li a {
-            background-color: #EFA63E   !important;
-            color: white;
+            background-color: #EFA63E !important;
+            color: Black;
             background: none;
             border: none;
             padding: 10px;
         }
+
         #tabs ul li.ui-tabs-active a {
             border-bottom: 1px solid aliceblue !important;
             color: white !important;
         }
+
         .fa-plus-circle {
-            color: #EFA63E  !important;
+            color: black !important;
         }
 
         .table thead th {
@@ -256,48 +343,43 @@
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: rgba(0, 0, 0, .05);
         }
-
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-        <div id="tabs">
+    <div id="tabs">
 
-            <ul>
-                <li><a href="#Tab-1">OPD</a></li>
-                <li><a href="#Tab-2">Lab</a></li>
-                <li><a href="#Tab-3">X_ray</a></li>
-                <li><a href="#Tab-4">Ultra_Sound</a></li>
-                <li><a href="#Tab-5">CT_Scan</a></li>
-            </ul>
+        <ul>
+            <li><a href="#Tab-1">OPD</a></li>
+            <li><a href="#Tab-2">Emergency</a></li>
+            <li><a href="#Tab-3">IPD</a></li>
+            <li><a href="#Tab-4">Ultra_Sound</a></li>
+            <li><a href="#Tab-5">CT_Scan</a></li>
+        </ul>
 
         <div id="Tab-1">
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <select style="display:none" id="OPD_ClinicalFinancialDepartment">
 
-                    </select>
-                </div>
-                <div class="col-lg-9 col-md-9 col-sm-9"></div>
-                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;" >
-                    <a href="#" id="btnaddrow" onclick="addNewRow()" >
-                       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrow" onclick="addNewRow()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
                     </a>
                 </div>
             </div>
             <table id="tableOPD" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
-          <thead id="theadOPD">
-            <tr>
-              <th style=" display:none">Financial Department  </th>
-              <th style="width: 20%;">Category Name         </th>
-              <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
-              <th style="width: 25%;">Discount              </th>
-              <th style="width: 25%;">Revenue               </th>
-              <th style="width: 5% ;">Action                </th>
-            </tr>
-          </thead>
-          <tbody id="tbodyOPD">
-          </tbody>
-        </table>
+                <thead id="theadOPD">
+                    <tr>
+                        <th style="display: none">Financial Department  </th>
+                        <th style="width: 20%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 25%;">Discount              </th>
+                        <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 5%;">Action                </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyOPD">
+                </tbody>
+            </table>
         </div>
 
         <div id="Tab-2">
@@ -333,13 +415,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-    <a href="#" id="btnshowLabModal" >
-       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
 
-    </a>
-</div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+                    <a href="#" id="btnshowLabModal">
+                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+                    </a>
+                </div>
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult">
                 <thead id="ihead">
@@ -395,13 +477,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-    <a href="#" id="btnshowxrayModal" >
-       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
 
-    </a>
-</div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+                    <a href="#" id="btnshowxrayModal">
+                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+                    </a>
+                </div>
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResults">
                 <thead id="iheads">
@@ -457,13 +539,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-               
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-    <a href="#" id="btnshowultrsoundModal" >
-       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
 
-    </a>
-</div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+                    <a href="#" id="btnshowultrsoundModal">
+                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+                    </a>
+                </div>
 
             </div>
             <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult_ultra">
@@ -520,13 +602,13 @@
                         <option value="100">100%</option>
                     </select>
                 </div>
-                
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-    <a href="#" id="btnshowCTScanModal" >
-       <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
 
-    </a>
-</div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
+                    <a href="#" id="btnshowCTScanModal">
+                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
+
+                    </a>
+                </div>
 
             </div>
             <table class="table table-bordered table-hover table-striped" style="overflow: scroll; height: auto; margin-top: 10px !important" id="tblResult_ctscan">
@@ -550,11 +632,11 @@
             </table>
         </div>
 
-       
-    </div>
-    <input type="button" class="btn btn-primry" style="margin-top: 20px; width:100px !important" onclick="submitData()" value="Save"/>
 
-        
-    
+    </div>
+    <input type="button" class="btn btn-primry" style="margin-top: 20px; width: 100px !important" onclick="submitData()" value="Save" />
+
+
+
 
 </asp:Content>
