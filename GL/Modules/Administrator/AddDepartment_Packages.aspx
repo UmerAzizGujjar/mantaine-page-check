@@ -473,7 +473,7 @@
                 <input type="button" id="listview" class="btn btn-primry" onclick="window.open('Department_Packages_List.aspx');" value="List View" />
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
-                <input type="button" value="Print" class="btn btn-gary" name="name" id="btn_Print" onclick="PrintGRNDetail();" style="width: 81px;" />
+                <input type="button" value="Print" class="btn btn-primry" name="name" id="btn_Print" onclick="PrintGRNDetail();" style="width: 81px;" />
             </div>
         </div>
                     <asp:Label ID="lblMessage" Text="" runat="server" />

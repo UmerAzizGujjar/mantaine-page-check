@@ -13,7 +13,12 @@
 
         });
 
+        function prints(Donor_Id) {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=BasePrintDonor&ReportTitle=Department Of Pathology&Donor_ID=' + Donor_Id;
+            window.open(url, '_blank');
 
+        }
 
         function LoadPage() {
             $("#tblDonorList").DataTable({
@@ -73,9 +78,10 @@
                             debugger;
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Donor_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="prints(' + full.Donor_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';
 
                             var result;
-                            result = res;
+                            result = res + print;
                             return result;
                         }, "width": "10%", "orderable": false
                     }

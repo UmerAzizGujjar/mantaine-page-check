@@ -11,9 +11,20 @@
             LoadPage();
         });
 
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+
+        function PrintReceipt(pat_id) {
+            debugger;
+            var locationInfo = window.location;
+            var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
+            }
+            window.open(url, '_blank');
         }
+
         function LoadPage() {
             $("#example").DataTable({
                 "processing": true,
@@ -70,7 +81,7 @@
                     {
                         render: function (data, type, full) {
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.pat_id + ')" style="border-radius: 4px;   padding: 5px 8px 5px 8px;"><i  class="fa fa-pencil"></i></a>';
-                            var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.pat_id + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReceipt(' + full.pat_id + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
                             result = res + print;
                             return result;
