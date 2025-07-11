@@ -6595,8 +6595,9 @@ button.btn:active {
 }
 
 .btn, .btn-default, .btn:focus, .btn-default:focus {
-    background-color: #abbac3 !important;
-    border-color: #abbac3;
+    background-color: #EFA63E !important;
+    border-color: #EFA63E;
+    color:black !important;
 }
 
     .btn:hover, .btn-default:hover, .btn:active, .btn-default:active, .open .btn.dropdown-toggle, .open .btn-default.dropdown-toggle {
@@ -8104,7 +8105,8 @@ button.btn:active {
 }
 
 .label-info, .badge-info {
-    background-color: #3a87ad !important;
+    background-color: #EFA63E !important;
+    color:black;
 }
 
 .label-primary, .badge-primary {
@@ -9054,13 +9056,13 @@ button.btn:active {
         }
 
         .dropdown-navbar.navbar-pink > li.dropdown-header {
-            background-color: #f7ecf2 !important;
-            color: #b471a0;
+            background-color: #EFA63E !important;
+            color: Black;
             border-bottom-color: #e5bcd4;
         }
 
             .dropdown-navbar.navbar-pink > li.dropdown-header > .ace-icon {
-                color: #c06090;
+                color: black;
             }
 
         .dropdown-navbar.navbar-pink > li > a {

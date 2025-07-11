@@ -116,6 +116,8 @@ namespace PMS
                     if (query != null)
                     {
                         query.isCancel = true;
+                        query.Cancel_by = AppConfig.UserID;
+                        query.Cancel_Date = DateTime.Now;
                         db.SubmitChanges();
                         status = "success";
                     }

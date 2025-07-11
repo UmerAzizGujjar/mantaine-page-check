@@ -1,10 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LabReportPreview.aspx.cs" Inherits="PMS.LabReportPreview" ValidateRequest="false" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LabReportPreview.aspx.cs" Inherits="PMS.LabReportPreview" ValidateRequest="false" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">    
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/LabReportPreview.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/css/CustomCss/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
         var GrowthTypeGlobal = '';
         var OrganismTypeGlobal = '';
@@ -346,17 +346,17 @@
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
 
-                $.each(tbl, function (key, val) {
+                //$.each(tbl, function (key, val) {
 
-                    var name = $(val).find('input[name="testDepartment"]').attr('name');
-                    if (name == "testDepartment") {
-                    }
-                    else {
-                        var Ids = $(val).find('td:eq(0)').text();
-                        //$(val).find('td[id=testDetailID]').text();
-                        test_list.push({ 'TestDID': Ids });
-                    }
-                });
+                //    var name = $(val).find('input[name="testDepartment"]').attr('name');
+                //    if (name == "testDepartment") {
+                //    }
+                //    else {
+                //        var Ids = $(val).find('td:eq(0)').text();
+                //        //$(val).find('td[id=testDetailID]').text();
+                //        test_list.push({ 'TestDID': Ids });
+                //    }
+                //});
                 //For Single Tests
                 var testID = $('#hdtestdetailid').val();
                 if (testID != null && testID > 0) {
@@ -1593,8 +1593,9 @@
             $('#myModal').modal('hide');
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
-
+                debugger;
                 var parsedData = JSON.parse(res);
+                console.log(parsedData)
                 var row = '';
                 if (Group_Categroy == "") //Single
                 {
@@ -1619,7 +1620,7 @@
                     $.ajax({
 
                         type: "POST",
-                        url: "LabTestResult.aspx/GetTestDetail",
+                        url: "LabReportPreview.aspx/GetTestDetail",
                         data: "{'TestDetailID':" + testDetailID + ",'LabID':" + LabID + "}",
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -1653,19 +1654,14 @@
                                 $("#chkUltraSound_level").show();
                                 getAllLevels(TestID);
                             }
-                            console.log(data);
+                            console.log("Data "+ data);
                             $('#txtfixedType').val(fixedValue);
                             $('#txtMaster_Remarks').val(Master_Remarks);
                             $('#txtAreaGrowth').text(growth);
                           
                             CKEDITOR.instances.txtfixedType.setData(fixedValue);
                             CKEDITOR.instances.txtMaster_Remarks.setData(Master_Remarks);
-                            if (Ranges == null) {
-                                TestRange = AllRange;
-                            }
-                            else {
-                                TestRange = Ranges;
-                            }
+  
                             if (Ranges == null || Ranges == '') {
                                 TestRange = AllRange;
                             }
@@ -2235,7 +2231,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                                    <img src="~../../../../wwwroot/StandardTheme/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-6">

@@ -140,12 +140,12 @@
                          debugger
                          if (btnSave == "Save") {
                              Item_list.push({
-                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtStoreStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'Department': $(value).find('td:eq(3)').text()
+                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtStoreStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'CGS': parseFloat($(value).find('input[name=txtIssueQty]').val() || 0) * parseFloat($(value).find('input[name=txtCGSRate]').val() || 0), 'Department': $(value).find('td:eq(3)').text()
                              });
                          }
                          if (btnSave == "Update") {
                              Item_list.push({
-                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtSaveTimeStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'Department': $(value).find('td:eq(3)').text()
+                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtSaveTimeStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'CGS': $(value).find('input[name=txtCGSAmount]').val(), 'Department': $(value).find('td:eq(3)').text()
                              });
                          }
 
@@ -346,6 +346,7 @@
             var IsBatch = $($(row).find('td')[10]).text();
             var Stock = $($(row).find('td')[11]).text();
             var balance = $($(row).find('td')[12]).text();
+            var CGSRate = $($(row).find('td')[13]).text();
             if (balance == "null" || balance == "") {
                 balance = 0
             }
@@ -401,6 +402,8 @@
                     '<td style="padding-top: 2px;"> <input type="text" value="' + balance + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + length + '" name="txtBlncQty" readonly="readonly"/></td>' +
                     '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + length + '" name="txtRemarks" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;"/> </td>' +
                     '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + item_id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
+                    '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSRate' + length + '" name="txtCGSRate" value="' + CGSRate +'"/></td>' +
+                    '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
                     '<td style="padding-top: 2px;display:none;"><input type="hidden" value="' + IsBatch + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBatch' + length + '" name="txtBatch"/></td>'
                     + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
                 $("#tblStoreIssueBote tbody").append(rows);
@@ -437,6 +440,7 @@
                         '<td style="display:none;">' + parsed_Date[i].IsBatch + '</td>' +
                         '<td style="display:none;">' + parseFloat(parsed_Date[i].Stock).toFixed(2) + '</td>' +
                         '<td style="display:none;">' + parseFloat(parsed_Date[i].Balance).toFixed(2) + '</td>' +
+                        '<td style="display:none;">' + parseFloat(parsed_Date[i].CGSRate).toFixed(2) + '</td>' +
                         '<td style="display:none;">StoreStock</td>' +
                         '</tr>';
                     $('#tblMIRItemstModelTable tbody').append(rows);
@@ -488,8 +492,11 @@
             var row = $(anchor).parents('tr')[0];
             var Item_qty = $($(row).find('input[name=txtmirQty]')).val();
             var Issue_Qty = $($(row).find('input[name=txtIssueQty]')).val();
+            var CGSRate = $($(row).find('input[name=txtCGSRate]')).val();
             var Balance = parseInt(Item_qty) - parseInt(Issue_Qty);
+            var cgsAmt = Issue_Qty * CGSRate;
             $($(row).find('input[name=txtBlncQty]')).val(Balance);
+            $($(row).find('input[name=txtCGSAmount]')).val(cgsAmt);
         }
         function LoadMaster(SI_ID) {
             debugger
@@ -538,6 +545,7 @@
                         '<td style="padding-top: 2px;"> <input type="text" value="' + parseFloat(result[key].Balance_Qty).toFixed(2) + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + key + '" name="txtBlncQty"/></td>' +
                         '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + key + '" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" name="txtRemarks" value="' + result[key].Remarks + '"/> </td>' +
                         '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].Item_Id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
+                        '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].CGS + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
                         '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
                         '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].SaveTimeStock + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtSaveTimeStock' + length + '" name="txtSaveTimeStock"/></td></tr > ';
                     $("#tblStoreIssueBote tbody").append(rows);

@@ -275,6 +275,7 @@ namespace PMS
             public int Qty { get; set; }
             public decimal Stock { get; set; }
             public string batchno { get; set; }
+            public decimal CGSAmount { get; set; }
         }
 
         [WebMethod]
@@ -398,6 +399,7 @@ namespace PMS
                 newBillDetails.Qty = dtls.Qty;
                 //newBillDetails.Batch_No = dtls.batchno;
                 var TotalRemainStock = dtls.Stock - dtls.Qty;
+                newBillDetails.CGS = dtls.CGSAmount;
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);
 
                 ListOfDetails.Add(newBillDetails);
@@ -630,7 +632,8 @@ namespace PMS
                     Amount = decimal.Parse(item.Rate),
                     Disc_Per = decimal.Parse(item.DisPer),
                     Disc_Amount = decimal.Parse(item.DisAmt),
-                    Net_Amount = decimal.Parse(item.NetAmt)
+                    Net_Amount = decimal.Parse(item.NetAmt),
+                    CGS = item.CGSAmount
                 };
                 db.Pharmacy_SaleReturn_Details.InsertOnSubmit(detail);
                 db.SubmitChanges();
@@ -662,6 +665,7 @@ namespace PMS
             public string DisAmt { get; set; }
             public string NetAmt { get; set; }
             public string Batch_No { get; set; }
+            public decimal CGSAmount { get; set; }
         }
 
     }

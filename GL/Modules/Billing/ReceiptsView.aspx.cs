@@ -146,6 +146,8 @@ namespace PMS
                 {
                     query.CancelRemarks = reason;
                     query.isCancel = true;
+                    query.Cancel_Date = DateTime.Now;
+                    query.Cancel_by = AppConfig.UserID;
                     db.SubmitChanges();
                     status = "success";
                 }
