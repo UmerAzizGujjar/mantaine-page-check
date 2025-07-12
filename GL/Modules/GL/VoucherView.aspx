@@ -21,9 +21,9 @@
             $('#txt_date').val(date);
             LoadPage();
         });
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
-        }
+        //function PrintTest(id) {
+        //    window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+        //}
         function LoadPage() {
             if ($.fn.DataTable.isDataTable('#example')) {
                 $('#example').DataTable().clear().destroy();
@@ -134,9 +134,9 @@
        <a href="#" class="delListBtn" onclick="deleteConfirm(${full.Voucher_ID})" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-trash-o"></i></a>`;
                             }
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            /*var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';*/
                             var result;
-                            result = actionButtons + print;
+                            result = actionButtons;
                             return result;;
                         }, width: "15%"
                     }

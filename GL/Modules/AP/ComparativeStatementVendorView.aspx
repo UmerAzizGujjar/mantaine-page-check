@@ -21,10 +21,20 @@
                 }
             });
         }
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
-        }
 
+
+        function Print(CSVENID) {
+             debugger;
+             var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=ComparativeStatementVendor&ReportTitle=Comparative Statement Vendor Print' + '&CM_ID=' + CSVENID;
+             if (!locationInfo.origin.includes('localhost')) {
+                 var urlInfo = window.location.href.split('/');
+                 var ip = urlInfo[2];
+                 var foldername = urlInfo[3];
+                 url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=ComparativeStatementVendor&ReportTitle=Comparative Statement Vendor Print' + '&CM_ID=' + CSVENID;
+             }
+             window.open(url, '_blank');
+         }
 
 
         function LoadPage() {
@@ -92,7 +102,7 @@
                             }
                             var create = '<a href="#" class="editListBtn" onclick="AutoPO(' + row.CSVENID + ')" ' + btnPoVisible + ' style = "border-radius: 4px;width:100%;padding: 4px 11px 4px 11px;" id = "btnPo' + (row + 1) + '" > Create PO</a >';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + row.CSVENID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + row.CSVENID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res + create + print;
                             return result;
