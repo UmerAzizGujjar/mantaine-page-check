@@ -189,9 +189,6 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-
-
-    <br />
     <div class="row">
         <div class="table-container">
             <table class="table table-hover table-striped table-bordered" id="tbloutPatients">
@@ -209,7 +206,7 @@
                         <th>Received Amount</th>
                         <th>Balance Amount</th>
                         <th>Operator</th>
-                        <th style="width: 68px;">Actions</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="ibody">
@@ -217,5 +214,4 @@
             </table>
         </div>
     </div>
-   
 </asp:Content>
