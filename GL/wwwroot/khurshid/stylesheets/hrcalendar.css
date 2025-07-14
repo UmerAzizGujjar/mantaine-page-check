@@ -1,0 +1,97 @@
+﻿.appCalcpYearNavigation,
+.appCalcpMonthNavigation
+{
+	background-color:#6677DD;
+	text-align:center;
+	vertical-align: middle;
+	text-decoration: none;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+.appCalcpDayColumnHeader,
+.appCalcpYearNavigation,
+.appCalcpMonthNavigation,
+.appCalcpCurrentMonthDate,
+.appCalcpCurrentMonthDateDisabled,
+.appCalcpOtherMonthDate,
+.appCalcpOtherMonthDateDisabled,
+.appCalcpCurrentDate,
+.appCalcpCurrentDateDisabled,
+.appCalcpTodayText,
+.appCalcpTodayTextDisabled,
+.appCalcpText
+{
+	font-family:arial;
+	font-size:8pt;
+}
+td.appCalcpDayColumnHeader
+{
+	text-align:right;
+	border:solid thin #6677DD;
+	border-width:0px 0px 1px 0px;
+}
+.appCalcpCurrentMonthDate,
+.appCalcpOtherMonthDate,
+.appCalcpCurrentDate
+{
+	text-align:right;
+	text-decoration:none;
+}
+.appCalcpCurrentMonthDateDisabled,
+.appCalcpOtherMonthDateDisabled,
+.appCalcpCurrentDateDisabled
+{
+	color:#D0D0D0;
+	text-align:right;
+	text-decoration:line-through;
+}
+.appCalcpCurrentMonthDate
+{
+	color:#6677DD;
+	font-weight:bold;
+}
+.appCalcpCurrentDate
+{
+	color: #FFFFFF;
+	font-weight:bold;
+}
+.appCalcpOtherMonthDate
+{
+	color:#808080;
+}
+td.appCalcpCurrentDate
+{
+	color:#FFFFFF;
+	background-color: #6677DD;
+	border-width:1;
+	border:solid thin #000000;
+}
+td.appCalcpCurrentDateDisabled
+{
+	border-width:1;
+	border:solid thin #FFAAAA;
+}
+td.appCalcpTodayText,
+td.appCalcpTodayTextDisabled
+{
+	border:solid thin #6677DD;
+	border-width:1 0 0 0;
+}
+a.appCalcpTodayText,
+span.appCalcpTodayTextDisabled
+{
+	height:20px;
+}
+a.appCalcpTodayText
+{
+	color:#6677DD;
+	font-weight:bold;
+}
+span.appCalcpTodayTextDisabled
+{
+	color:#D0D0D0;
+}
+.appCalcpBorder
+{
+	border:solid thin #6677DD;
+}

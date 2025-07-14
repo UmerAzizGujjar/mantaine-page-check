@@ -1,0 +1,22 @@
+.forcolor li a:hover {
+    color: #FFC000 !important;
+}
+
+#tabs ul {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+    #tabs ul li a {
+        background-color: #c11718  !important;
+        color: white;
+        background: none;
+        border: none;
+        padding: 10px;
+    }
+
+    #tabs ul li.ui-tabs-active a {
+        border-bottom: 1px solid aliceblue !important;
+        color: white !important;
+    }

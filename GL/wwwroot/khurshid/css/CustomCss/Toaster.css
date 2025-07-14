@@ -1,0 +1,19 @@
+.span_txt {
+    color: #c11718  !important
+}
+
+.toast-center-screen {
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    z-index: 9999;
+}
+
+.toast-success {
+    background-color: #c11718  !important;
+}
+
+    .toast-success .toast-message {
+        color: white !important; /* Ensures text is readable */
+    }

@@ -1,0 +1,115 @@
+#addNewbtn {
+    margin-top: 26px;
+}
+
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%; /* Ensure it takes full width of the container */
+}
+
+    .slots-grid h3 {
+        grid-column: span 3;
+        text-align: center;
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+    }
+
+
+.slot-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #c1c1c1;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .slot-btn.booked {
+        background-color: #484b4d;
+        color: white;
+    }
+
+    .slot-btn:hover:not(.booked) {
+        background-color: #FDC303;
+        color: white;
+    }
+
+    .slot-btn.selected {
+        background-color: #c11718 ;
+        color: white;
+    }
+
+#PatientModel {
+    margin-top: 15px !important;
+}
+
+#PatientsSearchModel {
+    margin-top: 15px !important;
+}
+
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+  
+
+}
+.timeslotheaders {
+    text-align: center;
+    font-size: 25px;
+    color: #c11718 ;
+}
+.mg {
+    margin-top: 5px;
+}
+.tooltips {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+    .tooltips .tooltiptxt {
+        visibility: hidden;
+        width: 100px !important;
+        background-color: #484B4D;
+        color: #fff;
+        text-align: center;
+        padding: 5px;
+        border-radius: 6px;
+        /* Position the tooltip above the icon */
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* Position tooltip above the icon */
+        left: 50%;
+        margin-left: -60px; /* Center the tooltip */
+        /* Fade-in effect */
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+        .tooltips .tooltiptxt::after {
+            content: "";
+            position: absolute;
+            top: 100%; /* Arrow at the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+    /* Show the tooltip text when hovering over the icon */
+    .tooltips:hover .tooltiptxt {
+        visibility: visible;
+        opacity: 1;
+        font-size: 10px !important;
+        width: 100px !important;
+    }
