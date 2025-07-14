@@ -74,6 +74,44 @@ namespace PMS.Modules.Accounts
             }
         }
         [WebMethod]
+        public static List<RowData> loadSavedRowsSERVICE()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "004"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                cashinhand = x.CashInHand.ToString(),
+                                discount = x.Discount.ToString(),
+                                revenue = x.Revenue.ToString(),
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
+        [WebMethod]
+        public static List<RowData> loadSavedRowsPHARMACY()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "005"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                cashinhand = x.CashInHand.ToString(),
+                                discount = x.Discount.ToString(),
+                                revenue = x.Revenue.ToString(),
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
+        [WebMethod]
         public static string ClinicalFinancialDepartmentDropdown()
         {
             string data = string.Empty;
@@ -161,6 +199,12 @@ namespace PMS.Modules.Accounts
             {
                 string category = row.categoryname;
                 string financialDept = row.financialdepartment;
+                string financialDept_name = (from dv in db.DataValues
+                                             join ds in db.ValueSets
+                                             on dv.ValueSet_ID equals ds.ValueSet_ID
+                                             where ds.ValueSet_Name == "Clinical Financial Department" &&  dv.DataValue_Name == financialDept
+                                             select dv.DataValue_Description ).FirstOrDefault();
+
                 int cash = 0, discount = 0, revenue = 0;
                 int.TryParse(row.cashinhand, out cash);
                 int.TryParse(row.discount, out discount);
@@ -169,6 +213,7 @@ namespace PMS.Modules.Accounts
                 ClinicalAccountCategory table = new ClinicalAccountCategory
                 {
                     Fn_Department = financialDept,
+                    Fn_Department_Name = financialDept_name,
                     CategoryName = category,
                     CashInHand = cash,
                     Discount = discount,
@@ -189,7 +234,7 @@ namespace PMS.Modules.Accounts
         // Create a class to receive row data
         public class RowData
         {
-            
+            public string financialdepartment_name {  get; set; }
                 public string financialdepartment { get; set; }
             public string categoryname { get; set; }
             public string cashinhand { get; set; }
