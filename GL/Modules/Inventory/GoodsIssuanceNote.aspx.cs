@@ -187,6 +187,7 @@ namespace PMS.Inventory
                 sid.Department = item.Department;
                 sid.Remarks = item.Remarks;
                 sid.BatchNum = item.BatchNum;
+                sid.CGS = item.CGS;
                 db.Store_Issue_Details.InsertOnSubmit(sid);
                 db.SubmitChanges();
             }
@@ -214,6 +215,7 @@ namespace PMS.Inventory
                              data.Item_Id,
                              data.MIR_Id,
                              data.MIR_Qty,
+                             data.CGS,
                              data.Remarks,
                              data.Store_Issue_Detail_Id,
                              data.Store_Issue_Id,
@@ -310,6 +312,7 @@ namespace PMS.Inventory
             public string Department { get; set; }
             public string Remarks { get; set; }
             public string BatchNum { get; set; }
+            public decimal CGS { get; set; }
         }
 
         [WebMethod]

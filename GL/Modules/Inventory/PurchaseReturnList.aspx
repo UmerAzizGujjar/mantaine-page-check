@@ -4,22 +4,20 @@
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
 
-        function PrintReport(id) {
+        function PrintReport(Purchase_Return_ID) {
             debugger;
             var locationInfo = window.location;
-            var url = '/ReportViewer.aspx?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&POid=' + id;
+            var url = '/ReportViewer.aspx?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&POid=' + Purchase_Return_ID;
             if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'https://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&POid=' + id;
+                url = 'https://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&POid=' + Purchase_Return_ID;
             }
             window.open(url, '_blank');
         }
 
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
-        }
+        
         function Edit(ID) {
             window.location.href = "AddPurchaseReturn.aspx?ID=" + ID;
         }
@@ -95,7 +93,7 @@
                         "render": function (data, type, full) {
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Purchase_Return_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(' + full.Purchase_Return_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
                             result = res  + print;
                             return result;

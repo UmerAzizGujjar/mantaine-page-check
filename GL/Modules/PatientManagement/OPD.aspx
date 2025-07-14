@@ -142,7 +142,7 @@
                  var urlInfo = window.location.href.split('/');
                  var ip = urlInfo[2];
                  var foldername = urlInfo[3];
-                url = 'http://' + ip +  "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
+                url = 'http://' + ip + '/' + foldername +  "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
              }
              window.open(url, '_blank');
         }
@@ -156,7 +156,7 @@
                         var urlInfo = window.location.href.split('/');
                         var ip = urlInfo[2];
                         var foldername = urlInfo[3];
-                        url = 'http://' + ip + "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
+                        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
                     }
                     window.open(url, '_blank');
                 }
