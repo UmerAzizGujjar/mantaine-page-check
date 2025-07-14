@@ -9,9 +9,13 @@
 
     });
        
-    function PrintTest(id) {
-        window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+    function PrintTest(Test_ID) {
+
+        var url = '../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + Test_ID;
+        window.open(url, '_blank');
+
     }
+
     function LoadPage() {
         $("#tblResult").DataTable({
             "processing": true,

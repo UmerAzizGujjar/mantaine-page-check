@@ -6,6 +6,18 @@
 
     <script type="text/javascript">
 
+        function PrintPurchaseDetail(PurchaseInvoiceId) {
+             var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=PurchaseInvoiceList&ReportTitle=Purchase Invoice List&Inv_Id=' + PurchaseInvoiceId;
+             if (!locationInfo.origin.includes('localhost')) {
+                 var urlInfo = window.location.href.split('/');
+                 var ip = urlInfo[2];
+                 var foldername = urlInfo[3];
+                 url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=PurchaseInvoiceList&ReportTitle=Purchase Invoice List&Inv_Id=' + PurchaseInvoiceId;
+             }
+             window.open(url, '_blank');
+        }
+
         function PrintVoucher(InvId) {
             var locationInfo = window.location;
             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Purchase Voucher&TransID=' + InvId + '&TransType=Pur';
@@ -93,7 +105,7 @@
                         "render": function (data, type, full) {
                             var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.PurchaseInvoiceId + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.PurchaseInvoiceId + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintPurchaseDetail(' + full.PurchaseInvoiceId + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result = res + print;
                             return result;
                         }, width:"9%"
