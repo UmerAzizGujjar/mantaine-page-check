@@ -1,129 +1,108 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClinicalFinancial.aspx.cs" Inherits="PMS.Modules.Accounts.ClinicalFinancial" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+         <link href="../../wwwroot/Tibbit_theme/css/CustomCss/ClinicalFinancial.css" rel="stylesheet" />
 
     <script type="text/javascript">
+
         $(document).ready(function () {
-
             OPDloadSavedRows();
-
+            DiagnosticloadSavedRows();
+            EMERGENCYloadSavedRows();
         });
+
+        //tabs 
         $(function () {
             $("#tabs").tabs();
-
         });
-        function OPDloadSavedRows() {
-            $.ajax({
-                type: "POST",
-                url: "ClinicalFinancial.aspx/loadSavedRowsOPD",
-                data: '{}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    const savedData = response.d;
-                    console.log(savedData);
-                    getClinicalFinancialAcoountsDropdown(function (options) {
-                        getPatientTypes(function (categoryOptions) {
-                            getAccounts(function (optionsVen) {
 
-                                savedData.forEach(item => {
-                                    let row = `
-<tr class="data-row">
-    <td style="display: none">
-        <select class="financialDepartment" disabled>
-            ${setSelected(options, item.financialdepartment)}
-        </select>
-    </td>
-    <td>
-        <select class="categoryname select2select" style="background-color: white; height:32px;" disabled>
-            ${setSelected(categoryOptions, item.categoryname)}
-        </select>
-    </td>
-    <td>
-        <select class="cashinhand select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.cashinhand)}
-        </select>
-    </td>
-    <td>
-        <select class="discount select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.discount)}
-        </select>
-    </td>
-    <td>
-        <select class="revenue select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.revenue)}
-        </select>
-    </td>
-    <td>
-        <a href="#" onclick="removeRow(this)">
-            <i class="fa fa-trash fa-lg " style="color: black;"></i>
-        </a>
-        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
-        </a>
-    </td>
-</tr>`;
-
-
-                                    $('#tableOPD tbody').append(row);
-                                });
-
-                                $('.select2select').select2(); // reinit after DOM update
-                            });
-                        });
-                    });
-                }
-            });
-        }
-
-        function setSelected(optionsHtml, selectedValue) {
-            let parser = new DOMParser();
-            let doc = parser.parseFromString('<select>' + optionsHtml + '</select>', 'text/html');
-            let select = doc.querySelector('select');
-
-            select.querySelectorAll('option').forEach(option => {
-                if (option.value === selectedValue) {
-                    option.setAttribute('selected', 'selected');
-                } else {
-                    option.removeAttribute('selected');
-                }
-            }); return Array.from(select.options).map(opt => opt.outerHTML).join('');
-        }
+        //SAVE DATA
         function submitData() {
+
             let isEmptyFound = false;
             let allData = [];
-            let categoryNames = new Set();
+            let categoryNamesOPD = new Set();
+            let categoryNamesDiagnostic = new Set();
+            let categoryNamesEMERGENCY = new Set();
             let duplicateFound = false;
-            let rows = $('#tableOPD .data-row');
+            let rowsOPD = $('#tableOPD .data-row');
+            let rowsDiagnostic = $('#tableDiagnostic .data-row');
+            let rowsEMERGENCY = $('#tableEMERGENCY .data-row');
 
             // Check if any rows exist
-            if (rows.length === 0) {
+            if (rowsOPD.length === 0 && rowsDiagnostic.length === 0 && rowsEMERGENCY.length === 0) {
                 isEmptyFound = true;
             }
 
-            rows.each(function () {
+            //getAllData
+            rowsOPD.each(function () {
                 let row = $(this);
-                let rowData = {
+                let rowDataOPD = {
 
-                    financialdepartment: row.find('.financialDepartment').val(),
-                    categoryname: row.find('.categoryname').val(),
-                    cashinhand: row.find('.cashinhand').val(),
-                    discount: row.find('.discount').val(),
-                    revenue: row.find('.revenue').val()
+                    financialdepartment: row.find('.financialDepartmentOPD').val(),
+                    categoryname: row.find('.categorynameOPD').val(),
+                    cashinhand: row.find('.cashinhandOPD').val(),
+                    discount: row.find('.discountOPD').val(),
+                    revenue: row.find('.revenueOPD').val()
                 };
                 // Check if any value is empty
-                if (rowData.categoryname == 0 || rowData.cashinhand == 0 || rowData.discount == 0 || rowData.revenue == 0) {
+                if (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0 || rowDataOPD.revenue == 0) {
                     isEmptyFound = true;
                 }
                 // Check for duplicate categoryname
-                if (categoryNames.has(rowData.categoryname)) {
+                if (categoryNamesOPD.has(rowDataOPD.categoryname)) {
                     duplicateFound = true;
                 } else {
-                    categoryNames.add(rowData.categoryname);
+                    categoryNamesOPD.add(rowDataOPD.categoryname);
                 }
-                allData.push(rowData);
+                allData.push(rowDataOPD);
+            });
+            rowsDiagnostic.each(function () {
+                let row = $(this);
+                let rowDataDiagnostic = {
+
+                    financialdepartment: row.find('.financialDepartmentDiagnostic').val(),
+                    categoryname: row.find('.categorynameDiagnostic').val(),
+                    cashinhand: row.find('.cashinhandDiagnostic').val(),
+                    discount: row.find('.discountDiagnostic').val(),
+                    revenue: row.find('.revenueDiagnostic').val()
+                };
+                // Check if any value is empty
+                if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesDiagnostic.has(rowDataDiagnostic.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesDiagnostic.add(rowDataDiagnostic.categoryname);
+                }
+                allData.push(rowDataDiagnostic);
+            });
+            rowsEMERGENCY.each(function () {
+                let row = $(this);
+                let rowDataEMERGENCY = {
+
+                    financialdepartment: row.find('.financialDepartmentEMERGENCY').val(),
+                    categoryname: row.find('.categorynameEMERGENCY').val(),
+                    cashinhand: row.find('.cashinhandEMERGENCY').val(),
+                    discount: row.find('.discountEMERGENCY').val(),
+                    revenue: row.find('.revenueEMERGENCY').val()
+                };
+                // Check if any value is empty
+                if (rowDataEMERGENCY.categoryname == 0 || rowDataEMERGENCY.cashinhand == 0 || rowDataEMERGENCY.discount == 0 || rowDataEMERGENCY.revenue == 0) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesEMERGENCY.has(rowDataEMERGENCY.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesEMERGENCY.add(rowDataEMERGENCY.categoryname);
+                }
+                allData.push(rowDataEMERGENCY);
             });
 
+            //swals
             if (isEmptyFound) {
                 Swal.fire({
                     icon: 'error',
@@ -155,11 +134,7 @@
 
             }
 
-            console.log(allData);
-            console.log(duplicateFound);
-            console.log(isEmptyFound);
-
-
+            //ajax
             if (!isEmptyFound && !duplicateFound) {
                 $.ajax({
                     type: "POST",
@@ -182,7 +157,7 @@
                         });
                         setTimeout(function () {
                             location.reload();
-                        }, 2500); // Reloads page after 2.5 seconds
+                        }, 2500);
                     },
                     error: function (xhr, status, error) {
                         console.error("Error:", error);
@@ -190,6 +165,202 @@
                 });
             }
         }
+
+        //load data from db
+        function OPDloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsOPD",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getPatientTypes(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+<tr class="data-row">
+    <td style="display: none">
+        <select class="financialDepartmentOPD" disabled>
+            ${setSelected(options, item.financialdepartment)}
+        </select>
+    </td>
+    <td>
+        <select class="categorynameOPD select2select" style="background-color: white; height:32px;" disabled>
+            ${setSelected(categoryOptions, item.categoryname)}
+        </select>
+    </td>
+    <td>
+        <select class="cashinhandOPD select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.cashinhand)}
+        </select>
+    </td>
+    <td>
+        <select class="discountOPD select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.discount)}
+        </select>
+    </td>
+    <td>
+        <select class="revenueOPD select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <a href="#" onclick="removeRow(this)">
+            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        </a>
+        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        </a>
+    </td>
+</tr>`;
+
+                                    $('.financialDepartmentOPD option[value="001"]').prop('selected', true);
+
+                                    $('#tableOPD tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        function DiagnosticloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsDiagnostic",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getMainTestDepartments(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+<tr class="data-row">
+    <td style="display: none">
+        <select class="financialDepartmentDiagnostic" disabled>
+            ${setSelected(options, item.financialdepartment)}
+        </select>
+    </td>
+    <td>
+        <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;" disabled>
+            ${setSelected(categoryOptions, item.categoryname)}
+        </select>
+    </td>
+    <td>
+        <select class="cashinhandDiagnostic select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.cashinhand)}
+        </select>
+    </td>
+    <td>
+        <select class="discountDiagnostic select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.discount)}
+        </select>
+    </td>
+    <td>
+        <select class="revenueDiagnostic select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <a href="#" onclick="removeRow(this)">
+            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        </a>
+        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        </a>
+    </td>
+</tr>`;
+
+                                    $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
+
+                                    $('#tableDiagnostic tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        function EMERGENCYloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsEMERGENCY",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getPatientTypes(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+<tr class="data-row">
+    <td style="display: none">
+        <select class="financialDepartmentEMERGENCY" disabled>
+            ${setSelected(options, item.financialdepartment)}
+        </select>
+    </td>
+    <td>
+        <select class="categorynameEMERGENCY select2select" style="background-color: white; height:32px;" disabled>
+            ${setSelected(categoryOptions, item.categoryname)}
+        </select>
+    </td>
+    <td>
+        <select class="cashinhandEMERGENCY select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.cashinhand)}
+        </select>
+    </td>
+    <td>
+        <select class="discountEMERGENCY select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.discount)}
+        </select>
+    </td>
+    <td>
+        <select class="revenueEMERGENCY select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <a href="#" onclick="removeRow(this)">
+            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        </a>
+        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        </a>
+    </td>
+</tr>`;
+
+                                    $('.financialDepartmentEMERGENCY option[value="003"]').prop('selected', true);
+
+                                    $('#tableEMERGENCY tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+
+        //helper functions
         function removeRow(anchor) {
             let row = anchor.closest('tr');
             row.remove();
@@ -199,34 +370,49 @@
             let selects = row.querySelectorAll('select');
             selects.forEach(select => select.disabled = false);
         }
-        function addNewRow() {
+        function setSelected(optionsHtml, selectedValue) {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString('<select>' + optionsHtml + '</select>', 'text/html');
+            let select = doc.querySelector('select');
+
+            select.querySelectorAll('option').forEach(option => {
+                if (option.value === selectedValue) {
+                    option.setAttribute('selected', 'selected');
+                } else {
+                    option.removeAttribute('selected');
+                }
+            }); return Array.from(select.options).map(opt => opt.outerHTML).join('');
+        }
+
+        //add new rows
+        function addNewRowOPD() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getPatientTypes(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
                         let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
-                        <select class="financialDepartment">
+                        <select class="financialDepartmentOPD">
                             ${options}
                         </select>
                     
                     <td>
-                        <select class="categoryname select2select" style="background-color: white; height:32px;">
+                        <select class="categorynameOPD select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
                         </select>
                     </td>
                     <td>
-                        <select class="cashinhand select2select" style="background-color: white;">
+                        <select class="cashinhandOPD select2select" style="background-color: white;">
                             ${optionsVen}
                         </select>
                     </td>
                     <td>
-                        <select class="discount select2select" style="background-color: white;">
+                        <select class="discountOPD select2select" style="background-color: white;">
                             ${optionsVen}
                         </select>
                     </td>
                     <td>
-                        <select class="revenue select2select" style="background-color: white;">
+                        <select class="revenueOPD select2select" style="background-color: white;">
                             ${optionsVen}
                         </select>
                     </td>
@@ -239,15 +425,130 @@
                 </tr>
             `;
                         $('#tableOPD tbody').append(newRow);
-                        $('.financialDepartment option[value="001"]').prop('selected', true);
+                        $('.financialDepartmentOPD option[value="001"]').prop('selected', true);
                         $('.select2select').select2(); // initialize Select2
                     });
                 });
             });
         }
+        function addNewRowDiagnostic() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getMainTestDepartments(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                        <select class="financialDepartmentDiagnostic">
+                            ${options}
+                        </select>
+                    
+                    <td>
+                        <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;">
+                            ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="cashinhandDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="discountDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenueDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
+
+                    </td>
+                </tr>
+            `;
+                        $('#tableDiagnostic tbody').append(newRow);
+                        $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                    });
+                });
+            });
+
+        }
+        function addNewRowEMERGENCY() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getPatientTypes(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                        <select class="financialDepartmentEMERGENCY">
+                            ${options}
+                        </select>
+                    
+                    <td>
+                        <select class="categorynameEMERGENCY select2select" style="background-color: white; height:32px;">
+                            ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="cashinhandEMERGENCY select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="discountEMERGENCY select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenueEMERGENCY select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
+
+                    </td>
+                </tr>
+            `;
+                        $('#tableEMERGENCY tbody').append(newRow);
+                        $('.financialDepartmentEMERGENCY option[value="003"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                    });
+                });
+            });
+        }
+
+        //dropdowns
         function getPatientTypes(callback) {
             $.ajax({
                 url: 'ClinicalFinancial.aspx/PatientType',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    let options = '<option value="0">Please Select</option>';
+                    let data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
+                    });
+                    callback(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching patient types:', error);
+                    callback('<option value="0">Error</option>');
+                }
+            });
+        }
+        function getMainTestDepartments(callback) {
+            $.ajax({
+                url: 'ClinicalFinancial.aspx/MainTestDepartments',
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -312,48 +613,16 @@
             return options;
         }
 
-
     </script>
-    <style type="text/css">
-        #tabs ul li a {
-            background-color: #EFA63E !important;
-            color: Black;
-            background: none;
-            border: none;
-            padding: 10px;
-        }
-
-        #tabs ul li.ui-tabs-active a {
-            border-bottom: 1px solid aliceblue !important;
-            color: white !important;
-        }
-
-        .fa-plus-circle {
-            color: black !important;
-        }
-
-        .table thead th {
-            background-color: #f8f9fa;
-        }
-
-        .search-input {
-            margin-bottom: 15px;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, .05);
-        }
-    </style>
+ 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div id="tabs">
 
         <ul>
             <li><a href="#Tab-1">OPD</a></li>
-            <li><a href="#Tab-2">Emergency</a></li>
-            <li><a href="#Tab-3">IPD</a></li>
-            <li><a href="#Tab-4">Ultra_Sound</a></li>
-            <li><a href="#Tab-5">CT_Scan</a></li>
+            <li><a href="#Tab-2">Diagnostic</a></li>
+            <li><a href="#Tab-3">Emergency</a></li>
         </ul>
 
         <div id="Tab-1">
@@ -361,7 +630,7 @@
 
                 <div class="col-lg-11 col-md-11 col-sm-11"></div>
                 <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
-                    <a href="#" id="btnaddrow" onclick="addNewRow()">
+                    <a href="#" id="btnaddrowOPD" onclick="addNewRowOPD()">
                         <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
                     </a>
                 </div>
@@ -384,253 +653,57 @@
 
         <div id="Tab-2">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                    <label>Department</label>
-                    <select id="ddlmaindep" name="ddlmaindep">
-                        <option value="0">Select Department</option>
-                        <option value="001">Lab Test</option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                    <label id="lbllabtestagremnttype">Agrement Type</label>
-                    <select id="ddl_labtest_AgrementType" name="ddl_labtest_AgrementType"></select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                    <label id="lbllabtestagremntdept">Agrement Department</label>
-                    <select id="ddl_labtest_Agrementdept" name="ddl_labtest_Agrementdept"></select>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <label>Doc_share</label>
-                    <select id="discount_lab" onchange="ddldiscount_lab();">
-                        <option value="0">No</option>
-                        <option value="10">10%</option>
-                        <option value="20">20%</option>
-                        <option value="30">30%</option>
-                        <option value="40">40%</option>
-                        <option value="50">50%</option>
-                        <option value="60">60%</option>
-                        <option value="70">70%</option>
-                        <option value="80">80%</option>
-                        <option value="90">90%</option>
-                        <option value="100">100%</option>
-                    </select>
-                </div>
 
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-                    <a href="#" id="btnshowLabModal">
-                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
-
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrowDiagnostic" onclick="addNewRowDiagnostic()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
                     </a>
                 </div>
             </div>
-            <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult">
-                <thead id="ihead">
+            <table id="tableDiagnostic" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+                <thead id="theadDiagnostic">
                     <tr>
-                        <th>Description</th>
-                        <th>Agrement Type</th>
-                        <th style="display: none">Agrement Type Id</th>
-                        <th>Agrement Dept</th>
-                        <th style="display: none">Agrement Dept Id</th>
-                        <th>Actual Amount</th>
-                        <th>Discount %</th>
-                        <th>Net Amount</th>
-                        <th>Doc_Share</th>
-                        <th>Hos_Share</th>
-                        <th>Action</th>
+                        <th style="display: none">Financial Department  </th>
+                        <th style="width: 20%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 25%;">Discount              </th>
+                        <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 5%;">Action                </th>
                     </tr>
                 </thead>
-                <tbody id="ibody">
+                <tbody id="tbodyDiagnostic">
                 </tbody>
             </table>
         </div>
 
         <div id="Tab-3">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                    <label>Department</label>
-                    <select id="ddlmaindep_xray" name="ddlmaindep_xray">
-                        <option value="0">Select Department</option>
-                        <option value="003">X-Ray</option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label id="lblxrayagremnttype">Agrement Type</label>
-                    <select id="ddl_xray_AgrementType" name="ddl_xray_AgrementType"></select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label id="lblxrayagremntdept">Agrement Department</label>
-                    <select id="ddl_xray_Agrementdept" name="ddl_xray_Agrementdept"></select>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <label>Doc_share</label>
-                    <select id="discount_xray" onchange="ddldiscount_xray();">
-                        <option value="0">No</option>
-                        <option value="10">10%</option>
-                        <option value="20">20%</option>
-                        <option value="30">30%</option>
-                        <option value="40">40%</option>
-                        <option value="50">50%</option>
-                        <option value="60">60%</option>
-                        <option value="70">70%</option>
-                        <option value="80">80%</option>
-                        <option value="90">90%</option>
-                        <option value="100">100%</option>
-                    </select>
-                </div>
 
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-                    <a href="#" id="btnshowxrayModal">
-                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
-
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrowEMERGENCY" onclick="addNewRowEMERGENCY()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
                     </a>
                 </div>
             </div>
-            <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResults">
-                <thead id="iheads">
+            <table id="tableEMERGENCY" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+                <thead id="theadEMERGENCY">
                     <tr>
-                        <th>Description</th>
-                        <th>Agrement Type</th>
-                        <th style="display: none">Agrement Type Id</th>
-                        <th>Agrement Dept</th>
-                        <th style="display: none">Agrement Dept Id</th>
-                        <th>Actual Amount</th>
-                        <th>Discount %</th>
-                        <th>Net Amount</th>
-                        <th>Doc_Share</th>
-                        <th>Hos_Share</th>
-                        <th>Action</th>
+                        <th style="display: none">Financial Department  </th>
+                        <th style="width: 20%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 25%;">Discount              </th>
+                        <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 5%;">Action                </th>
                     </tr>
                 </thead>
-                <tbody id="ibodys">
+                <tbody id="tbodyEMERGENCY">
                 </tbody>
             </table>
         </div>
 
-        <div id="Tab-4">
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                    <label>Department</label>
-                    <select id="ddlmaindep_Ultra" name="ddlmaindep_Ultra">
-                        <option value="0">Select Department</option>
-                        <option value="002">Ultra_Sound</option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label id="lblultrasoundsagremnttype">Agrement Type</label>
-                    <select id="ddl_ultrasounds_AgrementType" name="ddl_ultrasounds_AgrementType"></select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label id="lblultrasoundsagremntdept">Agrement Department</label>
-                    <select id="ddl_ultrasounds_Agrementdept" name="ddl_ultrasounds_Agrementdept"></select>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <label>Doc_share</label>
-                    <select id="discount_ultra" onchange="ddldiscount_ultra();">
-                        <option value="0">No</option>
-                        <option value="10">10%</option>
-                        <option value="20">20%</option>
-                        <option value="30">30%</option>
-                        <option value="40">40%</option>
-                        <option value="50">50%</option>
-                        <option value="60">60%</option>
-                        <option value="70">70%</option>
-                        <option value="80">80%</option>
-                        <option value="90">90%</option>
-                        <option value="100">100%</option>
-                    </select>
-                </div>
 
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-                    <a href="#" id="btnshowultrsoundModal">
-                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
-
-                    </a>
-                </div>
-
-            </div>
-            <table style="overflow: scroll; height: auto; margin-top: 10px !important" class="table table-bordered table-hover table-striped" id="tblResult_ultra">
-                <thead id="ihead_ultra">
-                    <tr>
-                        <th>Description</th>
-                        <th>Agrement Type</th>
-                        <th style="display: none">Agrement Type Id</th>
-                        <th>Agrement Dept</th>
-                        <th style="display: none">Agrement Dept Id</th>
-                        <th>Actual Amount</th>
-                        <th>Discount %</th>
-                        <th>Net Amount</th>
-                        <th>Doc_Share</th>
-                        <th>Hos_Share</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="ibodys_ultra">
-                </tbody>
-            </table>
-        </div>
-
-        <div id="Tab-5">
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                    <label>Department</label>
-                    <select id="ddlmaindep_ctscan" name="ddlmaindep_ct_scan">
-                        <option value="0">Select Department</option>
-                        <option value="004">CTScan</option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label id="lblCTScanagremnttype">Agrement Type</label>
-                    <select id="ddl_CTScan_AgrementType" name="ddl_CTScan_AgrementType"></select>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label id="lblCTScanagremntdept">Agrement Department</label>
-                    <select id="ddl_CTScan_Agrementdept" name="ddl_CTScan_Agrementdept"></select>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <label>Doc_share</label>
-                    <select id="discount" onchange="ddldiscount();">
-                        <option value="0">No</option>
-                        <option value="10">10%</option>
-                        <option value="20">20%</option>
-                        <option value="30">30%</option>
-                        <option value="40">40%</option>
-                        <option value="50">50%</option>
-                        <option value="60">60%</option>
-                        <option value="70">70%</option>
-                        <option value="80">80%</option>
-                        <option value="90">90%</option>
-                        <option value="100">100%</option>
-                    </select>
-                </div>
-
-                <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 30px;">
-                    <a href="#" id="btnshowCTScanModal">
-                        <i class="fa fa-plus-circle" style="font-size: 24px;"></i>
-
-                    </a>
-                </div>
-
-            </div>
-            <table class="table table-bordered table-hover table-striped" style="overflow: scroll; height: auto; margin-top: 10px !important" id="tblResult_ctscan">
-                <thead id="ihead_ctscan">
-                    <tr>
-                        <th>Description</th>
-                        <th>Agrement Type</th>
-                        <th style="display: none">Agrement Type Id</th>
-                        <th>Agrement Dept</th>
-                        <th style="display: none">Agrement Dept Id</th>
-                        <th>Actual Amount</th>
-                        <th>Discount %</th>
-                        <th>Net Amount</th>
-                        <th>Doc_Share</th>
-                        <th>Hos_Share</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="ibody_ctscan">
-                </tbody>
-            </table>
-        </div>
 
 
     </div>
