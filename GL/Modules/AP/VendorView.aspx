@@ -63,7 +63,7 @@
                 "columns": [
                     { "data": "Vendor_ID", "visible": false, "width": "0%" },
                     { "data": "Vendor_Name", "name": "Vendor_Name", "width": "15%", "orderable": true },
-                    { "data": "Contact_Person", "width": "15%", "orderable": false },                  
+                    { "data": "Contact_Person", "width": "13%", "orderable": false },                  
                     { "data": "Vendor_Phone1", "width": "11%", "orderable": false },
                     { "data": "Vendor_Address", "width": "25%", "orderable": false },
                     { "data": "City", "width": "10%", "orderable": false },
@@ -77,7 +77,7 @@
                             var result;
                             result = res  + print;
                             return result;
-                        }, "width": "5%", "orderable": false
+                        }, "width": "9%", "orderable": false
                     }
 
                 ],

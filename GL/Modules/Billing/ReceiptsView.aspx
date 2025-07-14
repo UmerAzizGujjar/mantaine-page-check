@@ -53,7 +53,7 @@
                 },
                 "columns": [
                     { "data": "Receipt_ID", "visible": false, "width": "0%" },
-                    { "data": "Receipt_No", "name": "Receipt_No", "width": "8%", "orderable": true },
+                    { "data": "Receipt_No", "name": "Receipt_No", "width": "7%", "orderable": true },
                     {
                         "data": "Receipt_Date", "name": "Receipt_Date",
                         "render": function (data, type, full) {
@@ -63,7 +63,7 @@
                             return date;
                         }, "width": "8%", "orderable": true
                     },
-                    { "data": "Remarks", "width": "15%", "orderable": false },
+                    { "data": "Remarks", "width": "16%", "orderable": false },
                     { "data": "Receipt_Amount", "width": "8%", "orderable": false },
 
                     { "data": "mr_no_sequence", "width": "12%", "orderable": false },
@@ -182,12 +182,9 @@
     </script>
 
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div >
-            
-       
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">                  
         <div class="row">
-            <div class="table-container col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
+            <div class="table-container">
                 <table class="table table-hover table-striped table-bordered" id="tblResult" >
                     <thead id="ihead">
                         <tr>
@@ -208,5 +205,4 @@
                 </table>
             </div>
         </div>
-    </div>
 </asp:Content>

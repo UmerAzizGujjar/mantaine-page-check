@@ -96,7 +96,7 @@
                     { "data": "Patient_ID", "visible": false, "width": "0%", "orderable": false },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
                     { "data": "Opd_No", "name": "Opd_No", "width": "5%", "orderable": false },
-                    { "data": "Full_Name", "width": "15%", "orderable": false },
+                    { "data": "Full_Name", "width": "13%", "orderable": false },
                     { "data": "Patient_Type", "width": "10%", "orderable": false },
                     { "data": "Department", "width": "10%", "orderable": false },
                     { "data": "NIC", "width": "10%", "orderable": false },
@@ -110,7 +110,7 @@
                             var date = full.Created_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%"
+                        }, "width": "9%"
                     },
                     {
                         render: function (data, type, full) {
@@ -125,7 +125,7 @@
                             return result;
                             
                             
-                        }, "width": "13%", "orderable": false
+                        }, "width": "17%", "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
