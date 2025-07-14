@@ -17,6 +17,7 @@ using System.Configuration;
 using CrystalDecisions.Shared;
 using System.Web.Script.Serialization;
 using PMS.Modules.PatientManagement;
+using System.Net.PeerToPeer;
 
 namespace PMS
 {
@@ -67,12 +68,23 @@ namespace PMS
                 tranObj = con.BeginTransaction();
                 try
                 {
-                    bool rowUpdated = DBClass.exectueQuery(
-                    "UPDATE In_Patient SET is_cancel = 1, cancel_by = '" + user + "' WHERE In_Patient_ID = " + Convert.ToInt32(InPatientID) + "; " +
-                    "DELETE FROM Ward_Allocation WHERE InPatient_ID = " + InPatientID.ToString(),
-                    tranObj,
-                    con
-                );
+                    string id = Convert.ToInt32(InPatientID).ToString();
+
+                    string query = $@"
+    UPDATE In_Patient 
+    SET is_cancel = 1, cancel_by = '{user}', CancelledTime = GETDATE() 
+    WHERE In_Patient_ID = {id};
+
+    UPDATE Ward_Allocation 
+    SET isCancelled = 1, CancelledBy = '{user}', CancelledTime = GETDATE() 
+    WHERE InPatient_ID = {id};
+";
+
+                    bool rowUpdated = DBClass.exectueQuery(query, tranObj, con);
+
+
+
+                    
 
 
 

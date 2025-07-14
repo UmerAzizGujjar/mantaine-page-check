@@ -58,10 +58,11 @@
                     render: function (data, type, full) {
                         debugger;
                         var res = '<a href="#" onclick="editOpen(' + full.Package_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
-
+                        var del = '<a href="#" onclick="delete_package(' + full.Package_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-trash"></i></a>'
+                        
                         var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Package_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                         var result;
-                        result = res  + print;
+                        result = res  + del + print;
                         return result;
                     }, "orderable": false
                 }
@@ -92,6 +93,65 @@
     function editOpen(id) {
         window.open("AddDoctor_Packages.aspx?Doc_Package_id=" + id + "");
     }
+    function delete_package(id) {
+        Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'This action will delete the Package!',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                $.ajax({
+                    type: "POST",
+                    url: "Doctor_Packages_List.aspx/DeletePackage",
+                    data: JSON.stringify({ Package_ID: id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "Package cancelled successfully.") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Your Package has been Deleted successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            }); 
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Error Deleting Package',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+
+        });
+        }
+    
 </script>
 
 </asp:Content>

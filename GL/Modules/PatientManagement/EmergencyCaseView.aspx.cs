@@ -56,7 +56,20 @@ namespace PMS
                 tranObj = con.BeginTransaction();
                 try
                 {
-                    bool rowDeleted = DBClass.exectueQuery("Delete Emergency_Patient Where Emergency_ID=" + Convert.ToInt32(Emergency_PatientID) + "; Delete from Ward_Allocation where EmergencyID = " + Emergency_PatientID.ToString() + "", tranObj, con);
+                    var username = AppConfig.UserID;
+                    string id = Convert.ToInt32(Emergency_PatientID).ToString();
+
+                    string query = $@"
+    UPDATE Emergency_Patient 
+    SET isCancelled = 1, CancelledBy = '{username}', CancelledTime = GETDATE() 
+    WHERE Emergency_ID = {id};
+
+    UPDATE Ward_Allocation 
+    SET isCancelled = 1, CancelledBy = '{username}', CancelledTime = GETDATE() 
+    WHERE EmergencyID = {id};
+";
+
+                    bool rowDeleted = DBClass.exectueQuery(query, tranObj, con);
 
 
                     tranObj.Commit();

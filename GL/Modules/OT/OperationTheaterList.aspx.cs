@@ -18,7 +18,35 @@ namespace PMS
         {
 
         }
+        [WebMethod]
+        public static string DeleteID(string OT_ID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
+                // Try to find the package by ID
+                var package = db.Operation_Bookings.FirstOrDefault(p => p.Operation_Booking_ID.ToString() == OT_ID);
+
+                if (package != null)
+                {
+                    package.isCancelled = true;
+                    package.CancelledBy = AppConfig.UserID;
+                    package.CancelledTime = DateTime.Now;
+                    db.SubmitChanges();
+                    return "Package cancelled successfully.";
+                }
+                else
+                {
+                    return "Package not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Optional: Log the exception if needed
+                return "Error occurred: " + ex.Message;
+            }
+        }
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
