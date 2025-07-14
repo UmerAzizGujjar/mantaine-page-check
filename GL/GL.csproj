@@ -10775,6 +10775,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\BloodBank.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\changePassword.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\ClinicalFinancial.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\ComparativeStatement.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\CRV.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Datavalue.css" />

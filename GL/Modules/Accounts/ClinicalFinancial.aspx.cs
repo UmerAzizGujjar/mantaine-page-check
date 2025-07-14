@@ -15,6 +15,7 @@ namespace PMS.Modules.Accounts
         {
 
         }
+       
         [WebMethod]
         public static List<RowData> loadSavedRowsOPD()
         {
@@ -22,6 +23,44 @@ namespace PMS.Modules.Accounts
             {
                 var data = (from x in db.ClinicalAccountCategories
                             where x.IsCancel == false && x.Fn_Department == "001"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                cashinhand = x.CashInHand.ToString(),
+                                discount = x.Discount.ToString(),
+                                revenue = x.Revenue.ToString(),
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
+        [WebMethod]
+        public static List<RowData> loadSavedRowsDiagnostic()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "002"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                cashinhand = x.CashInHand.ToString(),
+                                discount = x.Discount.ToString(),
+                                revenue = x.Revenue.ToString(),
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
+        [WebMethod]
+        public static List<RowData> loadSavedRowsEMERGENCY()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "003"
                             select new RowData
                             {
                                 categoryname = x.CategoryName,
@@ -65,6 +104,26 @@ namespace PMS.Modules.Accounts
                               join ds in db.ValueSets
                               on dv.ValueSet_ID equals ds.ValueSet_ID
                               where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string MainTestDepartments()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Main Test Departments"
                               select new
                               {
                                   dv.DataValue_Name,
