@@ -21069,6 +21069,7 @@
     <Folder Include="upload\UploadCSFilesImages\" />
     <Folder Include="upload\UploadGINFilesImages\" />
     <Folder Include="upload\UploadGIRFilesImages\" />
+    <Folder Include="upload\UploadInvItems\" />
     <Folder Include="upload\UploadItemsStock\" />
     <Folder Include="upload\UploadMIFilesImages\" />
     <Folder Include="upload\UploadPaymentFilesImages\" />
