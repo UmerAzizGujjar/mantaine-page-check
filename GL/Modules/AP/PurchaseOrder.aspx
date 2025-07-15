@@ -232,8 +232,10 @@
                 }
             });
 
+            $('#ddlWarehouse').select2();
             loaddata();
-
+            FillWarehouse();
+            
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#ctl00_MainContent_txtPurchase_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
@@ -363,6 +365,9 @@
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPOType').val(data.PO_Type).trigger('change');
                 }, 1000)
+                setTimeout(function () {
+                    $('#ddlWarehouse').val(data.Ware_House).trigger('change');
+                }, 1000);
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlpayment').val(data.Payment_Terms).trigger('change');
                 }, 1000)
@@ -632,6 +637,21 @@
             });
         }
 
+
+        function FillWarehouse() {
+
+            var optionInv = '';
+            PageMethods.fillWarehouse(function (Tests) {
+
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+
+                    optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                });
+                $('#ddlWarehouse').html(optionInv);
+            });
+        }
+
         function calcTotal() {
             debugger;
             var netAmount = 0;
@@ -729,6 +749,7 @@
             var proceed = true;
             var table = $('#tblItemDescriptionDetail');
             var Vendor = $('#ctl00_MainContent_ddlVendor').val();
+            var Warehouse = $('#ddlWarehouse').val();
             var PaymentTerms = $('#ctl00_MainContent_ddlpayment').val();
             var PDate = $('#ctl00_MainContent_txtPurchase_Date').val();
             var dueDate = $('#ctl00_MainContent_txtdueDate').val();
@@ -751,6 +772,23 @@
                 $("#btnSave").prop("disabled", false).removeAttr("disabled");
                 return false;
             }
+
+            if (Warehouse == '0') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Warehouse',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return false;
+            }
+
             if (Vendor == '0') {
                 $("#ctl00_MainContent_ddlVendor").addClass('ErrorAlert');
                 $('#select2-ctl00_MainContent_ddlVendor-container').parent().css('border-color', 'red');
@@ -887,6 +925,7 @@
                 var DiscountAmount = $('#ctl00_MainContent_txtTotalDiscAmt').val();
                 var NetAmount = $('#ctl00_MainContent_Net_Amount').val();
                 var PaymentTerms = $('#ctl00_MainContent_ddlpayment').val();
+                var Warehouse = $('#ddlWarehouse').val();
                 var Term_ID = $('#ctl00_MainContent_ddlTerm').val();
                 var DeliveryTerms = $('#ctl00_MainContent_ddlDelivery').val();
                 var Freight = $('#ctl00_MainContent_Freight').val();
@@ -913,6 +952,7 @@
                         });
                     }
                 });
+
                 if (status == false) {
                     Swal.fire({
                         icon: 'error',
@@ -931,7 +971,7 @@
                     return false;
                 }
                 else {
-                    var AllItemDetail = { 'txtst_amou': txtst_amou, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list };
+                    var AllItemDetail = { 'txtst_amou': txtst_amou, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse };
                     PageMethods.SavePurchaseItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         sendFile(res);
@@ -1092,11 +1132,11 @@
         </div>
 
         <div class="row">
-             <div class="col-lg-3 col-md-6 col-sm-12">
-     <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
-     <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
- </div>
-           
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <asp:Label ID="lblDueDate" runat="server" Text="Due Date"></asp:Label>
+                <asp:TextBox runat="server" ID="txtdueDate" class="form-control" />
+            </div>
+
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
@@ -1109,6 +1149,12 @@
             </div>
             <div class="col-lg-1 col-md-2 col-sm-4">
                 <input type="button" value="Add" id="btnPRSave" class="btn btn-primry" style="margin-top: 16px;" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
+                <select id="ddlWarehouse" class="form-select">
+                    <option value="0">Please Select</option>
+                </select>
             </div>
         </div>
 
