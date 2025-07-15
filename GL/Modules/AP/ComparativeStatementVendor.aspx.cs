@@ -102,7 +102,22 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
-
+        [WebMethod]
+        public static string fillWarehouse()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            string data = string.Empty;
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Ware House"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
 
         [WebMethod]
         public static string SaveCSData(string btnSave, string AllItemDetail)
@@ -127,6 +142,7 @@ namespace PMS.AP
                 lstItem.CS_Ven_No = Convert.ToInt32(record.csno);
                 lstItem.CS_Validity = record.csvalidity;
                 lstItem.Remarks = record.remarks;
+                lstItem.Ware_House = record.WareHouse;
                 lstItem.Term_Id = record.Term_Id;
 
                 if (record.date != "")
@@ -396,6 +412,7 @@ namespace PMS.AP
                 CM.IsAutoGenerate = false;
                 CM.IsDeleted = false;
                 CM.Remarks = record.remarks;
+                CM.Ware_House = record.WareHouse;
                 CM.Term_Id = record.Term_Id;
                 if (record.date != "")
                 {
@@ -805,6 +822,7 @@ namespace PMS.AP
         {
             public string txtstatus { get; set; }
             public string csno { get; set; }
+            public string WareHouse { get; set; }
             public string date { get; set; }
             public string csvalidity { get; set; }
             public string remarks { get; set; }

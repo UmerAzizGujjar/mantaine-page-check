@@ -36,8 +36,24 @@
                 _gloabal = optionsVen;
             });
         }
+
+        function FillWarehouse() {
+
+            var optionInv = '';
+            PageMethods.fillWarehouse(function (Tests) {
+
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+
+                    optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                });
+                $('#ddlWarehouse').html(optionInv);
+            });
+        }
+
         $(document).ready(function () {
             UserRights();
+            FillWarehouse();
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {
@@ -280,6 +296,7 @@
             PageMethods.LoadVenHeader(CM_ID, function (resp) {
                 var data = JSON.parse(resp);
                 $('#txt_CSno').val(data.CS_Ven_No);
+                $('#ddlWarehouse').val(data.Ware_House);
                 $('#txt_Cs_Validity').val(data.CS_Validity);
                 $('#txtSTAmount_Vend1').val(data.TotalSalesTax1);
                 $('#txtSTAmount_Vend2').val(data.TotalSalesTax2);
@@ -290,6 +307,9 @@
                 $('#txt_status').val(data.Status);
                 $('#ctl00_MainContent_ddlterms').val(data.Term_Id);
                 var status = $('#txt_status').val();
+                setTimeout(function () {
+                    $('#ddlWarehouse').val(data.Ware_House).trigger('change');
+                }, 1500);
                 if (status == "Approved") {
                     UserUnApproveButtonRights();
                     $('#btn_Save').attr("disabled", true);
@@ -1150,6 +1170,7 @@
             var date = $('#txt_Date').val();
             var csvalidity = $('#txt_Cs_Validity').val();
             var remarks = $('#txt_remarks').val();
+            var Warehouse = $('#ddlWarehouse').val();
             var txtstatus = $('#txt_status').val();
             var Term_Id =$('#ctl00_MainContent_ddlterms').val();
 
@@ -1443,6 +1464,7 @@
                 'remarks': remarks,
                 'txtstatus': txtstatus,
                 'Term_Id': Term_Id,
+                'Warehouse': Warehouse,
 
                 'Item_list1': Item_list1,
                 'Item_list2': Item_list2,
@@ -1665,6 +1687,16 @@
                                    </asp:DropDownList>
                                </div>
                            </div>  
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
+                        </div>
+                        <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
+                            <select id="ddlWarehouse" style="width:100% !important">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-xs-3 col-sm-3 col-lg-3 col-md-3">

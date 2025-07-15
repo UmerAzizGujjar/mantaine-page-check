@@ -53,8 +53,7 @@
             </td>
             <td>
                 <asp:TextBox runat="server" ID="txtCompany_Phone1" MaxLength="15" />
-                <!-- <asp:RangeValidator ID="rvCompany_Pnone1" ErrorMessage="Invalid phone no." ControlToValidate="txtCompany_Phone1" runat="server"
-                    SetFocusOnError="true" Display="Dynamic" MinimumValue="0" MaximumValue="999999999999" Type="Double" /> -->
+                
             </td>
             <td></td>
             <td>
@@ -62,8 +61,7 @@
             </td>
             <td>
                 <asp:TextBox runat="server" ID="txtCompany_Phone2" MaxLength="15" />
-                <!--  <asp:RangeValidator ID="rvCompany_Phone2" ErrorMessage="Invalid phone no." ControlToValidate="txtCompany_Phone2" runat="server"
-                    SetFocusOnError="true" Display="Dynamic" MinimumValue="0" MaximumValue="999999999999" Type="Double" /> -->
+             
             </td>
             <td></td>
         </tr>
@@ -97,8 +95,7 @@
             </td>
             <td>
                 <asp:TextBox runat="server" ID="txtCompany_Fax" />
-                <!--  <asp:RangeValidator ID="rvCompany_Fax" ErrorMessage="Invalid fax no." ControlToValidate="txtCompany_Fax" runat="server"
-                    SetFocusOnError="true" Display="Dynamic" MinimumValue="0" MaximumValue="999999999999" Type="Double" />-->
+             
             </td>
             <td></td>
         </tr>
