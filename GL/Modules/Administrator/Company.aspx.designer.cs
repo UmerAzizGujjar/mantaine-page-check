@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS {
-    
-    
-    public partial class Company {
-        
+namespace PMS
+{
+
+
+    public partial class Company
+    {
+
         /// <summary>
         /// txtCompany_ID control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_ID;
-        
+
         /// <summary>
         /// ddlSetOfBookID control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSetOfBookID;
-        
+
         /// <summary>
         /// rfvSetOfBookID control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvSetOfBookID;
-        
+
         /// <summary>
         /// txtCompany_Name control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_Name;
-        
+
         /// <summary>
         /// rfvCompany_Name control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCompany_Name;
-        
+
         /// <summary>
         /// txtCompany_Email control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_Email;
-        
+
         /// <summary>
         /// reCompany_Email control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RegularExpressionValidator reCompany_Email;
-        
+
         /// <summary>
         /// txtCompany_Phone1 control.
         /// </summary>
@@ -83,16 +85,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_Phone1;
-        
-        /// <summary>
-        /// rvCompany_Pnone1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvCompany_Pnone1;
-        
+
         /// <summary>
         /// txtCompany_Phone2 control.
         /// </summary>
@@ -101,16 +94,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_Phone2;
-        
-        /// <summary>
-        /// rvCompany_Phone2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvCompany_Phone2;
-        
+
         /// <summary>
         /// txtCompany_UserField1 control.
         /// </summary>
@@ -119,7 +103,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_UserField1;
-        
+
         /// <summary>
         /// txtCompany_UserField2 control.
         /// </summary>
@@ -128,7 +112,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_UserField2;
-        
+
         /// <summary>
         /// txtCompany_UserField3 control.
         /// </summary>
@@ -137,7 +121,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_UserField3;
-        
+
         /// <summary>
         /// txtCompany_Fax control.
         /// </summary>
@@ -146,16 +130,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_Fax;
-        
-        /// <summary>
-        /// rvCompany_Fax control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvCompany_Fax;
-        
+
         /// <summary>
         /// txtCompany_SalesTax_No control.
         /// </summary>
@@ -164,7 +139,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_SalesTax_No;
-        
+
         /// <summary>
         /// txtCompany_NTN_No control.
         /// </summary>
@@ -173,7 +148,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_NTN_No;
-        
+
         /// <summary>
         /// txtCompany_Address control.
         /// </summary>
@@ -182,7 +157,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_Address;
-        
+
         /// <summary>
         /// txtCompany_Fical_Year control.
         /// </summary>
@@ -191,7 +166,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCompany_Fical_Year;
-        
+
         /// <summary>
         /// cbAutoPosting control.
         /// </summary>
@@ -200,7 +175,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbAutoPosting;
-        
+
         /// <summary>
         /// phCompany_Image control.
         /// </summary>
@@ -209,7 +184,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.PlaceHolder phCompany_Image;
-        
+
         /// <summary>
         /// imgCompany_Image control.
         /// </summary>
@@ -218,7 +193,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgCompany_Image;
-        
+
         /// <summary>
         /// fluImage control.
         /// </summary>
@@ -227,7 +202,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.FileUpload fluImage;
-        
+
         /// <summary>
         /// btnBack control.
         /// </summary>
@@ -236,7 +211,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBack;
-        
+
         /// <summary>
         /// btnSave control.
         /// </summary>
@@ -245,7 +220,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSave;
-        
+
         /// <summary>
         /// lblMessage control.
         /// </summary>
