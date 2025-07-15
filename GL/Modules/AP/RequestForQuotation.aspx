@@ -673,7 +673,7 @@
  
     <div class="row">
         <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
-            <label id="LblWarehouse">WareHouse<span style="color: red;">*</span></label>
+            <label id="LblWarehouse" style="font-size:small">WareHouse<span style="color: red;">*</span></label>
             <select id="ddlWarehouse" class="form-select">
                 <option value="0">Please Select</option>
             </select>

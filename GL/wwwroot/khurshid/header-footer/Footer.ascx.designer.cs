@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.wwwroot.Pakred.header_footer
+namespace PMS.wwwroot.khurshid.header_footer
 {
 
 
