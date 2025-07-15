@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace PMS.wwwroot.Pakred.header_footer
+namespace PMS.wwwroot.khurshid.header_footer
 {
     public partial class Footer : System.Web.UI.UserControl
     {
