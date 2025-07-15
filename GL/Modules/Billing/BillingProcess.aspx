@@ -209,7 +209,7 @@
                         var rows = '';
                         var rowIndex = parseInt((parseInt($('#tblDetailModelTable tbody tr').length)));
                         $.each(JSON.parse(resp.d), function (key, value) {
-                            rows = '<tr><td style="text-align:Center;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> ' + value.Bill_No + '</td><td> ' + value.Total_Amount + '</td><td> ' + value.Discount_Amount + '</td><td> ' + value.Net_Amount + '</td><td style="background-color:#EFA63E;font-size:20px; color:white;"><i class="fa fa-eye" onclick="PopulateBillingDetails(' + value.Bill_ID + ')" id="btnDel"></i></td> </tr>'
+                            rows = '<tr><td style="text-align:Center;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> ' + value.Bill_No + '</td><td> ' + value.Total_Amount + '</td><td> ' + value.Discount_Amount + '</td><td> ' + value.Received_Amount + '</td><td> ' + value.Balance_Amount + '</td><td style="background-color:#EFA63E;font-size:20px; color:white;"><i class="fa fa-eye" onclick="PopulateBillingDetails(' + value.Bill_ID + ')" id="btnDel"></i></td> </tr>'
                             $('#tblDetailModelTable tbody').append(rows);
                             rowIndex++;
                         });
@@ -5867,6 +5867,7 @@
                                 <th style="text-align: left;">Total Amount </th>
                                 <th style="width: 100px; text-align: left;">Discount Amount </th>
                                 <th style="width: 100px; text-align: left;">Recevied Amount </th>
+                                <th style="width: 100px; text-align: left;">Balance Amount </th>
                                 <th style="width: 100px; text-align: left;">Action </th>
 
                             </tr>
