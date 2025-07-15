@@ -11,9 +11,21 @@
         function Edit(ID) {
             window.location.href = "InversionGatePass.aspx?IGP_Id=" + ID;
         }
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
-        }
+       
+
+        function PrintInwardGatePassDetail(Igp_Id) {
+            debugger;
+               var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + Igp_Id;
+               if (!locationInfo.origin.includes('localhost')) {
+                   var urlInfo = window.location.href.split('/');
+                   var ip = urlInfo[2];
+                   var foldername = urlInfo[3];
+                   url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + Igp_Id;
+               }
+               window.open(url, '_blank');
+           }
+
         function AutoGRN(ID) {
             var IgpId = ID;
             PageMethods.AutoGRN(IgpId, function (Tests) {
@@ -118,7 +130,7 @@
 
                             var res = '<a  href="#" onclick="Edit(' + full.Igp_Id + ')" class="editListBtn" style="border-radius: 4px;padding: 4px 11px 4px 11px;"><i class="fa fa-pencil"></i></a> <a class="editListBtn" href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px;padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintInwardGatePassDetail(' + full.Igp_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res + print;
                             return result;

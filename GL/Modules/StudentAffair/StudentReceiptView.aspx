@@ -17,6 +17,21 @@
             window.location.href = "StudentReceipt.aspx?Stu_RecptID=" + ID + "&Stu_ID=" + StuID;
 
         }
+
+        function PrintVoucher(Student_Receipt_ID) {
+            debugger
+            var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SRV Voucher&TransID=' + Student_Receipt_ID + '&TransType=SRV';
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SRV Voucher&TransID=' + Student_Receipt_ID + '&TransType=SRV';
+            }
+            //  window.location.href = url;
+            window.open(url, '_blank');
+
+        }
                
                function LoadPage() {
                  $("#tbl").DataTable({
@@ -75,7 +90,7 @@
                                  debugger;
                                  var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Student_Receipt_ID + ', ' + full.Student_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px; text-decoration: none; display: inline-block;"><i class="fa fa-pencil" style="color:white !important;"></i></a>';
                                  var Del = '<a href="#" style="border-radius: 4px; background-color: #ad170c;margin-left: 4px; color: white; padding: 5px 8px;" onclick="cancelReceipt(' + full.Student_Receipt_ID + ')"><i class="fa fa-trash"></i></a>';
-                                 var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                                 var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Student_Receipt_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
                                  var result;
                                  result = res + Del + print;
                                  return result;

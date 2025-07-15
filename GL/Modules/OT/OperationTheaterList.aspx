@@ -21,6 +21,65 @@
             var url = '../../ReportViewer.aspx?ReportName=OperationTheater&ReportTitle=Operation Booking&Operation_Booking_ID=' + Operation_Booking_ID;
             window.open(url, '_blank');
         }
+        function delete_id(id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'This action will delete the Package!',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                $.ajax({
+                    type: "POST",
+                    url: "Department_Packages_List.aspx/DeleteID",
+                    data: JSON.stringify({ OT_ID: id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "Package cancelled successfully.") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Your Package has been Deleted successfully.',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            }); LoadPage();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Error Deleting Package',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+
+            });
+        }
+
 
 
 
@@ -80,6 +139,7 @@
                         render: function (data, type, full) {
                             debugger;
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Operation_Booking_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
+                            var del = '<a href="#" onclick="delete_id(' + full.Operation_Booking_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-trash"></i></a>'
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Operationprint(' + full.Operation_Booking_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;

@@ -11,8 +11,18 @@
 
 
         });
-        function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+       
+        function printPerson(Vendor_ID) {
+            debugger;
+            var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + Vendor_ID;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + Vendor_ID;
+            }
+            window.open(url, '_blank');
         }
 
         function LoadPage() {
@@ -53,7 +63,7 @@
                 "columns": [
                     { "data": "Vendor_ID", "visible": false, "width": "0%" },
                     { "data": "Vendor_Name", "name": "Vendor_Name", "width": "15%", "orderable": true },
-                    { "data": "Contact_Person", "width": "15%", "orderable": false },                  
+                    { "data": "Contact_Person", "width": "13%", "orderable": false },                  
                     { "data": "Vendor_Phone1", "width": "11%", "orderable": false },
                     { "data": "Vendor_Address", "width": "25%", "orderable": false },
                     { "data": "City", "width": "10%", "orderable": false },
@@ -63,11 +73,11 @@
                             debugger;
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Vendor_ID + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="printPerson(' + full.Vendor_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res  + print;
                             return result;
-                        }, "width": "5%", "orderable": false
+                        }, "width": "9%", "orderable": false
                     }
 
                 ],

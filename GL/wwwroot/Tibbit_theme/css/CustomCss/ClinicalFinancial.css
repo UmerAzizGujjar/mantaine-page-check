@@ -1,0 +1,28 @@
+﻿#tabs ul li a {
+    background-color: #EFA63E !important;
+    color: Black;
+    background: none;
+    border: none;
+    padding: 10px;
+}
+
+#tabs ul li.ui-tabs-active a {
+    border-bottom: 1px solid aliceblue !important;
+    color: white !important;
+}
+
+.fa-plus-circle {
+    color: black !important;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+}
+
+.search-input {
+    margin-bottom: 15px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, .05);
+}

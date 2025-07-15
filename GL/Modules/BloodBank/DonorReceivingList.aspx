@@ -12,6 +12,12 @@
 
         });
 
+        function prints(Donor_Id) {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=BasePrintDonor&ReportTitle=Department Of Pathology&Donor_ID=' + Donor_Id;
+            window.open(url, '_blank');
+
+        }
 
         function LoadPage() {
             $("#tblDonorReceivingList").DataTable({

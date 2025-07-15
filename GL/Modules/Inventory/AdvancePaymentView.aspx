@@ -27,8 +27,18 @@
                 }, error: function () { }
             })
         }
-        function PrintVoucher(InvId) {
-            window.open('ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Payment Voucher&TransID=' + InvId + '&TransType=ADV');
+
+        function Print(Advance_ID) {
+            var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + Advance_ID;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+
+                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + Advance_ID;
+            }
+            window.open(url, '_blank');
         }
         function deleteConfirm(anchorTag) {
             debugger;
@@ -103,7 +113,7 @@
                         "render": function (data, type, full) {
                             var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Advance_ID + ')" style="border-radius: 4px;margin-right: 4px;  color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Advance_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + full.Advance_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                           
 
                             var result = res + print;

@@ -51,7 +51,18 @@ namespace PMS
                                    select itm.Advance_ID).FirstOrDefault();
                 if (advid != 0)
                 {
-                    DBClass.exectueQuery("delete AR_Advances where Advance_ID =" + advid, tranObj, con);
+                    string query = $@"
+                        UPDATE AR_Advances 
+                        SET isCancelled = 1, 
+                            CancelledBy = '{AppConfig.UserID}', 
+                            CancelledTime = GETDATE() 
+                        WHERE Advance_ID = {Convert.ToInt32(advid)};
+                    ";
+
+                    bool rowUpdated = DBClass.exectueQuery(query, tranObj, con);
+
+
+
                  
                     tranObj.Commit();
                 }
