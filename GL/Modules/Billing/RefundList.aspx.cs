@@ -32,9 +32,32 @@ namespace PMS
                              select itm.Refund_ID).FirstOrDefault();
                 if (advid != 0)
                 {
-                    DBClass.exectueQuery("delete Refund where Refund_ID =" + advid, tranObj, con);
-                    DBClass.exectueQuery("delete Refund_Detail_Services where Refund_ID =" + advid, tranObj, con);
-                    DBClass.exectueQuery("delete Refund_Detail_Doctor_Share where Refund_ID =" + advid, tranObj, con);
+                    string id = Convert.ToInt32(advid).ToString();
+                    var username = AppConfig.UserID.ToString();
+
+                    string query = $@"
+                        UPDATE Refund 
+                        SET isCancelled = 1, 
+                            CancelledBy = '{username}', 
+                            CancelledTime = GETDATE() 
+                        WHERE Refund_ID = {id};
+
+                        UPDATE Refund_Detail_Services 
+                        SET isCancelled = 1, 
+                            CancelledBy = '{username}', 
+                            CancelledTime = GETDATE() 
+                        WHERE Refund_ID = {id};
+
+                        UPDATE Refund_Detail_Doctor_Share 
+                        SET isCancelled = 1, 
+                            CancelledBy = '{username}', 
+                            CancelledTime = GETDATE() 
+                        WHERE Refund_ID = {id};
+                    ";
+
+                    bool rowUpdated = DBClass.exectueQuery(query, tranObj, con);
+
+                   
                     tranObj.Commit();
                 }
                 else
