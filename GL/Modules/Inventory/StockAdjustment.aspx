@@ -7,6 +7,32 @@
     <script type="text/javascript">
         var Stock_ID = 0;
         $(document).ready(function () {
+            $('#ctl00_MainContent_txtItem_Code').prop('disabled', true);
+            $('#ctl00_MainContent_ddl_Ware_House').on('change', function () {
+                var warehouseVal = $(this).val();
+
+                if (warehouseVal !== "0") {
+                    $('#ctl00_MainContent_txtItem_Code').prop('disabled', false);
+                    loadtokenInputsDefaultPRNo();
+                } else {
+                    $('#ctl00_MainContent_txtItem_Code').val('');
+                    $('#ctl00_MainContent_txtItem_Code').prop('disabled', true);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please select a warehouse before searching for items.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                }
+            });
+
             debugger;
                <% if (Request.QueryString["ID"] != null)
         { %>
@@ -30,31 +56,41 @@
             if (hiddenDate == "1") $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
             if (hiddenbatch == "1") $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
         }
+        
         function loadtokenInputsDefaultPRNo() {
-            debugger
-            $('#ctl00_MainContent_txtItem_Code').tokenInput("../../json.aspx?Table=INV_ItemsforStockAdj",
-                {
-                   
-                    tokenLimit: 1,
-                    onAdd: function (item) {
-                        debugger;
-                        calculatecurrentstock(item.id);
-                        if (item.Type == "True") {
-                            $('#ctl00_MainContent_hdbatch').val(1);
-                            $('#ctl00_MainContent_hdDate').val(1);
-                            $('#ctl00_MainContent_hdallowblank').val(1);
-                        }
-                        if (item.Type == "True") {
-                            debugger;
-                            $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
-                            $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
-                            $('#ctl00_MainContent_hdbatch').val(1);
-                            $('#ctl00_MainContent_hdDate').val(1);
-                            $('#ctl00_MainContent_hdallowblank').val(0);
-                        }
+            var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
+
+            if (warehouseVal === "0" || warehouseVal === null) {
+                return;
+            }
+
+            try {
+                $('#ctl00_MainContent_txtItem_Code').tokenInput("clear");
+                $('#ctl00_MainContent_txtItem_Code').tokenInput("destroy");
+            } catch (e) { }
+
+            $('#ctl00_MainContent_txtItem_Code').tokenInput("../../json.aspx?Table=INV_ItemsforStockAdj", {
+                tokenLimit: 1,
+                onAdd: function (item) {
+                    debugger;
+                    calculatecurrentstock(item.id);
+
+                    if (item.Type === "True") {
+                        $('#ctl00_MainContent_hdbatch').val(1);
+                        $('#ctl00_MainContent_hdDate').val(1);
+                        $('#ctl00_MainContent_hdallowblank').val(1);
+
+                        $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
+                        $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
+
+                        $('#ctl00_MainContent_hdbatch').val(1);
+                        $('#ctl00_MainContent_hdDate').val(1);
+                        $('#ctl00_MainContent_hdallowblank').val(0);
                     }
-                });
+                }
+            });
         }
+
         function loadtokenInputsForPRNo(elementId, data) {
             if (elementId == "#ctl00_MainContent_txtItem_Code") {
                 $(elementId).tokenInput("../../json.aspx?Table=INV_ItemsforStockAdj&q=",
