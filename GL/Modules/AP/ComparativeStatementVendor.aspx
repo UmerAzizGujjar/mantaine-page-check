@@ -54,6 +54,9 @@
         $(document).ready(function () {
             UserRights();
             FillWarehouse();
+            setTimeout(function () {
+                $('#ddlWarehouse').select2();
+            }, 2500);
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {
@@ -309,7 +312,7 @@
                 var status = $('#txt_status').val();
                 setTimeout(function () {
                     $('#ddlWarehouse').val(data.Ware_House).trigger('change');
-                }, 1500);
+                }, 1000);
                 if (status == "Approved") {
                     UserUnApproveButtonRights();
                     $('#btn_Save').attr("disabled", true);
