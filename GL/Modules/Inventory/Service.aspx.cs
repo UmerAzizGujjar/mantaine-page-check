@@ -158,9 +158,18 @@ namespace PMS.Modules.Inventory
                 var Item = Item_Code;
 
                 DataTable dt = DBClass.getDataTable("select Item_Code from INV_Items where Item_Code='" + Item + "'");
-                if (dt.Rows.Count > 0)
+
+
+                if (dt.Rows.Count == 0) // Item does not exist
                 {
-                    obj.Item_Code = DBClass.getField("Select max(convert(int, SubString(Item_Code, PATINDEX('%[0-9]%',Item_Code), Len(Item_Code)))+1) from INV_Items");
+                    string newItemCode = DBClass.getField(@"
+                    SELECT 
+                        ISNULL(MAX(CONVERT(INT, 
+                            SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
+                    FROM INV_Items
+                ");
+
+                    obj.Item_Code = newItemCode;
                 }
                 db.INV_Items.InsertOnSubmit(obj);
                 try
