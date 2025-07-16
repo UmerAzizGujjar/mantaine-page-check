@@ -122,8 +122,8 @@ namespace PMS
                                     cmd.Parameters.AddWithValue("@Procedure_Type", Convert.ToBoolean(Convert.ToInt32(row["Procedure_Type"])));
                                     cmd.Parameters.AddWithValue("@DepartmentId", row["DepartmentId"]);
                                     cmd.Parameters.AddWithValue("@Notes", row["Notes"]);
-                                    cmd.Parameters.AddWithValue("@Is_Active", Convert.ToBoolean(Convert.ToInt32(row["Is_Active"])));
-                                    cmd.Parameters.AddWithValue("@Active", Convert.ToBoolean(Convert.ToInt32(row["Is_Active"])));
+                                    cmd.Parameters.AddWithValue("@Is_Active", Convert.ToBoolean(Convert.ToInt32(row["Active"])));
+                                    cmd.Parameters.AddWithValue("@Active", Convert.ToBoolean(Convert.ToInt32(row["Active"])));
                                     cmd.Parameters.AddWithValue("@Created_By", createdBy);
                                     cmd.Parameters.AddWithValue("@Created_Time", creationTime);
                                     cmd.Parameters.AddWithValue("@Book_ID", bookId);

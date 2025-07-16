@@ -102,6 +102,23 @@ namespace PMS.AP
         }
 
         [WebMethod]
+        public static string fillWarehouse()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            string data = string.Empty;
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Ware House"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+
+        [WebMethod]
         public static String Getitem(int ItemID, string PRDate)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -177,7 +194,7 @@ namespace PMS.AP
 
 
         [WebMethod]
-        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string RefNum, string remarks, string btnValue)
+        public static string SavePurchaseRequistion(int PRid, string PrNum, string PrDate, string dept, string Pirority, string Warehouse, string RefNum, string remarks, string btnValue)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Purchase_Requisition obj = new Purchase_Requisition();
@@ -188,6 +205,7 @@ namespace PMS.AP
                 obj.PR_Num = Convert.ToInt32(PrNum);
                 obj.PR_Date = Convert.ToDateTime(PrDate);
                 obj.Priority = Pirority;
+                obj.Warehouse = Warehouse;
                 obj.Department = dept;
                 obj.Ref_Num = RefNum;
                 obj.Remarks = remarks;
@@ -211,6 +229,7 @@ namespace PMS.AP
                          select data).FirstOrDefault();
                 query.PR_Date = Convert.ToDateTime(PrDate);
                 query.Priority = Pirority;
+                query.Warehouse = Warehouse;
                 query.Department = dept;
                 query.Ref_Num = RefNum;
                 query.Remarks = remarks;
@@ -334,6 +353,7 @@ namespace PMS.AP
                                  {
                                      pr.PR_Num,
                                      pr.Priority,
+                                     pr.Warehouse,
                                      pr.Remarks,
                                      pr.PR_Id,
                                      pr.Ref_Num,

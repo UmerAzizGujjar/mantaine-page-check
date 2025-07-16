@@ -13,9 +13,11 @@
         $(document).ready(function () {
 
             FillPriority();
+            FillWarehouse();
             UserRights();
 
             FillDepartments();
+            $('#ddlWarehouse').select2();
             $('#ddldept').select2();
             $('#ddlPriority').select2();
             $('#ctl00_MainContent_ddlGIR').select2();
@@ -305,6 +307,20 @@
                 $('#ddlPriority').html(optionInv);
             });
         }
+
+        function FillWarehouse() {
+
+            var optionInv = '';
+            PageMethods.fillWarehouse(function (Tests) {
+
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+
+                    optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                });
+                $('#ddlWarehouse').html(optionInv);
+            });
+        }
         function loadtokenInputsDefaultitem() {
             debugger
             $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR",
@@ -440,11 +456,30 @@
             var PrNum = $('#txtPr_Num').val();
             var PrDate = $('#txtPR_Date').val();
             var Pirority = $("#ddlPriority").val();
+            var Warehouse = $("#ddlWarehouse").val();
             var RefNum = $('#txtRef_Num').val();
             var remarks = $('#txtRemarks').val();
             var btnValue = $("#btnsave").val();
             var totCost = $("#totCost").val() || 0;
             var dept = $('#ddldept').val();
+
+
+
+            if (Warehouse == '0') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Warehouse',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return false;
+            }
 
             if (Pirority == '0') {
                 Swal.fire({
@@ -644,6 +679,7 @@
                             "PrNum": PrNum,
                             "PrDate": PrDate,
                             "Pirority": Pirority,
+                            "Warehouse": Warehouse,
                             "dept": dept,
                             "RefNum": RefNum,
                             "remarks": remarks,
@@ -790,6 +826,11 @@
                         $('#ddlPriority').val(parse.Priority).trigger('change');
                         $('#ddldept').val(parse.Department).trigger('change');
                     }, 1000);
+                    setTimeout(function () {
+                        $('#ddlWarehouse').val(parse.Warehouse).trigger('change');
+                    }, 1500);
+
+                    
                     $('#txtRemarks').val(parse.Remarks);
                     debugger;
                     if (parse.GIRCreatedBy && parse.GIRCreatedBy.trim() !== "") {
@@ -1036,29 +1077,35 @@
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
                 <span class="btn-item" id="btnGetAllItems"><i id="faGetAllItems" class="fa fa-check-square btn-gray btntop">Items</i></span>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
+                <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
+                <select id="ddlWarehouse" class="form-select">
+                    <option value="0">Please Select</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                 <label id="lblGIR">GIR</label>
                 <asp:DropDownList runat="server" ID="ddlGIR" class="form-select"></asp:DropDownList>
             </div>
+            
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
                 <span class="btn-item" id="btnGIR"><i id="fabtnGIR" class="fa fa-plus btn-gray btntop">GIR</i></span>
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <label id="LblRef_Num">Ref #</label>
                 <input type="text" class="form-control" id="txtRef_Num" name="txtRef_Num" placeholder="Ref #" autocomplete="off" />
             </div>
-
+        </div>
+        <div class="row">
             <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                 <label id="lbl_Status">Status</label>
                 <input type="text" class="form-control" id="txt_Status" name="txt_Status" readonly="readonly" />
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-12">
+            <div class="col-lg-6 col-md-8 col-sm-12">
                 <label id="lblrem">Remarks</label>
                 <input id="txtRemarks" type="text" class="form-control" />
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-2 col-md-4 col-sm-12">
                 <label class="col-form-label">Attachment</label>
                 <input type="file" id="chosePrfile" name="chosePrfile" />
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>

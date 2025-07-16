@@ -2248,9 +2248,10 @@ namespace PMS
                                    {
                                        m.Bill_No,
                                        m.Bill_ID,
-                                       m.Net_Amount,
+                                       m.Received_Amount,
                                        m.Discount_Amount,
-                                       m.Total_Amount
+                                       m.Total_Amount,
+                                       m.Balance_Amount
                                    }).ToList();
             return (new JavaScriptSerializer()).Serialize(PackagesDetails);
         }

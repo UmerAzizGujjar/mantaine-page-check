@@ -80,6 +80,24 @@ namespace PMS.AP
                 return hasEntryRights;
             }
         }
+
+        [WebMethod]
+        public static string fillWarehouse()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<ddlListItems> listItems = new List<ddlListItems>();
+            string data = string.Empty;
+            listItems = (from p in db.DataValues
+                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Description == "Ware House"
+                         select new ddlListItems
+                         {
+                             DataValueName = p.DataValue_Name,
+                             DataValueDescription = p.DataValue_Description,
+                         }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+
         [WebMethod]
         public static bool UserUnApproveEntryRights()
         {
@@ -105,6 +123,7 @@ namespace PMS.AP
                           {
                               m.CS_Master_ID,
                               m.PO_ID,
+                              m.Ware_House,
                               m.PO_No,
                               m.PO_Date,
                               m.Due_Date,
@@ -311,6 +330,7 @@ namespace PMS.AP
             public string FreightCharges { get; set; }
             public string ImagePath { get; set; }
             public string POType { get; set; }
+            public string WareHouse { get; set; }
             public List<DetailItemList> ItemList { get; set; }
         }
         public class DetailItemList
@@ -359,6 +379,7 @@ namespace PMS.AP
                     existingItem.Remarks = record.Remarks;
                     existingItem.Warranty = record.Warranty;
                     existingItem.Disclaimer = record.Disclaimer;
+                    existingItem.Ware_House = record.WareHouse;
                     if (record.txtcsmasterid != "")
                     {
                         existingItem.CS_Master_ID = Convert.ToInt32(record.txtcsmasterid);
@@ -408,6 +429,7 @@ namespace PMS.AP
                 PO.Remarks = record.Remarks;
                 PO.Warranty = record.Warranty;
                 PO.Disclaimer = record.Disclaimer;
+                PO.Ware_House = record.WareHouse;
                 if (record.SubTotal != "")
                 {
                     PO.Sub_Total = Convert.ToDecimal(record.SubTotal);

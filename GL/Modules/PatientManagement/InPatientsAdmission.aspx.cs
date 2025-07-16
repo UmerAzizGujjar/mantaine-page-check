@@ -2102,12 +2102,6 @@ namespace PMS
                         select tbl.Patient_Discount_Type).FirstOrDefault();
             var discharge_InPatient = db.In_Patients.Where(w => w.Patient_ID == pat.pat_id && w.Discharge == true && w.Discharge_On != null).OrderByDescending(w => w.Admission_Date).FirstOrDefault();
 
-
-            //if (discharge_InPatient != null && discharge_InPatient.Patient_ID == pat.pat_id)
-            //{
-            //    pt.RevisitMsg = "Please Revisit Discharge Patient";
-            //    return pt;
-            //}
             if (pat != null)
             {
                 pt.Name = pat.Full_Name;
@@ -2118,16 +2112,12 @@ namespace PMS
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
-                //pt.PatientType = db.GetDataValueName("Patient Type", pat.Patient_Type);
                 Type = db.GetDataValueName("Patient Type", Type);
                 var inpatid = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + "order by Advance_ID desc");
                 if(inpatid != "There is no row at position 0.")
                 {
                     pt.AdvanceAmount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid);
                 }
-
-
-                //pt.AdvanceAmount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where Patient_ID=" + PatientID);
                 return pt;
             }
             else
@@ -2240,12 +2230,10 @@ namespace PMS
                                op.Psychiatry_Menstrual,
                                op.Psychiatry_Attachment_Separation,
                                op.Psychiatry_Health,
-
                                op.Psychiatry_Nail_Biting,
                                op.Psychiatry_Temper_Tantrums,
                                op.Psychiatry_Bed_Wetting,
                                op.Psychiatry_Academics,
-
                                op.Psychiatry_Peer_Relationship,
                                op.Psychiatry_Behaviour,
                                op.Psychiatry_Occupational_History,
@@ -2260,11 +2248,9 @@ namespace PMS
                                op.Psychiatry_Religious_Practices,
                                op.Psychiatry_Father,
                                op.Psychiatry_Mother,
-
                                op.Psychiatry_Siblings,
                                op.Psychiatry_Home_Atmosphere,
                                op.Psychiatry_Familial_Illness,
-                               // op.Psychiatry_Rel,
                                op.Psychiatry_Actual_age,
                                op.Psychiatry_Race,
                                op.Psychiatry_Tattoos_body_scars,
@@ -2275,7 +2261,6 @@ namespace PMS
                                op.Psychiatry_Involuntary_movements,
                                op.Psychiatry_Dystonia_EPS,
                                op.Psychiatry_Tardive_dyskinesia,
-
                                op.Psychiatry_Tics,
                                op.Psychiatry_Tremors,
                                op.Psychiatry_Attentiveness_interview,
@@ -2288,7 +2273,6 @@ namespace PMS
                                op.Psychiatry_Modulation,
                                op.Psychiatry_Depressed,
                                op.Psychiatry_Elated,
-
                                op.Psychiatry_Irritable,
                                op.Psychiatry_Labile,
                                op.Psychiatry_Incongruent,
@@ -2309,7 +2293,6 @@ namespace PMS
                                op.Psychiatry_Overvalued_Ideas,
                                op.Psychiatry_Depresonalization,
                                op.Psychiatry_Derealization,
-
                                op.Psychiatry_Obsession,
                                op.Psychiatry_Phobies,
                                op.Psychiatry_Homocidial_Ideas,
@@ -2408,7 +2391,6 @@ namespace PMS
                            {
 
                                op.Psychiatry_Informant,
-
                                op.Psychiatry_Source_Referral,
                                op.Psychiatry_Neck_Holding,
                                op.Psychiatry_Walking,
@@ -2418,12 +2400,10 @@ namespace PMS
                                op.Psychiatry_Menstrual,
                                op.Psychiatry_Attachment_Separation,
                                op.Psychiatry_Health,
-
                                op.Psychiatry_Nail_Biting,
                                op.Psychiatry_Temper_Tantrums,
                                op.Psychiatry_Bed_Wetting,
                                op.Psychiatry_Academics,
-
                                op.Psychiatry_Peer_Relationship,
                                op.Psychiatry_Behaviour,
                                op.Psychiatry_Occupational_History,
@@ -2438,11 +2418,9 @@ namespace PMS
                                op.Psychiatry_Religious_Practices,
                                op.Psychiatry_Father,
                                op.Psychiatry_Mother,
-
                                op.Psychiatry_Siblings,
                                op.Psychiatry_Home_Atmosphere,
-                               op.Psychiatry_Familial_Illness,
-                              
+                               op.Psychiatry_Familial_Illness,                           
                                op.Psychiatry_Actual_age,
                                op.Psychiatry_Race,
                                op.Psychiatry_Tattoos_body_scars,
@@ -2453,7 +2431,6 @@ namespace PMS
                                op.Psychiatry_Involuntary_movements,
                                op.Psychiatry_Dystonia_EPS,
                                op.Psychiatry_Tardive_dyskinesia,
-
                                op.Psychiatry_Tics,
                                op.Psychiatry_Tremors,
                                op.Psychiatry_Attentiveness_interview,
@@ -2466,7 +2443,6 @@ namespace PMS
                                op.Psychiatry_Modulation,
                                op.Psychiatry_Depressed,
                                op.Psychiatry_Elated,
-
                                op.Psychiatry_Irritable,
                                op.Psychiatry_Labile,
                                op.Psychiatry_Incongruent,
@@ -2487,7 +2463,6 @@ namespace PMS
                                op.Psychiatry_Overvalued_Ideas,
                                op.Psychiatry_Depresonalization,
                                op.Psychiatry_Derealization,
-
                                op.Psychiatry_Obsession,
                                op.Psychiatry_Phobies,
                                op.Psychiatry_Homocidial_Ideas,
@@ -2773,13 +2748,11 @@ namespace PMS
                     OrthoDetailClass obj = new OrthoDetailClass();
 
                     obj.Organ_Name = item.Organ_Name;
-                    obj.Organ_Side = item.Organ_Side;
-                   
+                    obj.Organ_Side = item.Organ_Side;                 
                     obj.Ortho_History = item.Ortho_History;
                     obj.DM = item.DM;
                     obj.HTN = item.HTN.ToString();
                     obj.Look = item.Look.ToString();
-
                     obj.Move = item.Move.ToString();
                     obj.Feel = item.Feel.ToString();
                     obj.Special_Tests = item.Special_Tests.ToString();
@@ -2795,13 +2768,11 @@ namespace PMS
                     OrthoDetailClass obj = new OrthoDetailClass();
 
                     obj.Organ_Name = item.Organ_Name;
-                    obj.Organ_Side = item.Organ_Side;
-                   
+                    obj.Organ_Side = item.Organ_Side;                   
                     obj.Ortho_History = item.Ortho_History;
                     obj.DM = item.DM;
                     obj.HTN = item.HTN.ToString();
                     obj.Look = item.Look.ToString();
-
                     obj.Move = item.Move.ToString();
                     obj.Feel = item.Feel.ToString();
                     obj.Special_Tests = item.Special_Tests.ToString();
@@ -2809,7 +2780,6 @@ namespace PMS
                     obj.Motor = item.Motor.ToString();
                     obj.Reflexes = item.Reflexes.ToString();
                     obj.Vascular_Status = item.Vascular_Status.ToString();
-
                     obj.Status = "OutPatient";
                     list.Add(obj);
                 }
@@ -2908,7 +2878,6 @@ namespace PMS
                 obj.Ent_Ear_Left = item.Ent_Ear_Left;
                 obj.ENT_Rinnes_Right_PosNeg = item.ENT_Rinnes_Right_PosNeg.ToString();
                 obj.ENT_Rinnes_Right_Neg = item.ENT_Rinnes_Right_Neg.ToString();
-
                 obj.ENT_Rinnes_Right_FalseNeg = item.ENT_Rinnes_Right_FalseNeg.ToString();
                 obj.ENT_Rinnes_Right_FNeg = item.ENT_Rinnes_Right_FNeg.ToString();
                 obj.ENT_Rinnes_Lft_PosNeg = item.ENT_Rinnes_Lft_PosNeg.ToString();
@@ -2934,7 +2903,6 @@ namespace PMS
                 obj.Ent_Ear_Left = item.Ent_Ear_Left;
                 obj.ENT_Rinnes_Right_PosNeg = item.ENT_Rinnes_Right_PosNeg.ToString();
                 obj.ENT_Rinnes_Right_Neg = item.ENT_Rinnes_Right_Neg.ToString();
-
                 obj.ENT_Rinnes_Right_FalseNeg = item.ENT_Rinnes_Right_FalseNeg.ToString();
                 obj.ENT_Rinnes_Right_FNeg = item.ENT_Rinnes_Right_FNeg.ToString();
                 obj.ENT_Rinnes_Lft_PosNeg = item.ENT_Rinnes_Lft_PosNeg.ToString();
@@ -3061,7 +3029,6 @@ namespace PMS
                 obj.DermaUpperLimb = item.DermaUpperLimb;
                 obj.DermaLowerLimb = item.DermaLowerLimb.ToString();
                 obj.DermaFlexures = item.DermaFlexures.ToString();
-
                 obj.DermaGenitalias = item.DermaGenitalias.ToString();
                 obj.DermaHair = item.DermaHair.ToString();
                 obj.DermaNail = item.DermaNail.ToString();
@@ -3070,7 +3037,6 @@ namespace PMS
                 obj.DermaEars = item.DermaEars.ToString();
                 obj.DermaNose = item.DermaNose.ToString();
                 obj.Created_Time = Convert.ToDateTime(item.Created_Time);
-
                 obj.DermaLips = item.DermaLips.ToString();
                 obj.Status = "InPatient";
                 list.Add(obj);

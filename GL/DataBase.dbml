@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Standard" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="tibb" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=tibb;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="tibbConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -2919,33 +2920,6 @@
       <Column Name="Deleted_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.AP_RequestForQuotations" Member="AP_RequestForQuotations">
-    <Type Name="AP_RequestForQuotation">
-      <Column Name="RFQ_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="RFQ_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="RFQ_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Ref_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Deleted_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="DueDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="PaymentTerms" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="QuotationValidty" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Term_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Store_Issue" Member="Store_Issues">
     <Type Name="Store_Issue">
       <Column Name="Store_Issue_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3170,30 +3144,6 @@
       <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
       <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.CS_Vendor_Master" Member="CS_Vendor_Masters">
-    <Type Name="CS_Vendor_Master">
-      <Column Name="CS_Ven_Master_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="CS_Ven_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CS_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CS_Validity" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsAutoGenerate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Deleted_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Term_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Sys_Approval_Logs" Member="Sys_Approval_Logs">
@@ -6676,6 +6626,59 @@
       <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.AP_RequestForQuotations" Member="AP_RequestForQuotations">
+    <Type Name="AP_RequestForQuotation">
+      <Column Name="RFQ_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RFQ_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RFQ_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Ref_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Deleted_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="DueDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PaymentTerms" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="QuotationValidty" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Term_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Ware_House" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CS_Vendor_Master" Member="CS_Vendor_Masters">
+    <Type Name="CS_Vendor_Master">
+      <Column Name="CS_Ven_Master_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CS_Ven_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CS_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CS_Validity" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsAutoGenerate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Deleted_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Term_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Ware_House" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -8110,13 +8113,6 @@
     <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
     <Return Type="System.Int32" />
   </Function>
-  <Function Name="dbo.spApproveStore_Issue" Method="spApproveStore_Issue">
-    <Parameter Name="sid" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="spApproveStore_IssueResult">
-      <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.SpApproveAdvancePayment" Method="SpApproveAdvancePayment">
     <Parameter Name="AdvID" Parameter="advID" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="UserId" Parameter="userId" Type="System.String" DbType="NVarChar(450)" />
@@ -9021,54 +9017,6 @@
       <Column Name="spo2" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="discharge_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Proto" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_LoadVenDetails" Method="sp_LoadVenDetails">
-    <Parameter Name="CMID" Parameter="cMID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_LoadVenDetailsResult">
-      <Column Name="CS_Ven_Master_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="CS_Ven_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CS_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CS_Validity" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Term_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Amount1" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount2" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount3" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount4" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount5" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Freight1" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Freight2" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Freight3" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Freight4" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Freight5" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount1" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount2" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount3" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount4" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount5" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Vendor1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Vendor2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Vendor3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Vendor4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Vendor5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Payment_Terms1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Payment_Terms2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Payment_Terms3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Payment_Terms4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Payment_Terms5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Delivery_Terms1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Delivery_Terms2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Delivery_Terms3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Delivery_Terms4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Delivery_Terms5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="TotalSalesTax1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="TotalSalesTax2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="TotalSalesTax3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="TotalSalesTax4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="TotalSalesTax5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_loadPatientsDoctorWise" Method="sp_loadPatientsDoctorWise">
@@ -10267,6 +10215,62 @@
       <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadVenDetails" Method="sp_LoadVenDetails">
+    <Parameter Name="CMID" Parameter="cMID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_LoadVenDetailsResult">
+      <Column Name="CS_Ven_Master_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CS_Ven_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CS_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CS_Validity" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Term_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Amount1" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount2" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount3" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount4" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount5" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Ware_House" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Freight1" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Freight2" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Freight3" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Freight4" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Freight5" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount1" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount2" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount3" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount4" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount5" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Vendor1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Vendor2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Vendor3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Vendor4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Vendor5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Payment_Terms1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Payment_Terms2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Payment_Terms3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Payment_Terms4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Payment_Terms5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Delivery_Terms1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Delivery_Terms2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Delivery_Terms3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Delivery_Terms4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Delivery_Terms5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TotalSalesTax1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TotalSalesTax2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TotalSalesTax3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TotalSalesTax4" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TotalSalesTax5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spApproveStore_Issue" Method="spApproveStore_Issue">
+    <Parameter Name="sid" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="spApproveStore_IssueResult">
+      <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
