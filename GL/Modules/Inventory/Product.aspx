@@ -642,11 +642,12 @@
                 <select id="ddlwareHouse"  class="form-control"></select>
                 </div>       
              </div> 
-         <div class="col-lg-3 col-md-6 col-sm-12 p-5">
+         <div class="col-lg-3 col-md-6 col-sm-12 p-5" style="margin-top: 25px;">
                  
              <div class="form-group form-check">
+                  <input type="checkbox" class="form-check-input" style="width:auto !important" id="Active" name="Active" />
                <label class="form-check-label" id="LblActive" for="Active">Active</label>
-            <input type="checkbox" class="form-check-input" style="width:auto !important" id="Active" name="Active" />
+           
             </div>
             </div>
             </div>
