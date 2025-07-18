@@ -96,25 +96,7 @@ namespace PMS.AP
                 }
             }
         }
-
-
-        [WebMethod]
-        public static string fillWarehouse()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            List<ddlListItems> listItems = new List<ddlListItems>();
-            string data = string.Empty;
-            listItems = (from p in db.DataValues
-                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
-                         where v.ValueSet_Description == "Ware House"
-                         select new ddlListItems
-                         {
-                             DataValueName = p.DataValue_Name,
-                             DataValueDescription = p.DataValue_Description,
-                         }).ToList();
-            return (new JavaScriptSerializer()).Serialize(listItems);
-        }
-
+      
         [WebMethod]
         public static string gettaxtype()
 
@@ -181,7 +163,6 @@ namespace PMS.AP
                           select new
                           {
                               m.RFQ_ID,
-                              m.Ware_House,
                               m.RFQ_No,
                               m.RFQ_Date,
                               m.Ref_No,
@@ -254,7 +235,6 @@ namespace PMS.AP
         public class MasterItemList
         {
             public string RFQ_ID { get; set; }
-            public string Warehouse { get; set; }
             public string RFQ_No { get; set; }
             public string RefNo { get; set; }
             public string VendorName { get; set; }
@@ -303,7 +283,6 @@ namespace PMS.AP
                         lstItemexist.Ref_No = record.RefNo;
                     }
                     lstItemexist.Remarks = record.Remarks;
-                    lstItemexist.Ware_House = record.Warehouse;
                     lstItemexist.RFQ_Date = Convert.ToDateTime(record.RFQ_Date);
                     lstItemexist.DueDate = Convert.ToDateTime(record.DueDate);
                     lstItemexist.PaymentTerms = Convert.ToString(record.PaymentTerms);
@@ -320,7 +299,6 @@ namespace PMS.AP
             {
                 RFQ.Company_ID = AppConfig.Company_ID;
                 RFQ.Ref_No = record.RefNo;
-                RFQ.Ware_House = record.Warehouse;
                 RFQ.Remarks = record.Remarks;
                 RFQ.RFQ_Date = Convert.ToDateTime(record.RFQ_Date);
                 RFQ.RFQ_No = DBClass.GetNewNumber("RFQ_No", "AP_RequestForQuotations", "");
