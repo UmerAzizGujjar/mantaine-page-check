@@ -66,9 +66,9 @@
                     debugger;
                     if (hasRights) {
                         debugger;
-                        $('#btnSave').show();
+                        $('#SaveButtonToBeHidden').show();
                     } else {
-                        $('#btnSave').hide();
+                        $('#SaveButtonToBeHidden').hide();
                     }
                 },
                 failure: function (response) {
@@ -124,8 +124,8 @@
                 if (status == "Approved") {
                     debugger;
                     UserUnApproveButtonRights();
-                    $('#btnSave').attr("disabled", 'disabled');
-                    $('#btnSave').hide();
+                    $('#SaveButtonToBeHidden').attr("disabled", 'disabled');
+                    $('#SaveButtonToBeHidden').hide();
                 }
                 if (status == "Created" || status == "Pending") {
                     debugger;
@@ -135,8 +135,8 @@
                     $('#btnInspec').attr("disabled", 'disabled');
                     $('#btnUnInspec').hide();
                     $('#btnUnInspec').attr("disabled", 'disabled');
-                    $('#btnSave').attr("disabled", false);
-                    $('#btnSave').show();
+                    $('#SaveButtonToBeHidden').attr("disabled", false);
+                    $('#SaveButtonToBeHidden').show();
                 }
                 $('#ddlVendor').attr("disabled", 'disabled');
                 getPONumByVendor(data.Vendor);
@@ -1082,9 +1082,9 @@
    
 
         <div class="row">
-             <div class="col-lg-8">
+             <div class="col-lg-10">
             <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
                 <input type="button" class="btn btn-primry" value="Save" id="btnSave"  />
                 &nbsp;
             </div>
