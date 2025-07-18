@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+
     <script type="text/javascript">
         $(document).ready(function () {
             LoadTable();
@@ -55,15 +55,6 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                    //setTimeout(function () {
-                    //    window.location.href = "../Accounts/Login.aspx";
-                    //}, 2000);
-
-
-
-
-
-
                 },
                 error: function (xhr, status, error) {
                     console.log("XHR:", xhr);
@@ -135,8 +126,9 @@
 
                             var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.UserId + '" onclick="deleteUser(\'' + full.UserId + '\')"><i class="fa fa-trash" ></i></a>';
 
+                            var reset = '<a class="resetbtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.UserId + '" onclick="Resetpass(\'' + full.UserId + '\')"><i class="fa fa-undo"></i></a>';
                             var result;
-                            result = res + Del;
+                            result = res + Del + reset;
                             return result;
                         }, "width": "2%", "orderable": false
                     }

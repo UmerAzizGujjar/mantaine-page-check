@@ -252,7 +252,7 @@
                 var rowIndex = parseInt((parseInt($('#tblItemDescriptionDetail tbody tr').length)));
                 $.each(data, function (key, value) {
                     rows += '<tr>' +
-                        '<td style="display:none"><input type=text class="form-control" id="AccountId' + (key + 1) + '" name="AccountId" style="width:164px !important;font-size: 10px !important;height:20px!important;"  value=' + data[key].Account_Category_Id + ' readonly=readonly /></td>' +
+                        '<td ><input type=text class="form-control" id="AccountId' + (key + 1) + '" name="AccountId" style="width:164px !important;font-size: 10px !important;height:20px!important;"  value=' + data[key].Account_Category_Id + ' readonly=readonly /></td>' +
                         '<td><input type=text class="form-control" id="Id' + (key + 1) + '" name="Id" style="width:123px !important;font-size: 10px !important;height:20px!important;"  value=' + (key + 1) + ' readonly=readonly /></td>' +
                         '<td><input type=text class="form-control" id="AccountCategoryName' + (key + 1) + '" name="AccountCategoryName" style="font-size: 10px !important;height:20px!important;"  value="' + value.CategoryName + '" readonly=readonly /></td>' +
                         '<td><select class="form-control" id="txtAccountCode' + (key + 1) + '" name="txtAccountCode" style="width:164px !important;font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
@@ -324,7 +324,7 @@
         <table class="table" id="tblItemDescription" style="margin-top: 13px; font-size: 10px!important;">
             <thead >
                 <tr>
-                    <th style="display: none;">Account Category Id</th>
+                    <th style="width: 70px !important; text-align: center; font-size: 10px;" >Account Category Id</th>
                     <th style="width: 70px !important; text-align: center; font-size: 10px;">Id</th>
                     <th style="width: 50px; text-align: center; font-size: 10px;">Category Name</th>
                     <th style="width: 50px; text-align: center; font-size: 10px;">Asset Account</th>
