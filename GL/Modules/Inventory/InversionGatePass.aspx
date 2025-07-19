@@ -543,7 +543,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadIGP.ashx',
+                    url: '/upload/UploadIGP.ashx',
                     data: data,
                     success: function (status) {
                     },
@@ -1099,20 +1099,20 @@
             <div class="col-lg-2 col-md-4 col-sm-12">
                 <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'InversionGatePass.aspx'" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnApproveToBeHidden">
                 <input type="button" class=" btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
             </div>
 
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnInspecToBeHidden">
                 <input type="button"  class="btn-primry" value="Inspec UnApproval" id="btnUnInspec" onclick="UnApproveInspec()" />
                 &nbsp;
             </div>
 
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="col-lg-2 col-md-4 col-sm-12" id="btnPrintInspecToBeHidden">
                 <input type="button" class="btn-primry" value="Print Inspec" id="btnPrintInspec" onclick="PrintInspection()" />
                 &nbsp;
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="col-lg-2 col-md-4 col-sm-12" id="btnInspecToBeHidden">
                 <input type="button"  class="btn btn-primry" value="Inspec Approval" id="btnInspec" onclick="ApproveInspecModal()" />
                 &nbsp;
             </div>

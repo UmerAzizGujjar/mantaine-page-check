@@ -1,6 +1,12 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovedPRFsAck.aspx.cs" Inherits="PMS.ApprovedPRFsAck" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   
+     <style>
+  #ctl00_MainContent_GridView1 tbody tr td table {
+font-size:20px ;
+    border-collapse: separate;
+    border-spacing: 20px; /* Space between inner <td>s */
+}
+</style>
     <script type="text/javascript">        
     $(document).ready(function () {
         debugger

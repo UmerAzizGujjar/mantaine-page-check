@@ -591,7 +591,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadGINFiles.ashx',
+                    url: '/upload/UploadGINFiles.ashx',
                     data: data,
                     success: function (status) {
 
@@ -618,9 +618,9 @@
                     debugger;
                     if (hasRights) {
                         debugger;
-                        $('#btnUnApprove').show();
+                        $('#btnUnApproveToBeHidden').show();
                     } else {
-                        $('#btnUnApprove').hide();
+                        $('#btnUnApproveToBeHidden').hide();
                     }
                 },
                 failure: function (response) {
@@ -729,13 +729,14 @@
             <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'GoodsIssuanceNote.aspx'" />
             &nbsp;
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+    <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+</div>
+        <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
             <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
             &nbsp;
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
-        </div>
+        
             </div>
         </div>
     </div>

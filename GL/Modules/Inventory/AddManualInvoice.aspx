@@ -538,7 +538,7 @@
                     data.append('ID', ID);
                     $.ajax({
                         type: 'post',
-                        url: '../UploadMIFiles.ashx',
+                        url: '/upload/UploadMIFiles.ashx',
                         data: data,
                         success: function (status) {
 

@@ -966,7 +966,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadPIFiles.ashx',
+                    url: '/upload/UploadPIFiles.ashx',
                     data: data,
                     success: function (status) {
 

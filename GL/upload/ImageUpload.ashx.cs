@@ -23,9 +23,9 @@ namespace PMS
                     HttpPostedFile file = files[i];
                     Test_Image image = new Test_Image();
                     int imageNo = Convert.ToInt32(DBClass.getField("Select isnull(Max(Image_No),0) + 1 from Test_Image where Lab_Test_Detail_ID = " + detail_ID + ""));
-                    string fname = context.Server.MapPath("~/LabTestImg/" + imageNo + "-" + detail_ID + ".png");
+                    string fname = context.Server.MapPath("~/upload/LabTestImg/" + imageNo + "-" + detail_ID + ".png");
 
-                    string image_Path = "~/LabTestImg/" + imageNo + "-" + detail_ID + ".png";
+                    string image_Path = "~/upload/LabTestImg/" + imageNo + "-" + detail_ID + ".png";
                     if (System.IO.File.Exists(context.Server.MapPath(image_Path)))
                     {
                         // file exist

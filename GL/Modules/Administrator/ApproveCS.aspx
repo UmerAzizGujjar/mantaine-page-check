@@ -2,7 +2,11 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
-     
+      #ctl00_MainContent_GridView1 tbody tr td table {
+font-size:20px ;
+    border-collapse: separate;
+    border-spacing: 20px; /* Space between inner <td>s */
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
