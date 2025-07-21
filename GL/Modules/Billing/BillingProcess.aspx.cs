@@ -906,6 +906,7 @@ namespace PMS
             }
 
 
+
             // Insert or Upate Bill Header
 
             if (data.Bill_ID == 0)
@@ -2374,15 +2375,24 @@ namespace PMS
                 pt.Room_Name = "";
                 pt.MainDepartment = "01";
 
-                var inpatid_adv = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + " order by Advance_ID desc");
-                if (inpatid_adv != "There is no row at position 0.")
-                {
-                    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid_adv);
-                }
+                //var inpatid_adv = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + " order by Advance_ID desc");
+                //if (inpatid_adv != "There is no row at position 0.")
+                //{
+                //    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid_adv);
+                //}
 
                 var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by Emergency_ID desc");
-                var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by In_Patient_ID desc");
-
+                var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 1 order by In_Patient_ID desc");
+                var ipd_ids = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by In_Patient_ID desc");
+                if (ipd_ids != "There is no row at position 0.")
+                {
+                    pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_ids);
+                    pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_ids);
+                    pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_ids);
+                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_ids + "order by Created_Time desc"));
+                    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_ids);
+                    pt.MainDepartment = "03";
+                }
                 if (ipd_id != "There is no row at position 0.")
                 {
                     pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where In_Patient_ID =" + ipd_id);
@@ -2392,6 +2402,7 @@ namespace PMS
                     pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
                     pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
                     pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
+                    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_id);
                     pt.MainDepartment = "03";
                 }
 
@@ -2420,7 +2431,102 @@ namespace PMS
                 return pt;
         }
 
+        [WebMethod]
+        public static string loadbillbypatient_id(int pat_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var inpatid = (from ipd in db.In_Patients where ipd.Patient_ID == pat_id orderby ipd.Created_Time descending select ipd.In_Patient_ID).FirstOrDefault();
 
+            if (inpatid == 0)
+            {
+
+                var Details = (from d in db.Ar_Billing_Details
+                               join m in db.Ar_Billings
+                                on d.Bill_ID equals m.Bill_ID
+                               where m.Patient_ID == pat_id
+                               && m.isCancel == false
+                               && m.In_Patient_ID != 0
+                               //&& ( d.Item_Type == "Item" || d.Item_Type == "Service")
+                               select new
+                               {
+                                   d.Amount,
+                                   d.Batch_No,
+                                   d.Bill_Details_ID,
+                                   d.Bill_ID,
+                                   d.Category_ID,
+                                   d.Discount_Amount,
+                                   d.Discount_Percentage,
+                                   d.Expiry_Date,
+                                   d.Item_ID,
+                                   d.Item_Name,
+                                   d.Net_Amount,
+                                   d.Item_Type,
+                                   d.ParentTrans_ID,
+                                   d.ParentTrans_Name,
+                                   d.ParentTrans_Type,
+                                   d.Qty,
+                                   d.Remarks,
+                                   d.Doctor_Share,
+                                   d.RecommendedByDoctor,
+                                   d.Service_Date,
+                                   d.Hospital_Share,
+                                   IsShare = DBClass.getField("select isnull(Is_ShareService,'0') as Is_ShareService  from Inv_Items where Item_id=" + d.Item_ID),
+                                   Procedure_Required = DBClass.getField("select isnull(Procedure_Required,'0') as Procedure_Required from Inv_Items where Item_id=" + d.Item_ID),
+                                   IsOpenBill = DBClass.getField("select isnull(Is_OpenBill,'0') as Is_OpenBill from Inv_Items where Item_id=" + d.Item_ID),
+                                   d.Test_Main_Department,
+                                   m.BillType
+
+                                   //                               IsShare
+                                   //Procedure_Required
+                                   //IsOpenBill
+
+                               }).ToList();
+                return (new JavaScriptSerializer()).Serialize(Details);
+            }
+
+            else
+            {
+                var Details = (from d in db.Ar_Billing_Details
+                               join m in db.Ar_Billings
+                                on d.Bill_ID equals m.Bill_ID
+                               where m.In_Patient_ID == inpatid
+                               && (m.isCancel == false || m.isCancel == null)
+                               && m.In_Patient_ID != 0
+                               //&& ( d.Item_Type == "Item" || d.Item_Type == "Service")
+                               select new
+                               {
+                                   d.Amount,
+                                   d.Batch_No,
+                                   d.Bill_Details_ID,
+                                   d.Bill_ID,
+                                   d.Category_ID,
+                                   d.Discount_Amount,
+                                   d.Discount_Percentage,
+                                   d.Expiry_Date,
+                                   d.Item_ID,
+                                   d.Item_Name,
+                                   d.Net_Amount,
+                                   d.Item_Type,
+                                   d.ParentTrans_ID,
+                                   d.ParentTrans_Name,
+                                   d.ParentTrans_Type,
+                                   d.Qty,
+                                   d.Remarks,
+                                   d.Doctor_Share,
+                                   d.RecommendedByDoctor,
+                                   d.Service_Date,
+                                   d.Hospital_Share,
+                                   IsShare = DBClass.getField("select isnull(Is_ShareService,'0') as Is_ShareService  from Inv_Items where Item_id=" + d.Item_ID),
+                                   Procedure_Required = DBClass.getField("select isnull(Procedure_Required,'0') as Procedure_Required from Inv_Items where Item_id=" + d.Item_ID),
+                                   IsOpenBill = DBClass.getField("select isnull(Is_OpenBill,'0') as Is_OpenBill from Inv_Items where Item_id=" + d.Item_ID),
+                                   d.Test_Main_Department,
+                                   m.BillType
+                               }).ToList();
+                return (new JavaScriptSerializer()).Serialize(Details);
+            }
+
+
+        }
 
 
         public class PatientDetail

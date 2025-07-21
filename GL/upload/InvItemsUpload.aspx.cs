@@ -82,7 +82,8 @@ namespace PMS
                             var createdBy = AppConfig.UserID;
                             DateTime creationTime = DateTime.Now;
                             var maxItemCode = db.INV_Items.Select(item => Convert.ToInt32(item.Item_Code)).Max();
-                            if (maxItemCode != 0)
+           
+                            if (maxItemCode != 0 )
                             {
                                 maxItemCode = maxItemCode + 1;
                             }

@@ -690,8 +690,7 @@ on DM.Rouster_id equals DD.Rouster_id
                              join Dm in db.Doctor_Rouster_Masters on a.Emp_ID equals Dm.Doctor_Id
                              join dd in db.Doctor_Rouster_Details on Dm.Rouster_id equals dd.Rouster_id
                              where a.Emp_ID == doc_id
-                                   && Convert.ToDateTime(dd.Rouster_Date).Month == specificMonth
-                                   && Convert.ToDateTime(dd.Rouster_Date).Day == specificDay
+                                 && dd.Rouster_Date == specificDate.Date
                              select new
                              {
                                  a.Emp_Name,
