@@ -1589,6 +1589,7 @@
             var TotalDiscountAmount_Procedure = 0;
             var TotalDiscountAmount_Package = 0;
             var c_Dis_Amt = 0;
+
             function CalculateSummarieDiscountPerWise(rowIndex) {
                 debugger;
                 Special = 0;
@@ -1603,6 +1604,11 @@
                 var TotalAmount = 0;
                 var TotalNetAmount = 0;
                 var Qty = 0;
+                var TotalAmount = parseFloat($("#txtTotalAmount").val()) || 0;
+                var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
+                var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+
                
                 var category = $('#ddlMainTestDepartment').val();
                 $.each($('#tblDetails tbody tr'), function (key, value)
@@ -2368,17 +2374,22 @@
                        total_amt +=  Math.round(parseFloat($($(value).find('td')[8]).text()));
 
                     });
+                    var TotalAmount = Net_Amt;
+                    var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                    var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
+                    var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
                     debugger;
-                    $('#txtTotalPayable').val(Net_Amt);
+                    $('#txtTotalAmount').val(Net_Amt);
+                    $('#txtTotalPayable').val(Net_Amt + PreviousBalance);
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
                     //   $('#txtNetPayable').val(net);
-                    $('#txtNetPayable').val(total_amt);
+                    $('#txtNetPayable').val(total_amt + PreviousBalance );
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '')
                     {
                         if (AmtReceived != '') {
-                            $('#txtBalances').val((net - AmtReceived).toFixed());
+                            $('#txtBalances').val(((AmtReceived + AdvanceAmount) - (net + PreviousBalance ) ).toFixed());
                         }
                         else
                             $('#txtBalances').val(net.toFixed());
@@ -4375,7 +4386,7 @@
                     PatientID = data.d.opdid;
                     //getdataopd(PatientID);
                     debugger;
-
+                    var Patient_ID = $('#hdfPatient_ID').val();
 
 
 
@@ -4401,20 +4412,25 @@
                         $('#lblPatientCategory').val(ReplaceNullWith_Space(data.d.Patient_Type));
                     }
                     debugger;
+
+                    if (id == '') { 
                     if ((PackType != "Null") && (packname != "Null")) {
                         debugger;
-
-                        AddPackage();
-
+                        //setTimeout(function () {
+                        //    LoadBillbypatid(Patient_ID);
+                        //}, 3500)         
+                            AddPackage();
+                  
+                       
                     }
                     else {
                         if (id == '') { 
                         FetchRecommendedDetails();
+                        }
                     }
                    }
                     debugger;
                     var lblIn_Patient_Category = $('#lblPatientDiscountType').text();
-                    //if ((lblPatientCategory == "Private") || (lblIn_Patient_Category == "Private") || )
                     if ((lblPatientCategory == "Insurance Company") || (lblIn_Patient_Category == "Insurance Company") )
                     {
                         var opd_Panel_company=$('#lblOPDpnl').text();
@@ -4422,12 +4438,10 @@
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined')
                         {
-                            if (opd_Panel_company == "Private Patient" || ipd_Panel_company == "Private Patient") {
-                              //  tokenInputs('txtAddService', 'Inv_Items_Panel_Private');
+                            if (opd_Panel_company == "Private Patient" || ipd_Panel_company == "Private Patient") {                         
                             }
                             else if (opd_Panel_company != "Private Patient" && opd_Panel_company != "" && opd_Panel_company != "Sehat Sahulat Card" && (lblIn_Patient_Category != "General"))
                             {
-                                //tokenInputs('txtAddService', 'Inv_Items_Panel');
                                 var company_id = 0;
                                 if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || typeof localStorage.OPD_Panel_ID === 'undefined') company_id = localStorage.IPD_PAnel_ID;
                                 if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || typeof localStorage.IPD_PAnel_ID === 'undefined')
@@ -4462,7 +4476,6 @@
                     
                     else if (((lblPatientCategory == "Private" || lblIn_Patient_Category == "Private")) && (lblIn_Patient_Category != "General"))
                     {
-                        debugger;
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
                             tokenInputs('txtAddService', 'Inv_Items_Panel_Private');
@@ -4470,7 +4483,6 @@
                     }
                     else if ((lblPatientCategory == "Private") && (lblIn_Patient_Category == "General"))
                     {
-                        debugger;
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
                             tokenInputs('txtAddService', 'INV_ItemsForBilling');
@@ -4481,7 +4493,6 @@
                     {
                         if (lblIn_Patient_Category == "Sehat Sahulat Card")
                         {
-                            debugger;
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
                                 tokenInputs('txtAddService', 'Inv_Items_Panel_Sehat_Sahulat');
@@ -4489,7 +4500,6 @@
                         }
                         else if (lblPatientCategory == "Sehat Sahulat Card" && lblIn_Patient_Category=="")
                         {
-                            debugger;
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
                                 tokenInputs('txtAddService', 'Inv_Items_Panel_Sehat_Sahulat');
@@ -4498,7 +4508,6 @@
                         
                         else
                         {
-                            debugger;
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
                                 tokenInputs('txtAddService', 'INV_ItemsForBilling');
@@ -4506,24 +4515,12 @@
                         }
                     }
                     else {
-                        debugger;
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
                             tokenInputs('txtAddService', 'INV_ItemsForBilling');
                         }
                     }
-                    //var as = $(arr).filter(function (i, n) {
-                    //    
-                    //    if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || typeof localStorage.OPD_Panel_ID === 'undefined') company_id = localStorage.IPD_PAnel_ID;
-                    //    if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || typeof localStorage.IPD_PAnel_ID === 'undefined')
-                    //        
-                    //    company_id = localStorage.OPD_Panel_ID;
-                    //    if (n.Panel_ID == company_id)
-                    //    {
-                    //        $('#txtDisPer').val(n.Discount);
-                    //        return false;
-                    //    }
-                    //});
+                    
                     $('#lblWardRoom').text(roomward);
                     checkIsExistinOutPatient();
                 }
@@ -4540,6 +4537,255 @@
                 }
 
             }
+
+
+            function LoadBillbypatid(pat_id) {
+                debugger;
+                $("#btnSavePrint").hide();
+                PageMethods.loadbillbypatient_id(pat_id, function (resp) {
+                    JSON.parse(resp);
+                    debugger;
+                    localStorage.clear();
+                    var date1 = new Date();
+                    var date2 = new Date($('#txtBillDate').val());
+                    var Difference_In_Time = date2.getTime() - date1.getTime();
+                    $('#lblDepartment').text('IPD');
+                    $('#ddlpat_dep_main').val('008');
+
+                    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                    var final = Math.round(Math.abs(Difference_In_Days));
+                    //   alert(final);
+                    if (final == 1) {
+                        final = 0;
+                    }
+                    var data = (JSON.parse(resp));
+
+                    ItmID = data[0].Item_ID;
+                    itmName = data[0].Item_Name;
+                    tyebill = data[0].BillType;
+
+
+
+                    var assign_doc_id = data;
+                    var rows = '';
+                    var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
+                    var Description = '';
+                    var hidshow = '';
+                    $.each(data, function (key, value) {
+                        debugger;
+                       
+
+                            var Type = $("#lblPatientDiscountType").text();
+                            var ward = $('#lblsetWardType').text();
+                            var room = $('#lblserRoomNo').text();
+                            //|| ward != "" || room != ""
+                            if (Type == "Private") {
+                                hidshow = "pointer-events:default;"
+                            }
+                            else {
+
+                                hidshow = "pointer-events:none;"
+                            }
+
+                        
+
+                        debugger;
+                        var username = '<%= AppConfig.UserName%>';
+
+         
+
+                        if (typeof value.ParentTrans_Name === 'undefined') value.ParentTrans_Name = "";
+                        var ServiceDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Service_Date.substring(6, 19))))
+                        if (value.IsShare.includes("There is no row at position 0.")) value.IsShare = false;
+                        if (value.Procedure_Required.includes("There is no row at position 0.")) value.Procedure_Required = false;
+                        if (value.IsOpenBill.includes("There is no row at position 0.")) value.IsOpenBill = false;
+                        debugger;
+                        rows = '<tr>'
+                            + '<td style="text-align:center;">' + (parseInt(rowIndex) + 1) + '</td>'
+                            + '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" style="' + hidshow + '"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>'
+                            + '<td style="text-align:left;">'
+                            + '<input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" />'
+                            + '<input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" />'
+                            + '<input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" />'
+                            + '<input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" />'
+                            + '<input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" />'
+                            + '<input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" />'
+                            + '<input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" />'
+                            + '<input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" />'
+                            + '<input type="hidden" name="hdnDisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(6)) + '" />'
+                            + '<input type="hidden" name="hdnDisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(6)) + '" />'
+                            + '<input type="hidden" name="hdnNet_Amount" value="' + parseFloat(value.Net_Amount.toFixed(6)) + '" />'
+                            + '<input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />'
+                            + value.Item_Name
+                            + '</td>'
+                            + '<td>' + (value.Remarks || '') + '</td>'
+                            + '<td>'
+                            + '<input class="height_height" type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)" />'
+                            + '<input type="hidden" name="txtActualAmount" value="' + value.Amount + '" />'
+                            + '</td>'
+                            + '<td style="text-align:right;font-weight:bold;">' + value.Amount + '</td>'
+                            + '<td class="orderchange">'
+                            + '<input class="height_height" type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" />'
+                            + '</td>'
+                            + '<td class="orderchangeDiscount">'
+                            + '<input class="height_height" type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" />'
+                            + '</td>'
+                            + '<td style="text-align:right;font-weight:bold;">' + parseFloat(value.Net_Amount.toFixed(0)) + '</td>'
+                            + '<td>'
+                            + '<input type="text" style="width: 75px !important;" disabled name="DocShare" class="height_height" value="' + value.Doctor_Share.toFixed(2) + '" id="DocShare' + (rowIndex + 1) + '" onkeyup="calculateDoctorShare()" />'
+                            + '</td>'
+                            + '<td>'
+                            + '<input type="text" class="height_height" style="width: 75px !important;" disabled name="HocShare" value="' + value.Hospital_Share.toFixed(2) + '" id="HocShare' + (rowIndex + 1) + '" onkeyup="calculateDoctorShare()" />'
+                            + '</td>'
+                            + '<td>'
+                            + '<select id="ddldoctor' + rowIndex + '" name="ddlDoctor" class="ddlDoctor" onchange="GetDocAgreementValuess(this)">' + doctors + '</select>'
+                            + '</td>'
+                            + '<td style="display:none;">'
+                            + '<input class="height_height" disabled type="text" name="BillDetailID" value="' + value.Bill_Details_ID + '" />'
+                            + '</td>'
+                            + '</tr>';
+
+
+
+
+                        $('#tblDetails tbody').append(rows);
+                        var isIPD = $("#lblPatientDiscountType").text();
+
+                        $('#tblDetails tr').find('th:eq(9)').show();
+                        $('#tblDetails tr').find('th:eq(10)').show();
+                        $('#tblDetails tbody').find('tr:eq(' + parseInt(parseInt(rowIndex)) + ')').find('td:eq(9)').show();
+                        $('#tblDetails tbody').find('tr:eq(' + parseInt(parseInt(rowIndex)) + ')').find('td:eq(10)').show();
+                        $('#ddldoctor' + key + '').val(data[key].Doctor_Id);
+                        $('#ddldoctor' + key + '').select2();
+                        if (value.Item_Type == "Test") {
+                            $('#tblDetails tbody').find('tr:eq(' + key + ')').find('input[name="txtDoctorShare"]').attr('disabled', false);
+                            $('#tblDetails tbody').find('tr:eq(' + key + ')').find('input[name="txtHospitalShare"]').attr('disabled', false);
+                        }
+
+
+                        setTimeout(function () {
+                            $("#tblDetails tr").each(function () {
+
+
+                                var ITem_Type = $(this).find('input[name="hdnItemType"]').val();
+                                var isOpenBill = $(this).find('input[name="hdnOpenBill"]').val();
+                                var IsOpenShare = $(this).find('input[name="hdnOpenShare"]').val();
+                                var isProcedure = $(this).find('input[name="hdnprocRequird"]').val();
+                                var test_M_Department = $(this).find('input[name="Main_Department"]').val();
+                                if (ITem_Type == "Item" || ITem_Type == "Service") {
+                                    if (isOpenBill == "True") {
+
+                                        if (IsOpenShare == "True" && isProcedure == "True") {
+
+                                            $(this).find("td:eq(5)").attr('contenteditable', 'True');
+                                            $(this).find('input[name="txtDoctorShare"]').attr('disabled', true);
+                                            $(this).find('input[name="txtHospitalShare"]').attr('disabled', true);
+                                        }
+                                        if (isProcedure == "True" && IsOpenShare == "False") {
+                                            $(this).find("td:eq(5)").attr('contenteditable', 'True');
+                                            $(this).find('input[name="txtDoctorShare"]').attr('disabled', false);
+                                            $(this).find('input[name="txtHospitalShare"]').attr('disabled', false);
+
+                                        }
+                                        if (IsOpenShare == "False" && isProcedure == "False") {
+                                            $(this).find("td:eq(5)").attr('contenteditable', 'True');
+                                            $(this).find('input[name="txtDoctorShare"]').attr('disabled', true);
+                                            $(this).find('input[name="txtHospitalShare"]').attr('disabled', true);
+
+                                            $(this).find('select[name="ddlDoctor"]').show();
+                                            $(this).find('select[name="ddlDoctor"]').next(".select2-container").show();
+                                            $(this).find('input[name="txtDoctorShare"]').show();
+                                            $(this).find('input[name="txtHospitalShare"]').show();
+                                        }
+
+                                    }
+                                    else {
+                                        if (IsOpenShare == "True" && isProcedure == "True") {
+
+                                            $(this).find("td:eq(5)").attr('contenteditable', 'False');
+                                            $(this).find('input[name="txtDoctorShare"]').attr('disabled', true);
+                                            $(this).find('input[name="txtHospitalShare"]').attr('disabled', true);
+                                        }
+                                        if (isProcedure == "True" && IsOpenShare == "False") {
+                                            $(this).find("td:eq(5)").attr('contenteditable', 'False');
+                                            $(this).find('input[name="txtDoctorShare"]').attr('disabled', false);
+                                            $(this).find('input[name="txtHospitalShare"]').attr('disabled', false);
+
+                                        }
+                                        if (IsOpenShare == "False" && isProcedure == "False") {
+
+                                            $(this).find("td:eq(5)").attr('contenteditable', 'False');
+                                            $(this).find('input[name="txtDoctorShare"]').attr('disabled', true);
+                                            $(this).find('input[name="txtHospitalShare"]').attr('disabled', true);
+                                            $(this).find('select[name="ddlDoctor"]').show();
+                                            $(this).find('select[name="ddlDoctor"]').next(".select2-container").hide();
+
+                                        }
+                                    }
+                                }
+
+                                else if (ITem_Type == "Test") {
+
+                                    if (test_M_Department != "002") {
+                                        $(this).find('select[name="ddlDoctor"]').show();
+                                        $(this).find('select[name="ddlDoctor"]').next(".select2-container").show();
+                                        //hide doctor share and hospital
+                                        $(this).find('input[name="txtDoctorShare"]').show();
+                                        $(this).find('input[name="txtHospitalShare"]').show();
+                                    }
+                                }
+
+                            });                           
+                            setTimeout(function () {
+                                if ($("#tblDetails tbody tr").length > 0 && $("#ctl00_MainContent_ddlUserDepartment").val() != "0") {
+                                    $("#ctl00_MainContent_ddlBillType").attr("disabled", "true");
+
+                                    //if (Billing_Rights == true) {
+                                    //    $("#ctl00_MainContent_ddlUserDepartment").attr('disabled', false);
+                                    //}
+                                    //else {
+                                        $("#ctl00_MainContent_ddlUserDepartment").attr("disabled", false);
+                                   // }
+                                }
+                            }, 300);
+
+
+                        }, 2000);
+
+                        setTimeout(function () {
+
+                            CalculateSummarieDiscountPerWise(rowIndex);
+                        }, 2000)
+
+                        rowIndex++;
+                    });
+                    $("#tblDetails tr:gt(0)").each(function (key, value) {
+
+                        var sixitems = ['102', '125', '103', '86'];
+                        //, '103', '86'];
+                        //102, 125,103,86
+
+                        var item_id = $(this).find('input[name="hdnItemID"]').val();
+                        var qty = $(this).find('input[name="txtQty"]').val();
+                        var item_name = $(this).find('input[name="hdnItemName"]').val();
+                        if (item_id == "102" || item_id == "125" || item_id == "103" || item_id == "86" || item_id == "112" || item_id == "113") {
+                            if (Day_Occupied == null) {
+
+                            }
+                            else {
+
+                            }
+                        }
+
+                    });
+
+                    $('#btnSave').val('Update');
+                },
+                    function (error) {
+                        alert(error.get_message());
+                    })
+            }
+
             function OpenModal() {
                 debugger;
                 $('#PatientsSearchModel').modal({
@@ -5387,7 +5633,7 @@
                         </div>                                                                                            
               
       
-        <div class="row" id="dvSummary">
+        <div class="row" style="display:none;" id="dvSummary">
             <div class="col-lg-6 col-md-8 col-sm-9"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label style="margin-top:11%" >Total Doctor Share</label>
@@ -5397,7 +5643,16 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" >
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label>Total Amount</label>
+                </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                 <input type="text" id="txtTotalAmount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+                </div>
+        </div>
+                <div class="row">
             <div class="col-lg-6 col-md-8 col-sm-9"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Previous Paid</label>

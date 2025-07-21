@@ -1494,7 +1494,7 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="number" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                         '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
@@ -1839,7 +1839,7 @@
 
                             '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                            '<td><input type="number" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                            '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                             '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
@@ -2155,15 +2155,14 @@
                             <tr>
                                 <th style="width: 5%;">Sr.</th>
                                 <th style="display: none;width: 0%">Billing Detail ID</th>
-                                <th style="width: 20%;">Description</th>
+                                <th style="width: 25%;">Description</th>
                                 <th style="display: none;width: 0%">Check Qty</th>
                                 <th style="width: 10%;">Qty</th>
                                 <th style="width: 10%;">Stock</th>
                                 <th style="width: 7%;">Rate</th>
                                 <th style="width: 7%;">Dis%</th>
-                                <th style="width: 8%;">Dis Amount</th>
-                                <th style="width: 8%;">Net Amount</th>
-                                <th style="width: 15%;">Batch_No</th>
+                                <th style="width: 13%;">Dis Amount</th>
+                                <th style="width: 13%;">Net Amount</th>
                                 <th style="width: 10%;">Action</th>
                             </tr>
                         </thead>

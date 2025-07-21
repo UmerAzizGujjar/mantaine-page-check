@@ -84,6 +84,7 @@
                     },
                     { "data": "CSVENVALIDITY", width: "10%", "orderable": false },
                     { "data": "CSVENREMARKS", "orderable": false },
+                    { "data": "CSVENSTATUS", "orderable": false },
                     { "data": "PoStatus", "orderable": false },
                     {
                         "render": function (data, type, row) {
@@ -148,7 +149,8 @@
                             <th>CS Date</th>
                             <th>CS Validity</th>
                             <th>Remarks</th>
-                            <th>Status</th>
+                            <th>CS Status</th>
+                            <th>PO Status</th>
                             <th>Action</th>                    
                         </tr>
                     </thead>

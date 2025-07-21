@@ -361,6 +361,10 @@
             if (IsBatch == "true" || IsBatch == "True") {
                 Stock = 0;
             }
+            if (IsBatch == "false" || IsBatch == "False") {
+              //  $('#ddlBatchNum').attr("disabled", 'disabled');
+                $('#tblStoreIssueBote').find('input[name = ddlBatchNum]').attr("disabled", 'disabled');
+            }
             var length = $("#tblStoreIssueBote tr:gt(0)").length;
             if (length > 0) {
                 length = length + 1;
@@ -395,7 +399,8 @@
                     '<td  style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + itemcode + '<input type="text" name="txtItemCode" value=' + itemcode + ' style="display:none;"/></td>' +
                     '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + item_name + '</td>' +
                     '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + unit + '</td>' +
-                    '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
+                //'<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
+                    '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this)" style="width: 75px !IMPORTANT;" ' + (IsBatch.toLowerCase() === 'false' ? 'disabled' : '') + ' ></select></td>' +
                     '<td style="padding-top: 9px;text-align: center;padding-top: 2px !important;"  ><input type="text" id="txtStoreStock' + length + '" name="txtStoreStock" readonly=true value="' + Stock + '" style="height: 22px!important;width: 70px !important;" ></td>' +
                     '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + length + '" name="txtmirQty" value="' + Qty + '" disabled/></td>' +
                     '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;                                        height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0" onkeyup="calculateBalanceQty(this)"/></td>' +
