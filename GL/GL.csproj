@@ -202,6 +202,7 @@
     <Content Include="Modules\Accounts\RegisterUser.aspx" />
     <Content Include="Modules\Accounts\RoleAssignment.aspx" />
     <Content Include="Modules\Accounts\UserList.aspx" />
+    <Content Include="Modules\Administrator\AddCompany.aspx" />
     <Content Include="Modules\Administrator\AddDepartment_Packages.aspx" />
     <Content Include="Modules\Administrator\AddDoctorAgreement.aspx" />
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
@@ -22044,6 +22045,13 @@
     </Compile>
     <Compile Include="Modules\Accounts\UserList.aspx.designer.cs">
       <DependentUpon>UserList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\AddCompany.aspx.cs">
+      <DependentUpon>AddCompany.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\AddCompany.aspx.designer.cs">
+      <DependentUpon>AddCompany.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\AddDepartment_Packages.aspx.cs">
       <DependentUpon>AddDepartment_Packages.aspx</DependentUpon>

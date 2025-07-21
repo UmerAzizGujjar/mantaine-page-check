@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/vendor.css" rel="stylesheet" />
-    
+
     <script type="text/javascript">
         var selectedOptions = '';
         $(document).ready(function () {
@@ -677,7 +677,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <form  id="item">
+    <form id="item">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label id="lblVendorCode" class="">Code</label>
@@ -697,7 +697,7 @@
                 </label>
                 <input type="text" id="txtAddress" class="form-control" />
             </div>
-            </div>
+        </div>
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label id="lblCountry" class="">
@@ -713,30 +713,26 @@
                 </select>
             </div>
 
-            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top:2%">               
-                    <label id="lblActive">Active</label>
-                </div>
-            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top:2%">
-                <div class="form-check">
-                    <input type="checkbox" id="Active" class="form-check-input" name="Active" />
-                    </div>
-                </div>
-                      
-            <div class="col-lg-1"></div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblCity">
-                    City
-                </label>
-                <input type="text" id="txtCity" class="form-control" />
-            </div>
-            </div>
-        <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label id="lblMobno" class="">
                     Mobile #
                 </label>
                 <input type="text" id="txtMobno" class="form-control" />
                 <input type="hidden" id="txtVendorId" name="txtVendorId" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label id="lblCity">
+                    City
+                </label>
+                <input type="text" id="txtCity" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <label id="lblFoc">
+                    Focal Person
+                </label>
+                <input type="text" id="txtFoc" class="form-control" />
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label id="lblPhno">
@@ -756,13 +752,14 @@
                 </label>
                 <input type="text" id="txtEmail" class="form-control" />
             </div>
-            </div>
+        </div>
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblFoc">
-                    Focal Person
+                <label id="lblPayabl" class="">
+                    Payable code
                 </label>
-                <input type="text" id="txtFoc" class="form-control" />
+                <select id="ddlPayabl" class="form-control">
+                </select>
             </div>
 
             <div class="col-lg-3 col-md-6 col-sm-12">
@@ -797,153 +794,156 @@
                 <select id="ddlCom" class="form-control">
                 </select>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <label id="lblPayabl" class="">
-                    Payable code
-                </label>
-                <select id="ddlPayabl" class="form-control">
-                </select>
-            </div>
-            <div class="col-lg-1 col-md-6 col-sm-6"  style="margin-top:2%">
-                <label class="form-check-label" id="lblmanual">Manual</label>
-                </div>
-            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top:2%">
+
+            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%; width: 40px">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="chkmanual" name="chkmanual" />                    
+                    <input type="checkbox" class="form-check-input" id="chkmanual" name="chkmanual" />
                 </div>
             </div>
+            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%">
+                <label class="form-check-label" id="lblmanual">Manual</label>
             </div>
+            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%; width: 40px">
+                <div class="form-check">
+                    <input type="checkbox" id="Active" class="form-check-input" name="Active" />
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-6" style="margin-top: 2%">
+                <label id="lblActive">Active</label>
+            </div>
+
+        </div>
     </form>
 
-            <div id="tabs">
-                <ul>
-                    <li><a href="#Tab-1">Persons</a></li>
-                    <li><a href="#Tab-2">Vendor Companies</a></li>
-                    <li><a href="#Tab-3">Vendor General Items</a></li>
-                    <li><a href="#Tab-4">Vendor Pharmacy Items</a></li>
-                </ul>
-                <div id="Tab-1">
-                    <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                        <div>
-                            <div class="col-lg-1 col-md-4 col-sm-12">
-                                <input type="button" onclick="Addrow()" value="+" id="AddPerson" class="btn btn-primry" />
-                            </div>
-                            <div class="col-lg-1 col-md-4 col-sm-12">
-                                <input type="button" class="btn btn-primry" onclick="printPerson()" value="Print" id="PrintPerson" />
-                            </div>
-                        </div>
-                        <table class="table table-hover table-striped table-bordered" id="tblItemDescription">
-                            <thead>
-                                <tr>
-                                    <th style="width: 30px; text-align: center;">Person Name</th>
-                                    <th style="width: 30px; text-align: center;">Designation</th>
-                                    <th style="width: 40px; text-align: center; font-size: 10px;">Phone #</th>
-                                    <th style="width: 45px; text-align: center;">Ext #</th>
-                                    <th style="width: 35px; text-align: center;">Cell #</th>
-                                    <th style="width: 6%; text-align: center;">Action</th>
-                                </tr>
-                            </thead>                          
-                            <tbody id="tblPerson">
-                            </tbody>
-                        </table>
+    <div id="tabs">
+        <ul>
+            <li><a href="#Tab-1">Persons</a></li>
+            <li><a href="#Tab-2">Vendor Companies</a></li>
+            <li><a href="#Tab-3">Vendor General Items</a></li>
+            <li><a href="#Tab-4">Vendor Pharmacy Items</a></li>
+        </ul>
+        <div id="Tab-1">
+            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
+                <div>
+                    <div class="col-lg-1 col-md-4 col-sm-12">
+                        <input type="button" onclick="Addrow()" value="+" id="AddPerson" class="btn btn-primry" />
+                    </div>
+                    <div class="col-lg-1 col-md-4 col-sm-12">
+                        <input style="display: none !important" type="button" class="btn btn-primry" onclick="printPerson()" value="Print" id="PrintPerson" />
                     </div>
                 </div>
-
-                <div id="Tab-2">
-                    <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                        <div>
-                            <div class="col-lg-1 col-md-4 col-sm-12">
-                                <input type="button" class="btn btn-primry" onclick="AppendvendorCompany()" value="+" id="AddvendorCompany" />
-                            </div>
-                            <div class="col-lg-1 col-md-4 col-sm-12">
-                                <input type="button" class="btn btn-info" onclick="printVendorCompany()" value="Print" id="PrintVendorCompany" />
-                            </div>
-                        </div>
-                        <table class="table responstable" id="VendorCompanieslist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%;">Sr #</th>
-                                    <th style="width: 80%;">Company Name</th>
-                                    <th style="text-align: center; width: 10%;">Action</th>
-                                </tr>
-                            </thead>                           
-                            <tbody id="myVendorCompany">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="Tab-3">
-                    <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                        <div>
-                            <div class="col-lg-1 col-md-4 col-sm-12">
-                                <input type="button" class="btn btn-primry" onclick="AppendvendorGeneralItem()" value="+" id="AddvendorGeneralItem" />
-                            </div>
-                            <div class="col-lg-1 col-md-4 col-sm-12">
-                                <input type="button" class="btn btn-info" onclick="printvendorGeneralItem()" value="Print" id="PrintvendorGeneralItem"  />
-                            </div>
-                        </div>
-                        <table class="table responstable" id="VendorGeneralItemlist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 15%;">Item Code</th>
-                                    <th style="width: 25%;">Description</th>
-                                    <th style="text-align: center; width: 8%;">UOM</th>
-                                    <th style="text-align: center; width: 7%;">Rate</th>
-                                    <th style="text-align: center; width: 20%;">Ref #</th>
-                                    <th style="text-align: center; width: 30%;">Remarks</th>
-                                    <th style="text-align: center; width: 5%;">Action</th>
-                                </tr>
-                            </thead>                           
-                            <tbody id="myVendorGeneralItem">
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-
-                <div id="Tab-4">
-                    <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
-                        <div>
-                            <div class="col-lg-1 col-md-4 col-sm-6">
-                                <input type="button" class="btn btn-primry" onclick="AppendvendorPharmacyItem()" value="+" id="AddvendorPharmacyItem"  />
-                            </div>
-                            <div class="col-lg-1 col-md-4 col-sm-6">
-                                <input type="button" class="btn btn-info" onclick="printPharmacyItem()" value="Print" id="PrintPharmacyItem"  />
-                            </div>
-                        </div>
-                        <table class="table responstable" id="VendorPharmacyItemlist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 15%;">Item Code</th>
-                                    <th style="width: 25%;">Description</th>
-                                    <th style="text-align: center; width: 8%;">UOM</th>
-                                    <th style="text-align: center; width: 7%;">Rate</th>
-                                    <th style="text-align: center; width: 20%;">Ref #</th>
-                                    <th style="text-align: center; width: 30%;">Remarks</th>
-                                    <th style="text-align: center; width: 5%;">Action</th>
-                                </tr>
-                            </thead>                           
-                            <tbody id="myVendorPharmacyItem">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <table class="table table-hover table-striped table-bordered" id="tblItemDescription">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px; text-align: center;">Person Name</th>
+                            <th style="width: 30px; text-align: center;">Designation</th>
+                            <th style="width: 40px; text-align: center; font-size: 10px;">Phone #</th>
+                            <th style="width: 45px; text-align: center;">Ext #</th>
+                            <th style="width: 35px; text-align: center;">Cell #</th>
+                            <th style="width: 6%; text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblPerson">
+                    </tbody>
+                </table>
             </div>
-    
-    <div style="margin-top: 21px;">   
-    <div class="row">
-        <div class="col-lg-1 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave"  />
         </div>
-        <div class="col-lg-1 col-md-4 col-sm-12">
-            <input type="button" class="btn-gray" value="List" onclick="window.location = 'VendorView.aspx'" />
+
+        <div id="Tab-2">
+            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
+                <div>
+                    <div class="col-lg-1 col-md-4 col-sm-12">
+                        <input type="button" class="btn btn-primry" onclick="AppendvendorCompany()" value="+" id="AddvendorCompany" />
+                    </div>
+                    <div class="col-lg-1 col-md-4 col-sm-12">
+                        <input style="display: none !important" type="button" class="btn btn-info" onclick="printVendorCompany()" value="Print" id="PrintVendorCompany" />
+                    </div>
+                </div>
+                <table class="table responstable" id="VendorCompanieslist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">Sr #</th>
+                            <th style="width: 80%;">Company Name</th>
+                            <th style="text-align: center; width: 10%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myVendorCompany">
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-lg-1 col-md-4 col-sm-12">
-            <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'Vendor.aspx'" />
+
+        <div id="Tab-3">
+            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
+                <div>
+                    <div class="col-lg-1 col-md-4 col-sm-12">
+                        <input type="button" class="btn btn-primry" onclick="AppendvendorGeneralItem()" value="+" id="AddvendorGeneralItem" />
+                    </div>
+                    <div class="col-lg-1 col-md-4 col-sm-12">
+                        <input style="display: none !important" type="button" class="btn btn-info" onclick="printvendorGeneralItem()" value="Print" id="PrintvendorGeneralItem" />
+                    </div>
+                </div>
+                <table class="table responstable" id="VendorGeneralItemlist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Item Code</th>
+                            <th style="width: 25%;">Description</th>
+                            <th style="text-align: center; width: 8%;">UOM</th>
+                            <th style="text-align: center; width: 7%;">Rate</th>
+                            <th style="text-align: center; width: 20%;">Ref #</th>
+                            <th style="text-align: center; width: 30%;">Remarks</th>
+                            <th style="text-align: center; width: 5%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myVendorGeneralItem">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div id="Tab-4">
+            <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
+                <div>
+                    <div class="col-lg-1 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" onclick="AppendvendorPharmacyItem()" value="+" id="AddvendorPharmacyItem" />
+                    </div>
+                    <div class="col-lg-1 col-md-4 col-sm-6">
+                        <input style="display: none !important" type="button" class="btn btn-info" onclick="printPharmacyItem()" value="Print" id="PrintPharmacyItem" />
+                    </div>
+                </div>
+                <table class="table responstable" id="VendorPharmacyItemlist" style="margin-top: 13px; font-size: 10px!important; width: 95% !important; overflow: unset;">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Item Code</th>
+                            <th style="width: 25%;">Description</th>
+                            <th style="text-align: center; width: 8%;">UOM</th>
+                            <th style="text-align: center; width: 7%;">Rate</th>
+                            <th style="text-align: center; width: 20%;">Ref #</th>
+                            <th style="text-align: center; width: 30%;">Remarks</th>
+                            <th style="text-align: center; width: 5%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myVendorPharmacyItem">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <div style="margin-top: 21px;">
+        <div class="row">
+            <div class="col-lg-1 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave" />
+            </div>
+            <div class="col-lg-1 col-md-4 col-sm-12">
+                <input type="button" class="btn-gray" value="List" onclick="window.location = 'VendorView.aspx'" />
+            </div>
+            <div class="col-lg-1 col-md-4 col-sm-12">
+                <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'Vendor.aspx'" />
+            </div>
         </div>
+    </div>
 
 </asp:Content>
 

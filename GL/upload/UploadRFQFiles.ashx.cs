@@ -15,7 +15,7 @@ namespace PMS
             context.Response.ContentType = "text/plain";
             try
             {
-                string dirFullPath = context.Server.MapPath("~/UploadRFQFilesImages/");
+                string dirFullPath = context.Server.MapPath("~/upload/UploadRFQFilesImages/");
                 string[] files;
                 files = System.IO.Directory.GetFiles(dirFullPath);
                 string str_image = "";
@@ -33,8 +33,8 @@ namespace PMS
                     {
                         fileExtension = Path.GetExtension(fileName);
                         str_image = RFQID.ToString() + fileExtension;
-                        string pathToSave = context.Server.MapPath("~/UploadRFQFilesImages/") + str_image;
-                        image_path = "~/UploadRFQFilesImages/" + str_image;
+                        string pathToSave = context.Server.MapPath("~/upload/UploadRFQFilesImages/") + str_image;
+                        image_path = "~/upload/UploadRFQFilesImages/" + str_image;
 
                         if (System.IO.File.Exists(context.Server.MapPath(oldpath)))
                         {

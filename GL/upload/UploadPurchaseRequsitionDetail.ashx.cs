@@ -51,10 +51,10 @@ namespace PMS
                     string fileExtension = file.ContentType;
                     fileExtension = Path.GetExtension(fileName);
                     var guid = Guid.NewGuid();
-                    string fname = context.Server.MapPath("~/PurchaseRequistionDetailImages/" + PRDetailID + fileExtension);
+                    string fname = context.Server.MapPath("~/upload/PurchaseRequistionDetailImages/" + PRDetailID + fileExtension);
                     str_image = guid.ToString() + fileExtension;
-                    string image_Path = "~/PurchaseRequistionDetailImages/" + PRDetailID + fileExtension;
-                    string image_Path_without_ext = "~/PurchaseRequistionDetailImages/" + PRDetailID;
+                    string image_Path = "~/upload/PurchaseRequistionDetailImages/" + PRDetailID + fileExtension;
+                    string image_Path_without_ext = "~/upload/PurchaseRequistionDetailImages/" + PRDetailID;
                     if (System.IO.File.Exists(context.Server.MapPath(image_Path)))
                     {
                         // file exist

@@ -20,7 +20,7 @@ namespace PMS
             context.Response.ContentType = "text/plain";
             try
             {
-                string dirFullPath = context.Server.MapPath("~/IGPFileImages/");
+                string dirFullPath = context.Server.MapPath("~/upload/IGPFileImages/");
                 string[] files;
                 files = System.IO.Directory.GetFiles(dirFullPath);
                 string str_image = "";
@@ -35,8 +35,8 @@ namespace PMS
                     {
                         fileExtension = Path.GetExtension(fileName);
                         str_image = IgpId.ToString() + fileExtension;
-                        string pathToSave = context.Server.MapPath("~/IGPFileImages/") + str_image;
-                        string image_path = "~/IGPFileImages/" + str_image;
+                        string pathToSave = context.Server.MapPath("~/upload/IGPFileImages/") + str_image;
+                        string image_path = "~/upload/IGPFileImages/" + str_image;
                         if (System.IO.File.Exists(context.Server.MapPath(image_path)))
                         {
                             // file exist

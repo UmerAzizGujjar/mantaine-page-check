@@ -203,7 +203,7 @@
             { %>
             GRN_ID = '<%= Request.QueryString["GRN_ID"]%>'
             LoadGRNData(GRN_ID);
-            $('#btnSave').hide();
+            $('#SaveButtonToBeHidden').hide();
             $('#thaction').hide();
             <% } %>
             $('select').select2();
@@ -817,7 +817,7 @@
                         <input type="button" class="btn-primry" value="Print" name="name" id="btn_Print" onclick="PrintGRNDetail();" style="width: 81px;" />
                         &nbsp;
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-12">
+                    <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
                         <input type="button" class="btn-primry" onclick="SaveAllRecord()" value="Save" id="btnSave" style="width: 81px; display: none" />
                         &nbsp;
                     </div>

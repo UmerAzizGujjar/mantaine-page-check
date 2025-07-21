@@ -256,9 +256,9 @@
                     debugger;
                     if (hasRights) {
                         debugger;
-                        $('#btnUnApprove').show();
+                        $('#btnUnApproveToBeHidden').show();
                     } else {
-                        $('#btnUnApprove').hide();
+                        $('#btnUnApproveToBeHidden').hide();
                     }
                 },
                 failure: function (response) {
@@ -585,7 +585,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadMaterialIssue.ashx',
+                    url: '/upload/UploadMaterialIssue.ashx',
                     data: data,
                     success: function (status) {
                     },
@@ -724,13 +724,14 @@
                 <input type="button" value="New" class="btn btn-yellow" onclick="window.location = 'GoodsIssuanceRequest.aspx'" />
                 &nbsp;
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+    <input type="button" value="Print" class="btn btn-primry" name="btn_Print" id="btn_Print" onclick="PrintGoodsIssuanceRequest();" style="width: 81px;" />
+</div>
+            <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
                 <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />            
                         &nbsp;
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" value="Print" class="btn btn-primry" name="btn_Print" id="btn_Print" onclick="PrintGoodsIssuanceRequest();" style="width: 81px;" />
-            </div>
+            
             </div>
         </div>
         </div>

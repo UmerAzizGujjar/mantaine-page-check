@@ -2084,6 +2084,9 @@ namespace PMS
                 reportPath += rptFileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("@GRN_Num", (Request.QueryString["DepetID"]).ToString());
+                //Mohsin
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                //Mohsin
             }
             #endregion
             #region In Patient Report
