@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="tibb" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=tibb;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="tibbConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -746,27 +745,6 @@
       <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="HR_Shift_Shift_Assign" Member="HR_Shift" ThisKey="Shift_ID" OtherKey="Shift_ID" Type="HR_Shift" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.sys_Companys" Member="sys_Companies">
-    <Type Name="sys_Company">
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Company_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Company_Address" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Company_Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_Phone1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_Phone2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_Fax" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_UserField1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_UserField2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_UserField3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Company_Image" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
-      <Column Name="Company_SalesTax_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_NTN_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Company_Fiscal_Year" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Earning" Type="System.String" DbType="VarChar(9)" CanBeNull="true" />
-      <Column Name="Auto_Posting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Terms_and_conditions" Member="Terms_and_conditions">
@@ -6677,6 +6655,29 @@
       <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
       <Column Name="Term_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Ware_House" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sys_Companys" Member="sys_Companies">
+    <Type Name="sys_Company">
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Company_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Company_Address" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Company_Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_Phone1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_Phone2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_Fax" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_UserField1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_UserField2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_UserField3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Company_Image" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="Company_SalesTax_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_NTN_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Company_Fiscal_Year" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Earning" Type="System.String" DbType="VarChar(9)" CanBeNull="true" />
+      <Column Name="Auto_Posting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ImageURL" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="CompanyCode" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
