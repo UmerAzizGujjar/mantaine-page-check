@@ -1086,7 +1086,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '/upload/UploadPOFiles.ashx',
+                    url: '../../UploadPOFiles.ashx',
                     data: data,
                     success: function (status) {
 

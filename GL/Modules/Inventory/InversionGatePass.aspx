@@ -543,7 +543,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '/upload/UploadIGP.ashx',
+                    url: '../../UploadIGP.ashx',
                     data: data,
                     success: function (status) {
                     },

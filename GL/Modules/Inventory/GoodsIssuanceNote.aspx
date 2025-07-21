@@ -596,7 +596,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '/upload/UploadGINFiles.ashx',
+                    url: '../../UploadGINFiles.ashx',
                     data: data,
                     success: function (status) {
 

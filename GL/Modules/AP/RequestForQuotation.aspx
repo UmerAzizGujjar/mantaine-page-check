@@ -562,7 +562,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '/upload/UploadRFQFiles.ashx',
+                    url: '../../UploadRFQFiles.ashx',
                     data: data,
                     success: function (status) {
 
