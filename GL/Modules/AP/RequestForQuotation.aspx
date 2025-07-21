@@ -16,19 +16,7 @@
                 _gloabal = optionsVen;
             });
         }
-        function FillWarehouse() {
-
-            var optionInv = '';
-            PageMethods.fillWarehouse(function (Tests) {
-
-                optionInv = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(Tests), function (key, value) {
-
-                    optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                });
-                $('#ddlWarehouse').html(optionInv);
-            });
-        }
+        
 
         $(document).ready(function () {
             $('#btnSelectVendor').on('click', function () {
@@ -36,8 +24,6 @@
                 $('#VendorModal').modal('show');
             });
 
-            FillWarehouse();
-            $('#ddlWarehouse').select2();
 
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
@@ -114,9 +100,6 @@
                     $('#ctl00_MainContent_ddlTerm').val(data.Term_ID).trigger('change');
                 }, 1000);
 
-                setTimeout(function () {
-                    $('#ddlWarehouse').val(data.Ware_House).trigger('change');
-                }, 1000);
 
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPaymentTerms').val(data.PaymentTerms).trigger('change');
@@ -209,24 +192,7 @@
             var proceed = true;
             var table = $('#tblItemDescriptionDetail');
             var DueDate = $('#ctl00_MainContent_txtDue_Date').val();
-            var WareHouse = $('#ddlWarehouse').val();
             var RFQDate = $('#ctl00_MainContent_txtRFQ_Date').val();
-
-            if (WareHouse == '0') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please select WareHouse',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return false;
-            }
 
             if ($('#tblItemDescription tr').length <= 1) {
                 proceed = false;
@@ -310,7 +276,6 @@
                 var RFQ_No = $('#ctl00_MainContent_txtRFQ_No').val();
                 var RFQ_Date = $('#ctl00_MainContent_txtRFQ_Date').val();
                 var DueDate = $('#ctl00_MainContent_txtDue_Date').val();
-                var Warehouse = $('#ddlWarehouse').val();
                 var PaymentTerms = $('#ctl00_MainContent_ddlPaymentTerms').val();
                 var Term_ID = $('#ctl00_MainContent_ddlTerm').val();
                 var QuotationValidty = $('#ctl00_MainContent_txtquotationValidty').val();
@@ -348,7 +313,7 @@
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
-                    var AllItemDetail = { 'RFQ_ID': RFQ_ID, 'RFQ_Date': RFQ_Date, 'RFQ_No': RFQ_No, 'RefNo': RefNo, 'DueDate': DueDate, 'Term_ID': Term_ID, 'PaymentTerms': PaymentTerms, 'QuotationValidty': QuotationValidty, 'Remarks': Remarks, 'ItemList': Item_list, 'Vendorlist': Vendor_list ,'Warehouse': Warehouse };
+                    var AllItemDetail = { 'RFQ_ID': RFQ_ID, 'RFQ_Date': RFQ_Date, 'RFQ_No': RFQ_No, 'RefNo': RefNo, 'DueDate': DueDate, 'Term_ID': Term_ID, 'PaymentTerms': PaymentTerms, 'QuotationValidty': QuotationValidty, 'Remarks': Remarks, 'ItemList': Item_list, 'Vendorlist': Vendor_list };
                     PageMethods.SaveRFQItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         if (btnSave == "Update") {
@@ -597,7 +562,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadRFQFiles.ashx',
+                    url: '/upload/UploadRFQFiles.ashx',
                     data: data,
                     success: function (status) {
 
@@ -672,12 +637,6 @@
     </div>
  
     <div class="row">
-        <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
-            <label id="LblWarehouse">WareHouse<span style="color: red;">*</span></label>
-            <select id="ddlWarehouse" class="form-select">
-                <option value="0">Please Select</option>
-            </select>
-        </div>
         <div class="col-lg-7 col-md-12 col-sm-12">
             <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
             <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />

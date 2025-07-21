@@ -118,6 +118,10 @@
 
             var locatorAddress = $('#txtlocatorAddress').val();
             var fianceIntegration = $('#ddlfiance_integration').val();
+            var consumable = $('#Consumable').prop('checked');
+            var Fixasset = $('#Isfixasset').prop('checked');
+            var saleable = $('#Saleable').prop('checked');
+            debugger;
             if (Desc == "") {
                 Swal.fire({
                     icon: 'error',
@@ -177,6 +181,21 @@
                     }
                 });
                  proceed = false;
+            }
+            if (!consumable && !Fixasset && !saleable) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select at least one: Consumable, Fixed Asset, or Saleable.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                proceed = false;
             }
             if (fianceIntegration == "0") {
                 Swal.fire({
@@ -251,6 +270,7 @@
                 var DepartmentId = $('#ddldepartment').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
                 var Id = 0;
+
                 if (id == "") {
                     Id = 0;
                 }
@@ -622,11 +642,12 @@
                 <select id="ddlwareHouse"  class="form-control"></select>
                 </div>       
              </div> 
-         <div class="col-lg-3 col-md-6 col-sm-12 p-5">
+         <div class="col-lg-3 col-md-6 col-sm-12 p-5" style="margin-top: 25px;">
                  
              <div class="form-group form-check">
+                  <input type="checkbox" class="form-check-input" style="width:auto !important" id="Active" name="Active" />
                <label class="form-check-label" id="LblActive" for="Active">Active</label>
-            <input type="checkbox" class="form-check-input" style="width:auto !important" id="Active" name="Active" />
+           
             </div>
             </div>
             </div>

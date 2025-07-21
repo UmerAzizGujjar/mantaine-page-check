@@ -74,7 +74,7 @@ namespace PMS.Inventory
                 if (UomQty != "")
                 {
                     obj.UOM_Qty = Convert.ToDecimal(UomQty);
-                }               
+                }
                 obj.Item_Account_category = int.Parse(FianceIntegration);
                 if (Lenght != "")
                 {
@@ -106,7 +106,7 @@ namespace PMS.Inventory
                 obj.Purchaseable = Convert.ToBoolean(Purchaseable);
                 obj.IsNonStockItem = Convert.ToBoolean(NonStockItem);
                 obj.Isfixasset = Convert.ToBoolean(Fixasset);
-                if(MinimumStock == "")
+                if (MinimumStock == "")
                 {
                     MinimumStock = null;
                 }
@@ -139,7 +139,7 @@ namespace PMS.Inventory
                 obj.Billing_Required = Convert.ToBoolean(Billing);
                 obj.OTProcedure = Convert.ToBoolean(OTProcedure);
                 obj.Book_ID = AppConfig.Book_ID;
-                obj.Company_ID= AppConfig.Company_ID;
+                obj.Company_ID = AppConfig.Company_ID;
                 obj.DepartmentId = DepartmentId;
                 obj.ItemGroupId = ItemGroup;
                 obj.InventoryOrg = Warehouse;
@@ -147,11 +147,22 @@ namespace PMS.Inventory
                 obj.Services = Convert.ToBoolean(IsService);
                 var Item = Item_Code;
 
-                DataTable dt = DBClass.getDataTable("select Item_Code from INV_Items where Item_Code='"+ Item + "'");
-                if (dt.Rows.Count > 0)
+                DataTable dt = DBClass.getDataTable("select Item_Code from INV_Items where Item_Code='" + Item + "'");
+             
+
+                if (dt.Rows.Count == 0) // Item does not exist
                 {
-                    obj.Item_Code = DBClass.getField("Select max(convert(int, SubString(Item_Code, PATINDEX('%[0-9]%',Item_Code), Len(Item_Code)))+1) from INV_Items");
+                    string newItemCode = DBClass.getField(@"
+                    SELECT 
+                        ISNULL(MAX(CONVERT(INT, 
+                            SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
+                    FROM INV_Items
+                ");
+
+                    obj.Item_Code = newItemCode;
                 }
+              
+
                 db.INV_Items.InsertOnSubmit(obj);
                 try
                 {
@@ -239,7 +250,7 @@ namespace PMS.Inventory
                     obj.Mini_Stock = MinimumStock;
                 }
 
-           
+
                 obj.Reorder_Stock = ReorderStock;
                 obj.Max_Stock = MaximumStock;
                 obj.ATC = ATC;

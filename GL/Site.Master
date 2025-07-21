@@ -109,14 +109,68 @@
             $('#ctl00_lblMessage').hide();
 
         });
+
+
+
+
+
+
+
+
+
+
     </script>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
     <style type="text/css">
         @media screen and (max-width: 995px) {
+            .container-fluid{
+                padding-left:0px !important;
+                padding-right:0px !important;
+
+            }
+            .hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+ 
+  width: 40px;
+}
+
+.hamburger-btn span {
+  display: block;
+  margin-top:2px;
+  height: 3px;
+  width: 100%;
+  background-color: #333;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+            #ctl00_sidebar.hide-force {
+                transform: translateX(-120%);
+            }
+
+            .hover {
+                width: 160px !important;
+            }
+
+            .hamburger-row {
+                display: block !important;
+            }
 
             #ctl00_sidebar {
-                width: 152px !important;
+                width: 180px !important;
+                height:100vh !important;
+                transition: transform 0.5s ease;
+                transform: translateX(0); /* visible */
             }
+
+                #ctl00_sidebar.hide-force {
+                    transform: translateX(-120%);
+                }
 
             .main {
                 width: 732px !important;
@@ -436,11 +490,11 @@
                 background-color: #e0850f;
                 color: white;
             }
-        
-   .dropdown-item i {
-           color :black
+
+        .dropdown-item i {
+            color: black
         }
- 
+
         .dropdown-divider {
             margin: 0.3rem 0;
         }
@@ -773,9 +827,9 @@
                                         <!-- Added arrow down icon -->
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                        
+
                                         <!-- Logout with icon -->
-                                        <a href="~/Modules/Accounts/Login.aspx" style=" text-decoration:none;color:black !important " class="dropdown-item" onclick="document.getElementById('<%= HeadLoginStatus.ClientID %>').click(); return false;">
+                                        <a href="~/Modules/Accounts/Login.aspx" style="text-decoration: none; color: black !important" class="dropdown-item" onclick="document.getElementById('<%= HeadLoginStatus.ClientID %>').click(); return false;">
                                             <i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Log Out
                                         </a>
 
@@ -786,11 +840,11 @@
                                             LogoutPageUrl="~/Modules/Accounts/Login.aspx"
                                             Style="display: none;"
                                             OnLoggedOut="HeadLoginStatus_LoggedOut" />
-                                        
+
 
                                         <div class="dropdown-divider"></div>
                                         <!-- Change Password -->
-                                        <a href="/Modules/Accounts/PasswordChange.aspx" style=" text-decoration:none;color:Black !important " class="dropdown-item">
+                                        <a href="/Modules/Accounts/PasswordChange.aspx" style="text-decoration: none; color: Black !important" class="dropdown-item">
                                             <i class="fa fa-key mr-2" aria-hidden="true"></i>Change Password
                                         </a>
                                     </div>
@@ -813,7 +867,18 @@
             <div class="main-content">
                 <div id="sidebar" runat="server" class="sidebar h-sidebar navbar-collapse collapse"></div>
                 <div class="main">
+
                     <div style="clear: both; height: 10px;"></div>
+                    <div class="row hamburger-row" style="margin-left:-13% !important; display:none  " >
+                        <div class="col-2">
+                            <button type="button" onclick="hideNavbar" id="hamburger" class="hamburger-btn" aria-label="Toggle navigation">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+
+                        </div>
+                    </div>
                     <div class="ace-settings-container" style="display: none" id="ace-settings-container">
                         <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
                             <i class="ace-icon fa fa-cog bigger-130"></i>
@@ -889,6 +954,7 @@
             });
         });
         $(document).ready(function () {
+
             debugger
             $('#ctl00_sidebar').delay(2000).fadeIn();
             var sessionTimeoutWarning ="<%= System.Configuration.ConfigurationManager.AppSettings["SessionTimeoutWarning"].ToString()%>";
@@ -902,6 +968,25 @@
                     " mins! Please Save the data before the session expires";
                 alert(message);
             }
+        });
+        $(document).ready(function () {
+            const $div = $('#ctl00_sidebar');
+            const $button = $('#hamburger');
+
+            // Show the div (by removing .hide-force) on button click
+            $button.on('click', function (e) {
+                e.stopPropagation(); // Prevent document click from firing
+                $div.removeClass('hide-force');
+            });
+
+            // Hide div if click is outside both the div and the button
+            $(document).on('click', function (event) {
+                if (
+                    !$div.is(event.target) && $div.has(event.target).length === 0
+                ) {
+                    $div.addClass('hide-force');
+                }
+            });
         });
 
         $("#ctl00_lblMessage").hide();

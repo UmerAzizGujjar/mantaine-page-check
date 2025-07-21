@@ -1086,7 +1086,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadPOFiles.ashx',
+                    url: '/upload/UploadPOFiles.ashx',
                     data: data,
                     success: function (status) {
 
@@ -1102,6 +1102,12 @@
 
 
     </script>
+    <style>
+        #txtfreight_charges{
+            text-align:right;
+        }
+    </style>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <input type="hidden" id="txtcsmasterid" name="txtcsmasterid" />
@@ -1211,7 +1217,7 @@
    
 
         <div class="row" style=" height: 276px !important; height: auto; margin-top: -10px;overflow:scroll">
-        <table class="table responstable" id="tblItemDescription" style="font-size: 9px !important; overflow: scroll; height: auto;">
+        <table class="table responstable table-bordered" id="tblItemDescription" style="font-size: 9px !important; overflow: scroll; height: auto;">
             <thead>
                 <tr style="position: sticky; top: 0px; z-index: 10;">
                     <th style="width: 29px;">No</th>

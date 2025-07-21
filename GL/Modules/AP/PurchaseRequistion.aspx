@@ -991,7 +991,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadPRFiles.ashx',
+                    url: '/upload/UploadPRFiles.ashx',
                     data: data,
                     success: function (status) {
                     },

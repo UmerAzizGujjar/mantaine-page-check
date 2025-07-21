@@ -20,7 +20,7 @@ namespace PMS
             context.Response.ContentType = "text/plain";
             try
             {
-                string dirFullPath = context.Server.MapPath("~/PurchaseOrderImages/");
+                string dirFullPath = context.Server.MapPath("~/upload/PurchaseOrderImages/");
                 string[] files;
                 files = System.IO.Directory.GetFiles(dirFullPath);
                 string str_image = "";
@@ -35,8 +35,8 @@ namespace PMS
                     {
                         fileExtension = Path.GetExtension(fileName);
                         str_image = POID.ToString() + fileExtension;
-                        string pathToSave = context.Server.MapPath("~/PurchaseOrderImages/") + str_image;
-                        string image_path = "~/PurchaseOrderImages/" + str_image;
+                        string pathToSave = context.Server.MapPath("~/upload/PurchaseOrderImages/") + str_image;
+                        string image_path = "~/upload/PurchaseOrderImages/" + str_image;
                         if (System.IO.File.Exists(context.Server.MapPath(image_path)))
                         {
                             // file exist

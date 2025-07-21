@@ -3,13 +3,85 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+
     <script type="text/javascript">
         $(document).ready(function () {
             LoadTable();
         });
         function editOpen(id) {
             window.open("RegisterUser.aspx?UserID=" + id + "");
+        }
+        function Resetpass(UserID) {
+            var data = JSON.stringify({ UserID: UserID });
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'This action will delete the user permanently!',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Only run this if user clicked "Yes, delete it!"
+                    $.ajax({
+                        type: "POST",
+                        url: "UserList.aspx/Reset_User_Password",
+                        data: data,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            var response = data.d;
+                            if (response == "Password Reset Successfully!") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response,
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            }
+                            else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: response,
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("XHR:", xhr);
+                            console.log("Status:", status);
+                            console.log("Error:", error);
+
+                            if (xhr.responseText) {
+                                alert("Server Error: " + xhr.responseText);
+                            } else {
+                                alert("AJAX Error: " + error);
+                            }
+                        }
+                    });
+                }
+            });
+
         }
         function deleteUser(id) {
             Swal.fire({
@@ -55,15 +127,6 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                    //setTimeout(function () {
-                    //    window.location.href = "../Accounts/Login.aspx";
-                    //}, 2000);
-
-
-
-
-
-
                 },
                 error: function (xhr, status, error) {
                     console.log("XHR:", xhr);
@@ -135,8 +198,9 @@
 
                             var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.UserId + '" onclick="deleteUser(\'' + full.UserId + '\')"><i class="fa fa-trash" ></i></a>';
 
+                            var reset = '<a class="resetbtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.UserId + '" onclick="Resetpass(\'' + full.UserId + '\')"><i class="fa fa-undo"></i></a>';
                             var result;
-                            result = res + Del;
+                            result = res + Del + reset;
                             return result;
                         }, "width": "2%", "orderable": false
                     }

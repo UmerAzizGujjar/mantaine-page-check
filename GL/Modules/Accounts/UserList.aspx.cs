@@ -18,6 +18,35 @@ namespace PMS.Modules.Accounts
 
         }
         [WebMethod]
+        public static string Reset_User_Password(string UserID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            string UserId = Convert.ToString(UserID);
+            if (UserId != null)
+            {
+                Guid userExists = (Guid)(from m in db.aspnet_Users
+                                         where Convert.ToString(m.UserId) == Convert.ToString(UserId)
+                                         select m.UserId).FirstOrDefault();
+                if (userExists != null)
+                {
+                    aspnet_Membership Rest = (from m in db.aspnet_Memberships
+                                              where m.UserId == userExists
+                                              select m).FirstOrDefault();
+                    Rest.Password = "sFzZ/5lcW5h8v+EWSCYpApN1Izc=";
+                    Rest.PasswordSalt = "+F9MPo0sk8oAOfWVLlX1FQ==";
+                    Rest.IsLockedOut = false;
+                    db.SubmitChanges();
+                    return "Password Reset Successfully!";
+                }
+                else
+                {
+                    return "Could'nt Reset Password!";
+                }
+            }
+            return "User does'nt exist!";
+
+        }
+        [WebMethod]
         public static string Delete_User(string UserID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());

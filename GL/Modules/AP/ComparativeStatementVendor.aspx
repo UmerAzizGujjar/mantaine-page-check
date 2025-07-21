@@ -54,6 +54,9 @@
         $(document).ready(function () {
             UserRights();
             FillWarehouse();
+            setTimeout(function () {
+                $('#ddlWarehouse').select2();
+            }, 2500);
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {
@@ -309,7 +312,7 @@
                 var status = $('#txt_status').val();
                 setTimeout(function () {
                     $('#ddlWarehouse').val(data.Ware_House).trigger('change');
-                }, 1500);
+                }, 1000);
                 if (status == "Approved") {
                     UserUnApproveButtonRights();
                     $('#btn_Save').attr("disabled", true);
@@ -1557,7 +1560,7 @@
             data.append('ID', ID);
             $.ajax({
                 type: 'post',
-                url: '../UploadCSFiles.ashx',
+                url: '/upload/UploadCSFiles.ashx',
                 data: data,
                 success: function (status) {
                 },
@@ -2034,7 +2037,7 @@
         </div>
     </div>
 
-    <div class="row">     
+    <div class="row" style="margin-top:10px">     
         <div class="col-lg-8">
             <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-8">
