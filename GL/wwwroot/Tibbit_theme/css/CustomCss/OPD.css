@@ -2,6 +2,10 @@
     background-color: #EFA63E   !important;
 }
 
+.mleft{
+    margin-left:15px !important;
+}
+
 .card {
     border: 1px solid #C4C4C4;
     background-color: #f9f9f9;
@@ -66,7 +70,7 @@
 
     border-radius: 10px;
     padding: 15px;
-    margin-left: 0px;
+    margin-left: 15px;
 }
 #PatientModel{
     margin-top:15px !important; 

@@ -15,6 +15,7 @@
              $('#SavePatient_Data').val('Update');
          }
          else {
+             $('#btnPrint').prop('disabled', true);
              fillmrno();
              $('#ddl_Gender').select2();
              $('#ddl_status').select2();
@@ -24,7 +25,7 @@
              $('#txtcity').select2();
              $('#txtarea').select2();
          }
-        });
+          });
           //Print
           debugger
           function PrintReceipt() {

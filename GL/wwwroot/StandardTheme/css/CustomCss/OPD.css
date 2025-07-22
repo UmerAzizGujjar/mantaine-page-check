@@ -10,6 +10,10 @@
     height: 330px !important,
 }
 
+.mleft {
+    margin-left: 15px !important;
+}
+
 .tooltips {
     position: relative;
     display: inline-block;
@@ -63,10 +67,9 @@
 }
 
 .card3 {
-
     border-radius: 10px;
     padding: 15px;
-    margin-left: 0px;
+    margin-left: 15px;
 }
 #PatientModel{
     margin-top:15px !important; 
