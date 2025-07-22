@@ -869,7 +869,7 @@ namespace PMS
                 newBill.Updated_By = AppConfig.UserID;
                 newBill.Updation_Date = DateTime.Now;
             }
-
+            newBill.Company_ID = AppConfig.Company_ID;
             newBill.Patient_ID = data.Patient_ID;
             newBill.Opd_Id = data.Opd_id;
             newBill.Bill_Date = DateTime.Now;

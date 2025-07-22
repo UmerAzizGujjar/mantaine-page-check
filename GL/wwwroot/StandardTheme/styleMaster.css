@@ -280,6 +280,10 @@ body {
     background-color: #ad170c !important;
     color: white !important;
 }
+.resetbtn {
+    background-color: #ad170c !important;
+    color: black !important;
+}
 
 .fa-pencil {
     color: green !important;

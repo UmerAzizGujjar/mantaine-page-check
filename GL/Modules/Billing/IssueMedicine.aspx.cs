@@ -297,13 +297,16 @@ namespace PMS
             if (data.Bill_ID == 0)
             {
                 newBill = new Ar_Billing();
+                newBill.Company_ID = AppConfig.Company_ID;
                 newBill.Created_By = AppConfig.UserID;
                 newBill.Creation_Date = DateTime.Now;
                 newBill.Bill_No = DBClass.GetNewNumber("Bill_No", "Ar_Billings", "").ToString();
             }
             else
             {
+                
                 newBill = db.Ar_Billings.Where(b => b.Bill_ID == data.Bill_ID).FirstOrDefault();
+                newBill.Company_ID = AppConfig.Company_ID;
                 newBill.Updated_By = AppConfig.UserID;
                 newBill.Updation_Date = DateTime.Now;
             }

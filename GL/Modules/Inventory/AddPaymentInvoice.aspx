@@ -751,7 +751,7 @@
                     data.append('ID', ID);
                     $.ajax({
                         type: 'post',
-                        url: '/upload/UploadPaymentFiles.ashx',
+                        url: '../../UploadPaymentFiles.ashx',
                         data: data,
                         success: function (status) {
 
