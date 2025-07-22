@@ -28,12 +28,12 @@ namespace PMS.Modules.Administrator
                     string id = Request.QueryString["ID"];
                     int maxNo = (from dt in db.sys_Companies
                                  select dt.Company_ID).Max();
-                    string foldercomph = Server.MapPath("~/wwwroot/Tibbit_theme/images/CompanyImages");
+                    string foldercomph = Server.MapPath("~/wwwroot/CompanyImages");
                     if (!string.IsNullOrEmpty(id))
                     {
 
                         string filename = "companyImage" + id + ".png";
-                        string URL1 = "../../wwwroot/Tibbit_theme/images/CompanyImages/" + filename;
+                        string URL1 = "../../wwwroot/CompanyImages/" + filename;
                         string fullcomph1 = Path.Combine(foldercomph, filename);
                         file.SaveAs(fullcomph1);
                         var company = (from dt in db.sys_Companies
@@ -45,7 +45,7 @@ namespace PMS.Modules.Administrator
                     else
                     {
                         string fileName = "companyImage" + maxNo.ToString() + ".png";
-                        string URL = "../../wwwroot/Tibbit_theme/images/CompanyImages/" + fileName;
+                        string URL = "../../wwwroot/CompanyImages/" + fileName;
                         string fullcomph = Path.Combine(foldercomph, fileName);
                         file.SaveAs(fullcomph);
                         var company = (from dt in db.sys_Companies
@@ -118,7 +118,7 @@ namespace PMS.Modules.Administrator
                 {
                     string fileName = Path.GetFileName(query.ImageURL);
 
-                    string imagePath = HttpContext.Current.Server.MapPath("~/wwwroot/Tibbit_theme/images/CompanyImages/" + fileName);
+                    string imagePath = HttpContext.Current.Server.MapPath("~/wwwroot/CompanyImages/" + fileName);
 
                     db.sys_Companies.DeleteOnSubmit(query);
                     db.SubmitChanges();
