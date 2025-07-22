@@ -77,6 +77,7 @@ $(document).ready(function () {
     fillCountry();
     fillProvince();
     fillCashInHand();
+    FillHREmployee();
 
 });
 
@@ -482,6 +483,32 @@ function FillCasher() {
 
     return options;
 }
+
+function FillHREmployee() {
+    var options;
+
+    $.ajax({
+        url: 'OPD.aspx/GetHREmployee',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            var data = response.d ? JSON.parse(response.d) : response;
+            $.each(data, function (key, value) {
+                options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+            });
+            $('#ddlcashier').html(options);
+
+
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching area data:', error);
+        }
+    });
+
+    return options;
+}
+
 function fillgender() {
     var options = '<option value="0">Please Select</option>';
 
