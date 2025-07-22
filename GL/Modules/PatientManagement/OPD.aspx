@@ -385,7 +385,7 @@
 
                 <!-- Checkboxes Section -->
                 <div class="row " style="width: 100%;">
-                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop">
+                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop mleft">
                         <label for="chckcardissue" class="ml-2">Card</label>
                         <input type="checkbox" id="chckcardissue" runat="server" class="custom-checkbox" onclick="DisableCardPrint()" />
                     </div>  
@@ -419,9 +419,6 @@
                <div class="col-lg-2 col-md-3 col-sm-4" id="divcard">
                 <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCard" onclick="getcardAmount()" value="Card" />
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
-                <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" />
-            </div>
             <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                 <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
             </div>
@@ -430,10 +427,13 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6" id="divvoucher">
                 <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" />
-            </div>         
-        </div>
-        </div>
-    </div>
+            </div>  
+            <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
+             <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" style="display: none;" />
+            </div>
+                  </div>
+              </div>
+         </div>
 
     <%--patient modal--%>
     <div id="PatientModel" class="modal fade" tabindex="-1" role="dialog">
