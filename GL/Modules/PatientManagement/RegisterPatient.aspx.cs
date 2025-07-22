@@ -203,7 +203,8 @@ namespace PMS.Modules.PatientManagement
             else
             {
                 pat = new Reg_patient();
-                pat.Patient_No = DBClass.getMaxEntry_No("Reg_patient", "Patient_No");
+                string PatientNumber = (DBClass.getMaxEntry_No("Reg_patient", "Patient_No")).ToString();
+                pat.Patient_No =Convert.ToInt32(PatientNumber);
                 pat.Full_Name = Full_Name;
                 pat.walkin = false;
                 pat.Father_Name = Relation;
@@ -225,7 +226,13 @@ namespace PMS.Modules.PatientManagement
                 pat.State = State;
                 pat.Blood_Group = Blood_Group;
                 pat.Country = Country;
-                pat.mr_no_sequence = db.GetSequentialMrNo();
+                var companyID = AppConfig.Company_ID;
+                var company = (from dt in db.sys_Companies
+                               where dt.Company_ID == companyID
+                               select dt).FirstOrDefault();
+                string companyCode = company.CompanyCode;
+                string MR_Sequence = companyCode + "-" + PatientNumber;
+                pat.mr_no_sequence = MR_Sequence;
 
 
                 db.Reg_patients.InsertOnSubmit(pat);
