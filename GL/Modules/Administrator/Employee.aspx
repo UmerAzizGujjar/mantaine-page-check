@@ -408,8 +408,18 @@
                   success: function (data) {
                       debugger;
                       var ini_patientID = data.d;
-
-                      toasterMessage(false, "Data Saved");
+                      Swal.fire({
+                          icon: 'success',
+                          title: 'Success!',
+                          text: 'Data Saved Successfully',
+                          showConfirmButton: false,
+                          timer: 2500,
+                          customClass: {
+                              popup: 'swal-big-popup',
+                              title: 'swal-big-title',
+                              htmlContainer: 'swal-big-text'
+                          }
+                      });
 
                   },
                   error: function (xhr, status, error) {
