@@ -128,6 +128,27 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
+        [WebMethod]
+        public static string GetHREmployee()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from hr in db.HR_Employees
+                              where hr.is_Employee == true
+                              && hr.userid == Convert.ToString(AppConfig.UserID)
+                              select new
+                              {
+                                  hr.Emp_ID,
+                                  hr.Emp_Name,
+                              }).ToList();
+
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string Getpanel()
         {

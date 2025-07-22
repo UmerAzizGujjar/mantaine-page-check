@@ -174,8 +174,10 @@
 
 
                   debugger;
-
-                  $("#ddluser").val(empData.user);
+                    setTimeout(function () {
+                        $("#ddluser").val(empData.user);
+                        }, 2500)
+                  
                   $("#ddluser").val(empData.ddluser);
                   $("#txtPatient_Time").val(empData.txtPatient_Time);
                   $("#TxtTime_In").val(empData.TxtTime_In);
@@ -206,6 +208,7 @@
                       $("#btnSave").val(empData.btnSave);
                       $("#ChkDoctor").prop("checked", empData.ChkDoctor);
                       $("#ChkVisting").prop("checked", empData.ChkVisting);
+                      $("#ChkEmployee").prop("checked", empData.ChkEmployee);
                       $("#sun").prop("checked", empData.isSun);
                       $("#mon").prop("checked", empData.isMon);
                       $("#tue").prop("checked", empData.isTue);

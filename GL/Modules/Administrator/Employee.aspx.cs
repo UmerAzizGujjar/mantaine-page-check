@@ -150,6 +150,7 @@ namespace PMS
                     txtRemarks = employee.Remarks,
                     ChkDoctor = employee.IsDoctor.HasValue ? Convert.ToBoolean(employee.IsDoctor) : false,
                     ChkVisting = employee.IS_Visting.HasValue ? Convert.ToBoolean(employee.IS_Visting) : false,
+                    ChkEmployee = employee.is_Employee.HasValue ? Convert.ToBoolean(employee.is_Employee) : false,
                     txtConsultant_Charges = employee.Consultant_Charges.ToString(),
                     btnSave = "Update",
                 };
