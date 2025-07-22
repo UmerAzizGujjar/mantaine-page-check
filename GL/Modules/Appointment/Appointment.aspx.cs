@@ -260,7 +260,8 @@ on DM.Rouster_id equals DD.Rouster_id
             else
             {
                 pat = new Reg_patient();
-                pat.Patient_No = DBClass.getMaxEntry_No("Reg_patient", "Patient_No");
+                string PatientNumber = (DBClass.getMaxEntry_No("Reg_patient", "Patient_No")).ToString();
+                pat.Patient_No = Convert.ToInt32(PatientNumber);
                 //pat.Mr_No_seq = db.GetSequentialMrNo();
                 pat.Full_Name = Full_Name;
                 //pat.RelationType = RelationType;
@@ -275,7 +276,13 @@ on DM.Rouster_id equals DD.Rouster_id
                 pat.Created_by = AppConfig.UserID;
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
-                pat.mr_no_sequence = db.GetSequentialMrNo();
+                var companyID = AppConfig.Company_ID;
+                var company = (from dt in db.sys_Companies
+                               where dt.Company_ID == companyID
+                               select dt).FirstOrDefault();
+                string companyCode = company.CompanyCode;
+                string MR_Sequence = companyCode + "-" + PatientNumber;
+                pat.mr_no_sequence = MR_Sequence;
                 pat.Permanent_Address = houseno;
                 pat.stno_mno = stno;
                 pat.city = city;
