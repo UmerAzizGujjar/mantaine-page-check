@@ -644,6 +644,8 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
+
         [WebMethod]
         public static string GetBasicInfo(int reg_id)
         {
