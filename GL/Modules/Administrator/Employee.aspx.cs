@@ -150,6 +150,7 @@ namespace PMS
                     txtRemarks = employee.Remarks,
                     ChkDoctor = employee.IsDoctor.HasValue ? Convert.ToBoolean(employee.IsDoctor) : false,
                     ChkVisting = employee.IS_Visting.HasValue ? Convert.ToBoolean(employee.IS_Visting) : false,
+                    ChkEmployee = employee.is_Employee.HasValue ? Convert.ToBoolean(employee.is_Employee) : false,
                     txtConsultant_Charges = employee.Consultant_Charges.ToString(),
                     btnSave = "Update",
                 };
@@ -505,6 +506,11 @@ namespace PMS
                 else
                     employee.IS_Visting = false;
 
+                if (dataa.IsEmployee)
+                    employee.is_Employee = Convert.ToBoolean(true);
+                else
+                    employee.is_Employee = false;
+
                 if (dataa.buttonVal == "Save")
                 {
                     employee.Created_By = AppConfig.UserID;
@@ -646,6 +652,7 @@ namespace PMS
             public bool isSat { get; set; }
             public bool isDoc { get; set; }
             public bool isVisiting { get; set; }
+            public bool IsEmployee { get; set; }
             public string hdfAccount_ID { get; set; }
             public string hdfParent_Code { get; set; }
             public string hdfAccount_Serial { get; set; }

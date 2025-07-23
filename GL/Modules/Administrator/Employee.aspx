@@ -174,8 +174,10 @@
 
 
                   debugger;
-
-                  $("#ddluser").val(empData.user);
+                    setTimeout(function () {
+                        $("#ddluser").val(empData.user);
+                        }, 2500)
+                  
                   $("#ddluser").val(empData.ddluser);
                   $("#txtPatient_Time").val(empData.txtPatient_Time);
                   $("#TxtTime_In").val(empData.TxtTime_In);
@@ -206,6 +208,7 @@
                       $("#btnSave").val(empData.btnSave);
                       $("#ChkDoctor").prop("checked", empData.ChkDoctor);
                       $("#ChkVisting").prop("checked", empData.ChkVisting);
+                      $("#ChkEmployee").prop("checked", empData.ChkEmployee);
                       $("#sun").prop("checked", empData.isSun);
                       $("#mon").prop("checked", empData.isMon);
                       $("#tue").prop("checked", empData.isTue);
@@ -331,6 +334,7 @@
               var isSat = $('#sat').prop('checked');
               var isDoc = $('#ChkDoctor').prop('checked');
               var isVisiting = $('#ChkVisting').prop('checked');
+              var IsEmployee = $('#ChkEmployee').prop('checked');
 
               var hdfParent_Code = $('#hdfParent_Code').val();
               var hdfAccount_Serial = $('#hdfAccount_Serial').val();
@@ -388,9 +392,11 @@
                   "hdfLevel": hdfLevel,
                   "hdfAccount_Code": hdfAccount_Code,
                   "txtGovt_Hospital": txtGovt_Hospital,
+                  "IsEmployee": IsEmployee,
                   "hdnEmp": hdnEmp,
                   "lblMessage": lblMessage,
                   "CustomerJSON": CustomerJSON
+
               };
               var data = JSON.stringify({ dataa: dataObj });
               console.log(data);
@@ -405,8 +411,18 @@
                   success: function (data) {
                       debugger;
                       var ini_patientID = data.d;
-
-                      toasterMessage(false, "Data Saved");
+                      Swal.fire({
+                          icon: 'success',
+                          title: 'Success!',
+                          text: 'Data Saved Successfully',
+                          showConfirmButton: false,
+                          timer: 2500,
+                          customClass: {
+                              popup: 'swal-big-popup',
+                              title: 'swal-big-title',
+                              htmlContainer: 'swal-big-text'
+                          }
+                      });
 
                   },
                   error: function (xhr, status, error) {
@@ -701,15 +717,20 @@
                  <input type="text" id="txtdependent" name="txtdependent" />
 
             </div>
-                  <div class="col-lg-2 col-md-4 col-sm-6 custom-label-checkbox">
+                  <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
+                 <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
                 <label id="LblIsDoctor" for="ChkDoctor">Doctor</label>
-                <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
+                
 
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6 custom-label-checkbox">
-                <label id="LblIsVisting" for="ChkVisting">Visting</label>
+            <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
                 <input type="checkbox" id="ChkVisting" name="ChkVisting" class="chkwdth" />
+                <label id="LblIsVisting" for="ChkVisting">Visting</label>
+            </div>
 
+            <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
+                <input type="checkbox" id="ChkEmployee" name="ChkEmployee" class="chkwdth" />
+                <label id="LblEmployee" for="ChkEmployee">Employee</label>
             </div>
 
 

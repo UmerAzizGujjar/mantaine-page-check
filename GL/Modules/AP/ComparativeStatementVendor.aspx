@@ -1560,7 +1560,7 @@
             data.append('ID', ID);
             $.ajax({
                 type: 'post',
-                url: '/upload/UploadCSFiles.ashx',
+                url: '../../UploadCSFiles.ashx',
                 data: data,
                 success: function (status) {
                 },

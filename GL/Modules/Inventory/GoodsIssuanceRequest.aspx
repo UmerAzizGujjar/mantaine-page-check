@@ -585,13 +585,14 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '/upload/UploadMaterialIssue.ashx',
+                    url: '../../UploadMaterialIssue.ashx',
                     data: data,
                     success: function (status) {
                     },
                     processData: false,
                     contentType: false,
                     error: function () {
+                        alert("hehe");
                     }
                 });
             }

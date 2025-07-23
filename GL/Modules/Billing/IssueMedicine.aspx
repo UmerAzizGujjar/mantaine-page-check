@@ -1147,6 +1147,7 @@
                 $(this).find('td:eq(1)').text(key + 1);
             })
         }
+
         function CalculateTotals() {
             debugger;
             var Amount = 0;
@@ -1165,14 +1166,18 @@
                 ttlDisAmnt += DisAmt
             });
             debugger;
-            Math.round($('#txtTotalPayable').val((AmntFinal).toFixed()), 0);
+            Math.round($('#txtTotalPayable').val((AmntFinal).toFixed(0)), 0);
+
             $('#txtDisAmt').val(parseInt(Math.round(ttlDisAmnt)));
             var Disc = $('#txtDisAmt').val();
+
             if (Disc == 0) {
                 $('#txtDisPer').val(0);
             }
             $('#txtNetPayable').val(Math.round(NetAmount));
-            var AmtReceived = $('#txtAmountReceived').val() || 0;
+            $('#txtAmountReceived').val(Math.round(NetAmount));
+            var AmtReceived = $('#txtAmountReceived').val();
+
             if ($('#txtTotalPayable').val() != '') {
                 if (AmtReceived != '') {
                     debugger;
@@ -1186,6 +1191,7 @@
             else {
                 $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
             }
+
         }
 
         function toasterMessage(isError = false, title, message) {
