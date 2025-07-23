@@ -194,7 +194,7 @@ namespace PMS
                 var result = (from dv in db.DataValues
                               join ds in db.ValueSets
                               on dv.ValueSet_ID equals ds.ValueSet_ID
-                              where ds.ValueSet_Name == "Department"
+                              where ds.ValueSet_Name == "Patient Main Category"
                               select new
                               {
                                   dv.DataValue_Name,
