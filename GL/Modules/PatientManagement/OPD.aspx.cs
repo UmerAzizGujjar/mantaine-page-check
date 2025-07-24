@@ -128,6 +128,27 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
+        [WebMethod]
+        public static string GetHREmployee()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from hr in db.HR_Employees
+                              where hr.is_Employee == true
+                              && hr.userid == Convert.ToString(AppConfig.UserID)
+                              select new
+                              {
+                                  hr.Emp_ID,
+                                  hr.Emp_Name,
+                              }).ToList();
+
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string Getpanel()
         {
@@ -387,7 +408,8 @@ namespace PMS.Modules.PatientManagement
             else
             {
                 pat = new Reg_patient();
-                pat.Patient_No = DBClass.getMaxEntry_No("Reg_patient", "Patient_No");
+                string PatientNumber = (DBClass.getMaxEntry_No("Reg_patient", "Patient_No")).ToString();
+                pat.Patient_No = Convert.ToInt32(PatientNumber);
                 pat.Full_Name = Full_Name;
                 pat.walkin = false;
                 pat.Father_Name = Relation;
@@ -408,7 +430,13 @@ namespace PMS.Modules.PatientManagement
                 pat.area = area;
                 pat.val_city = city_val;
                 pat.val_area = area_val;
-                pat.mr_no_sequence = db.GetSequentialMrNo();
+                var companyID = AppConfig.Company_ID;
+                var company = (from dt in db.sys_Companies
+                               where dt.Company_ID == companyID
+                               select dt).FirstOrDefault();
+                string companyCode = company.CompanyCode;
+                string MR_Sequence = companyCode + "-" + PatientNumber;
+                pat.mr_no_sequence = MR_Sequence;
                 pat.Country = Country;
                 pat.Province = Province;
 
@@ -616,6 +644,8 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
+
         [WebMethod]
         public static string GetBasicInfo(int reg_id)
         {

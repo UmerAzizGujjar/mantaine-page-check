@@ -73,7 +73,7 @@ $(document).ready(function () {
     showhide();
     fillEmployee();
     fillpanel();
-    FillCasher();
+    FillHREmployee();
     fillCountry();
     fillProvince();
     fillCashInHand();
@@ -458,18 +458,18 @@ function FillPatientType() {
 }
 
 
-function FillCasher() {
-    var options = '<option value="0">Please Select</option>';
+function FillHREmployee() {
+    var options;
 
     $.ajax({
-        url: 'OPD.aspx/GetCashier',
+        url: 'OPD.aspx/GetHREmployee',
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (response) {
             var data = response.d ? JSON.parse(response.d) : response;
             $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
             });
             $('#ddlcashier').html(options);
 

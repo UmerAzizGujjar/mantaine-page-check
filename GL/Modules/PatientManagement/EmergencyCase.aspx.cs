@@ -303,7 +303,8 @@ namespace PMS
             else
             {
                 pat = new Reg_patient();
-                pat.Patient_No = DBClass.getMaxEntry_No("Reg_patient", "Patient_No");
+                string PatientNumber = (DBClass.getMaxEntry_No("Reg_patient", "Patient_No")).ToString();
+                pat.Patient_No = Convert.ToInt32(PatientNumber);
                 pat.Full_Name = Full_Name;
                 pat.Father_Name = Relation;
                 pat.Relation_prefix = RelationType;
@@ -317,7 +318,13 @@ namespace PMS
                 pat.Created_by = AppConfig.UserID;
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
-                pat.mr_no_sequence = db.GetSequentialMrNo();
+                var companyID = AppConfig.Company_ID;
+                var company = (from dt in db.sys_Companies
+                               where dt.Company_ID == companyID
+                               select dt).FirstOrDefault();
+                string companyCode = company.CompanyCode;
+                string MR_Sequence = companyCode + "-" + PatientNumber;
+                pat.mr_no_sequence = MR_Sequence;
                 pat.walkin = true;
                 db.Reg_patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
