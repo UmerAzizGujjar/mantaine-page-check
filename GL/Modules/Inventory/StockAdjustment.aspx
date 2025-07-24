@@ -58,6 +58,7 @@
         }
         
         function loadtokenInputsDefaultPRNo() {
+            debugger;
             var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
 
             if (warehouseVal === "0" || warehouseVal === null) {
@@ -69,7 +70,7 @@
                 $('#ctl00_MainContent_txtItem_Code').tokenInput("destroy");
             } catch (e) { }
 
-            $('#ctl00_MainContent_txtItem_Code').tokenInput("../../json.aspx?Table=INV_ItemsforStockAdj", {
+            $('#ctl00_MainContent_txtItem_Code').tokenInput("../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal), {
                 tokenLimit: 1,
                 onAdd: function (item) {
                     debugger;

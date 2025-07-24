@@ -7,6 +7,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web;
 using static PMS.Vendor;
 
 namespace PMS
@@ -102,16 +103,86 @@ namespace PMS
             }
             return accountID;
         }
+        [WebMethod]
+        public static string LoadNewAccountToCreate()
+        {
+            string sql = "";
+            string[] accountLength;
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            sys_Parm AccountPram = new sys_Parm();
+            AccountPram = (from tbl in db.sys_Parms
+                           where tbl.Name == "Trade & Other Payables"
+
+                           select tbl).FirstOrDefault();
+            if (AccountPram != null && AccountPram.Code != null)
+            {
+                GL_Account account = new GL_Account();
+
+                var tbl = (from config in db.Configurations
+                           where config.Configuration_Name == "Chart of Accounts Level"
+                           select config).SingleOrDefault();
+                accountLength = tbl.Configuration_Value.Split(',');
+                sql = "Select account_id from gl_Accounts where Account_Code='" + AccountPram.Code + "' and Book_ID=" + AppConfig.Book_ID;
+                string value = DBClass.getField(sql);
+                var NewhdfParent_Code = "";
+                if (value == "There is no row at position 0.")
+                {
+                    NewhdfParent_Code = AccountPram.Code.ToString();
+                }
+                else
+                {
+                    NewhdfParent_Code = value;
+                }
+
+                sql = "Select isNUll(MAX(Convert(int, Account_Serial)),0) from gl_accounts where parent_code=" + value;
+                string maxcode = DBClass.getField(sql);
+                int newcode = Convert.ToInt32(maxcode);
+                newcode += 1;
+                string newAccountcode = newcode.ToString("000");
+                var NewhdfAccount_Code = AccountPram.Code + newAccountcode;
+                var NewhdfAccount_Serial = newAccountcode;
+                var NewhdfLevel = "4";
+
+                var result = new
+                {
+                    NewhdfParent_Code,
+                    NewhdfAccount_Code,
+                    NewhdfAccount_Serial,
+                    NewhdfLevel,
+
+                };
+
+
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                return js.Serialize(result);
+            }
+            else
+            {
+                var Newlblmessage = "Please assign Customers account in sys_Params table.";
+                var result = new
+                {
+                    Newlblmessage,
+
+                };
+
+
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                return js.Serialize(result);
+            }
+
+        }
 
 
         [WebMethod]
-        public static int SaveVendor(string btnSave, string AllItemDetail)
+        public static string SaveVendor(string btnSave, string AllItemDetail)
         {
             AP_Vendor obj = new AP_Vendor();
             string VendorId = "";
             AP_Vendor lstItem = new AP_Vendor();
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             JavaScriptSerializer oJS = new JavaScriptSerializer();
+            GL_Account accounts = new GL_Account();
+            int accountID = 0;
             var record = oJS.Deserialize<VendorList>(AllItemDetail);
             if (record.VendorId != "")
             {
@@ -142,7 +213,15 @@ namespace PMS
                 }
                 if (record.Ismanual == "False" || record.Ismanual == null)
                 {
-                    lstItem.Account_ID = Convert.ToInt32(LoadAutoAccount(Convert.ToBoolean(record.Ismanual)));
+                    if (record.hdfAccount_ID != "")
+                    {
+                        accountID = Convert.ToInt32(record.hdfAccount_ID);
+                        accounts = (from tbl in db.GL_Accounts
+                                    where tbl.Account_ID == accountID
+                                    select tbl).FirstOrDefault();
+                        accounts.Account_Name = record.VendorName;
+                        db.SubmitChanges();
+                    }
                 }
                 lstItem.TaxPayerTyp = record.TaxTyp;
                 lstItem.Company_ID = Convert.ToInt32(record.CompanyTyp);
@@ -173,10 +252,26 @@ namespace PMS
                 {
                     obj.Account_ID = Convert.ToInt32(record.PayablCode);
                 }
-                if (record.Ismanual == "False"|| record.Ismanual ==null)
-                {
-                    obj.Account_ID = Convert.ToInt32(LoadAutoAccount(Convert.ToBoolean(record.Ismanual)));
-                }
+                else
+                    {
+
+                        if (record.hdfParent_Code == "")
+                        {
+                            return "";
+                        }
+
+                        accounts.Account_Name = record.VendorName;
+                        accounts.Account_Code = record.hdfAccount_Code;
+                        accounts.Parent_Code = Convert.ToInt32(record.hdfParent_Code);
+                        accounts.Levels = Convert.ToInt32(record.hdfLevel);
+                        accounts.Account_Serial = record.hdfAccount_Serial;
+                        accounts.Active = true;
+                        accounts.Book_ID = AppConfig.Book_ID;
+                        db.GL_Accounts.InsertOnSubmit(accounts);
+                        db.SubmitChanges();
+                        accountID = accounts.Account_ID;
+                    }
+                
                 obj.TaxPayerTyp = record.TaxTyp;
                 obj.CompanyType_Id =record.CompanyTyp;
                 obj.Company_ID = AppConfig.Company_ID;
@@ -257,7 +352,7 @@ namespace PMS
                 db.SubmitChanges();
             }
 
-            return int.Parse(VendorId);
+            return (VendorId);
         }
 
         [WebMethod]
@@ -412,6 +507,11 @@ namespace PMS
             public string IsActive { get; set; }
             public string Ismanual { get; set; }
             public string VendorCode { get; set; }
+            public string hdfAccount_ID { get; set; }
+            public string hdfParent_Code { get; set; }
+            public string hdfAccount_Serial { get; set; }
+            public string hdfLevel { get; set; }
+            public string hdfAccount_Code { get; set; }
             public List<PersonList> PersonList { get; set; }
             public List<GeneralItemlist> GeneralItemlist { get; set; }
             public List<PharmacyItemlist> PharmacyItemlist { get; set; }

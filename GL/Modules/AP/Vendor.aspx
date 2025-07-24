@@ -29,14 +29,17 @@
             GetNewVendorNo();
             loadPayableCode();
             FillDropDownList();
-           <% if (Request.QueryString["ID"] != null)
-        { %>
-            $('#btnSave').val('Update');
+
             var VenId = '<%= Request.QueryString["ID"]%>';
-            $('#txtVendorId').val(VenId);
-            LoadVendorDetail(VenId);
-           <% }
-         %>
+            if (VenId != null) {
+                $('#btnSave').val('Update');
+                var VenId = '<%= Request.QueryString["ID"]%>';
+                $('#txtVendorId').val(VenId);
+                LoadVendorDetail(VenId);
+            }
+            else {
+                loadnewaccountToCreate();
+            }
         })
         var id = '<% =Request.QueryString["ID"] %>';
         function printPerson() {
@@ -50,6 +53,20 @@
                 url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + id;
             }
             window.open(url, '_blank');
+        }
+        function loadnewaccountToCreate() {
+
+            PageMethods.LoadNewAccountToCreate(function (data) {
+                var NewAccountData = JSON.parse(data);
+
+                $("#hdfParent_Code").val(NewAccountData.NewhdfParent_Code);
+                $("#hdfAccount_Code").val(NewAccountData.NewhdfAccount_Code);
+                $("#hdfAccount_Serial").val(NewAccountData.NewhdfAccount_Serial);
+                $("#hdfLevel").val(NewAccountData.NewhdfLevel);
+            }
+                , function (err) {
+                    alert("Error: " + err.get_message());
+                });
         }
         function printVendorCompany() {
             debugger;
@@ -134,10 +151,30 @@
                 setTimeout(function () {
                     $('#ddlCom').val(data.CompanyType_Id).trigger('change');
                 }, 1000);
+
+                if (data.Account_ID != null) {
+                    PageMethods.LoadGLAccount(parseInt(data.Account_ID), function (data) {
+                        var AccountData = JSON.parse(data);
+                        $("#ddlPayabl").val(AccountData.txtAccount_Code_Name).trigger();
+                        $("#hdfAccount_Name").val(AccountData.hdfAccount_Name);
+                        $("#hdfAccount_Code").val(AccountData.hdfAccount_Code);
+                        $("#hdfParent_Code").val(AccountData.hdfParent_Code);
+                        $("#hdfAccount_Serial").val(AccountData.hdfAccount_Serial);
+                        $("#hdfLevel").val(AccountData.hdfLevel);
+                        $("#hdfAccount_ID").val(AccountData.hdfAccount_ID);
+                    }
+                        , function (err) {
+                            alert("Error: " + err.get_message());
+                        });
+                }
+
+
                 LoadVendorPerson(VenId);
                 LoadVendorGeneralItem(VenId);
                 LoadVendorPharmacyItem(VenId);
                 LoadVendorCompany(VenId);
+
+
             },
                 function (error) {
                     alert(error.get_message());
@@ -578,7 +615,10 @@
                 return false;
             }
             var table = $('#tblItemDescription');
-
+            var hdfParent_Code = $('#hdfParent_Code').val();
+            var hdfAccount_Serial = $('#hdfAccount_Serial').val();
+            var hdfLevel = $('#hdfLevel').val();
+            var hdfAccount_Code = $('#hdfAccount_Code').val();
             var tableGeneralItems = $('#VendorGeneralItemlist');
             var tablePharmacyItems = $('#VendorPharmacyItemlist');
             var tableCompany = $('#VendorCompanieslist');
@@ -613,7 +653,8 @@
                 }
             });
             $('#btnsave').attr('disabled', true);
-            var AllItemDetail = { 'IsActive': active, 'Ismanual': Chkmanual, 'VendorId': VendorId, 'VendorName': VendorName, 'VendorType': VendorType, 'Address': Address, 'CreditDays': CreditDays, 'Country': Country, 'Region': Region, 'City': City, 'MobNo': MobNo, 'PhnNo': PhnNo, 'DrugLicenceNo': DrugLicenceNo, 'Stn': Stn, 'Ntn': Ntn, 'Cnic': Cnic, 'Email': Email, 'FocalPerson': Foc, 'PayablCode': AccountId, 'TaxTyp': TaxTyp, 'VendorCode': VendorCode, 'CompanyTyp': CompanyTyp, 'PersonList': Person_list, 'GeneralItemlist': GeneralItem_list, 'PharmacyItemlist': PharmacyItem_list, 'Companylist': Company_list };
+            var AllItemDetail = {
+                'IsActive': active, 'Ismanual': Chkmanual, 'VendorId': VendorId, 'VendorName': VendorName, 'VendorType': VendorType, 'Address': Address, 'CreditDays': CreditDays, 'Country': Country, 'Region': Region, 'City': City, 'MobNo': MobNo, 'PhnNo': PhnNo, 'DrugLicenceNo': DrugLicenceNo, 'Stn': Stn, 'Ntn': Ntn, 'Cnic': Cnic, 'Email': Email, 'FocalPerson': Foc, 'PayablCode': AccountId, 'TaxTyp': TaxTyp, 'VendorCode': VendorCode, 'CompanyTyp': CompanyTyp, 'PersonList': Person_list, 'GeneralItemlist': GeneralItem_list, 'PharmacyItemlist': PharmacyItem_list, 'Companylist': Company_list ,'hdfAccount_ID': hdfAccount_ID,'hdfParent_Code': hdfParent_Code,'hdfAccount_Serial': hdfAccount_Serial,'hdfLevel': hdfLevel,'hdfAccount_Code': hdfAccount_Code};
             PageMethods.SaveVendor(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 Swal.fire({
                     icon: 'success',
@@ -760,6 +801,14 @@
                 </label>
                 <select id="ddlPayabl" class="form-control">
                 </select>
+
+                 <input type="hidden" id="hdfAccount_Name" name="hdfAccount_Name" />
+                <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
+                <input type="hidden" id="hdfParent_Code" name="hdfParent_Code" />
+                <input type="hidden" id="hdfAccount_Serial" name="hdfAccount_Serial" />
+                <input type="hidden" id="hdfLevel" name="hdfLevel" />
+                <input type="hidden" id="hdfAccount_ID" name="hdfAccount_ID" />
+                <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
             </div>
 
             <div class="col-lg-3 col-md-6 col-sm-12">
@@ -943,6 +992,7 @@
                 <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'Vendor.aspx'" />
             </div>
         </div>
+                   
     </div>
 
 </asp:Content>
