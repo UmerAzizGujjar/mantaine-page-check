@@ -129,16 +129,16 @@
                <div id="forgot_pass_viv">
                    <p style="font-size:20px;color:red">Forgot Password</p>
                    <br />
-                            <label style="margin-left:-88px" for="lblphone" >Phone Number:</label>
+                            <label  for="lblphone" >Phone Number:</label>
                              <asp:TextBox style="margin-left:15px;width:65% !important" ID="txtPhone" runat="server"  />
                         </div>
                 <span id="Span1" runat="server" style="color: red; font-size: 12px;"></span>
                 <br />
-                <asp:Button ID="Button1" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
-                <asp:Button ID="Button2" Cssclass="btn-primry" runat="server" Text="Request OTP" OnClick="btnrequestOTP" />
+                <asp:Button ID="Button1" Style="width:125px" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
+                <asp:Button ID="Button2" Style="width:125px" Cssclass="btn-primry" runat="server" Text="Request OTP" OnClick="btnrequestOTP" />
             </asp:Panel>
              <asp:Panel ID="Panel_changePasword" runat="server">
-             <p style="color: #438eb9  !important; font-size: 12px;">Enter One Time PassCode Sent To You</p>
+             <p style="color: black  !important; font-size: 12px;">Enter One Time PassCode Sent To You</p>
         <div id="changepassowrd" class="d-flex justify-content-between">
             <asp:TextBox ID="pass1" runat="server" ClientIDMode="Static" MaxLength="1" 
                 oninput="moveToNext(this, 'pass2')" onkeydown="handleBackspace(this, null)" autocomplete="off"

@@ -91,14 +91,12 @@ namespace PMS
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RegisterRoutes(RouteTable.Routes);
-            //tibbitFooter.Visible = false;
-            //StandardFooter.Visible = false;
+         
 
             if (Session["UserName"] == null || Session["Company_Name"] == null || Session["Company_ID"] == null || Session["Book_ID"] == null)
             {
                 Session.Abandon();
-                Response.Redirect("~/Login");
+                Response.Redirect("~/Modules/Accounts/Login.aspx");
 
             }
             if (!IsPostBack)
@@ -136,14 +134,7 @@ namespace PMS
 
         }
 
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            routes.MapPageRoute(
-                "CleanLoginRoute",     // Route name
-                "Login",               // URL shown in browser
-                "~/Modules/Accounts/Login.aspx" // Actual file path
-            );
-        }
+       
 
         int i = 1;
         string Menu_Name = "";
