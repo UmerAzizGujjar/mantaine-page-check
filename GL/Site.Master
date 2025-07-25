@@ -642,7 +642,7 @@
     <form runat="server" id="MasterPageForm1">
         <asp:ToolkitScriptManager ID="cmManager" runat="server" EnablePageMethods="true" />
         <div class="page">
-            <div class="loginDisplay" style="background-color: #438eb9">
+            <div class="loginDisplay" >
                 <div id="navbar" style="height: 60px !important" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
                     <div class="navbar-container ace-save-state row" id="navbar-container">
                         <!-- Left Side Logo + Company -->

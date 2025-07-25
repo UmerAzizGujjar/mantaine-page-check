@@ -150,3 +150,123 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     border-radius: 12px !important;
     height: 40px
 }
+
+.btn-primry, .btn-primary:focus {
+    background-color: #EFA63E !important;
+    border: none !important;
+    color: black !important;
+    padding: 10px 20px !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+}
+
+    /* Hover effect */
+    .btn-primry:hover, .btn-primary:hover {
+        background-color: black !important; /* Slightly darker orange */
+        color: white !important;
+        box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Active state */
+    .btn-primry:active, .open .btn-primary.dropdown-toggle {
+        background-color: black !important; /* Even darker orange for pressed effect */
+        box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* No-border buttons on hover and active states */
+    .btn-primry.no-border:hover, .btn-primary.no-border:active {
+        border-color: black !important; /* Darker orange instead of blue */
+    }
+
+    .btn-primry.no-hover:hover, .btn-primary.no-hover:active {
+        background-color: #EFA63E !important;
+    }
+
+    /* Active button state */
+    .btn-primry.active {
+        background-color: #EFA63E !important;
+        border-color: #c97b1e !important; /* Darker shade */
+    }
+
+    /* Active button with no border */
+    .btn-primry.no-border.active {
+        background-color: #EFA63E !important;
+        border-color: #b5691a !important;
+    }
+
+    /* Disabled button styles */
+    .btn-primry.disabled,
+    .btn-primary[disabled],
+    fieldset[disabled] .btn-primary,
+    .btn-primary.disabled:hover,
+    .btn-primary[disabled]:hover,
+    fieldset[disabled] .btn-primary:hover,
+    .btn-primary.disabled:focus,
+    .btn-primary[disabled]:focus,
+    fieldset[disabled] .btn-primary:focus,
+    .btn-primary.disabled:active,
+    .btn-primary[disabled]:active,
+    fieldset[disabled] .btn-primary:active,
+    .btn-primary.disabled.active,
+    .btn-primary[disabled].active,
+    fieldset[disabled] .btn-primary.active {
+        background-color: #EFA63E !important;
+        border-color: #EFA63E !important;
+        opacity: 0.6 !important; /* Make disabled buttons appear faded */
+        cursor: not-allowed !important;
+    }
+
+.btn-gray, .btn-gray:focus {
+    background-color: transparent !important;
+    border: 2px solid #EFA63E !important; /* Orange border */
+    color: #EFA63E !important; /* Orange text */
+    padding: 8px 18px !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease-in-out !important;
+    box-shadow: 2px 2px 5px rgb(64 64 64 / 50%) !important;
+}
+
+    /* Hover effect */
+    .btn-gray:hover, .btn-gray:active, .open .btn-gray.dropdown-toggle {
+        background-color: #EFA63E !important;
+        color: white !important;
+    }
+
+    /* No-border variant */
+    .btn-gray.no-border:hover, .btn-gray.no-border:active {
+        border-color: #EFA63E !important;
+    }
+
+    /* No-hover variant */
+    .btn-gray.no-hover:hover, .btn-gray.no-hover:active {
+        background-color: transparent !important;
+        color: #EFA63E !important;
+    }
+
+    /* Active state */
+    .btn-gray.active {
+        background-color: transparent !important;
+        border-color: #EFA63E !important;
+        color: #EFA63E !important;
+    }
+
+    /* Disabled state */
+    .btn-gray.disabled, .btn-gray[disabled],
+    fieldset[disabled] .btn-gray,
+    .btn-gray.disabled:hover, .btn-gray[disabled]:hover,
+    fieldset[disabled] .btn-gray:hover,
+    .btn-gray.disabled:focus, .btn-gray[disabled]:focus,
+    fieldset[disabled] .btn-gray:focus,
+    .btn-gray.disabled:active, .btn-gray[disabled]:active,
+    fieldset[disabled] .btn-gray:active,
+    .btn-gray.disabled.active, .btn-gray[disabled].active,
+    fieldset[disabled] .btn-gray.active {
+        background-color: transparent !important;
+        border-color: #EFA63E !important;
+        color: #EFA63E !important;
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+    }
