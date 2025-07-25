@@ -214,7 +214,7 @@
                     dataType: "json",
                     success: function (data) {
 
-                        window.location.href = "/Modules/Administrator/MenuView.aspx";
+                        window.location.href = "../Administrator/MenuView.aspx";
 
                     },
                     error: function (xhr, status, error) {
