@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Net.PeerToPeer;
 using System.Text;
 using System.Web;
+using System.Web.Routing;
+using System.Web.Script.Serialization;
 using System.Web.Security;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data.SqlClient;
-using System.Web.Services;
-using System.Web.Script.Serialization;
-using System.Diagnostics.Eventing.Reader;
 using Telerik.Web.UI;
-using System.Net.PeerToPeer;
 
 namespace PMS
 {
@@ -90,14 +91,15 @@ namespace PMS
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            RegisterRoutes(RouteTable.Routes);
             //tibbitFooter.Visible = false;
             //StandardFooter.Visible = false;
 
             if (Session["UserName"] == null || Session["Company_Name"] == null || Session["Company_ID"] == null || Session["Book_ID"] == null)
             {
                 Session.Abandon();
-                Response.Redirect("~/Modules/Accounts/Login.aspx", true);
+                Response.Redirect("~/Login");
+
             }
             if (!IsPostBack)
             {
@@ -134,7 +136,14 @@ namespace PMS
 
         }
 
-
+        public static void RegisterRoutes(RouteCollection routes)
+        {
+            routes.MapPageRoute(
+                "CleanLoginRoute",     // Route name
+                "Login",               // URL shown in browser
+                "~/Modules/Accounts/Login.aspx" // Actual file path
+            );
+        }
 
         int i = 1;
         string Menu_Name = "";
