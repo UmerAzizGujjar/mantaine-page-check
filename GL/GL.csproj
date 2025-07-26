@@ -239,7 +239,7 @@
     <Content Include="Modules\Accounts\ChangePassword.aspx" />
     <Content Include="Modules\Accounts\ChangePasswordSuccess.aspx" />
     <Content Include="Modules\Accounts\ForgetPassword.aspx" />
-    <Content Include="Modules\Accounts\Login.aspx" />
+    <Content Include="Login.aspx" />
     <Content Include="Modules\Accounts\ManageRoles.aspx" />
     <Content Include="Modules\Accounts\ManageUserRoles.aspx" />
     <Content Include="Modules\Accounts\Register.aspx" />
@@ -22305,11 +22305,11 @@
     <Compile Include="Modules\Accounts\ForgetPassword.aspx.designer.cs">
       <DependentUpon>ForgetPassword.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Accounts\Login.aspx.cs">
+    <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Modules\Accounts\Login.aspx.designer.cs">
+    <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Accounts\ManageRoles.aspx.cs">

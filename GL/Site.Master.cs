@@ -96,7 +96,7 @@ namespace PMS
             if (Session["UserName"] == null || Session["Company_Name"] == null || Session["Company_ID"] == null || Session["Book_ID"] == null)
             {
                 Session.Abandon();
-                Response.Redirect("~/Modules/Accounts/Login.aspx");
+                Response.Redirect("~/Login.aspx");
 
             }
             if (!IsPostBack)

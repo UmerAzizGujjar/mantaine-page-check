@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Log In" Language="C#" MasterPageFile="~/SiteNoMenu.master" AutoEventWireup="true"
-    CodeBehind="Login.aspx.cs" Inherits="PMS.Account.Login" %>
+    CodeBehind="Login.aspx.cs" Inherits="PMS.Login" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -134,7 +134,7 @@
                         </div>
                 <span id="Span1" runat="server" style="color: red; font-size: 12px;"></span>
                 <br />
-                <asp:Button ID="Button1" Style="width:125px" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
+                <asp:Button ID="Button1" Style="margin-left:110px;width:125px" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
                 <asp:Button ID="Button2" Style="width:125px" Cssclass="btn-primry" runat="server" Text="Request OTP" OnClick="btnrequestOTP" />
             </asp:Panel>
              <asp:Panel ID="Panel_changePasword" runat="server">
