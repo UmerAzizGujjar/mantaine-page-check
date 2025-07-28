@@ -2389,7 +2389,7 @@
                     if ($('#txtTotalPayable').val() != '')
                     {
                         if (AmtReceived != '') {
-                            $('#txtBalances').val(((AmtReceived + AdvanceAmount) - (net + PreviousBalance ) ).toFixed());
+                            $('#txtBalances').val(((net + PreviousBalance) - (AmtReceived + AdvanceAmount)   ).toFixed());
                         }
                         else
                             $('#txtBalances').val(net.toFixed());
