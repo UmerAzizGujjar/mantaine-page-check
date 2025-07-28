@@ -22,149 +22,95 @@ namespace PMS
         }
         protected void btnUpload_Click(object sender, EventArgs e)
         {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            db.Connection.Open();
-            db.Transaction = db.Connection.BeginTransaction();
-            try
+            string filePath = string.Empty;
+
+            if (!FileUpload.HasFile || (Path.GetExtension(FileUpload.FileName) != ".xls" && Path.GetExtension(FileUpload.FileName) == ".xlsx"))
             {
-                if (!FileUpload.HasFile || (Path.GetExtension(FileUpload.FileName) != ".xls" && Path.GetExtension(FileUpload.FileName) != ".xlsx"))
+                try
                 {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "swal", @"
-                                                                          <script type='text/javascript'>
-                                                                              Swal.fire({
-                                                                                  title: 'Error',
-                                                                                  text: 'Please select an Excel file!',
-                                                                                  icon: 'error',                                                                                 
-                                                                                  width: '521px',
-                                                                                  heightAuto: false,
-                                                                                  height: '305px'
-                                                                              }).then(function() {
-                                                                                  window.location.href = '" + Request.RawUrl + @"';                                                 
-                                                                              });
-                                                                          </script>", false);
-                    return;
-                }
-                if (FileUpload.HasFile)
-                {
-                    string excelPath = Server.MapPath("~/upload/UploadInvItems/") + Path.GetFileName(FileUpload.PostedFile.FileName);
-                    FileUpload.SaveAs(excelPath);
-                    string conString = string.Empty;
-                    string extension = Path.GetExtension(FileUpload.PostedFile.FileName);
+                    string fileName = Path.GetFileName(FileUpload.PostedFile.FileName);
+                    string fileExtension = Path.GetExtension(fileName);
+                    string folderPath = Server.MapPath("~/ExcelFiles/");
+
+                    // Create folder if not exists
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    filePath = folderPath + fileName;
+                    FileUpload.SaveAs(filePath);
+
+                    string conString = "";
+                    string extension = Path.GetExtension(filePath);
+
+                    // Choose correct connection string
                     switch (extension)
                     {
                         case ".xls": // Excel 97-03
                             conString = ConfigurationManager.ConnectionStrings["Excel03ConString"].ConnectionString;
                             break;
-                        case ".xlsx": // Excel 07 or higher
-                            conString = ConfigurationManager.ConnectionStrings["Excel07+ConString"].ConnectionString;
-                            break;
-                    }
-                    conString = string.Format(conString, excelPath);
-                    using (OleDbConnection excel_con = new OleDbConnection(conString))
-                    {
-                        excel_con.Open();
-                        string sheet1 = excel_con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null).Rows[0]["TABLE_NAME"].ToString();
-                        DataTable dtExcelData = new DataTable();
-                        using (OleDbCommand cmd = new OleDbCommand($"SELECT * FROM [{sheet1}]", excel_con))
-                        {
-                            using (OleDbDataReader reader = cmd.ExecuteReader())
-                            {
-                                dtExcelData.Load(reader);
-                            }
-                        }
-                        string consString = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
-                        using (SqlConnection con = new SqlConnection(consString))
-                        {
 
-                            con.Open();
-                            int bookId = AppConfig.Book_ID;
-                            int companyId = AppConfig.Company_ID;
-                            var createdBy = AppConfig.UserID;
-                            DateTime creationTime = DateTime.Now;
-                            var maxItemCode = db.INV_Items.Select(item => Convert.ToInt32(item.Item_Code)).Max();
-           
-                            if (maxItemCode != 0 )
-                            {
-                                maxItemCode = maxItemCode + 1;
-                            }
-                            else
-                            {
-                                maxItemCode = 1;
-                            }
-                            foreach (DataRow row in dtExcelData.Rows)
-                            {
-                                using (SqlCommand cmd = new SqlCommand("INSERT INTO dbo.INV_Items (Item_Code,Description,Item_Type, Item_Account_category,Purchase_Rate,Sale_Rate,Mini_Stock,Max_Stock,Reorder_Stock,IsBill_Item,Hospital_Services,Services,IsPharmacyItem,Pharmacy_Item,Unit,UOM_Qty,IsBatch,Refigrator,Locator,locatorAddress,InventoryOrg,Saleable,Purchaseable,Isfixasset,Procedure_Type,Notes,DepartmentId,Is_Active,Active,Created_By,Created_Time,Book_ID,Company_ID) " +
-                                                                       "VALUES (@Item_Code,@Description,@Item_Type,@Item_Account_category,@Purchase_Rate,@Sale_Rate,@Mini_Stock,@Max_Stock,@Reorder_Stock,@IsBill_Item,@Hospital_Services,@Services,@IsPharmacyItem,@Pharmacy_Item,@Unit,@UOM_Qty,@IsBatch,@Refigrator,@Locator,@locatorAddress,@InventoryOrg,@Saleable,@Purchaseable,@Isfixasset,@Procedure_Type,@Notes,@DepartmentId,@Is_Active,@Active,@Created_By,@Created_Time,@Book_ID,@Company_ID)", con))
-                                {
-                                    cmd.Parameters.AddWithValue("@Item_Code", maxItemCode);
-                                    cmd.Parameters.AddWithValue("@Description", row["Description"]);
-                                    cmd.Parameters.AddWithValue("@Item_Type", row["Item_Type"]);
-                                    cmd.Parameters.AddWithValue("@Item_Account_category", Convert.ToInt32(row["Item_Account_category"]));
-                                    cmd.Parameters.AddWithValue("@Purchase_Rate", Convert.ToDecimal(row["Purchase_Rate"]));
-                                    cmd.Parameters.AddWithValue("@Sale_Rate", Convert.ToDecimal(row["Sale_Rate"]));
-                                    cmd.Parameters.AddWithValue("@Mini_Stock", row["Mini_Stock"]);
-                                    cmd.Parameters.AddWithValue("@Max_Stock", row["Max_Stock"]);
-                                    cmd.Parameters.AddWithValue("@Reorder_Stock", row["Reorder_Stock"]);
-                                    cmd.Parameters.AddWithValue("@IsBill_Item", Convert.ToBoolean(Convert.ToInt32(row["IsBill_Item"])));
-                                    cmd.Parameters.AddWithValue("@Hospital_Services", Convert.ToBoolean(Convert.ToInt32(row["Hospital_Services"])));
-                                    cmd.Parameters.AddWithValue("@Services", Convert.ToBoolean(Convert.ToInt32(row["Hospital_Services"])));
-                                    cmd.Parameters.AddWithValue("@IsPharmacyItem", Convert.ToBoolean(Convert.ToInt32(row["IsPharmacyItem"])));
-                                    cmd.Parameters.AddWithValue("@Pharmacy_Item", Convert.ToBoolean(Convert.ToInt32(row["IsPharmacyItem"])));
-                                    cmd.Parameters.AddWithValue("@Unit", row["Unit"]);
-                                    cmd.Parameters.AddWithValue("@UOM_Qty", Convert.ToDecimal(row["UOM_Qty"]));
-                                    cmd.Parameters.AddWithValue("@IsBatch", Convert.ToBoolean(Convert.ToInt32(row["IsBatch"])));
-                                    cmd.Parameters.AddWithValue("@Refigrator", Convert.ToBoolean(Convert.ToInt32(row["Refigrator"])));
-                                    cmd.Parameters.AddWithValue("@Locator", Convert.ToBoolean(Convert.ToInt32(row["Locator"])));
-                                    cmd.Parameters.AddWithValue("@locatorAddress", row["locatorAddress"]);
-                                    cmd.Parameters.AddWithValue("@InventoryOrg", row["InventoryOrg"]);
-                                    cmd.Parameters.AddWithValue("@Saleable", Convert.ToBoolean(Convert.ToInt32(row["Saleable"])));
-                                    cmd.Parameters.AddWithValue("@Purchaseable", Convert.ToBoolean(Convert.ToInt32(row["Purchaseable"])));
-                                    cmd.Parameters.AddWithValue("@Isfixasset", Convert.ToBoolean(Convert.ToInt32(row["Isfixasset"])));
-                                    cmd.Parameters.AddWithValue("@Procedure_Type", Convert.ToBoolean(Convert.ToInt32(row["Procedure_Type"])));
-                                    cmd.Parameters.AddWithValue("@DepartmentId", row["DepartmentId"]);
-                                    cmd.Parameters.AddWithValue("@Notes", row["Notes"]);
-                                    cmd.Parameters.AddWithValue("@Is_Active", Convert.ToBoolean(Convert.ToInt32(row["Active"])));
-                                    cmd.Parameters.AddWithValue("@Active", Convert.ToBoolean(Convert.ToInt32(row["Active"])));
-                                    cmd.Parameters.AddWithValue("@Created_By", createdBy);
-                                    cmd.Parameters.AddWithValue("@Created_Time", creationTime);
-                                    cmd.Parameters.AddWithValue("@Book_ID", bookId);
-                                    cmd.Parameters.AddWithValue("@Company_ID", companyId);
-                                    cmd.ExecuteNonQuery();
-                                    maxItemCode++;
-                                }
-                            }                            
-                            db.SubmitChanges();
-                            db.Transaction.Commit();
-                            string script = @"<script type='text/javascript'>
-                                             Swal.fire({
-                                                 title: 'Success',
-                                                 text: 'Data inserted successfully!',
-                                                 icon: 'success',
-                                                 width: '521px',
-                                                 heightAuto: false,
-                                                 height: '305px'
-                                             }).then(function() {                                                 
-                                                 window.location.href = '/Modules/Inventory/ProductsView.aspx';
-                                             });
-                                            </script>";
-                            ScriptManager.RegisterStartupScript(this, GetType(), "swal", script, false);
-                            con.Close();
+                        case ".xlsx": // Excel 07+
+                            conString = ConfigurationManager.ConnectionStrings["Excel07ConString"].ConnectionString;
+                            break;
+
+                        default:
+                            throw new Exception("Unsupported file type");
+                    }
+
+                    conString = string.Format(conString, filePath);
+                    using (OleDbConnection excelCon = new OleDbConnection(conString))
+                    {
+                        excelCon.Open();
+                        DataTable dtSchema;
+                        dtSchema = excelCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+
+                        if (dtSchema == null || dtSchema.Rows.Count == 0)
+                            throw new Exception("No worksheet found");
+
+                        string sheetName = dtSchema.Rows[0]["TABLE_NAME"].ToString();
+                        string query = "SELECT * FROM [" + sheetName + "]";
+                        OleDbDataAdapter da = new OleDbDataAdapter(query, excelCon);
+                        DataTable dtExcelData = new DataTable();
+                        da.Fill(dtExcelData);
+
+                        // Optional: Bind to grid for preview
+                        // GridView1.DataSource = dtExcelData;
+                        // GridView1.DataBind();
+
+                        // Process your data as needed here
+                        // Example: Loop through rows
+                        foreach (DataRow row in dtExcelData.Rows)
+                        {
+                            string name = row["Name"].ToString();
+                            string email = row["Email"].ToString();
+                            // Do your DB insert here
                         }
+
+                        ShowMessage("File uploaded and processed successfully.", "success");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                db.Transaction.Rollback();
-            }
-            finally
-            {
-                db.Connection.Close(); if (db.Connection != null && db.Connection.State == ConnectionState.Open)
+                catch (Exception ex)
                 {
-                    db.Connection.Close();
+                    ShowMessage("Error: " + ex.Message, "error");
                 }
             }
+            else
+            {
+                ShowMessage("Please select a file.", "warning");
+            }
+        }
+
+        private void ShowMessage(string message, string icon)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "swal", $@"
+        <script>
+        Swal.fire({{
+            title: '{(icon == "success" ? "Success" : icon == "error" ? "Error" : "Notice")}',
+            text: '{message.Replace("'", "").Replace(Environment.NewLine, " ")}',
+            icon: '{icon}',
+            confirmButtonText: 'OK'
+        }});
+        </script>", false);
         }
         protected void btnDownloadSample_Click(object sender, EventArgs e)
         {

@@ -2,10 +2,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
-    <style type="text/css">
-  
-</style>
-
     <script type="text/javascript">  
         $(document).ready(function () {
 
@@ -135,7 +131,6 @@
                 }
             });
         }
-
         function LoadPage() {
             $("#tblResult").DataTable({
                 "processing": true,
@@ -237,7 +232,6 @@
 
             });
         }
-
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

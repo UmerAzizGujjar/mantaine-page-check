@@ -608,7 +608,15 @@ function getGeneralFee() {
         success: function (resp) {
             debugger;
             var data = JSON.parse(resp.d);
-            $('#txtfees').val(data.Code);
+            var Category = $('#ddlPatient_Type').val();
+            if (Category == "06") {
+                $('#txtfees').val("0")
+            }
+        else
+            {
+                $('#txtfees').val(data.Code);
+            }
+            
 
         },
         error: function (response) {
@@ -757,7 +765,36 @@ function fillArea() {
     return options;
 
 }
+var editrights;
+function AllowOPdEdit() {
+    debugger;
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/checlkeditRights",
+        data: "",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: true,
+        success: function (data) {
+            debugger;
+            editrights = data.d;
 
+            if (editrights == "true") {
+                console.log(editrights);
+                $('#btnsave').attr('disabled', false);
+            }
+            else {
+                $('#btnsave').attr('disabled', false);
+            }
+
+        },
+        failure: function () {
+            alert("Error");
+        }
+    });
+
+
+}
 function fillCountry() {
     var options = '<option value="0">Please Select</option>';
     $.ajax({
@@ -1033,8 +1070,8 @@ function SaveData() {
     if (Fees == "") {
         Fees = 0;
     }
-
-    if (!pat_no || pat_no === "0") {
+    txtPatientNo
+    if (!txtPatientNo || txtPatientNo === "0") {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1480,7 +1517,7 @@ function getpanelRate() {
 function loadPatientDetail(OPDID) {
     $('#btnsave').val('Update');
     $('#btnsave').attr('disabled', true);
-
+    AllowOPdEdit();
 
     $.ajax({
         type: "POST",
@@ -1663,7 +1700,25 @@ function loaddata() {
         /*  $('#txtfees').val('');*/
         $('#emp_id').hide();
     }
+    else if (Category == "06") {
+        $('#fees').show();
+        $('#department').show();
+        $('#doctor').hide();
+        $('#pnlcompany').hide();
+        $('#employee').hide();
+        $('#refference').hide();
+        /*        $('#txtfees').val('');*/
+        $('#discount').show();
+        $('#empname').hide();
+        $('#designation').hide();
+        $('#rollno').hide();
+        $('#class').hide();
+        $('#section').hide();
+        $('#dependent').hide();
 
+        $('#emp_id').hide();
+
+    }
 }
 
 $(document).ready(function () {

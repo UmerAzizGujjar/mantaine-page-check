@@ -18,7 +18,7 @@ using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
 using System.Net.PeerToPeer;
 
-namespace PMS.Account
+namespace PMS
 {
     public partial class Login : System.Web.UI.Page
     {

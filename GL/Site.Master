@@ -642,7 +642,7 @@
     <form runat="server" id="MasterPageForm1">
         <asp:ToolkitScriptManager ID="cmManager" runat="server" EnablePageMethods="true" />
         <div class="page">
-            <div class="loginDisplay" style="background-color: #438eb9">
+            <div class="loginDisplay" >
                 <div id="navbar" style="height: 60px !important" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
                     <div class="navbar-container ace-save-state row" id="navbar-container">
                         <!-- Left Side Logo + Company -->
@@ -829,7 +829,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
 
                                         <!-- Logout with icon -->
-                                        <a href="~/Modules/Accounts/Login.aspx" style="text-decoration: none; color: black !important" class="dropdown-item" onclick="document.getElementById('<%= HeadLoginStatus.ClientID %>').click(); return false;">
+                                        <a href="~/Login.aspx" style="text-decoration: none; color: black !important" class="dropdown-item" onclick="document.getElementById('<%= HeadLoginStatus.ClientID %>').click(); return false;">
                                             <i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Log Out
                                         </a>
 
@@ -837,7 +837,7 @@
                                         <asp:LoginStatus ID="HeadLoginStatus" runat="server"
                                             LogoutAction="Redirect"
                                             LogoutText=""
-                                            LogoutPageUrl="~/Modules/Accounts/Login.aspx"
+                                            LogoutPageUrl="~/Login.aspx"
                                             Style="display: none;"
                                             OnLoggedOut="HeadLoginStatus_LoggedOut" />
 

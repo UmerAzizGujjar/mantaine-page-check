@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Log In" Language="C#" MasterPageFile="~/SiteNoMenu.master" AutoEventWireup="true"
-    CodeBehind="Login.aspx.cs" Inherits="PMS.Account.Login" %>
+    CodeBehind="Login.aspx.cs" Inherits="PMS.Login" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -129,16 +129,16 @@
                <div id="forgot_pass_viv">
                    <p style="font-size:20px;color:red">Forgot Password</p>
                    <br />
-                            <label style="margin-left:-88px" for="lblphone" >Phone Number:</label>
+                            <label  for="lblphone" >Phone Number:</label>
                              <asp:TextBox style="margin-left:15px;width:65% !important" ID="txtPhone" runat="server"  />
                         </div>
                 <span id="Span1" runat="server" style="color: red; font-size: 12px;"></span>
                 <br />
-                <asp:Button ID="Button1" Style="border-radius: 5px; border: none; width: 60px; background-color: #a9a9a9; height: 25px; color: white;margin-left:25%" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
-                <asp:Button ID="Button2" Style="border-radius: 5px; border: none; width: 88px; background-color: #438eb9 ; height: 25px; color: white;" runat="server" Text="Request OTP" OnClick="btnrequestOTP" />
+                <asp:Button ID="Button1" Style="margin-left:110px;width:125px" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
+                <asp:Button ID="Button2" Style="width:125px" Cssclass="btn-primry" runat="server" Text="Request OTP" OnClick="btnrequestOTP" />
             </asp:Panel>
              <asp:Panel ID="Panel_changePasword" runat="server">
-             <p style="color: #438eb9  !important; font-size: 12px;">Enter One Time PassCode Sent To You</p>
+             <p style="color: black  !important; font-size: 12px;">Enter One Time PassCode Sent To You</p>
         <div id="changepassowrd" class="d-flex justify-content-between">
             <asp:TextBox ID="pass1" runat="server" ClientIDMode="Static" MaxLength="1" 
                 oninput="moveToNext(this, 'pass2')" onkeydown="handleBackspace(this, null)" autocomplete="off"
@@ -160,8 +160,8 @@
                   <span id="otpChangePassError" runat="server" style="color: red; font-size: 12px;"></span>
                 
                  <br />
-                 <asp:Button ID="Button3" Style="border-radius: 5px; border: none; width: 60px; background-color: #484B4D; height: 25px; color: white;" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
-                 <asp:Button ID="Button4" Style="border-radius: 5px; border: none; width: 60px; background-color: #438eb9 ; height: 25px; color: white;" runat="server" Text="Next" OnClick="btnverify_Click_changePass" />
+                 <asp:Button ID="Button3" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
+                 <asp:Button ID="Button4" cssclass="btn-primry" runat="server" Text="Next" OnClick="btnverify_Click_changePass" />
              </asp:Panel>
             <asp:Panel ID="messagePanel" runat="server" Width="200px" CssClass="popupContainer">
                 <div class="popupHeaderWraper">

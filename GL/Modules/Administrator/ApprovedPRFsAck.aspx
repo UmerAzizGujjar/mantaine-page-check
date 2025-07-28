@@ -1,97 +1,211 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovedPRFsAck.aspx.cs" Inherits="PMS.ApprovedPRFsAck" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <style>
-  #ctl00_MainContent_GridView1 tbody tr td table {
-font-size:20px ;
-    border-collapse: separate;
-    border-spacing: 20px; /* Space between inner <td>s */
-}
-</style>
-    <script type="text/javascript">        
+                    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+<script type="text/javascript">  
     $(document).ready(function () {
-        debugger
-        $('#txt_search').keyup(function (e) {
-            debugger
-            var searchText = $('#txt_search').val().toLowerCase();
-            var tbl = document.getElementById('ctl00_MainContent_GridView1');
-            debugger
-            for (var i = 1; i < tbl.rows.length; i++) {
-                var row = tbl.rows[i];
-                var prnum = row.cells[1].innerText.toLowerCase();
-                var prdate = row.cells[2].innerText.toLowerCase();
-                var department = row.cells[3].innerText.toLowerCase();
-                var remarks = row.cells[5].innerText.toLowerCase();
-                var status = row.cells[6].innerText.toLowerCase();
-              
 
-                if (searchText.trim() === '' ||
-                    prnum.includes(searchText) ||
-                    prdate.includes(searchText) ||
-                    remarks.includes(searchText) ||
-                    status.includes(searchText) ||
-                    department.includes(searchText)
-                ) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+        LoadPage();
+        CheckUserRights();
+
+
+    });
+    function editOpen(id) {
+        window.open("/Modules/AP/PurchaseRequistion.aspx?ID=" + id, "_blank");
+
+    }
+    function CheckUserRights() {
+        $.ajax({
+            type: "POST",
+            url: "ApprovedPRFsAck.aspx/CheckUserRights",  // Update to match your page name
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.d === false) {
+
+                    $('#btnApproveHide').hide();
+
                 }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", error);
             }
         });
-    });
-    </script>
+    }
+    function ApproveSelectedIds() {
+        var selectedIds = [];
+
+        $('#tblResult input[type="checkbox"].rowCheck:checked').each(function () {
+            var id = $(this).data('id');
+            selectedIds.push(id);
+        });
+        console.log(selectedIds);
+        if (selectedIds.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select at least one row',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+
+            return;
+        }
+
+        // Send to backend via AJAX
+        $.ajax({
+            type: "POST",
+            url: "ApprovedPRFsAck.aspx/ApproveSelectedPRs", // Update this
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ PRIds: selectedIds }),
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data saved successfully.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                alert("Error: " + error);
+            }
+        });
+    }
+    function LoadPage() {
+        $("#tblResult").DataTable({
+            "processing": true,
+            "serverSide": true,
+            "dom": 'lBfrtip',
+            "lengthChange": true,
+            "buttons": [
+                {
+                    text: 'PR Notify',
+                    className: 'dt-button buttons-copy buttons-html5',
+                    attr: {
+                        id: 'btnApproveHide'
+                    },
+                    action: function () {
+                        ApproveSelectedIds();
+                    }
+                },
+                'copy', 'excel', 'pdf',
+            ],
+            "filter": true,
+            "ajax": function (data, callback, settings) {
+                $.ajax({
+                    type: "POST",
+                    url: "ApprovedPRFsAck.aspx/ViewList",
+                    data: JSON.stringify({
+                        draw: data.draw,
+                        start: data.start,
+                        length: data.length,
+                        sortColumn: data.columns[data.order[0].column].name,
+                        sortColumnDirection: data.order[0].dir,
+                        searchValue: data.search.value
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        callback({
+                            draw: response.d.draw,
+                            recordsTotal: response.d.recordsTotal,
+                            recordsFiltered: response.d.recordsFiltered,
+                            data: response.d.data
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            },
+            "columns": [
+                {
+                    render: function (data, type, full, meta) {
+                        var checkboxId = 'chkSelect_' + full.PRID;
+                        return '<span style="display:inline-block;width:30px;">' +
+                            '<input id="' + checkboxId + '" type="checkbox" class="rowCheck" data-id="' + full.PRID + '">' +
+                            '</span>';
+                    }, "width": "2%", "orderable": false
+                },
+                { "data": "PRID", "visible": false, "width": "0%", "orderable": false },
+                { "data": "PRNO", "name": "mr_no_sequence", "width": "8%", "orderable": true },
+                {
+                    "data": "PRDATE", "name": "PRDATE",
+                    "render": function (data, type, full) {
+                        debugger;
+                        var date = full.PRDATE;
+                        date = moment(date).format('DD-MMM-YYYY');
+                        return date;
+                    }, "width": "9%"
+                },
+                { "data": "DEPARTMENT", "width": "13%", "orderable": false },
+                { "data": "CREATOR", "width": "13%", "orderable": false },
+                { "data": "REMARKS", "width": "10%", "orderable": false },
+                { "data": "STATUS", "width": "10%", "orderable": false },
+                { "data": "APPROVEBY", "width": "10%", "orderable": false },
+                {
+                    render: function (data, type, full) {
+                        return '<a href="#" onclick="editOpen(' + full.PRID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                    }, "width": "7%", "orderable": false
+                }
+            ],
+            "initComplete": function (settings, json) {
+                var lengthContainer = document.querySelector('#tblResult_length');
+                var lengthDropdown = document.querySelector('#tblResult_length select');
+                var label = document.querySelector('#tblResult_length label');
+
+                if (lengthDropdown && label && lengthContainer) {
+                    var labelText = document.createElement('span');
+                    labelText.textContent = 'Show entries ';
+                    labelText.style.marginTop = '10px';
+                    labelText.style.display = 'inline-block';
+
+                    lengthDropdown.style.width = '60px';
+                    label.innerHTML = '';
+                    label.style.display = 'inline-flex';
+                    label.style.marginTop = '17px';
+                    label.appendChild(labelText);
+                    label.appendChild(lengthDropdown);
+                } else {
+                    console.log("Length dropdown, label, or container not found");
+                }
+            }
+
+        });
+    }
+</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <input type="text" id="txt_search" style="width: 357px!important;" name="txt_search" placeholder="Search..." />
-      <div class="table-container" style="overflow: scroll; height: 400px;">
-<asp:GridView ID="GridView1" CssClass="custom-gridview" runat="server" AutoGenerateColumns="False" EnableModelValidation="True">
-    <Columns>
-        <asp:TemplateField HeaderStyle-Width="30px">
-            <ItemTemplate>
-                <asp:CheckBox ID="chkSelect" Text="" runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="PR ID" Visible="False">
-            <ItemTemplate>
-                <asp:Label ID="lblPR_ID" runat="server" Text='<%# Bind("PR_Id") %>'></asp:Label>
-            </ItemTemplate>
-            <EditItemTemplate>
-                <asp:TextBox ID="txtPR_ID" runat="server" Text='<%# Bind("PR_Id") %>'></asp:TextBox>
-            </EditItemTemplate>
-        </asp:TemplateField>
-        <asp:BoundField DataField="PR_Num" HeaderText="PR No." ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="70px" ItemStyle-Width="70px" />
-        <asp:BoundField DataField="PRDate" HeaderText="PR Date" HeaderStyle-Width="100px" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:d}" ItemStyle-Width="100px" />
-         <asp:BoundField DataField="Department" HeaderText="Department" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="150px" /> 
-        <asp:BoundField DataField="Creator" HeaderText="Creator" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="120px" />
-        <asp:TemplateField HeaderText="Remarks">
-            <ItemTemplate>
-                <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("Remarks") %>' CssClass="remarks-label"></asp:Label>
-            </ItemTemplate>
-            <ItemStyle Width="550px" />
-        </asp:TemplateField>
-        <asp:BoundField DataField="Status" HeaderStyle-Width="100px" HeaderStyle-HorizontalAlign="Center" HeaderText="Status" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
-        <asp:BoundField DataField="Approve_By" HeaderText="Approve By" ItemStyle-Width="180px" />
-        <asp:TemplateField HeaderStyle-Width="80px">
-            <HeaderTemplate>
-                Actions
-            </HeaderTemplate>
-            <ItemTemplate>
-                <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# "../AP/PurchaseRequistion.aspx?ID="+ Eval("PR_Id")%>' Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
-            </ItemTemplate>
-            <HeaderStyle CssClass="header-center-align" />
-        </asp:TemplateField>       
-    </Columns>
-    <HeaderStyle CssClass="gridview-header" />
-</asp:GridView>
-  </div>
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-4">
-                  <asp:Button ID="btnPRNotify" CssClass="btn btn-primry" Text="PR Notify" runat="server" SkinID="btnAutoWidth" OnClick="btnPRNotify_Click" />
-                </div>
-              
-            </div>
-        </div>
-    </div>
+             <div class="table-container col-lg-12 col-md-12 col-sm-10">
+    <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
+        <thead id="ihead">
+            <tr>
+                <th>Select</th>
+                <th style="display: none;">PR ID</th>
+                <th>PR No.</th>
+                <th>PR Date</th>
+                <th>Department</th>
+                <th>Creator</th>
+                <th>Remarks</th>
+                <th>Status</th>
+                <th>Approve By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="ibody">
+        </tbody>
+    </table>
+</div>
+
    
 </asp:Content>

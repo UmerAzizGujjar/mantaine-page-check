@@ -1,90 +1,285 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApproveCS.aspx.cs" Inherits="PMS.ApproveCS" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-      #ctl00_MainContent_GridView1 tbody tr td table {
-font-size:20px ;
-    border-collapse: separate;
-    border-spacing: 20px; /* Space between inner <td>s */
-}
-    </style>
+      <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+<script type="text/javascript">        
+    $(document).ready(function () {
+        LoadPage(); 
+        CheckUserRights();
+    });
+    function editOpen(id) {
+        window.open("/Modules/AP/ComparativeStatementVendor.aspx?CS_ID=" + id, "_blank");
+
+    }
+    function CheckUserRights() {
+        $.ajax({
+            type: "POST",
+            url: "ApproveCS.aspx/CheckUserRights",  // Update to match your page name
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.d === false) {
+
+                    $('#btnApproveHide').hide();
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", error);
+            }
+        });
+    }
+    function RejectSelectedIds() {
+        var selectedData = [];
+
+        $('#tblResult input[type="checkbox"].rowCheck:checked').each(function () {
+            var id = $(this).data('id');
+
+            // Assuming input is in the same row as checkbox
+            var inputVal = $(this).closest('tr').find('input.rowInput').val();
+
+            selectedData.push({ CSId: id, DecisionRemarks: inputVal });
+        });
+
+        console.log(selectedData);
+
+        if (selectedData.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to select Patient',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select at least one row',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+             return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "ApproveCS.aspx/ApproveSelectedCSs",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ CSItems: selectedData }),
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data saved successfully.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+             },
+            error: function (xhr, status, error) {
+                alert("Error: " + error);
+            }
+        });
+    }
+    function ApproveSelectedIds() {
+        var selectedData = [];
+
+        $('#tblResult input[type="checkbox"].rowCheck:checked').each(function () {
+            var id = $(this).data('id');
+
+            // Assuming input is in the same row as checkbox
+            var inputVal = $(this).closest('tr').find('input.rowInput').val();
+
+            selectedData.push({ CSId: id, DecisionRemarks: inputVal });
+        });
+
+        console.log(selectedData);
+
+        if (selectedData.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select at least one row',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+             return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "ApproveCS.aspx/ApproveSelectedCSs",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ CSItems: selectedData }),
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data saved successfully.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+             },
+            error: function (xhr, status, error) {
+                alert("Error: " + error);
+            }
+        });
+    }
+    function LoadPage() {
+        $("#tblResult").DataTable({
+            "processing": true,
+            "serverSide": true,
+            "dom": 'lBfrtip',
+            "lengthChange": true,
+            "buttons": [
+                {
+                    text: 'Reject CSs',
+                    className: 'dt-button buttons-copy buttons-html5',
+                    action: function () {
+                        RejectSelectedIds();
+                    }
+                },
+                {
+                    text: 'Approve CSs',
+                    className: 'dt-button buttons-copy buttons-html5',
+                    attr: {
+                        id: 'btnApproveHide'
+                    },
+                    action: function () {
+                        ApproveSelectedIds();
+                    }
+                },
+                'copy', 'excel', 'pdf',
+            ],
+            "filter": true,
+            "ajax": function (data, callback, settings) {
+                $.ajax({
+                    type: "POST",
+                    url: "ApproveCS.aspx/ViewList",
+                    data: JSON.stringify({
+                        draw: data.draw,
+                        start: data.start,
+                        length: data.length,
+                        sortColumn: data.columns[data.order[0].column].name,
+                        sortColumnDirection: data.order[0].dir,
+                        searchValue: data.search.value
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        callback({
+                            draw: response.d.draw,
+                            recordsTotal: response.d.recordsTotal,
+                            recordsFiltered: response.d.recordsFiltered,
+                            data: response.d.data
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            },
+            "columns": [
+                {
+                    render: function (data, type, full, meta) {
+                        var checkboxId = 'chkSelect_' + full.CSID;
+                        return '<span style="display:inline-block;width:30px;">' +
+                            '<input id="' + checkboxId + '" type="checkbox" class="rowCheck" data-id="' + full.CSID + '">' +
+                            '</span>';
+                    }, "width": "2%", "orderable": false
+                },
+                { "data": "CSID", "visible": false, "width": "0%", "orderable": false },
+                { "data": "CSNO", "name": "mr_no_sequence", "width": "8%", "orderable": true },
+                { "data": "CSDATE", "name": "Opd_No", "width": "5%", "orderable": false },
+                { "data": "DEPARTMENT", "visible": false, "width": "10%", "orderable": false },
+                
+                { "data": "CREATOR", "width": "13%", "orderable": false },
+                
+                { "data": "REMARKS", "width": "10%", "orderable": false },
+                { "data": "STATUS", "width": "10%", "orderable": false },
+                { "data": "APPROVEBY", "width": "10%", "orderable": false },
+                {
+                    render: function (data, type, full, meta) {
+                        
+                        return  '<input type="text" class="rowInput">';
+                    }, "width": "2%", "orderable": false
+                },
+                {
+                    render: function (data, type, full) {
+                        return '<a href="#" onclick="editOpen(' + full.CSID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                    }, "width": "7%", "orderable": false
+                }
+            ],
+            "initComplete": function (settings, json) {
+                var lengthContainer = document.querySelector('#tblResult_length');
+                var lengthDropdown = document.querySelector('#tblResult_length select');
+                var label = document.querySelector('#tblResult_length label');
+
+                if (lengthDropdown && label && lengthContainer) {
+                    var labelText = document.createElement('span');
+                    labelText.textContent = 'Show entries ';
+                    labelText.style.marginTop = '10px';
+                    labelText.style.display = 'inline-block';
+
+                    lengthDropdown.style.width = '60px';
+                    label.innerHTML = '';
+                    label.style.display = 'inline-flex';
+                    label.style.marginTop = '17px';
+                    label.appendChild(labelText);
+                    label.appendChild(lengthDropdown);
+                } else {
+                    console.log("Length dropdown, label, or container not found");
+                }
+            }
+
+        });
+    }
+</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="table-container" style="overflow: scroll; height: 400px;">
-        <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" EnableModelValidation="True" PageSize="15" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging">
-            <Columns>
-                <asp:TemplateField>
-                    <ItemTemplate>
-                        <asp:CheckBox ID="chkSelect" Text="" runat="server" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="CS ID" Visible="False">
-                    <ItemTemplate>
-                        <asp:Label ID="lblCS_Ven_Master_ID" runat="server" Text='<%# Bind("CS_Ven_Master_ID") %>'></asp:Label>
-                    </ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="txtCS_Ven_Master_ID" runat="server" Text='<%# Bind("CS_Ven_Master_ID") %>'></asp:TextBox>
-                    </EditItemTemplate>
-                </asp:TemplateField>
-                <asp:BoundField DataField="CS_Ven_No" HeaderText="CS No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px" />
-                <asp:BoundField DataField="CS_Date" HeaderText="CS Date" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:d}" ItemStyle-Width="100px" />
-                <asp:BoundField DataField="Department" HeaderText="Department" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="150px" />
-                <asp:BoundField DataField="Creator" HeaderText="Creator" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="120px" />
-
-                <asp:TemplateField HeaderText="CS Remarks">
-                    <ItemTemplate>
-                        <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("Remarks") %>' CssClass="remarks-label"></asp:Label>
-                    </ItemTemplate>
-                    <ItemStyle Width="500px" />
-                </asp:TemplateField>
-                <asp:BoundField DataField="Status" HeaderText="Status" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
-                <asp:TemplateField HeaderText="Approve By">
-                    <ItemTemplate>
-                        <div style="white-space: nowrap; overflow: auto; max-width: 180px;">
-                            <asp:Label ID="lblApproveBy" runat="server" Text='<%# Eval("Approve_By") %>'></asp:Label>
-                        </div>
-                    </ItemTemplate>
-                    <ItemStyle Width="180px" />
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Decision Remarks">
-                    <ItemTemplate>
-                        <asp:TextBox ID="txtApproval_RejectionRemarks" runat="server" Width="250px" TextMode="MultiLine" CssClass="approval-remarks-textbox"></asp:TextBox>
-                    </ItemTemplate>
-                    <ItemStyle Width="300px" />
-                </asp:TemplateField>
-
-
-
-                <asp:TemplateField>
-                    <HeaderTemplate>
-                        <div style="width: 100px; text-align: center;">
-                            Actions
-                        </div>
-                    </HeaderTemplate>
-                    <ItemTemplate>
-                        <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# "../AP/ComparativeStatementVendor.aspx?CM_ID="+ Eval("CS_Ven_Master_ID")%>' Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
-                    </ItemTemplate>
-                    <HeaderStyle CssClass="header-center-align" />
-                </asp:TemplateField>
-            </Columns>
-            <PagerSettings Mode="NumericFirstLast" FirstPageText="First" LastPageText="Last" />
-            <PagerStyle HorizontalAlign="Right" CssClass="pager-style" />
-            <HeaderStyle BackColor="#438eb9 " Font-Bold="true" ForeColor="White" Font-Size="14px" />
-            <RowStyle CssClass="gridview-row" />
-            <AlternatingRowStyle CssClass="gridview-alt-row" />
-        </asp:GridView>
-    </div>
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-4">
-
-                    <asp:Button ID="btnApprove" CssClass="btn btn-primry" Text="Approve Selected CS" runat="server" SkinID="btnAutoWidth" OnClick="btnApprove_Click" />
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-4">
-                    <asp:Button ID="btnCancel" CssClass="btn btn-primry" Text="Reject Selected CS" runat="server" SkinID="btnAutoWidth" OnClick="btnCancel_Click" />
-                </div>
-            </div>
-        </div>
-        </div>
+    <div class="table-container col-lg-12 col-md-12 col-sm-10">
+    <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
+        <thead id="ihead">
+            <tr>
+                <th>Select</th>
+                <th style="display: none;">CS ID</th>
+                <th>CS No.</th>
+                <th>CS Date</th>
+                <th>Department</th>
+                <th>Creator</th>
+                 <th>CS Remarks</th>
+                <th>Status</th>
+                <th>Approve By</th>
+                <th>Decision Remarks</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="ibody">
+        </tbody>
+    </table>
+</div>
 </asp:Content>

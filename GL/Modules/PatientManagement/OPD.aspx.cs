@@ -644,7 +644,16 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+        [WebMethod]
+        public static string checlkeditRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.AllowPatientEdit).FirstOrDefault();
 
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
 
         [WebMethod]
         public static string GetBasicInfo(int reg_id)

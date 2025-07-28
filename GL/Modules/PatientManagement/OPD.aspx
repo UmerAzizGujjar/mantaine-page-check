@@ -51,6 +51,10 @@
                 $('#ddldoctor').select2();
                 $('#ddlDepartment').select2();
             }
+         
+           
+
+            
         });
         function DisableCardPrint() {
 
@@ -180,12 +184,7 @@
                         debugger;
                     console.log(msg.d);
                     var url = "../../ReportViewer.aspx?ReportName=PrintPatientCard&ReportTitle=OPD Patient Card&MrNo=" + ID;
-                    //if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
-                    //    var urlInfo = window.location.href.split('/');
-                    //    var ip = urlInfo[2];
-                    //    var foldername = urlInfo[3];
-                    //    url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=PrintPatientCard&ReportTitle=OPD Patient Card&MrNo=" + ID;
-                    //}
+                   
                     window.open(url, '_blank');
                 },
                 Error: function (x, e) {
