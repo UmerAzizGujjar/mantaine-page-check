@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row" style="margin-left:-5px !important">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
                                         <asp:DropDownList runat="server"  ID="ddlCompany" AppendDataBoundItems="true">
                                         </asp:DropDownList>
