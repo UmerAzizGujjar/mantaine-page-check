@@ -6259,18 +6259,22 @@
                             </div>
                                     <div class="row mt">
                                          <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <asp:Label ID="lbladvamount" runat="server" Text="Advance Amount"></asp:Label>
+                                                      <asp:Label ID="lbladvamount" runat="server" Text="Advance Amount"></asp:Label>
                                         <asp:TextBox ID="txtadvamount" TabIndex="8" runat="server" Enabled="false"></asp:TextBox>
-                                               <div class="col-lg-3 col-md-4 col-sm-6" style="display:none">
+                                               </div>
+                                          <div class="col-lg-3 col-md-4 col-sm-6">
+                                                        <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
+                                        <asp:TextBox ID="txtadmissionfee" TabIndex="8" runat="server" Enabled="false"></asp:TextBox>
+                                               </div>
+                                         <div class="col-lg-1 col-md-2 col-sm-2">
+                                                             <label></label>
+                                    <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
+                                               </div>
+                                         <div class="col-lg-3 col-md-4 col-sm-6" style="display:none">
                                      <asp:Label ID="LblExpected_Discharge_Date" runat="server" Text="Expected Discharge Date"></asp:Label>
                                       <asp:TextBox ID="txtExpected_Discharge_Date" TabIndex="4" runat="server"></asp:TextBox>
                                  </div>
-                                 <div class="col-lg-1 col-md-4 col-sm-6" style="width:100px">
-                                    <label></label>
-                                    <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
                                 </div>
-                                </div>
-                                    </div>
                                 </div>
                                  <div class="col-lg-3 co-md-4 col-sm-6" style="margin-top:-4%" >
                                     <h2> Today Admission : </h2>
@@ -6287,6 +6291,10 @@
                                     </table>
                                     </div>
                                 </div>
+                                
+
+
+
                               <div class="row">
                                 <div class="col-lg-3 co-md-4 col-sm-6" style="overflow: scroll; height: 197px;margin-top:3%;">
                                         <table id="tblWards" class="table">
@@ -6313,6 +6321,7 @@
 
                                     </div>
                             </div>
+                        
                             </div>
                              
                              <div class="row" id="panelshow" runat="server" style="display:none">
@@ -6395,7 +6404,7 @@
                                         <asp:UpdateProgress ID="UpdateProgress2" runat="server" DisplayAfter="1000" DynamicLayout="False">
                                             <ProgressTemplate>
                                                 <div class="loadingimage">
-                                                     <asp:Image ID="image2" ImageUrl="~../../../../wwwroot/images/loading.gif" runat="server" Width="32px" />
+                                                    <%-- <asp:Image ID="image2" ImageUrl="~../../../../wwwroot/images/loading.gif" runat="server" Width="32px" />--%>
                                                 </div>
                                             </ProgressTemplate>
                                         </asp:UpdateProgress>
@@ -8860,7 +8869,7 @@
                         <tr>
                             <td>
                                  <div id="loadingimage" style="display:none">
-                                <asp:Image ID="image" ImageUrl="~../../../../wwwroot/images/loading.gif" runat="server" Width="32px" />
+                                <%--<asp:Image ID="image" ImageUrl="~../../../../wwwroot/images/loading.gif" runat="server" Width="32px" />--%>
                                                 </div>
                             </td>                          
                         </tr>

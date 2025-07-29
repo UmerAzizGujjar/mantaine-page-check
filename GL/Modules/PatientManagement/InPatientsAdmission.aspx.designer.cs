@@ -582,6 +582,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtadvamount;
 
         /// <summary>
+        /// lblfee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblfee;
+
+        /// <summary>
+        /// txtadmissionfee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtadmissionfee;
+
+        /// <summary>
         /// LblExpected_Discharge_Date control.
         /// </summary>
         /// <remarks>
@@ -4063,15 +4081,6 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRN_Special_Instruction_Desc;
-
-        /// <summary>
-        /// image control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image image;
 
         /// <summary>
         /// ValidationSummary1 control.
