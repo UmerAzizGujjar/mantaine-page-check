@@ -11,7 +11,32 @@
 
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
+            $('#txtItem').tokenInput(function () {
+                var warehouseVal = $('#ddlWarehouse').val();
+                debugger;
+                if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
 
+                    return "";
+                }
+
+
+                return "../../json.aspx?Table=INV_ItemsForPR&WarehouseID=" + encodeURIComponent(warehouseVal);
+            }, {
+                tokenLimit: 1,
+                hintText: "Select a warehouse first...",
+                noResultsText: "No items found.",
+                searchingText: "Searching...",
+
+                onAdd: function (item) {
+                
+                    $("#hditemID").val(item.id);
+                    GetItemDetail();
+                    $('#btnGIR').attr('disabled', true);
+                    $('#btnGIR').css('pointer-events', 'none');
+                    $('#ctl00_MainContent_ddlGIR').css('pointer-events', 'none');
+                    $('#ctl00_MainContent_ddlGIR').attr('disabled', true);
+                }
+            });
             FillPriority();
             FillWarehouse();
             UserRights();
@@ -36,7 +61,7 @@
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#txtPR_Date").val(formattedDate);
-            loadtokenInputsDefaultitem();
+            //loadtokenInputsDefaultitem();
             if (id != "") {
                 LoadPurchaseRequistionMaster(id);
                 LoadPurchaseRequistionDetail(id);
@@ -321,7 +346,7 @@
                 $('#ddlWarehouse').html(optionInv);
             });
         }
-        function loadtokenInputsDefaultitem() {
+/*        function loadtokenInputsDefaultitem()*/ {
             debugger
             $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR",
                 {

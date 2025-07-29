@@ -30,7 +30,7 @@ namespace PMS.AP
                 BindPaymentTerms();
                 BindDeliveryTerms();
                 BindPOType();
-                LoadPRNum();
+                //LoadPRNum();
                 if (Request.QueryString["PO_ID"] != null)
                 {
                     var getID = Request.QueryString["PO_ID"];
@@ -265,22 +265,22 @@ namespace PMS.AP
             #endregion
         }
 
-        private void LoadPRNum()
-        {
-            #region "Bind PRNUM in Dropdown"
-            DataTable dt = new DataTable();
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var vendor = db.sp_LoadPRNum();
-            ddlPrNo.DataSource = vendor;
-            ddlPrNo.DataTextField = "PR_Num";
-            ddlPrNo.DataValueField = "PR_Id";
-            ddlPrNo.DataBind();
-            if (!IsPostBack)
-            {
-                ddlPrNo.Items.Insert(0, new ListItem("Please Select", "0"));
-            }
-            #endregion
-        }
+        //private void LoadPRNum()
+        //{
+        //    #region "Bind PRNUM in Dropdown"
+        //    DataTable dt = new DataTable();
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+        //    var vendor = db.sp_LoadPRNum();
+        //    ddlPrNo.DataSource = vendor;
+        //    ddlPrNo.DataTextField = "PR_Num";
+        //    ddlPrNo.DataValueField = "PR_Id";
+        //    ddlPrNo.DataBind();
+        //    if (!IsPostBack)
+        //    {
+        //        ddlPrNo.Items.Insert(0, new ListItem("Please Select", "0"));
+        //    }
+        //    #endregion
+        //}
 
         [WebMethod]
         public static string getDDLlist()
@@ -300,6 +300,15 @@ namespace PMS.AP
 
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+        [WebMethod]
+
+        public static string GetPRNoByWarehouse(string Warehouse)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var POList = db.sp_LoadPRNum(Convert.ToInt32(Warehouse));
+            return (new JavaScriptSerializer()).Serialize(POList);
+        }
+
         private class ddlListItems
         {
             public string DataValueName;

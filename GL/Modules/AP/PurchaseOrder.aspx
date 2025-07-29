@@ -485,6 +485,25 @@
             });
             $("#hdfitem_name").val(name);
         }
+        function getprNoBy_WareHouse(item) {
+            debugger;
+            var optionsPR = '';
+            var Warehouse;
+            Warehouse = item.value;
+            if (typeof Warehouse == "undefined" || Warehouse == "") {
+                VendorId = item;
+            }
+            PageMethods.GetPRNoByWarehouse(Warehouse, function (res) {
+                var item = JSON.parse(res);
+                optionsPR = '<option value="0">Please Select</option>';
+                $.each(item, function (key, value) {
+                    optionsPR += '<option value="' + value.PR_Id + '" >' + value.PR_Num + '</option>';
+                });
+                $("#ctl00_MainContent_ddlPrNo option").remove();
+                $('#ctl00_MainContent_ddlPrNo').html(optionsPR);
+            });
+        }
+        
     </script>
     <script type="text/javascript">
         function HideItemPopup() {
@@ -1158,7 +1177,7 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
-                <select id="ddlWarehouse" class="form-select">
+                <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
                     <option value="0">Please Select</option>
                 </select>
             </div>
