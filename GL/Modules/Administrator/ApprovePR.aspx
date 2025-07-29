@@ -4,6 +4,9 @@
       <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">        
         $(document).ready(function () {
+            $('#checkAll').on('change', function () {
+                $('.rowCheck').prop('checked', this.checked);
+            });
             LoadPage(); 
             CheckUserRights();
         });
@@ -213,8 +216,8 @@
                         }, "width": "2%", "orderable": false
                     },
                     { "data": "PRID", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "PRNO", "name": "mr_no_sequence", "width": "8%", "orderable": true },
-                    { "data": "PRDATE", "name": "Opd_No", "width": "5%", "orderable": false },
+                    { "data": "PRNO", "name": "mr_no_sequence", "width": "5%", "orderable": true },
+                    { "data": "PRDATE", "name": "Opd_No", "width": "10%", "orderable": false },
                     { "data": "CREATOR", "width": "13%", "orderable": false },
                     { "data": "DEPARTMENT", "visible": false, "width": "10%", "orderable": false },
                     { "data": "REMARKS", "width": "10%", "orderable": false },
@@ -263,7 +266,7 @@
     <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
         <thead id="ihead">
             <tr>
-                <th>Select</th>
+                <th><span style="display:inline-block;width:30px;"><input id="checkAll" type="checkbox"/></span></th>
                 <th style="display: none;">Company ID</th>
                 <th>PR No.</th>
                 <th>PR Date</th>

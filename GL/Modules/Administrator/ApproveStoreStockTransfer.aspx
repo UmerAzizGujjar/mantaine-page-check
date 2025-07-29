@@ -3,7 +3,9 @@
           <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 <script type="text/javascript">  
     $(document).ready(function () {
-
+        $('#checkAll').on('change', function () {
+            $('.rowCheck').prop('checked', this.checked);
+        });
         LoadPage();
         CheckUserRights();
 
@@ -195,8 +197,16 @@
                 },
                 { "data": "TRANSFERID", "visible": false, "width": "0%", "orderable": false },
                 { "data": "TRANSFERNO", "name": "mr_no_sequence", "width": "8%", "orderable": true },
-                { "data": "TRANSFERDATE", "name": "Opd_No", "width": "5%", "orderable": false },
-                { "data": "CREATOR", "width": "13%", "orderable": false },
+                {
+                    "data": "TRANSFERDATE", "name": "TRANSFERDATE",
+                    "render": function (data, type, full) {
+                        debugger;
+                        var date = full.TRANSFERDATE;
+                        date = moment(date).format('DD-MMM-YYYY');
+                        return date;
+                    }, "width": "9%"
+                },
+                 { "data": "CREATOR", "width": "13%", "orderable": false },
                  { "data": "REMARKS", "width": "10%", "orderable": false },
                 { "data": "STATUS", "width": "10%", "orderable": false },
                 { "data": "APPROVEBY", "width": "10%", "orderable": false },
@@ -237,7 +247,7 @@
         <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
             <thead id="ihead">
                 <tr>
-                    <th>Select</th>
+                    <th><span style="display:inline-block;width:30px;"><input id="checkAll" type="checkbox"/></span></th>
                     <th style="display: none;">TRANSFER ID</th>
                     <th>Stock Transfer No.</th>
                     <th>Transfer Date</th>

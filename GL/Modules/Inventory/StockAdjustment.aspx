@@ -7,32 +7,44 @@
     <script type="text/javascript">
         var Stock_ID = 0;
         $(document).ready(function () {
-            $('#ctl00_MainContent_txtItem_Code').prop('disabled', true);
-            $('#ctl00_MainContent_ddl_Ware_House').on('change', function () {
-                var warehouseVal = $(this).val();
 
-                if (warehouseVal !== "0") {
-                    $('#ctl00_MainContent_txtItem_Code').prop('disabled', false);
-                    loadtokenInputsDefaultPRNo();
-                } else {
-                    $('#ctl00_MainContent_txtItem_Code').val('');
-                    $('#ctl00_MainContent_txtItem_Code').prop('disabled', true);
+            
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please select a warehouse before searching for items.',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
+
+            $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
+                var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
+
+               
+                if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
+
+                    return ""; 
+                }
+
+           
+                return "../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal);
+            }, {
+                tokenLimit: 1,
+                hintText: "Select a warehouse first...",
+                noResultsText: "No items found.",
+                searchingText: "Searching...",
+
+                onAdd: function (item) {
+                    calculatecurrentstock(item.id);
+
+                    if (item.Type === "True") {
+                        $('#ctl00_MainContent_hdbatch').val(1);
+                        $('#ctl00_MainContent_hdDate').val(1);
+                        $('#ctl00_MainContent_hdallowblank').val(1);
+
+                        $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
+                        $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
+
+                        $('#ctl00_MainContent_hdbatch').val(1);
+                        $('#ctl00_MainContent_hdDate').val(1);
+                        $('#ctl00_MainContent_hdallowblank').val(0);
+                    }
                 }
             });
-
             debugger;
                <% if (Request.QueryString["ID"] != null)
         { %>
@@ -40,6 +52,7 @@
                <% } %>
             if (Stock_ID == 0) {
                 $('#btnVoucher').hide();
+
             }
             var status = $('#ctl00_MainContent_txt_status').val();
             if (status == "Approved") {
@@ -51,6 +64,7 @@
                 $('#ctl00_MainContent_btnSave').attr("disabled", false);
                 $('#btnVoucher').hide();
             }
+
         });
         function hiddenVal(hiddenDate, hiddenbatch, hiddenallowblank) {
             if (hiddenDate == "1") $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");

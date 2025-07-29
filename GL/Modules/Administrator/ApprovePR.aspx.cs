@@ -242,6 +242,7 @@ namespace PMS
                                                                   join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
                                                                   from usr in userGroup.DefaultIfEmpty()
                                                                   where a.PR_Id == SAL.Entry_ID && SAL.Form_ID == 1
+                                                                  && (usr.UserName.ToString().Contains(searchValue))
                                                                   select usr.UserName ?? "").Distinct()),
                                   Department = db.GetDataValueName("Department", a.Department),
                               };

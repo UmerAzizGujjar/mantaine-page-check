@@ -4,7 +4,9 @@
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">  
         $(document).ready(function () {
-
+            $('#checkAll').on('change', function () {
+                $('.rowCheck').prop('checked', this.checked);
+            });
             LoadPage();
             CheckUserRights();
 
@@ -240,7 +242,7 @@
         <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
             <thead id="ihead">
                 <tr>
-                    <th>Select</th>
+                    <th><span style="display:inline-block;width:30px;"><input id="checkAll" type="checkbox"/></span></th>
                     <th style="display: none;">Company ID</th>
                     <th>PO No.</th>
                     <th>PO Date</th>
