@@ -28,7 +28,12 @@ namespace PMS
             {
                 var id = Request.Url.PathAndQuery;
                 var s = Request.QueryString;
- 
+
+                db = new DataBaseDataContext(DBClass.ConnectionString());
+                txtadmissionfee.Text = Convert.ToString(
+                         (from tbl in db.sys_Parms
+                          where tbl.Name == "Emergency Fee"
+                          select tbl.Code).FirstOrDefault());
                 txtAdmission_Date.Text = DateTime.Now.ToString();
                 txtReceiving_Date.Text = DateTime.Now.ToString();
                 txtDischarge_On.Text = DateTime.Now.ToString();
@@ -1495,18 +1500,12 @@ namespace PMS
                         OPD.Updated_By = AppConfig.UserID;
                         OPD.Updated_Time = DateTime.Now;
                     }
-                    string fee = DBClass.getParameter("In Patient Fee").ToString();
+                    string fee = DBClass.getParameter("Emergency Fee").ToString();
                     if (fee.Trim() == string.Empty)
                         fee = "0";
-                    if (ddlDepartment == "019")
-                    {
-                        OPD.Admission_Fees = 0;
-                    }
-   
-                    else
-                    {
+                   
                         OPD.Admission_Fees = int.Parse(fee);
-                    }
+                  
 
                     OPD.Department = ddlDepartment;
            
