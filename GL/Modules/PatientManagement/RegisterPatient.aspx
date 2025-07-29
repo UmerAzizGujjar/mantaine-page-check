@@ -3,7 +3,7 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Toaster.css" rel="stylesheet" />
     <script src="../../wwwroot/Tibbit_theme/CustomJs/RegPatient.js" type="text/javascript"></script>
     <link href="../../wwwroot/Tibbit_theme/css/RegPat.css" rel="stylesheet" />
-
+   
       <script type="text/javascript">
           $(document).ready(function () {
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
@@ -24,6 +24,10 @@
              $('#ddlstate').select2();
              $('#txtcity').select2();
              $('#txtarea').select2();
+             $('#ddlRelation').select2();
+             $('#ddl_name').select2();
+             $('#PrefixAge').select2();
+
          }
           });
           //Print

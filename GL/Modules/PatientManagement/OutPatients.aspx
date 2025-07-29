@@ -1607,18 +1607,7 @@
                 processData: false,
                 contentType: false,
                 error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Something went wrong!',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
+                   
                 }
             });
         }
@@ -4649,530 +4638,439 @@
 
         function saveAllRecord() {
             debugger;
-            var btnsave = $('#btnSave').val();
-            var btnsaveVital = $('#btnSave_Vital').val();
-
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
-            var Discharge = document.getElementById("ctl00_MainContent_CheckBox1").checked;
-            var No_Medicine = document.getElementById("ctl00_MainContent_chkNo_Medicine").checked;
-            var No_LabTest = document.getElementById("ctl00_MainContent_chkNo_Test").checked;
-            var Doctor_ID = $('#ctl00_MainContent_ddlDoctorName option:selected').val();
-            var Follow_Up = $('#ctl00_MainContent_ddlFOllowUp').val();
-            var Proto = $('#ctl00_MainContent_ddlProto').val();
-            var Follow_Date = $('#ctl00_MainContent_FollowNoDate').val();
-
-            var pulse_Min = $('#ctl00_MainContent_txtPuls').val();
-            var L_M_P = $('#ctl00_MainContent_txtLMP').val();
-            var SPO2 = $('#ctl00_MainContent_txtspo2').val();
-
-
-
-            var pulse_Min = $('#ctl00_MainContent_txtPuls').val();
-            var L_M_P = $('#ctl00_MainContent_txtLMP').val();
-            var SPO2 = $('#ctl00_MainContent_txtspo2').val();
-            var BP_mm_Hg = $('#ctl00_MainContent_txtBP').val();
-            var MUAC = $('#ctl00_MainContent_txtMUAC').val();
-            var OFC = $('#ctl00_MainContent_txtOFC').val();
-            var Temp_C = $('#ctl00_MainContent_txtTemp').val();
-            var Respiration_Min = $('#ctl00_MainContent_txtRespiration').val();
-            var Height_Cm = $('#ctl00_MainContent_txtHeight').val();
-            var Weight_Kg = $('#ctl00_MainContent_txtWeight').val();
-
-            var Refer_To_Hospital = $('#ctl00_MainContent_txtRefer_To_Hospital').val();
-            var Reffer_To = $('#ctl00_MainContent_ddlPatient_Main_Category').val();
-            if (Reffer_To == 0)
-                Reffer_To = "";
-            var Reffer_doc = $('#ddldoctors').val();
-
-            var Provisional_Diagnosis = $('#ctl00_MainContent_txtProvisionalDiagnosis').val();
-            var HistoryOfPeresentIllness = $('#ctl00_MainContent_txtHistoryOfPeresentIllness').val();
-            var HistoryOfFamily = $('#ctl00_MainContent_txtHistoryOfFamily').val();
-            var HistoryOfPastIllness = $('#ctl00_MainContent_txtHistoryOfPastIllness').val();
-            var CVS = $('#ctl00_MainContent_txtCVS').val();
-            var GIT = $('#ctl00_MainContent_txtGIT').val();
-            var RESP = $('#ctl00_MainContent_txtRESP').val();
-            var SocioEconomicHistory = $('#ctl00_MainContent_txtSocioEconomicHistory').val();
-            var CNS = $('#ctl00_MainContent_txtCNS').val();
-            var GYNAE = $('#ctl00_MainContent_txtGYNAE').val();
-            var Mucculor = $('#ctl00_MainContent_txtMucculor').val();
-            var Local = $('#ctl00_MainContent_txtLocal').val();
-            var Advice = $('#ctl00_MainContent_txtAdvice').val();
-            var Special_Test = $('#ctl00_MainContent_txtSpecialTests').val();
-            var Area_Of_Interest = $('#ctl00_MainContent_txtAreaOfInterest').val();
-            var Birth_History = $('#ctl00_MainContent_txtBirthHistory').val();
-
-            var Reffer_No = $('#ctl00_MainContent_txtRefferNote').val();
-            var Drug_History = $('#ctl00_MainContent_txtDrugHistory').val();
-            var Personal_History = $('#ctl00_MainContent_txtPersonalHistory').val();
-            var txtRemarksHistory = $('#ctl00_MainContent_txtRemarksHistory').val();
-            var ObstetricHistory = $('#ctl00_MainContent_txtObstetricHistory').val();
-            var AllergiesHistory = $('#ctl00_MainContent_txtAllergiesHistory').val();
-            var TreatmentHistory = $('#ctl00_MainContent_txtTreatmentHistory').val();
-            var DevelopmentHistory = $('#ctl00_MainContent_txtDevelopmentHistory').val();
-            var VaccinationHistory = $('#ctl00_MainContent_txtVaccinationHistory').val();
-            var NutritionHistory = $('#ctl00_MainContent_txtNutritionHistory').val();
-            var chkPallor = document.getElementById("ctl00_MainContent_chkPallor").checked;
-            var chkJVP = document.getElementById("ctl00_MainContent_chkJVP").checked;
-            var chkaganoris = document.getElementById("ctl00_MainContent_chkaganoris").checked;
-            var chkunconceed = document.getElementById("ctl00_MainContent_chkunconceed").checked;
-            var chkjaundice = document.getElementById("ctl00_MainContent_chkjaundice").checked;
-            var hydration = document.getElementById("ctl00_MainContent_hydration").checked;
-            var edema = document.getElementById("ctl00_MainContent_edema").checked;
-            var chk1 = document.getElementById("ctl00_MainContent_chk1").checked;
-            var chk2 = document.getElementById("ctl00_MainContent_chk2").checked;
-            var chk3 = document.getElementById("ctl00_MainContent_chk3").checked;
-            var chk4 = document.getElementById("ctl00_MainContent_ns").checked;
-            var chk5 = document.getElementById("ctl00_MainContent_sl").checked;
-
-            var Other = $('#ctl00_MainContent_txtInputBox1').val();
-            var Designation = $('#ctl00_MainContent_txtDesignation').val();
-            var FinalDiagnosis = $('#ctl00_MainContent_txtFinalDiagnosis').val();
-            var Final_Rec = $("#ctl00_MainContent_Final_Rec").val();
             var Administration = $('#ctl00_MainContent_ddlIssuance_Of').val();
             if (Administration == 0)
                 Administration = "";
-            var ENT_Throat_IDL = $('#ctl00_MainContent_txtmidl').val();
-            if (ENT_Throat_IDL == null)
-                ENT_Throat_IDL = "";
-            var ENT_Throat_Nose = $('#ctl00_MainContent_txtmNose').val();
-            if (ENT_Throat_Nose == null)
-                ENT_Throat_Nose = "";
-            var ENT_Ear_Right = $('#ctl00_MainContent_txtmRight').val();
-            if (ENT_Ear_Right == null)
-                ENT_Ear_Right = "";
-            var Ent_Ear_Left = $('#ctl00_MainContent_txtmLeft').val();
-            if (Ent_Ear_Left == null)
-                Ent_Ear_Left = "";
-
-            var ComRightPos = $('#ctl00_MainContent_ComRightPos').val();
-            if (ComRightPos == null)
-                ComRightPos = "";
-            var ComLeftPos = $('#ctl00_MainContent_ComLeftPos').val();
-            if (ComLeftPos == null)
-                ComLeftPos = "";
-            var ComRightNeg = $('#ctl00_MainContent_ComRightNeg').val();
-            if (ComRightNeg == null)
-                ComRightNeg = "";
-            var ComLeftNeg = $('#ctl00_MainContent_ComLeftNeg').val();
-            if (ComLeftNeg == null)
-                ComLeftNeg = "";
-            var ComRightF = $('#ctl00_MainContent_ComRightF').val();
-            if (ComRightF == null)
-                ComRightF = "";
-            var ComLeftF = $('#ctl00_MainContent_ComLeftF').val();
-            if (ComLeftF == null)
-                ComLeftF = "";
-            var ComRightFNeg = $('#ctl00_MainContent_ComRightFNeg').val();
-            if (ComRightFNeg == null)
-                ComRightFNeg = "";
-            var ComLeftFNeg = $('#ctl00_MainContent_ComLeftFNeg').val();
-            if (ComLeftFNeg == null)
-                ComLeftFNeg = "";
-            var ComCentral = $('#ctl00_MainContent_ComCentral').val();
-            if (ComCentral == null)
-                ComCentral = "";
-            var ComLateralized = $('#ctl00_MainContent_ComLateralized').val();
-            if (ComLateralized == null)
-                ComLateralized = "";
-            var ComPTA = $('#ctl00_MainContent_ComPTA').val();
-            if (ComPTA == null)
-                ComPTA = "";
-            var ComTympanometry = $('#ctl00_MainContent_ComTympanometry').val();
-            if (ComTympanometry == null)
-                ComTympanometry = "";
-
-
-
-            var ENT_Rinnes_Right_PosNeg = document.getElementById('ctl00_MainContent_mchkRightPos').checked;
-            var ENT_Rinnes_Lft_PosNeg = document.getElementById('ctl00_MainContent_mchkLeftPos').checked;
-            var ENT_Rinnes_Right_FalseNeg = document.getElementById('ctl00_MainContent_mchkRightF').checked;
-            var ENT_Rinnes_Lft_FalseNeg = document.getElementById('ctl00_MainContent_mchkLeftF').checked;
-
-            var ENT_Webber_Central = document.getElementById('ctl00_MainContent_mchkcentral').checked;
-            var ENT_Webber_Lateralized = document.getElementById('ctl00_MainContent_mchkLateralized').checked;
-
-            var ENT_Investigation_PTA = document.getElementById('ctl00_MainContent_mchkPTA').checked;
-            var ENT_Investigation_Tympanometry = document.getElementById('ctl00_MainContent_mchkTympanometry').checked;
-
-            var ENT_Rinnes_Right_Neg = document.getElementById('ctl00_MainContent_mchkRightNeg').checked;
-            var ENT_Rinnes_Lft_Neg = document.getElementById('ctl00_MainContent_mchkLeftNeg').checked;
-            var ENT_Rinnes_Right_FNeg = document.getElementById('ctl00_MainContent_mchkRightFNeg').checked;
-            var ENT_Rinnes_Lft_FNeg = document.getElementById('ctl00_MainContent_mchkLeftFNeg').checked;
-            var txtInformant = $('#ctl00_MainContent_txtInformant').val();
-
-            var txtSourceOfReferral = $('#ctl00_MainContent_txtSourceOfReferral').val();
-            var chkNeckHolding = document.getElementById("ctl00_MainContent_chkNeckHolding").checked;
-            var chkWalking = document.getElementById('ctl00_MainContent_chkWalking').checked;
-            var chkTalking = document.getElementById('ctl00_MainContent_chkTalking').checked;
-            var chkOthers = document.getElementById('ctl00_MainContent_chkOthers').checked;
-            var txtMenarche = $('#ctl00_MainContent_txtMenarche').val();
-            var txtMenstrual = $('#ctl00_MainContent_txtMenstrual').val();
-            var txtAttachmentSeparationfromParents = $('#ctl00_MainContent_txtAttachmentSeparationfromParents').val();
-            var txtHealth = $('#ctl00_MainContent_txtHealth').val();
-            var chkNailBiting = document.getElementById('ctl00_MainContent_chkNailBiting').checked;
-            var chkTemperTantrums = document.getElementById('ctl00_MainContent_chkTemperTantrums').checked;
-            var chkBedWetting = document.getElementById('ctl00_MainContent_chkBedWetting').checked;
-            var txtAcademics = $('#ctl00_MainContent_txtAcademics').val();
-
-            var txtPeerRelationship = $('#ctl00_MainContent_txtPeerRelationship').val();
-            var txtBehaviour = $('#ctl00_MainContent_txtBehaviour').val();
-            var txtOccupationalHistory = $('#ctl00_MainContent_txtOccupationalHistory').val();
-            var txtMaritalRelationshipSexualHistory = $('#ctl00_MainContent_txtMaritalRelationshipSexualHistory').val();
-            var txtSubstanceUse = $('#ctl00_MainContent_txtSubstanceUse').val();
-            var txtForensicUse = $('#ctl00_MainContent_txtForensicUse').val();
-            var txtRelationship = $('#ctl00_MainContent_txtRelationship').val();
-            var txtLeisureActivities = $('#ctl00_MainContent_txtLeisureActivities').val();
-            var txtAttitudetoSelfandStandards = $('#ctl00_MainContent_txtAttitudetoSelfandStandards').val();
-            var txtPrevallingMood = $('#ctl00_MainContent_txtPrevallingMood').val();
-            var txtReactionPattrentoStress = $('#ctl00_MainContent_txtReactionPattrentoStress').val();
-            var txtReligiousPracticesAttitute = $('#ctl00_MainContent_txtReligiousPracticesAttitute').val();
-            var txtFather = $('#ctl00_MainContent_txtFather').val();
-            var txtMother = $('#ctl00_MainContent_txtMother').val();
-            var txtSiblings = $('#ctl00_MainContent_txtSiblings').val();
-
-            var txtHomeAtmosphererelationshipsocialclass = $('#ctl00_MainContent_txtHomeAtmosphererelationshipsocialclass').val();
-            var txtFamilialIllness = $('#ctl00_MainContent_txtFamilialIllness').val();
-            var txtActualandapparentage = $('#ctl00_MainContent_txtActualandapparentage').val();
-            var txtRace = $('#ctl00_MainContent_txtRace').val();
-            var txtTattoosbodypiercingandscars = $('#ctl00_MainContent_txtTattoosbodypiercingandscars').val();
-            var txtBodyHabitus = $('#ctl00_MainContent_txtBodyHabitus').val();
-            var txtDress = $('#ctl00_MainContent_txtDress').val();
-            var txtHygiene = $('#ctl00_MainContent_txtHygiene').val();
-            var txtPsychomotorActivity = $('#ctl00_MainContent_txtPsychomotorActivity').val();
-            var txtInvoluntarymovements = $('#ctl00_MainContent_txtInvoluntarymovements').val();
-            var txtDystoniaEPS = $('#ctl00_MainContent_txtDystoniaEPS').val();
-            var txtTardivedyskinesia = $('#ctl00_MainContent_txtTardivedyskinesia').val();
-
-            var txtTics = $('#ctl00_MainContent_txtTics').val();
-            var txtTremors = $('#ctl00_MainContent_txtTremors').val();
-            var txtAttentivenesstointerview = $('#ctl00_MainContent_txtAttentivenesstointerview').val();
-            var txtEyeContact = $('#ctl00_MainContent_txtEyeContact').val();
-            var txtLevelofConsciousness = $('#ctl00_MainContent_txtLevelofConsciousness').val();
-            var txtRate = $('#ctl00_MainContent_txtRate').val();
-            var txtRhythm = $('#ctl00_MainContent_txtRhythm').val();
-            var txtVolume = $('#ctl00_MainContent_txtVolume').val();
-            var txtTone = $('#ctl00_MainContent_txtTone').val();
-            var txtModulationvar = $('#ctl00_MainContent_txtModulationvar').val();
-            var txtDepressed = $('#ctl00_MainContent_txtDepressed').val();
-            var txtElated = $('#ctl00_MainContent_txtElated').val();
-
-            var txtIrritable = $('#ctl00_MainContent_txtIrritable').val();
-            var txtLabile = $('#ctl00_MainContent_txtLabile').val();
-            var txtIncongruent = $('#ctl00_MainContent_txtIncongruent').val();
-            var txtbluntingflatteningapathy = $('#ctl00_MainContent_txtBluntingFlatteningApathy').val();
-            var txtThinkingPremeditation = $('#ctl00_MainContent_txtThinkingPremeditation').val();
-            var txtPlans = $('#ctl00_MainContent_txtPlans').val();
-            var txtNextPlan = $('#ctl00_MainContent_txtNextPlan').val();
-            var txtActions = $('#ctl00_MainContent_txtActions').val();
-            var txtPreservative = $('#ctl00_MainContent_txtPreservative').val();
-            var txtLoosAssociation = $('#ctl00_MainContent_txtLoosAssociation').val();
-            var txtTangentiaility = $('#ctl00_MainContent_txtTangentiaility').val();
-            var txtCircumstantiality = $('#ctl00_MainContent_txtCircumstantiality').val();
-            var txtFlightofIdeas = $('#ctl00_MainContent_txtFlightofIdeas').val();
-            var txtThoughtInsertion = $('#ctl00_MainContent_txtThoughtInsertion').val();
-            var txtThoughtWithdrawal = $('#ctl00_MainContent_txtThoughtWithdrawal').val();
-            var txtThoughBroadcasting = $('#ctl00_MainContent_txtThoughBroadcasting').val();
-            var txtThoughControl = $('#ctl00_MainContent_txtThoughControl').val();
-            var txtDellusion = $('#ctl00_MainContent_txtDellusion').val();
-            var txtovervaluedideas = $('#ctl00_MainContent_txtovervaluedideas').val();
-            var txtDepresonalization = $('#ctl00_MainContent_txtDepresonalization').val();
-            var txtDerealization = $('#ctl00_MainContent_txtDerealization').val();
-            var txtthrougObsession = $('#ctl00_MainContent_txtthrougObsession').val();
-            var txtthrougPhobies = $('#ctl00_MainContent_txtthrougPhobies').val();
-            var txtthrougHomocidialIdeas = $('#ctl00_MainContent_txtthrougHomocidialIdeas').val();
-            var txtillusion = $('#ctl00_MainContent_txtillusion').val();
-            var txtHallucinationAuditoryVisualOlfactoryGustatoryTactile = $('#ctl00_MainContent_txtHallucinationAuditoryVisualOlfactoryGustatoryTactile').val();
-            var txtorientationtime = $('#ctl00_MainContent_txtorientationtime').val();
-            var txtplace = $('#ctl00_MainContent_txtplace').val();
-            var txtperson = $('#ctl00_MainContent_txtperson').val();
-            var txtAttentionConcentrationSerial7Test = $('#ctl00_MainContent_txtAttentionConcentrationSerial7Test').val();
-            var txtOrDaysOfWeekReverseOrder = $('#ctl00_MainContent_txtOrDaysOfWeekReverseOrder').val();
-            var txtImmediatememory = $('#ctl00_MainContent_txtImmediatememory').val();
-            var txtshorttermrecentevents = $('#ctl00_MainContent_txtshorttermrecentevents').val();
-            var txtadressrecallafter2minutes = $('#ctl00_MainContent_txtadressrecallafter2minutes').val();
-            var txtlongtermremoteevents = $('#ctl00_MainContent_longtermremoteevents').val();
-            var txtadressrecallafter5minues = $('#ctl00_MainContent_txtadressrecallafter5minues').val();
-            var txtgeneralknowledgequestion = $('#ctl00_MainContent_txtgeneralknowledgequestion').val();
-            var txtsimplearthemeticcalculation = $('#ctl00_MainContent_txtsimplearthemeticcalculation').val();
-            var txtabstrationconcertethinking = $('#ctl00_MainContent_txtabstrationconcertethinking').val();
-            var txtinsight = $('#ctl00_MainContent_txtinsight').val();
-
-
-            var DermaFace = $('#ctl00_MainContent_txtDermaFace').val();
-            if (DermaFace == null)
-                DermaFace = "";
-            var DermaNeck = $('#ctl00_MainContent_txtDermaNeck').val();
-            if (DermaNeck == null)
-                DermaNeck = "";
-            var DermaTrunk = $('#ctl00_MainContent_txtDermaTrunk').val();
-            if (DermaTrunk == null)
-                DermaTrunk = "";
-            var DermaUpperLimb = $('#ctl00_MainContent_txtDermaUpperLimb').val();
-            if (DermaUpperLimb == null)
-                DermaUpperLimb = "";
-            var DermaLowerLimb = $('#ctl00_MainContent_txtDermaLowerLimb').val();
-            if (DermaLowerLimb == null)
-                DermaLowerLimb = "";
-            var DermaFlexures = $('#ctl00_MainContent_txtDermaFlexures').val();
-            if (DermaFlexures == null)
-                DermaFlexures = "";
-            var DermaGenitalias = $('#ctl00_MainContent_txtDermaGenitalias').val();
-            if (DermaGenitalias == null)
-                DermaGenitalias = "";
-            var DermaHair = $('#ctl00_MainContent_txtDermaHair').val();
-            if (DermaHair == null)
-                DermaHair = "";
-            var DermaNail = $('#ctl00_MainContent_txtDermaNail').val();
-            if (DermaNail == null)
-                DermaNail = "";
-            var DermaMucousMembrane = $('#ctl00_MainContent_txtDermaMucousMembrane').val();
-            if (DermaMucousMembrane == null)
-                DermaMucousMembrane = "";
-            var DermaEyes = $('#ctl00_MainContent_txtDermaEyes').val();
-            if (DermaEyes == null)
-                DermaEyes = "";
-            var DermaEars = $('#ctl00_MainContent_txtDermaEars').val();
-            if (DermaEars == null)
-                DermaEars = "";
-            var DermaNose = $('#ctl00_MainContent_txtDermaNose').val();
-            if (DermaNose == null)
-                DermaNose = "";
-            var DermaLips = $('#ctl00_MainContent_txtDermaLips').val();
-            if (DermaLips == null)
-                DermaLips = "";
-            debugger;
             var Out_Patient_ID = $('#ctl00_MainContent_txtOut_Patient_ID').val();
             if (Out_Patient_ID == "(New)")
                 Out_Patient_ID = "";
 
-            var PE_Pluse = $('#ctl00_MainContent_txtPE_Pluse').val();
-            var PE_BP = $('#ctl00_MainContent_txtPE_BP').val();
-            var PE_Temperature = $('#ctl00_MainContent_txtPE_Temperature').val();
-            var PE_Weight = $('#ctl00_MainContent_txtPE_Weight').val();
-            var PE_RespiratoryRate = $('#ctl00_MainContent_txtPE_RespiratoryRate').val();
-            var PE_Jaundice = $('#ctl00_MainContent_txtPE_Jaundice').val();
-            var PE_Anemia = $('#ctl00_MainContent_txtPE_Anemia').val();
-            var PE_Cyanosis = $('#ctl00_MainContent_txtPE_Cyanosis').val();
-            var PE_Clubbing = $('#ctl00_MainContent_txtPE_Clubbing').val();
-            var PE_JVP = $('#ctl00_MainContent_txtPE_JVP').val();
-            var PE_LymphNodes = $('#ctl00_MainContent_txtPE_LymphNodes').val();
-            var PE_Edema = $('#ctl00_MainContent_txtPE_Edema').val();
-            var PE_Respiratory = $('#ctl00_MainContent_txtPE_Respiratory').val();
-            var PE_Cardiovascular = $('#ctl00_MainContent_txtPE_Cardiovascular').val();
-            var PE_Gastro_Intestinal = $('#ctl00_MainContent_txtPE_Gastro_Intestinal').val();
-            var PE_Observation = $('#ctl00_MainContent_txtPE_Observation').val();
-            var PE_Cranial_Nerves = $('#ctl00_MainContent_txtPE_Cranial_Nerves').val();
-            var PE_Limb_Strength = $('#ctl00_MainContent_txtPE_Limb_Strength').val();
-            var PE_Spasticity = $('#ctl00_MainContent_txtPE_Spasticity').val();
-            var PE_Position = $('#ctl00_MainContent_txtPE_Position').val();
-            var PE_Vibration = $('#ctl00_MainContent_txtPE_Vibration').val();
-            var PE_Stereognosis = $('#ctl00_MainContent_txtPE_Stereognosis').val();
-            var PE_Pain = $('#ctl00_MainContent_txtPE_Pain').val();
-            var PE_Biceps = $('#ctl00_MainContent_txtPE_Biceps').val();
-            var PE_Triceps = $('#ctl00_MainContent_txtPE_Triceps').val();
-            var PE_Brachioradialis = $('#ctl00_MainContent_txtPE_Brachioradialis').val();
-            var PE_Quadriceps = $('#ctl00_MainContent_txtPE_Quadriceps').val();
-            var PE_Patellar = $('#ctl00_MainContent_txtPE_Patellar').val();
-            var PE_Achilles = $('#ctl00_MainContent_txtPE_Achilles').val();
-            var PE_Extensor = $('#ctl00_MainContent_txtPE_Extensor').val();
-            var PE_Frontal = $('#ctl00_MainContent_txtPE_Frontal').val();
-            var PE_Finger = $('#ctl00_MainContent_txtPE_Finger').val();
-            var PE_Heel = $('#ctl00_MainContent_txtPE_Heel').val();
-            var PE_Movements = $('#ctl00_MainContent_txtPE_Movements').val();
-            var PE_Gait = $('#ctl00_MainContent_txtPE_Gait').val();
-            var HBM_Problem = $('#ctl00_MainContent_txtHBM_Problem').val();
-            var HBM_Caused = $('#ctl00_MainContent_txtHBM_Caused').val();
-            var HBM_Started = $('#ctl00_MainContent_txtHBM_Started').val();
-            var HBM_Course = $('#ctl00_MainContent_txtHBM_Course').val();
-            var HBM_Treatment = $('#ctl00_MainContent_txtHBM_Treatment').val();
-            var HBM_Effects = $('#ctl00_MainContent_txtHBM_Effects').val();
-            var PE_Neck_Rigidity = document.getElementById('ctl00_MainContent_chkPE_Neck_Rigidity').checked;
-            var PE_Kerning_Sign = document.getElementById('ctl00_MainContent_chkPE_Kerning_Sign').checked;
-            var PE_Brudzinki_Sign = document.getElementById('ctl00_MainContent_chkPE_Brudzinki_Sign').checked;
 
-            var For_Summary = $('#ctl00_MainContent_txtFor_Summary').val();
-            var For_Diagnosis = $('#ctl00_MainContent_txtFor_Diagnosis').val();
-            var For_AxisI = $('#ctl00_MainContent_txtFor_AxisI').val();
-            var For_AxisII = $('#ctl00_MainContent_txtFor_AxisII').val();
-            var For_AxisIII = $('#ctl00_MainContent_txtFor_AxisIII').val();
-            var For_AxisIV = $('#ctl00_MainContent_txtFor_AxisIV').val();
-            var For_AxisV = $('#ctl00_MainContent_txtFor_AxisV').val();
-            var For_PredisposingFactors = $('#ctl00_MainContent_txtFor_PredisposingFactors').val();
-            var For_PrecipitatingFactors = $('#ctl00_MainContent_txtFor_PrecipitatingFactors').val();
-            var For_PrepetuatingFactors = $('#ctl00_MainContent_txtFor_PrepetuatingFactors').val();
-            var For_Investigation = $('#ctl00_MainContent_txtFor_Investigation').val();
-            var For_Medical = $('#ctl00_MainContent_txtFor_Medical').val();
-            var For_Psychological = $('#ctl00_MainContent_txtFor_Psychological').val();
-            var For_Major_Issues = $('#ctl00_MainContent_txtFor_Major_Issues').val();
-            var For_Strengths = $('#ctl00_MainContent_txtFor_Strengths').val();
-            var For_Goals = $('#ctl00_MainContent_txtFor_Goals').val();
-            var For_Strategies = $('#ctl00_MainContent_txtFor_Strategies').val();
+            var interrior = [];
+            var posterior = [];
 
-            var Heptomology = $("#ctl00_MainContent_txtHeptomogy").val();
-            var Splenomegaly = $("#ctl00_MainContent_txtsplenomegaly").val();
-            var txtPeads_weight = $('#ctl00_MainContent_txtPeads_weight').val();
-            var txtPeads_Length = $('#ctl00_MainContent_txtPeads_Length').val();
-            var txtPeads_HC = $('#ctl00_MainContent_txtPeads_HC').val();
-            var txtPeads_General_Appearance = $('#ctl00_MainContent_txtPeads_General_Appearance').val();
-            var chkPeads_Cyanosis = document.getElementById('ctl00_MainContent_chkPeads_Cyanosis').checked;
-            var chkPeads_Jaundice = document.getElementById('ctl00_MainContent_chkPeads_Jaundice').checked;
-            var chkPeads_Lethargy = document.getElementById('ctl00_MainContent_chkPeads_Rash').checked;
-            var chkPeads_Rash = document.getElementById('ctl00_MainContent_chkPeads_Rash').checked;
-            var txtPeads_Others = $('#ctl00_MainContent_txtPeads_Others').val();
-            var chkPeads_Caput = document.getElementById('ctl00_MainContent_chkPeads_Caput').checked;
-            var chkPeads_Cephalhematoma = document.getElementById('ctl00_MainContent_chkPeads_Cephalhematoma').checked;
-            var rdbPeads_Anterioropen = document.getElementById('ctl00_MainContent_rdbPeads_Anterioropen').checked;
-            var rdbPeads_AnteriorClose = document.getElementById('ctl00_MainContent_rdbPeads_AnteriorClose').checked;
-            var chkPeads_Dextrocardia = document.getElementById('ctl00_MainContent_chkPeads_Dextrocardia').checked;
-            var chkPeads_Bulging = document.getElementById('ctl00_MainContent_chkPeads_Bulging').checked;
-            var chkPeads_Murmur = document.getElementById('ctl00_MainContent_chkPeads_Murmur').checked;
-            var txtPeads_HeartSound = $('#ctl00_MainContent_txtPeads_HeartSound').val();
-            var chkPeads_Nasal = document.getElementById('ctl00_MainContent_chkPeads_Nasal').checked;
-            var chkPeads_Recessions = document.getElementById('ctl00_MainContent_chkPeads_Recessions').checked;
-            var txtPeads_AddedSounds = $('#ctl00_MainContent_txtPeads_AddedSounds').val();
-            var rdbPeads_Flat = document.getElementById('ctl00_MainContent_rdbPeads_Flat').checked;
-            var rdbPeads_Distended = document.getElementById('ctl00_MainContent_rdbPeads_Distended').checked;
-            var rdbPeads_Scaphoid = document.getElementById('ctl00_MainContent_rdbPeads_Scaphoid').checked;
-            var chkPeads_Liver = document.getElementById('ctl00_MainContent_chkPeads_Liver').checked;
-            var chkPeads_Spleen = document.getElementById('ctl00_MainContent_chkPeads_Spleen').checked;
-            var txtPeads_GITOthers = $('#ctl00_MainContent_txtPeads_GITOthers').val();
-            var chkPeads_Sucking = document.getElementById('ctl00_MainContent_chkPeads_Sucking').checked;
-            var chkPeads_Rooting = document.getElementById('ctl00_MainContent_chkPeads_Rooting').checked;
-            var chkPeads_Moro = document.getElementById('ctl00_MainContent_chkPeads_Moro').checked;
-            var txtPeads_CNSOthers = $('#ctl00_MainContent_txtPeads_CNSOthers').val();
-            var chkPeads_FullTerm = document.getElementById('ctl00_MainContent_chkPeads_FullTerm').checked;
-            var chkPeads_PreTerm = document.getElementById('ctl00_MainContent_chkPeads_PreTerm').checked;
-            var txtPeads_DateOfDelivery = $('#ctl00_MainContent_txtPeads_DateOfDelivery').val();
-            var txtPeads_TimeOfDelivery = $('#ctl00_MainContent_txtPeads_TimeOfDelivery').val();
-            var rdbPeads_Booked = document.getElementById('ctl00_MainContent_rdbPeads_Booked').checked;
-            var rdbPeads_UnBooked = document.getElementById('ctl00_MainContent_rdbPeads_UnBooked').checked;
-            var chkPeads_DAIHandling = document.getElementById('ctl00_MainContent_chkPeads_DAIHandling').checked;
-            var chkPeads_ANTURash = document.getElementById('ctl00_MainContent_chkPeads_ANTURash').checked;
-            var chkPeads_PIH = document.getElementById('ctl00_MainContent_chkPeads_PIH').checked;
-            var chkPeads_GDM = document.getElementById('ctl00_MainContent_chkPeads_GDM').checked;
-            var chkPeads_Vacinated = document.getElementById('ctl00_MainContent_chkPeads_Vacinated').checked;
-            var txtPeads_ANTOthers = $('#ctl00_MainContent_txtPeads_ANTOthers').val();
-            var rdbPeads_SVD = document.getElementById('ctl00_MainContent_rdbPeads_SVD').checked;
-            var rdbPeads_LSCS = document.getElementById('ctl00_MainContent_rdbPeads_LSCS').checked;
-            var rdbPeads_Emergency = document.getElementById('ctl00_MainContent_rdbPeads_Emergency').checked;
-            var rdbPeads_Elective = document.getElementById('ctl00_MainContent_rdbPeads_Elective').checked;
-            var txtPeads_PlaceOfDelivery = $('#ctl00_MainContent_txtPeads_PlaceOfDelivery').val();
-            var txtPeads_IndicationForLSCS = $('#ctl00_MainContent_txtPeads_IndicationForLSCS').val();
-            var Peads_apgerScore1min = $('#ctl00_MainContent_ddlPeads_apgerScore1min').val();
-            if (Peads_apgerScore1min == 0)
-                Peads_apgerScore1min = "";
-            var Peads_apgerScore5min = $('#ctl00_MainContent_ddlPeads_apgerScore5min').val();
-            if (Peads_apgerScore5min == 0)
-                Peads_apgerScore5min = "";
-            var chkPeads_Resuscitation = document.getElementById('ctl00_MainContent_chkPeads_Resuscitation').checked;
-            var txtPeads_NatalOthers = $('#ctl00_MainContent_txtPeads_NatalOthers').val();
-            var chkPeads_Moaning = document.getElementById('ctl00_MainContent_chkPeads_Moaning').checked;
-            var chkPeads_RespDistress = document.getElementById('ctl00_MainContent_chkPeads_RespDistress').checked;
-            var chkPeads_PostNATALCyanosis = document.getElementById('ctl00_MainContent_chkPeads_PostNATALCyanosis').checked;
-            var chkPeads_Fits = document.getElementById('ctl00_MainContent_chkPeads_Fits').checked;
-            var chkPeads_ReluctanceToFeed = document.getElementById('ctl00_MainContent_chkPeads_ReluctanceToFeed').checked;
-            var txtPeads_PostNatalOthers = $('#ctl00_MainContent_txtPeads_PostNatalOthers').val();
-            var Edd = $('#ctl00_MainContent_txtedd').val();
-            var Bsr = $('#ctl00_MainContent_TxtBSR').val();
-            var Bmi = $('#ctl00_MainContent_txtBMI').val();
-            var URG = $("#ctl00_MainContent_txtUGS").val();
-            var chkdre = document.getElementById('ctl00_MainContent_chkDRE').checked;
-            var chkProctoscopy = document.getElementById('ctl00_MainContent_chkProctoscopy').checked;
-            var Abdominal = $("#ctl00_MainContent_txtAbdomin").val();
-            var Pa_gynae = $("#ctl00_MainContent_txtPA_Gynae").val();
-            var ps_gynae = $("#ctl00_MainContent_txtPS_Gynae").val();
-            var uterus = $("#ctl00_MainContent_txtUterus").val();
-            var ps_obs = $("#ctl00_MainContent_txtPS_OBS").val();
-            var pv_obs = $("#ctl00_MainContent_txtPV").val();
-            var fx = $("#ctl00_MainContent_txtFX").val();
-            var sfh = $("#ctl00_MainContent_txtSFH").val();
-            var lie = $("#ctl00_MainContent_txtLIE").val();
-            var presentation = $("#ctl00_MainContent_txtPresentation").val();
-            var fhr = $("#ctl00_MainContent_txtFHR").val();
-            var engagement = $("#ctl00_MainContent_txtEngagement").val();
+            var rightData = $('#txtInteriorRight0').val() || "";
+            var leftData = $('#txtInteriorLeft0').val() || "";
+            interrior.push([rightData, leftData]);
 
-            debugger;
-            var eyeInfo = new Array();
-            var infoType = '#lblEye';
-            var right = '#txtRightEye';
-            var left = '#txtLeftEye';
+            rightData = $('#txtPosteriorRight0').val() || "";
+            leftData = $('#txtPosteriorLeft0').val() || "";
+            posterior.push([rightData, leftData]);
+
+            var eyeInfo = [];
+
             for (var i = 0; i < 5; i++) {
-                var infoData = $('' + infoType + '' + i + '').text();
-                var rightData = $('' + right + '' + i + '').val();
-                var leftData = $('' + left + '' + i + '').val();
+                var infoType = $('#lblEye' + i).text().trim();
+                var rightData = $('#txtRightEye' + i).val() || "";
+                var leftData = $('#txtLeftEye' + i).val() || "";
 
-                eyeInfo[i] = new Array(infoData, rightData, leftData);
+                eyeInfo.push({
+                    Info_Type: infoType.toUpperCase(),
+                    Right_Eye: rightData,
+                    Left_Eye: leftData
+                });
             }
 
-            debugger;
-            /*Slit Lamp Exam*/
-            var rightData = '';
-            var leftData = '';
 
-            var interrior = new Array();
-            var posterior = new Array();
 
-            rightData = $('#txtInteriorRight0').val();
-            leftData = $('#txtInteriorLeft0').val();
-            interrior[0] = new Array(rightData, leftData);
-            debugger;
-            rightData = $('#txtPosteriorRight0').val();
-            leftData = $('#txtPosteriorLeft0').val();
-            posterior[0] = new Array(rightData, leftData);
+            var data = {
+                Patient_ID: Patient_ID,
+                reg_ID: reg_ID,
+                 btnsave : $('#btnSave').val(),
+                 btnsaveVital : $('#btnSave_Vital').val(),
+                 Discharged : document.getElementById("ctl00_MainContent_CheckBox1").checked,
+                 No_Medicine : document.getElementById("ctl00_MainContent_chkNo_Medicine").checked,
+                 No_LabTest : document.getElementById("ctl00_MainContent_chkNo_Test").checked,
+                 Doctor_ID : $('#ctl00_MainContent_ddlDoctorName option:selected').val(),
+                 Follow_Up : $('#ctl00_MainContent_ddlFOllowUp').val(),
+                 Proto : $('#ctl00_MainContent_ddlProto').val(),
+                 Follow_Date : $('#ctl00_MainContent_FollowNoDate').val(),
+                 pulse_Min : $('#ctl00_MainContent_txtPuls').val(),
+                 L_M_P : $('#ctl00_MainContent_txtLMP').val(),
+                 SPO2 : $('#ctl00_MainContent_txtspo2').val(),
+                 pulse_Min : $('#ctl00_MainContent_txtPuls').val(),
+                 L_M_P : $('#ctl00_MainContent_txtLMP').val(),
+                 SPO2 : $('#ctl00_MainContent_txtspo2').val(),
+                 BP_mm_Hg : $('#ctl00_MainContent_txtBP').val(),
+                 MUAC : $('#ctl00_MainContent_txtMUAC').val(),
+                 OFC : $('#ctl00_MainContent_txtOFC').val(),
+                 Temp_C : $('#ctl00_MainContent_txtTemp').val(),
+                 Respiration_Min : $('#ctl00_MainContent_txtRespiration').val(),
+                 Height_Cm : $('#ctl00_MainContent_txtHeight').val(),
+                 Weight_Kg : $('#ctl00_MainContent_txtWeight').val(),
+                 Refer_To_Hospital : $('#ctl00_MainContent_txtRefer_To_Hospital').val(),
+                Reffer_To: $('#ctl00_MainContent_ddlPatient_Main_Category').val(),
+                Reffer_doc: $('#ddldoctors').val() || "",
+                 Provisional_Diagnosis : $('#ctl00_MainContent_txtProvisionalDiagnosis').val(),
+                 HistoryOfPeresentIllness : $('#ctl00_MainContent_txtHistoryOfPeresentIllness').val(),
+                 HistoryOfFamily : $('#ctl00_MainContent_txtHistoryOfFamily').val(),
+                 HistoryOfPastIllness : $('#ctl00_MainContent_txtHistoryOfPastIllness').val(),
+                 CVS : $('#ctl00_MainContent_txtCVS').val(),
+                 GIT : $('#ctl00_MainContent_txtGIT').val(),
+                 RESP : $('#ctl00_MainContent_txtRESP').val(),
+                 SocioEconomicHistory : $('#ctl00_MainContent_txtSocioEconomicHistory').val(),
+                 CNS : $('#ctl00_MainContent_txtCNS').val(),
+                 GYNAE : $('#ctl00_MainContent_txtGYNAE').val(),
+                 Mucculor : $('#ctl00_MainContent_txtMucculor').val(),
+                 Local : $('#ctl00_MainContent_txtLocal').val(),
+                 Advice : $('#ctl00_MainContent_txtAdvice').val(),
+                 Special_Test : $('#ctl00_MainContent_txtSpecialTests').val(),
+                 Area_Of_Interest : $('#ctl00_MainContent_txtAreaOfInterest').val(),
+                 Birth_History : $('#ctl00_MainContent_txtBirthHistory').val(),
+                 Reffer_No : $('#ctl00_MainContent_txtRefferNote').val(),
+                 Drug_History : $('#ctl00_MainContent_txtDrugHistory').val(),
+                 Personal_History : $('#ctl00_MainContent_txtPersonalHistory').val(),
+                 txtRemarksHistory : $('#ctl00_MainContent_txtRemarksHistory').val(),
+                 ObstetricHistory : $('#ctl00_MainContent_txtObstetricHistory').val(),
+                 AllergiesHistory : $('#ctl00_MainContent_txtAllergiesHistory').val(),
+                 TreatmentHistory : $('#ctl00_MainContent_txtTreatmentHistory').val(),
+                 DevelopmentHistory : $('#ctl00_MainContent_txtDevelopmentHistory').val(),
+                 VaccinationHistory : $('#ctl00_MainContent_txtVaccinationHistory').val(),
+                NutritionHistory: $('#ctl00_MainContent_txtNutritionHistory').val(),
 
-            PageMethods.SaveRecord(Out_Patient_ID, Patient_ID, reg_ID, btnsave, btnsaveVital, pulse_Min, L_M_P, SPO2, Edd, Bsr, Bmi, MUAC, OFC, DevelopmentHistory, VaccinationHistory, NutritionHistory, Heptomology, Splenomegaly, BP_mm_Hg, Temp_C, Respiration_Min, Height_Cm, Weight_Kg, Provisional_Diagnosis, Refer_To_Hospital, Reffer_To, Reffer_doc, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, CVS, GIT, RESP, SocioEconomicHistory, CNS, GYNAE, URG, Mucculor, Local, chkPallor, chkJVP, chkaganoris, chkunconceed, chkjaundice, hydration, edema, chk1, chk2, chk3, chk4, chk5, Discharge, No_Medicine, No_LabTest, Other, Doctor_ID, Designation, FinalDiagnosis, Final_Rec, Administration, Follow_Up, Proto, Follow_Date, Advice, Special_Test, Area_Of_Interest, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, txtRemarksHistory, AllergiesHistory, TreatmentHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg
-                , ComRightPos, ComLeftPos, ComRightNeg, ComLeftNeg, ComRightF, ComLeftF, ComRightFNeg, ComLeftFNeg, ComCentral, ComLateralized, ComPTA, ComTympanometry, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA,
-                ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress,
-                txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtNextPlan, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion,
-                txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
-                txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
-                DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress,
-                chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, chkdre, chkProctoscopy, Abdominal, Pa_gynae, ps_gynae, uterus, ps_obs, pv_obs, fx, sfh, lie, presentation, fhr, engagement, eyeInfo, interrior, posterior, onAjaxFailed,
-                function (response) {
-                    debugger;
-                    console.log(response);
-                    var error = response._errorObject.Message;
-                    console.log(error);
-                    if (error != "") {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: response._errorObject.Message,
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                        return false;
-                    }
+
+                 chkPallor : document.getElementById("ctl00_MainContent_chkPallor").checked,
+                 chkJVP : document.getElementById("ctl00_MainContent_chkJVP").checked,
+                 chkaganoris : document.getElementById("ctl00_MainContent_chkaganoris").checked,
+                 chkunconceed : document.getElementById("ctl00_MainContent_chkunconceed").checked,
+                 chkjaundice : document.getElementById("ctl00_MainContent_chkjaundice").checked,
+                 hydration : document.getElementById("ctl00_MainContent_hydration").checked,
+                 edema : document.getElementById("ctl00_MainContent_edema").checked,
+                 chk1 : document.getElementById("ctl00_MainContent_chk1").checked,
+                 chk2 : document.getElementById("ctl00_MainContent_chk2").checked,
+                 chk3 : document.getElementById("ctl00_MainContent_chk3").checked,
+                 chk4 : document.getElementById("ctl00_MainContent_ns").checked,
+                 chk5 : document.getElementById("ctl00_MainContent_sl").checked,
+                 Other : $('#ctl00_MainContent_txtInputBox1').val(),
+                 Designation : $('#ctl00_MainContent_txtDesignation').val(),
+                 FinalDiagnosis : $('#ctl00_MainContent_txtFinalDiagnosis').val(),
+                 Final_Rec : $("#ctl00_MainContent_Final_Rec").val(),
+                Administration: Administration,
+                ENT_Throat_IDL: $('#ctl00_MainContent_txtmidl').val() || "",
+                ENT_Throat_Nose: $('#ctl00_MainContent_txtmNose').val() || "",
+                ENT_Ear_Right: $('#ctl00_MainContent_txtmRight').val() || "",
+                Ent_Ear_Left: $('#ctl00_MainContent_txtmLeft').val() || "",
+                ComRightPos: $('#ctl00_MainContent_ComRightPos').val() || "",
+                ComLeftPos: $('#ctl00_MainContent_ComLeftPos').val() || "",
+                ComRightNeg: $('#ctl00_MainContent_ComRightNeg').val() || "",
+                ComLeftNeg: $('#ctl00_MainContent_ComLeftNeg').val() || "",
+                ComRightF: $('#ctl00_MainContent_ComRightF').val() || "",
+                ComLeftF: $('#ctl00_MainContent_ComLeftF').val() || "",
+                ComRightFNeg: $('#ctl00_MainContent_ComRightFNeg').val() || "",
+                ComLeftFNeg: $('#ctl00_MainContent_ComLeftFNeg').val() || "",
+                ComCentral: $('#ctl00_MainContent_ComCentral').val() || "",
+                ComLateralized: $('#ctl00_MainContent_ComLateralized').val() || "",
+                ComPTA: $('#ctl00_MainContent_ComPTA').val() || "",
+                ComTympanometry: $('#ctl00_MainContent_ComTympanometry').val() || "",
+                ENT_Rinnes_Right_PosNeg : document.getElementById('ctl00_MainContent_mchkRightPos').checked,
+                ENT_Rinnes_Lft_PosNeg : document.getElementById('ctl00_MainContent_mchkLeftPos').checked,
+                ENT_Rinnes_Right_FalseNeg : document.getElementById('ctl00_MainContent_mchkRightF').checked,
+                ENT_Rinnes_Lft_FalseNeg : document.getElementById('ctl00_MainContent_mchkLeftF').checked,
+                ENT_Webber_Central : document.getElementById('ctl00_MainContent_mchkcentral').checked,
+                ENT_Webber_Lateralized : document.getElementById('ctl00_MainContent_mchkLateralized').checked,
+                ENT_Investigation_PTA : document.getElementById('ctl00_MainContent_mchkPTA').checked,
+                ENT_Investigation_Tympanometry : document.getElementById('ctl00_MainContent_mchkTympanometry').checked,
+                ENT_Rinnes_Right_Neg : document.getElementById('ctl00_MainContent_mchkRightNeg').checked,
+                ENT_Rinnes_Lft_Neg : document.getElementById('ctl00_MainContent_mchkLeftNeg').checked,
+                ENT_Rinnes_Right_FNeg : document.getElementById('ctl00_MainContent_mchkRightFNeg').checked,
+                ENT_Rinnes_Lft_FNeg : document.getElementById('ctl00_MainContent_mchkLeftFNeg').checked,
+                txtInformant : $('#ctl00_MainContent_txtInformant').val(),
+                txtSourceOfReferral : $('#ctl00_MainContent_txtSourceOfReferral').val(),
+                chkNeckHolding : document.getElementById("ctl00_MainContent_chkNeckHolding").checked,
+                chkWalking : document.getElementById('ctl00_MainContent_chkWalking').checked,
+                chkTalking : document.getElementById('ctl00_MainContent_chkTalking').checked,
+                chkOthers : document.getElementById('ctl00_MainContent_chkOthers').checked,
+                txtMenarche : $('#ctl00_MainContent_txtMenarche').val(),
+                txtMenstrual : $('#ctl00_MainContent_txtMenstrual').val(),
+                txtAttachmentSeparationfromParents : $('#ctl00_MainContent_txtAttachmentSeparationfromParents').val(),
+                txtHealth : $('#ctl00_MainContent_txtHealth').val(),
+                chkNailBiting : document.getElementById('ctl00_MainContent_chkNailBiting').checked,
+                chkTemperTantrums : document.getElementById('ctl00_MainContent_chkTemperTantrums').checked,
+                chkBedWetting : document.getElementById('ctl00_MainContent_chkBedWetting').checked,
+                txtAcademics : $('#ctl00_MainContent_txtAcademics').val(),
+                txtPeerRelationship : $('#ctl00_MainContent_txtPeerRelationship').val(),
+                txtBehaviour : $('#ctl00_MainContent_txtBehaviour').val(),
+                txtOccupationalHistory : $('#ctl00_MainContent_txtOccupationalHistory').val(),
+                txtMaritalRelationshipSexualHistory : $('#ctl00_MainContent_txtMaritalRelationshipSexualHistory').val(),
+                txtSubstanceUse : $('#ctl00_MainContent_txtSubstanceUse').val(),
+                txtForensicUse : $('#ctl00_MainContent_txtForensicUse').val(),
+                txtRelationship : $('#ctl00_MainContent_txtRelationship').val(),
+                txtLeisureActivities : $('#ctl00_MainContent_txtLeisureActivities').val(),
+                txtAttitudetoSelfandStandards : $('#ctl00_MainContent_txtAttitudetoSelfandStandards').val(),
+                txtPrevallingMood : $('#ctl00_MainContent_txtPrevallingMood').val(),
+                txtReactionPattrentoStress : $('#ctl00_MainContent_txtReactionPattrentoStress').val(),
+                txtReligiousPracticesAttitute : $('#ctl00_MainContent_txtReligiousPracticesAttitute').val(),
+                txtFather : $('#ctl00_MainContent_txtFather').val(),
+                txtMother : $('#ctl00_MainContent_txtMother').val(),
+                txtSiblings: $('#ctl00_MainContent_txtSiblings').val(),
+
+                txtHomeAtmosphererelationshipsocialclass : $('#ctl00_MainContent_txtHomeAtmosphererelationshipsocialclass').val(),
+                txtFamilialIllness : $('#ctl00_MainContent_txtFamilialIllness').val(),
+                txtActualandapparentage : $('#ctl00_MainContent_txtActualandapparentage').val(),
+                txtRace : $('#ctl00_MainContent_txtRace').val(),
+                txtTattoosbodypiercingandscars : $('#ctl00_MainContent_txtTattoosbodypiercingandscars').val(),
+                txtBodyHabitus : $('#ctl00_MainContent_txtBodyHabitus').val(),
+                txtDress : $('#ctl00_MainContent_txtDress').val(),
+                txtHygiene : $('#ctl00_MainContent_txtHygiene').val(),
+                txtPsychomotorActivity : $('#ctl00_MainContent_txtPsychomotorActivity').val(),
+                txtInvoluntarymovements : $('#ctl00_MainContent_txtInvoluntarymovements').val(),
+                txtDystoniaEPS : $('#ctl00_MainContent_txtDystoniaEPS').val(),
+                txtTardivedyskinesia : $('#ctl00_MainContent_txtTardivedyskinesia').val(),
+                txtTics : $('#ctl00_MainContent_txtTics').val(),
+                txtTremors : $('#ctl00_MainContent_txtTremors').val(),
+                txtAttentivenesstointerview : $('#ctl00_MainContent_txtAttentivenesstointerview').val(),
+                txtEyeContact : $('#ctl00_MainContent_txtEyeContact').val(),
+                txtLevelofConsciousness : $('#ctl00_MainContent_txtLevelofConsciousness').val(),
+                txtRate : $('#ctl00_MainContent_txtRate').val(),
+                txtRhythm : $('#ctl00_MainContent_txtRhythm').val(),
+                txtVolume : $('#ctl00_MainContent_txtVolume').val(),
+                txtTone : $('#ctl00_MainContent_txtTone').val(),
+                txtModulation: $('#ctl00_MainContent_txtModulationvar').val(),
+                txtDepressed : $('#ctl00_MainContent_txtDepressed').val(),
+                txtElated : $('#ctl00_MainContent_txtElated').val(),
+                txtIrritable : $('#ctl00_MainContent_txtIrritable').val(),
+                txtLabile : $('#ctl00_MainContent_txtLabile').val(),
+                txtIncongruent : $('#ctl00_MainContent_txtIncongruent').val(),
+                txtbluntingflatteningapathy : $('#ctl00_MainContent_txtBluntingFlatteningApathy').val(),
+                txtThinkingPremeditation : $('#ctl00_MainContent_txtThinkingPremeditation').val(),
+                txtPlans : $('#ctl00_MainContent_txtPlans').val(),
+                txtNextPlan : $('#ctl00_MainContent_txtNextPlan').val(),
+                txtActions : $('#ctl00_MainContent_txtActions').val(),
+                txtPreservative : $('#ctl00_MainContent_txtPreservative').val(),
+                txtLoosAssociation : $('#ctl00_MainContent_txtLoosAssociation').val(),
+                txtTangentiaility : $('#ctl00_MainContent_txtTangentiaility').val(),
+                txtCircumstantiality : $('#ctl00_MainContent_txtCircumstantiality').val(),
+                txtFlightofIdeas : $('#ctl00_MainContent_txtFlightofIdeas').val(),
+                txtThoughtInsertion : $('#ctl00_MainContent_txtThoughtInsertion').val(),
+                txtThoughtWithdrawal : $('#ctl00_MainContent_txtThoughtWithdrawal').val(),
+                txtThoughBroadcasting : $('#ctl00_MainContent_txtThoughBroadcasting').val(),
+                txtThoughControl : $('#ctl00_MainContent_txtThoughControl').val(),
+                txtDellusion : $('#ctl00_MainContent_txtDellusion').val(),
+                txtovervaluedideas : $('#ctl00_MainContent_txtovervaluedideas').val(),
+                txtDepresonalization : $('#ctl00_MainContent_txtDepresonalization').val(),
+                txtDerealization : $('#ctl00_MainContent_txtDerealization').val(),
+                txtthrougObsession : $('#ctl00_MainContent_txtthrougObsession').val(),
+                txtthrougPhobies : $('#ctl00_MainContent_txtthrougPhobies').val(),
+                txtthrougHomocidialIdeas : $('#ctl00_MainContent_txtthrougHomocidialIdeas').val(),
+                txtillusion : $('#ctl00_MainContent_txtillusion').val(),
+                txtHallucinationAuditoryVisualOlfactoryGustatoryTactile : $('#ctl00_MainContent_txtHallucinationAuditoryVisualOlfactoryGustatoryTactile').val(),
+                txtorientationtime : $('#ctl00_MainContent_txtorientationtime').val(),
+                txtplace : $('#ctl00_MainContent_txtplace').val(),
+                txtperson : $('#ctl00_MainContent_txtperson').val(),
+                txtAttentionConcentrationSerial7Test : $('#ctl00_MainContent_txtAttentionConcentrationSerial7Test').val(),
+                txtOrDaysOfWeekReverseOrder : $('#ctl00_MainContent_txtOrDaysOfWeekReverseOrder').val(),
+                txtImmediatememory : $('#ctl00_MainContent_txtImmediatememory').val(),
+                txtshorttermrecentevents : $('#ctl00_MainContent_txtshorttermrecentevents').val(),
+                txtadressrecallafter2minutes : $('#ctl00_MainContent_txtadressrecallafter2minutes').val(),
+                txtlongtermremoteevents : $('#ctl00_MainContent_longtermremoteevents').val(),
+                txtadressrecallafter5minues : $('#ctl00_MainContent_txtadressrecallafter5minues').val(),
+                txtgeneralknowledgequestion : $('#ctl00_MainContent_txtgeneralknowledgequestion').val(),
+                txtsimplearthemeticcalculation : $('#ctl00_MainContent_txtsimplearthemeticcalculation').val(),
+                txtabstrationconcertethinking : $('#ctl00_MainContent_txtabstrationconcertethinking').val(),
+                txtinsight: $('#ctl00_MainContent_txtinsight').val(),
+                DermaFace: $('#ctl00_MainContent_txtDermaFace').val() || "",
+                DermaNeck: $('#ctl00_MainContent_txtDermaNeck').val() || "",
+                DermaTrunk: $('#ctl00_MainContent_txtDermaTrunk').val() || "",
+                DermaUpperLimb: $('#ctl00_MainContent_txtDermaUpperLimb').val() || "",
+                DermaLowerLimb: $('#ctl00_MainContent_txtDermaLowerLimb').val() || "",
+                DermaFlexures: $('#ctl00_MainContent_txtDermaFlexures').val() || "",
+                DermaGenitalias: $('#ctl00_MainContent_txtDermaGenitalias').val() || "",
+                DermaHair: $('#ctl00_MainContent_txtDermaHair').val() || "",
+                DermaNail: $('#ctl00_MainContent_txtDermaNail').val() || "",
+                DermaMucousMembrane: $('#ctl00_MainContent_txtDermaMucousMembrane').val() || "",
+                DermaEyes: $('#ctl00_MainContent_txtDermaEyes').val() || "",
+                DermaEars: $('#ctl00_MainContent_txtDermaEars').val() || "",
+                DermaNose: $('#ctl00_MainContent_txtDermaNose').val() || "",
+                DermaLips: $('#ctl00_MainContent_txtDermaLips').val() || "",
+                Out_Patient_ID: Out_Patient_ID,
+
+                Interior_Right: interrior[0][0],
+                Interior_Left: interrior[0][1],
+                Posterior_Right: posterior[0][0],
+                Posterior_Left: posterior[0][1],
+                PE_Pluse : $('#ctl00_MainContent_txtPE_Pluse').val(),
+                PE_BP : $('#ctl00_MainContent_txtPE_BP').val(),
+                PE_Temperature : $('#ctl00_MainContent_txtPE_Temperature').val(),
+                PE_Weight : $('#ctl00_MainContent_txtPE_Weight').val(),
+                PE_RespiratoryRate : $('#ctl00_MainContent_txtPE_RespiratoryRate').val(),
+                PE_Jaundice : $('#ctl00_MainContent_txtPE_Jaundice').val(),
+                PE_Anemia : $('#ctl00_MainContent_txtPE_Anemia').val(),
+                PE_Cyanosis : $('#ctl00_MainContent_txtPE_Cyanosis').val(),
+                PE_Clubbing : $('#ctl00_MainContent_txtPE_Clubbing').val(),
+                PE_JVP : $('#ctl00_MainContent_txtPE_JVP').val(),
+                PE_LymphNodes : $('#ctl00_MainContent_txtPE_LymphNodes').val(),
+                PE_Edema : $('#ctl00_MainContent_txtPE_Edema').val(),
+                PE_Respiratory : $('#ctl00_MainContent_txtPE_Respiratory').val(),
+                PE_Cardiovascular : $('#ctl00_MainContent_txtPE_Cardiovascular').val(),
+                PE_Gastro_Intestinal : $('#ctl00_MainContent_txtPE_Gastro_Intestinal').val(),
+                PE_Observation : $('#ctl00_MainContent_txtPE_Observation').val(),
+                PE_Cranial_Nerves : $('#ctl00_MainContent_txtPE_Cranial_Nerves').val(),
+                PE_Limb_Strength : $('#ctl00_MainContent_txtPE_Limb_Strength').val(),
+                PE_Spasticity : $('#ctl00_MainContent_txtPE_Spasticity').val(),
+                PE_Position : $('#ctl00_MainContent_txtPE_Position').val(),
+                PE_Vibration : $('#ctl00_MainContent_txtPE_Vibration').val(),
+                PE_Stereognosis : $('#ctl00_MainContent_txtPE_Stereognosis').val(),
+                PE_Pain : $('#ctl00_MainContent_txtPE_Pain').val(),
+                PE_Biceps : $('#ctl00_MainContent_txtPE_Biceps').val(),
+                PE_Triceps : $('#ctl00_MainContent_txtPE_Triceps').val(),
+                PE_Brachioradialis : $('#ctl00_MainContent_txtPE_Brachioradialis').val(),
+                PE_Quadriceps : $('#ctl00_MainContent_txtPE_Quadriceps').val(),
+                PE_Patellar : $('#ctl00_MainContent_txtPE_Patellar').val(),
+                PE_Achilles : $('#ctl00_MainContent_txtPE_Achilles').val(),
+                PE_Extensor : $('#ctl00_MainContent_txtPE_Extensor').val(),
+                PE_Frontal : $('#ctl00_MainContent_txtPE_Frontal').val(),
+                PE_Finger : $('#ctl00_MainContent_txtPE_Finger').val(),
+                PE_Heel : $('#ctl00_MainContent_txtPE_Heel').val(),
+                PE_Movements : $('#ctl00_MainContent_txtPE_Movements').val(),
+                PE_Gait : $('#ctl00_MainContent_txtPE_Gait').val(),
+                HBM_Problem : $('#ctl00_MainContent_txtHBM_Problem').val(),
+                HBM_Caused : $('#ctl00_MainContent_txtHBM_Caused').val(),
+                HBM_Started : $('#ctl00_MainContent_txtHBM_Started').val(),
+                HBM_Course : $('#ctl00_MainContent_txtHBM_Course').val(),
+                HBM_Treatment : $('#ctl00_MainContent_txtHBM_Treatment').val(),
+                HBM_Effects : $('#ctl00_MainContent_txtHBM_Effects').val(),
+                PE_Neck_Rigidity : document.getElementById('ctl00_MainContent_chkPE_Neck_Rigidity').checked,
+                PE_Kerning_Sign : document.getElementById('ctl00_MainContent_chkPE_Kerning_Sign').checked,
+                PE_Brudzinki_Sign : document.getElementById('ctl00_MainContent_chkPE_Brudzinki_Sign').checked,
+                For_Summary : $('#ctl00_MainContent_txtFor_Summary').val(),
+                For_Diagnosis : $('#ctl00_MainContent_txtFor_Diagnosis').val(),
+                For_AxisI : $('#ctl00_MainContent_txtFor_AxisI').val(),
+                For_AxisII : $('#ctl00_MainContent_txtFor_AxisII').val(),
+                For_AxisIII : $('#ctl00_MainContent_txtFor_AxisIII').val(),
+                For_AxisIV : $('#ctl00_MainContent_txtFor_AxisIV').val(),
+                For_AxisV : $('#ctl00_MainContent_txtFor_AxisV').val(),
+                For_PredisposingFactors : $('#ctl00_MainContent_txtFor_PredisposingFactors').val(),
+                For_PrecipitatingFactors : $('#ctl00_MainContent_txtFor_PrecipitatingFactors').val(),
+                For_PrepetuatingFactors : $('#ctl00_MainContent_txtFor_PrepetuatingFactors').val(),
+                For_Investigation : $('#ctl00_MainContent_txtFor_Investigation').val(),
+                For_Medical : $('#ctl00_MainContent_txtFor_Medical').val(),
+                For_Psychological : $('#ctl00_MainContent_txtFor_Psychological').val(),
+                For_Major_Issues : $('#ctl00_MainContent_txtFor_Major_Issues').val(),
+                For_Strengths : $('#ctl00_MainContent_txtFor_Strengths').val(),
+                For_Goals : $('#ctl00_MainContent_txtFor_Goals').val(),
+                For_Strategies : $('#ctl00_MainContent_txtFor_Strategies').val(),
+                Heptomology : $("#ctl00_MainContent_txtHeptomogy").val(),
+                Splenomegaly : $("#ctl00_MainContent_txtsplenomegaly").val(),
+                txtPeads_weight : $('#ctl00_MainContent_txtPeads_weight').val(),
+                txtPeads_Length : $('#ctl00_MainContent_txtPeads_Length').val(),
+                txtPeads_HC : $('#ctl00_MainContent_txtPeads_HC').val(),
+                txtPeads_General_Appearance: $('#ctl00_MainContent_txtPeads_General_Appearance').val(),
+
+
+                chkPeads_Cyanosis : document.getElementById('ctl00_MainContent_chkPeads_Cyanosis').checked,
+                chkPeads_Jaundice : document.getElementById('ctl00_MainContent_chkPeads_Jaundice').checked,
+                chkPeads_Lethargy : document.getElementById('ctl00_MainContent_chkPeads_Rash').checked,
+                chkPeads_Rash : document.getElementById('ctl00_MainContent_chkPeads_Rash').checked,
+                txtPeads_Others : $('#ctl00_MainContent_txtPeads_Others').val(),
+                chkPeads_Caput : document.getElementById('ctl00_MainContent_chkPeads_Caput').checked,
+                chkPeads_Cephalhematoma : document.getElementById('ctl00_MainContent_chkPeads_Cephalhematoma').checked,
+                rdbPeads_Anterioropen : document.getElementById('ctl00_MainContent_rdbPeads_Anterioropen').checked,
+                rdbPeads_AnteriorClose : document.getElementById('ctl00_MainContent_rdbPeads_AnteriorClose').checked,
+                chkPeads_Dextrocardia : document.getElementById('ctl00_MainContent_chkPeads_Dextrocardia').checked,
+                chkPeads_Bulging : document.getElementById('ctl00_MainContent_chkPeads_Bulging').checked,
+                chkPeads_Murmur : document.getElementById('ctl00_MainContent_chkPeads_Murmur').checked,
+                txtPeads_HeartSound : $('#ctl00_MainContent_txtPeads_HeartSound').val(),
+                chkPeads_Nasal : document.getElementById('ctl00_MainContent_chkPeads_Nasal').checked,
+                chkPeads_Recessions : document.getElementById('ctl00_MainContent_chkPeads_Recessions').checked,
+                txtPeads_AddedSounds : $('#ctl00_MainContent_txtPeads_AddedSounds').val(),
+                rdbPeads_Flat : document.getElementById('ctl00_MainContent_rdbPeads_Flat').checked,
+                rdbPeads_Distended : document.getElementById('ctl00_MainContent_rdbPeads_Distended').checked,
+                rdbPeads_Scaphoid : document.getElementById('ctl00_MainContent_rdbPeads_Scaphoid').checked,
+                chkPeads_Liver : document.getElementById('ctl00_MainContent_chkPeads_Liver').checked,
+                chkPeads_Spleen : document.getElementById('ctl00_MainContent_chkPeads_Spleen').checked,
+                txtPeads_GITOthers : $('#ctl00_MainContent_txtPeads_GITOthers').val(),
+                chkPeads_Sucking : document.getElementById('ctl00_MainContent_chkPeads_Sucking').checked,
+                chkPeads_Rooting : document.getElementById('ctl00_MainContent_chkPeads_Rooting').checked,
+                chkPeads_Moro : document.getElementById('ctl00_MainContent_chkPeads_Moro').checked,
+                txtPeads_CNSOthers : $('#ctl00_MainContent_txtPeads_CNSOthers').val(),
+                chkPeads_FullTerm : document.getElementById('ctl00_MainContent_chkPeads_FullTerm').checked,
+                chkPeads_PreTerm : document.getElementById('ctl00_MainContent_chkPeads_PreTerm').checked,
+                txtPeads_DateOfDelivery : $('#ctl00_MainContent_txtPeads_DateOfDelivery').val(),
+                txtPeads_TimeOfDelivery : $('#ctl00_MainContent_txtPeads_TimeOfDelivery').val(),
+                rdbPeads_Booked : document.getElementById('ctl00_MainContent_rdbPeads_Booked').checked,
+                rdbPeads_UnBooked : document.getElementById('ctl00_MainContent_rdbPeads_UnBooked').checked,
+                chkPeads_DAIHandling : document.getElementById('ctl00_MainContent_chkPeads_DAIHandling').checked,
+                chkPeads_ANTURash : document.getElementById('ctl00_MainContent_chkPeads_ANTURash').checked,
+                chkPeads_PIH : document.getElementById('ctl00_MainContent_chkPeads_PIH').checked,
+                chkPeads_GDM : document.getElementById('ctl00_MainContent_chkPeads_GDM').checked,
+                chkPeads_Vacinated : document.getElementById('ctl00_MainContent_chkPeads_Vacinated').checked,
+                txtPeads_ANTOthers : $('#ctl00_MainContent_txtPeads_ANTOthers').val(),
+                rdbPeads_SVD : document.getElementById('ctl00_MainContent_rdbPeads_SVD').checked,
+                rdbPeads_LSCS : document.getElementById('ctl00_MainContent_rdbPeads_LSCS').checked,
+                rdbPeads_Emergency : document.getElementById('ctl00_MainContent_rdbPeads_Emergency').checked,
+                rdbPeads_Elective : document.getElementById('ctl00_MainContent_rdbPeads_Elective').checked,
+                txtPeads_PlaceOfDelivery : $('#ctl00_MainContent_txtPeads_PlaceOfDelivery').val(),
+                txtPeads_IndicationForLSCS : $('#ctl00_MainContent_txtPeads_IndicationForLSCS').val(),
+                chkPeads_Resuscitation : document.getElementById('ctl00_MainContent_chkPeads_Resuscitation').checked,
+                txtPeads_NatalOthers : $('#ctl00_MainContent_txtPeads_NatalOthers').val(),
+                chkPeads_Moaning : document.getElementById('ctl00_MainContent_chkPeads_Moaning').checked,
+                chkPeads_RespDistress : document.getElementById('ctl00_MainContent_chkPeads_RespDistress').checked,
+                chkPeads_PostNATALCyanosis : document.getElementById('ctl00_MainContent_chkPeads_PostNATALCyanosis').checked,
+                chkPeads_Fits : document.getElementById('ctl00_MainContent_chkPeads_Fits').checked,
+                chkPeads_ReluctanceToFeed: document.getElementById('ctl00_MainContent_chkPeads_ReluctanceToFeed').checked,
+
+
+                txtPeads_PostNatalOthers : $('#ctl00_MainContent_txtPeads_PostNatalOthers').val(),
+                Edd : $('#ctl00_MainContent_txtedd').val(),
+                Bsr : $('#ctl00_MainContent_TxtBSR').val(),
+                Bmi : $('#ctl00_MainContent_txtBMI').val(),
+                URG : $("#ctl00_MainContent_txtUGS").val(),
+                chkdre : document.getElementById('ctl00_MainContent_chkDRE').checked,
+                chkProctoscopy : document.getElementById('ctl00_MainContent_chkProctoscopy').checked,
+                Abdominal : $("#ctl00_MainContent_txtAbdomin").val(),
+                Pa_gynae : $("#ctl00_MainContent_txtPA_Gynae").val(),
+                ps_gynae : $("#ctl00_MainContent_txtPS_Gynae").val(),
+                uterus : $("#ctl00_MainContent_txtUterus").val(),
+                ps_obs : $("#ctl00_MainContent_txtPS_OBS").val(),
+                pv_obs : $("#ctl00_MainContent_txtPV").val(),
+                fx : $("#ctl00_MainContent_txtFX").val(),
+                sfh : $("#ctl00_MainContent_txtSFH").val(),
+                lie : $("#ctl00_MainContent_txtLIE").val(),
+                presentation : $("#ctl00_MainContent_txtPresentation").val(),
+                fhr : $("#ctl00_MainContent_txtFHR").val(),
+                engagement : $("#ctl00_MainContent_txtEngagement").val(),
+                Peads_apgerScore1min: $('#ctl00_MainContent_ddlPeads_apgerScore1min').val() || "",
+                Peads_apgerScore5min: $('#ctl00_MainContent_ddlPeads_apgerScore5min').val() || "",
+            }
+            
+          
+            $.ajax({
+                type: "POST",
+                url: "OutPatients.aspx/SaveRecord",
+                data: JSON.stringify({ data : data ,eyeInfos: eyeInfo}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Record has been saved successfully.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Record has been saved successfully.',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                    
                     debugger;
-                    sendFile(response);
+                    sendFile(response.d);
                     setTimeout(function () {
-                        window.location = "OutPatients.aspx?ID=" + response;
+                        window.location = "OutPatients.aspx?ID=" + response.d;
                     }, 2500);
 
-                   
+
                     $('#btnSave').val("Update");
                     $('#btnSave_Vital').text('Update Vital');
-                });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+            
             if ($('#fileupload')[0].files.length > 0) {
                 var patientID = $('#<%= txtOut_Patient_ID.ClientID %>').val();
                 if (patientID != "(New)") {
