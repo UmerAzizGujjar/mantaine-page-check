@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Data;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
-using System.Web.Services;
-using System.Web.Script.Serialization;
-using static PMS.WebForm11;
+using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.MobileControls.Adapters;
+using System.Web.UI.WebControls;
+using static PMS.WebForm11;
 
 namespace PMS
 {
@@ -945,502 +949,498 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string SaveRecord(string Out_Patient_ID, int Patient_ID,int reg_ID, string btnsave, string btnsaveVital, string pulse_Min, string L_M_P, string SPO2, string Edd, string Bsr, string Bmi, string MUAC, string OFC, string DevelopmentHistory, string VaccinationHistory, string NutritionHistory, string Heptomology, string Splenomegaly, string BP_mm_Hg, string Temp_C, string Respiration_Min, string Height_Cm, string Weight_Kg, string Provisional_Diagnosis, string Refer_To_Hospital, string Reffer_To, string Reffer_doc, string HistoryOfPeresentIllness, string HistoryOfFamily, string HistoryOfPastIllness, string CVS, string GIT, string RESP, string SocioEconomicHistory, string CNS, string GYNAE, string URG, string Mucculor, string Local, bool chkPallor, bool chkJVP, bool chkaganoris, bool chkunconceed, bool chkjaundice, bool hydration, bool edema, bool chk1, bool chk2, bool chk3, bool chk4, bool chk5, bool Discharge, bool No_Medicine, bool No_LabTest, string Other, string Doctor_ID, string Designation, string FinalDiagnosis, string Final_Rec, string Administration, string Follow_Up, string Proto, DateTime Follow_Date, string Advice, string Special_Test, string Area_Of_Interest, string Birth_History, string Reffer_No, string Drug_History, string Personal_History, string ObstetricHistory, string txtRemarksHistory, string AllergiesHistory, string TreatmentHistory, string ENT_Throat_IDL, string ENT_Throat_Nose, string ENT_Ear_Right, string Ent_Ear_Left, bool ENT_Rinnes_Right_PosNeg,
-            string ComRightPos, string ComLeftPos, string ComRightNeg, string ComLeftNeg, string ComRightF, string ComLeftF, string ComRightFNeg, string ComLeftFNeg, string ComCentral, string ComLateralized, string ComPTA, string ComTympanometry,
-            bool ENT_Rinnes_Lft_PosNeg, bool ENT_Rinnes_Right_FalseNeg, bool ENT_Rinnes_Lft_FalseNeg, bool ENT_Webber_Central, bool ENT_Webber_Lateralized, bool ENT_Investigation_PTA, bool ENT_Investigation_Tympanometry, bool ENT_Rinnes_Right_Neg, bool ENT_Rinnes_Lft_Neg, bool ENT_Rinnes_Right_FNeg, bool ENT_Rinnes_Lft_FNeg, string txtInformant, string txtSourceOfReferral, bool chkNeckHolding, bool chkWalking, bool chkTalking, bool chkOthers, string txtMenarche, string txtMenstrual, string txtAttachmentSeparationfromParents, string txtHealth, bool chkNailBiting, bool chkTemperTantrums, bool chkBedWetting, string txtAcademics, string txtPeerRelationship, string txtBehaviour, string txtOccupationalHistory, string txtMaritalRelationshipSexualHistory, string txtSubstanceUse, string txtForensicUse, string txtRelationship, string txtLeisureActivities, string txtAttitudetoSelfandStandards, string txtPrevallingMood, string txtReactionPattrentoStress, string txtReligiousPracticesAttitute, string txtFather, string txtMother, string txtSiblings, string txtHomeAtmosphererelationshipsocialclass, string txtFamilialIllness, string txtActualandapparentage, string txtRace, string txtTattoosbodypiercingandscars, string txtBodyHabitus, string txttxtDress, string txtHygiene, string txtPsychomotorActivity, string txtInvoluntarymovements, string txtDystoniaEPS, string txtTardivedyskinesia, string txtTics, string txtTremors, string txtAttentivenesstointerview, string txtEyeContact, string txtLevelofConsciousness, string txtRate, string txtRhythm, string txtVolume, string txtTone, string txtModulationvar, string txtDepressed, string txtElated, string txtIrritable, string txtLabile, string txtIncongruent, string txtbluntingflatteningapathy, string txtThinkingPremeditation, string txtPlans, string txtNextPlan,
-             string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed,
-            string txtPeads_PostNatalOthers, bool chkdre, bool chkProctoscopy, string Abdominal, string Pa_gynae, string ps_gynae, string uterus,
-    string ps_obs, string pv_obs, string fx, string sfh, string lie, string presentation, string fhr, string engagement, string[][] eyeInfo, string[][] interrior, string[][] posterior)
+        public static string SaveRecord(PatientVisitData data, List<OutPatientEyeInfo> eyeInfos)
         {
             try
             {
+                var id = "";
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
 
                     Out_Patient OPD;
+                  
+                        if (data.btnsave == "Save" && data.btnsaveVital == "Save Vital")
+                        {
 
-                    if (btnsave == "Save" && btnsaveVital == "Save Vital")
-                    {
+                            OPD = new Out_Patient();
+                            OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
+                            OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                        }
+                        else
+                        {
+                            OPD = (from tbl in db.Out_Patients
+                                   where tbl.Out_Patient_ID == Convert.ToInt32(data.Out_Patient_ID)
+                                   select tbl).FirstOrDefault();
+                            OPD.Updated_By = AppConfig.UserID;
+                            OPD.Updated_Time = DateTime.Now;
+                        }
+                        OPD.L_M_P = data.L_M_P;
+                        OPD.spo2 = data.SPO2;
+                        OPD.EDD = data.Edd;
+                        OPD.BSR = data.Bsr;
+                        OPD.BMI = data.Bmi;
+                        OPD.pulse_Min = data.pulse_Min;
+                        OPD.BP_mm_Hg = data.BP_mm_Hg;
+                        OPD.Temp_C = data.Temp_C;
+                        OPD.Respiration_Min = data.Respiration_Min;
+                        OPD.Height_Cm = data.Height_Cm;
+                        OPD.Weight_Kg = data.Weight_Kg;
+                        OPD.MUAC = data.MUAC;
+                        OPD.OFC = data.OFC;
+                        OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
+                        OPD.HistoryOfPeresentIllness = data.HistoryOfPeresentIllness;
+                        OPD.HistoryOfFamily = data.HistoryOfFamily;
+                        OPD.HistoryOfPastIllness = data.HistoryOfPastIllness;
+                        OPD.DevelopmentHistory = data.DevelopmentHistory;
+                        OPD.VaccinationHistory = data.VaccinationHistory;
+                        OPD.NutritionHistory = data.NutritionHistory;
+                        OPD.CVS = data.CVS;
+                        OPD.GIT = data.GIT;
+                        OPD.RESP = data.RESP;
+                        OPD.AllergiesHistory = data.AllergiesHistory;
+                        OPD.TreatmentHistory = data.TreatmentHistory;
+                        OPD.SocioEconomicHistory = data.SocioEconomicHistory;
+                        OPD.CNS = data.CNS;
+                        OPD.URG = data.URG;
+                        OPD.GYNAE = data.GYNAE;
+                        OPD.Local = data.Local;
+                        OPD.Mucculor = data.Mucculor;
+                        OPD.ObstetricHistory = data.ObstetricHistory;
+                        OPD.txtRemarksHistory = data.txtRemarksHistory;
+                        OPD.chkJVP = data.chkJVP;
+                        OPD.chkPallor = data.chkPallor;
+                        OPD.chkaganoris = data.chkaganoris;
+                        OPD.chkunconceed = data.chkunconceed;
+                        OPD.chkjaundice = data.chkjaundice;
+                        OPD.hydration = data.hydration;
+                        OPD.edema = data.edema;
+                        OPD.chk1 = data.chk1;
+                        OPD.chk2 = data.chk2;
+                        OPD.chk3 = data.chk3;
+                        OPD.chk4 = data.chk4;
+                        OPD.chk5 = data.chk5;
+                        OPD.Discharge = data.Discharged;
+                        OPD.No_medicine = data.No_Medicine;
+                        OPD.No_LabTest = data.No_LabTest;
+                        OPD.txtInputBox1 = data.Other;
+                        if (data.Discharged == true)
+                        {
+                            OPD.discharge_date = DateTime.Now;
+                        }
+                        //OPD.Doctor_ID = Convert.ToString(AppConfig.UserID);
+                        OPD.Doctor_ID = data.Doctor_ID;
+                        OPD.Designation = data.Designation;
+                        OPD.Final_Rec = data.Final_Rec;
+                        OPD.Final_Diagnosis = data.FinalDiagnosis;
+                        OPD.Administration = data.Administration.ToString(); ;
+                        OPD.Control_Date = Convert.ToDateTime(DateTime.Now);
+                        OPD.Follow_Up = data.Follow_Up.ToString();
+                        OPD.Proto = data.Proto.ToString();
+                        OPD.Folllow_Date = Convert.ToDateTime(data.Follow_Date);
+                        OPD.Advice = data.Advice;
+                        OPD.Special_Test = data.Special_Test;
+                        OPD.Area_Of_Interest = data.Area_Of_Interest;
+                        OPD.Birth_History = data.Birth_History;
+                        if (data.Reffer_To != "")
+                        {
+                            var P = (from tbl in db.Patients
+                                     where tbl.Patient_ID == data.Patient_ID
+                                     select tbl).FirstOrDefault();
 
-                        OPD = new Out_Patient();
-                        OPD.Patient_ID = Convert.ToInt32(Patient_ID);
-                        OPD.Reg_PatId = Convert.ToInt32(reg_ID);
-                    }
-                    else
-                    {
-                        OPD = (from tbl in db.Out_Patients
-                               where tbl.Out_Patient_ID == Convert.ToInt32(Out_Patient_ID)
-                               select tbl).FirstOrDefault();
-                        OPD.Updated_By = AppConfig.UserID;
-                        OPD.Updated_Time = DateTime.Now;
-                    }
-                    OPD.L_M_P = L_M_P;
-                    OPD.spo2 = SPO2;
-                    OPD.EDD = Edd;
-                    OPD.BSR = Bsr;
-                    OPD.BMI = Bmi;
-                    OPD.pulse_Min = pulse_Min;
-                    OPD.BP_mm_Hg = BP_mm_Hg;
-                    OPD.Temp_C = Temp_C;
-                    OPD.Respiration_Min = Respiration_Min;
-                    OPD.Height_Cm = Height_Cm;
-                    OPD.Weight_Kg = Weight_Kg;
-                    OPD.MUAC = MUAC;
-                    OPD.OFC = OFC;
-                    OPD.ProvisionalDiagnosis = Provisional_Diagnosis;
-                    OPD.HistoryOfPeresentIllness = HistoryOfPeresentIllness;
-                    OPD.HistoryOfFamily = HistoryOfFamily;
-                    OPD.HistoryOfPastIllness = HistoryOfPastIllness;
-                    OPD.DevelopmentHistory = DevelopmentHistory;
-                    OPD.VaccinationHistory = VaccinationHistory;
-                    OPD.NutritionHistory = NutritionHistory;
-                    OPD.CVS = CVS;
-                    OPD.GIT = GIT;
-                    OPD.RESP = RESP;
-                    OPD.AllergiesHistory = AllergiesHistory;
-                    OPD.TreatmentHistory = TreatmentHistory;
-                    OPD.SocioEconomicHistory = SocioEconomicHistory;
-                    OPD.CNS = CNS;
-                    OPD.URG = URG;
-                    OPD.GYNAE = GYNAE;
-                    OPD.Local = Local;
-                    OPD.Mucculor = Mucculor;
-                    OPD.ObstetricHistory = ObstetricHistory;
-                    OPD.txtRemarksHistory = txtRemarksHistory;
-                    OPD.chkJVP = chkJVP;
-                    OPD.chkPallor = chkPallor;
-                    OPD.chkaganoris = chkaganoris;
-                    OPD.chkunconceed = chkunconceed;
-                    OPD.chkjaundice = chkjaundice;
-                    OPD.hydration = hydration;
-                    OPD.edema = edema;
-                    OPD.chk1 = chk1;
-                    OPD.chk2 = chk2;
-                    OPD.chk3 = chk3;
-                    OPD.chk4 = chk4;
-                    OPD.chk5 = chk5;
-                    OPD.Discharge = Discharge;
-                    OPD.No_medicine = No_Medicine;
-                    OPD.No_LabTest = No_LabTest;
-                    OPD.txtInputBox1 = Other;
-                    if (Discharge == true)
-                    {
-                        OPD.discharge_date = DateTime.Now;
-                    }
-                    //OPD.Doctor_ID = Convert.ToString(AppConfig.UserID);
-                    OPD.Doctor_ID = Doctor_ID;
-                    OPD.Designation = Designation;
-                    OPD.Final_Rec = Final_Rec;
-                    OPD.Final_Diagnosis = FinalDiagnosis;
-                    OPD.Administration = Administration.ToString(); ;
-                    OPD.Control_Date = Convert.ToDateTime(DateTime.Now);
-                    OPD.Follow_Up = Follow_Up.ToString();
-                    OPD.Proto = Proto.ToString();
-                    OPD.Folllow_Date = Convert.ToDateTime(Follow_Date);
-                    OPD.Advice = Advice;
-                    OPD.Special_Test = Special_Test;
-                    OPD.Area_Of_Interest = Area_Of_Interest;
-                    OPD.Birth_History = Birth_History;
-                    if (Reffer_To != "")
-                    {
-                        var P = (from tbl in db.Patients
-                                 where tbl.Patient_ID == Patient_ID
-                                 select tbl).FirstOrDefault();
+                            P.Patient_Main_Category = data.Reffer_To;
+                            db.SubmitChanges();
 
-                        P.Patient_Main_Category = Reffer_To;
+                            var D = (from tbl in db.Previous_Dpts
+                                     where tbl.Patient_ID == data.Patient_ID && tbl.Perivious_Dpt_Name == data.Reffer_To
+                                     select tbl).FirstOrDefault();
+                            if (D == null)
+                            {
+                                Previous_Dpt Previous_Dpt = new Previous_Dpt();
+                                Previous_Dpt.Patient_ID = data.Patient_ID;
+                                Previous_Dpt.Perivious_Dpt_Name = data.Reffer_To;
+                                Previous_Dpt.Created_Time = DateTime.Now;
+                                db.Previous_Dpts.InsertOnSubmit(Previous_Dpt);
+                                db.SubmitChanges();
+                            }
+                        }
+                        OPD.Reffer_To = data.Reffer_To.ToString();
+                        OPD.Reffer_No = data.Reffer_No;
+                        OPD.reffer_doc = Convert.ToInt32(data.Reffer_doc);
+                        OPD.Drug_History = data.Drug_History;
+                        OPD.Personal_History = data.Personal_History;
+                        OPD.ENT_Throat_IDL = data.ENT_Throat_IDL.ToString();
+                        OPD.ENT_Throat_Nose = data.ENT_Throat_Nose.ToString();
+                        OPD.ENT_Ear_Right = data.ENT_Ear_Right.ToString();
+                        OPD.Ent_Ear_Left = data.Ent_Ear_Left.ToString();
+                        OPD.ENT_Rinnes_Right_PosNeg = data.ENT_Rinnes_Right_PosNeg;
+                        OPD.ENT_Rinnes_Lft_PosNeg = data.ENT_Rinnes_Lft_PosNeg;
+                        OPD.ENT_Rinnes_Right_FalseNeg = data.ENT_Rinnes_Right_FalseNeg;
+                        OPD.ENT_Rinnes_Lft_FalseNeg = data.ENT_Rinnes_Lft_FalseNeg;
+                        OPD.ENT_Webber_Central = data.ENT_Webber_Central;
+                        OPD.ENT_Webber_Lateralized = data.ENT_Webber_Lateralized;
+                        OPD.ENT_Investigation_PTA = data.ENT_Investigation_PTA;
+                        OPD.ENT_Investigation_Tympanometry = data.ENT_Investigation_Tympanometry;
+                        OPD.ENT_Rinnes_Right_Neg = data.ENT_Rinnes_Right_Neg;
+                        OPD.ENT_Rinnes_Lft_Neg = data.ENT_Rinnes_Lft_Neg;
+                        OPD.ENT_Rinnes_Right_FNeg = data.ENT_Rinnes_Right_FNeg;
+                        OPD.ENT_Rinnes_Lft_FNeg = data.ENT_Rinnes_Lft_FNeg;
+
+                        OPD.Ent_Com_Right_pos = data.ComRightPos.ToString();
+                        OPD.Ent_Com_Left_pos = data.ComLeftPos.ToString();
+                        OPD.Ent_Com_Right_Neg = data.ComRightNeg.ToString();
+                        OPD.Ent_Com_Left_Neg = data.ComLeftNeg.ToString();
+                        OPD.Ent_Com_Right_False = data.ComRightF.ToString();
+                        OPD.Ent_Com_Left_False = data.ComLeftF.ToString();
+                        OPD.Ent_Com_Right_False_Neg = data.ComRightFNeg.ToString();
+                        OPD.Ent_Com_Left_False_Neg = data.ComLeftFNeg.ToString();
+                        OPD.Ent_Com_Central = data.ComCentral.ToString();
+                        OPD.Ent_Com_Lateralized = data.ComLateralized.ToString();
+                        OPD.Ent_Com_PTA = data.ComPTA.ToString();
+                        OPD.Ent_Com_Tympanometry = data.ComTympanometry.ToString();
+
+                        OPD.Psychiatry_Informant = data.txtInformant;
+                        OPD.Psychiatry_Source_Referral = data.txtSourceOfReferral;
+                        OPD.Psychiatry_Neck_Holding = data.chkNeckHolding;
+                        OPD.Psychiatry_Walking = data.chkWalking;
+                        OPD.Psychiatry_Talking = data.chkTalking;
+                        OPD.Psychiatry_Others = data.chkOthers;
+                        OPD.Psychiatry_Menarche = data.txtMenarche;
+                        OPD.Psychiatry_Menstrual = data.txtMenstrual;
+                        OPD.Psychiatry_Attachment_Separation = data.txtAttachmentSeparationfromParents;
+                        OPD.Psychiatry_Health = data.txtHealth;
+                        OPD.Psychiatry_Nail_Biting = data.chkNailBiting.ToString();
+                        OPD.Psychiatry_Temper_Tantrums = data.chkTemperTantrums.ToString();
+                        OPD.Psychiatry_Bed_Wetting = data.chkBedWetting.ToString();
+                        OPD.Psychiatry_Academics = data.txtAcademics;
+                        OPD.Psychiatry_Peer_Relationship = data.txtPeerRelationship;
+                        OPD.Psychiatry_Behaviour = data.txtBehaviour;
+                        OPD.Psychiatry_Occupational_History = data.txtOccupationalHistory;
+                        OPD.Psychiatry_Sexual_History = data.txtMaritalRelationshipSexualHistory;
+                        OPD.Psychiatry_Substance_Use = data.txtSubstanceUse;
+                        OPD.Psychiatry_Forensic_Use = data.txtForensicUse;
+                        OPD.Psychiatry_Relationship = data.txtRelationship;
+                        OPD.Psychiatry_Leisure_Activities = data.txtLeisureActivities;
+                        OPD.Psychiatry_Attitude_Standards = data.txtAttitudetoSelfandStandards;
+                        OPD.Psychiatry_Prevalling_Mood = data.txtPrevallingMood;
+                        OPD.Psychiatry_Reaction_Stress = data.txtReactionPattrentoStress;
+                        OPD.Psychiatry_Religious_Practices = data.txtReligiousPracticesAttitute;
+                        OPD.Psychiatry_Father = data.txtFather;
+                        OPD.Psychiatry_Mother = data.txtMother;
+                        OPD.Psychiatry_Siblings = data.txtSiblings;
+                        OPD.Psychiatry_Home_Atmosphere = data.txtHomeAtmosphererelationshipsocialclass;
+                        OPD.Psychiatry_Familial_Illness = data.txtFamilialIllness;
+                        OPD.Psychiatry_Actual_age = data.txtActualandapparentage;
+                        OPD.Psychiatry_Race = data.txtRace;
+                        OPD.Psychiatry_Tattoos_body_scars = data.txtTattoosbodypiercingandscars;
+                        OPD.Psychiatry_Body_Habitus = data.txtBodyHabitus;
+                        OPD.Psychiatry_Dress = data.txtDress;
+                        OPD.Psychiatry_Hygiene = data.txtHygiene;
+                        OPD.Psychiatry_Psychomotor_Activity = data.txtPsychomotorActivity;
+                        OPD.Psychiatry_Involuntary_movements = data.txtInvoluntarymovements;
+                        OPD.Psychiatry_Dystonia_EPS = data.txtDystoniaEPS;
+                        OPD.Psychiatry_Tardive_dyskinesia = data.txtTardivedyskinesia;
+                        OPD.Psychiatry_Tics = data.txtTics;
+                        OPD.Psychiatry_Tremors = data.txtTremors;
+                        OPD.Psychiatry_Attentiveness_interview = data.txtAttentivenesstointerview;
+                        OPD.Psychiatry_Eye_Contact = data.txtEyeContact;
+                        OPD.Psychiatry_Level_Consciousness = data.txtLevelofConsciousness;
+                        OPD.Psychiatry_Rate = data.txtRate;
+                        OPD.Psychiatry_Rhythm = data.txtRhythm;
+                        OPD.Psychiatry_Volume = data.txtVolume;
+                        OPD.Psychiatry_Tone = data.txtTone;
+                        OPD.Psychiatry_Modulation = data.txtModulation;
+                        OPD.Psychiatry_Depressed = data.txtDepressed;
+                        OPD.Psychiatry_Elated = data.txtElated;
+                        OPD.Psychiatry_Irritable = data.txtIrritable;
+                        OPD.Psychiatry_Labile = data.txtLabile;
+                        OPD.Psychiatry_Incongruent = data.txtIncongruent;
+                        OPD.Psychiatry_Blunting_Flattening_Apathy = data.txtbluntingflatteningapathy;
+                        OPD.Psychiatry_Thinking = data.txtThinkingPremeditation;
+                        OPD.Psychiatry_Plans = data.txtPlans;
+                        OPD.NextPlan = data.txtNextPlan;
+                        OPD.Psychiatry_Actions = data.txtActions;
+                        OPD.Psychiatry_Preservative = data.txtPreservative;
+                        OPD.Psychiatry_LoosAssociation = data.txtLoosAssociation;
+                        OPD.Psychiatry_Tangentiaility = data.txtTangentiaility;
+                        OPD.Psychiatry_Circumstantiality = data.txtCircumstantiality;
+                        OPD.Psychiatry_Flight_Ideas = data.txtFlightofIdeas;
+                        OPD.Psychiatry_Thought_Insertion = data.txtThoughtInsertion;
+                        OPD.Psychiatry_Thought_Withdrawal = data.txtThoughtWithdrawal;
+                        OPD.Psychiatry_Thought_Broadcasting = data.txtThoughBroadcasting;
+                        OPD.Psychiatry_Thought_Control = data.txtThoughControl;
+                        OPD.Psychiatry_Dellusion = data.txtDellusion;
+                        OPD.Psychiatry_Overvalued_Ideas = data.txtovervaluedideas;
+                        OPD.Psychiatry_Depresonalization = data.txtDepresonalization;
+                        OPD.Psychiatry_Derealization = data.txtDerealization;
+                        OPD.Psychiatry_Obsession = data.txtthrougObsession;
+                        OPD.Psychiatry_Phobies = data.txtthrougPhobies;
+                        OPD.Psychiatry_Homocidial_Ideas = data.txtthrougHomocidialIdeas;
+                        OPD.Psychiatry_Illusion = data.txtillusion;
+                        OPD.Psychiatry_Hallucination = data.txtHallucinationAuditoryVisualOlfactoryGustatoryTactile;
+                        OPD.Psychiatry_Orientation_Time = data.txtorientationtime;
+                        OPD.Psychiatry_Place = data.txtplace;
+                        OPD.Psychiatry_Person = data.txtperson;
+                        OPD.Psychiatry_Attention_Concentration = data.txtAttentionConcentrationSerial7Test;
+                        OPD.Psychiatry_Days_Week = data.txtOrDaysOfWeekReverseOrder;
+                        OPD.Psychiatry_Immediate_Memory = data.txtImmediatememory;
+                        OPD.Psychiatry_Recent_Events = data.txtshorttermrecentevents;
+                        OPD.Psychiatry_Adress_Recall_Two = data.txtadressrecallafter2minutes;
+                        OPD.Psychiatry_Remote_Events = data.txtlongtermremoteevents;
+                        OPD.Psychiatry_Adress_Recall_Five = data.txtadressrecallafter5minues;
+                        OPD.Psychiatry_General_knowledge = data.txtgeneralknowledgequestion;
+                        OPD.Psychiatry_Arthemetic_Calculation = data.txtsimplearthemeticcalculation;
+                        OPD.Psychiatry_Abstraction = data.txtabstrationconcertethinking;
+                        OPD.Psychiatry_Insight = data.txtinsight;
+
+                        OPD.DermaFace = data.DermaFace;
+                        OPD.DermaNeck = data.DermaNeck;
+                        OPD.DermaTrunk = data.DermaTrunk;
+                        OPD.DermaUpperLimb = data.DermaUpperLimb;
+                        OPD.DermaLowerLimb = data.DermaLowerLimb;
+                        OPD.DermaFlexures = data.DermaFlexures;
+                        OPD.DermaGenitalias = data.DermaGenitalias;
+                        OPD.DermaHair = data.DermaHair;
+                        OPD.DermaNail = data.DermaNail;
+                        OPD.DermaMucousMembrane = data.DermaMucousMembrane;
+                        OPD.DermaEyes = data.DermaEyes;
+                        OPD.DermaEars = data.DermaEars;
+                        OPD.DermaNose = data.DermaNose;
+                        OPD.DermaLips = data.DermaLips;
+                        OPD.Psychiatry_HBM_Problem = data.HBM_Problem;
+                        OPD.Psychiatry_HBM_Caused = data.HBM_Caused;
+                        OPD.Psychiatry_HBM_Started = data.HBM_Started;
+                        OPD.Psychiatry_HBM_Course = data.HBM_Course;
+                        OPD.Psychiatry_HBM_Treatment = data.HBM_Treatment;
+                        OPD.Psychiatry_HBM_Effects = data.HBM_Effects;
+                        OPD.Psychiatry_PE_Pluse = data.PE_Pluse;
+                        OPD.Psychiatry_PE_BP = data.PE_BP;
+                        OPD.Psychiatry_PE_Temperature = data.PE_Temperature;
+                        OPD.Psychiatry_PE_Weight = data.PE_Weight;
+                        OPD.Psychiatry_PE_RespiratoryRate = data.PE_RespiratoryRate;
+                        OPD.Psychiatry_PE_Jaundice = data.PE_Jaundice;
+                        OPD.Psychiatry_PE_Anemia = data.PE_Anemia;
+                        OPD.Psychiatry_PE_Cyanosis = data.PE_Cyanosis;
+                        OPD.Psychiatry_PE_Clubbing = data.PE_Clubbing;
+                        OPD.Psychiatry_PE_JVP = data.PE_JVP;
+                        OPD.Psychiatry_PE_LymphNodes = data.PE_LymphNodes;
+                        OPD.Psychiatry_PE_Edema = data.PE_Edema;
+                        OPD.Psychiatry_PE_Respiratory = data.PE_Respiratory;
+                        OPD.Psychiatry_PE_Cardiovascular = data.PE_Cardiovascular;
+                        OPD.Psychiatry_PE_Gastro_Intestinal = data.PE_Gastro_Intestinal;
+                        OPD.Psychiatry_PE_Observation = data.PE_Observation;
+                        OPD.Psychiatry_PE_Cranial_Nerves = data.PE_Cranial_Nerves;
+                        OPD.Psychiatry_PE_Limb_Strength = data.PE_Limb_Strength;
+                        OPD.Psychiatry_PE_Spasticity = data.PE_Spasticity;
+                        OPD.Psychiatry_PE_Position = data.PE_Position;
+                        OPD.Psychiatry_PE_Vibration = data.PE_Vibration;
+                        OPD.Psychiatry_PE_Stereognosis = data.PE_Stereognosis;
+                        OPD.Psychiatry_PE_Pain = data.PE_Pain;
+                        OPD.Psychiatry_PE_Biceps = data.PE_Biceps;
+                        OPD.Psychiatry_PE_Triceps = data.PE_Triceps;
+                        OPD.Psychiatry_PE_Brachioradialis = data.PE_Brachioradialis;
+                        OPD.Psychiatry_PE_Quadriceps = data.PE_Quadriceps;
+                        OPD.Psychiatry_PE_Patellar = data.PE_Patellar;
+                        OPD.Psychiatry_PE_Achilles = data.PE_Achilles;
+                        OPD.Psychiatry_PE_Extensor = data.PE_Extensor;
+                        OPD.Psychiatry_PE_Frontal = data.PE_Frontal;
+                        OPD.Psychiatry_PE_Finger = data.PE_Finger;
+                        OPD.Psychiatry_PE_Heel = data.PE_Heel;
+                        OPD.Psychiatry_PE_Movements = data.PE_Movements;
+                        OPD.Psychiatry_PE_Gait = data.PE_Gait;
+                        OPD.Psychiatry_PE_Neck_Rigidity = data.PE_Neck_Rigidity;
+                        OPD.Psychiatry_PE_Kerning_Sign = data.PE_Kerning_Sign;
+                        OPD.Psychiatry_PE_Brudzinki_Sign = data.PE_Brudzinki_Sign;
+                        OPD.Psychiatry_For_Summary = data.For_Summary;
+                        OPD.Psychiatry_For_Diagnosis = data.For_Diagnosis;
+                        OPD.Psychiatry_For_AxisI = data.For_AxisI;
+                        OPD.Psychiatry_For_AxisII = data.For_AxisII;
+                        OPD.Psychiatry_For_AxisIII = data.For_AxisIII;
+                        OPD.Psychiatry_For_AxisIV = data.For_AxisIV;
+                        OPD.Psychiatry_For_AxisV = data.For_AxisV;
+                        OPD.Psychiatry_For_PredisposingFactors = data.For_PredisposingFactors;
+                        OPD.Psychiatry_For_PrecipitatingFactors = data.For_PrecipitatingFactors;
+                        OPD.Psychiatry_For_PrepetuatingFactors = data.For_PrepetuatingFactors;
+                        OPD.Psychiatry_For_Investigation = data.For_Investigation;
+                        OPD.Psychiatry_For_Medical = data.For_Medical;
+                        OPD.Psychiatry_For_Psychological = data.For_Psychological;
+                        OPD.Psychiatry_Major_Issues = data.For_Major_Issues;
+                        OPD.Psychiatry_For_Strengths = data.For_Strengths;
+                        OPD.Psychiatry_For_Goals = data.For_Goals;
+                        OPD.Psychiatry_For_Strategies = data.For_Strategies;
+
+                        OPD.Peads_weight = data.txtPeads_weight;
+                        OPD.Peads_Length = data.txtPeads_Length;
+                        OPD.Peads_HC = data.txtPeads_HC;
+                        OPD.Peads_General_Appearance = data.txtPeads_General_Appearance;
+                        OPD.Peads_Cyanosis = data.chkPeads_Cyanosis;
+                        OPD.Peads_Jaundice = data.chkPeads_Jaundice;
+                        OPD.Peads_Lethargy = data.chkPeads_Lethargy;
+                        OPD.Peads_Rash = data.chkPeads_Rash;
+                        OPD.Peads_Others = data.txtPeads_Others;
+                        OPD.Peads_Caput = data.chkPeads_Caput;
+                        OPD.Peads_Cephalhematoma = data.chkPeads_Cephalhematoma;
+                        OPD.Peads_Anterioropen = data.rdbPeads_Anterioropen;
+                        OPD.Peads_AnteriorClose = data.rdbPeads_AnteriorClose;
+                        OPD.Peads_Dextrocardia = data.chkPeads_Dextrocardia;
+                        OPD.Peads_Bulging = data.chkPeads_Bulging;
+                        OPD.Peads_Murmur = data.chkPeads_Murmur;
+                        OPD.Peads_HeartSound = data.txtPeads_HeartSound;
+                        OPD.Peads_Nasal = data.chkPeads_Nasal;
+                        OPD.Peads_Recessions = data.chkPeads_Recessions;
+                        OPD.Peads_AddedSounds = data.txtPeads_AddedSounds;
+                        OPD.Peads_Flat = data.rdbPeads_Flat;
+                        OPD.Peads_Distended = data.rdbPeads_Distended;
+                        OPD.Peads_Scaphoid = data.rdbPeads_Scaphoid;
+                        OPD.Peads_Liver = data.chkPeads_Liver;
+                        OPD.Peads_Spleen = data.chkPeads_Spleen;
+                        OPD.Peads_GITOthers = data.txtPeads_GITOthers;
+                        OPD.Peads_Sucking = data.chkPeads_Sucking;
+                        OPD.Peads_Rooting = data.chkPeads_Rooting;
+                        OPD.Peads_Moro = data.chkPeads_Moro;
+                        OPD.Peads_CNSOthers = data.txtPeads_CNSOthers;
+                        OPD.Peads_FullTerm = data.chkPeads_FullTerm;
+                        OPD.Peads_PreTerm = data.chkPeads_PreTerm;
+                        if (!string.IsNullOrEmpty(data.txtPeads_DateOfDelivery))
+                            OPD.Peads_DateOfDelivery = Convert.ToDateTime(data.txtPeads_DateOfDelivery);
+                        OPD.Peads_TimeOfDelivery = data.txtPeads_TimeOfDelivery;
+                        OPD.Peads_Booked = data.rdbPeads_Booked;
+                        OPD.Peads_UnBooked = data.rdbPeads_UnBooked;
+                        OPD.Peads_DAIHandling = data.chkPeads_DAIHandling;
+                        OPD.Peads_ANTURash = data.chkPeads_ANTURash;
+                        OPD.Peads_PIH = data.chkPeads_PIH;
+                        OPD.Peads_GDM = data.chkPeads_GDM;
+                        OPD.Peads_Vacinated = data.chkPeads_Vacinated;
+                        OPD.Peads_ANTOthers = data.txtPeads_ANTOthers;
+                        OPD.Peads_SVD = data.rdbPeads_SVD;
+                        OPD.Peads_LSCS = data.rdbPeads_LSCS;
+                        OPD.Peads_Emergency = data.rdbPeads_Emergency;
+                        OPD.Peads_Elective = data.rdbPeads_Elective;
+                        OPD.Peads_PlaceOfDelivery = data.txtPeads_PlaceOfDelivery;
+                        OPD.Peads_IndicationForLSCS = data.txtPeads_IndicationForLSCS;
+                        OPD.Peads_apgerScore1min = data.Peads_apgerScore1min;
+                        OPD.Peads_apgerScore5min = data.Peads_apgerScore5min;
+                        OPD.Peads_Resuscitation = data.chkPeads_Resuscitation;
+                        OPD.Peads_NatalOthers = data.txtPeads_NatalOthers;
+                        OPD.Peads_Moaning = data.chkPeads_Moaning;
+                        OPD.Peads_RespDistress = data.chkPeads_RespDistress;
+                        OPD.Peads_PostNATALCyanosis = data.chkPeads_PostNATALCyanosis;
+                        OPD.Peads_Fits = data.chkPeads_Fits;
+                        OPD.Peads_ReluctanceToFeed = data.chkPeads_ReluctanceToFeed;
+                        OPD.Peads_PostNatalOthers = data.txtPeads_PostNatalOthers;
+                        OPD.DRE = data.chkdre;
+                        OPD.Heptomology = data.Heptomology;
+                        OPD.Splenomegaly = data.Splenomegaly;
+                        OPD.Proctoscopy = data.chkProctoscopy;
+                        OPD.Abdominal = data.Abdominal;
+                        OPD.PA_Gynae = data.Pa_gynae;
+                        OPD.PS_Gynae = data.ps_gynae;
+                        OPD.Uterus = data.uterus;
+                        OPD.FX = data.fx;
+                        OPD.PS_Obs = data.ps_obs;
+                        OPD.PV_Obs = data.pv_obs;
+                        OPD.SFH = data.sfh;
+                        OPD.LIE = data.lie;
+                        OPD.Presentation = data.presentation;
+                        OPD.FHR = data.fhr;
+                        OPD.Engagement = data.engagement;
+                        if (data.btnsave == "Save" && data.btnsaveVital == "Save Vital")
+                        {
+                            OPD.Book_ID = AppConfig.Book_ID;
+                            OPD.Created_By = AppConfig.UserID;
+                            OPD.Created_Time = DateTime.Now;
+                            OPD.Company_ID = AppConfig.Company_ID;
+                            db.Out_Patients.InsertOnSubmit(OPD);
+
+
+                            string SMS_Contant = "عارف میموریل ہسپتال پر اعتماد کرنے کا شکریہ۔صحت کارڈ پر مریضوں کا علاج تسلی بخش کیا جارہاہے۔مریضوں کو کھانا بھی دیا جاتاہے۔سہولیات کی بہتری کےلیےاس نمبرپررابط کریں۔03366581000";
+
+                            string msg = "";
+                            // string CellNumber = txtMobile1.Text;
+                            string CellNumber = (from tbl in db.Patients
+                                                 where tbl.Patient_ID == data.Patient_ID
+                                                 select tbl.Mobile1).FirstOrDefault();
+
+                        }
                         db.SubmitChanges();
 
-                        var D = (from tbl in db.Previous_Dpts
-                                 where tbl.Patient_ID == Patient_ID && tbl.Perivious_Dpt_Name == Reffer_To
-                                 select tbl).FirstOrDefault();
-                        if (D == null)
+                        #region 'Eye Info region'
+                        string sql = string.Empty;
+                        if (data.btnsave.Trim() == "Update")
                         {
-                            Previous_Dpt Previous_Dpt = new Previous_Dpt();
-                            Previous_Dpt.Patient_ID = Patient_ID;
-                            Previous_Dpt.Perivious_Dpt_Name = Reffer_To;
-                            Previous_Dpt.Created_Time = DateTime.Now;
-                            db.Previous_Dpts.InsertOnSubmit(Previous_Dpt);
-                            db.SubmitChanges();
+                            sql = "Delete from Out_Patient_Eye_Info where Out_Patient_ID = " + OPD.Out_Patient_ID + " ";
+                            sql += " Delete from Out_Patient_Slit_Lamp_Exam where Out_Patient_ID = " + OPD.Out_Patient_ID + "";
+                            DBClass.executeNonQueryWithoutBegin(sql);
                         }
-                    }
-                    OPD.Reffer_To = Reffer_To.ToString();
-                    OPD.Reffer_No = Reffer_No;
-                    OPD.reffer_doc = Convert.ToInt32(Reffer_doc);
-                    OPD.Drug_History = Drug_History;
-                    OPD.Personal_History = Personal_History;
-                    OPD.ENT_Throat_IDL = ENT_Throat_IDL.ToString();
-                    OPD.ENT_Throat_Nose = ENT_Throat_Nose.ToString();
-                    OPD.ENT_Ear_Right = ENT_Ear_Right.ToString();
-                    OPD.Ent_Ear_Left = Ent_Ear_Left.ToString();
-                    OPD.ENT_Rinnes_Right_PosNeg = ENT_Rinnes_Right_PosNeg;
-                    OPD.ENT_Rinnes_Lft_PosNeg = ENT_Rinnes_Lft_PosNeg;
-                    OPD.ENT_Rinnes_Right_FalseNeg = ENT_Rinnes_Right_FalseNeg;
-                    OPD.ENT_Rinnes_Lft_FalseNeg = ENT_Rinnes_Lft_FalseNeg;
-                    OPD.ENT_Webber_Central = ENT_Webber_Central;
-                    OPD.ENT_Webber_Lateralized = ENT_Webber_Lateralized;
-                    OPD.ENT_Investigation_PTA = ENT_Investigation_PTA;
-                    OPD.ENT_Investigation_Tympanometry = ENT_Investigation_Tympanometry;
-                    OPD.ENT_Rinnes_Right_Neg = ENT_Rinnes_Right_Neg;
-                    OPD.ENT_Rinnes_Lft_Neg = ENT_Rinnes_Lft_Neg;
-                    OPD.ENT_Rinnes_Right_FNeg = ENT_Rinnes_Right_FNeg;
-                    OPD.ENT_Rinnes_Lft_FNeg = ENT_Rinnes_Lft_FNeg;
+                        /*
+                         * [0] : Type
+                         * [1] : Right Eye
+                         * [2] : Left Eye
+                         */
+                        foreach (var info in eyeInfos)
+                        {
+                            Out_Patient_Eye_Info opdEye = new Out_Patient_Eye_Info();
+                            opdEye.Out_Patient_ID = info.Out_Patient_ID;
+                            opdEye.Patient_ID = info.Patient_ID;
+                            opdEye.Info_Type = info.Info_Type.Trim().ToUpper();
+                            opdEye.Right_Eye = info.Right_Eye;
+                            opdEye.Left_Eye = info.Left_Eye;
+                            
+                            db.Out_Patient_Eye_Infos.InsertOnSubmit(opdEye);
+                        }
+                        
+                        #endregion
 
-                    OPD.Ent_Com_Right_pos = ComRightPos.ToString();
-                    OPD.Ent_Com_Left_pos = ComLeftPos.ToString();
-                    OPD.Ent_Com_Right_Neg = ComRightNeg.ToString();
-                    OPD.Ent_Com_Left_Neg = ComLeftNeg.ToString();
-                    OPD.Ent_Com_Right_False = ComRightF.ToString();
-                    OPD.Ent_Com_Left_False = ComLeftF.ToString();
-                    OPD.Ent_Com_Right_False_Neg = ComRightFNeg.ToString();
-                    OPD.Ent_Com_Left_False_Neg = ComLeftFNeg.ToString();
-                    OPD.Ent_Com_Central = ComCentral.ToString();
-                    OPD.Ent_Com_Lateralized = ComLateralized.ToString();
-                    OPD.Ent_Com_PTA = ComPTA.ToString();
-                    OPD.Ent_Com_Tympanometry = ComTympanometry.ToString();
+                        #region 'Slit Lamp Exam'
+                        /*
+                         * [0] : Right Eye
+                         * [1] : Left Eye
+                         */
+                        Out_Patient_Slit_Lamp_Exam opdSlitLamp = new Out_Patient_Slit_Lamp_Exam();
+                        opdSlitLamp.Interior_Right = data.Interior_Right;
+                        opdSlitLamp.Interior_Left = data.Interior_Left;
+                        opdSlitLamp.Posterior_Right = data.Posterior_Right;
+                        opdSlitLamp.Posterior_Left = data.Posterior_Left;
 
-                    OPD.Psychiatry_Informant = txtInformant;
-                    OPD.Psychiatry_Source_Referral = txtSourceOfReferral;
-                    OPD.Psychiatry_Neck_Holding = chkNeckHolding;
-                    OPD.Psychiatry_Walking = chkWalking;
-                    OPD.Psychiatry_Talking = chkTalking;
-                    OPD.Psychiatry_Others = chkOthers;
-                    OPD.Psychiatry_Menarche = txtMenarche;
-                    OPD.Psychiatry_Menstrual = txtMenstrual;
-                    OPD.Psychiatry_Attachment_Separation = txtAttachmentSeparationfromParents;
-                    OPD.Psychiatry_Health = txtHealth;
-                    OPD.Psychiatry_Nail_Biting = chkNailBiting.ToString();
-                    OPD.Psychiatry_Temper_Tantrums = chkTemperTantrums.ToString();
-                    OPD.Psychiatry_Bed_Wetting = chkBedWetting.ToString();
-                    OPD.Psychiatry_Academics = txtAcademics;
-                    OPD.Psychiatry_Peer_Relationship = txtPeerRelationship;
-                    OPD.Psychiatry_Behaviour = txtBehaviour;
-                    OPD.Psychiatry_Occupational_History = txtOccupationalHistory;
-                    OPD.Psychiatry_Sexual_History = txtMaritalRelationshipSexualHistory;
-                    OPD.Psychiatry_Substance_Use = txtSubstanceUse;
-                    OPD.Psychiatry_Forensic_Use = txtForensicUse;
-                    OPD.Psychiatry_Relationship = txtRelationship;
-                    OPD.Psychiatry_Leisure_Activities = txtLeisureActivities;
-                    OPD.Psychiatry_Attitude_Standards = txtAttitudetoSelfandStandards;
-                    OPD.Psychiatry_Prevalling_Mood = txtPrevallingMood;
-                    OPD.Psychiatry_Reaction_Stress = txtReactionPattrentoStress;
-                    OPD.Psychiatry_Religious_Practices = txtReligiousPracticesAttitute;
-                    OPD.Psychiatry_Father = txtFather;
-                    OPD.Psychiatry_Mother = txtMother;
-                    OPD.Psychiatry_Siblings = txtSiblings;
-                    OPD.Psychiatry_Home_Atmosphere = txtHomeAtmosphererelationshipsocialclass;
-                    OPD.Psychiatry_Familial_Illness = txtFamilialIllness;
-                    OPD.Psychiatry_Actual_age = txtActualandapparentage;
-                    OPD.Psychiatry_Race = txtRace;
-                    OPD.Psychiatry_Tattoos_body_scars = txtTattoosbodypiercingandscars;
-                    OPD.Psychiatry_Body_Habitus = txtBodyHabitus;
-                    OPD.Psychiatry_Dress = txttxtDress;
-                    OPD.Psychiatry_Hygiene = txtHygiene;
-                    OPD.Psychiatry_Psychomotor_Activity = txtPsychomotorActivity;
-                    OPD.Psychiatry_Involuntary_movements = txtInvoluntarymovements;
-                    OPD.Psychiatry_Dystonia_EPS = txtDystoniaEPS;
-                    OPD.Psychiatry_Tardive_dyskinesia = txtTardivedyskinesia;
-                    OPD.Psychiatry_Tics = txtTics;
-                    OPD.Psychiatry_Tremors = txtTremors;
-                    OPD.Psychiatry_Attentiveness_interview = txtAttentivenesstointerview;
-                    OPD.Psychiatry_Eye_Contact = txtEyeContact;
-                    OPD.Psychiatry_Level_Consciousness = txtLevelofConsciousness;
-                    OPD.Psychiatry_Rate = txtRate;
-                    OPD.Psychiatry_Rhythm = txtRhythm;
-                    OPD.Psychiatry_Volume = txtVolume;
-                    OPD.Psychiatry_Tone = txtTone;
-                    OPD.Psychiatry_Modulation = txtModulationvar;
-                    OPD.Psychiatry_Depressed = txtDepressed;
-                    OPD.Psychiatry_Elated = txtElated;
-                    OPD.Psychiatry_Irritable = txtIrritable;
-                    OPD.Psychiatry_Labile = txtLabile;
-                    OPD.Psychiatry_Incongruent = txtIncongruent;
-                    OPD.Psychiatry_Blunting_Flattening_Apathy = txtbluntingflatteningapathy;
-                    OPD.Psychiatry_Thinking = txtThinkingPremeditation;
-                    OPD.Psychiatry_Plans = txtPlans;
-                    OPD.NextPlan = txtNextPlan;
-                    OPD.Psychiatry_Actions = txtActions;
-                    OPD.Psychiatry_Preservative = txtPreservative;
-                    OPD.Psychiatry_LoosAssociation = txtLoosAssociation;
-                    OPD.Psychiatry_Tangentiaility = txtTangentiaility;
-                    OPD.Psychiatry_Circumstantiality = txtCircumstantiality;
-                    OPD.Psychiatry_Flight_Ideas = txtFlightofIdeas;
-                    OPD.Psychiatry_Thought_Insertion = txtThoughtInsertion;
-                    OPD.Psychiatry_Thought_Withdrawal = txtThoughtWithdrawal;
-                    OPD.Psychiatry_Thought_Broadcasting = txtThoughBroadcasting;
-                    OPD.Psychiatry_Thought_Control = txtThoughControl;
-                    OPD.Psychiatry_Dellusion = txtDellusion;
-                    OPD.Psychiatry_Overvalued_Ideas = txtovervaluedideas;
-                    OPD.Psychiatry_Depresonalization = txtDepresonalization;
-                    OPD.Psychiatry_Derealization = txtDerealization;
-                    OPD.Psychiatry_Obsession = txtthrougObsession;
-                    OPD.Psychiatry_Phobies = txtthrougPhobies;
-                    OPD.Psychiatry_Homocidial_Ideas = txtthrougHomocidialIdeas;
-                    OPD.Psychiatry_Illusion = txtillusion;
-                    OPD.Psychiatry_Hallucination = txtHallucinationAuditoryVisualOlfactoryGustatoryTactile;
-                    OPD.Psychiatry_Orientation_Time = txtorientationtime;
-                    OPD.Psychiatry_Place = txtplace;
-                    OPD.Psychiatry_Person = txtperson;
-                    OPD.Psychiatry_Attention_Concentration = txtAttentionConcentrationSerial7Test;
-                    OPD.Psychiatry_Days_Week = txtOrDaysOfWeekReverseOrder;
-                    OPD.Psychiatry_Immediate_Memory = txtImmediatememory;
-                    OPD.Psychiatry_Recent_Events = txtshorttermrecentevents;
-                    OPD.Psychiatry_Adress_Recall_Two = txtadressrecallafter2minutes;
-                    OPD.Psychiatry_Remote_Events = txtlongtermremoteevents;
-                    OPD.Psychiatry_Adress_Recall_Five = txtadressrecallafter5minues;
-                    OPD.Psychiatry_General_knowledge = txtgeneralknowledgequestion;
-                    OPD.Psychiatry_Arthemetic_Calculation = txtsimplearthemeticcalculation;
-                    OPD.Psychiatry_Abstraction = txtabstrationconcertethinking;
-                    OPD.Psychiatry_Insight = txtinsight;
+                        opdSlitLamp.Patient_ID = OPD.Patient_ID;
+                        opdSlitLamp.Out_Patient_ID = OPD.Out_Patient_ID;
 
-                    OPD.DermaFace = DermaFace;
-                    OPD.DermaNeck = DermaNeck;
-                    OPD.DermaTrunk = DermaTrunk;
-                    OPD.DermaUpperLimb = DermaUpperLimb;
-                    OPD.DermaLowerLimb = DermaLowerLimb;
-                    OPD.DermaFlexures = DermaFlexures;
-                    OPD.DermaGenitalias = DermaGenitalias;
-                    OPD.DermaHair = DermaHair;
-                    OPD.DermaNail = DermaNail;
-                    OPD.DermaMucousMembrane = DermaMucousMembrane;
-                    OPD.DermaEyes = DermaEyes;
-                    OPD.DermaEars = DermaEars;
-                    OPD.DermaNose = DermaNose;
-                    OPD.DermaLips = DermaLips;
-                    OPD.Psychiatry_HBM_Problem = HBM_Problem;
-                    OPD.Psychiatry_HBM_Caused = HBM_Caused;
-                    OPD.Psychiatry_HBM_Started = HBM_Started;
-                    OPD.Psychiatry_HBM_Course = HBM_Course;
-                    OPD.Psychiatry_HBM_Treatment = HBM_Treatment;
-                    OPD.Psychiatry_HBM_Effects = HBM_Effects;
-                    OPD.Psychiatry_PE_Pluse = PE_Pluse;
-                    OPD.Psychiatry_PE_BP = PE_BP;
-                    OPD.Psychiatry_PE_Temperature = PE_Temperature;
-                    OPD.Psychiatry_PE_Weight = PE_Weight;
-                    OPD.Psychiatry_PE_RespiratoryRate = PE_RespiratoryRate;
-                    OPD.Psychiatry_PE_Jaundice = PE_Jaundice;
-                    OPD.Psychiatry_PE_Anemia = PE_Anemia;
-                    OPD.Psychiatry_PE_Cyanosis = PE_Cyanosis;
-                    OPD.Psychiatry_PE_Clubbing = PE_Clubbing;
-                    OPD.Psychiatry_PE_JVP = PE_JVP;
-                    OPD.Psychiatry_PE_LymphNodes = PE_LymphNodes;
-                    OPD.Psychiatry_PE_Edema = PE_Edema;
-                    OPD.Psychiatry_PE_Respiratory = PE_Respiratory;
-                    OPD.Psychiatry_PE_Cardiovascular = PE_Cardiovascular;
-                    OPD.Psychiatry_PE_Gastro_Intestinal = PE_Gastro_Intestinal;
-                    OPD.Psychiatry_PE_Observation = PE_Observation;
-                    OPD.Psychiatry_PE_Cranial_Nerves = PE_Cranial_Nerves;
-                    OPD.Psychiatry_PE_Limb_Strength = PE_Limb_Strength;
-                    OPD.Psychiatry_PE_Spasticity = PE_Spasticity;
-                    OPD.Psychiatry_PE_Position = PE_Position;
-                    OPD.Psychiatry_PE_Vibration = PE_Vibration;
-                    OPD.Psychiatry_PE_Stereognosis = PE_Stereognosis;
-                    OPD.Psychiatry_PE_Pain = PE_Pain;
-                    OPD.Psychiatry_PE_Biceps = PE_Biceps;
-                    OPD.Psychiatry_PE_Triceps = PE_Triceps;
-                    OPD.Psychiatry_PE_Brachioradialis = PE_Brachioradialis;
-                    OPD.Psychiatry_PE_Quadriceps = PE_Quadriceps;
-                    OPD.Psychiatry_PE_Patellar = PE_Patellar;
-                    OPD.Psychiatry_PE_Achilles = PE_Achilles;
-                    OPD.Psychiatry_PE_Extensor = PE_Extensor;
-                    OPD.Psychiatry_PE_Frontal = PE_Frontal;
-                    OPD.Psychiatry_PE_Finger = PE_Finger;
-                    OPD.Psychiatry_PE_Heel = PE_Heel;
-                    OPD.Psychiatry_PE_Movements = PE_Movements;
-                    OPD.Psychiatry_PE_Gait = PE_Gait;
-                    OPD.Psychiatry_PE_Neck_Rigidity = PE_Neck_Rigidity;
-                    OPD.Psychiatry_PE_Kerning_Sign = PE_Kerning_Sign;
-                    OPD.Psychiatry_PE_Brudzinki_Sign = PE_Brudzinki_Sign;
-                    OPD.Psychiatry_For_Summary = For_Summary;
-                    OPD.Psychiatry_For_Diagnosis = For_Diagnosis;
-                    OPD.Psychiatry_For_AxisI = For_AxisI;
-                    OPD.Psychiatry_For_AxisII = For_AxisII;
-                    OPD.Psychiatry_For_AxisIII = For_AxisIII;
-                    OPD.Psychiatry_For_AxisIV = For_AxisIV;
-                    OPD.Psychiatry_For_AxisV = For_AxisV;
-                    OPD.Psychiatry_For_PredisposingFactors = For_PredisposingFactors;
-                    OPD.Psychiatry_For_PrecipitatingFactors = For_PrecipitatingFactors;
-                    OPD.Psychiatry_For_PrepetuatingFactors = For_PrepetuatingFactors;
-                    OPD.Psychiatry_For_Investigation = For_Investigation;
-                    OPD.Psychiatry_For_Medical = For_Medical;
-                    OPD.Psychiatry_For_Psychological = For_Psychological;
-                    OPD.Psychiatry_Major_Issues = For_Major_Issues;
-                    OPD.Psychiatry_For_Strengths = For_Strengths;
-                    OPD.Psychiatry_For_Goals = For_Goals;
-                    OPD.Psychiatry_For_Strategies = For_Strategies;
+                        db.Out_Patient_Slit_Lamp_Exams.InsertOnSubmit(opdSlitLamp);
 
-                    OPD.Peads_weight = txtPeads_weight;
-                    OPD.Peads_Length = txtPeads_Length;
-                    OPD.Peads_HC = txtPeads_HC;
-                    OPD.Peads_General_Appearance = txtPeads_General_Appearance;
-                    OPD.Peads_Cyanosis = chkPeads_Cyanosis;
-                    OPD.Peads_Jaundice = chkPeads_Jaundice;
-                    OPD.Peads_Lethargy = chkPeads_Lethargy;
-                    OPD.Peads_Rash = chkPeads_Rash;
-                    OPD.Peads_Others = txtPeads_Others;
-                    OPD.Peads_Caput = chkPeads_Caput;
-                    OPD.Peads_Cephalhematoma = chkPeads_Cephalhematoma;
-                    OPD.Peads_Anterioropen = rdbPeads_Anterioropen;
-                    OPD.Peads_AnteriorClose = rdbPeads_AnteriorClose;
-                    OPD.Peads_Dextrocardia = chkPeads_Dextrocardia;
-                    OPD.Peads_Bulging = chkPeads_Bulging;
-                    OPD.Peads_Murmur = chkPeads_Murmur;
-                    OPD.Peads_HeartSound = txtPeads_HeartSound;
-                    OPD.Peads_Nasal = chkPeads_Nasal;
-                    OPD.Peads_Recessions = chkPeads_Recessions;
-                    OPD.Peads_AddedSounds = txtPeads_AddedSounds;
-                    OPD.Peads_Flat = rdbPeads_Flat;
-                    OPD.Peads_Distended = rdbPeads_Distended;
-                    OPD.Peads_Scaphoid = rdbPeads_Scaphoid;
-                    OPD.Peads_Liver = chkPeads_Liver;
-                    OPD.Peads_Spleen = chkPeads_Spleen;
-                    OPD.Peads_GITOthers = txtPeads_GITOthers;
-                    OPD.Peads_Sucking = chkPeads_Sucking;
-                    OPD.Peads_Rooting = chkPeads_Rooting;
-                    OPD.Peads_Moro = chkPeads_Moro;
-                    OPD.Peads_CNSOthers = txtPeads_CNSOthers;
-                    OPD.Peads_FullTerm = chkPeads_FullTerm;
-                    OPD.Peads_PreTerm = chkPeads_PreTerm;
-                    if (txtPeads_DateOfDelivery != null)
-                        OPD.Peads_DateOfDelivery = Convert.ToDateTime(txtPeads_DateOfDelivery);
-                    OPD.Peads_TimeOfDelivery = txtPeads_TimeOfDelivery;
-                    OPD.Peads_Booked = rdbPeads_Booked;
-                    OPD.Peads_UnBooked = rdbPeads_UnBooked;
-                    OPD.Peads_DAIHandling = chkPeads_DAIHandling;
-                    OPD.Peads_ANTURash = chkPeads_ANTURash;
-                    OPD.Peads_PIH = chkPeads_PIH;
-                    OPD.Peads_GDM = chkPeads_GDM;
-                    OPD.Peads_Vacinated = chkPeads_Vacinated;
-                    OPD.Peads_ANTOthers = txtPeads_ANTOthers;
-                    OPD.Peads_SVD = rdbPeads_SVD;
-                    OPD.Peads_LSCS = rdbPeads_LSCS;
-                    OPD.Peads_Emergency = rdbPeads_Emergency;
-                    OPD.Peads_Elective = rdbPeads_Elective;
-                    OPD.Peads_PlaceOfDelivery = txtPeads_PlaceOfDelivery;
-                    OPD.Peads_IndicationForLSCS = txtPeads_IndicationForLSCS;
-                    OPD.Peads_apgerScore1min = Peads_apgerScore1min;
-                    OPD.Peads_apgerScore5min = Peads_apgerScore5min;
-                    OPD.Peads_Resuscitation = chkPeads_Resuscitation;
-                    OPD.Peads_NatalOthers = txtPeads_NatalOthers;
-                    OPD.Peads_Moaning = chkPeads_Moaning;
-                    OPD.Peads_RespDistress = chkPeads_RespDistress;
-                    OPD.Peads_PostNATALCyanosis = chkPeads_PostNATALCyanosis;
-                    OPD.Peads_Fits = chkPeads_Fits;
-                    OPD.Peads_ReluctanceToFeed = chkPeads_ReluctanceToFeed;
-                    OPD.Peads_PostNatalOthers = txtPeads_PostNatalOthers;
-                    OPD.DRE = chkdre;
-                    OPD.Heptomology = Heptomology;
-                    OPD.Splenomegaly = Splenomegaly;
-                    OPD.Proctoscopy = chkProctoscopy;
-                    OPD.Abdominal = Abdominal;
-                    OPD.PA_Gynae = Pa_gynae;
-                    OPD.PS_Gynae = ps_gynae;
-                    OPD.Uterus = uterus;
-                    OPD.FX = fx;
-                    OPD.PS_Obs = ps_obs;
-                    OPD.PV_Obs = pv_obs;
-                    OPD.SFH = sfh;
-                    OPD.LIE = lie;
-                    OPD.Presentation = presentation;
-                    OPD.FHR = fhr;
-                    OPD.Engagement = engagement;
-                    if (btnsave == "Save" && btnsaveVital == "Save Vital")
-                    {
-                        OPD.Book_ID = AppConfig.Book_ID;
-                        OPD.Created_By = AppConfig.UserID;
-                        OPD.Created_Time = DateTime.Now;
-                        OPD.Company_ID = AppConfig.Company_ID;
-                        db.Out_Patients.InsertOnSubmit(OPD);
+                        #endregion
 
+                        /***********Setting 0 patient id inserted medicine to current out patient id****************/
 
-                        string SMS_Contant = "عارف میموریل ہسپتال پر اعتماد کرنے کا شکریہ۔صحت کارڈ پر مریضوں کا علاج تسلی بخش کیا جارہاہے۔مریضوں کو کھانا بھی دیا جاتاہے۔سہولیات کی بہتری کےلیےاس نمبرپررابط کریں۔03366581000";
+                        List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").ToList();
+                        foreach (In_Patient_Medicine med in list)
+                        {
+                            med.Patient_ID = OPD.Out_Patient_ID;
+                        }
+                        /***********Setting 0 patient id inserted eyes to current out patient id****************/
 
-                        string msg = "";
-                        // string CellNumber = txtMobile1.Text;
-                        string CellNumber = (from tbl in db.Patients
-                                             where tbl.Patient_ID == Patient_ID
-                                             select tbl.Mobile1).FirstOrDefault();
+                        List<PMS.EyeDetail> eyelist = db.EyeDetails.Where(t => t.TransactionType == "OutPatient" && t.TransactionID == 0).ToList();
+                        foreach (PMS.EyeDetail eye in eyelist)
+                        {
+                            eye.TransactionID = OPD.Out_Patient_ID;
+                        }
+                        /***********Setting 0 patient id inserted test to current out patient id****************/
 
-                    }
-                    db.SubmitChanges();
-
-                    #region 'Eye Info region'
-                    string sql = string.Empty;
-                    if (btnsave.Trim() == "Update")
-                    {
-                        sql = "Delete from Out_Patient_Eye_Info where Out_Patient_ID = " + OPD.Out_Patient_ID + " ";
-                        sql += " Delete from Out_Patient_Slit_Lamp_Exam where Out_Patient_ID = " + OPD.Out_Patient_ID + "";
-                        DBClass.executeNonQueryWithoutBegin(sql);
-                    }
-                    /*
-                     * [0] : Type
-                     * [1] : Right Eye
-                     * [2] : Left Eye
-                     */
-
-                    for (int i = 0; i < eyeInfo.Length; i++)
-                    {
-                        Out_Patient_Eye_Info opdEye = new Out_Patient_Eye_Info();
-                        opdEye.Out_Patient_ID = OPD.Out_Patient_ID;
-                        opdEye.Patient_ID = OPD.Patient_ID;
-                        opdEye.Info_Type = eyeInfo[i][0].ToString().Trim().ToUpper();
-                        opdEye.Right_Eye = eyeInfo[i][1].ToString();
-                        opdEye.Left_Eye = eyeInfo[i][2].ToString();
-
-                        db.Out_Patient_Eye_Infos.InsertOnSubmit(opdEye);
-                    }
-
-                    #endregion
-
-                    #region 'Slit Lamp Exam'
-                    /*
-                     * [0] : Right Eye
-                     * [1] : Left Eye
-                     */
-                    Out_Patient_Slit_Lamp_Exam opdSlitLamp = new Out_Patient_Slit_Lamp_Exam();
-                    opdSlitLamp.Interior_Right = interrior[0][0].ToString();
-                    opdSlitLamp.Interior_Left = interrior[0][1].ToString();
-                    opdSlitLamp.Posterior_Right = posterior[0][0].ToString();
-                    opdSlitLamp.Posterior_Left = posterior[0][1].ToString();
-
-                    opdSlitLamp.Patient_ID = OPD.Patient_ID;
-                    opdSlitLamp.Out_Patient_ID = OPD.Out_Patient_ID;
-
-                    db.Out_Patient_Slit_Lamp_Exams.InsertOnSubmit(opdSlitLamp);
-
-                    #endregion
-
-                    /***********Setting 0 patient id inserted medicine to current out patient id****************/
-
-                    List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").ToList();
-                    foreach (In_Patient_Medicine med in list)
-                    {
-                        med.Patient_ID = OPD.Out_Patient_ID;
-                    }
-                    /***********Setting 0 patient id inserted eyes to current out patient id****************/
-
-                    List<PMS.EyeDetail> eyelist = db.EyeDetails.Where(t => t.TransactionType == "OutPatient" && t.TransactionID == 0).ToList();
-                    foreach (PMS.EyeDetail eye in eyelist)
-                    {
-                        eye.TransactionID = OPD.Out_Patient_ID;
-                    }
-                    /***********Setting 0 patient id inserted test to current out patient id****************/
-
-                    Laboratory_Test test = db.Laboratory_Tests.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").FirstOrDefault();
-                    if (test != null)
-                        test.Patient_ID = OPD.Out_Patient_ID;
+                        Laboratory_Test test = db.Laboratory_Tests.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").FirstOrDefault();
+                        if (test != null)
+                            test.Patient_ID = OPD.Out_Patient_ID;
 
 
 
-                    /***********Setting 0 patient id inserted Ortho to current out patient id****************/
-                    List<PMS.Ortho> ortholist = db.Orthos.Where(t => t.Patient_Type == "OutPatient" && t.Transaction_ID == 0).ToList();
-                    foreach (PMS.Ortho orth in ortholist)
-                    {
-                        orth.Transaction_ID = OPD.Out_Patient_ID;
-                    }
-                    db.SubmitChanges();
-                    var OutPatientID = OPD.Out_Patient_ID;
-                    return OutPatientID.ToString();
-                }
+                        /***********Setting 0 patient id inserted Ortho to current out patient id****************/
+                        List<PMS.Ortho> ortholist = db.Orthos.Where(t => t.Patient_Type == "OutPatient" && t.Transaction_ID == 0).ToList();
+                        foreach (PMS.Ortho orth in ortholist)
+                        {
+                            orth.Transaction_ID = OPD.Out_Patient_ID;
+                        }
+                        db.SubmitChanges();
+                         id = OPD.Out_Patient_ID.ToString();
+                     }
+                
+                return id.ToString();
             }
             catch (Exception ex)
             {
@@ -5570,5 +5570,396 @@ on d.Doctor_Id equals hr.Emp_ID
             public string RightEye;
             public string Status;
         }
+        public class PatientVisitData
+        {
+            public int Patient_ID { get; set; }
+            public int reg_ID { get; set; }
+            public string btnsave { get; set; }
+            public string btnsaveVital { get; set; }
+
+            public bool Discharged { get; set; }
+            public bool No_Medicine { get; set; }
+            public bool No_LabTest { get; set; }
+
+            public string Doctor_ID { get; set; }
+            public string Follow_Up { get; set; }
+            public string Proto { get; set; }
+            public string Follow_Date { get; set; }
+
+            public string pulse_Min { get; set; }
+            public string L_M_P { get; set; }
+            public string SPO2 { get; set; }
+            public string BP_mm_Hg { get; set; }
+            public string MUAC { get; set; }
+            public string OFC { get; set; }
+            public string Temp_C { get; set; }
+            public string Respiration_Min { get; set; }
+            public string Height_Cm { get; set; }
+            public string Weight_Kg { get; set; }
+            public string Refer_To_Hospital { get; set; }
+
+            public string Reffer_To { get; set; }
+            public string Reffer_doc { get; set; }
+
+            public string Provisional_Diagnosis { get; set; }
+            public string HistoryOfPeresentIllness { get; set; }
+            public string HistoryOfFamily { get; set; }
+            public string HistoryOfPastIllness { get; set; }
+
+            public string CVS { get; set; }
+            public string GIT { get; set; }
+            public string RESP { get; set; }
+            public string SocioEconomicHistory { get; set; }
+            public string CNS { get; set; }
+            public string GYNAE { get; set; }
+            public string Mucculor { get; set; }
+            public string Local { get; set; }
+
+            public string Advice { get; set; }
+            public string Special_Test { get; set; }
+            public string Area_Of_Interest { get; set; }
+            public string Birth_History { get; set; }
+            public string Reffer_No { get; set; }
+
+            public string Drug_History { get; set; }
+            public string Personal_History { get; set; }
+            public string txtRemarksHistory { get; set; }
+            public string ObstetricHistory { get; set; }
+            public string AllergiesHistory { get; set; }
+            public string TreatmentHistory { get; set; }
+            public string DevelopmentHistory { get; set; }
+            public string VaccinationHistory { get; set; }
+            public string NutritionHistory { get; set; }
+
+            public bool chkPallor { get; set; }
+            public bool chkJVP { get; set; }
+            public bool chkaganoris { get; set; }
+            public bool chkunconceed { get; set; }
+            public bool chkjaundice { get; set; }
+            public bool hydration { get; set; }
+            public bool edema { get; set; }
+            public bool chk1 { get; set; }
+            public bool chk2 { get; set; }
+            public bool chk3 { get; set; }
+            public bool chk4 { get; set; }
+            public bool chk5 { get; set; }
+
+            // Text fields
+            public string Other { get; set; }
+            public string Designation { get; set; }
+            public string FinalDiagnosis { get; set; }
+            public string Final_Rec { get; set; }
+            public string Administration { get; set; }
+
+            // ENT Fields
+            public string ENT_Throat_IDL { get; set; }
+            public string ENT_Throat_Nose { get; set; }
+            public string ENT_Ear_Right { get; set; }
+            public string Ent_Ear_Left { get; set; }
+
+            public string ComRightPos { get; set; }
+            public string ComLeftPos { get; set; }
+            public string ComRightNeg { get; set; }
+            public string ComLeftNeg { get; set; }
+            public string ComRightF { get; set; }
+            public string ComLeftF { get; set; }
+            public string ComRightFNeg { get; set; }
+            public string ComLeftFNeg { get; set; }
+            public string ComCentral { get; set; }
+            public string ComLateralized { get; set; }
+            public string ComPTA { get; set; }
+            public string ComTympanometry { get; set; }
+
+            // ENT Checkboxes
+            public bool ENT_Rinnes_Right_PosNeg { get; set; }
+            public bool ENT_Rinnes_Lft_PosNeg { get; set; }
+            public bool ENT_Rinnes_Right_FalseNeg { get; set; }
+            public bool ENT_Rinnes_Lft_FalseNeg { get; set; }
+            public bool ENT_Webber_Central { get; set; }
+            public bool ENT_Webber_Lateralized { get; set; }
+            public bool ENT_Investigation_PTA { get; set; }
+            public bool ENT_Investigation_Tympanometry { get; set; }
+            public bool ENT_Rinnes_Right_Neg { get; set; }
+            public bool ENT_Rinnes_Lft_Neg { get; set; }
+            public bool ENT_Rinnes_Right_FNeg { get; set; }
+            public bool ENT_Rinnes_Lft_FNeg { get; set; }
+
+            // Informants & Referral
+            public string txtInformant { get; set; }
+            public string txtSourceOfReferral { get; set; }
+
+            // Development & Milestones
+            public bool chkNeckHolding { get; set; }
+            public bool chkWalking { get; set; }
+            public bool chkTalking { get; set; }
+            public bool chkOthers { get; set; }
+            public string txtMenarche { get; set; }
+            public string txtMenstrual { get; set; }
+
+            // Child/Adolescent Psych
+            public string txtAttachmentSeparationfromParents { get; set; }
+            public string txtHealth { get; set; }
+            public bool chkNailBiting { get; set; }
+            public bool chkTemperTantrums { get; set; }
+            public bool chkBedWetting { get; set; }
+            public string txtAcademics { get; set; }
+            public string txtPeerRelationship { get; set; }
+            public string txtBehaviour { get; set; }
+
+            // Adult Psych & Social
+            public string txtOccupationalHistory { get; set; }
+            public string txtMaritalRelationshipSexualHistory { get; set; }
+            public string txtSubstanceUse { get; set; }
+            public string txtForensicUse { get; set; }
+            public string txtRelationship { get; set; }
+            public string txtLeisureActivities { get; set; }
+            public string txtAttitudetoSelfandStandards { get; set; }
+            public string txtPrevallingMood { get; set; }
+            public string txtReactionPattrentoStress { get; set; }
+            public string txtReligiousPracticesAttitute { get; set; }
+
+            // Family Info
+            public string txtFather { get; set; }
+            public string txtMother { get; set; }
+            public string txtSiblings { get; set; }
+            public string txtHomeAtmosphererelationshipsocialclass { get; set; }
+            public string txtFamilialIllness { get; set; }
+            public string txtActualandapparentage { get; set; }
+            public string txtRace { get; set; }
+            public string txtTattoosbodypiercingandscars { get; set; }
+            public string txtBodyHabitus { get; set; }
+            public string txtDress { get; set; }
+            public string txtHygiene { get; set; }
+            public string txtPsychomotorActivity { get; set; }
+            public string txtInvoluntarymovements { get; set; }
+            public string txtDystoniaEPS { get; set; }
+            public string txtTardivedyskinesia { get; set; }
+            public string txtTics { get; set; }
+            public string txtTremors { get; set; }
+            public string txtAttentivenesstointerview { get; set; }
+            public string txtEyeContact { get; set; }
+            public string txtLevelofConsciousness { get; set; }
+            public string txtRate { get; set; }
+            public string txtRhythm { get; set; }
+            public string txtVolume { get; set; }
+            public string txtTone { get; set; }
+            public string txtModulation { get; set; }
+            public string txtDepressed { get; set; }
+            public string txtElated { get; set; }
+            public string txtIrritable { get; set; }
+            public string txtLabile { get; set; }
+            public string txtIncongruent { get; set; }
+            public string txtbluntingflatteningapathy { get; set; }
+            public string txtThinkingPremeditation { get; set; }
+            public string txtPlans { get; set; }
+            public string txtNextPlan { get; set; }
+            public string txtActions { get; set; }
+            public string txtPreservative { get; set; }
+            public string txtLoosAssociation { get; set; }
+            public string txtTangentiaility { get; set; }
+            public string txtCircumstantiality { get; set; }
+            public string txtFlightofIdeas { get; set; }
+            public string txtThoughtInsertion { get; set; }
+            public string txtThoughtWithdrawal { get; set; }
+            public string txtThoughBroadcasting { get; set; }
+            public string txtThoughControl { get; set; }
+            public string txtDellusion { get; set; }
+            public string txtovervaluedideas { get; set; }
+            public string txtDepresonalization { get; set; }
+            public string txtDerealization { get; set; }
+            public string txtthrougObsession { get; set; }
+            public string txtthrougPhobies { get; set; }
+            public string txtthrougHomocidialIdeas { get; set; }
+            public string txtillusion { get; set; }
+            public string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile { get; set; }
+            public string txtorientationtime { get; set; }
+            public string txtplace { get; set; }
+            public string txtperson { get; set; }
+            public string txtAttentionConcentrationSerial7Test { get; set; }
+            public string txtOrDaysOfWeekReverseOrder { get; set; }
+            public string txtImmediatememory { get; set; }
+            public string txtshorttermrecentevents { get; set; }
+            public string txtadressrecallafter2minutes { get; set; }
+            public string txtlongtermremoteevents { get; set; }
+            public string txtadressrecallafter5minues { get; set; }
+            public string txtgeneralknowledgequestion { get; set; }
+            public string txtsimplearthemeticcalculation { get; set; }
+            public string txtabstrationconcertethinking { get; set; }
+            public string txtinsight { get; set; }
+            public string DermaFace { get; set; }
+            public string DermaNeck { get; set; }
+            public string DermaTrunk { get; set; }
+            public string DermaUpperLimb { get; set; }
+            public string DermaLowerLimb { get; set; }
+            public string DermaFlexures { get; set; }
+            public string DermaGenitalias { get; set; }
+            public string DermaHair { get; set; }
+            public string DermaNail { get; set; }
+            public string DermaMucousMembrane { get; set; }
+            public string DermaEyes { get; set; }
+            public string DermaEars { get; set; }
+            public string DermaNose { get; set; }
+            public string DermaLips { get; set; }
+            public string Out_Patient_ID { get; set; }
+
+            public string Interior_Right { get; set; }
+            public string Interior_Left { get; set; }
+            public string Posterior_Right { get; set; }
+            public string Posterior_Left { get; set; }
+
+            public string PE_Pluse { get; set; }
+            public string PE_BP { get; set; }
+            public string PE_Temperature { get; set; }
+            public string PE_Weight { get; set; }
+            public string PE_RespiratoryRate { get; set; }
+            public string PE_Jaundice { get; set; }
+            public string PE_Anemia { get; set; }
+            public string PE_Cyanosis { get; set; }
+            public string PE_Clubbing { get; set; }
+            public string PE_JVP { get; set; }
+            public string PE_LymphNodes { get; set; }
+            public string PE_Edema { get; set; }
+            public string PE_Respiratory { get; set; }
+            public string PE_Cardiovascular { get; set; }
+            public string PE_Gastro_Intestinal { get; set; }
+            public string PE_Observation { get; set; }
+            public string PE_Cranial_Nerves { get; set; }
+            public string PE_Limb_Strength { get; set; }
+            public string PE_Spasticity { get; set; }
+            public string PE_Position { get; set; }
+            public string PE_Vibration { get; set; }
+            public string PE_Stereognosis { get; set; }
+            public string PE_Pain { get; set; }
+            public string PE_Biceps { get; set; }
+            public string PE_Triceps { get; set; }
+            public string PE_Brachioradialis { get; set; }
+            public string PE_Quadriceps { get; set; }
+            public string PE_Patellar { get; set; }
+            public string PE_Achilles { get; set; }
+            public string PE_Extensor { get; set; }
+            public string PE_Frontal { get; set; }
+            public string PE_Finger { get; set; }
+            public string PE_Heel { get; set; }
+            public string PE_Movements { get; set; }
+            public string PE_Gait { get; set; }
+
+            public string HBM_Problem { get; set; }
+            public string HBM_Caused { get; set; }
+            public string HBM_Started { get; set; }
+            public string HBM_Course { get; set; }
+            public string HBM_Treatment { get; set; }
+            public string HBM_Effects { get; set; }
+
+            public bool PE_Neck_Rigidity { get; set; }
+            public bool PE_Kerning_Sign { get; set; }
+            public bool PE_Brudzinki_Sign { get; set; }
+
+            public string For_Summary { get; set; }
+            public string For_Diagnosis { get; set; }
+            public string For_AxisI { get; set; }
+            public string For_AxisII { get; set; }
+            public string For_AxisIII { get; set; }
+            public string For_AxisIV { get; set; }
+            public string For_AxisV { get; set; }
+            public string For_PredisposingFactors { get; set; }
+            public string For_PrecipitatingFactors { get; set; }
+            public string For_PrepetuatingFactors { get; set; }
+            public string For_Investigation { get; set; }
+            public string For_Medical { get; set; }
+            public string For_Psychological { get; set; }
+            public string For_Major_Issues { get; set; }
+            public string For_Strengths { get; set; }
+            public string For_Goals { get; set; }
+            public string For_Strategies { get; set; }
+
+            public string Heptomology { get; set; }
+            public string Splenomegaly { get; set; }
+
+            public string txtPeads_weight { get; set; }
+            public string txtPeads_Length { get; set; }
+            public string txtPeads_HC { get; set; }
+            public string txtPeads_General_Appearance { get; set; }
+            public bool chkPeads_Cyanosis { get; set; }
+            public bool chkPeads_Jaundice { get; set; }
+            public bool chkPeads_Lethargy { get; set; }
+            public bool chkPeads_Rash { get; set; }
+            public string txtPeads_Others { get; set; }
+            public bool chkPeads_Caput { get; set; }
+            public bool chkPeads_Cephalhematoma { get; set; }
+            public bool rdbPeads_Anterioropen { get; set; }
+            public bool rdbPeads_AnteriorClose { get; set; }
+            public bool chkPeads_Dextrocardia { get; set; }
+            public bool chkPeads_Bulging { get; set; }
+            public bool chkPeads_Murmur { get; set; }
+            public string txtPeads_HeartSound { get; set; }
+            public bool chkPeads_Nasal { get; set; }
+            public bool chkPeads_Recessions { get; set; }
+            public string txtPeads_AddedSounds { get; set; }
+            public bool rdbPeads_Flat { get; set; }
+            public bool rdbPeads_Distended { get; set; }
+            public bool rdbPeads_Scaphoid { get; set; }
+            public bool chkPeads_Liver { get; set; }
+            public bool chkPeads_Spleen { get; set; }
+            public string txtPeads_GITOthers { get; set; }
+            public bool chkPeads_Sucking { get; set; }
+            public bool chkPeads_Rooting { get; set; }
+            public bool chkPeads_Moro { get; set; }
+            public string txtPeads_CNSOthers { get; set; }
+            public bool chkPeads_FullTerm { get; set; }
+            public bool chkPeads_PreTerm { get; set; }
+            public string txtPeads_DateOfDelivery { get; set; }
+            public string txtPeads_TimeOfDelivery { get; set; }
+            public bool rdbPeads_Booked { get; set; }
+            public bool rdbPeads_UnBooked { get; set; }
+            public bool chkPeads_DAIHandling { get; set; }
+            public bool chkPeads_ANTURash { get; set; }
+            public bool chkPeads_PIH { get; set; }
+            public bool chkPeads_GDM { get; set; }
+            public bool chkPeads_Vacinated { get; set; }
+            public string txtPeads_ANTOthers { get; set; }
+            public bool rdbPeads_SVD { get; set; }
+            public bool rdbPeads_LSCS { get; set; }
+            public bool rdbPeads_Emergency { get; set; }
+            public bool rdbPeads_Elective { get; set; }
+            public string txtPeads_PlaceOfDelivery { get; set; }
+            public string txtPeads_IndicationForLSCS { get; set; }
+            public bool chkPeads_Resuscitation { get; set; }
+            public string txtPeads_NatalOthers { get; set; }
+            public bool chkPeads_Moaning { get; set; }
+            public bool chkPeads_RespDistress { get; set; }
+            public bool chkPeads_PostNATALCyanosis { get; set; }
+            public bool chkPeads_Fits { get; set; }
+            public bool chkPeads_ReluctanceToFeed { get; set; }
+            public string txtPeads_PostNatalOthers { get; set; }
+            public string Edd { get; set; }
+            public string Bsr { get; set; }
+            public string Bmi { get; set; }
+            public string URG { get; set; }
+            public bool chkdre { get; set; }
+            public bool chkProctoscopy { get; set; }
+            public string Abdominal { get; set; }
+            public string Pa_gynae { get; set; }
+            public string ps_gynae { get; set; }
+            public string uterus { get; set; }
+            public string ps_obs { get; set; }
+            public string pv_obs { get; set; }
+            public string fx { get; set; }
+            public string sfh { get; set; }
+            public string lie { get; set; }
+            public string presentation { get; set; }
+            public string fhr { get; set; }
+            public string engagement { get; set; }
+            public string Peads_apgerScore1min { get; set; }
+            public string Peads_apgerScore5min { get; set; }
+        }
+        public class OutPatientEyeInfo
+        {
+            public string Info_Type { get; set; }
+            public string Right_Eye { get; set; }
+            public string Left_Eye { get; set; }
+            public int Out_Patient_ID { get; set; }
+            public int Patient_ID { get; set; }
+        }
     }
-}
+
+    }
