@@ -78,6 +78,7 @@ namespace PMS.Modules.Accounts
                              IsNotificationViewed = p.IsNotificationViewed,
                              AllowUnapproveVoucher = p.AllowUnapproveVoucher,
                              IsAnonymous = p.IsAnonymous,
+                             EditEmergency = p.EditEmergency,   
                              EmpCode=p.Emp_Code
                          }).FirstOrDefault();
             string data = string.Empty;
@@ -144,7 +145,7 @@ namespace PMS.Modules.Accounts
                     user.IsNotificationViewed = data.PRFsNotifications;
                     user.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                     user.IsAnonymous = data.IsAnonymous;
-
+                    user.EditEmergency = data.EditEmergency;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -200,6 +201,7 @@ namespace PMS.Modules.Accounts
                 newuser.IsNotificationViewed = data.PRFsNotifications;
                 newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                 newuser.IsAnonymous = data.IsAnonymous;
+                newuser.EditEmergency = data.EditEmergency;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
 
@@ -299,6 +301,7 @@ namespace PMS.Modules.Accounts
             public bool AllowToAccessAllTest { get; set; }
             public bool AllowCardio { get; set; }
             public bool IsAnonymous { get; set; }
+            public bool EditEmergency { get; set; }
             public bool BlockUser { get; set; }
         }
 

@@ -58,6 +58,7 @@
                     $('#AllowToAccessAllTest').prop('checked', data.AllowToAccessAllTest);
                     $('#AllowCardio').prop('checked', data.allow_cardio);
                     $('#IsAnonymous').prop('checked', data.IsAnonymous);
+                    $('#AllowEditEmergency').prop('checked', data.EditEmergency);
                     $('#BlockUser').prop('checked', data.BlockUser);
                 },
                 error: function (xhr, status, error) {
@@ -97,6 +98,7 @@
             var AllowToAccessAllTest = $('#AllowToAccessAllTest').prop('checked');
             var AllowCardio = $('#AllowCardio').prop('checked');
             var IsAnonymous = $('#IsAnonymous').prop('checked');
+            var EditEmergency = $('#AllowEditEmergency').prop('checked');
             var BlockUser = $('#BlockUser').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var hasMinLength = Password.length >= 6;
@@ -202,6 +204,7 @@
                 "AllowToAccessAllTest": AllowToAccessAllTest,
                 "AllowCardio": AllowCardio,
                 "IsAnonymous": IsAnonymous,
+                "EditEmergency": EditEmergency,
                 "BlockUser": BlockUser
 
             };
@@ -486,6 +489,9 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="IsAnonymous" name="RateBox" />
+                                                    </div> 
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowEditEmergency" name="EditEmergency" />
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
@@ -526,6 +532,9 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="IsAnonymous">IsAnonymous</label>
+                                                    </div>
+                                                     <div class="form-check">
+                                                        <label class="form-check-label" for="AllowEditEmergency">Edit Emergency</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="EmpCode">Employee Code</label>

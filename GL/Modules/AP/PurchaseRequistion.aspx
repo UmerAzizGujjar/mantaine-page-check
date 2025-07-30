@@ -37,6 +37,10 @@
                     $('#ctl00_MainContent_ddlGIR').attr('disabled', true);
                 }
             });
+            $('#ddlWarehouse').change(function () {
+
+                $("#ddlWarehouse").attr('disabled', true);
+            });
             FillPriority();
             FillWarehouse();
             UserRights();

@@ -10,6 +10,11 @@
             UserRights();
             LoadDepartments();
             LoadOrganizations();
+
+            $('#ddlInventoryOrg').change(function () {
+
+                $("#ddlInventoryOrg").attr('disabled', true);
+            });
             var SI_ID = '<%= Request.QueryString["SI_ID"]%>';
              if (SI_ID != "") {
                  LoadDetail(SI_ID);
