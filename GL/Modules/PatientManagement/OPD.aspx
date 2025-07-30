@@ -371,7 +371,7 @@
                         <option value="0">Select</option>
                     </select>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" style="display:none;">
+                <div class="col-lg-12 col-md-12 col-sm-12" >
                     <label>Cashier</label>
                     <select id="ddlcashier" class="form-control" disabled></select>
                 </div>

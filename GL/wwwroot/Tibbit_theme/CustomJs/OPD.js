@@ -73,7 +73,7 @@ $(document).ready(function () {
     showhide();
     fillEmployee();
     fillpanel();
-    FillHREmployee();
+    FillUserAccount();
     fillCountry();
     fillProvince();
     fillCashInHand();
@@ -458,18 +458,18 @@ function FillPatientType() {
 }
 
 
-function FillHREmployee() {
+function FillUserAccount() {
     var options;
 
     $.ajax({
-        url: 'OPD.aspx/GetHREmployee',
+        url: 'OPD.aspx/GetUserAccount',
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function (response) {
             var data = response.d ? JSON.parse(response.d) : response;
             $.each(data, function (key, value) {
-                options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
             });
             $('#ddlcashier').html(options);
 

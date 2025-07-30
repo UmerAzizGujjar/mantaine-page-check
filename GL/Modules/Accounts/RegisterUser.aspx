@@ -268,26 +268,28 @@
 
         }
 
-        function fillCashInHand() {
-            var options = '<option value="0">Please Select</option>';
-            $.ajax({
-                url: 'RegisterUser.aspx/GetGLAccounts',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
-                    });
-                    $('#ddlCashInHand').html(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
+    function fillCashInHand() {
+    var options = '<option value="0">Please Select</option>';
+    $.ajax({
+        url: 'RegisterUser.aspx/GetGLAccounts',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            var data = response.d ? JSON.parse(response.d) : response;
+            $.each(data, function (key, value) {
+                options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
             });
-            return options;
+            $('#ddlCashInHand').html(options);
+            $('#ddlCashInHand').select2({
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching area data:', error);
         }
+    });
+}
+
 
     </script>
 </asp:Content>
@@ -339,13 +341,17 @@
                             </div>
                         </div>
                         <div>
-                            <div class="label-field">
-                                <label for="ddlCashInHand" style="font-size: 16px;">Accounts</label>
-                            </div>
-                            <div class="input-field">
-                                <select id="ddlCashInHand" >
-                                    <option value="0">Select</option>
-                                </select>
+                            <div class="row">
+                                <div class="col-lg-11 col-md-4 col-sm-6">
+                                    <div class="label-field">
+                                        <label for="ddlCashInHand" style="font-size: 16px;">Accounts</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <select id="ddlCashInHand">
+                                            <option value="0">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
