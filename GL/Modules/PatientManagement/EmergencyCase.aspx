@@ -61,9 +61,14 @@
                 }, 1000);
             } else {
             }
-
+            var Emergency_id = '<%= Request.QueryString["ID"] %>';
+            if (Emergency_id != "") {
+                AllowEmergencyEdit();
+            }
+          
             fillmartial();
             fillgender();
+        
 
             jQuery(function ($) {
                 MaskedInput({
@@ -1026,6 +1031,36 @@
                     }
                 });
             }
+        }
+        var editrights;
+        function AllowEmergencyEdit() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/CheckEditRights",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    editrights = data.d;
+
+                    if (editrights == "true") {
+                      
+                        $('#btnSave').attr('disabled', false);
+                    }
+                    else {
+                        $('#btnSave').attr('disabled', true);
+                    }
+
+                },
+                failure: function () {
+                    alert("Error");
+                }
+            });
+
+
         }
 
         function LoadDischargeMedicinesrpt(PatientID) {
@@ -4399,6 +4434,7 @@
         {%>
 
             $('#btnSave').val("Update");
+         
             <%}%>
             FillWardBeds();
 
@@ -8074,7 +8110,7 @@
                     <div class =" col-lg-8">
                     <div class="row">
                         <div class="col-lg-2 col-md-4 col-sm-6">
-                            <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" /> 
+                            <input type="button" class="btn-primry"  onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" /> 
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
@@ -8083,7 +8119,7 @@
                         <input type="button" class="btn-gray" id="btnBackList" value="View" onclick="BackToList()" />
                         </div>
                         <div class="col-lg-1 col-md-4 col-sm-6">
-                            <%--<input type="button"  class="btn-primry" id="btnBasePrintPrint" disabled="disabled" value="Reffer Print" onclick="PrintBaseRecord();" />--%>
+                         
                              <input type="button" class="btn-primry" value="Prescription" name="name" onclick="PrintoutPatient();" style="width: 200px !important" />
                         </div>
                     </div>

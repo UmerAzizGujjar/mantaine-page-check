@@ -13,6 +13,8 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+
 
 namespace PMS
 {
@@ -40,6 +42,8 @@ namespace PMS
                 LoadAllDoctors();
                 BindingDropDown();
                 BlankForm();
+             
+
                 if (Request.QueryString["ID"] != null)
                 {
                     string QS = id.Split('=')[1];
@@ -279,7 +283,16 @@ namespace PMS
             }
             return list;
         }
+        [WebMethod]
+        public static string CheckEditRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.EditEmergency).FirstOrDefault();
 
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
         [WebMethod]
         public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age)
         {
