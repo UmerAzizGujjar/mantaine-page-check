@@ -128,7 +128,7 @@ namespace PMS.AP
             }
         }
         [WebMethod]
-        public static string GetAllitem(string searchText)
+        public static string GetAllitem(string searchText,string warehouse)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
@@ -143,7 +143,7 @@ namespace PMS.AP
                 bool allowPharmacy = userPermissions?.AllowPharmacy ?? false;
                 bool allowGeneralItem = userPermissions?.AllowGeneralItems ?? false;
 
-                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem).ToList();
+                var itemDetail = db.spGetAllitemsDetails(searchText, allowPharmacy, allowGeneralItem,Convert.ToInt32(warehouse)).ToList();
                 return (new JavaScriptSerializer()).Serialize(itemDetail);
             }
         }

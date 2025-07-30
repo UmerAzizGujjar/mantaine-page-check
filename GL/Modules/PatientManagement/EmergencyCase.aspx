@@ -5227,16 +5227,20 @@
             var Gender = $('#ddl_Gender').val();
             var Mobile = $('#txt_mobile').val();
             var PreFix_DOB = $('#ddl_dob').val();
+
+            if (PreFix_DOB == "Undefined") {
+                PreFix_DOB = "";
+            }
             var Age = $('#txt_dob').val();
             var Date_Of_Birth = $('#txtAge_yearss').val();
             var CNIC = $('#txt_cnic').val();
             var Address = $('#txt_Address').val();
             var martail_status = $('#ddl_status').val();
-            if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || Address == "")) {
+            if ((PatientName == "" )) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Please Enter compulsory Fields',
+                    text: 'Please Enter Patient Name',
                     showConfirmButton: false,
                     timer: 2000,
                     customClass: {
@@ -5508,7 +5512,7 @@
                         <div class="col-lg-1 col-md-3 col-sm-4"></div>
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Gender<span style="color:red;">*</span></label>
+                            <label>Gender</label>
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
@@ -5537,7 +5541,7 @@
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Martial Status<span style="color:red;">*</span></label>
+                            <label>Martial Status</label>
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
@@ -5549,7 +5553,7 @@
                     <div class="row">
                         <div class="col-lg-1 col-md-3 col-sm-4"></div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Relation<span style="color:red;">*</span></label>
+                            <label>Relation</label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
                             <select class="impo-drop fcux" name="name" id="ddlRelation">
@@ -5564,7 +5568,7 @@
 
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Mobile<span style="color:red;">*</span></label>
+                            <label>Mobile</label>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
                             <input type="text" tabindex="6" id="txt_mobile" style="width: 197px !important;" />
@@ -5574,7 +5578,7 @@
                     <div class="row">
                         <div class="col-lg-1 col-md-3 col-sm-4"></div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Age/DOB<span style="color:red;">*</span></label>
+                            <label>Age/DOB</label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
                             <select name="name" id="PrefixAge" >
@@ -5591,7 +5595,7 @@
 
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>CNIC<span style="color:red;">*</span></label>
+                            <label>CNIC</label>
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
@@ -5602,7 +5606,7 @@
                     <div class="row">
                         <div class="col-lg-1 col-md-3 col-sm-4"></div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Address<span style="color:red;">*</span></label>
+                            <label>Address</label>
                         </div>
 
                         <div class="col-lg-6 col-md-3 col-sm-4">

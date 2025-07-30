@@ -7688,13 +7688,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetMIR" Method="sp_GetMIR">
-    <ElementType Name="sp_GetMIRResult">
-      <Column Name="MIR" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="MIR_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.GetItemTotalStock" Method="GetItemTotalStock" IsComposable="true">
     <Parameter Name="itemcode" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
@@ -8286,18 +8279,6 @@
       <Column Name="SerialNo" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
       <Column Name="IsGroupCategory" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="CategoryID" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
-    <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
-    <Parameter Name="allowGeneralItem" Type="System.Boolean" DbType="Bit" />
-    <ElementType Name="spGetAllitemsDetailsResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_Dashboard_Daily" Method="sp_Dashboard_Daily">
@@ -10277,6 +10258,27 @@
       <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetMIR" Method="sp_GetMIR">
+    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetMIRResult">
+      <Column Name="MIR" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MIR_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
+    <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="allowGeneralItem" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAllitemsDetailsResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

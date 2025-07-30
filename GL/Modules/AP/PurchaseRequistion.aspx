@@ -87,11 +87,11 @@
                 LoadAllitem('');
             });
             function LoadAllitem(searchText) {
-
+                var warehouse = $('#ddlWarehouse').val();
                 $.ajax({
                     type: "POST",
                     url: "PurchaseRequistion.aspx/GetAllitem",
-                    data: JSON.stringify({ searchText: searchText }),
+                    data: JSON.stringify({ searchText: searchText, warehouse: warehouse }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
