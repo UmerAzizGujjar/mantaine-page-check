@@ -38,7 +38,8 @@ input[type="Password"] {
 
 
 input.textEntry,
-input.passwordEntry {
+input.passwordEntry,
+select {
     position: relative;
     width: 90% !important;
     height: 35px;

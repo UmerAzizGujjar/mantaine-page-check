@@ -20,6 +20,28 @@ namespace PMS.Modules.Accounts
             
 
         }
+
+        [WebMethod]
+        public static string GetGLAccounts()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from account in db.GL_Accounts
+                              where account.Levels == 4
+                              select new
+                              {
+                                  account.Account_ID,
+                                  account.Account_Name,
+                                  account.Parent_Code,
+                              }).ToList();
+
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
         [WebMethod]
         public static string Populate_Data(string UserID)
         {
@@ -32,6 +54,7 @@ namespace PMS.Modules.Accounts
                              UserName = p.UserName,
                              mobileno = rg.mobileno,
                              Email = rg.Email,
+                             Accounts = p.Gl_Account,
                              AllowPatientDelete = p.AllowPatientDelete,
                              AllPatientRecords = p.AllPatientRecords,
                              AllowPatientEdit = p.AllowPatientEdit,
@@ -97,6 +120,7 @@ namespace PMS.Modules.Accounts
                     user.UserName = data.UserName;
                     user.LoweredUserName = data.UserName.ToLower();
                     user.mobileno = data.Mobile;
+                    user.Gl_Account = data.Accounts;
                     user.AllowPatientDelete = data.AllowPatientDelete;
                     user.AllPatientRecords = data.AllPatientRecords;
                     user.AllowPatientEdit = data.AllowPatientEdit;
@@ -152,6 +176,7 @@ namespace PMS.Modules.Accounts
                 newuser.UserName = data.UserName;
                 newuser.LoweredUserName = data.UserName.ToLower();
                 newuser.mobileno = data.Mobile;
+                newuser.Gl_Account = data.Accounts;
                 newuser.AllowPatientDelete = data.AllowPatientDelete;
                 newuser.AllPatientRecords = data.AllPatientRecords;
                 newuser.AllowPatientEdit = data.AllowPatientEdit;
@@ -248,6 +273,7 @@ namespace PMS.Modules.Accounts
             public string Password { get; set; }
             public string ConfirmPassword { get; set; }
             public string Mobile { get; set; }          // Added
+            public string Accounts { get; set; }          // Added
             public string EmpCode { get; set; }         // Added
 
             public bool AllowPatientEdit { get; set; }

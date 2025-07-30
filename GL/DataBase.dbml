@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=Pakred;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="PakredConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="TIBIT" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -139,9 +138,9 @@
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Description" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
       <Association Name="aspnet_Application_aspnet_Path" Member="aspnet_Paths" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Path" />
-      <Association Name="aspnet_Application_aspnet_User" Member="aspnet_Users" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_User" />
       <Association Name="aspnet_Application_aspnet_Membership" Member="aspnet_Memberships" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Membership" />
       <Association Name="aspnet_Application_aspnet_Role" Member="aspnet_Roles" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Role" />
+      <Association Name="aspnet_Application_aspnet_User" Member="aspnet_Users" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_User" />
     </Type>
   </Table>
   <Table Name="dbo.aspnet_Paths" Member="aspnet_Paths">
@@ -205,8 +204,8 @@
       <Column Name="RoleId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="AllCompany" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_Role_aspnet_UsersInRole" Member="aspnet_Role" ThisKey="RoleId" OtherKey="RoleId" Type="aspnet_Role" IsForeignKey="true" />
+      <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.aspnet_WebEvent_Events" Member="aspnet_WebEvent_Events">
@@ -3255,48 +3254,6 @@
       <Column Name="Warranty" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="Disclaimer" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="Due_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.aspnet_Users" Member="aspnet_Users">
-    <Type Name="aspnet_User">
-      <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
-      <Column Name="LoweredUserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
-      <Column Name="MobileAlias" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
-      <Column Name="IsAnonymous" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="LastActivityDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="AllowUnapproveVoucher" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowPatientEdit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowPatientDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Emp_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="AllPatientRecords" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowToAccessAllTest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowTestRate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="BlockUser" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowBillDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allowtestbox" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_lab" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_ultra" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_xray" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_ctscan" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_b_bank" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_cardio" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="OpdAllow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowPharmacy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowGeneralItems" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsShowBudget" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsInventoryUnApprove" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="OTPUsers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="mobileno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Association Name="aspnet_User_aspnet_PersonalizationPerUser" Member="aspnet_PersonalizationPerUsers" ThisKey="UserId" OtherKey="UserId" Type="aspnet_PersonalizationPerUser" />
-      <Association Name="aspnet_User_aspnet_Profile" Member="aspnet_Profile" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Profile" Cardinality="One" />
-      <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />
-      <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" Cardinality="One" />
-      <Association Name="aspnet_Application_aspnet_User" Member="aspnet_Application" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Application" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.aspnet_Membership" Member="aspnet_Memberships">
@@ -6680,6 +6637,49 @@
       <Column Name="userid" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="Dependent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="is_Employee" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.aspnet_Users" Member="aspnet_Users">
+    <Type Name="aspnet_User">
+      <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
+      <Column Name="LoweredUserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
+      <Column Name="MobileAlias" Type="System.String" DbType="NVarChar(16)" CanBeNull="true" />
+      <Column Name="IsAnonymous" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="LastActivityDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AllowUnapproveVoucher" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowPatientEdit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowPatientDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Emp_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="AllPatientRecords" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowToAccessAllTest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowTestRate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="BlockUser" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowBillDelete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allowtestbox" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_lab" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_ultra" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_xray" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_ctscan" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_b_bank" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_cardio" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="OpdAllow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowPharmacy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowGeneralItems" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsShowBudget" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsInventoryUnApprove" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="OTPUsers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="mobileno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Gl_Account" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Association Name="aspnet_User_aspnet_PersonalizationPerUser" Member="aspnet_PersonalizationPerUsers" ThisKey="UserId" OtherKey="UserId" Type="aspnet_PersonalizationPerUser" />
+      <Association Name="aspnet_User_aspnet_Profile" Member="aspnet_Profile" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Profile" Cardinality="One" />
+      <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />
+      <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" Cardinality="One" />
+      <Association Name="aspnet_Application_aspnet_User" Member="aspnet_Application" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Application" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

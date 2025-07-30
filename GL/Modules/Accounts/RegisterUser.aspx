@@ -7,7 +7,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var UserID = '<%= Request.QueryString["UserID"] %>';
-
+            fillCashInHand();
             if (UserID != "") {
                 populate_data(UserID);
             }
@@ -34,6 +34,7 @@
                     $('#Email').val(data.Email);
                     $('#Mobile').val(data.mobileno);
                     $('#EmpCode').val(data.EmpCode);
+                    $('#ddlCashInHand').val(data.Accounts);
                     // Checkboxes
                     $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
                     $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
@@ -73,6 +74,7 @@
             var Password = $('#Password').val();
             var ConfirmPassword = $('#ConfirmPassword').val();
             var Mobile = $('#Mobile').val();
+            var Accounts = $('#ddlCashInHand :selected').val();
             var AllowPatientEdit = $('#AllowPatientEdit').prop('checked');
             var AllowPatientDelete = $('#AllowPatientDelete').prop('checked');
             var AllPatientRecords = $('#AllPatientRecords').prop('checked');
@@ -176,6 +178,7 @@
                 "Password": Password,
                 "ConfirmPassword": ConfirmPassword,
                 "Mobile": Mobile,
+                "Accounts": Accounts,
                 "AllowPatientEdit": AllowPatientEdit,
                 "AllowPatientDelete": AllowPatientDelete,
                 "AllPatientRecords": AllPatientRecords,
@@ -262,6 +265,27 @@
 
         }
 
+        function fillCashInHand() {
+            var options = '<option value="0">Please Select</option>';
+            $.ajax({
+                url: 'RegisterUser.aspx/GetGLAccounts',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
+                    });
+                    $('#ddlCashInHand').html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+            return options;
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -308,15 +332,33 @@
                                 <label for="Mobile" style="font-size: 16px;">Mobile:</label>
                             </div>
                             <div class="input-field">
-                                <input autocomplete="off" type="text" id="Mobile" name="UserName" class="textEntry" style="border-radius: 10px !important; width: 55% !important; margin-right: 5px" />
-                                <input type="button" value="User Rights" class="btn-primry" onclick="showmodal()" style="border-radius: 50px !important; margin-top: 10px; width: 34% !important;" />
+                                <input autocomplete="off" type="text" id="Mobile" name="UserName" class="textEntry" style="border-radius: 10px !important; margin-right: 5px" />
                             </div>
                         </div>
-                        <!-- Buttons -->
-
-                        <input id="saveBtn" class="btn-primry" type="button" value="Create User" onclick="CreateUser()" style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
-                        <input type="button" class="btn-primry" value="View" onclick="window.location.href='UserList.aspx'" style="border-radius: 50px !important; margin-top: 10px; width: 45% !important;" />
-
+                        <div>
+                            <div class="label-field">
+                                <label for="ddlCashInHand" style="font-size: 16px;">Accounts</label>
+                            </div>
+                            <div class="input-field">
+                                <select id="ddlCashInHand" >
+                                    <option value="0">Select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5 col-md-4 col-sm-6">
+                                <!-- Buttons -->
+                                <input type="button" value="User Rights" class="btn-primry" onclick="showmodal()" style="border-radius: 50px !important; margin-top: 10px;" />
+                            </div>
+                            <div class="col-lg-5 col-md-4 col-sm-6">
+                                <input id="saveBtn" class="btn-primry" type="button" value="Create User" onclick="CreateUser()" style="border-radius: 50px !important; margin-top: 10px;" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5 col-md-4 col-sm-6">
+                                <input type="button" class="btn-primry" value="View" onclick="window.location.href='UserList.aspx'" style="border-radius: 50px !important; margin-top: 10px;" />
+                            </div>
+                        </div>
                         <%--patient modal--%>
                         <div id="UserModel" class="modal fade" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-lg" role="document">
