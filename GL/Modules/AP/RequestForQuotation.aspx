@@ -24,7 +24,10 @@
                 $('#VendorModal').modal('show');
             });
 
+            $('#ctl00_MainContent_ddlWareHouse').change(function () {
 
+                $("#ctl00_MainContent_ddlWareHouse").attr('disabled', true);
+            });
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {

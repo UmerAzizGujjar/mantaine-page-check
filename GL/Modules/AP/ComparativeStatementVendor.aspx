@@ -74,6 +74,10 @@
                     $('.chktd').prop('checked', false);
                 }
             });
+            $('#ddlWarehouse').change(function () {
+
+                $("#ddlWarehouse").attr('disabled', true);
+            });
             setTimeout(function () {
                 Filltaxtype();
             }, 200);

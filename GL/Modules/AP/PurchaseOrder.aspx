@@ -213,7 +213,10 @@
         }
         $(document).ready(function () {
             UserRights();
+            $('#ddlWarehouse').change(function () {
 
+                $("#ddlWarehouse").attr('disabled', true);
+            });
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {

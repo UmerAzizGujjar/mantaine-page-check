@@ -34,7 +34,10 @@
             });
           
          
+            $('#ddlwarehouse').change(function () {
 
+                $("#ddlwarehouse").attr('disabled', true);
+            });
             UserRights();
             FillDepartments();
             FillWarehouses();
