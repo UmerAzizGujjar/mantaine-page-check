@@ -297,7 +297,14 @@ namespace PMS
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
-                    pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                    if (Date_Of_Birth == "")
+                    {
+                        pat.DOB = null;
+                    }
+                    else
+                    {
+                        pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                    }
                     pat.NIC = CNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
@@ -316,7 +323,15 @@ namespace PMS
                 pat.Gender = Gender;
                 pat.Mobile1 = Mobile;
                 pat.Age_years = Age;
-                pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                if(Date_Of_Birth == "")
+                {
+                    pat.DOB = null;
+                }
+                else
+                {
+                    pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                }
+                
                 pat.NIC = CNIC;
                 pat.Permanent_Address = Address;
                 pat.Created_time = DateTime.Now;

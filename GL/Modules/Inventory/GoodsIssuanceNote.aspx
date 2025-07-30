@@ -2,9 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <style>
-   
-    </style>
+
     <script type="text/javascript">
         var selectedOptions = '';
         $(document).ready(function () { 
@@ -19,7 +17,7 @@
                  setTimeout(function () { LoadMaster(SI_ID); }, 1000);
                  $("#btnSave").val('Update');
              }
-             getMIR();
+           
              if (SI_ID == "") {
                  $('#btn_Print').hide();
                  $('#btnVoucher').hide();
@@ -281,6 +279,7 @@
                     option += '<option value=' + parsed_Date[key].DataValueName + '>' + parsed_Date[key].DataValueDescription + '</option>'
                 });
                 $('#ddlDepartment').html(option);
+                $('#ddlDepartment').select2();
                 $('#ddlDepartment').addClass('readonly');
             });
         }
@@ -292,6 +291,7 @@
                     option += '<option value=' + parsed_Date[key].DataValueName + '>' + parsed_Date[key].DataValueDescription + '</option>'
                 });
                 $('#ddlInventoryOrg').html(option);
+                $('#ddlInventoryOrg').select2();
                 $('#ddlInventoryOrg').addClass('readonly');
             });
         }
@@ -474,10 +474,11 @@
             });
         }
         function getMIR() {
+            var warehouse = $("#ddlInventoryOrg").val();
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/getMIR",
-                data: "",
+                data: JSON.stringify({ warehouse: warehouse }), // <-- pass parameter here
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -485,7 +486,7 @@
                     var options = '<option value="0">Select</option>';
                     $(parsed_Date).each(function (key, index) {
                         options += '<option value=' + parsed_Date[key].MIR + '>' + parsed_Date[key].MIR_No + '</option>';
-                    })
+                    });
                     $("#ddlMIR").html(options);
                 },
                 failure: function (response) {
@@ -493,6 +494,7 @@
                 }
             });
         }
+
         function calculateBalanceQty(anchor) {
             var row = $(anchor).parents('tr')[0];
             var Item_qty = $($(row).find('input[name=txtmirQty]')).val();
@@ -662,13 +664,13 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <label class="">Warehouse</label>
-                <select id="ddlInventoryOrg" class="form-control">
+                <select id="ddlInventoryOrg" onchange="getMIR();" class="form-control">
                 </select>
             </div>
         
             <div class="col-lg-3 col-md-4 col-sm-12">
                 <label>GIR#</label>
-                <select id="ddlMIR" class="form-select"></select>
+                <select id="ddlMIR"  class="form-select"></select>
             </div>
             <div class="col-lg-1 col-md-2 col-sm-6">
                 <input type="button" value="Add" id="btnAdd" class="btn btn-primry" style="margin-top: 20px;" />

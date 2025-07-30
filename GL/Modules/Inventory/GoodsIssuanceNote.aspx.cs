@@ -31,10 +31,10 @@ namespace PMS.Inventory
         }
 
         [WebMethod]
-        public static String getMIR()
+        public static String getMIR(string warehouse)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());         
-            var result = db.sp_GetMIR();
+            var result = db.sp_GetMIR(Convert.ToInt32(warehouse));
             return (new JavaScriptSerializer()).Serialize(result);
         }
         [WebMethod]
