@@ -129,26 +129,35 @@ namespace PMS.Modules.PatientManagement
             return data;
         }
 
+        
         [WebMethod]
-        public static string GetHREmployee()
+        public static string GetUserAccount()
         {
             string data = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var result = (from hr in db.HR_Employees
-                              where hr.is_Employee == true
-                              && hr.userid == Convert.ToString(AppConfig.UserID)
-                              select new
-                              {
-                                  hr.Emp_ID,
-                                  hr.Emp_Name,
-                              }).ToList();
+                var userAccount = (from u in db.aspnet_Users
+                                   where u.UserId == AppConfig.UserID
+                                   select u.Gl_Account).FirstOrDefault();
 
-                data = new JavaScriptSerializer().Serialize(result);
+                if (userAccount != null)
+                {
+                    var result = (from gl in db.GL_Accounts
+                                  where gl.Account_ID == Convert.ToInt32(userAccount)
+                                  select new
+                                  {
+                                      gl.Account_ID,
+                                      gl.Account_Name
+                                  }).ToList();
+
+                    data = new JavaScriptSerializer().Serialize(result);
+                }
             }
             return data;
         }
+
+
         [WebMethod]
         public static string Getpanel()
         {
