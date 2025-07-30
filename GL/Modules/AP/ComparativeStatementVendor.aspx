@@ -1571,7 +1571,24 @@
             });
             }
         }
-
+        function getprNoBy_WareHouseCS(item) {
+            debugger;
+            var optionsRFQ = '';
+            var Warehouse;
+            Warehouse = item.value;
+            if (typeof Warehouse == "undefined" || Warehouse == "") {
+                VendorId = item;
+            }
+            PageMethods.GetPRNoByWarehouse_CS(Warehouse, function (res) {
+                var item = JSON.parse(res);
+                optionsRFQ = '<option value="0">Please Select</option>';
+                $.each(item, function (key, value) {
+                    optionsRFQ += '<option value="' + value.PR_Id + '" >' + value.PR_Num + '</option>';
+                });
+                $("#ctl00_MainContent_ddlPrNo option").remove();
+                $('#ctl00_MainContent_ddlPrNo').html(optionsRFQ);
+            });
+        }
         function Print() {
             var CS_ID = '<%= Request.QueryString["CM_ID"]%>'
             debugger;
@@ -1695,7 +1712,7 @@
                             <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
-                            <select id="ddlWarehouse" style="width:100% !important">
+                            <select id="ddlWarehouse" onchange="getprNoBy_WareHouseCS(this)" style="width:100% !important">
                                 <option value="0">Please Select</option>
                             </select>
                         </div>

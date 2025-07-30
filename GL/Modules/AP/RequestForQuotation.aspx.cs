@@ -22,8 +22,9 @@ namespace PMS.AP
                 db = new DataBaseDataContext();
                 BindPaymentTerms();
                 BindTerm();
-                LoadPRNum();
                 BindVendors();
+                Bindwarehouse();
+               
                 if (Request.QueryString["RFQ_ID"] != null)
                 {
                     var getID = Request.QueryString["RFQ_ID"];
@@ -66,6 +67,18 @@ namespace PMS.AP
             ddlTerm.DataValueField = "DataValue_Name";
             ddlTerm.Items.Add(new ListItem("Please Select", "0"));
             ddlTerm.DataBind();
+            #endregion
+        }
+        private void Bindwarehouse()
+        {
+            #region "Bind Terms and Conditions"
+            object valueset;
+            valueset = DBClass.GetValueSet("Ware House");
+            ddlWareHouse.DataSource = valueset;
+            ddlWareHouse.DataTextField = "DataValue_Description";
+            ddlWareHouse.DataValueField = "DataValue_Name";
+            ddlWareHouse.Items.Add(new ListItem("Please Select", "0"));
+            ddlWareHouse.DataBind();
             #endregion
         }
         private void BindVendors()
@@ -112,21 +125,27 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(query);
         }
 
-        private void LoadPRNum()
+        //private void LoadPRNum()
+        //{
+        //    DataTable dt = new DataTable();
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+        //    var vendor = db.sp_LoadPRNumOnRFQ();
+        //    ddlPrNo.DataSource = vendor;
+        //    ddlPrNo.DataTextField = "PR_Num";
+        //    ddlPrNo.DataValueField = "PR_Id";
+        //    ddlPrNo.DataBind();
+        //    if (!IsPostBack)
+        //    {
+        //        ddlPrNo.Items.Insert(0, new ListItem("Please Select", "0"));
+        //    }
+        //}
+        [WebMethod]
+        public static string GetPRNoByWarehouse_RFQ(string Warehouse)
         {
-            DataTable dt = new DataTable();
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var vendor = db.sp_LoadPRNumOnRFQ();
-            ddlPrNo.DataSource = vendor;
-            ddlPrNo.DataTextField = "PR_Num";
-            ddlPrNo.DataValueField = "PR_Id";
-            ddlPrNo.DataBind();
-            if (!IsPostBack)
-            {
-                ddlPrNo.Items.Insert(0, new ListItem("Please Select", "0"));
-            }
+            DataBaseDataContext db = new DataBaseDataContext();
+            var RFQ = db.sp_LoadPRNumOnRFQ(Convert.ToInt32(Warehouse));
+            return (new JavaScriptSerializer()).Serialize(RFQ);
         }
-
         [WebMethod]
         public static string getPRByID(string PRID)
         {
@@ -169,6 +188,7 @@ namespace PMS.AP
                               m.Remarks,
                               m.DueDate,
                               m.PaymentTerms,
+                              m.Ware_House,
                               m.Term_ID,
                               m.QuotationValidty,
                               m.Status,
@@ -243,6 +263,7 @@ namespace PMS.AP
             public string DueDate { get; set; }
             public string Term_ID { get; set; }
             public string PaymentTerms { get; set; }
+            public string wareHouse { get; set; }
             public string QuotationValidty { get; set; }
             public List<DetailItemList> ItemList { get; set; }
             public List<VendorItemList> Vendorlist { get; set; }
@@ -287,8 +308,10 @@ namespace PMS.AP
                     lstItemexist.DueDate = Convert.ToDateTime(record.DueDate);
                     lstItemexist.PaymentTerms = Convert.ToString(record.PaymentTerms);
                     lstItemexist.Term_ID = record.Term_ID;
+                    lstItemexist.Ware_House = record.wareHouse;
                     lstItemexist.QuotationValidty = Convert.ToString(record.QuotationValidty);
                     lstItemexist.RFQ_No = int.Parse(record.RFQ_No);
+
                     lstItemexist.Update_Time = DateTime.Now;
                     lstItemexist.Updated_By = AppConfig.UserID;
                     db.SubmitChanges();
@@ -304,6 +327,7 @@ namespace PMS.AP
                 RFQ.RFQ_No = DBClass.GetNewNumber("RFQ_No", "AP_RequestForQuotations", "");
                 RFQ.DueDate = Convert.ToDateTime(record.DueDate);
                 RFQ.Term_ID = record.Term_ID;
+                RFQ.Ware_House = record.wareHouse;
                 RFQ.PaymentTerms = Convert.ToString(record.PaymentTerms);
                 RFQ.QuotationValidty = Convert.ToString(record.QuotationValidty);
                 RFQ.Creation_Time = DateTime.Now;

@@ -8,35 +8,32 @@
         debugger;
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
-            debugger;
-            let alertShown = true;
-            $('#txtItem').prop('disabled', true);
-            if (!alertShown) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please select a warehouse before searching for items.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                alertShown = false;
-            }
-            $('#ddlwarehouse').on('change', function () {
-                var warehouseVal = $(this).val();
+        
+            $('#txtItem').tokenInput(function () {
+                var warehouseVal = $('#ddlwarehouse').val();
+                debugger;
+                if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
 
-                if (warehouseVal !== "0") {
-                    $('#txtItem').prop('disabled', false);
-                    loadtokenInputsDefaultitem();
-                } else {
-                    $('#txtItem').val('');
-                    $('#txtItem').prop('disabled', true);
+                    return "";
+                }
+
+
+                return "../../json.aspx?Table=INV_ItemsForMIR&WarehouseID=" + encodeURIComponent(warehouseVal);
+            }, {
+                tokenLimit: 1,
+                hintText: "Select a warehouse first...",
+                noResultsText: "No items found.",
+                searchingText: "Searching...",
+
+                onAdd: function (item) {
+
+                    $("#hditemID").val(item.id);
+                    $("#txtItem").val(item.name);
+                    GetItemDetail();
                 }
             });
+          
+         
 
             UserRights();
             FillDepartments();
@@ -49,7 +46,7 @@
             $("#txtMIR_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
 
             $('.token-input-list').css('width', '666px !important', 'margin-left: 1px;');
-            loadtokenInputsDefaultitem();
+           
             if (id == '') {
                 $('#btn_Print').hide();
             }
@@ -125,29 +122,7 @@
             });
         }
 
-        function loadtokenInputsDefaultitem() {
-            var warehouseVal = $('#ddlwarehouse').val();
-            if (warehouseVal === "0" || warehouseVal === null) {
-                return;
-            }
-            try {
-                $('#txtItem').tokenInput("clear");
-                $('#txtItem').tokenInput("destroy");
-            } catch (e) { }
-
-            $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForMIR", {
-                tokenLimit: 1,
-                onAdd: function (item) {
-                    try {
-                        $("#hditemID").val(item.id);
-                        $("#txtItem").val(item.name);
-                        GetItemDetail();
-                    } catch (err) {
-                        alert(err.message);
-                    }
-                }
-            });
-        }
+    
 
         function Delete(row) {
             $(row).closest('tr').remove();

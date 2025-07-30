@@ -7938,20 +7938,6 @@
       <Column Name="UOM" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_LoadPRNumOnRFQ" Method="sp_LoadPRNumOnRFQ">
-    <ElementType Name="sp_LoadPRNumOnRFQResult">
-      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_LoadPRNumOnCS" Method="sp_LoadPRNumOnCS">
-    <ElementType Name="sp_LoadPRNumOnCSResult">
-      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetPRDetailByPRID" Method="sp_GetPRDetailByPRID">
     <Parameter Name="PRId" Parameter="pRId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_GetPRDetailByPRIDResult">
@@ -10272,6 +10258,22 @@
   <Function Name="dbo.sp_LoadPRNum" Method="sp_LoadPRNum">
     <Parameter Name="Warehouse" Parameter="warehouse" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_LoadPRNumResult">
+      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadPRNumOnRFQ" Method="sp_LoadPRNumOnRFQ">
+    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_LoadPRNumOnRFQResult">
+      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadPRNumOnCS" Method="sp_LoadPRNumOnCS">
+    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_LoadPRNumOnCSResult">
       <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />

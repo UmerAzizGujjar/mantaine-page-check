@@ -17,7 +17,7 @@ namespace PMS.AP
             hyperlink1.Visible = false;
             if (!IsPostBack)
             {
-                LoadPRNum();
+                //LoadPRNum();
                 BindTerm();
                 if (Request.QueryString["CM_ID"] != null)
                 {
@@ -737,19 +737,13 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
 
-        private void LoadPRNum()
+      
+        [WebMethod]
+        public static string GetPRNoByWarehouse_CS(string Warehouse)
         {
-            DataTable dt = new DataTable();
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var vendor = db.sp_LoadPRNumOnCS();
-            ddlPrNo.DataSource = vendor;
-            ddlPrNo.DataTextField = "PR_Num";
-            ddlPrNo.DataValueField = "PR_Id";
-            ddlPrNo.DataBind();
-            if (!IsPostBack)
-            {
-                ddlPrNo.Items.Insert(0, new ListItem("Please Select", "0"));
-            }
+            DataBaseDataContext db = new DataBaseDataContext();
+            var RFQ = db.sp_LoadPRNumOnCS(Convert.ToInt32(Warehouse));
+            return (new JavaScriptSerializer()).Serialize(RFQ);
         }
         [WebMethod]
         public static string getVendorDDLlist()

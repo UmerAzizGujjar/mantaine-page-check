@@ -84,6 +84,24 @@
                     alert(error.get_message());
                 });
         }
+        function getprNoBy_WareHouseRFQ(item) {
+            debugger;
+            var optionsRFQ = '';
+            var Warehouse;
+            Warehouse = item.value;
+            if (typeof Warehouse == "undefined" || Warehouse == "") {
+                VendorId = item;
+            }
+            PageMethods.GetPRNoByWarehouse_RFQ(Warehouse, function (res) {
+                var item = JSON.parse(res);
+                optionsRFQ = '<option value="0">Please Select</option>';
+                $.each(item, function (key, value) {
+                    optionsRFQ += '<option value="' + value.PR_Id + '" >' + value.PR_Num + '</option>';
+                });
+                $("#ctl00_MainContent_ddlPrNo option").remove();
+                $('#ctl00_MainContent_ddlPrNo').html(optionsRFQ);
+            });
+        }
         function LoadRFQData(RFQ_ID) {
             PageMethods.LoadRFQHeaderDetail(RFQ_ID, function (resp) {
                 var data = JSON.parse(resp);
@@ -107,6 +125,9 @@
                 $('#ctl00_MainContent_txtRemarks').val(data.Remarks);
                 $('#ctl00_MainContent_txtStatus').val(data.Status);
                 $('#ctl00_MainContent_txtquotationValidty').val(data.QuotationValidty);
+                setTimeout(function () {
+                    $('#ctl00_MainContent_ddlWareHouse').val(data.Ware_House).trigger('change');
+                }, 1500);
                 LoadRFQItemDetail(RFQ_ID);
                 setTimeout(function () {
                     LoadRFQVendor(RFQ_ID);
@@ -277,6 +298,7 @@
                 var RFQ_Date = $('#ctl00_MainContent_txtRFQ_Date').val();
                 var DueDate = $('#ctl00_MainContent_txtDue_Date').val();
                 var PaymentTerms = $('#ctl00_MainContent_ddlPaymentTerms').val();
+                var wareHouse = $('#ctl00_MainContent_ddlWareHouse').val();
                 var Term_ID = $('#ctl00_MainContent_ddlTerm').val();
                 var QuotationValidty = $('#ctl00_MainContent_txtquotationValidty').val();
                 var table1 = $('#tblItemDescriptionDetail');
@@ -313,7 +335,7 @@
                 }
                 else {
                     $('#btnsave').attr('disabled', true);
-                    var AllItemDetail = { 'RFQ_ID': RFQ_ID, 'RFQ_Date': RFQ_Date, 'RFQ_No': RFQ_No, 'RefNo': RefNo, 'DueDate': DueDate, 'Term_ID': Term_ID, 'PaymentTerms': PaymentTerms, 'QuotationValidty': QuotationValidty, 'Remarks': Remarks, 'ItemList': Item_list, 'Vendorlist': Vendor_list };
+                    var AllItemDetail = { 'RFQ_ID': RFQ_ID, 'RFQ_Date': RFQ_Date, 'RFQ_No': RFQ_No, 'RefNo': RefNo, 'DueDate': DueDate, 'Term_ID': Term_ID, 'PaymentTerms': PaymentTerms, 'wareHouse': wareHouse, 'QuotationValidty': QuotationValidty, 'Remarks': Remarks, 'ItemList': Item_list, 'Vendorlist': Vendor_list };
                     PageMethods.SaveRFQItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         if (btnSave == "Update") {
@@ -637,6 +659,10 @@
     </div>
  
     <div class="row">
+           <div class="col-lg-3 col-md-6 col-sm-12">
+            <asp:Label ID="lblwarehouse" runat="server" Text="Ware House"></asp:Label>
+            <asp:DropDownList runat="server" ID="ddlWareHouse" onchange="getprNoBy_WareHouseRFQ(this)" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+        </div>
         <div class="col-lg-7 col-md-12 col-sm-12">
             <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
             <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
