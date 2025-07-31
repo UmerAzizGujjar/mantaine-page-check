@@ -6677,6 +6677,7 @@
       <Column Name="mobileno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="EditEmergency" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Gl_Account" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Allow_bill_edit" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="aspnet_User_aspnet_PersonalizationPerUser" Member="aspnet_PersonalizationPerUsers" ThisKey="UserId" OtherKey="UserId" Type="aspnet_PersonalizationPerUser" />
       <Association Name="aspnet_User_aspnet_Profile" Member="aspnet_Profile" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Profile" Cardinality="One" />
       <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />

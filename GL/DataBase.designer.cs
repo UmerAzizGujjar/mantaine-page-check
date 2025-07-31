@@ -148266,6 +148266,8 @@ namespace PMS
 
 		private string _Gl_Account;
 
+		private System.Nullable<bool> _Allow_bill_edit;
+
 		private EntitySet<aspnet_PersonalizationPerUser> _aspnet_PersonalizationPerUsers;
 
 		private EntityRef<aspnet_Profile> _aspnet_Profile;
@@ -148350,6 +148352,8 @@ namespace PMS
 		partial void OnEditEmergencyChanged();
 		partial void OnGl_AccountChanging(string value);
 		partial void OnGl_AccountChanged();
+		partial void OnAllow_bill_editChanging(System.Nullable<bool> value);
+		partial void OnAllow_bill_editChanged();
 		#endregion
 
 		public aspnet_User()
@@ -149062,6 +149066,26 @@ namespace PMS
 					this._Gl_Account = value;
 					this.SendPropertyChanged("Gl_Account");
 					this.OnGl_AccountChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_bill_edit", DbType = "Bit")]
+		public System.Nullable<bool> Allow_bill_edit
+		{
+			get
+			{
+				return this._Allow_bill_edit;
+			}
+			set
+			{
+				if ((this._Allow_bill_edit != value))
+				{
+					this.OnAllow_bill_editChanging(value);
+					this.SendPropertyChanging();
+					this._Allow_bill_edit = value;
+					this.SendPropertyChanged("Allow_bill_edit");
+					this.OnAllow_bill_editChanged();
 				}
 			}
 		}
