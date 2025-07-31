@@ -371,11 +371,11 @@
                         <option value="0">Select</option>
                     </select>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" >
+                <div class="col-lg-12 col-md-12 col-sm-12" style="display:none" >
                     <label>Cashier</label>
-                    <select id="ddlcashier" class="form-control" disabled></select>
+                    <select id="ddlcashier" class="form-control" ></select>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="col-lg-12 col-md-12 col-sm-12" >
                     <label>Cash In Hand</label>
                     <select id="ddlCashInHand" class="form-control">
                         <option value="0">Select</option>

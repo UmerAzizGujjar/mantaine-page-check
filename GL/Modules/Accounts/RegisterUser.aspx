@@ -34,7 +34,7 @@
                     $('#Email').val(data.Email);
                     $('#Mobile').val(data.mobileno);
                     $('#EmpCode').val(data.EmpCode);
-                    $('#ddlCashInHand').val(data.Accounts);
+                    $('#ddlCashInHand').val(data.Accounts).trigger('change');
                     // Checkboxes
                     $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
                     $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
@@ -175,6 +175,22 @@
                 if (UserIDfromURL != "") {
                     Valid = true;
                 }
+            }
+
+                if (!Accounts || Accounts === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select a Account.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
             }
 
             var dataObj = {
