@@ -42,7 +42,17 @@ namespace PMS
             return data;
         }
 
-     
+        [WebMethod]
+        public static string CheckEditRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Allow_bill_edit).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
         [WebMethod]
         public static string GetGLAccounts()
         {

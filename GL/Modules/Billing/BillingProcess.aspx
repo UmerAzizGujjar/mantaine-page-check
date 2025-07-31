@@ -5140,14 +5140,6 @@
                     $('#hdfPatient_ID').val(data.d.Reg_PatientID);
                  
 
-                    //$("#txtCardNo").val(data.d.CardNo);
-                    //$("#txtCardHolderName").val(data.d.CardHolderName);
-                    //$("#txtCardLimitNo").val(data.d.CardLimitNo);
-                    //$("#txtApprovedLimit").val(data.d.ApprovedLimit);
-                    //$("#txtRoomLimit").val(data.d.RoomLimit);
-
-                    //$("#ddl_Sub_Department").val(data.d.SubDepartment).change();
-                    //$("#PatientId").val(data.d.PatientID);
 
                 }
 
@@ -5242,6 +5234,11 @@
             //}
            
             $(document).ready(function () {
+                var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
+                if (Bill_ID != "") {
+                    AllowBillEdit();
+                }
+
                 debugger;
                 fillCasher();
                 TotalAmountToday();
@@ -5350,6 +5347,37 @@
                 if (id != "") {
                 }
             });  // document.ready ends
+
+            var editrights;
+            function AllowBillEdit() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/CheckEditRights",
+                    data: "",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        debugger;
+                        editrights = data.d;
+
+                        if (editrights == "true") {
+
+                            $('#btnSave').attr('disabled', false);
+                        }
+                        else {
+                            $('#btnSave').attr('disabled', true);
+                        }
+
+                    },
+                    failure: function () {
+                        alert("Error");
+                    }
+                });
+
+
+            }
         </script>
         <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
          <asp:HiddenField runat="server" ID="hndopdid" ClientIDMode="Static" />
