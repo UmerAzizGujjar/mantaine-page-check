@@ -5090,7 +5090,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="preloader" style="display: none;"><h1>Loading Page.....</h1></div>
-    <div class="loader" style="display:none;    width: 200px;height: 200px;margin-left: 450px;margin-top: 30px;"><img src="~../../../../wwwroot/Tibbit_theme/images/loading.gif"/></div>
+    <div class="loader" style="display:none;    width: 200px;height: 200px;margin-left: 450px;margin-top: 30px;"><%--<img src="~../../../../wwwroot/Tibbit_theme/images/loading.gif"/>--%></div>
 <div id="MedicationModel" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg"> <!-- Use modal-lg for larger standard size -->
         <div class="modal-content">
@@ -5310,7 +5310,7 @@
 </div>
 
 
-        <img src="~../../../../wwwroot/Styles/805.gif" class="se-pre-con" style="margin-left: 500px;"/>
+        <%--<img src="~../../../../wwwroot/Styles/805.gif" class="se-pre-con" style="margin-left: 500px;"/>--%>
         <div id="tabs">
             <ul class="forcolor" >
                 <li><a href="#Tab-4" >Patients Waiting List</a></li>
