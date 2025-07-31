@@ -34,7 +34,7 @@
                     $('#Email').val(data.Email);
                     $('#Mobile').val(data.mobileno);
                     $('#EmpCode').val(data.EmpCode);
-                    $('#ddlCashInHand').val(data.Accounts);
+                    $('#ddlCashInHand').val(data.Accounts).trigger('change');
                     // Checkboxes
                     $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
                     $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
