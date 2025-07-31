@@ -78,7 +78,9 @@ namespace PMS.Modules.Accounts
                              IsNotificationViewed = p.IsNotificationViewed,
                              AllowUnapproveVoucher = p.AllowUnapproveVoucher,
                              IsAnonymous = p.IsAnonymous,
-                             EditEmergency = p.EditEmergency,   
+                             EditEmergency = p.EditEmergency,
+                             Allow_bill_edit = p.Allow_bill_edit,
+                             Emergency_adm_dis = p.Emergency_adm_dis,   
                              EmpCode=p.Emp_Code
                          }).FirstOrDefault();
             string data = string.Empty;
@@ -146,6 +148,8 @@ namespace PMS.Modules.Accounts
                     user.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                     user.IsAnonymous = data.IsAnonymous;
                     user.EditEmergency = data.EditEmergency;
+                    user.Emergency_adm_dis = data.AllowEmergency_adm_dis;
+                    user.Allow_bill_edit = data.AllowBillUpdate;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -202,6 +206,8 @@ namespace PMS.Modules.Accounts
                 newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                 newuser.IsAnonymous = data.IsAnonymous;
                 newuser.EditEmergency = data.EditEmergency;
+                newuser.Allow_bill_edit = data.AllowBillUpdate;
+                newuser.Emergency_adm_dis = data.AllowEmergency_adm_dis;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
 
@@ -302,6 +308,8 @@ namespace PMS.Modules.Accounts
             public bool AllowCardio { get; set; }
             public bool IsAnonymous { get; set; }
             public bool EditEmergency { get; set; }
+            public bool AllowEmergency_adm_dis { get; set; }
+            public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
         }
 
