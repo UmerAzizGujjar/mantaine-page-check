@@ -68,7 +68,7 @@ namespace PMS.Inventory
                     var inv_Items = from I in _dbContext.INV_Items
                                     where I.Item_Type != null && I.Services != true
                                     &&
-                                       ((I.Item_Code.ToString().Contains(searchValue) || I.Description.ToString().Contains(searchValue)))
+                                       ((I.Item_Code.ToString().Contains(searchValue) || I.Description.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Ware House", I.InventoryOrg).Contains(searchValue)))
                                            select new
                                            {
                                                Item_ID =    I.Item_ID,
