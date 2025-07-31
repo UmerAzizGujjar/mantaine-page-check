@@ -1318,14 +1318,29 @@
                         if (Over_and_Above == '') {
                             Over_and_Above = 0.00
                         }
-
+                        if (Balance_Amount > 0.00) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Are you sure?',
+                                text: 'Are you sure to save bill with Balance “00”',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Yes',
+                                cancelButtonText: 'Cancel',
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }                           
+                            });
+                        }
 
 
                         var ChargePolicy = ddlChargePolicy.value;
                         var referred_by_doctor = $('#ddlReffered_By').val();
                         var Casher = $('#ddlcasher').val();
-                        //var Doctor_ID = ddlDoctor.value;
-                        //doctor table data save code 
+
                         $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
                             var Doc_ID = $(value).find('td:eq(0) #ddlDoctorList' + key + '').val();
                             var Share_type = $(value).find('td:eq(1) #ddlShareType' + key + '').val();
@@ -1334,7 +1349,6 @@
                                 Doc_ID: Doc_ID, Doc_Amount: Doc_Amount, Share_type: Share_type
                             });
                         });
-                        //end
                         var isAmountZero = false;
                         $.each($('#tblDetails tbody tr'), function (key, value) {
 
@@ -1342,7 +1356,7 @@
                             var ParentTrans_Name = $(value).find('input[name="hdnParentTrans_Name"]').val();
                             var ParentTrans_Type = $(value).find('input[name="hdnParentTrans_Type"]').val();
                             var ItemID = $(value).find('input[name="hdnItemID"]').val();
-                            var Remarks = $(value).find('td:eq(3)').html();//$(value).find('input[name="Remarks"]').val();
+                            var Remarks = $(value).find('td:eq(3)').html();
                             var Qty = $(value).find('input[name="txtQty"]').val();
                             var Category_ID = $(value).find('input[name="hdnCategory_ID"]').val();
                             var ItemName = $(value).find('input[name="hdnItemName"]').val();
@@ -1399,7 +1413,6 @@
                             if (ParentTrans_Type == "Package" && ItemType == "Test") {
                                 MainDepartment = '001';
                             }
-                            //var Net_Amount = $($(value).find('td')[7]).text();
                             var Net_Amount = $(value).find('input[name="hdnNet_Amount"]').val();
 
                             Net_Amount = (Qty * Amount) - DisAmt;
@@ -1414,15 +1427,12 @@
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
-                            //return;
                         }
                         PageMethods.CheckReceipts(Bill_ID, function (dataaaaaaaaaaaaaa) {
                             if (dataaaaaaaaaaaaaa == '') {
                                 PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
                                     debugger;
                                     alert('Data Successfully Save');
-                                    //window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
-                                   // window.location.href = 'BillingProcess.aspx';
                                     window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + JSON.parse(resp));
                                     setTimeout(function () {
                                         window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
@@ -1445,16 +1455,7 @@
                         returnVal = false;
                     }
                 }
-            }
-                //if (Bill_ID == 0) {
-                //    PageMethods.SaveRecord(JSON.stringify(Parameters), function (resp) {
-                //        window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
-                //        DeleteExcludedItems();
-                //    }, function (error) {
-                //        alert(error.get_message());
-                //    });
-                //}
-           // }
+            }             
             function DeleteExcludedItems() {
                 for (var i = 0; i < ExcludedItem_List.length; i++) {
                     PageMethods.MarkTestAsExcludedFromPayment(ExcludedItem_List[i].ItemID, function () {
@@ -3042,61 +3043,11 @@
                             $('#txtBalances').val(net.toFixed());
                         }
 
-                        //   }
-
+                    }
                     }
 
                 }
-                //if (isNaN(validate))
-                //{
-                //    var CalAmount = $($(row).find('td input[name=txtActualAmount]')[0]).val();
-                //    var Qty = $($(row).find('td input[name=txtQty]')[0]).val();
-                //    var totalamount = (CalAmount) *(Qty)
-                //    $($(row).find('td')[5]).text(totalamount);
-                //    $($(row).find('td')[8]).text(totalamount);
-                //    var total_Disc = 0;
-                //    var Net_Amt = 0;
-                //    var total_amt = 0;
-                //    var qty = 0;
-                //    //After 
-                //    $.each($('#tblDetails tbody tr'), function (key, value) {
-                //        debugger;
 
-                //        total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
-                //        var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
-
-                //        Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
-
-                //        total_amt += Math.round(parseFloat($($(value).find('td')[8]).text()));
-
-                //    });
-                //    debugger;
-                //    $('#txtTotalPayable').val(Net_Amt);
-                //    $('#txtDisAmt').val(total_Disc);
-                //    var net = Net_Amt - total_Disc;
-                //    //   $('#txtNetPayable').val(net);
-                //    $('#txtNetPayable').val(total_amt);
-                //    var AmtReceived = $('#txtAmountReceived').val();
-                //    if ($('#txtTotalPayable').val() != '') {
-                //        if (AmtReceived != '') {
-                //            $('#txtBalances').val((net - AmtReceived).toFixed());
-                //        }
-                //        else
-                //            $('#txtBalances').val(net.toFixed());
-                //    }
-                //    else {
-                //        $('#txtBalances').val(net.toFixed());
-                //    }
-                //}
-
-                }
-                //  CalculateSummarieDiscountPerWise(row_length);
-
-                //var CalAmount = $($(row).find('td input[name=txtActualAmount]')[0]).val();
-                //var Qty = $($(row).find('td input[name=txtQty]')[0]).val();
-                //var totalamount = (CalAmount) *(Qty)
-                //$($(row).find('td')[5]).text(totalamount);
-            //$($(row).find('td')[8]).text(totalamount);
             function SumTotalAmountrecived() {
                 debugger;
                 var Cash_in_Hand = $('#txtcashinhand').val();
@@ -3354,20 +3305,22 @@
                         $("#amnt" + rowIndex).attr('contenteditable', false);
                     }
 
+                    $('#txtDisPer').on('keyup', function () {
+                        $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
+                        $('#tblDetails').find('input[name="DisAmount"]').prop('disabled', true);
+                    });
+                    $(document).on('keyup', 'input[name="DisPer"]', function () {
+                        $('#txtDisPer').prop('disabled', true);
+                        $('#txtDisAmt').prop('disabled', true);
+                    });
+                       
+                    
+                    ////else
+                    ////{
+                    ////       // $('input[name="DisPer"]').attr('disabled', true);
+                    ////        $('input[name="DisAmount"]').attr('disabled', true);
 
-                    var user_name = '<% =AppConfig.UserName %>';
-                    // Ali.Tariq
-                    if (user_name === "Ali.Tariq" || user_name === "ali.tariq") {
-                        debugger;
-                        $('input[name="DisPer"]').attr('disabled', false);
-                        $('input[name="DisAmount"]').attr('disabled', false);
-                    }
-                    else
-                    {
-                           // $('input[name="DisPer"]').attr('disabled', true);
-                            $('input[name="DisAmount"]').attr('disabled', true);
-
-                    }
+                    ////}
                  
                      
 
@@ -5197,7 +5150,7 @@
                     });
                 });
             }
-            function fillCashInHand() {
+                function fillCashInHand() {
                 debugger;
                 var optionsBnk = '';
 
@@ -5244,6 +5197,7 @@
             $(document).ready(function () {
                 debugger;
                 fillCasher();
+
                 TotalAmountToday();
                 $("#txtSearch").keypress(function (event) {
 
@@ -5273,7 +5227,7 @@
                 });
                 fillmartial();
                 fillgender();
-                fillCashInHand();
+                
 
                 jQuery(function ($) {
                     MaskedInput({
@@ -5301,7 +5255,7 @@
                 localStorage.removeItem('Disc'); 
                 localStorage.removeItem('Total_Disc_Amt');
                 localStorage.Disc_Pro ="0.00";
-                var user_name = '<% =AppConfig.UserName %>';
+<%--                var user_name = '<% =AppConfig.UserName %>';
                 if (user_name == "Ali.Tariq" || user_name == "ali.tariq") {
                 $('#txtDisPer').attr('disabled', false);
                 $('#txtDisAmt').attr('disabled', false);
@@ -5310,7 +5264,7 @@
             {
                 $('#txtDisPer').attr('disabled', true);
                 $('#txtDisAmt').attr('disabled', true);
-            }
+            }--%>
                 GetPanelRateAndDiscountComplete();
                 $("#txtDateFrom").datepicker({ dateFormat: 'mm/dd/yy' });
                 $("#txtDateTo").datepicker({ dateFormat: 'mm/dd/yy' });
@@ -5338,6 +5292,7 @@
                 FillMainTestDepartment();
                 FillChargePolicy();
                 LoadMainDepartment();
+                fillCashInHand();
                 $('#add-new-testDirect').click(function () {
                 });
                 $('#add-new-Othertest').click(function () {
