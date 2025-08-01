@@ -418,8 +418,6 @@
 
                 frameDoc.document.write('<html>');
                 frameDoc.document.write('<body>');
-                //Append the external CSS file.
-                //Append the DIV contents.
                 frameDoc.document.write(contents);
                 frameDoc.document.write('</body></html>');
                 frameDoc.document.close();
@@ -427,13 +425,11 @@
                     window.frames["frame1"].focus();
                     window.frames["frame1"].print();
                     frame1.remove();
-                    // window.close();
                 }, 500);
             }
             function PrintVoucher() {
                 window.open('/ReportViewer.aspx?ReportName=GLVoucherEntry&ReportTitle=SALE INVOICE VOUCHER' + '&Voucher_ID=346897');
             }
-            // PrintConsultant
             function PrintHospital() {
                 window.open('/ReportViewer.aspx?ReportName=PrintHospital&ReportTitle=Hospital Print' + '&Bill_ID=' + '<%= Request.QueryString["Bill_ID"]%>');
             }
@@ -739,8 +735,7 @@
                                 if (max_Total_Dic_Amt_Ultra != 0) {
                                 }
                                 else {
-                                    max_Total_Dic_Amt_Ultra = data[0].Total_Disc_Amt; //1000
-                                    //Net_Amt = value.Total_Disc_Amt;
+                                    max_Total_Dic_Amt_Ultra = data[0].Total_Disc_Amt;
                                 }
                             }
                             if (categ == "003") {
@@ -751,8 +746,7 @@
                                 if (max_Total_Dic_Amt_Xray != 0) {
                                 }
                                 else {
-                                    max_Total_Dic_Amt_Xray = data[0].Total_Disc_Amt; //1000
-                                    //Net_Amt = value.Total_Disc_Amt;
+                                    max_Total_Dic_Amt_Xray = data[0].Total_Disc_Amt; 
                                 }
                             }
                             if (categ == "004") {
@@ -889,7 +883,6 @@
                         success: function (response) {
 
                             if (response.d != 0) {
-                                //Test_Rate = response.d;
                                 globalTestRate = response.d;
                             }
                             else {
@@ -908,17 +901,9 @@
                                 AddRadialogyTest(maindpt);
                             }
                             else {
-                                //AddProcedureTest();
                                 AddLabTest(maindpt);
                             }
-                            //update
-                            //var pat_type = $("#lblPatientCategory").text();
-                            //if (pat_type == "Private") {
-                            //    $("#tblDetails tr").each(function () {
-                            //        
-                            //        $(this).find("td:eq(5)").attr('contenteditable', 'True');
-                            //    });
-                            //}
+                            
                         },
                         failure: function (response) { }
                     });
@@ -983,8 +968,6 @@
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     });
                     $('#ddlMainTestDepartment').html(options);
-                    // $('#ddlMainTestDepartment').select2();
-                    ///localStorage.TestForCategoryWiseSelections = options;
                 });
             }
             function FillShareType() {
@@ -1061,11 +1044,8 @@
                 $("body").append(frame1);
                 var frameDoc = frame1[0].contentWindow;
                 frameDoc.document.open();
-                //Create a new HTML document.
                 frameDoc.document.write('<html>');
                 frameDoc.document.write('<body>');
-                //Append the external CSS file.
-                //Append the DIV contents.
                 frameDoc.document.write(contents);
                 frameDoc.document.write('</body></html>');
                 frameDoc.document.close();
@@ -1142,8 +1122,6 @@
                     FillTokenInputForMRNo();
                     LoadBillDetails(Bill_ID);
                     LoadDoctorShare(Bill_ID);
-                   // calculateDoctorShare();
-                    //$('#ddlDoctor').val(data[0].Doctor_ID);
                     $('#ddlReffered_By').val(data[0].Referred_By).trigger('change');
                 },
                 function (error) {
@@ -1165,18 +1143,14 @@
 
                         $('#tblDetails tbody').append(rows);
                         if (departmentpat == "Sehat Sahulat Card") {
-                            //$('#amnt').attr('contenteditable', true);
                             $("#amnt" + rowIndex).attr('contenteditable', true);
                         }
                         else {
                             $("#amnt" + rowIndex).attr('contenteditable', false);
                         }
                         updates();
-                       // $('input[name="DisPer"]').attr('disabled', true);
                         $('input[name="DisAmount"]').attr('disabled', true);
                        
-                   
-                        //CalculateSummarieDiscountPerWise(rowIndex);
                         rowIndex++;
                     });
                     $('#btnSave').val('Update');
@@ -1197,7 +1171,6 @@
                     $.each(data, function (key, value) {
                         rows = '<tr><td><select id="ddlDoctorList' + key + '" style="width: 122px !important;"> ' + doctorListGlobal + ' onkeyup="calculateDoctorShare(this)" </select></td><td><select id="ddlShareType' + key + '" style="width: 122px !important;"> ' + shareTypeGlobalResponse + ' onkeyup="calculateDoctorShare(this)" </select></td><td><input type="text" name="DoctorAmount" id="DoctorAmount' + key + '" value="' + parseFloat(value.Amount) + '" style="width: 65px !important;" onkeyup="calculateDoctorShare(this)"/></td><td> <a href="javascript:void(0)" onclick="DeleteShareDoctor(this)">Delete</a></td></tr>';
                         $('#Doctor_Share_Table tbody').append(rows);
-                       // calculateDoctorShare(rowIndex);
                         rowIndex++;
                     });
                     for (var i = 0; i < data.length; i++)
@@ -1223,20 +1196,14 @@
                     alert(error.get_message());
                 })
             }
-            // List fOr the items exluded from bill. so dont delete it.
             var ExcludedItem_List = [];
             function validateSave()
             {
                 var proceed = true;
-                //doctor share code
                 var Totaldoctorshare = isNaN($('#txtTotalDoctorShare').val()) == true ? 0 : $('#txtTotalDoctorShare').val();
                 var Totaldoctordistribution = $('#txtDoctorTotalDistribution').val();
                 var policy = $('#ddlChargePolicy').val();
-                //if (Totaldoctorshare != Totaldoctordistribution)
-                //{
-                //    alert('Doctor Share and Doctor Distribution Should be Same.');
-                //    proceed = false;
-                //}
+               
                 if (policy == "0")
                 {
                     alert("Please Select Charge Policy");
@@ -1278,7 +1245,6 @@
                         var TotalPayable = $('#txtTotalPayable').val();
                         var Discount_Percentage = $('#txtDisPer').val();
                         Discount_Percentage = $('#hdntxtDisPer').val();
-                        //Discount_Percentage = parseFloat(Discount_Percentage);
                         var Discount_Amount = $('#txtDisAmt').val();
                         var Net_Amount = $('#txtNetPayable').val();
                         var Received_Amount = $('#txtAmountReceived').val();
@@ -1291,7 +1257,6 @@
 
                         var Previous_Balance = $('#txt_balance').val();
                         var Previous_Paid = $('#txtprevious_paid').val();
-                       // var Total_Doctor_Share = $('#txtTotalDoctorShare').val();
                         var Over_and_Above = $('#txtOver_and_Above').val();
                         var Cash_In_Hand = $('#txtcashinhand').val();
                         var Cash_In_Hand_Account = $('#ddlCashInHand').val();
@@ -1306,9 +1271,6 @@
                         if (Previous_Paid == '') {
                             Previous_Paid = 0.00
                         }
-                        //if (Total_Doctor_Share == '') {
-                        //    Total_Doctor_Share = 0.00
-                        //}
                         if (Cash_In_Hand == '') {
                             Cash_In_Hand = 0.00
                         }
@@ -1324,8 +1286,6 @@
                         var ChargePolicy = ddlChargePolicy.value;
                         var referred_by_doctor = $('#ddlReffered_By').val();
                         var Casher = $('#ddlcasher').val();
-                        //var Doctor_ID = ddlDoctor.value;
-                        //doctor table data save code 
                         $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
                             var Doc_ID = $(value).find('td:eq(0) #ddlDoctorList' + key + '').val();
                             var Share_type = $(value).find('td:eq(1) #ddlShareType' + key + '').val();
@@ -1342,7 +1302,7 @@
                             var ParentTrans_Name = $(value).find('input[name="hdnParentTrans_Name"]').val();
                             var ParentTrans_Type = $(value).find('input[name="hdnParentTrans_Type"]').val();
                             var ItemID = $(value).find('input[name="hdnItemID"]').val();
-                            var Remarks = $(value).find('td:eq(3)').html();//$(value).find('input[name="Remarks"]').val();
+                            var Remarks = $(value).find('td:eq(3)').html();
                             var Qty = $(value).find('input[name="txtQty"]').val();
                             var Category_ID = $(value).find('input[name="hdnCategory_ID"]').val();
                             var ItemName = $(value).find('input[name="hdnItemName"]').val();
@@ -1399,7 +1359,6 @@
                             if (ParentTrans_Type == "Package" && ItemType == "Test") {
                                 MainDepartment = '001';
                             }
-                            //var Net_Amount = $($(value).find('td')[7]).text();
                             var Net_Amount = $(value).find('input[name="hdnNet_Amount"]').val();
 
                             Net_Amount = (Qty * Amount) - DisAmt;
@@ -1421,8 +1380,6 @@
                                 PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
                                     debugger;
                                     alert('Data Successfully Save');
-                                    //window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
-                                   // window.location.href = 'BillingProcess.aspx';
                                     window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + JSON.parse(resp));
                                     setTimeout(function () {
                                         window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
@@ -1446,15 +1403,6 @@
                     }
                 }
             }
-                //if (Bill_ID == 0) {
-                //    PageMethods.SaveRecord(JSON.stringify(Parameters), function (resp) {
-                //        window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
-                //        DeleteExcludedItems();
-                //    }, function (error) {
-                //        alert(error.get_message());
-                //    });
-                //}
-           // }
             function DeleteExcludedItems() {
                 for (var i = 0; i < ExcludedItem_List.length; i++) {
                     PageMethods.MarkTestAsExcludedFromPayment(ExcludedItem_List[i].ItemID, function () {
@@ -1466,7 +1414,6 @@
                 debugger;
                 var InPatient_Type = $("#hdn_InPatienttype").val();
                 var Patient_Type = $("#hdn_PatienttypeId").val();
-             //   var Item_Type = $("#hdnItemType").val();
                 var Aggreement_Type = ''
 
                 if (InPatient_Type == "There is no row at position 0.") {
@@ -1494,15 +1441,8 @@
                     success: function (data) {
 
                         debugger;
-                        //var Doctorid = JSON.parse(data.d)["Doctor"];
-                        //var test_id = JSON.parse(data.d)["test_id"];
-                        //var actualamount = JSON.parse(data.d)["Actual_amount"];
                         var hos_share = JSON.parse(data.d)["hos_share"];
                         var doc_share = JSON.parse(data.d)["doc_share"];
-                        //var Department = JSON.parse(data.d)["Department"];
-                        //var item_id = JSON.parse(data.d)["item_id"];
-                        //var services = JSON.parse(data.d)["services"];
-                        //var active = JSON.parse(data.d)["isactive"];
                         debugger;
                         $(rows).closest('tr').find('td input[name="DocShare"]').val(doc_share);
                         $(rows).closest('tr').find('td input[name="HocShare"]').val(hos_share);
@@ -1528,12 +1468,6 @@
                 $('#txtAge_yearss').unmask("99/99/9999");
                 $("#txtAge_yearss").mask("99/99/9999");
 
-                //var years = $('#ctl00_MainContent_txtAge_years').val();
-                //PageMethods.CalculateDOB(years, function (resp) {
-
-
-                //    $('#ctl00_MainContent_txtBirth_Date').val(resp);
-                //});
 
             }
             function CalculateDiscountPercentage() {
@@ -1660,15 +1594,7 @@
                         if (localStorage.OnlyPercentage == 1)
                         {
                            
-                            //$(value).find('input[name="DisAmount"]').val('0');
-                            //$(value).find('input[name="hdnDisAmount"]').val('0');
-                            //$(value).find('input[name="hdnDisPer"]').val('0');
-                            //$(value).find('input[name="DisPer"]').val('0');
-                            //var Amount = $(value).find('td:eq(5)').text().trim();
-                            ////TotalAmount += parseFloat(Amount);
-                            //var Net_Amount = parseInt(Amount);
-                            //$(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
-                            //return false;
+                            
 
                         }
                         else
@@ -1689,7 +1615,6 @@
                                         $(value).find('input[name="hdnDisPer"]').val();
                                         $(value).find('input[name="DisPer"]').val();
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
                                         var Net_Amount = parseInt(Amount);
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         return false;
@@ -1714,14 +1639,11 @@
                                                     $(value).find('input[name="hdnDisPer"]').val();
                                                     $(value).find('input[name="DisPer"]').val();
                                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                                    //TotalAmount += parseFloat(Amount);
-                                                    //var Net_Amount = parseInt(Amount);
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                         return false;                                                  
                                                 }
                                                 debugger;
-                                                /*var amt = Math.abs(sub2);*/
                                                 var amt = parseFloat(DisAmt);
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
@@ -1731,7 +1653,6 @@
                                                 $(value).find('input[name="hdnDisPer"]').val();
                                                 $(value).find('input[name="DisPer"]').val();
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
                                                 var Net_Amount = parseInt(Amount) - amt;
                                                 DisAmt = Net_Amount;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
@@ -1741,9 +1662,7 @@
                                             else {
 
                                                 if (localStorage.IsZero_Amt == 1)
-                                                {                                                  
-                                                    //Lab += parseInt(Amount);
-                                                    //TotalDiscountAmount += parseInt(Amount);
+                                                {                                                
                                                     if (Item > max_Total_Dic_Amt_Item) {
                                                         var sub1 = TotalDiscountAmount_ITem - Amount;
                                                         var sub2 = max_Total_Dic_Amt_Item - sub1;
@@ -1753,22 +1672,17 @@
                                                             $(value).find('input[name="hdnDisPer"]').val();
                                                             $(value).find('input[name="DisPer"]').val();
                                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                                //TotalAmount += parseFloat(Amount);
-                                                            //var Net_Amount = parseInt(Amount);
                                                             var Net_Amount = parseInt(Amount) - DisAmt;
                                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                                 return false;                                                            
                                                         }
-                                                        /*var amt = Math.abs(sub2);*/
                                                         var amt = parseFloat(DisAmt);
-                                                        //var total = amt - max_Total_Dic_Amt;
                                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                         $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                                         var DisPer = 100 / Amount * amt;
                                                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                                         $(value).find('input[name="DisPer"]').val(DisPer);
                                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                                        //TotalAmount += parseFloat(Amount);
                                                         var Net_Amount = parseInt(Amount) - amt;
                                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                         isItemCompleted = true;
@@ -1799,14 +1713,11 @@
                                             $(value).find('input[name="hdnDisPer"]').val();
                                             $(value).find('input[name="DisPer"]').val();
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
-                                            //var Net_Amount = parseInt(Amount);
                                             var Net_Amount = parseInt(Amount) - DisAmt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 return false;
                                             
                                         }
-                                        /*var amt = Math.abs(sub2);*/
                                         var amt = parseFloat(DisAmt);
                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                         $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
@@ -1814,7 +1725,6 @@
                                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                         $(value).find('input[name="DisPer"]').val(DisPer);
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
                                         var Net_Amount = parseInt(Amount) - amt;
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         isItemCompeted_Procedure = true;
@@ -1826,8 +1736,6 @@
                                         if (localStorage.IsZero_Procedure == 1)
                                         {
                                             debugger;
-                                            //Lab += parseInt(Amount);
-                                            //TotalDiscountAmount += parseInt(Amount);
                                             if (Procedure > TotalDiscountAmount_Procedure) {
                                                 debugger;
                                                 var sub1 = TotalDiscountAmount_Procedure - Amount;
@@ -1840,23 +1748,18 @@
                                                         $(value).find('input[name="hdnDisPer"]').val();
                                                         $(value).find('input[name="DisPer"]').val();
                                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                                        //TotalAmount += parseFloat(Amount);
-                                                    //var Net_Amount = parseInt(Amount);
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                         return false;
                                                    
                                                 }
-                                                /*var amt = Math.abs(sub2);*/
                                                 var amt = parseFloat(DisAmt);
-                                                //var total = amt - max_Total_Dic_Amt;
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                                 var DisPer = 100 / Amount * amt;
                                                 $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                                 $(value).find('input[name="DisPer"]').val(DisPer);
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
                                                 var Net_Amount = parseInt(Amount) - amt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 isItemCompeted_Procedure = true;
@@ -1880,15 +1783,11 @@
                                         $(value).find('input[name="hdnDisPer"]').val();
                                         $(value).find('input[name="DisPer"]').val();
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
-                                        //var Net_Amount = parseInt(Amount);
                                         var Net_Amount = parseInt(Amount) - DisAmt;
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         return false;
                                     } debugger;
-                                    /*var amt = Math.abs(sub2);*/
                                     var amt = parseFloat(DisAmt);
-                                    //var total = amt - max_Total_Dic_Amt;
                                     $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                     $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                     var DisPer = 100 / Amount * amt;
@@ -1900,7 +1799,6 @@
 
                                     }
                                     var Amount = $(value).find('td:eq(5)').text().trim();
-                                    //TotalAmount += parseFloat(Amount);
                                     var Net_Amount = parseInt(Amount) - amt;
                                     $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                     isPackageCompleted = true;
@@ -1910,8 +1808,6 @@
                                     debugger;
                                     if (localStorage.Disc_Zero == 1) {
                                         debugger;
-                                        //Lab += parseInt(Amount);
-                                        //TotalDiscountAmount += parseInt(Amount);
                                         if (Package > max_Package_Amt) {
                                             debugger;
                                             var sub1 = TotalDiscountAmount_Package - Amount;
@@ -1923,23 +1819,18 @@
                                                 $(value).find('input[name="hdnDisPer"]').val();
                                                 $(value).find('input[name="DisPer"]').val();
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
-                                                //var Net_Amount = parseInt(Amount);
                                                 var Net_Amount = parseInt(Amount) - DisAmt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 return false;
                                             }
                                             debugger;
-                                            /*var amt = Math.abs(sub2);*/
                                             var amt = parseFloat(DisAmt);
-                                            //var total = amt - max_Total_Dic_Amt;
                                             $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                             $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                             var DisPer = 100 / Amount * amt;
                                             $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                             $(value).find('input[name="DisPer"]').val(DisPer);
                                             var Amount = $(value).find('td:eq(5)').text().trim();
-                                            //TotalAmount += parseFloat(Amount);
                                             var Net_Amount = parseInt(Amount) - amt;
                                             $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                             isPackageCompleted = true;
@@ -1957,7 +1848,6 @@
                                     debugger;
                                     Lab += DisAmt;
                                     TotalDiscountAmount += DisAmt;
-                                    //max_Total_Dic_Amt = (max_Total_Dic_Amt) - (t);
                                     if (Lab > max_Total_Dic_Amt) {
                                         debugger;
                                         var sub1 = TotalDiscountAmount - DisAmt;
@@ -1968,16 +1858,12 @@
                                             $(value).find('input[name="hdnDisPer"]').val();
                                             $(value).find('input[name="DisPer"]').val();
                                             var Amount = $(value).find('td:eq(5)').text().trim();
-                                            //TotalAmount += parseFloat(Amount);
-                                            //var Net_Amount = parseInt(Amount);
                                             var Net_Amount = parseInt(Amount) - DisAmt;
                                             $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                             return false;
                                         }
                                         debugger;
-                                        /*var amt = Math.abs(sub2);*/
                                         var amt = parseFloat(DisAmt);
-                                        //var total = amt - max_Total_Dic_Amt;
                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                         $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                         var DisPer = 100 / Amount * amt;
@@ -1989,7 +1875,6 @@
 
                                         }
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
                                         var Net_Amount = parseInt(Amount) - amt;
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         isLabCompeted = true;
@@ -1999,8 +1884,6 @@
                                         debugger;
                                         if (localStorage.Disc_Zero == 1)
                                         {                                           
-                                            //Lab += parseInt(Amount);
-                                            //TotalDiscountAmount += parseInt(Amount);
                                             if (Lab > max_Total_Dic_Amt) {
                                                 
                                                 var sub1 = TotalDiscountAmount - Amount;
@@ -2012,22 +1895,17 @@
                                                     $(value).find('input[name="hdnDisPer"]').val();
                                                     $(value).find('input[name="DisPer"]').val();
                                                     var Amount = $(value).find('td:eq(5)').text().trim();
-                                                    //TotalAmount += parseFloat(Amount);
-                                                    //var Net_Amount = parseInt(Amount);
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                     $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                     return false;
-                                                }                                              
-                                                /*var amt = Math.abs(sub2);*/
+                                                }                                     
                                                 var amt = parseFloat(DisAmt);
-                                                //var total = amt - max_Total_Dic_Amt;
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                                 var DisPer = 100 / Amount * amt;
                                                 $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                                 $(value).find('input[name="DisPer"]').val(DisPer);
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
                                                 var Net_Amount = parseInt(Amount) - amt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 isLabCompeted = true;
@@ -2051,22 +1929,17 @@
                                             $(value).find('input[name="hdnDisPer"]').val();
                                             $(value).find('input[name="DisPer"]').val();
                                             var Amount = $(value).find('td:eq(5)').text().trim();
-                                            //TotalAmount += parseFloat(Amount);
-                                            //var Net_Amount = parseInt(Amount);
                                             var Net_Amount = parseInt(Amount) - DisAmt;
                                             $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                             return false;
                                         }
-                                        /*var amt = Math.abs(sub2);*/
                                         var amt = parseFloat(DisAmt);
-                                        //var total = amt - max_Total_Dic_Amt;
                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                         $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                         var DisPer = 100 / Amount * amt;
                                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                         $(value).find('input[name="DisPer"]').val(DisPer);
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
                                         var Net_Amount = parseInt(Amount) - amt;
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         isUltraSoundCompleted = true;
@@ -2075,8 +1948,6 @@
                                     else {
                                         if (localStorage.Disc_Zero == 1) {
                                             
-                                            //Lab += parseInt(Amount);
-                                            //TotalDiscountAmount += parseInt(Amount);
                                             if (UltraSound > max_Total_Dic_Amt_Ultra) {
                                                 var sub1 = TotalDiscountAmount_Ultra - Amount;
                                                 var sub2 = max_Total_Dic_Amt_Ultra - sub1;
@@ -2086,22 +1957,17 @@
                                                     $(value).find('input[name="hdnDisPer"]').val();
                                                     $(value).find('input[name="DisPer"]').val();
                                                     var Amount = $(value).find('td:eq(5)').text().trim();
-                                                    //TotalAmount += parseFloat(Amount);
-                                                    //var Net_Amount = parseInt(Amount);
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                     $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                     return false;
                                                 }
-                                                /*var amt = Math.abs(sub2);*/
                                                 var amt = parseFloat(DisAmt);
-                                                //var total = amt - max_Total_Dic_Amt;
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                                 var DisPer = 100 / Amount * amt;
                                                 $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                                 $(value).find('input[name="DisPer"]').val(DisPer);
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
                                                 var Net_Amount = parseInt(Amount) - amt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 isUltraSoundCompleted = true;
@@ -2125,31 +1991,24 @@
                                             $(value).find('input[name="hdnDisPer"]').val();
                                             $(value).find('input[name="DisPer"]').val();
                                             var Amount = $(value).find('td:eq(5)').text().trim();
-                                            //TotalAmount += parseFloat(Amount);
-                                            //var Net_Amount = parseInt(Amount);
                                             var Net_Amount = parseInt(Amount) - DisAmt;
                                             $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                             return false;
                                         }
-                                        /*var amt = Math.abs(sub2);*/
                                         var amt = parseFloat(DisAmt);
-                                        //var total = amt - max_Total_Dic_Amt;
                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                         $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                         var DisPer = 100 / Amount * amt;
                                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                         $(value).find('input[name="DisPer"]').val(DisPer);
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
                                         var Net_Amount = parseInt(Amount) - amt;
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         isXrayCompleted = true;
                                         TotalDiscountAmount_Xray = max_Total_Dic_Amt_Xray;
                                     }
                                     else {
-                                        if (localStorage.Disc_Zero == 1) {                                            
-                                            //Lab += parseInt(Amount);
-                                            //TotalDiscountAmount += parseInt(Amount);
+                                        if (localStorage.Disc_Zero == 1) {
                                             if (Xray > max_Total_Dic_Amt_Xray) {
                                                 var sub1 = TotalDiscountAmount_Xray - Amount;
                                                 var sub2 = max_Total_Dic_Amt_Xray - sub1;
@@ -2159,22 +2018,17 @@
                                                     $(value).find('input[name="hdnDisPer"]').val();
                                                     $(value).find('input[name="DisPer"]').val();
                                                     var Amount = $(value).find('td:eq(5)').text().trim();
-                                                    //TotalAmount += parseFloat(Amount);
-                                                    //var Net_Amount = parseInt(Amount);
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                     $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                     return false;
                                                 }
-                                                /*var amt = Math.abs(sub2);*/
                                                 var amt = parseFloat(DisAmt);
-                                                //var total = amt - max_Total_Dic_Amt;
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                                 var DisPer = 100 / Amount * amt;
                                                 $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                                 $(value).find('input[name="DisPer"]').val(DisPer);
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
                                                 var Net_Amount = parseInt(Amount) - amt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 isXrayCompleted = true;
@@ -2199,22 +2053,17 @@
                                             $(value).find('input[name="hdnDisPer"]').val();
                                             $(value).find('input[name="DisPer"]').val();
                                             var Amount = $(value).find('td:eq(5)').text().trim();
-                                            //TotalAmount += parseFloat(Amount);
-                                            //var Net_Amount = parseInt(Amount);
                                             var Net_Amount = parseInt(Amount) - DisAmt;
                                             $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                             return false;
                                         }
-                                        /*var amt = Math.abs(sub2);*/
                                         var amt = parseFloat(DisAmt);
-                                        //var total = amt - max_Total_Dic_Amt;
                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                         $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                         var DisPer = 100 / Amount * amt;
                                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                         $(value).find('input[name="DisPer"]').val(DisPer);
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
                                         var Net_Amount = parseInt(Amount) - amt;
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         isCTScanCompleted = true;
@@ -2223,8 +2072,6 @@
                                     else {
                                         if (localStorage.Disc_Zero == 1) {
                                             
-                                            //Lab += parseInt(Amount);
-                                            //TotalDiscountAmount += parseInt(Amount);
                                             if (CT_Scan > max_Total_Dic_Amt_ct_Scan) {
                                                 var sub1 = TotalDiscountAmount_CTScan - Amount;
                                                 var sub2 = max_Total_Dic_Amt_ct_Scan - sub1;
@@ -2234,22 +2081,17 @@
                                                     $(value).find('input[name="hdnDisPer"]').val();
                                                     $(value).find('input[name="DisPer"]').val();
                                                     var Amount = $(value).find('td:eq(5)').text().trim();
-                                                    //TotalAmount += parseFloat(Amount);
-                                                    //var Net_Amount = parseInt(Amount);
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                     $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                     return false;
                                                 }
-                                                /*var amt = Math.abs(sub2);*/
                                                 var amt = parseFloat(DisAmt);
-                                                //var total = amt - max_Total_Dic_Amt;
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                                 var DisPer = 100 / Amount * amt;
                                                 $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                                 $(value).find('input[name="DisPer"]').val(DisPer);
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
                                                 var Net_Amount = parseInt(Amount) - amt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 isCTScanCompleted = true;
@@ -2262,7 +2104,6 @@
                                     
                                     Blood += DisAmt;
                                     TotalDiscountAmount_Blood += DisAmt;
-                                    //max_Total_Dic_Amt = (max_Total_Dic_Amt) - (t);
                                     if (Blood > max_Total_Dic_Amt_Blood) {
                                         
                                         var sub1 = TotalDiscountAmount_Blood - DisAmt;
@@ -2273,31 +2114,24 @@
                                             $(value).find('input[name="hdnDisPer"]').val();
                                             $(value).find('input[name="DisPer"]').val();
                                             var Amount = $(value).find('td:eq(5)').text().trim();
-                                            //TotalAmount += parseFloat(Amount);
-                                            //var Net_Amount = parseInt(Amount);
                                             var Net_Amount = parseInt(Amount) - DisAmt;
                                             $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                             return false;
                                         }
-                                        /*var amt = Math.abs(sub2);*/
                                         var amt = parseFloat(DisAmt);
-                                        //var total = amt - max_Total_Dic_Amt;
                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                         $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                         var DisPer = 100 / Amount * amt;
                                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                         $(value).find('input[name="DisPer"]').val(DisPer);
                                         var Amount = $(value).find('td:eq(5)').text().trim();
-                                        //TotalAmount += parseFloat(Amount);
                                         var Net_Amount = parseInt(Amount) - amt;
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         isBloodBankCompleted = true;
                                         TotalDiscountAmount_Blood = max_Total_Dic_Amt_Blood;
                                     }
                                     else {
-                                        if (localStorage.Disc_Zero == 1) {                                         
-                                            //Lab += parseInt(Amount);
-                                            //TotalDiscountAmount += parseInt(Amount);
+                                        if (localStorage.Disc_Zero == 1) {                
                                             if (Blood > max_Total_Dic_Amt_Blood) {
                                                 var sub1 = TotalDiscountAmount_Blood - Amount;
                                                 var sub2 = max_Total_Dic_Amt_Blood - sub1;
@@ -2307,22 +2141,17 @@
                                                     $(value).find('input[name="hdnDisPer"]').val();
                                                     $(value).find('input[name="DisPer"]').val();
                                                     var Amount = $(value).find('td:eq(5)').text().trim();
-                                                    //TotalAmount += parseFloat(Amount);
-                                                    //var Net_Amount = parseInt(Amount);
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                     $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                     return false;
                                                 }
-                                                /*var amt = Math.abs(sub2);*/
                                                 var amt = parseFloat(DisAmt);
-                                                //var total = amt - max_Total_Dic_Amt;
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
                                                 var DisPer = 100 / Amount * amt;
                                                 $(value).find('input[name="hdnDisPer"]').val(DisPer);
                                                 $(value).find('input[name="DisPer"]').val(DisPer);
                                                 var Amount = $(value).find('td:eq(5)').text().trim();
-                                                //TotalAmount += parseFloat(Amount);
                                                 var Net_Amount = parseInt(Amount) - amt;
                                                 $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                 isBloodBankCompleted = true;
@@ -2383,7 +2212,6 @@
                     $('#txtTotalPayable').val(Net_Amt + PreviousBalance);
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
-                    //   $('#txtNetPayable').val(net);
                     $('#txtNetPayable').val(total_amt + PreviousBalance );
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '')
@@ -2414,11 +2242,6 @@
                         });
                     }
                     debugger;
-                    //$('#txtTotalPayable').val(TotalAmount.toFixed());
-
-                    //$('#txtDisAmt').val(TotalDiscountAmount.toFixed());
-
-                    //$('#txtNetPayable').val(TotalNetAmount.toFixed());
                     debugger;
                     $('#txtTotalPayable').val(TotalAmount.toFixed());
 
@@ -2440,14 +2263,6 @@
                 }
               
                 
-               // var total_Disc = parseFloat(TotalDiscountAmount) +
-               //parseFloat(TotalDiscountAmount_Ultra) +
-               // parseFloat(TotalDiscountAmount_Xray) +
-               // parseFloat(TotalDiscountAmount_CTScan) +
-               // parseFloat(TotalDiscountAmount_Blood) +
-               //  parseFloat(TotalDiscountAmount_ITem) +
-               //parseFloat(TotalDiscountAmount_Procedure);
-               
             }
             var Temporary = 0;
             debugger;
@@ -2482,7 +2297,6 @@
                 var TotalNetAmount = 0;
                 $.each($('#tblDetails tbody tr'), function (key, value) {
                     debugger;
-                    //if (rowIndex == parseInt(key)) {
                         debugger;
                         Amount = $($(value).find('td')[5]).text();
                         Qty = $(value).find('input[name="txtQty"]').val();
@@ -2554,7 +2368,6 @@
                         $(value).find('input[name="DisAmount"]').val(DisAmt.toFixed(2));
                         $(value).find('input[name="hdnDisAmount"]').val(DisAmt.toFixed(6));
                         NetAmount = (Qty * Amount) - DisAmt;
-                        //var NAmount = (Qty * Amount) - DisAmt;
                         $($(value).find('td')[8]).text(NetAmount.toFixed(0));
                         $(value).find('input[name="hdnNet_Amount"]').val(NetAmount.toFixed(6));
                         TotalAmount += parseFloat(Amount);
@@ -2585,7 +2398,6 @@
                         $(value).find('input[name="DisPer"]').val(parseFloat(TotalDisPer_Entered).toFixed(2));
                         $(value).find('input[name="hdnDisPer"]').val(parseFloat(TotalDisPer_Entered).toFixed(6));
                         NetAmount = (Qty * Amount) - DisAmt;
-                      /*  var NAmount = (Qty * Amount) - DisAmt;*/
                         $($(value).find('td')[8]).text(NetAmount.toFixed(0));
                         $(value).find('input[name="hdnNet_Amount"]').val(parseFloat(NetAmount.toFixed(6)));
                         TotalAmount += parseFloat(Amount);
@@ -2687,7 +2499,6 @@
                     debugger;
                     var Amount = $(row).find('td:eq(5)').text();
 
-                    //DisPer = $(row).find('input[name="DisPer"]').val();
 
                     var qty = $($(row).find('td input[name=txtQty]')[0]).val();
                     var old_Dis_amt = parseInt(Amount) * parseInt(localStorage.Disc) / 100;
@@ -2717,8 +2528,6 @@
                     });
 
 
-                    //Item += DisAmt;
-                    //TotalDiscountAmount_ITem += DisAmt;
 
                     if (Package > max_Package_Amt)
                     {
@@ -2728,7 +2537,6 @@
                         var sub2 = max_Package_Amt - sub1;
                         var amt = Math.abs(sub2);
                         var Total_Dis_Amt = Math.round(parseInt(amt));
-                        //+ (parseInt(old_Dis_amt) / parseInt(qty))) - 1;
 
                         $(row).find('input[name="DisAmount"]').val(Math.round(Total_Dis_Amt.toFixed(2)));
                         $(row).find('input[name="hdnDisAmount"]').val(Math.round(Total_Dis_Amt.toFixed(2)));
@@ -2736,12 +2544,10 @@
                         $(row).find('input[name="hdnDisPer"]').val(DisPer);
                         $(row).find('input[name="DisPer"]').val(DisPer);
                         var Amount = $(row).find('td:eq(5)').text().trim();
-                        //TotalAmount += parseFloat(Amount);
                         var Net_Amount = (parseInt(Amount) * parseInt(qty)) - amt;
                         $(row).find('td:eq(8)').text(Net_Amount.toFixed(0));
                         isPackageCompleted = true;
                         TotalDiscountAmount_Package = max_Package_Amt;
-                        //Item = Item - old_Dis_amt;
                     }
                     else {
                         isPackageCompleted = false;
@@ -2749,7 +2555,6 @@
 
                     }
 
-                    //TotalDiscountAmount_ITem=TotalDiscountAmount_ITem-old_Dis_amt;
                     var total_Disc = 0;
                     var Net_Amt = 0;
                     var total_amt = 0;
@@ -2769,7 +2574,6 @@
                     $('#txtTotalPayable').val(Net_Amt);
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
-                    //   $('#txtNetPayable').val(net);
                     $('#txtNetPayable').val(total_amt);
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '') {
@@ -2787,10 +2591,8 @@
                     if (isHos == 1)
                     {
                         debugger;
-                        //Total_Disc_Amt = "2000.0000"
                         var Amount = $(row).find('td:eq(5)').text();
 
-                        //DisPer = $(row).find('input[name="DisPer"]').val();
 
                         var qty = $($(row).find('td input[name=txtQty]')[0]).val();
                         var old_Dis_amt = parseInt(Amount) * parseInt(localStorage.Disc) / 100;
@@ -2798,7 +2600,6 @@
                         if (localStorage.Disc == "0.0000")
                         {
                             debugger;
-                            //Amount = $($(row).find('td input[name=txtQty]')[0]).val();
                             Qty = $(row).find('input[name="txtQty"]').val();
                             DisAmt = $(row).find('input[name="DisAmount"]').val();
                             $(row).find('input[name="hdnDisAmount"]').val(DisAmt);
@@ -2809,7 +2610,6 @@
 
                         
                         if (localStorage.Disc == "0.0000") {
-                            //DisAmt = localStorageTotal_Disc_Amt
                         }
                         var net_amt = (parseInt(Amount) * qty) - parseFloat(DisAmt);
 
@@ -2847,8 +2647,6 @@
                         });
 
 
-                        //Item += DisAmt;
-                        //TotalDiscountAmount_ITem += DisAmt;
 
                         if (Item > max_Total_Dic_Amt_Item) {
                             debugger;
@@ -2857,7 +2655,6 @@
                             var sub2 = max_Total_Dic_Amt_Item - sub1;
                             var amt = Math.abs(sub2);
                             var Total_Dis_Amt = Math.round(parseInt(amt));
-                            //+ (parseInt(old_Dis_amt) / parseInt(qty))) - 1;
 
                             $(row).find('input[name="DisAmount"]').val(Math.round(Total_Dis_Amt.toFixed(2)));
                             $(row).find('input[name="hdnDisAmount"]').val(Math.round(Total_Dis_Amt.toFixed(2)));
@@ -2865,24 +2662,20 @@
                             $(row).find('input[name="hdnDisPer"]').val(DisPer);
                             $(row).find('input[name="DisPer"]').val(DisPer);
                             var Amount = $(row).find('td:eq(5)').text().trim();
-                            //TotalAmount += parseFloat(Amount);
                             var Net_Amount = (parseInt(Amount) * parseInt(qty)) - amt;
                             $(row).find('td:eq(8)').text(Net_Amount.toFixed(0));
                             isItemCompleted = true;
                             TotalDiscountAmount_ITem = max_Total_Dic_Amt_Item;
-                            //Item = Item - old_Dis_amt;
                         }
                         else {
                             isItemCompleted = false;
                             TotalDiscountAmount_ITem = Item;
                             if (localStorage.Disc == "0.0000")
                             {
-                                //old_Dis_amt = parseInt(Amount) * 1 / 100;
                             }
 
                         }
 
-                        //TotalDiscountAmount_ITem=TotalDiscountAmount_ITem-old_Dis_amt;
                         var total_Disc = 0;
                         var Net_Amt = 0;
                         var total_amt = 0;
@@ -2904,7 +2697,6 @@
                         $('#txtTotalPayable').val(Net_Amt);
                         $('#txtDisAmt').val(total_Disc);
                         var net = Net_Amt - total_Disc;
-                        //   $('#txtNetPayable').val(net);
                         $('#txtNetPayable').val(total_amt);
                         var AmtReceived = $('#txtAmountReceived').val();
                         if ($('#txtTotalPayable').val() != '')
@@ -2972,7 +2764,6 @@
                             var sub2 = max_Total_Dic_Amt_Procedure - sub1;
                             var amt = Math.abs(sub2);
                             var Total_Dis_Amt = Math.round(parseInt(amt));
-                            //+ (parseInt(old_Dis_amt) / parseInt(qty))) - 1;
 
                             $(row).find('input[name="DisAmount"]').val(Math.round(Total_Dis_Amt.toFixed(2)));
                             $(row).find('input[name="hdnDisAmount"]').val(Math.round(Total_Dis_Amt.toFixed(2)));
@@ -2980,7 +2771,6 @@
                             $(row).find('input[name="hdnDisPer"]').val(DisPer);
                             $(row).find('input[name="DisPer"]').val(DisPer);
                             var Amount = $(row).find('td:eq(5)').text().trim();
-                            //TotalAmount += parseFloat(Amount);
                             var Net_Amount = (parseInt(Amount) * parseInt(qty)) - amt;
                             $(row).find('td:eq(8)').text(Net_Amount.toFixed(0));
                             isItemCompeted_Procedure = true;
@@ -2990,7 +2780,6 @@
                             isItemCompeted_Procedure = false;
                             TotalDiscountAmount_Procedure = Procedure;
                         }
-                        //TotalDiscountAmount_ITem=TotalDiscountAmount_ITem-old_Dis_amt;
                         var total_Disc = 0;
                         var Net_Amt = 0;
                         var total_amt = 0;
@@ -3000,18 +2789,6 @@
 
                             debugger;
 
-                            //$(value).find('input[name="DisAmount"]').val('0');
-                            //$(value).find('input[name="hdnDisAmount"]').val('0');
-                            //$(value).find('input[name="hdnDisPer"]').val('0');
-                            //$(value).find('input[name="DisPer"]').val('0');
-                            //var dis = $(value).find('input[name="DisAmount"]').val();
-                            //var qty = $($(row).find('td input[name=txtQty]')[0]).val();
-                            //var Amount = $(value).find('td:eq(5)').text().trim();
-                            //var net = (qty * Amount) - dis;
-                            ////TotalAmount += parseFloat(Amount);
-                            //var Net_Amount = parseInt(net);
-                            //$(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
-                            //return false;
 
                         }
                         $.each($('#tblDetails tbody tr'), function (key, value) {
@@ -3028,7 +2805,6 @@
                         $('#txtTotalPayable').val(Net_Amt);
                         $('#txtDisAmt').val(total_Disc);
                         var net = Net_Amt - total_Disc;
-                        //   $('#txtNetPayable').val(net);
                         $('#txtNetPayable').val(total_amt);
                         var AmtReceived = $('#txtAmountReceived').val();
                         if ($('#txtTotalPayable').val() != '') {
@@ -3047,56 +2823,8 @@
                     }
 
                 }
-                //if (isNaN(validate))
-                //{
-                //    var CalAmount = $($(row).find('td input[name=txtActualAmount]')[0]).val();
-                //    var Qty = $($(row).find('td input[name=txtQty]')[0]).val();
-                //    var totalamount = (CalAmount) *(Qty)
-                //    $($(row).find('td')[5]).text(totalamount);
-                //    $($(row).find('td')[8]).text(totalamount);
-                //    var total_Disc = 0;
-                //    var Net_Amt = 0;
-                //    var total_amt = 0;
-                //    var qty = 0;
-                //    //After 
-                //    $.each($('#tblDetails tbody tr'), function (key, value) {
-                //        debugger;
-
-                //        total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
-                //        var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
-
-                //        Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
-
-                //        total_amt += Math.round(parseFloat($($(value).find('td')[8]).text()));
-
-                //    });
-                //    debugger;
-                //    $('#txtTotalPayable').val(Net_Amt);
-                //    $('#txtDisAmt').val(total_Disc);
-                //    var net = Net_Amt - total_Disc;
-                //    //   $('#txtNetPayable').val(net);
-                //    $('#txtNetPayable').val(total_amt);
-                //    var AmtReceived = $('#txtAmountReceived').val();
-                //    if ($('#txtTotalPayable').val() != '') {
-                //        if (AmtReceived != '') {
-                //            $('#txtBalances').val((net - AmtReceived).toFixed());
-                //        }
-                //        else
-                //            $('#txtBalances').val(net.toFixed());
-                //    }
-                //    else {
-                //        $('#txtBalances').val(net.toFixed());
-                //    }
-                //}
-
-                }
-                //  CalculateSummarieDiscountPerWise(row_length);
-
-                //var CalAmount = $($(row).find('td input[name=txtActualAmount]')[0]).val();
-                //var Qty = $($(row).find('td input[name=txtQty]')[0]).val();
-                //var totalamount = (CalAmount) *(Qty)
-                //$($(row).find('td')[5]).text(totalamount);
-            //$($(row).find('td')[8]).text(totalamount);
+             }
+              
             function SumTotalAmountrecived() {
                 debugger;
                 var Cash_in_Hand = $('#txtcashinhand').val();
@@ -3185,7 +2913,6 @@
                             }
                             rows = '<tr><td style="text-align:Center;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnItemID" value="' + value.Item_Code + '" /> <input type="hidden" name="hdnItemName" value="' + itemanme + '" /> <input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + itemanme + '<td></td>' + '' + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /><input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" /></td><td style="text-align:Right;"onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> 45 </td><td><input type="number" id="DocShare' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
                             $('#tblDetails tbody').append(rows);
-                            //$('input[name="DisPer"]').attr('disabled', true);
                             $('input[name="DisAmount"]').attr('disabled', true)
                             CalculateSummarieDiscountPerWise(rowIndex);
                             //update
@@ -3213,8 +2940,6 @@
             function  AddServiceOrItem()
             {
                 debugger;
-                //localStorage.Disc_Zero = 0;
-                //localStorage.OnlyPercentage = 0;
                 notProcedurenotITem = false;
                 localStorage.IsPocedure = false;
                 if ($('#lblPatientDiscountType').text() == "Insurance Company")
@@ -3245,18 +2970,11 @@
                         if (Item_Id == value.Item_ID && panel_id == value.Panel_ID)
                         {
                             debugger;
-                            //if (Type == "OPD") {
-                            //    localStorage.SelectedItemAmount = value.Rate;
-                            //}
-                            //else if (Type == "IPD") {
+                           
                                 localStorage.SelectedItemAmount = value.Rate;
                                 DiscountAMt = value.Discount;
-                           // }
+                           
                         }
-                        //else
-                        //{
-                        //    localStorage.SelectedItemAmount = 0;
-                        //}
                     });
                 }
                 debugger;
@@ -3304,15 +3022,13 @@
 
                     }
                     else {
-                        max_Total_Dic_Amt_Procedure = localStorage.Total_Disc_Amt_pro; //1000
-                        //Net_Amt = value.Total_Disc_Amt;
+                        max_Total_Dic_Amt_Procedure = localStorage.Total_Disc_Amt_pro;
                     }
 
 
                 }
            
                 var remarks = $("#ctl00_MainContent_ddlpro_dis").val();
-               // '</td><td> ' + remarks + '
                 setTimeout(function () {
                     if ($('#txtAddService').val() == "")
                         return false;
@@ -3320,7 +3036,6 @@
                     debugger;
                     if (CheckInPatientObject == true)
                     {
-                        // localStorage.DocShare
                         if (isNaN(validate)) {
                             var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
 
@@ -3347,7 +3062,6 @@
                     debugger;
                     if (departmentpat == "Sehat Sahulat Card") {
                         $("#amnt"+rowIndex).attr('contenteditable', true);
-                  /*      $("[name='amnt']").attr('contenteditable', true);*/
 
                     }
                     else {
@@ -3364,7 +3078,6 @@
                     }
                     else
                     {
-                           // $('input[name="DisPer"]').attr('disabled', true);
                             $('input[name="DisAmount"]').attr('disabled', true);
 
                     }
@@ -3385,7 +3098,6 @@
                     CalculateSummarieDiscountPerWise(rowIndex);
                     
                     debugger;
-                    //editable some Items
                     var ItemId = localStorage.SelectedItemID;
                     var pat_type = $("#lblPatientDiscountType").text();
                     var INP_Private = $("#lblPatientCategory").text();
@@ -3434,12 +3146,10 @@
                             $('input[name="DisAmount"]').attr('disabled', false)
                         }
                         else {
-                           // $('input[name="DisPer"]').attr('disabled', true);
                             $('input[name="DisAmount"]').attr('disabled', true)
                         }
                     }
                     else {
-                       // $('input[name="DisPer"]').attr('disabled', true);
                         $('input[name="DisAmount"]').attr('disabled', true)
                     }
                 }, 300);
@@ -3503,7 +3213,7 @@
                         debugger;
                         $.each(data, function (key, value) {
                             debugger;
-                            itemIds.push(value); // Push item_id into the array
+                            itemIds.push(value); 
                         });
                     }
 
@@ -3532,7 +3242,7 @@
                         debugger;
                         $.each(data, function (key, value) {
                             debugger;
-                            itemIds.push(value); // Push item_id into the array
+                            itemIds.push(value); 
                         });
                     }
 
@@ -3543,7 +3253,7 @@
             function getitem_code() {
                 debugger;
                 var Pat_id = $('#hdfPatient_ID').val();
-                itemIds = []; // Array to store item_ids
+                itemIds = [];
                 debugger;
                 $.ajax({
                     type: "post",
@@ -3560,7 +3270,7 @@
                         debugger;
                         $.each(data, function (key, value) {
                             debugger;
-                            itemIds.push(value); // Push item_id into the array
+                            itemIds.push(value);
                         });
                     }
 
@@ -3609,7 +3319,6 @@
                             servicerow = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="OPD" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + data[0].Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + data[0].Description + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinors + '" /> <input type="hidden" name="hdnDisPer" value=""/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + data[0].Sale_Rate + '/><input type="hidden" name="hdnItemType" value="' + itemtype + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + data[0].Description + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + data[0].Sale_Rate + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name="amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + data[0].Sale_Rate + '</td><td> <input type="text" name="DisPer" value="0" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + data[0].Sale_Rate + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
                         },
                     });
-                    //$('#tblDetails tbody').empty();
                     $('#tblDetails tbody').append(servicerow);
                     $('input[name="DisAmount"]').attr('disabled', true)
 
@@ -3673,7 +3382,6 @@
                  $.each($('#tblDetails tbody tr'), function (key, value)
                  {
                    
-                    //Amount += parseFloat($($(value).find('td')[4]).text());
                     Amount += parseFloat($(this).closest("tr").find("td:eq(5)").text());
                     DisAmt += parseFloat($(value).find('input[name="DisAmount"]').val());
                     NetAmount = Amount - DisAmt;
@@ -3855,7 +3563,6 @@
                     else {
                         CheckInPatientObject = true;
                     }
-                    // $('#ddlDaysMonthsYears').html(options);
                 }, function (error) { })
             }
             debugger;
@@ -3877,7 +3584,6 @@
                         rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="OutPatient" /><input type="hidden" name="Main_Department" value="' + value.MainDepartment + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount"  value="0.00" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + '</td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td></tr>'
                         debugger;
                         $('#tblDetails tbody').append(rows);
-                        //$('input[name="DisPer"]').attr('disabled', true);
                         $('input[name="DisAmount"]').attr('disabled', true)
                         if (rows !='')
                             setTimeout(function () {
@@ -3889,7 +3595,6 @@
        
                     getitem_code();
                     
-                    //inpatientwork
                     FetchRecommendedInPatientDetails();
                 });
             }
@@ -3908,7 +3613,6 @@
                         
                         $('#tblDetails tbody').append(rows);
                         
-                       // $('input[name="DisPer"]').attr('disabled', true);
                        $('input[name="DisAmount"]').attr('disabled', true)
                         if (rows != '')
                             debugger;
@@ -3928,7 +3632,7 @@
                     var packname = $("#hdn_pkgname").val();
                 $.ajax({
                     type: "POST",
-                    url: "BillingProcess.aspx/CheckItemsinPackages", // Update with the correct endpoint
+                    url: "BillingProcess.aspx/CheckItemsinPackages",
                     data: JSON.stringify({
                         PackType: PackType,
                         packname: packname,
@@ -3941,7 +3645,6 @@
                         const result = JSON.parse(response.d); 
                         console.log(result)
                         if (result.ItemExists) {
-                            // Show alert if the item exists in the package
                             alert(`Item "${result.ItemName}" exists in the package!`);
                         }
                     },
@@ -3951,21 +3654,7 @@
                     }
                 });
             }
-            //function CheckItemsinPackages(itemid, itemName) {
-            //    debugger;
-            //    var PackType = $("#hdn_pkgtype").val();
-            //    var packname = $("#hdn_pkgname").val();
-            //    PageMethods.CheckItemsinPackages(PackType, packname, itemid, itemName, function (resp) {
-            //        debugger;
-            //        var data = JSON.parse(resp);
-            //      //  if (data != "")
-
-            //        console.log(data);
-
-            //    });
-
-
-            //}
+            
 
             function FetchRecommendedEmergencyPatDetails() {
                 debugger;
@@ -3981,7 +3670,6 @@
                     $.each(JSON.parse(resp), function (key, value) {
                         rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="EmergencyPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + ' </td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
                         $('#tblDetails tbody').append(rows);
-                        // $('input[name="DisPer"]').attr('disabled', true);
                         $('input[name="DisAmount"]').attr('disabled', true)
                         if (rows != '')
                             CalculateSummarieDiscountPerWise(rowIndex);
@@ -4017,7 +3705,6 @@
                         var datas = data.Total_Disc_Amt;
                         if (datas == "0.0000") {
 
-                            //localStorage.Disc = data.Disc;
                             localStorage.OnlyPercentage = 1;
                             if (RemainDiscAmt != "0.0000") {
                                 localStorage.OnlyPercentage = 0;
@@ -4133,10 +3820,6 @@
                             Item_Discount = data.Total_Disc_Amt;
                             localStorage.Procedure_types = data.Procedure_types;
                             if (data.Procedure_types == null && data.Hospital_Services == false) localStorage.Procedure_types = true;
-                            //if (isNaN(datas))
-                            //{
-
-                            //}
                             localStorage.Disc_Pro = data.Disc_Pro;
                             localStorage.Total_Disc_Amt_pro = data.Total_Disc_Amt_Pro;
                             localStorage.isService = data.Services;
@@ -4244,8 +3927,6 @@
                         userupdate = data.d;
 
                         if (userupdate == false || userupdate == "False" || userupdate == 'False') {
-                            //$('input[name="txtQty"]').attr('disabled', true);
-                            //$('input[name="DisPer"]').attr('disabled', true);
                            
                         }
                     },
@@ -4266,10 +3947,6 @@
           
                      return true;
                 }
-                //else {
-
-                //    $('#btnsave').attr('disabled', false);
-                //}
             }
 
             debugger;
@@ -4282,7 +3959,6 @@
                 else {
                     var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientID);
                     $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name,readonly:true });
-                    //LoadPatientDetails();
                 }
             }
             debugger;
@@ -4333,7 +4009,7 @@
                         roomward = data.d.Room_Name + ',  ' + data.d.Room_No
                     }
                     else {
-                        $('#lblWardRoom').hide(); // Replace the correct ID of Label.
+                        $('#lblWardRoom').hide(); 
                     }
                    
                     if (data.d.Patient_Discount_Type == null)
@@ -4360,8 +4036,6 @@
                     $('#txtdischargedate').val(data.d.Discharge_On);
                     $('#wardtype').val(data.d.Ward_Name);
                     $('#bedno').val(data.d.Bed_No);
-                    //$('#txtroomtype').val(data.d.Balance);
-                    //$('#txtroomno').val(data.d.Balance);
 
                     var Packtypes = data.d.Package_Type
                     var Packnames = data.d.Package_Name
@@ -4384,7 +4058,6 @@
                     var b = data.pat_id;
                     pat_id = data.d.pat_id;;
                     PatientID = data.d.opdid;
-                    //getdataopd(PatientID);
                     debugger;
                     var Patient_ID = $('#hdfPatient_ID').val();
 
@@ -4415,10 +4088,7 @@
 
                     if (id == '') { 
                     if ((PackType != "Null") && (packname != "Null")) {
-                        debugger;
-                        //setTimeout(function () {
-                        //    LoadBillbypatid(Patient_ID);
-                        //}, 3500)         
+                        debugger;        
                             AddPackage();
                   
                        
@@ -4578,7 +4248,6 @@
                             var Type = $("#lblPatientDiscountType").text();
                             var ward = $('#lblsetWardType').text();
                             var room = $('#lblserRoomNo').text();
-                            //|| ward != "" || room != ""
                             if (Type == "Private") {
                                 hidshow = "pointer-events:default;"
                             }
@@ -4729,7 +4398,6 @@
                                     if (test_M_Department != "002") {
                                         $(this).find('select[name="ddlDoctor"]').show();
                                         $(this).find('select[name="ddlDoctor"]').next(".select2-container").show();
-                                        //hide doctor share and hospital
                                         $(this).find('input[name="txtDoctorShare"]').show();
                                         $(this).find('input[name="txtHospitalShare"]').show();
                                     }
@@ -4740,12 +4408,8 @@
                                 if ($("#tblDetails tbody tr").length > 0 && $("#ctl00_MainContent_ddlUserDepartment").val() != "0") {
                                     $("#ctl00_MainContent_ddlBillType").attr("disabled", "true");
 
-                                    //if (Billing_Rights == true) {
-                                    //    $("#ctl00_MainContent_ddlUserDepartment").attr('disabled', false);
-                                    //}
-                                    //else {
                                         $("#ctl00_MainContent_ddlUserDepartment").attr("disabled", false);
-                                   // }
+                                   
                                 }
                             }, 300);
 
@@ -4836,7 +4500,6 @@
                 var PreFix_DOB = $('#ddl_dob').val();
                 var Age = $('#txt_dob').val();
                 var Date_Of_Birth = $('#txtAge_yearss').val();
-                //var Date_Of_Birth = DOB + PreFix_DOB;
                 var CNIC = $('#txt_cnic').val();
                 var Address = $('#txt_Address').val();
                 var martail_status = $('#ddl_status').val();
@@ -4899,14 +4562,13 @@
                 $('#txt_dob').val("");
                 $('#txt_cnic').val("");
                 $('#txt_Address').val('');
-                //   $('#ddltest_main_dpt').val(0);
                 $('#updatePatient_Data').hide();
                 $('#RevistPat').hide();
             }
             debugger;
             function fillmrnos() {
                 debugger;
-                var data = {}; // Define 'data' as needed
+                var data = {}; 
 
                 $.ajax({
                     type: "POST",
@@ -4939,7 +4601,7 @@
                 });
                 $("#ddl_name").focus();
                 MaskedInput({
-                    elm: document.getElementById('txt_cnic'), // select only by id
+                    elm: document.getElementById('txt_cnic'), 
                     format: '_____-_______-_',
                     separator: '-'
 
@@ -4976,14 +4638,10 @@
             function addfunc() {
                 debugger;
 
-                // Get the masked value
                 var maskedValue = $('#txtSearch').val();
 
-                // Extract only numeric digits from the masked value
-                //var unmaskedValue = maskedValue.replace(/\D/g, '');
 
                 var unmaskedValue = maskedValue.replace(/_/g, '');
-                // Use the unmasked value for further processing
                 var Ph_sNOs = unmaskedValue.length;
 
 
@@ -5028,7 +4686,6 @@
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     });
                     $('#ddl_status').html(options);
-                    // GrowthTypeGlobal = options;
                 });
                 return options;
             }
@@ -5052,7 +4709,6 @@
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     });
                     $('#ddl_Gender').html(options);
-                    // GrowthTypeGlobal = options;
                 });
                 return options;
             }
@@ -5113,8 +4769,6 @@
                     $("#ddl_ctgry").val(data.d.Patient_Type).change();
                     $("#ddl_Doc").val(data.d.DocID).change();
                     $('#ddl_pnl_cpy').hide();
-                    //$('#txt_Emp').hide();
-                    //$('#txt_Ref').hide();
                     if (data.d.DOB != null) {
                         stDate = new Date(parseInt(data.d.DOB.substr(6)));
                         stDate = moment(stDate).format('L');
@@ -5140,14 +4794,6 @@
                     $('#hdfPatient_ID').val(data.d.Reg_PatientID);
                  
 
-                    //$("#txtCardNo").val(data.d.CardNo);
-                    //$("#txtCardHolderName").val(data.d.CardHolderName);
-                    //$("#txtCardLimitNo").val(data.d.CardLimitNo);
-                    //$("#txtApprovedLimit").val(data.d.ApprovedLimit);
-                    //$("#txtRoomLimit").val(data.d.RoomLimit);
-
-                    //$("#ddl_Sub_Department").val(data.d.SubDepartment).change();
-                    //$("#PatientId").val(data.d.PatientID);
 
                 }
 
@@ -5242,6 +4888,11 @@
             //}
            
             $(document).ready(function () {
+                var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
+                if (Bill_ID != "") {
+                    AllowBillEdit();
+                }
+
                 debugger;
                 fillCasher();
                 TotalAmountToday();
@@ -5350,6 +5001,37 @@
                 if (id != "") {
                 }
             });  // document.ready ends
+
+            var editrights;
+            function AllowBillEdit() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/CheckEditRights",
+                    data: "",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        debugger;
+                        editrights = data.d;
+
+                        if (editrights == "true") {
+
+                            $('#btnSave').attr('disabled', false);
+                        }
+                        else {
+                            $('#btnSave').attr('disabled', true);
+                        }
+
+                    },
+                    failure: function () {
+                        alert("Error");
+                    }
+                });
+
+
+            }
         </script>
         <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
          <asp:HiddenField runat="server" ID="hndopdid" ClientIDMode="Static" />
