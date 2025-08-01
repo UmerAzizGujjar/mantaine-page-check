@@ -14208,6 +14208,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\EMR.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\GIR.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\IGP.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\inv_org.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\ipdadmission.css" />
