@@ -151,13 +151,13 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string MedicineDetail(int itemId)
+        public static string MedicineDetail(int itemId, string Batch)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId).ToList();
+                var query = db.spMedicinesDetails(itemId,Batch).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -234,18 +234,18 @@ namespace PMS
 
             return new JavaScriptSerializer().Serialize(combinedResult);
         }
-        //[WebMethod]
-        //public static string GetStockByBatch(int itemId, string batchNumber)
-        //{
-        //    string result = string.Empty;
+        [WebMethod]
+        public static string GetStockByBatch(int itemId, string batchNumber)
+        {
+            string result = string.Empty;
 
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var query = db.spMedicinesDetails(itemId, batchNumber).ToList();
-        //        result = (new JavaScriptSerializer()).Serialize(query).ToString();
-        //    }
-        //    return result;
-        //}
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spMedicinesDetails(itemId, batchNumber).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+            }
+            return result;
+        }
         public class Medicines
         {
             public int Bill_ID { get; set; }
@@ -400,7 +400,7 @@ namespace PMS
                 newBillDetails.Discount_Amount = dtls.DiscAmount;
                 newBillDetails.Net_Amount = dtls.NetAmount;
                 newBillDetails.Qty = dtls.Qty;
-                //newBillDetails.Batch_No = dtls.batchno;
+                newBillDetails.Batch_No = dtls.batchno;
                 var TotalRemainStock = dtls.Stock - dtls.Qty;
                 newBillDetails.CGS = dtls.CGSAmount;
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);
@@ -636,6 +636,7 @@ namespace PMS
                     Disc_Per = decimal.Parse(item.DisPer),
                     Disc_Amount = decimal.Parse(item.DisAmt),
                     Net_Amount = decimal.Parse(item.NetAmt),
+                    Batch_No = item.Batch_No,
                     CGS = item.CGSAmount
                 };
                 db.Pharmacy_SaleReturn_Details.InsertOnSubmit(detail);

@@ -2043,7 +2043,8 @@ namespace PMS
                     {
                         var Service = db.INV_Items
                                         .Where(inv => inv.Item_ID == Convert.ToInt32(item_id) && inv.Services == true)
-                                        .Select(inv => new { doc_share = (inv.Doctor_Share / 100) * inv.Sale_Rate, hos_share = (inv.Hospital_Share / 100) * inv.Sale_Rate })
+                                        .Select(inv => new { doc_share = 0, hos_share = inv.Sale_Rate })
+                                       // .Select(inv => new { doc_share = (inv.Doctor_Share / 100) * inv.Sale_Rate, hos_share = (inv.Hospital_Share / 100) * inv.Sale_Rate })
                                         .FirstOrDefault();
 
                         return new JavaScriptSerializer().Serialize(Service);
