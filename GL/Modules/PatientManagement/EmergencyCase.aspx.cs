@@ -252,6 +252,16 @@ namespace PMS
 
         }
         [WebMethod]
+        public static string checkEMRG_tabs()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.Emergency_adm_dis).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+        [WebMethod]
         public static List<PatientsResult> AddPatient(string SearchString)
         {
 

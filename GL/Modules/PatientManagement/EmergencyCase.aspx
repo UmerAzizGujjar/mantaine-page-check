@@ -68,6 +68,7 @@
           
             fillmartial();
             fillgender();
+            AllowEMRGTabs();
         
 
             jQuery(function ($) {
@@ -216,6 +217,56 @@
             });
 
         });
+
+        var tabsEmr;
+        function AllowEMRGTabs() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/checkEMRG_tabs",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    tabsEmr = data.d;
+
+                    if (tabsEmr == "true") {
+                        $('#ui-id-1').show();
+                        $('#ui-id-11').show();
+                        $('#ui-id-2').hide();
+                        $('#ui-id-3').hide();
+                        $('#ui-id-4').hide();
+                        $('#ui-id-5').hide();
+                        $('#ui-id-6').hide();
+                        $('#ui-id-7').hide();
+                        $('#ui-id-8').hide();
+                        $('#ui-id-9').hide();
+                        $('#ui-id-10').hide();
+                    }
+                    else {
+                        $('#ui-id-1').show();
+                        $('#ui-id-2').show();
+                        $('#ui-id-3').show();
+                        $('#ui-id-4').show();
+                        $('#ui-id-5').show();
+                        $('#ui-id-6').show();
+                        $('#ui-id-7').show();
+                        $('#ui-id-8').show();
+                        $('#ui-id-9').show();
+                        $('#ui-id-10').show();
+                        $('#ui-id-11').show();
+                    }
+
+                },
+                failure: function () {
+                    alert(bi);
+                }
+            });
+        }
+
+
         function showdeathtab() {
             debugger;
             var chck_death = $("#ctl00_MainContent_cb_death").prop('checked')

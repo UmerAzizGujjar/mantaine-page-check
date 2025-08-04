@@ -1418,7 +1418,8 @@
                     }
                 }
             }
-            }             
+            
+           
             function DeleteExcludedItems() {
                 for (var i = 0; i < ExcludedItem_List.length; i++) {
                     PageMethods.MarkTestAsExcludedFromPayment(ExcludedItem_List[i].ItemID, function () {
@@ -2839,9 +2840,7 @@
                 }
              }
               
-                    }
-
-                }
+                  
 
             function SumTotalAmountrecived() {
                 debugger;
@@ -3094,9 +3093,9 @@
                         $('input[name="DisPer"]').attr('disabled', false);
                         $('input[name="DisAmount"]').attr('disabled', false);
                     }
-                    else
-                    {
-                            $('input[name="DisAmount"]').attr('disabled', true);
+                    else {
+                        $('input[name="DisAmount"]').attr('disabled', true);
+                    }
                     $('#txtDisPer').on('keyup', function () {
                         $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
                         $('#tblDetails').find('input[name="DisAmount"]').prop('disabled', true);
@@ -3184,7 +3183,7 @@
                     else {
                         $('input[name="DisAmount"]').attr('disabled', true)
                     }
-                }, 300);
+                },300);
                 setTimeout(function ()
                 {
                 $(arr).filter(function (i, n)
