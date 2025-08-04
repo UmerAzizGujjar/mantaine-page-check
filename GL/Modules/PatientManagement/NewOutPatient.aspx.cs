@@ -20,7 +20,45 @@ namespace PMS.Modules.PatientManagement
         {
 
         }
+        [WebMethod]
+        public static string SaveNewSymptom(string name)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                try
+                {
+                    // Get the maximum DataValueName where ValueSet_ID = 1083
+                    int? maxValue = db.DataValues
+                        .Where(dv => dv.ValueSet_ID == 1083)
+                        .Max(dv => (int?)Convert.ToInt32((dv.DataValue_Name)));
 
+                    // If no records found, start with 1, otherwise increment the max value
+                    int newValue = (maxValue.HasValue) ? maxValue.Value + 1 : 1;
+
+                    // Create new DataValue record
+                    DataValue newSymptom = new DataValue
+                    {
+                        ValueSet_ID = 1083,
+                        DataValue_Name = newValue.ToString(),
+                        DataValue_Description = name,
+                        // Add other required fields with default values if needed
+                        // For example:
+                        // IsActive = true,
+                        // CreatedDate = DateTime.Now
+                    };
+
+                    db.DataValues.InsertOnSubmit(newSymptom);
+                    db.SubmitChanges();
+
+                    return "Symptom saved successfully";
+                }
+                catch (Exception ex)
+                {
+                    // Log the error if needed
+                    return "Error saving symptom: " + ex.Message;
+                }
+            }
+        }
         [WebMethod]
         public static string GetCategorizedSymptoms(string categoryId, string searchValue)
         {

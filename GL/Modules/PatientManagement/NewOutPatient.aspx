@@ -73,100 +73,12 @@
     </style>
 
     <style>
-        .select2-container--default .select2-selection--single {
-            height: 44px;
-            padding: 0 12px;
-            font-size: 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Dropdown Container - Matches Select Height */
-        .select2-dropdown {
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        /* Options - Match Select Height */
-        .select2-results__option {
-            padding: 12px;
-            line-height: 20px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Permanent Blue Filter Icon */
-        .select2-selection__placeholder i,
-        .select2-selection__rendered i {
-            margin-right: 8px;
-            font-size: 14px;
-            /* Always blue */
-            filter: brightness(0) saturate(100%) invert(44%) sepia(94%) saturate(1352%) hue-rotate(193deg) brightness(101%) contrast(87%);
-            vertical-align: middle;
-        }
-
-        /* Dropdown Animation */
-        .select2-container--open .select2-dropdown {
-            animation: slideDown 0.3s ease-out forwards;
-            transform-origin: top center;
-            opacity: 0;
-            display: block !important; /* Ensure it's visible for animation */
-        }
-
-        @keyframes slideDown {
-            0% {
-                transform: translateY(-10px);
-                opacity: 0;
-            }
-
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Result Options Animation */
-        .select2-results__option {
-            animation: fadeIn 0.3s ease-out forwards;
-            animation-delay: calc(var(--option-index) * 0.05s);
-            opacity: 0;
-            transform: translateY(-5px);
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Search Field Animation */
-        .select2-search--dropdown {
-            animation: fadeIn 0.2s ease-out 0.1s forwards;
-            opacity: 0;
-        }
-
-        /* Arrow Rotation Animation */
-        .select2-container--default .select2-selection--single .select2-selection__arrow b {
-            transition: transform 0.3s ease;
-        }
-
-        .select2-container--open .select2-selection--single .select2-selection__arrow b {
-            transform: rotate(180deg);
-        }
-
-        /* Ensure proper z-index for animations */
-        .select2-container--open {
-            z-index: 9999;
-        }
-
         th {
             color: white !important
+        }
+
+        .container-fluid {
+            padding-left: 0px !important
         }
 
         input[type="checkbox"] {
@@ -217,12 +129,42 @@
                 transform: scale(1.02);
                 /* Ensure smooth scaling if added */
                 transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-            }
 
+                
+            }
+            
+.symptom-row:hover .fa-plus-circle {
+    color: white !important;
+}
             .symptom-row label {
                 margin-left: 10px;
                 margin-bottom: 0;
             }
+
+      .mybutton {
+    width: fit-content !important;
+    height: 30px;
+    background-color: #f0f1f3;
+    
+    padding: 3px 12px;
+    border-radius: 8px;
+    margin: 0;
+    color: #EFA63E !important;
+    font-weight: bold !important;
+    font-size: 16px;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    margin-bottom:5px;
+    border:0px !important;
+        margin-left:5px;
+        margin-right:5px;
+}
+
+.mybutton:hover {
+    background-color: #000; /* Black background on hover */
+    color: #fff !important; /* White text on hover */
+    
+    
+}
     </style>
 
     <script id="ScriptmanageSymptomsModal">
@@ -310,7 +252,7 @@
                 var html = '<tr> <td style="display:none;"><input type="text" class="deptid" value="' + deptId + '"/></td>' +
                     '<td style="display:none;"><input type="text" class="symptomid" value="' + id + '"/></td>' +
                     '<td> ' + name + ' </td>' +
-                    '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + id + '\')">Delete</a></td></tr>';
+                    '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + id + '\')"><i class="fa fa-trash"></i></a></td></tr>';
 
 
                 $('#tblsymptomspreview tbody').append(html);
@@ -353,7 +295,7 @@
                                 '<input type="text" class="symptomid" value="' + symptom.SymptomId + '"/>' +
                                 '</td>' +
                                 '<td>' + symptom.Description + '</td>' +
-                                '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + symptom.SymptomId + '\')">Delete</a></td>' +
+                                '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + symptom.SymptomId + '\')"><i class="fa fa-trash"></i></a></td>' +
                                 '</tr>';
 
                             $('#tblsymptomspreview tbody').append(html);
@@ -436,9 +378,8 @@
             loadDepartments();
             $('#filterDepartments option[value="000"]').prop('selected', true);
             GetSymptomsByDepartment();
-
             fillSymptoms("000", "");
-
+            $('#filterDepartments').select2();
             // Handle department filter changes
             $('#filterDepartments').change(function () {
                 const selectedValue = $(this).val();
@@ -452,27 +393,7 @@
                 const selectedValue = $('#filterDepartments').val();
                 fillSymptoms(selectedValue, searchTerm);
             });
-            $('.select2').on('select2:open', function () {
-                // Add index to each option for staggered animation
-                $('.select2-results__option').each(function (index) {
-                    $(this).css('--option-index', index);
-                });
-            });
-            $('.enhanced-select2').select2({
-                placeholder: '<i class="fa fa-filter"></i> Filter documents',
-                allowClear: true,
-                escapeMarkup: function (markup) {
-                    return markup; // Allows HTML
-                },
-                templateSelection: function (data) {
-                    // Always show icon, whether placeholder or selected
-                    if (data.id) {
-                        return '<i class="fas fa-filter" style="margin-right:8px;color:#3b82f6"></i>' + data.text;
-                    }
-                    return data.text; // Placeholder already has icon
-                },
-                dropdownParent: $('.big-select2')
-            });
+
             $('#dvtblSymtomps').hide();
 
             $('#filterSelect').select2();
@@ -526,11 +447,49 @@
             }
             return uuid;
         }
+        function AddNewSymptom() {
+            $('#AddNewSymptom').modal('show');
+            
+            $('#saveNewSymptom').off('click').on('click', function () {
+                var name = $('#SymptomName').val();
+                $.ajax({
+                    type: "POST",
+                    url: "NewOutPatient.aspx/SaveNewSymptom", 
+                    data: JSON.stringify({ name: name }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d) {
+                            // Success handling
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Symptoms saved successfully',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+                        fillSymptoms("000", "");
+                    },
+                    error: function (xhr, status, error) {
+                        // Error handling
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to save symptoms: ' + error,
+                            showConfirmButton: true
+                        });
+                        console.error("Error saving symptoms:", error);
+                    }
+                });
+            });
+        }
+
         function AddSymptomByModal(id, name) {
             $('#AddSymptomsByModal').modal('show');
             $('#symptomName').val(name);
-           
-          
+
+
 
             // Remove any existing click handlers to prevent duplicates
             $('#saveSymptomByModal').off('click').on('click', function () {
@@ -556,7 +515,7 @@
                         '<td style="display:none;"> ' + Duration + ' </td>' +
                         '<td style="display:none;"> ' + DurationSuffix + ' </td>' +
                         '<td style="display:none;"> ' + Remarks + ' </td>' +
-                        '<td> <a href="#" onclick="Delete_Symtom(this)">Delete</a></td></tr>';
+                        '<td> <a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-trash"></i></a></td></tr>';
 
                     if (symp === "") {
                         Swal.fire({
@@ -616,7 +575,7 @@
                     '<td  style="display:none;"> ' + $('#txtDuration').val() + ' </td>' +
                     '<td  style="display:none;"> ' + $('#ddlDaysMonthsYears').find('option:selected').text() + ' </td>' +
                     '<td  style="display:none;"> ' + $('#txtRemarks').val() + ' </td>' +
-                    '<td  > <a href="#" onclick="Delete_Symtom(this)">Delete</a></td></tr>';
+                    '<td  > <a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-trash"></i></a></td></tr>';
 
                 if (symp === "") {
                     Swal.fire({
@@ -684,7 +643,6 @@
             });
         }
 
-        z
 
 
         function fillSymptoms(categoryId, searchValue) {
@@ -713,7 +671,7 @@
                             '<button type="button" class="symptom-add-btn" ' +
                             'onclick="AddSymptomByModal(\'' + value.SymptomId + '\', \'' + value.Description + '\')" ' +
                             'style="background: none; border: none; cursor: pointer; padding: 8px;">' +
-                            '<i class="fa fa-plus-circle" style="font-size: 18px; color: #28a745;"></i>' +
+                            '<i class="fa fa-plus-circle" style="font-size: 18px; color: black;"></i>' +
                             '</button>' +
                             '</div>';
                     });
@@ -804,42 +762,70 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-     <div id="AddSymptomsByModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
-     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-         <div class="modal-content">
-             <div class="modal-body">
-                 <div class="row">
-                       <div class="col-lg-3">
-                           <input type="text" id="symptomName" disabled/>
-                       </div>
-                      <div class="col-lg-3">
-                          <input type="text" id="duration" placeholder="Duration"/>
-                      </div>
-                     
-                      <div class="col-lg-3">
-                          <select id="durationSuffix">
-                              <option selected>H</option>
-                              <option >D</option>
-                              <option >W</option>
-                              <option >M</option>
-                              <option >Y</option>
-                          </select>
-                      </div>
-                      <div class="col-lg-3">
-                          <input type="text" id="Remarks" placeholder="Remarks" />
-                      </div>
 
-                 </div>
+    <div id="AddNewSymptom" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" id="SymptomName" placeholder="Symptom Name" />
+                    </div>
 
-             </div>
-             <div class="modal-footer">
+                    <div class="col-lg-4">
+                        
+                    </div>
+                    
 
-                 <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                 <button id="saveSymptomByModal" type="button" class="btn btn-primry" >Save</button>
-             </div>
-         </div>
-     </div>
- </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                <button id="saveNewSymptom" type="button" class="btn btn-primry">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="AddSymptomsByModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <input type="text" id="symptomName" disabled />
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="text" id="duration" placeholder="Duration" />
+                        </div>
+
+                        <div class="col-lg-3">
+                            <select id="durationSuffix">
+                                <option selected>H</option>
+                                <option>D</option>
+                                <option>W</option>
+                                <option>M</option>
+                                <option>Y</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="text" id="Remarks" placeholder="Remarks" />
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                    <button id="saveSymptomByModal" type="button" class="btn btn-primry">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -853,7 +839,7 @@
                         </div>
                         <div class="col-lg-4">
                             <div>
-                                <input type="text" class="form-control mb-2" id="symptomSearch" placeholder="Search..." style="height: 44px !important" />
+                                <input type="text" class="form-control mb-2" id="symptomSearch" placeholder="Search..."  />
                             </div>
 
                             <div id="symptoms">
@@ -1059,6 +1045,10 @@
                     <div class="card">
                         <div class="card-body">
                             <div id="tab01">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+                                    <input style="margin-left:5px" type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+                                </div>
                                 <div class="row">
                                     <div class="col-md-5 col-sm-12">
                                         <div class="big-select2">
@@ -1067,16 +1057,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-7 col-sm-12">
-                                        <input type="text" class="form-control mb-2" id="tab01Search" placeholder="Search..." style="height: 44px !important" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-12"></div>
-                                    <div class="col-md-3 col-sm-6">
-                                        <input type="button" onclick="openAddNewSymptomsModal()" value="Add New" style="width: 30px; border-radius: 5px; background-color: antiquewhite; border: 0px; height: 25px;" />
-                                    </div>
-                                    <div class="col-md-3 col-sm-6">
-                                        <input type="button" onclick="openManageSymptomsModal()" value="Manage Symptoms" style="width: 30px; border-radius: 5px; background-color: antiquewhite; border: 0px; height: 25px;" />
+                                        <input type="text" class="form-control mb-2" id="tab01Search" placeholder="Search..."  />
                                     </div>
                                 </div>
                                 <div id="allSymptoms"></div>
@@ -1089,6 +1070,15 @@
 
         <!-- Right Column (6 units) -->
         <div class="col-md-6 col-sm-12">
+            
+            <div style="display: flex; justify-content: flex-end;">
+    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+    <input  type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+<input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+<input type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+<input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+
+</div>
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -1100,11 +1090,11 @@
                                             <tr>
                                                 <th style="display: none;">Row ID</th>
                                                 <th style="display: none;">Symtom ID</th>
-                                                <th>Symptom</th>
+                                                <th>Symptoms</th>
                                                 <th style="display: none;">Dur</th>
                                                 <th style="display: none;">D/M/Y</th>
                                                 <th style="display: none;">Remarks</th>
-                                                <th>Edit</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>

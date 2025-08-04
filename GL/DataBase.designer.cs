@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Hmis_Standard")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "tibb")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -840,6 +840,12 @@ namespace PMS
         partial void Insertaspnet_User(aspnet_User instance);
         partial void Updateaspnet_User(aspnet_User instance);
         partial void Deleteaspnet_User(aspnet_User instance);
+        partial void InsertSymptomsCategorization(SymptomsCategorization instance);
+        partial void UpdateSymptomsCategorization(SymptomsCategorization instance);
+        partial void DeleteSymptomsCategorization(SymptomsCategorization instance);
+        partial void InsertSymptomsCategorization1(SymptomsCategorization1 instance);
+        partial void UpdateSymptomsCategorization1(SymptomsCategorization1 instance);
+        partial void DeleteSymptomsCategorization1(SymptomsCategorization1 instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3059,6 +3065,22 @@ namespace PMS
             get
             {
                 return this.GetTable<aspnet_User>();
+            }
+        }
+
+        public System.Data.Linq.Table<SymptomsCategorization> SymptomsCategorizations
+        {
+            get
+            {
+                return this.GetTable<SymptomsCategorization>();
+            }
+        }
+
+        public System.Data.Linq.Table<SymptomsCategorization1> SymptomsCategorization1s
+        {
+            get
+            {
+                return this.GetTable<SymptomsCategorization1>();
             }
         }
 
@@ -149272,6 +149294,322 @@ namespace PMS
         {
             this.SendPropertyChanging();
             entity.aspnet_User = null;
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.SymptomsCategorization")]
+    public partial class SymptomsCategorization : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Id;
+
+        private string _CategoryId;
+
+        private string _SymptomId;
+
+        private string _CreatedBy;
+
+        private System.Nullable<System.DateTime> _CreatedTime;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIdChanging(int value);
+        partial void OnIdChanged();
+        partial void OnCategoryIdChanging(string value);
+        partial void OnCategoryIdChanged();
+        partial void OnSymptomIdChanging(string value);
+        partial void OnSymptomIdChanged();
+        partial void OnCreatedByChanging(string value);
+        partial void OnCreatedByChanged();
+        partial void OnCreatedTimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreatedTimeChanged();
+        #endregion
+
+        public SymptomsCategorization()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Id
+        {
+            get
+            {
+                return this._Id;
+            }
+            set
+            {
+                if ((this._Id != value))
+                {
+                    this.OnIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Id = value;
+                    this.SendPropertyChanged("Id");
+                    this.OnIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CategoryId", DbType = "NVarChar(100) NOT NULL", CanBeNull = false)]
+        public string CategoryId
+        {
+            get
+            {
+                return this._CategoryId;
+            }
+            set
+            {
+                if ((this._CategoryId != value))
+                {
+                    this.OnCategoryIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._CategoryId = value;
+                    this.SendPropertyChanged("CategoryId");
+                    this.OnCategoryIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SymptomId", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
+        public string SymptomId
+        {
+            get
+            {
+                return this._SymptomId;
+            }
+            set
+            {
+                if ((this._SymptomId != value))
+                {
+                    this.OnSymptomIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._SymptomId = value;
+                    this.SendPropertyChanged("SymptomId");
+                    this.OnSymptomIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "NVarChar(100)")]
+        public string CreatedBy
+        {
+            get
+            {
+                return this._CreatedBy;
+            }
+            set
+            {
+                if ((this._CreatedBy != value))
+                {
+                    this.OnCreatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedBy = value;
+                    this.SendPropertyChanged("CreatedBy");
+                    this.OnCreatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedTime", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> CreatedTime
+        {
+            get
+            {
+                return this._CreatedTime;
+            }
+            set
+            {
+                if ((this._CreatedTime != value))
+                {
+                    this.OnCreatedTimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedTime = value;
+                    this.SendPropertyChanged("CreatedTime");
+                    this.OnCreatedTimeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.SymptomsCategorization")]
+    public partial class SymptomsCategorization1 : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Id;
+
+        private string _CategoryId;
+
+        private string _SymptomId;
+
+        private string _CreatedBy;
+
+        private System.Nullable<System.DateTime> _CreatedTime;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIdChanging(int value);
+        partial void OnIdChanged();
+        partial void OnCategoryIdChanging(string value);
+        partial void OnCategoryIdChanged();
+        partial void OnSymptomIdChanging(string value);
+        partial void OnSymptomIdChanged();
+        partial void OnCreatedByChanging(string value);
+        partial void OnCreatedByChanged();
+        partial void OnCreatedTimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreatedTimeChanged();
+        #endregion
+
+        public SymptomsCategorization1()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Id
+        {
+            get
+            {
+                return this._Id;
+            }
+            set
+            {
+                if ((this._Id != value))
+                {
+                    this.OnIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Id = value;
+                    this.SendPropertyChanged("Id");
+                    this.OnIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CategoryId", DbType = "NVarChar(100) NOT NULL", CanBeNull = false)]
+        public string CategoryId
+        {
+            get
+            {
+                return this._CategoryId;
+            }
+            set
+            {
+                if ((this._CategoryId != value))
+                {
+                    this.OnCategoryIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._CategoryId = value;
+                    this.SendPropertyChanged("CategoryId");
+                    this.OnCategoryIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SymptomId", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
+        public string SymptomId
+        {
+            get
+            {
+                return this._SymptomId;
+            }
+            set
+            {
+                if ((this._SymptomId != value))
+                {
+                    this.OnSymptomIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._SymptomId = value;
+                    this.SendPropertyChanged("SymptomId");
+                    this.OnSymptomIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "NVarChar(100)")]
+        public string CreatedBy
+        {
+            get
+            {
+                return this._CreatedBy;
+            }
+            set
+            {
+                if ((this._CreatedBy != value))
+                {
+                    this.OnCreatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedBy = value;
+                    this.SendPropertyChanged("CreatedBy");
+                    this.OnCreatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedTime", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> CreatedTime
+        {
+            get
+            {
+                return this._CreatedTime;
+            }
+            set
+            {
+                if ((this._CreatedTime != value))
+                {
+                    this.OnCreatedTimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedTime = value;
+                    this.SendPropertyChanged("CreatedTime");
+                    this.OnCreatedTimeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 
