@@ -180,7 +180,7 @@ namespace PMS.Account
                
                 if (Request.QueryString["RoleId"] != null)
                 {
-                    DBClass.exectueQueryWithTransaction("Delete aspnet_RolesInMenus where roleID='" + Request.QueryString["RoleId"] + "'", tranObj, con);
+                    DBClass.exectueQueryWithTransaction("Delete from aspnet_RolesInMenus where roleID='" + Request.QueryString["RoleId"] + "'", tranObj, con);
 
                 }
                 List<aspnet_RolesInMenus> menulist = new List<aspnet_RolesInMenus>();

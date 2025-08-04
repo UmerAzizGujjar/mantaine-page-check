@@ -34,7 +34,7 @@
                     $('#Email').val(data.Email);
                     $('#Mobile').val(data.mobileno);
                     $('#EmpCode').val(data.EmpCode);
-                    $('#ddlCashInHand').val(data.Accounts);
+                    $('#ddlCashInHand').val(data.Accounts).trigger('change');
                     // Checkboxes
                     $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
                     $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
@@ -59,6 +59,8 @@
                     $('#AllowCardio').prop('checked', data.allow_cardio);
                     $('#IsAnonymous').prop('checked', data.IsAnonymous);
                     $('#AllowEditEmergency').prop('checked', data.EditEmergency);
+                    $('#AllowBillUpdate').prop('checked', data.Allow_bill_edit);
+                    $('#AllowEmergency_adm_dis').prop('checked', data.Emergency_adm_dis);
                     $('#BlockUser').prop('checked', data.BlockUser);
                 },
                 error: function (xhr, status, error) {
@@ -99,6 +101,8 @@
             var AllowCardio = $('#AllowCardio').prop('checked');
             var IsAnonymous = $('#IsAnonymous').prop('checked');
             var EditEmergency = $('#AllowEditEmergency').prop('checked');
+            var AllowEmergency_adm_dis = $('#AllowEmergency_adm_dis').prop('checked');
+            var AllowBillUpdate = $('#AllowBillUpdate').prop('checked');
             var BlockUser = $('#BlockUser').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var hasMinLength = Password.length >= 6;
@@ -173,6 +177,22 @@
                 }
             }
 
+                if (!Accounts || Accounts === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select a Account.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             var dataObj = {
                 "UserIDfromURL": UserIDfromURL,
                 "UserName": UserName,
@@ -205,6 +225,8 @@
                 "AllowCardio": AllowCardio,
                 "IsAnonymous": IsAnonymous,
                 "EditEmergency": EditEmergency,
+                "AllowEmergency_adm_dis": AllowEmergency_adm_dis,
+                "AllowBillUpdate": AllowBillUpdate,
                 "BlockUser": BlockUser
 
             };
@@ -419,7 +441,12 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowCardio" name="AllowCardio" />
                                                     </div>
-
+                                                     <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowBillUpdate" name="AllowBillUpdate" />
+                                                    </div> 
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowEmergency_adm_dis" name="AllowEmergency_adm_dis" />
+                                                    </div>
                                                 </div>
 
                                                 <div class="col-md-3">
@@ -458,6 +485,12 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowCardio">Allow Cardio</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowCardio">Allow Bill Update</label>
+                                                    </div> 
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowAdmissionDischarge">Emergency Adm_Dis </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2"></div>

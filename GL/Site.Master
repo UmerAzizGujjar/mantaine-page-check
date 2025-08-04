@@ -10,9 +10,7 @@
     <title>Hospital Management System</title>
     <link rel="icon" type="image/x-icon" href="wwwroot/Tibbit_theme/images/HMIS_Icons/Icon.png" />
     <asp:PlaceHolder ID="PlaceHolder1" runat="server">
-        <%--Datatable css--%>
-
-        <%--<link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/css/toastr.min.css") %>" rel="stylesheet" type="text/css" />--%>
+     
         <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/wwwroot/Tibbit_theme/Styles/jquery.datetimepicker.css") %>" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/js/bootstrap.min.js") %>" rel="stylesheet" type="text/css" />
@@ -81,6 +79,7 @@
     <script type="text/javascript">
         jQuery.browser = {};
         (function () {
+            debugger;
             jQuery.browser.msie = false;
             jQuery.browser.version = 0;
             if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {

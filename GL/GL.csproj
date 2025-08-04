@@ -301,6 +301,7 @@
     <Content Include="Modules\Administrator\AssetSubCategory.aspx" />
     <Content Include="Modules\Administrator\AssetSubCategoryView.aspx" />
     <Content Include="Modules\Administrator\AssetSelection.aspx" />
+    <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OPD.aspx" />
     <Content Include="Modules\PatientManagement\OPDView.aspx" />
     <Content Include="Modules\PatientManagement\RegisterPatient.aspx" />
@@ -352,7 +353,6 @@
     <Content Include="bin\Newtonsoft.Json.dll" />
     <Content Include="bin\PMS.dll" />
     <Content Include="bin\PMS.pdb" />
-    <Content Include="bin\stdole.dll" />
     <Content Include="bin\System.Data.SqlServerCe.dll" />
     <Content Include="bin\System.Net.Http.dll" />
     <Content Include="bin\System.Net.Http.Formatting.dll" />
@@ -14208,6 +14208,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Emergency.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\EMR.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\GIR.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\IGP.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\inv_org.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\ipdadmission.css" />
@@ -22864,6 +22865,13 @@
     </Compile>
     <Compile Include="Modules\Accounts\ChangeAccount.aspx.designer.cs">
       <DependentUpon>ChangeAccount.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\NewOutPatient.aspx.cs">
+      <DependentUpon>NewOutPatient.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\NewOutPatient.aspx.designer.cs">
+      <DependentUpon>NewOutPatient.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD.aspx.cs">
       <DependentUpon>OPD.aspx</DependentUpon>
