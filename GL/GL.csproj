@@ -16969,6 +16969,9 @@
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\jszip.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\vfs_fonts.js" />
+    <Content Include="wwwroot\Tibbit_theme\newBootstrap\Bootstrap.min.css" />
+    <Content Include="wwwroot\Tibbit_theme\newBootstrap\jquery.min.js" />
+    <Content Include="wwwroot\Tibbit_theme\newBootstrap\bootstrap.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\angular-ui\ui-bootstrap-tpls.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\angular-ui\ui-bootstrap.js" />
