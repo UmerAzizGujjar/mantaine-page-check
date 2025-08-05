@@ -1280,12 +1280,29 @@
                         if (Over_and_Above == '') {
                             Over_and_Above = 0.00
                         }
-
+                        if (Balance_Amount > 0.00) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Are you sure?',
+                                text: 'Are you sure to save bill with Balance “00”',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Yes',
+                                cancelButtonText: 'Cancel',
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }                           
+                            });
+                        }
 
 
                         var ChargePolicy = ddlChargePolicy.value;
                         var referred_by_doctor = $('#ddlReffered_By').val();
                         var Casher = $('#ddlcasher').val();
+
                         $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
                             var Doc_ID = $(value).find('td:eq(0) #ddlDoctorList' + key + '').val();
                             var Share_type = $(value).find('td:eq(1) #ddlShareType' + key + '').val();
@@ -1294,7 +1311,6 @@
                                 Doc_ID: Doc_ID, Doc_Amount: Doc_Amount, Share_type: Share_type
                             });
                         });
-                        //end
                         var isAmountZero = false;
                         $.each($('#tblDetails tbody tr'), function (key, value) {
 
@@ -1373,7 +1389,6 @@
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
-                            //return;
                         }
                         PageMethods.CheckReceipts(Bill_ID, function (dataaaaaaaaaaaaaa) {
                             if (dataaaaaaaaaaaaaa == '') {
@@ -1403,6 +1418,8 @@
                     }
                 }
             }
+            
+           
             function DeleteExcludedItems() {
                 for (var i = 0; i < ExcludedItem_List.length; i++) {
                     PageMethods.MarkTestAsExcludedFromPayment(ExcludedItem_List[i].ItemID, function () {
@@ -2818,13 +2835,13 @@
                             $('#txtBalances').val(net.toFixed());
                         }
 
-                        //   }
-
                     }
 
                 }
              }
               
+                  
+
             function SumTotalAmountrecived() {
                 debugger;
                 var Cash_in_Hand = $('#txtcashinhand').val();
@@ -3076,11 +3093,25 @@
                         $('input[name="DisPer"]').attr('disabled', false);
                         $('input[name="DisAmount"]').attr('disabled', false);
                     }
-                    else
-                    {
-                            $('input[name="DisAmount"]').attr('disabled', true);
-
+                    else {
+                        $('input[name="DisAmount"]').attr('disabled', true);
                     }
+                    $('#txtDisPer').on('keyup', function () {
+                        $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
+                        $('#tblDetails').find('input[name="DisAmount"]').prop('disabled', true);
+                    });
+                    $(document).on('keyup', 'input[name="DisPer"]', function () {
+                        $('#txtDisPer').prop('disabled', true);
+                        $('#txtDisAmt').prop('disabled', true);
+                    });
+                       
+                    
+                    ////else
+                    ////{
+                    ////       // $('input[name="DisPer"]').attr('disabled', true);
+                    ////        $('input[name="DisAmount"]').attr('disabled', true);
+
+                    ////}
                  
                      
 
@@ -3152,7 +3183,7 @@
                     else {
                         $('input[name="DisAmount"]').attr('disabled', true)
                     }
-                }, 300);
+                },300);
                 setTimeout(function ()
                 {
                 $(arr).filter(function (i, n)
@@ -4843,7 +4874,7 @@
                     });
                 });
             }
-            function fillCashInHand() {
+                function fillCashInHand() {
                 debugger;
                 var optionsBnk = '';
 
@@ -4895,6 +4926,7 @@
 
                 debugger;
                 fillCasher();
+
                 TotalAmountToday();
                 $("#txtSearch").keypress(function (event) {
 
@@ -4924,7 +4956,7 @@
                 });
                 fillmartial();
                 fillgender();
-                fillCashInHand();
+                
 
                 jQuery(function ($) {
                     MaskedInput({
@@ -4952,7 +4984,7 @@
                 localStorage.removeItem('Disc'); 
                 localStorage.removeItem('Total_Disc_Amt');
                 localStorage.Disc_Pro ="0.00";
-                var user_name = '<% =AppConfig.UserName %>';
+<%--                var user_name = '<% =AppConfig.UserName %>';
                 if (user_name == "Ali.Tariq" || user_name == "ali.tariq") {
                 $('#txtDisPer').attr('disabled', false);
                 $('#txtDisAmt').attr('disabled', false);
@@ -4961,7 +4993,7 @@
             {
                 $('#txtDisPer').attr('disabled', true);
                 $('#txtDisAmt').attr('disabled', true);
-            }
+            }--%>
                 GetPanelRateAndDiscountComplete();
                 $("#txtDateFrom").datepicker({ dateFormat: 'mm/dd/yy' });
                 $("#txtDateTo").datepicker({ dateFormat: 'mm/dd/yy' });
@@ -4989,6 +5021,7 @@
                 FillMainTestDepartment();
                 FillChargePolicy();
                 LoadMainDepartment();
+                fillCashInHand();
                 $('#add-new-testDirect').click(function () {
                 });
                 $('#add-new-Othertest').click(function () {
