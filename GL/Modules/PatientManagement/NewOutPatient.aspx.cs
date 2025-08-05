@@ -20,7 +20,25 @@ namespace PMS.Modules.PatientManagement
         {
 
         }
-        [WebMethod]
+        private void BindDropDownList()
+        {
+            object valueset;   //declare a single object for all valueset            
+            valueset = DBClass.GetValueSet("Patient Status");
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<HR_Employee> EmpList = new List<HR_Employee>();
+            EmpList = (from tbl in db.HR_Employees
+                       where tbl.IsDoctor == true
+                       select tbl).ToList();
+
+            valueset = DBClass.GetValueSet("Patient Main Category");
+            ddlPatient_Main_Category.DataSource = valueset;
+            ddlPatient_Main_Category.DataTextField = "DataValue_Description";
+            ddlPatient_Main_Category.DataValueField = "DataValue_Name";
+            ddlPatient_Main_Category.Items.Add(new ListItem("Please Select", "0"));
+            ddlPatient_Main_Category.DataBind();
+        }
+
+            [WebMethod]
         public static string SaveNewSymptom(string name)
         {
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
