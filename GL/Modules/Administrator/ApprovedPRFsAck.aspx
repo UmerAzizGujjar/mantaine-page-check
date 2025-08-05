@@ -82,6 +82,9 @@
                 alert("Error: " + error);
             }
         });
+        setTimeout(function () {
+            location.reload();
+        }, 2500);
     }
     function LoadPage() {
         $("#tblResult").DataTable({

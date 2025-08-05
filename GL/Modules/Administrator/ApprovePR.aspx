@@ -97,21 +97,19 @@
                     alert("Error: " + error);
                 }
             });
+            setTimeout(function () {
+                location.reload();
+            }, 2500);
         }
         function ApproveSelectedIds() {
             var selectedData = [];
 
             $('#tblResult input[type="checkbox"].rowCheck:checked').each(function () {
                 var id = $(this).data('id');
-
-                // Assuming input is in the same row as checkbox
                 var inputVal = $(this).closest('tr').find('input.rowInput').val();
 
                 selectedData.push({ PRId: id, DecisionRemarks: inputVal });
             });
-
-            console.log(selectedData);
-
             if (selectedData.length === 0) {
                 Swal.fire({
                     icon: 'error',
@@ -151,6 +149,9 @@
                     alert("Error: " + error);
                 }
             });
+            setTimeout(function () {
+                location.reload(); 
+            }, 2500);
         }
         function LoadPage() {
             $("#tblResult").DataTable({
