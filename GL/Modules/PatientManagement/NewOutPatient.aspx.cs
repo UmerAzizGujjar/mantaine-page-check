@@ -18,7 +18,23 @@ namespace PMS.Modules.PatientManagement
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Page.IsPostBack)
+            {
+                BindDropDownList();
+            }
+        }
+        [WebMethod]
+        public static string LoadDoctor_bydep(string depart)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var doctor = (from emp in db.HR_Employees
 
+                              where emp.Department == depart && emp.IsDoctor == true
+                              select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                return (new JavaScriptSerializer()).Serialize(doctor);
+            }
+            return "";
         }
         private void BindDropDownList()
         {

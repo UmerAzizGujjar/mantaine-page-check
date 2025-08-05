@@ -5,9 +5,10 @@
 
     <style title="sidebar">
         .main textarea {
-     margin-bottom: 0px !important;
-    height: 50px !important;
-}
+            margin-bottom: 0px !important;
+            height: 50px !important;
+        }
+
         .no-submenu {
             color: #495057;
             font-weight: 500;
@@ -110,7 +111,7 @@
         }
 
 
-        .symptom-row,.vital-row,.history-row,.exam-row,.exam-text-row,.Systematic-Exam-Row,.refer-row {
+        .symptom-row, .vital-row, .history-row, .exam-row, .exam-text-row, .Systematic-Exam-Row, .refer-row {
             display: flex;
             align-items: center;
             margin-bottom: 2px;
@@ -125,52 +126,50 @@
             /* Optional: Add cursor pointer to indicate interactivity */
             cursor: pointer;
         }
-        .history-row,.exam-text-row,.Systematic-Exam-Row {
-            height:60px !important;
+
+        .history-row, .exam-text-row, .Systematic-Exam-Row {
+            height: 60px !important;
         }
-            .symptom-row:hover,.vital-row:hover,.history-row:hover,.exam-row:hover,.exam-text-row:hover,.Systematic-Exam-Row:hover,.refer-row:hover {
+
+            .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover, .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover {
                 background-color: black;
                 color: white;
                 /* Optional: Add slight scale effect */
                 transform: scale(1.02);
                 /* Ensure smooth scaling if added */
                 transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-
-                
-            }
-            
-.symptom-row:hover .fa-plus-circle {
-    color: white !important;
-}
-            .symptom-row label {
-                margin-left: 10px;
-                margin-bottom: 0;
             }
 
-      .mybutton {
-    width: fit-content !important;
-    height: 30px;
-    background-color: #f0f1f3;
-    
-    padding: 3px 12px;
-    border-radius: 8px;
-    margin: 0;
-    color: #EFA63E !important;
-    font-weight: bold !important;
-    font-size: 16px;
-    transition: all 0.3s ease; /* Smooth transition for all properties */
-    margin-bottom:5px;
-    border:0px !important;
-        margin-left:5px;
-        margin-right:5px;
-}
+                .symptom-row:hover .fa-plus-circle {
+                    color: white !important;
+                }
 
-.mybutton:hover {
-    background-color: #000; /* Black background on hover */
-    color: #fff !important; /* White text on hover */
-    
-    
-}
+        .symptom-row label {
+            margin-left: 10px;
+            margin-bottom: 0;
+        }
+
+        .mybutton {
+            width: fit-content !important;
+            height: 30px;
+            background-color: #f0f1f3;
+            padding: 3px 12px;
+            border-radius: 8px;
+            margin: 0;
+            color: #EFA63E !important;
+            font-weight: bold !important;
+            font-size: 16px;
+            transition: all 0.3s ease; /* Smooth transition for all properties */
+            margin-bottom: 5px;
+            border: 0px !important;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+            .mybutton:hover {
+                background-color: #000; /* Black background on hover */
+                color: #fff !important; /* White text on hover */
+            }
     </style>
 
     <script id="ScriptmanageSymptomsModal">
@@ -381,6 +380,96 @@
 
     <script>
         $(document).ready(function () {
+            const $patientCategory = $('#ctl00_MainContent_ddlPatient_Main_Category');
+            const $doctorsDropdown = $('#ddldoctors');
+            const $referTextbox = $('.refer-textbox');
+            const $referTable = $('#tblRefer tbody');
+            const $divRefer = $('#divtblRefer');
+
+            // Constants for row positions
+            const ROW_DEPARTMENT = 0;
+            const ROW_DOCTOR = 1;
+            const ROW_NOTE = 2;
+
+            // Initialize table with empty rows if needed
+            function initializeTable() {
+                while ($referTable.find('tr').length < 3) {
+                    $referTable.append('<tr style="display:none"><td></td></tr>');
+                }
+            }
+
+            // Update table visibility based on content
+            function updateTableVisibility() {
+                const hasContent = $referTable.find('td').text().trim() !== '';
+                $divRefer.toggle(hasContent);
+            }
+
+            // Handle patient category change
+            $patientCategory.on('change', function () {
+                const selectedValue = $(this).val();
+                const selectedText = $(this).find('option:selected').text();
+
+                initializeTable();
+                const $deptRow = $referTable.find(`tr:eq(${ROW_DEPARTMENT})`);
+
+                if (selectedValue && selectedValue !== "0") {
+                    // Update department row
+                    $deptRow.find('td').text("Department: " + selectedText);
+                    $deptRow.show();
+                } else {
+                    // Remove department row and all other rows if department is 0
+                    $referTextbox.empty();
+                    $referTable.empty();
+                    $divRefer.hide();
+                    return;
+                }
+
+                updateTableVisibility();
+            });
+
+            // Handle doctors dropdown change
+            $doctorsDropdown.on('change', function () {
+                if ($patientCategory.val() === "0") return;
+
+                initializeTable();
+                var $doctorRow = $referTable.find(`tr:eq(${ROW_DOCTOR})`);
+                var selectedValue = $(this).val();
+                var selectedText = $(this).find('option:selected').text();
+
+                if (selectedValue && selectedValue !== "0") {
+                    // Update doctor row
+                    $doctorRow.find('td').text("Doctor: " + selectedText);
+                    $doctorRow.show();
+                } else {
+                    // Remove doctor row
+
+                    $doctorRow.find('td').empty();
+                    $doctorRow.hide();
+                }
+
+                updateTableVisibility();
+            });
+
+            // Handle refer textbox input
+            $referTextbox.on('input', function () {
+                if ($patientCategory.val() === "0") return;
+
+                initializeTable();
+                const $noteRow = $referTable.find(`tr:eq(${ROW_NOTE})`);
+                const inputValue = $(this).val().trim();
+
+                if (inputValue) {
+                    // Update note row
+                    $noteRow.find('td').text("Note: " + inputValue);
+                    $noteRow.show();
+                } else {
+                    // Remove note row
+                    $noteRow.find('td').empty();
+                    $noteRow.hide();
+                }
+
+                updateTableVisibility();
+            });
             $('#filterExaminations').change(filterExaminations);
             updateHistoryTable();
             loadDepartments();
@@ -395,30 +484,30 @@
                 fillSymptoms(selectedValue, searchTerm);
             });
             $('#ctl00_MainContent_txtInputBox1').on('input', function () {
-            const inputVal = $(this).val().trim();
-            const examName = 'CustomInput';
-            const $existingRow = $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`);
+                const inputVal = $(this).val().trim();
+                const examName = 'CustomInput';
+                const $existingRow = $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`);
 
-            if (inputVal === '') {
-                // If input is empty, remove the row
+                if (inputVal === '') {
+                    // If input is empty, remove the row
+                    if ($existingRow.length > 0) {
+                        $existingRow.remove();
+                    }
+
+                    // Hide table if it's empty
+                    if ($('#tblGeneralExam tbody tr').length === 0) {
+                        $('#divtblGeneralExam').hide();
+                    }
+
+                    return; // Exit
+                }
+
                 if ($existingRow.length > 0) {
-                    $existingRow.remove();
-                }
-
-                // Hide table if it's empty
-                if ($('#tblGeneralExam tbody tr').length === 0) {
-                    $('#divtblGeneralExam').hide();
-                }
-
-                return; // Exit
-            }
-
-            if ($existingRow.length > 0) {
-                // Update existing row
-                $existingRow.find('td:first').text(inputVal);
-            } else {
-                // Add new row
-                const $row = $(`
+                    // Update existing row
+                    $existingRow.find('td:first').text(inputVal);
+                } else {
+                    // Add new row
+                    const $row = $(`
                     <tr data-exam="${examName}">
                         <td>${inputVal}</td>
                         <td>
@@ -428,12 +517,12 @@
                         </td>
                     </tr>
                 `);
-                $('#tblGeneralExam tbody').append($row);
-            }
+                    $('#tblGeneralExam tbody').append($row);
+                }
 
-            // Show table
-            $('#divtblGeneralExam').show();
-        });
+                // Show table
+                $('#divtblGeneralExam').show();
+            });
             // Handle search input
             $('#tab01Search').on('input', function () {
                 const searchTerm = $(this).val().trim();
@@ -481,59 +570,59 @@
 
         });
 
-        $(document).on('input', '.history-row textarea, .history-row input[type="text"]', function() {
-    updateHistoryTable();
-});
-        $(document).on('input', '.Systematic-Exam-Row textarea, .Systematic-Exam-Row input[type="text"]', function() {
-    updateSystematicExamTable();
-});
-function Remove_CustomInputRow() {
-        const examName = 'CustomInput';
+        $(document).on('input', '.history-row textarea, .history-row input[type="text"]', function () {
+            updateHistoryTable();
+        });
+        $(document).on('input', '.Systematic-Exam-Row textarea, .Systematic-Exam-Row input[type="text"]', function () {
+            updateSystematicExamTable();
+        });
+        function Remove_CustomInputRow() {
+            const examName = 'CustomInput';
 
-        // Remove the row
-        $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`).remove();
+            // Remove the row
+            $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`).remove();
 
-        // Clear textbox
-        $('#ctl00_MainContent_txtInputBox1').val('');
+            // Clear textbox
+            $('#ctl00_MainContent_txtInputBox1').val('');
 
-        // Hide table if no rows
-        if ($('#tblGeneralExam tbody tr').length === 0) {
-            $('#divtblGeneralExam').hide();
+            // Hide table if no rows
+            if ($('#tblGeneralExam tbody tr').length === 0) {
+                $('#divtblGeneralExam').hide();
+            }
         }
-    }
-    function filterExaminations() {
+        function filterExaminations() {
 
-    const selectedValue = $('#filterExaminations').val(); 
-    
-    $('.subtabs').hide();
+            const selectedValue = $('#filterExaminations').val();
 
-    if (selectedValue === '001') {
-        $('#subTab001').show();
-    }
-   
-     else if (selectedValue === '002') {
-        $('#subTab002').show();
-     }
-     else{
-$('#subTab003').show();
-     }
-}
-             function loaddoctor_byDep() {
-     var depart = $('#ctl00_MainContent_ddlPatient_Main_Category').val();
-     PageMethods.LoadDoctor_bydep(depart, function (res) {
-         var doctor = JSON.parse(res);
-         var options = '<option value="0" >Please Select </option>';
-         var rowsText = '';
+            $('.subtabs').hide();
 
-         $.each(doctor, function (key, value) {
+            if (selectedValue === '001') {
+                $('#subTab001').show();
+            }
 
-             options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
-         });
+            else if (selectedValue === '002') {
+                $('#subTab002').show();
+            }
+            else {
+                $('#subTab003').show();
+            }
+        }
+        function loaddoctor_byDep() {
+            var depart = $('#ctl00_MainContent_ddlPatient_Main_Category').val();
 
-         $('#ddldoctors').html(options)
-         $('#ddldoctors').attr('disabled', false);
-     });
- }
+            PageMethods.LoadDoctor_bydep(depart, function (res) {
+                var doctor = JSON.parse(res);
+                var options = '<option value="0" >Please Select </option>';
+                var rowsText = '';
+
+                $.each(doctor, function (key, value) {
+                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                });
+
+                $('#ddldoctors').html(options)
+                $('#ddldoctors').attr('disabled', false);
+            });
+        }
         function uuid() {
             var uuid = "", i, random;
             for (i = 0; i < 32; i++) {
@@ -548,12 +637,12 @@ $('#subTab003').show();
         }
         function AddNewSymptom() {
             $('#AddNewSymptom').modal('show');
-            
+
             $('#saveNewSymptom').off('click').on('click', function () {
                 var name = $('#SymptomName').val();
                 $.ajax({
                     type: "POST",
-                    url: "NewOutPatient.aspx/SaveNewSymptom", 
+                    url: "NewOutPatient.aspx/SaveNewSymptom",
                     data: JSON.stringify({ name: name }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -791,23 +880,23 @@ $('#subTab003').show();
             element.classList.toggle('active');
         }
         function AddVitals() {
-    // Get all the input values using jQuery
-    const pulse = $('#ctl00_MainContent_txtPuls').val();
-    const bp = $('#ctl00_MainContent_txtBP').val();
-    const temp = $('#ctl00_MainContent_txtTemp').val();
-    const resp = $('#ctl00_MainContent_txtRespiration').val();
-    const height = $('#ctl00_MainContent_txtHeight').val();
-    const weight = $('#ctl00_MainContent_txtWeight').val();
-    
-    // Get the table body and container div
-    const tbody = $('#tblVitals tbody');
-    const tableContainer = $('#divtblVitals');
-    
-    // Clear existing rows
-    tbody.empty();
-    
-    // Create new row with the vitals data
-    const newRow = $('<tr>').html(`
+            // Get all the input values using jQuery
+            const pulse = $('#ctl00_MainContent_txtPuls').val();
+            const bp = $('#ctl00_MainContent_txtBP').val();
+            const temp = $('#ctl00_MainContent_txtTemp').val();
+            const resp = $('#ctl00_MainContent_txtRespiration').val();
+            const height = $('#ctl00_MainContent_txtHeight').val();
+            const weight = $('#ctl00_MainContent_txtWeight').val();
+
+            // Get the table body and container div
+            const tbody = $('#tblVitals tbody');
+            const tableContainer = $('#divtblVitals');
+
+            // Clear existing rows
+            tbody.empty();
+
+            // Create new row with the vitals data
+            const newRow = $('<tr>').html(`
         <td>${pulse || '-'}</td>
         <td>${bp || '-'}</td>
         <td>${temp || '-'}</td>
@@ -815,100 +904,100 @@ $('#subTab003').show();
         <td>${height || '-'}</td>
         <td>${weight || '-'}</td>
     `);
-    tbody.append(newRow);
-    tableContainer.show();
-}
-function updateHistoryTable() {
-    const historyTable = $('#tblHistory tbody');
-    const historyContainer = $('#divtblHistory');
-    let hasData = false;
-    
-    // Clear existing rows
-    historyTable.empty();
-    
-    // Process each history field
-    $('.history-row').each(function() {
-        const label = $(this).find('span').text().trim();
-        const textbox = $(this).find('textarea, input[type="text"]');
-        const value = textbox.val().trim();
-        
-        if (value) {
-            // Append new row with formatted text
-            historyTable.append(`
+            tbody.append(newRow);
+            tableContainer.show();
+        }
+        function updateHistoryTable() {
+            const historyTable = $('#tblHistory tbody');
+            const historyContainer = $('#divtblHistory');
+            let hasData = false;
+
+            // Clear existing rows
+            historyTable.empty();
+
+            // Process each history field
+            $('.history-row').each(function () {
+                const label = $(this).find('span').text().trim();
+                const textbox = $(this).find('textarea, input[type="text"]');
+                const value = textbox.val().trim();
+
+                if (value) {
+                    // Append new row with formatted text
+                    historyTable.append(`
                 <tr>
                     <td><strong>${label}:</strong> ${value}</td>
                 </tr>
             `);
-            hasData = true;
+                    hasData = true;
+                }
+            });
+
+            // Show/hide container based on whether there's data
+            if (hasData) {
+                historyContainer.show();
+            } else {
+                historyContainer.hide();
+            }
         }
-    });
-    
-    // Show/hide container based on whether there's data
-    if (hasData) {
-        historyContainer.show();
-    } else {
-        historyContainer.hide();
-    }
-}
-function updateSystematicExamTable() {
-    const SystematicExamTable = $('#SystematicExam tbody');
-    const SystematicExam = $('#divtblSystematicExam');
-    let hasData = false;
+        function updateSystematicExamTable() {
+            const SystematicExamTable = $('#SystematicExam tbody');
+            const SystematicExam = $('#divtblSystematicExam');
+            let hasData = false;
 
-    // Clear existing rows
-    SystematicExamTable.empty();
+            // Clear existing rows
+            SystematicExamTable.empty();
 
-    // Process each examination field
-    $('.Systematic-Exam-Row').each(function() {
-        // Get the label - ASP.NET renders it as a span with ID ending with "_LabelXX"
-        const labelSpan = $(this).find('span[id*="_Label"]');
-        const label = labelSpan.length ? labelSpan.text().trim() : '';
-        
-        // Get the textbox value
-        const textbox = $(this).find('textarea, input[type="text"]');
-        const value = textbox.length ? textbox.val().trim() : '';
-        
-        if (value) {
-            // Append new row with formatted text
-            SystematicExamTable.append(`
+            // Process each examination field
+            $('.Systematic-Exam-Row').each(function () {
+                // Get the label - ASP.NET renders it as a span with ID ending with "_LabelXX"
+                const labelSpan = $(this).find('span[id*="_Label"]');
+                const label = labelSpan.length ? labelSpan.text().trim() : '';
+
+                // Get the textbox value
+                const textbox = $(this).find('textarea, input[type="text"]');
+                const value = textbox.length ? textbox.val().trim() : '';
+
+                if (value) {
+                    // Append new row with formatted text
+                    SystematicExamTable.append(`
                 <tr>
                     <td><strong>${label}:</strong> ${value}</td>
                 </tr>
             `);
-            hasData = true;
-        }
-    });
+                    hasData = true;
+                }
+            });
 
-    // Show/hide container based on whether there's data
-    SystematicExam.toggle(hasData);
-}
+            // Show/hide container based on whether there's data
+            SystematicExam.toggle(hasData);
+        }
         // Handle click for items without submenu (e.g., navigation, actions)
         function navigateAction(element) {
-    // Hide all tabs first
-    const allTabs = document.querySelectorAll('.tabs');
-    allTabs.forEach(tab => {
-        tab.style.display = 'none';
-    });
-    
-    // Get the ID of the tab to show (e.g., "tab02" for "Vitals")
-    const tabId = 'tab' + element.id;
-    
-    // Show the selected tab
-    const selectedTab = document.getElementById(tabId);
-    if (selectedTab) {
-        selectedTab.style.display = 'block';
-    }
-    
-    // You can add additional navigation logic here if needed
-}
-function Add_GeneralExamRow(examName) {
-        const $tableBody = $('#tblGeneralExam tbody');
+            // Hide all tabs first
+            const allTabs = document.querySelectorAll('.tabs');
+            allTabs.forEach(tab => {
+                tab.style.display = 'none';
+            });
 
-        // Check if the row already exists
-        if ($tableBody.find(`tr[data-exam="${examName}"]`).length > 0) return;
+            // Get the ID of the tab to show (e.g., "tab02" for "Vitals")
+            const tabId = 'tab' + element.id;
 
-        // Create new row
-        const $row = $(`
+            // Show the selected tab
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+
+            // You can add additional navigation logic here if needed
+        }
+        function Add_GeneralExamRow(examName) {
+            const $tableBody = $('#tblGeneralExam tbody');
+
+            // Check if the row already exists
+            if ($tableBody.find(`tr[data-exam="${examName}"]`).length > 0) return;
+
+            // Create new row
+            const $row = $(`
             <tr data-exam="${examName}">
                 <td>${examName}</td>
                 <td>
@@ -917,24 +1006,24 @@ function Add_GeneralExamRow(examName) {
             </tr>
         `);
 
-        // Append to table
-        $tableBody.append($row);
+            // Append to table
+            $tableBody.append($row);
 
-        // Show table container
-        $('#divtblGeneralExam').show();
-    }
-     function Remove_GeneralExamRow(examName) {
-        // Remove the row
-        $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`).remove();
-
-        // Uncheck the corresponding checkbox
-        $(`input[type="checkbox"][onclick*="'${examName}'"]`).prop('checked', false);
-
-        // Hide the table container if no rows
-        if ($('#tblGeneralExam tbody tr').length === 0) {
-            $('#divtblGeneralExam').hide();
+            // Show table container
+            $('#divtblGeneralExam').show();
         }
-    }
+        function Remove_GeneralExamRow(examName) {
+            // Remove the row
+            $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`).remove();
+
+            // Uncheck the corresponding checkbox
+            $(`input[type="checkbox"][onclick*="'${examName}'"]`).prop('checked', false);
+
+            // Hide the table container if no rows
+            if ($('#tblGeneralExam tbody tr').length === 0) {
+                $('#divtblGeneralExam').hide();
+            }
+        }
 
 
         // Optional: Close all open submenus when clicking outside the sidebarr
@@ -984,7 +1073,7 @@ function Add_GeneralExamRow(examName) {
                 }
             });
         }
-       
+
 
     </script>
 </asp:Content>
@@ -1754,22 +1843,22 @@ function Add_GeneralExamRow(examName) {
                                 </div>
                             </div>
                             <div class="tabs" id="tab05">
-                                <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                    <div style="display: flex; align-items: center;">
+                                <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between; ">
+                                    <div style="display: flex; align-items: center;width:100%">
                                         <asp:Label Style="width: 200px;" ID="Label14" runat="server" Text="Refered To"></asp:Label>
-                                        <asp:DropDownList ID="ddlPatient_Main_Category" onchange="loaddoctor_byDep()" runat="server"  AppendDataBoundItems="true" TabIndex="21"></asp:DropDownList>
+                                        <asp:DropDownList ID="ddlPatient_Main_Category" onchange="loaddoctor_byDep()" Width="80%" runat="server" AppendDataBoundItems="true" TabIndex="21"></asp:DropDownList>
                                     </div>
                                 </div>
                                 <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                    <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; align-items: center;width:100%">
                                         <asp:Label Style="width: 200px;" ID="Label18" runat="server" Text="Doctor"></asp:Label>
-                                        <select id="ddldoctors"></select>
+                                        <select style="width:80%" id="ddldoctors"></select>
                                     </div>
                                 </div>
                                 <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                    <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; align-items: center;width:100%">
                                         <asp:Label Style="width: 200px;" ID="Label19" runat="server" Text="Referral Note"></asp:Label>
-                                        <asp:TextBox ID="txtRefferNote"  TextMode="SingleLine" runat="server" TabIndex="22"></asp:TextBox>
+                                        <asp:TextBox ID="txtRefferNote" TextMode="SingleLine" Width="80%" CssClass="refer-textbox" runat="server" TabIndex="22"></asp:TextBox>
                                     </div>
                                 </div>
                             </div>
@@ -1885,6 +1974,22 @@ function Add_GeneralExamRow(examName) {
                             </div>
 
                         </div>
+                        <div id="divtblRefer" style="display: none" class="col-lg-4">
+    <div>
+        <div class="table-responsive">
+            <table class="table" id="tblRefer">
+                <thead>
+                    <tr>
+                        <th>Refer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
                     </div>
                 </div>
             </div>
