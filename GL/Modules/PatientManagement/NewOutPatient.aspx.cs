@@ -18,9 +18,43 @@ namespace PMS.Modules.PatientManagement
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!Page.IsPostBack)
+            {
+                BindDropDownList();
+            }
         }
         [WebMethod]
+        public static string LoadDoctor_bydep(string depart)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var doctor = (from emp in db.HR_Employees
+
+                              where emp.Department == depart && emp.IsDoctor == true
+                              select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                return (new JavaScriptSerializer()).Serialize(doctor);
+            }
+            return "";
+        }
+        private void BindDropDownList()
+        {
+            object valueset;   //declare a single object for all valueset            
+            valueset = DBClass.GetValueSet("Patient Status");
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<HR_Employee> EmpList = new List<HR_Employee>();
+            EmpList = (from tbl in db.HR_Employees
+                       where tbl.IsDoctor == true
+                       select tbl).ToList();
+
+            valueset = DBClass.GetValueSet("Patient Main Category");
+            ddlPatient_Main_Category.DataSource = valueset;
+            ddlPatient_Main_Category.DataTextField = "DataValue_Description";
+            ddlPatient_Main_Category.DataValueField = "DataValue_Name";
+            ddlPatient_Main_Category.Items.Add(new ListItem("Please Select", "0"));
+            ddlPatient_Main_Category.DataBind();
+        }
+
+            [WebMethod]
         public static string SaveNewSymptom(string name)
         {
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))

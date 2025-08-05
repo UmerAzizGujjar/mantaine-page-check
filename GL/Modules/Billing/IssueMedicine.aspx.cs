@@ -38,6 +38,20 @@ namespace PMS
 
         }
 
+ 
+        [WebMethod]
+        public static string GetinvBatch(int med_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from dv in db.INV_Items
+                       where dv.Item_ID == med_id
+                       select dv.IsBatch).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+
+
         [WebMethod]
         public static string Getbatch_grn(int med_id)
         {

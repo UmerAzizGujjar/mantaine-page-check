@@ -273,11 +273,14 @@ namespace PMS.Modules.StudentAffair
 
             if (btnSave == "Update")
             {
+                var lstItem = db.Student_Fees
+                    .Where(t => t.Fee_No == int.Parse(record.txt_feecode))
+                    .FirstOrDefault();
 
-
-                var lstItem = (from t in db.Student_Fees
-                               where t.Fee_No == int.Parse(record.txt_feecode)
-                               select t).FirstOrDefault();
+                if (lstItem == null)
+                {
+                    throw new ArgumentException("Record not found for update.");
+                }
 
                 lstItem.Fee_No = Convert.ToInt32(record.txt_feecode);
                 lstItem.Date = Convert.ToDateTime(record.txt_feedate);
@@ -289,8 +292,8 @@ namespace PMS.Modules.StudentAffair
                 lstItem.Updated_By = AppConfig.UserID;
                 lstItem.Update_Time = DateTime.Now;
 
-                var b = record.txt_st_gl_Acc;
-                if (b == null || b == "")
+                // Handle null Student GL Account
+                if (string.IsNullOrEmpty(record.txt_st_gl_Acc))
                 {
                     lstItem.Student_Account_ID = 0;
                 }
@@ -299,74 +302,121 @@ namespace PMS.Modules.StudentAffair
                     lstItem.Student_Account_ID = Convert.ToInt32(record.txt_st_gl_Acc);
                 }
 
-
-                lstItem.Student_Account_ID = Convert.ToInt32(record.txt_st_gl_Acc);
-              
                 lstItem.Total_Amount = Convert.ToDecimal(record.txt_Total_amount);
                 db.SubmitChanges();
                 StudentMasterID = lstItem.Fee_ID.ToString();
-            }
-            else
-            {
 
+                // Now handle details (update/insert/delete)
+                int studentFeeId = int.Parse(StudentMasterID);
 
+                var existingDetails = db.Student_Fee_Details
+                    .Where(t => t.Student_Fee_ID == studentFeeId)
+                    .ToList();
 
-                obj.Fee_No = Convert.ToInt32(record.txt_feecode);
-                obj.Roll_No = record.ddl_rollno;
-                obj.Student_Name = record.txt_studentname;
-                obj.Date = Convert.ToDateTime(record.txt_feedate);
-                obj.Father_Name = record.txt_fname;
-                obj.Student_Class = record.ddlstu_class;
-                obj.Status = record.txt_status;
-                obj.Created_By = AppConfig.UserID;
-                obj.Creation_Time = DateTime.Now;
-                obj.IsCancel = false;
+                var processedDetails = new List<Student_Fee_Detail>();
 
-                var b = record.txt_st_gl_Acc;
-                if (b == null || b == "")
+                foreach (var a in record.ItemList)
                 {
-                    obj.Student_Account_ID = 0;
+                    Student_Fee_Detail detail;
+
+                    var existing = existingDetails.FirstOrDefault(x => x.Fee_Type == a.ddl_feetype);
+
+                    if (existing != null)
+                    {
+                        detail = existing; // update
+                    }
+                    else
+                    {
+                        detail = new Student_Fee_Detail();
+                        detail.Student_Fee_ID = studentFeeId;
+                        db.Student_Fee_Details.InsertOnSubmit(detail);
+                    }
+
+                    detail.Fee_Type = a.ddl_feetype;
+                    detail.Payable_Fee = Convert.ToDecimal(a.txt_fee);
+                    detail.Accrued_Income_Acc_ID = Convert.ToInt32(a.accruedincome_ID);
+                    detail.NetIncome_Acc_ID = Convert.ToInt32(a.netincome_ID);
+
+                    processedDetails.Add(detail);
                 }
-                else
+
+                // Delete removed items
+                var itemsToRemove = existingDetails
+                    .Where(x => !processedDetails.Contains(x))
+                    .ToList();
+
+                if (itemsToRemove.Any())
                 {
-                    obj.Student_Account_ID = Convert.ToInt32(record.txt_st_gl_Acc);
+                    db.Student_Fee_Details.DeleteAllOnSubmit(itemsToRemove);
                 }
-                obj.Total_Amount = Convert.ToDecimal(record.txt_Total_amount);
-                db.Student_Fees.InsertOnSubmit(obj);
+
                 db.SubmitChanges();
-                StudentMasterID = obj.Fee_ID.ToString();
 
+                return studentFeeId; // ✅ return in Update
             }
-
-
-            if (btnSave == "Update")
+            else // btnSave == "Save"
             {
-                List<Student_Fee_Detail> lststudentfeedetail = db.Student_Fee_Details.Where(t => t.Student_Fee_ID == int.Parse(StudentMasterID)).ToList();
-                db.Student_Fee_Details.DeleteAllOnSubmit(lststudentfeedetail);
-                db.SubmitChanges();
+                try
+                {
+                    obj.Fee_No = Convert.ToInt32(record.txt_feecode);
+                    obj.Roll_No = record.ddl_rollno;
+                    obj.Student_Name = record.txt_studentname;
+                    obj.Date = Convert.ToDateTime(record.txt_feedate);
+                    obj.Father_Name = record.txt_fname;
+                    obj.Student_Class = record.ddlstu_class;
+                    obj.Status = record.txt_status;
+                    obj.Created_By = AppConfig.UserID;
+                    obj.Creation_Time = DateTime.Now;
+                  
+
+                    if (string.IsNullOrEmpty(record.txt_st_gl_Acc))
+                    {
+                        obj.Student_Account_ID = 0;
+                    }
+                    else
+                    {
+                        obj.Student_Account_ID = Convert.ToInt32(record.txt_st_gl_Acc);
+                    }
+
+                    obj.Total_Amount = Convert.ToDecimal(record.txt_Total_amount);
+
+                    db.Student_Fees.InsertOnSubmit(obj);
+                    db.SubmitChanges(); // ← This may throw exception
+
+                    int studentFeeId = obj.Fee_ID; // Get the newly generated ID
+                    StudentMasterID = studentFeeId.ToString();
+
+                    // Insert details
+                    foreach (var a in record.ItemList)
+                    {
+                        var detail = new Student_Fee_Detail
+                        {
+                            Student_Fee_ID = studentFeeId,
+                            Fee_Type = a.ddl_feetype,
+                            Payable_Fee = Convert.ToDecimal(a.txt_fee),
+                            Accrued_Income_Acc_ID = Convert.ToInt32(a.accruedincome_ID),
+                            NetIncome_Acc_ID = Convert.ToInt32(a.netincome_ID)
+                        };
+
+                        db.Student_Fee_Details.InsertOnSubmit(detail);
+                    }
+
+                    db.SubmitChanges(); // Save details
+
+                    return studentFeeId;
+                }
+                catch (Exception ex)
+                {
+                    // You can log the exception here (e.g., to file, DB, etc.)
+                    // Example: System.Diagnostics.Debug.WriteLine(ex.Message);
+
+                    // Throw a new exception with user-friendly message
+                    throw new Exception("Error saving student fee: " + ex.Message, ex);
+                }
             }
-
-            foreach (var a in record.ItemList)
-            {
-
-                Student_Fee_Detail ltd = new Student_Fee_Detail();
-
-                ltd.Student_Fee_ID = Convert.ToInt32(StudentMasterID);
-             
-                ltd.Fee_Type = a.ddl_feetype;
-                ltd.Payable_Fee = Convert.ToDecimal(a.txt_fee);
-                ltd.Accrued_Income_Acc_ID = Convert.ToInt32(a.accruedincome_ID);
-                ltd.NetIncome_Acc_ID = Convert.ToInt32(a.netincome_ID);
-
-                db.Student_Fee_Details.InsertOnSubmit(ltd);
-                db.SubmitChanges();
-            }
-
-            return int.Parse(StudentMasterID);
-
         }
 
-     
+
 
 
         public class MasterList
