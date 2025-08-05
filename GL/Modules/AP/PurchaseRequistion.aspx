@@ -62,9 +62,12 @@
                 $('#txtRemarks').focus();
             });
             $('.token-input-list').css('width', '666px !important', 'margin-left: 1px;');
+            //var currentDate = new Date();
+            //var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
+            //$("#txtPR_Date").val(formattedDate);
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
-            $("#txtPR_Date").val(formattedDate);
+            $("#txtPR_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
             //loadtokenInputsDefaultitem();
             if (id != "") {
                 LoadPurchaseRequistionMaster(id);
@@ -1084,7 +1087,7 @@
             </div>
             <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                 <label id="LblPR_Date">PR Date</label>
-                <input type="text" class="form-control" readonly="readonly" id="txtPR_Date" name="txtPR_Date" autocomplete="off" />
+                <input type="text" class="form-control"  id="txtPR_Date" name="txtPR_Date" autocomplete="off" />
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <label id="LblPriority">Priority <span style="color: red">*</span></label>
