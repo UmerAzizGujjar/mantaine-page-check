@@ -375,7 +375,7 @@
         <classShapeMoniker Id="a8fd26f7-fc7a-4a1e-928c-e46337f01c1a" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.625 : 3.7875); (6.375 : 3.7875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.625 : 3.725); (6.0775 : 3.725); (6.0775 : 4.1375); (7.3749995 : 4.1375); (7.3749995 : 4.075)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataBaseDataContext/aspnet_Path/aspnet_Path_aspnet_PersonalizationAllUser" />
       <nodes>
         <classShapeMoniker Id="a8fd26f7-fc7a-4a1e-928c-e46337f01c1a" />
@@ -1268,7 +1268,7 @@
         <classShapeMoniker Id="873326d7-2eb0-498b-bc2a-55d637df5e9f" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(3.25 : 4.04375); (5.78125 : 4.04375); (5.78125 : 5)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(3.25 : 4.04375); (5.78125 : 4.04375); (5.78125 : 5)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataBaseDataContext/aspnet_Application/aspnet_Application_aspnet_Role" />
       <nodes>
         <classShapeMoniker Id="59e65987-e576-4b67-b0c2-f95d5990dd1c" />
@@ -1793,5 +1793,17 @@
         <classShapeMoniker Id="21cb102b-cce7-4c4e-a305-e6ceda685474" />
       </nodes>
     </associationConnector>
+    <classShape Id="c4f28e21-2528-467e-a37c-4fbd53ba3763" absoluteBounds="0.5, 0.5, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/DataBaseDataContext/SymptomsCategorization" />
+      <nestedChildShapes>
+        <elementListCompartment Id="bad84644-63b9-49be-b469-f1e2cd7b9d66" absoluteBounds="0.515, 0.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="d92b1824-0bad-41de-8759-fad4e1899818" absoluteBounds="6.125, 2.25, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/DataBaseDataContext/SymptomsCategorization1" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e6fbc7cd-b730-40dd-8763-731b39fe06b6" absoluteBounds="6.14, 2.71, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>
