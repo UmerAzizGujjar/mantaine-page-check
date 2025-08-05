@@ -1703,7 +1703,7 @@
 
     <div id="tabs">
         <ul>
-            <li><a href="#Tab-1">OPD</a></li>
+            <li style="display:none;"><a href="#Tab-1">OPD</a></li>
             <li><a href="#Tab-2">Lab</a></li>
             <li><a href="#Tab-3">X_ray</a></li>
             <li><a href="#Tab-4">Ultra_Sound</a></li>
