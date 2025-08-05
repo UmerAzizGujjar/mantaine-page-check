@@ -4431,13 +4431,6 @@ namespace PMS
             return ((ISingleResult<sp_GetGRNDetailforPurchaseReturnResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spMedicinesDetailsfromopd")]
-        public ISingleResult<spMedicinesDetailsfromopdResult> spMedicinesDetailsfromopd([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemId", DbType = "Int")] System.Nullable<int> itemId)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId);
-            return ((ISingleResult<spMedicinesDetailsfromopdResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIRDetailByMIRID")]
         public ISingleResult<sp_GetMIRDetailByMIRIDResult> sp_GetMIRDetailByMIRID([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "MIRId", DbType = "Int")] System.Nullable<int> mIRId)
         {
@@ -4519,6 +4512,13 @@ namespace PMS
         public System.Nullable<decimal> GetPharmcyItemUomTotalStock([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> itemcode, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Inventory_Org", DbType = "VarChar(100)")] string inventory_Org, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Batch", DbType = "VarChar(100)")] string batch)
         {
             return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemcode, inventory_Org, batch).ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spMedicinesDetailsfromopd")]
+        public ISingleResult<spMedicinesDetailsfromopdResult> spMedicinesDetailsfromopd([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemId", DbType = "Int")] System.Nullable<int> itemId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId);
+            return ((ISingleResult<spMedicinesDetailsfromopdResult>)(result.ReturnValue));
         }
     }
 
@@ -193859,212 +193859,6 @@ namespace PMS
         }
     }
 
-    public partial class spMedicinesDetailsfromopdResult
-    {
-
-        private int _Item_ID;
-
-        private string _Item_Code;
-
-        private string _Description;
-
-        private System.Nullable<decimal> _UOM_Qty;
-
-        private System.Nullable<decimal> _Purchase_Rate;
-
-        private string _Unit;
-
-        private string _BatchNum;
-
-        private string _ExpiryDate;
-
-        private System.Nullable<decimal> _Total_Stock;
-
-        private System.Nullable<decimal> _Sale_Rate;
-
-        private System.Nullable<decimal> _CGSRate;
-
-        public spMedicinesDetailsfromopdResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
-        public int Item_ID
-        {
-            get
-            {
-                return this._Item_ID;
-            }
-            set
-            {
-                if ((this._Item_ID != value))
-                {
-                    this._Item_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
-        public string Item_Code
-        {
-            get
-            {
-                return this._Item_Code;
-            }
-            set
-            {
-                if ((this._Item_Code != value))
-                {
-                    this._Item_Code = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
-        public string Description
-        {
-            get
-            {
-                return this._Description;
-            }
-            set
-            {
-                if ((this._Description != value))
-                {
-                    this._Description = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM_Qty", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> UOM_Qty
-        {
-            get
-            {
-                return this._UOM_Qty;
-            }
-            set
-            {
-                if ((this._UOM_Qty != value))
-                {
-                    this._UOM_Qty = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Purchase_Rate", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Purchase_Rate
-        {
-            get
-            {
-                return this._Purchase_Rate;
-            }
-            set
-            {
-                if ((this._Purchase_Rate != value))
-                {
-                    this._Purchase_Rate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(150)")]
-        public string Unit
-        {
-            get
-            {
-                return this._Unit;
-            }
-            set
-            {
-                if ((this._Unit != value))
-                {
-                    this._Unit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BatchNum", DbType = "NVarChar(MAX)")]
-        public string BatchNum
-        {
-            get
-            {
-                return this._BatchNum;
-            }
-            set
-            {
-                if ((this._BatchNum != value))
-                {
-                    this._BatchNum = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ExpiryDate", DbType = "VarChar(10)")]
-        public string ExpiryDate
-        {
-            get
-            {
-                return this._ExpiryDate;
-            }
-            set
-            {
-                if ((this._ExpiryDate != value))
-                {
-                    this._ExpiryDate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Stock", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Total_Stock
-        {
-            get
-            {
-                return this._Total_Stock;
-            }
-            set
-            {
-                if ((this._Total_Stock != value))
-                {
-                    this._Total_Stock = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sale_Rate", DbType = "Decimal(10,2)")]
-        public System.Nullable<decimal> Sale_Rate
-        {
-            get
-            {
-                return this._Sale_Rate;
-            }
-            set
-            {
-                if ((this._Sale_Rate != value))
-                {
-                    this._Sale_Rate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CGSRate", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> CGSRate
-        {
-            get
-            {
-                return this._CGSRate;
-            }
-            set
-            {
-                if ((this._CGSRate != value))
-                {
-                    this._CGSRate = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetMIRDetailByMIRIDResult
     {
 
@@ -196130,6 +195924,212 @@ namespace PMS
                 if ((this._Total_Stock != value))
                 {
                     this._Total_Stock = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CGSRate", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> CGSRate
+        {
+            get
+            {
+                return this._CGSRate;
+            }
+            set
+            {
+                if ((this._CGSRate != value))
+                {
+                    this._CGSRate = value;
+                }
+            }
+        }
+    }
+
+    public partial class spMedicinesDetailsfromopdResult
+    {
+
+        private int _Item_ID;
+
+        private string _Item_Code;
+
+        private string _Description;
+
+        private System.Nullable<decimal> _UOM_Qty;
+
+        private System.Nullable<decimal> _Purchase_Rate;
+
+        private string _Unit;
+
+        private string _BatchNum;
+
+        private string _ExpiryDate;
+
+        private System.Nullable<decimal> _Total_Stock;
+
+        private System.Nullable<decimal> _Sale_Rate;
+
+        private System.Nullable<decimal> _CGSRate;
+
+        public spMedicinesDetailsfromopdResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
+        public int Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this._Item_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
+        public string Item_Code
+        {
+            get
+            {
+                return this._Item_Code;
+            }
+            set
+            {
+                if ((this._Item_Code != value))
+                {
+                    this._Item_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this._Description = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM_Qty", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> UOM_Qty
+        {
+            get
+            {
+                return this._UOM_Qty;
+            }
+            set
+            {
+                if ((this._UOM_Qty != value))
+                {
+                    this._UOM_Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Purchase_Rate", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Purchase_Rate
+        {
+            get
+            {
+                return this._Purchase_Rate;
+            }
+            set
+            {
+                if ((this._Purchase_Rate != value))
+                {
+                    this._Purchase_Rate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(150)")]
+        public string Unit
+        {
+            get
+            {
+                return this._Unit;
+            }
+            set
+            {
+                if ((this._Unit != value))
+                {
+                    this._Unit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BatchNum", DbType = "NVarChar(MAX)")]
+        public string BatchNum
+        {
+            get
+            {
+                return this._BatchNum;
+            }
+            set
+            {
+                if ((this._BatchNum != value))
+                {
+                    this._BatchNum = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ExpiryDate", DbType = "VarChar(10)")]
+        public string ExpiryDate
+        {
+            get
+            {
+                return this._ExpiryDate;
+            }
+            set
+            {
+                if ((this._ExpiryDate != value))
+                {
+                    this._ExpiryDate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Stock", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Total_Stock
+        {
+            get
+            {
+                return this._Total_Stock;
+            }
+            set
+            {
+                if ((this._Total_Stock != value))
+                {
+                    this._Total_Stock = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sale_Rate", DbType = "Decimal(10,2)")]
+        public System.Nullable<decimal> Sale_Rate
+        {
+            get
+            {
+                return this._Sale_Rate;
+            }
+            set
+            {
+                if ((this._Sale_Rate != value))
+                {
+                    this._Sale_Rate = value;
                 }
             }
         }
