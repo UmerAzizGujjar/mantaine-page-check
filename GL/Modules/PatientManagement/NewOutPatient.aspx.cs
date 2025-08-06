@@ -22,6 +22,135 @@ namespace PMS.Modules.PatientManagement
             {
                 BindDropDownList();
             }
+
+        }
+        [WebMethod]
+        public static string GetLabTestDDLDetails(string SerialNo, string maindpt)
+        {
+            string groupCategory = string.Empty;
+            string testName = SerialNo;
+
+            string[] testFullName = SerialNo.Split('|');
+            if (testFullName.Length > 1)
+            {
+                testName = testFullName[0];
+                groupCategory = DBClass.getField("select Datavalue_Name from Datavalues where valueset_ID = 70 and Datavalue_Description = '" + testFullName[1].Trim() + "'").ToString();
+            }
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var test = (from t in db.Lab_Tests
+                        where t.Main_Department == maindpt && t.Test_Name == testName && t.Group_Category == groupCategory
+                        select new
+                        {
+                            t.Test_ID,
+                            t.Rate, /*= DBClass.getField(""),t.Test_Name*/
+                            Test_Name = SerialNo,
+                            t.Group_Category,
+                            TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
+                            GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),
+
+
+                        }).ToList();
+            var count = test.Count;
+
+            if (count != 0)
+            {
+
+                return (new JavaScriptSerializer()).Serialize(test);
+
+            }
+            else
+            {
+                var GroupCategories = (from dv in db.DataValues
+                                       join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                       where vs.ValueSet_Name == "Test Groups" && dv.DataValue_Description == SerialNo
+                                       select new
+                                       {
+                                           Test_ID = 0,
+                                           Group_Category = dv.DataValue_Name,
+                                           Test_Name = dv.DataValue_Description,
+                                           TestMainDepartmentName = "Lab Test",
+                                           Main_Department = "001",
+                                           Rate = dv.Segment1,
+
+
+                                       }).ToList();
+                return (new JavaScriptSerializer()).Serialize(GroupCategories);
+
+            }
+        }
+        [WebMethod]
+        public static string GetLabTests(string searchValue)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            // Get tests with optional search filter
+            var testsQuery = from t in db.Lab_Tests
+                             where t.Main_Department == "001"
+                             && t.Active == true
+                             select t;
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                testsQuery = testsQuery.Where(t => t.Test_Name.Contains(searchValue));
+            }
+
+            var tests = testsQuery.Select(t => new {
+                t.Test_ID,
+                Test_Name = t.Test_Name,
+                t.Group_Category
+            });
+
+            List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
+            int counter = 1;
+
+            // Process tests (same as original)
+            foreach (var test in tests)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name.ToString() +
+                              (test.Group_Category != string.Empty ?
+                               " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") :
+                               string.Empty);
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            // Only add categories if no search value (maintain original behavior)
+            if (string.IsNullOrEmpty(searchValue))
+            {
+                var GroupCategories = from dv in db.DataValues
+                                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                      where vs.ValueSet_Name == "Test Groups" && dv.Division == "001"
+                                      select new { dv.DataValue_Name, dv.DataValue_Description };
+
+                foreach (var category in GroupCategories)
+                {
+                    TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                    obj.TestID = category.DataValue_Name.ToString();
+                    obj.TestName = category.DataValue_Description.ToString();
+                    obj.SerialNo = counter.ToString();
+                    obj.IsGroupCategory = true;
+                    obj.CategoryID = category.DataValue_Name;
+                    listOfTest.Add(obj);
+                    counter++;
+                }
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTest);
+        }
+        public class TestIDsAndGroupCategory
+        {
+            public string TestID { get; set; }
+            public string TestName { get; set; }
+            public string SerialNo { get; set; }
+            public string CategoryID { get; set; }
+            public bool IsGroupCategory { get; set; }
+            public string GroupName { get; set; }
+            public string MainDepartmentName { get; set; }
         }
         [WebMethod]
         public static string LoadDoctor_bydep(string depart)
