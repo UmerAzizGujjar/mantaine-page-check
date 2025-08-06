@@ -24,6 +24,162 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
+        public static string SaveNewDiagnosis(string Text)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                try
+                {
+
+                    // Trim input and check for existing complaint (case-insensitive match)
+                    string trimmedText = Text.Trim();
+
+                    bool exists = db.ComplaintsDefinitions
+                                    .Any(c => c.ComplaintName.ToLower() == trimmedText.ToLower());
+
+                    if (exists)
+                    {
+                        return "0";
+                    }
+
+                    // Create and insert the new complaint
+                    DiagnosisDefinition newDiagnosis = new DiagnosisDefinition
+                    {
+                        DiagnosisName = trimmedText
+                    };
+
+                    db.DiagnosisDefinitions.InsertOnSubmit(newDiagnosis);
+                    db.SubmitChanges();
+
+                    return "1";
+                }
+                catch (Exception ex)
+                {
+                    // Log the error if needed
+                    return "Error saving symptom: " + ex.Message;
+                }
+            }
+
+        }
+        [WebMethod]
+        public static string GetDiagnosis(string searchValue)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    IQueryable<DiagnosisDefinition> query = db.DiagnosisDefinitions;
+
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        // Filter based on search
+                        query = query.Where(c => c.DiagnosisName.ToLower().Contains(searchValue.ToLower()));
+                    }
+                    else
+                    {
+                        // If no search, take top 6
+                        query = query.Take(6);
+                    }
+
+                    // Select only necessary fields
+                    var result = query
+                        .Select(c => new
+                        {
+                            DiagnosisId = c.ID,
+                            DiagnosisName = c.DiagnosisName
+                        })
+                        .ToList();
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error
+                System.Diagnostics.Debug.WriteLine($"Error in GetComplaints: {ex}");
+                return "[]"; // Return empty array on error
+            }
+        }
+
+        [WebMethod]
+        public static string GetComplaints(string searchValue)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    IQueryable<ComplaintsDefinition> query = db.ComplaintsDefinitions;
+
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        // Filter based on search
+                        query = query.Where(c => c.ComplaintName.ToLower().Contains(searchValue.ToLower()));
+                    }
+                    else
+                    {
+                        // If no search, take top 6
+                        query = query.Take(6);
+                    }
+
+                    // Select only necessary fields
+                    var result = query
+                        .Select(c => new
+                        {
+                            ComplaintId = c.ID,
+                            ComplaintName = c.ComplaintName
+                        })
+                        .ToList();
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error
+                System.Diagnostics.Debug.WriteLine($"Error in GetComplaints: {ex}");
+                return "[]"; // Return empty array on error
+            }
+        }
+
+        [WebMethod]
+        public static string SaveNewComplaint(string complaintText)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                try
+                {
+
+                    // Trim input and check for existing complaint (case-insensitive match)
+                    string trimmedComplaint = complaintText.Trim();
+
+                    bool exists = db.ComplaintsDefinitions
+                                    .Any(c => c.ComplaintName.ToLower() == trimmedComplaint.ToLower());
+
+                    if (exists)
+                    {
+                        return "0";
+                    }
+
+                    // Create and insert the new complaint
+                    ComplaintsDefinition newComplaint = new ComplaintsDefinition
+                    {
+                        ComplaintName = trimmedComplaint
+                    };
+
+                    db.ComplaintsDefinitions.InsertOnSubmit(newComplaint);
+                    db.SubmitChanges();
+
+                    return "1";
+                }
+                catch (Exception ex)
+                {
+                    // Log the error if needed
+                    return "Error saving symptom: " + ex.Message;
+                }
+            }
+
+        }
+        [WebMethod]
         public static string LoadDoctor_bydep(string depart)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())

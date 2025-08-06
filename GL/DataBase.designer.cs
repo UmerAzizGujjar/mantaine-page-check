@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "TIBIT")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "tibb")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -855,13 +855,27 @@ namespace PMS
         partial void InsertDepartment_Assignment(Department_Assignment instance);
         partial void UpdateDepartment_Assignment(Department_Assignment instance);
         partial void DeleteDepartment_Assignment(Department_Assignment instance);
+        partial void InsertComplaintsDefinition(ComplaintsDefinition instance);
+        partial void UpdateComplaintsDefinition(ComplaintsDefinition instance);
+        partial void DeleteComplaintsDefinition(ComplaintsDefinition instance);
+        partial void InsertDiagnosisDefinition(DiagnosisDefinition instance);
+        partial void UpdateDiagnosisDefinition(DiagnosisDefinition instance);
+        partial void DeleteDiagnosisDefinition(DiagnosisDefinition instance);
+        partial void InsertOutPatientComplaint(OutPatientComplaint instance);
+        partial void UpdateOutPatientComplaint(OutPatientComplaint instance);
+        partial void DeleteOutPatientComplaint(OutPatientComplaint instance);
+        partial void InsertOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
+        partial void UpdateOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
+        partial void DeleteOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
+        partial void InsertOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
+        partial void UpdateOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
+        partial void DeleteOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -3115,6 +3129,46 @@ namespace PMS
             get
             {
                 return this.GetTable<Department_Assignment>();
+            }
+        }
+
+        public System.Data.Linq.Table<ComplaintsDefinition> ComplaintsDefinitions
+        {
+            get
+            {
+                return this.GetTable<ComplaintsDefinition>();
+            }
+        }
+
+        public System.Data.Linq.Table<DiagnosisDefinition> DiagnosisDefinitions
+        {
+            get
+            {
+                return this.GetTable<DiagnosisDefinition>();
+            }
+        }
+
+        public System.Data.Linq.Table<OutPatientComplaint> OutPatientComplaints
+        {
+            get
+            {
+                return this.GetTable<OutPatientComplaint>();
+            }
+        }
+
+        public System.Data.Linq.Table<OutPatientFinalDiagnosi> OutPatientFinalDiagnosis
+        {
+            get
+            {
+                return this.GetTable<OutPatientFinalDiagnosi>();
+            }
+        }
+
+        public System.Data.Linq.Table<OutPatientPrimaryDiagnosi> OutPatientPrimaryDiagnosis
+        {
+            get
+            {
+                return this.GetTable<OutPatientPrimaryDiagnosi>();
             }
         }
 
@@ -150672,6 +150726,628 @@ namespace PMS
                     this._Updated_At = value;
                     this.SendPropertyChanged("Updated_At");
                     this.OnUpdated_AtChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.ComplaintsDefinition")]
+    public partial class ComplaintsDefinition : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ID;
+
+        private string _ComplaintName;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIDChanging(int value);
+        partial void OnIDChanged();
+        partial void OnComplaintNameChanging(string value);
+        partial void OnComplaintNameChanged();
+        #endregion
+
+        public ComplaintsDefinition()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this.OnIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ID = value;
+                    this.SendPropertyChanged("ID");
+                    this.OnIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ComplaintName", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+        public string ComplaintName
+        {
+            get
+            {
+                return this._ComplaintName;
+            }
+            set
+            {
+                if ((this._ComplaintName != value))
+                {
+                    this.OnComplaintNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._ComplaintName = value;
+                    this.SendPropertyChanged("ComplaintName");
+                    this.OnComplaintNameChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.DiagnosisDefinition")]
+    public partial class DiagnosisDefinition : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ID;
+
+        private string _DiagnosisName;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIDChanging(int value);
+        partial void OnIDChanged();
+        partial void OnDiagnosisNameChanging(string value);
+        partial void OnDiagnosisNameChanged();
+        #endregion
+
+        public DiagnosisDefinition()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this.OnIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ID = value;
+                    this.SendPropertyChanged("ID");
+                    this.OnIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DiagnosisName", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+        public string DiagnosisName
+        {
+            get
+            {
+                return this._DiagnosisName;
+            }
+            set
+            {
+                if ((this._DiagnosisName != value))
+                {
+                    this.OnDiagnosisNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._DiagnosisName = value;
+                    this.SendPropertyChanged("DiagnosisName");
+                    this.OnDiagnosisNameChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.OutPatientComplaints")]
+    public partial class OutPatientComplaint : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ID;
+
+        private int _OutPatientID;
+
+        private int _PatientID;
+
+        private int _ComplaintID;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIDChanging(int value);
+        partial void OnIDChanged();
+        partial void OnOutPatientIDChanging(int value);
+        partial void OnOutPatientIDChanged();
+        partial void OnPatientIDChanging(int value);
+        partial void OnPatientIDChanged();
+        partial void OnComplaintIDChanging(int value);
+        partial void OnComplaintIDChanged();
+        #endregion
+
+        public OutPatientComplaint()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this.OnIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ID = value;
+                    this.SendPropertyChanged("ID");
+                    this.OnIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OutPatientID", DbType = "Int NOT NULL")]
+        public int OutPatientID
+        {
+            get
+            {
+                return this._OutPatientID;
+            }
+            set
+            {
+                if ((this._OutPatientID != value))
+                {
+                    this.OnOutPatientIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._OutPatientID = value;
+                    this.SendPropertyChanged("OutPatientID");
+                    this.OnOutPatientIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PatientID", DbType = "Int NOT NULL")]
+        public int PatientID
+        {
+            get
+            {
+                return this._PatientID;
+            }
+            set
+            {
+                if ((this._PatientID != value))
+                {
+                    this.OnPatientIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._PatientID = value;
+                    this.SendPropertyChanged("PatientID");
+                    this.OnPatientIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ComplaintID", DbType = "Int NOT NULL")]
+        public int ComplaintID
+        {
+            get
+            {
+                return this._ComplaintID;
+            }
+            set
+            {
+                if ((this._ComplaintID != value))
+                {
+                    this.OnComplaintIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ComplaintID = value;
+                    this.SendPropertyChanged("ComplaintID");
+                    this.OnComplaintIDChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.OutPatientFinalDiagnosis")]
+    public partial class OutPatientFinalDiagnosi : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ID;
+
+        private int _OutPatientID;
+
+        private int _PatientID;
+
+        private int _DiagnosisID;
+
+        private string _Remarks;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIDChanging(int value);
+        partial void OnIDChanged();
+        partial void OnOutPatientIDChanging(int value);
+        partial void OnOutPatientIDChanged();
+        partial void OnPatientIDChanging(int value);
+        partial void OnPatientIDChanged();
+        partial void OnDiagnosisIDChanging(int value);
+        partial void OnDiagnosisIDChanged();
+        partial void OnRemarksChanging(string value);
+        partial void OnRemarksChanged();
+        #endregion
+
+        public OutPatientFinalDiagnosi()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this.OnIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ID = value;
+                    this.SendPropertyChanged("ID");
+                    this.OnIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OutPatientID", DbType = "Int NOT NULL")]
+        public int OutPatientID
+        {
+            get
+            {
+                return this._OutPatientID;
+            }
+            set
+            {
+                if ((this._OutPatientID != value))
+                {
+                    this.OnOutPatientIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._OutPatientID = value;
+                    this.SendPropertyChanged("OutPatientID");
+                    this.OnOutPatientIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PatientID", DbType = "Int NOT NULL")]
+        public int PatientID
+        {
+            get
+            {
+                return this._PatientID;
+            }
+            set
+            {
+                if ((this._PatientID != value))
+                {
+                    this.OnPatientIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._PatientID = value;
+                    this.SendPropertyChanged("PatientID");
+                    this.OnPatientIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DiagnosisID", DbType = "Int NOT NULL")]
+        public int DiagnosisID
+        {
+            get
+            {
+                return this._DiagnosisID;
+            }
+            set
+            {
+                if ((this._DiagnosisID != value))
+                {
+                    this.OnDiagnosisIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._DiagnosisID = value;
+                    this.SendPropertyChanged("DiagnosisID");
+                    this.OnDiagnosisIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "Text", UpdateCheck = UpdateCheck.Never)]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this.OnRemarksChanging(value);
+                    this.SendPropertyChanging();
+                    this._Remarks = value;
+                    this.SendPropertyChanged("Remarks");
+                    this.OnRemarksChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.OutPatientPrimaryDiagnosis")]
+    public partial class OutPatientPrimaryDiagnosi : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ID;
+
+        private int _OutPatientID;
+
+        private int _PatientID;
+
+        private int _DiagnosisID;
+
+        private string _Remarks;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIDChanging(int value);
+        partial void OnIDChanged();
+        partial void OnOutPatientIDChanging(int value);
+        partial void OnOutPatientIDChanged();
+        partial void OnPatientIDChanging(int value);
+        partial void OnPatientIDChanged();
+        partial void OnDiagnosisIDChanging(int value);
+        partial void OnDiagnosisIDChanged();
+        partial void OnRemarksChanging(string value);
+        partial void OnRemarksChanged();
+        #endregion
+
+        public OutPatientPrimaryDiagnosi()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this.OnIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ID = value;
+                    this.SendPropertyChanged("ID");
+                    this.OnIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OutPatientID", DbType = "Int NOT NULL")]
+        public int OutPatientID
+        {
+            get
+            {
+                return this._OutPatientID;
+            }
+            set
+            {
+                if ((this._OutPatientID != value))
+                {
+                    this.OnOutPatientIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._OutPatientID = value;
+                    this.SendPropertyChanged("OutPatientID");
+                    this.OnOutPatientIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PatientID", DbType = "Int NOT NULL")]
+        public int PatientID
+        {
+            get
+            {
+                return this._PatientID;
+            }
+            set
+            {
+                if ((this._PatientID != value))
+                {
+                    this.OnPatientIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._PatientID = value;
+                    this.SendPropertyChanged("PatientID");
+                    this.OnPatientIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DiagnosisID", DbType = "Int NOT NULL")]
+        public int DiagnosisID
+        {
+            get
+            {
+                return this._DiagnosisID;
+            }
+            set
+            {
+                if ((this._DiagnosisID != value))
+                {
+                    this.OnDiagnosisIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._DiagnosisID = value;
+                    this.SendPropertyChanged("DiagnosisID");
+                    this.OnDiagnosisIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "VarChar(100)")]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this.OnRemarksChanging(value);
+                    this.SendPropertyChanging();
+                    this._Remarks = value;
+                    this.SendPropertyChanged("Remarks");
+                    this.OnRemarksChanged();
                 }
             }
         }

@@ -111,7 +111,7 @@
         }
 
 
-        .symptom-row, .vital-row, .history-row, .exam-row, .exam-text-row, .Systematic-Exam-Row, .refer-row {
+        .symptom-row, .vital-row, .history-row, .exam-row, .exam-text-row, .Systematic-Exam-Row, .refer-row, .complaint-row,.Primary-Diagnosis-row,.Final-Diagnosis-row {
             display: flex;
             align-items: center;
             margin-bottom: 2px;
@@ -127,11 +127,11 @@
             cursor: pointer;
         }
 
-        .history-row, .exam-text-row, .Systematic-Exam-Row {
+        .history-row, .exam-text-row, .Systematic-Exam-Row,.Primary-Diagnosis-row,.Final-Diagnosis-row {
             height: 60px !important;
         }
 
-            .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover, .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover {
+            .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover, .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover, .complaint-row:hover,.Primary-Diagnosis-row:hover,.Final-Diagnosis-row:hover {
                 background-color: black;
                 color: white;
                 /* Optional: Add slight scale effect */
@@ -380,6 +380,24 @@
 
     <script>
         $(document).ready(function () {
+            fillComplaints("");
+            fillPrimaryDiagnosis("");
+            fillFinalDiagnosis("");
+            // Handle search input
+            $('#tab06Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                fillComplaints(searchTerm);
+            });
+            // Handle search input
+            $('#tab07Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                fillPrimaryDiagnosis(searchTerm);
+            });
+            // Handle search input
+            $('#tab08Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                fillFinalDiagnosis(searchTerm);
+            });
             const $patientCategory = $('#ctl00_MainContent_ddlPatient_Main_Category');
             const $doctorsDropdown = $('#ddldoctors');
             const $referTextbox = $('.refer-textbox');
@@ -1073,7 +1091,489 @@
                 }
             });
         }
+        function AddNewComplaint() {
+            const $divComplaint = $('#divAddNewComplaint');
 
+            if ($divComplaint.is(':visible')) {
+                // Hide with slide up animation
+                $divComplaint.slideUp(300, function () {
+                    $('#NewComplaint').val(''); // Clear input after hiding
+                });
+            } else {
+                // Show with slide down animation
+                $divComplaint.slideDown(300, function () {
+                    $('#NewComplaint').focus(); // Focus input after showing
+                });
+            }
+        }
+        function AddNewPrimaryDiagnosis() {
+            const $divComplaint = $('#divAddNewPrimaryDiagnosis');
+
+            if ($divComplaint.is(':visible')) {
+                // Hide with slide up animation
+                $divComplaint.slideUp(300, function () {
+                    $('#NewPrimaryDiagnosis').val(''); // Clear input after hiding
+                });
+            } else {
+                // Show with slide down animation
+                $divComplaint.slideDown(300, function () {
+                    $('#NewPrimaryDiagnosis').focus(); // Focus input after showing
+                });
+            }
+        }
+        function AddNewFinalDiagnosis() {
+            const $divComplaint = $('#divAddNewFinalDiagnosis');
+
+            if ($divComplaint.is(':visible')) {
+                // Hide with slide up animation
+                $divComplaint.slideUp(300, function () {
+                    $('#NewFinalDiagnosis').val(''); // Clear input after hiding
+                });
+            } else {
+                // Show with slide down animation
+                $divComplaint.slideDown(300, function () {
+                    $('#NewFinalDiagnosis').focus(); // Focus input after showing
+                });
+            }
+        }
+
+        function saveComplaint() {
+            const complaintText = $('#NewComplaint').val().trim();
+
+            if (complaintText === '') {
+                alert('Please enter a complaint before saving.');
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "NewOutPatient.aspx/SaveNewComplaint",
+                    data: JSON.stringify({ complaintText: complaintText }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Complaint already exists!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                        else {
+                            fillComplaints("");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error searching symptoms:", error);
+                    }
+                });
+            }
+            // Hide the form with slide up animation after saving
+            $('#divAddNewComplaint').slideUp(300, function () {
+                $('#NewComplaint').val(''); // Clear input after hiding
+            });
+        }
+        function savePrimaryDiagnosis() {
+            const Text = $('#NewPrimaryDiagnosis').val().trim();
+
+            if (Text === '') {
+                alert('Please enter a Diagnosis before saving.');
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "NewOutPatient.aspx/SaveNewDiagnosis",
+                    data: JSON.stringify({ Text: Text }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Diagnosis already exists!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                        else {
+                            fillPrimaryDiagnosis("");
+                            fillFinalDiagnosis("");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error searching symptoms:", error);
+                    }
+                });
+            }
+            // Hide the form with slide up animation after saving
+            $('#divAddNewPrimaryDiagnosis').slideUp(300, function () {
+                $('#NewPrimaryDiagnosis').val(''); // Clear input after hiding
+            });
+        }
+        function saveFinalDiagnosis() {
+            const Text = $('#NewFinalDiagnosis').val().trim();
+
+            if (Text === '') {
+                alert('Please enter a Diagnosis before saving.');
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "NewOutPatient.aspx/SaveNewDiagnosis",
+                    data: JSON.stringify({ Text: Text }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Diagnosis already exists!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                        else {
+                            fillFinalDiagnosis("");
+                            fillPrimaryDiagnosis("");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error searching symptoms:", error);
+                    }
+                });
+            }
+            // Hide the form with slide up animation after saving
+            $('#divAddNewFinalDiagnosis').slideUp(300, function () {
+                $('#NewFinalDiagnosis').val(''); // Clear input after hiding
+            });
+        }
+
+        function fillComplaints(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetComplaints',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    searchValue: searchValue || ""
+                }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="complaint-row" style="display: flex; align-items: center; justify-content: space-between;">' +
+                            '<div style="display: flex; align-items: center;">' +
+                            '<input type="checkbox" id="chk_complaint_' + value.ComplaintId + '" ' +
+                            'value="' + value.ComplaintId + '" ' +
+                            'class="complaint_checkbox" ' +
+                            'onclick="this.checked ? Add_ComplaintRow(\'' + value.ComplaintId + '\', \'' + value.ComplaintName + '\') : Remove_ComplaintRow(\'' + value.ComplaintId + '\')" />' +
+                            '<label for="chk_complaint_' + value.ComplaintId + '" style="margin-left: 8px;">' + value.ComplaintName + '</label>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    $('#allComplaints').html(options);
+                    
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+
+            return options;
+        }
+        function fillPrimaryDiagnosis(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetDiagnosis',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    searchValue: searchValue || ""
+                }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="Primary-Diagnosis-row" style="display: flex; align-items: center; justify-content: space-between;">' +
+                            '<div style="display: flex; align-items: center; width: 100%">' +
+                            '<input type="checkbox" id="chk_Primary_Diagnosis_' + value.DiagnosisId + '" ' +
+                            'value="' + value.DiagnosisId + '" ' +
+                            'class="Primary_Diagnosis_checkbox" ' +
+                            'onclick="var textarea = document.getElementById(\'txtPrimaryDiagnosis_' + value.DiagnosisId + '\'); ' +
+                            'this.checked ? handlePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\', \'' + (value.DiagnosisName || '').replace(/'/g, "\\'") + '\') ' +
+                            ': removePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\')" />' +
+                            '<label for="chk_Primary_Diagnosis_' + value.DiagnosisId + '" style="margin-left: 8px; width: 25%;">' + (value.DiagnosisName || '') + '</label>' +
+                            '<textarea class="primaryDiagnosisTextbox" id="txtPrimaryDiagnosis_' + value.DiagnosisId + '" style="width: 70%; margin-left: 10px;" rows="3"></textarea>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    $('#allPrimaryDiagnosis').html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+        }
+        function fillFinalDiagnosis(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetDiagnosis',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    searchValue: searchValue || ""
+                }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="Final-Diagnosis-row" style="display: flex; align-items: center; justify-content: space-between;">' +
+                            '<div style="display: flex; align-items: center; width: 100%">' +
+                            '<input type="checkbox" id="chk_Final_Diagnosis_' + value.DiagnosisId + '" ' +
+                            'value="' + value.DiagnosisId + '" ' +
+                            'class="Final_Diagnosis_checkbox" ' +
+                            'onclick="var textarea = document.getElementById(\'txtFinalDiagnosis_' + value.DiagnosisId + '\'); ' +
+                            'this.checked ? handleFinalDiagnosisRow(\'' + value.DiagnosisId + '\', \'' + (value.DiagnosisName || '').replace(/'/g, "\\'") + '\') ' +
+                            ': removeFinalDiagnosisRow(\'' + value.DiagnosisId + '\')" />' +
+                            '<label for="chk_Final_Diagnosis_' + value.DiagnosisId + '" style="margin-left: 8px; width: 25%;">' + (value.DiagnosisName || '') + '</label>' +
+                            '<textarea class="finalDiagnosisTextbox" id="txtFinalDiagnosis_' + value.DiagnosisId + '" style="width: 70%; margin-left: 10px;" rows="3"></textarea>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    $('#allFinalDiagnosis').html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+        }
+
+        function Add_ComplaintRow(id, name) {
+            var checkComplaintadded = false;
+            $(".complainclass").each(function () {
+                var complainid = $(this).val();
+                if (complainid == id) {
+                    checkComplaintadded = true;
+                }
+            });
+
+            if (checkComplaintadded === false) {
+
+
+
+
+                var html = '<tr> <td style="display:none;"> <input type="hidden" class="complainclass" value="' + id + '" />' + id + ' </td>' +
+                    '<td> ' + name + ' </td>' +
+                    '<td  > <a href="#" onclick="Remove_ComplaintRow(\'' + id + '\')"><i class="fa fa-trash"></i></a></td></tr>';
+
+
+                $('#tblComplaints tbody').append(html);
+                $('#dvtblComplaints').show();
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Symptom already added',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            }
+        }
+        function Remove_ComplaintRow(id) {
+            // Only uncheck the checkbox for the given id
+            $('#chk_complaint_' + id).prop('checked', false);
+
+            // Loop through rows to find and remove the matching one
+            $('#tblComplaints tbody tr').each(function () {
+                var row = $(this);
+                var hiddenInput = row.find('input.complainclass');
+                if (hiddenInput.val() === id) {
+                    row.remove();
+                    return false; // exit the loop early after removing
+                }
+            });
+
+            // Hide the table if there are no more rows
+            if ($('#tblComplaints tbody tr').length === 0) {
+                $('#dvtblComplaints').hide();
+            }
+        }
+
+        function handlePrimaryDiagnosisRow(diagnosisId, diagnosisName) {
+            // Get the textarea value
+            const remarks = $('#txtPrimaryDiagnosis_' + diagnosisId).val().trim();
+
+            // Check if row already exists
+            const existingRow = $('#PrimarydiagnosisRow_' + diagnosisId);
+
+            if (existingRow.length) {
+                // Update existing row
+                existingRow.find('td:eq(2)').text(remarks);
+            } else {
+                // Create new row
+                const newRow = `
+            <tr id="PrimarydiagnosisRow_${diagnosisId}">
+                <td style="display:none">${diagnosisId}</td>
+                <td>${diagnosisName}</td>
+                <td>${remarks}</td>
+                <td>
+                    <a href="#" onclick="removePrimaryDiagnosisRow('${diagnosisId}')">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        `;
+
+                $('#tblPrimaryDiagnosis tbody').append(newRow);
+            }
+
+            // Show table if hidden
+            $('#dvtblPrimaryDiagnosis').show();
+        }
+
+        function removePrimaryDiagnosisRow(diagnosisId) {
+            // Remove the row
+            $('#PrimarydiagnosisRow_' + diagnosisId).remove();
+
+            // Uncheck checkbox and clear textarea
+            $('#chk_Primary_Diagnosis_' + diagnosisId).prop('checked', false);
+            $('#txtPrimaryDiagnosis_' + diagnosisId).val('');
+
+            // Hide table if no rows left
+            if ($('#tblPrimaryDiagnosis tbody tr').length === 0) {
+                $('#dvtblPrimaryDiagnosis').hide();
+            }
+        }
+
+        // Event handler for checkbox changes - corrected class name
+        $(document).on('change', '.Primary_Diagnosis_checkbox', function () {
+            const diagnosisId = $(this).val();
+            const diagnosisName = $(this).next('label').text();
+
+            if ($(this).is(':checked')) {
+                handlePrimaryDiagnosisRow(diagnosisId, diagnosisName);
+            } else {
+                removePrimaryDiagnosisRow(diagnosisId);
+            }
+        });
+
+        // Event handler for textarea changes
+        $(document).on('input', '.primaryDiagnosisTextbox', function () {
+            const diagnosisId = $(this).attr('id').replace('txtPrimaryDiagnosis_', '');
+            const diagnosisName = $(this).prevAll('label').text();
+            const checkbox = $('#chk_Primary_Diagnosis_' + diagnosisId);
+
+            // Check the checkbox if not already checked
+            if (!checkbox.is(':checked')) {
+                checkbox.prop('checked', true);
+            }
+
+            handlePrimaryDiagnosisRow(diagnosisId, diagnosisName);
+        });
+
+        function handleFinalDiagnosisRow(diagnosisId, diagnosisName) {
+            // Get the textarea value
+            const remarks = $('#txtFinalDiagnosis_' + diagnosisId).val().trim();
+
+            // Check if row already exists
+            const existingRow = $('#FinaldiagnosisRow_' + diagnosisId);
+
+            if (existingRow.length) {
+                // Update existing row
+                existingRow.find('td:eq(2)').text(remarks);
+            } else {
+                // Create new row
+                const newRow = `
+            <tr id="FinaldiagnosisRow_${diagnosisId}">
+                <td style="display:none">${diagnosisId}</td>
+                <td>${diagnosisName}</td>
+                <td>${remarks}</td>
+                <td>
+                    <a href="#" onclick="removeFinalDiagnosisRow('${diagnosisId}')">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        `;
+
+                $('#tblFinalDiagnosis tbody').append(newRow);
+            }
+
+            // Show table if hidden
+            $('#dvtblFinalDiagnosis').show();
+        }
+
+        function removeFinalDiagnosisRow(diagnosisId) {
+            // Remove the row
+            $('#FinaldiagnosisRow_' + diagnosisId).remove();
+
+            // Uncheck checkbox and clear textarea
+            $('#chk_Final_Diagnosis_' + diagnosisId).prop('checked', false);
+            $('#txtFinalDiagnosis_' + diagnosisId).val('');
+
+            // Hide table if no rows left
+            if ($('#tblFinalDiagnosis tbody tr').length === 0) {
+                $('#dvtblFinalDiagnosis').hide();
+            }
+        }
+
+        // Event handler for checkbox changes - corrected class name
+        $(document).on('change', '.Final_Diagnosis_checkbox', function () {
+            const diagnosisId = $(this).val();
+            const diagnosisName = $(this).next('label').text();
+
+            if ($(this).is(':checked')) {
+                handleFinalDiagnosisRow(diagnosisId, diagnosisName);
+            } else {
+                removeFinalDiagnosisRow(diagnosisId);
+            }
+        });
+
+        // Event handler for textarea changes
+        $(document).on('input', '.finalDiagnosisTextbox', function () {
+            const diagnosisId = $(this).attr('id').replace('txtFinalDiagnosis_', '');
+            const diagnosisName = $(this).prevAll('label').text();
+            const checkbox = $('#chk_Final_Diagnosis_' + diagnosisId);
+
+            // Check the checkbox if not already checked
+            if (!checkbox.is(':checked')) {
+                checkbox.prop('checked', true);
+            }
+
+            handleFinalDiagnosisRow(diagnosisId, diagnosisName);
+        });
 
     </script>
 </asp:Content>
@@ -1142,9 +1642,6 @@
             </div>
         </div>
     </div>
-
-
-
     <div id="manageSymptomsModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -1278,6 +1775,11 @@
                 <!-- Sidebar (4 units) -->
                 <div class="col-md-4 col-sm-12 p-0">
                     <div class="sidebarr">
+                        <div class="menu-item no-submenu" id="06" onclick="navigateAction(this)">
+                            <div class="menu-title">
+                                <span>Complaints</span>
+                            </div>
+                        </div>
                         <div class="menu-item no-submenu" id="01" onclick="navigateAction(this)">
                             <div class="menu-title">
                                 <span>Symptoms</span>
@@ -1304,6 +1806,18 @@
                         <div class="menu-item no-submenu" id="05" onclick="navigateAction(this)">
                             <div class="menu-title">
                                 <span>Refer To</span>
+                            </div>
+                        </div>
+
+                        <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
+                            <div class="menu-title">
+                                <span>Primary Diagnosis</span>
+                            </div>
+                        </div>
+
+                        <div class="menu-item no-submenu" id="08" onclick="navigateAction(this)">
+                            <div class="menu-title">
+                                <span>Final Diagnosis</span>
                             </div>
                         </div>
 
@@ -1842,25 +2356,85 @@
                                 <div id="subTab003" class="subtabs">
                                 </div>
                             </div>
-                            <div class="tabs" id="tab05">
-                                <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between; ">
-                                    <div style="display: flex; align-items: center;width:100%">
+                            <div class="tabs" id="tab05" style="display: none">
+                                <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center; width: 100%">
                                         <asp:Label Style="width: 200px;" ID="Label14" runat="server" Text="Refered To"></asp:Label>
                                         <asp:DropDownList ID="ddlPatient_Main_Category" onchange="loaddoctor_byDep()" Width="80%" runat="server" AppendDataBoundItems="true" TabIndex="21"></asp:DropDownList>
                                     </div>
                                 </div>
                                 <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                    <div style="display: flex; align-items: center;width:100%">
+                                    <div style="display: flex; align-items: center; width: 100%">
                                         <asp:Label Style="width: 200px;" ID="Label18" runat="server" Text="Doctor"></asp:Label>
-                                        <select style="width:80%" id="ddldoctors"></select>
+                                        <select style="width: 80%" id="ddldoctors"></select>
                                     </div>
                                 </div>
                                 <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                    <div style="display: flex; align-items: center;width:100%">
+                                    <div style="display: flex; align-items: center; width: 100%">
                                         <asp:Label Style="width: 200px;" ID="Label19" runat="server" Text="Referral Note"></asp:Label>
                                         <asp:TextBox ID="txtRefferNote" TextMode="SingleLine" Width="80%" CssClass="refer-textbox" runat="server" TabIndex="22"></asp:TextBox>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="tabs" id="tab06">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewComplaint()" />
+                                </div>
+                                <div style="display: none" id="divAddNewComplaint">
+                                    <div style="display: flex; justify-content: center;">
+                                        <input type="text" id="NewComplaint" />
+                                        <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewComplaint" onclick="saveComplaint()" class="btn btn-primry" value="Save" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab06Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allComplaints"></div>
+                            </div>
+                            <div class="tabs" id="tab07" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
+                                </div>
+                                <div style="display: none" id="divAddNewPrimaryDiagnosis">
+                                    <div style="display: flex; justify-content: center;">
+                                        <input type="text" id="NewPrimaryDiagnosis" />
+                                        <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewPrimaryDiagnosis" onclick="savePrimaryDiagnosis()" class="btn btn-primry" value="Save" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab07Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allPrimaryDiagnosis"></div>
+                            </div>
+                            <div class="tabs" id="tab08" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewFinalDiagnosis()" />
+                                </div>
+                                <div style="display: none" id="divAddNewFinalDiagnosis">
+                                    <div style="display: flex; justify-content: center;">
+                                        <input type="text" id="NewFinalDiagnosis" />
+                                        <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewFinalDiagnosis" onclick="saveFinalDiagnosis()" class="btn btn-primry" value="Save" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab08Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allFinalDiagnosis"></div>
                             </div>
 
                         </div>
@@ -1975,21 +2549,74 @@
 
                         </div>
                         <div id="divtblRefer" style="display: none" class="col-lg-4">
-    <div>
-        <div class="table-responsive">
-            <table class="table" id="tblRefer">
-                <thead>
-                    <tr>
-                        <th>Refer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblRefer">
+                                        <thead>
+                                            <tr>
+                                                <th>Refer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-</div>
+                        </div>
+                        <div class="col-lg-3" id="dvtblComplaints" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblComplaints">
+                                        <thead>
+                                            <tr>
+                                                <th style="display: none;">ComplaintID</th>
+                                                <th>Complaints</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" id="dvtblPrimaryDiagnosis" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblPrimaryDiagnosis">
+                                        <thead>
+                                            <tr>
+                                                <th style="display: none;">PrimaryDiagnosisID</th>
+                                                <th>Primary Diagnosis</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" id="dvtblFinalDiagnosis" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblFinalDiagnosis">
+                                        <thead>
+                                            <tr>
+                                                <th style="display: none;">FinalDiagnosisID</th>
+                                                <th>Final Diagnosis</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
