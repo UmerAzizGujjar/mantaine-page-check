@@ -214,6 +214,75 @@
             }
             return proceed;
         }
+        function LoadBatchData(id) {
+            debugger;
+            PageMethods.LoadBatchsRate(id, function (resp) {
+                debugger;
+                var datas = JSON.parse(resp);
+                $.each(datas, function (key, data) {
+
+                    var Batch_Num = data.Batch_Num || [];
+                    var Item_Sale_Rate = data.Item_Sale_Rate || [];
+                    var Uom_Qty = data.Uom_Qty || [];
+                    // Append new rows for medicines
+                    var rows = '';
+                    var rowlength = BatchTable.rows.length;
+                    rows = '<tr>' +
+                        '<td>' +
+                        '<input type="hidden" name="ddlmed" id="ddlmed' + rowlength + '" value="' + Batch_Num + '" />' + Batch_Num +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="hidden" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="' + Item_Sale_Rate + '" />' + Item_Sale_Rate +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="hidden" name="txtBatchRate" id="txtUom_Qty' + rowlength + '" value="' + Uom_Qty + '" />' + Uom_Qty +
+                        '</td>' +
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
+                        '</td>' +
+                        '</tr>'
+                    $('#BatchTable_body').append(rows);
+
+                });
+            });
+        }
+        function ExcludeFromPayment(anchor) {
+            debugger;
+            var a = confirm("Are you sure You want to delete");
+            if (a == true) {
+                var row = $(anchor).parents('tr')[0];
+                row.remove();
+            }
+        }
+        function getbatchfrom_grn(id) {            debugger;            var item_id = id            PageMethods.Getbatch_grn(item_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                $.each(parsedData.GRN_Details, function (key, value) {                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                });                $.each(parsedData.Stock_Adjustment_Details, function (key, value) {                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                });                $('#ddlBatchNum').html(options);                $('#ddlBatchNum').select2();
+                $('.select2-container--default').css('width', "150px")
+            }, function (error) {
+                alert(error.get_message());
+            });
+        }
+        function AppendBatch() {
+            debugger
+            var selectedOption = $('#ddlBatchNum option:selected');
+            var selectedValue = selectedOption.val();
+            var selectedText = selectedOption.text();
+            if (selectedValue && selectedValue !== "0") {
+                var rows = '';
+                var rowlength = BatchTable.rows.length;
+                rows = '<tr>' +
+                    '<td>' +
+                    '<input type="hidden" name="ddlBatch" id="ddlBatch' + rowlength + '" value="' + selectedText + '" />' + selectedText +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="text" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="0" />' +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="text" name="txtUom_Qty" id="txtUom_Qty' + rowlength + '" value="0" />' +
+                    '</td>' +
+                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
+                    '</td>' +
+                    '</tr>'
+                $('#BatchTable_body').append(rows);
+            }
+        }
         function Saveitem() {
             if (validateSave()) {
                 debugger;
@@ -270,6 +339,7 @@
                 var DepartmentId = $('#ddldepartment').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
                 var Id = 0;
+                var batchList = [];
 
                 if (id == "") {
                     Id = 0;
@@ -277,6 +347,12 @@
                 else {
                     Id = id
                 }
+                $('#BatchTable_body tr').each(function (key, value) {
+                    var txtBatchRate = $(this).find('input[name="txtBatchRate"]').val();
+                    var txtUom_Qty = $(this).find('input[name="txtUom_Qty"]').val();
+                    var ddlBatch = $(this).find('input[name="ddlBatch"]').val();
+                    batchList.push({ txtBatchRate: txtBatchRate, ddlBatch: ddlBatch, txtUom_Qty: txtUom_Qty });
+                });
                 $('#btnValue').attr('disabled', true);
                 $.ajax({
                     type: "POST",
@@ -335,6 +411,7 @@
                         "ItemId": Id,
                         "DepartmentId": DepartmentId,
                         "IsHospital": isHospitalchk,
+                        "batchList": batchList,
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -496,6 +573,8 @@
                     }
                     if (parse.IsBatch == 1) {
                         $("#IsBatch").prop('checked', true);
+                        getbatchfrom_grn(id);
+                        LoadBatchData(id)
                     }
                     if (parse.Purchaseable == 1) {
                         $("#Purchaseable").prop('checked', true);
@@ -797,13 +876,32 @@
                     </td>
                 </tr>
             </table>
-            <table style="margin-left:20px">
+            <table style="margin-left:0px">
                 <tr>
-                    <td style="width: 71px;">Generic Name</td>
+                    <td style="width: 66px;">Generic Name</td>
                     <td>
-                        <input type="text" id="GenericName" name="GenericName" style="width: 775px!Important;margin-left: 7px" /></td>
+                        <input type="text" id="GenericName" name="GenericName" style="width: 166px!Important; margin-left: 8px" /></td>
+                    <td style="width: 66px;">
+                        <label style="margin-right: 40px;margin-left: 15px;">Batch Number</label></td>
+                    <td >
+                        <select id="ddlBatchNum" style="width: 170px;"></select>
+
+                    </td>
+                    <td>
+                        <input type="button" onclick="AppendBatch()" value="+" id="AddBatch" style="width: 44px; margin-left: 10px !important;" /></td>
                 </tr>
-            </table>            
+            </table>
+            <table class="table table-bordered" id="BatchTable" style="overflow: scroll; width: 550px; height: auto;">
+
+                <tr id="row_sample">
+                    <th style="width: 40%;">Batch Number</th>
+                    <th style="width: 30%;">Rate</th>
+                    <th style="width: 20%;">Uom Qty</th>
+                    <th style="text-align: center; width: 10%;">ACTIONS</th>
+                </tr>
+                <tbody id="BatchTable_body">
+                </tbody>
+            </table>
         </div>
         <div id="Tab-5" >
             <table>
