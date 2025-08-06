@@ -3,6 +3,23 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            var Policy_ID = '<%= Request.QueryString["Policy_ID"] %>';
+
+            if(Policy_ID && Policy_ID !== "null" && Policy_ID !== "") {
+                loadPolicyForEdit(Policy_ID);
+                $("#btnSave").val("Update");
+            } else {
+                $("#btnSave").val("Save");
+            }
+
+            $("#btnView").on("click", function () {
+                window.location.href = "Define_Policy_View.aspx";
+            });
+
+            $("#btnAddNew").on("click", function () {
+                window.location.href = "Define_Policy.aspx";
+            });
+
             $("#btnSave").click(function () {
                 var policy_id = $("#hdPolicyID").val();
                 var policyName = $("#txt_Policy").val();
@@ -49,6 +66,9 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2500);
                     },
                     error: function (xhr, status, error) {
                         alert("Error: " + error);
@@ -57,6 +77,29 @@
             });
 
         });
+
+        function loadPolicyForEdit(id) {
+            $.ajax({
+                type: "POST",
+                url: "Define_Policy.aspx/GetPolicyById",
+                data: JSON.stringify({ policy_id: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    if (data) {
+                        $("#hdPolicyID").val(data.Policy_ID);
+                        $("#txt_Policy").val(data.Policy_Name);
+                        $("#txt_Policy_Description").val(data.Policy_Description);
+                        $("#chkActive").prop("checked", data.Active);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Error loading policy: " + error);
+                }
+            });
+        }
+
     </script>
 
 </asp:Content>
@@ -79,11 +122,19 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6 mt-4">
-            <button type="button" id="btnSave" class="btn btn-primry">Save</button>
+        <div class="col-lg-8 col-md-6 col-sm-6">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" id="btnView" class="btn btn-primry" value="View" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" id="btnAddNew" class="btn btn-primry" value="New" />
+                </div>
+            </div>
         </div>
     </div>
-
-
 </asp:Content>
 
