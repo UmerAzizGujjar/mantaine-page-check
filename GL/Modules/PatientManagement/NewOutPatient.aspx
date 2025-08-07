@@ -128,11 +128,13 @@
             cursor: pointer;
         }
 
-        .history-row, .exam-text-row, .Systematic-Exam-Row {
+        .history-row, .exam-text-row, .Systematic-Exam-Row, .Primary-Diagnosis-row, .Final-Diagnosis-row {
             height: 60px !important;
         }
 
-            .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover, .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover {
+            .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
+            .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
+            .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover {
                 background-color: black;
                 color: white !important;
                 /* Optional: Add slight scale effect */
@@ -385,6 +387,29 @@
 
     <script>
         $(document).ready(function () {
+            FillLabTests('');
+            fillComplaints("");
+            fillPrimaryDiagnosis("");
+            fillFinalDiagnosis("");
+            // Handle search input
+            $('#tab06Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                fillComplaints(searchTerm);
+            });
+            // Handle search input
+            $('#tab07Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                fillPrimaryDiagnosis(searchTerm);
+            });
+            // Handle search input
+            $('#tab08Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                fillFinalDiagnosis(searchTerm);
+            });
+            $('#tab09Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                FillLabTests(searchTerm);
+            });
             const $patientCategory = $('#ctl00_MainContent_ddlPatient_Main_Category');
             const $doctorsDropdown = $('#ddldoctors');
             const $referTextbox = $('.refer-textbox');
@@ -1078,7 +1103,670 @@
                 }
             });
         }
+        function AddNewComplaint() {
+            const $divComplaint = $('#divAddNewComplaint');
 
+            if ($divComplaint.is(':visible')) {
+                // Hide with slide up animation
+                $divComplaint.slideUp(300, function () {
+                    $('#NewComplaint').val(''); // Clear input after hiding
+                });
+            } else {
+                // Show with slide down animation
+                $divComplaint.slideDown(300, function () {
+                    $('#NewComplaint').focus(); // Focus input after showing
+                });
+            }
+        }
+        function AddNewPrimaryDiagnosis() {
+            const $divComplaint = $('#divAddNewPrimaryDiagnosis');
+
+            if ($divComplaint.is(':visible')) {
+                // Hide with slide up animation
+                $divComplaint.slideUp(300, function () {
+                    $('#NewPrimaryDiagnosis').val(''); // Clear input after hiding
+                });
+            } else {
+                // Show with slide down animation
+                $divComplaint.slideDown(300, function () {
+                    $('#NewPrimaryDiagnosis').focus(); // Focus input after showing
+                });
+            }
+        }
+        function AddNewFinalDiagnosis() {
+            const $divComplaint = $('#divAddNewFinalDiagnosis');
+
+            if ($divComplaint.is(':visible')) {
+                // Hide with slide up animation
+                $divComplaint.slideUp(300, function () {
+                    $('#NewFinalDiagnosis').val(''); // Clear input after hiding
+                });
+            } else {
+                // Show with slide down animation
+                $divComplaint.slideDown(300, function () {
+                    $('#NewFinalDiagnosis').focus(); // Focus input after showing
+                });
+            }
+        }
+
+        function saveComplaint() {
+            const complaintText = $('#NewComplaint').val().trim();
+
+            if (complaintText === '') {
+                alert('Please enter a complaint before saving.');
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "NewOutPatient.aspx/SaveNewComplaint",
+                    data: JSON.stringify({ complaintText: complaintText }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Complaint already exists!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                        else {
+                            fillComplaints("");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error searching symptoms:", error);
+                    }
+                });
+            }
+            // Hide the form with slide up animation after saving
+            $('#divAddNewComplaint').slideUp(300, function () {
+                $('#NewComplaint').val(''); // Clear input after hiding
+            });
+        }
+        function savePrimaryDiagnosis() {
+            const Text = $('#NewPrimaryDiagnosis').val().trim();
+
+            if (Text === '') {
+                alert('Please enter a Diagnosis before saving.');
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "NewOutPatient.aspx/SaveNewDiagnosis",
+                    data: JSON.stringify({ Text: Text }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Diagnosis already exists!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                        else {
+                            fillPrimaryDiagnosis("");
+                            fillFinalDiagnosis("");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error searching symptoms:", error);
+                    }
+                });
+            }
+            // Hide the form with slide up animation after saving
+            $('#divAddNewPrimaryDiagnosis').slideUp(300, function () {
+                $('#NewPrimaryDiagnosis').val(''); // Clear input after hiding
+            });
+        }
+        function saveFinalDiagnosis() {
+            const Text = $('#NewFinalDiagnosis').val().trim();
+
+            if (Text === '') {
+                alert('Please enter a Diagnosis before saving.');
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "NewOutPatient.aspx/SaveNewDiagnosis",
+                    data: JSON.stringify({ Text: Text }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d == "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Diagnosis already exists!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                        else {
+                            fillFinalDiagnosis("");
+                            fillPrimaryDiagnosis("");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error searching symptoms:", error);
+                    }
+                });
+            }
+            // Hide the form with slide up animation after saving
+            $('#divAddNewFinalDiagnosis').slideUp(300, function () {
+                $('#NewFinalDiagnosis').val(''); // Clear input after hiding
+            });
+        }
+
+        function fillComplaints(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetComplaints',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    searchValue: searchValue || ""
+                }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="complaint-row" style="display: flex; align-items: center; justify-content: space-between;">' +
+                            '<div style="display: flex; align-items: center;">' +
+                            '<input type="checkbox" id="chk_complaint_' + value.ComplaintId + '" ' +
+                            'value="' + value.ComplaintId + '" ' +
+                            'class="complaint_checkbox" ' +
+                            'onclick="this.checked ? Add_ComplaintRow(\'' + value.ComplaintId + '\', \'' + value.ComplaintName + '\') : Remove_ComplaintRow(\'' + value.ComplaintId + '\')" />' +
+                            '<label for="chk_complaint_' + value.ComplaintId + '" style="margin-left: 8px;">' + value.ComplaintName + '</label>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    $('#allComplaints').html(options);
+
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+
+            return options;
+        }
+        function fillPrimaryDiagnosis(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetDiagnosis',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    searchValue: searchValue || ""
+                }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="Primary-Diagnosis-row" style="display: flex; align-items: center; justify-content: space-between;">' +
+                            '<div style="display: flex; align-items: center; width: 100%">' +
+                            '<input type="checkbox" id="chk_Primary_Diagnosis_' + value.DiagnosisId + '" ' +
+                            'value="' + value.DiagnosisId + '" ' +
+                            'class="Primary_Diagnosis_checkbox" ' +
+                            'onclick="var textarea = document.getElementById(\'txtPrimaryDiagnosis_' + value.DiagnosisId + '\'); ' +
+                            'this.checked ? handlePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\', \'' + (value.DiagnosisName || '').replace(/'/g, "\\'") + '\') ' +
+                            ': removePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\')" />' +
+                            '<label for="chk_Primary_Diagnosis_' + value.DiagnosisId + '" style="margin-left: 8px; width: 25%;">' + (value.DiagnosisName || '') + '</label>' +
+                            '<textarea class="primaryDiagnosisTextbox" id="txtPrimaryDiagnosis_' + value.DiagnosisId + '" style="width: 70%; margin-left: 10px;" rows="3"></textarea>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    $('#allPrimaryDiagnosis').html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+        }
+        function fillFinalDiagnosis(searchValue) {
+            var options = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetDiagnosis',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    searchValue: searchValue || ""
+                }),
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<div class="Final-Diagnosis-row" style="display: flex; align-items: center; justify-content: space-between;">' +
+                            '<div style="display: flex; align-items: center; width: 100%">' +
+                            '<input type="checkbox" id="chk_Final_Diagnosis_' + value.DiagnosisId + '" ' +
+                            'value="' + value.DiagnosisId + '" ' +
+                            'class="Final_Diagnosis_checkbox" ' +
+                            'onclick="var textarea = document.getElementById(\'txtFinalDiagnosis_' + value.DiagnosisId + '\'); ' +
+                            'this.checked ? handleFinalDiagnosisRow(\'' + value.DiagnosisId + '\', \'' + (value.DiagnosisName || '').replace(/'/g, "\\'") + '\') ' +
+                            ': removeFinalDiagnosisRow(\'' + value.DiagnosisId + '\')" />' +
+                            '<label for="chk_Final_Diagnosis_' + value.DiagnosisId + '" style="margin-left: 8px; width: 25%;">' + (value.DiagnosisName || '') + '</label>' +
+                            '<textarea class="finalDiagnosisTextbox" id="txtFinalDiagnosis_' + value.DiagnosisId + '" style="width: 70%; margin-left: 10px;" rows="3"></textarea>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    $('#allFinalDiagnosis').html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+        }
+
+        function Add_ComplaintRow(id, name) {
+            var checkComplaintadded = false;
+            $(".complainclass").each(function () {
+                var complainid = $(this).val();
+                if (complainid == id) {
+                    checkComplaintadded = true;
+                }
+            });
+
+            if (checkComplaintadded === false) {
+
+
+
+
+                var html = '<tr> <td style="display:none;"> <input type="hidden" class="complainclass" value="' + id + '" />' + id + ' </td>' +
+                    '<td> ' + name + ' </td>' +
+                    '<td  > <a href="#" onclick="Remove_ComplaintRow(\'' + id + '\')"><i class="fa fa-trash"></i></a></td></tr>';
+
+
+                $('#tblComplaints tbody').append(html);
+                $('#dvtblComplaints').show();
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Symptom already added',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            }
+        }
+        function Remove_ComplaintRow(id) {
+            // Only uncheck the checkbox for the given id
+            $('#chk_complaint_' + id).prop('checked', false);
+
+            // Loop through rows to find and remove the matching one
+            $('#tblComplaints tbody tr').each(function () {
+                var row = $(this);
+                var hiddenInput = row.find('input.complainclass');
+                if (hiddenInput.val() === id) {
+                    row.remove();
+                    return false; // exit the loop early after removing
+                }
+            });
+
+            // Hide the table if there are no more rows
+            if ($('#tblComplaints tbody tr').length === 0) {
+                $('#dvtblComplaints').hide();
+            }
+        }
+
+        function handlePrimaryDiagnosisRow(diagnosisId, diagnosisName) {
+            // Get the textarea value
+            const remarks = $('#txtPrimaryDiagnosis_' + diagnosisId).val().trim();
+
+            // Check if row already exists
+            const existingRow = $('#PrimarydiagnosisRow_' + diagnosisId);
+
+            if (existingRow.length) {
+                // Update existing row
+                existingRow.find('td:eq(2)').text(remarks);
+            } else {
+                // Create new row
+                const newRow = `
+            <tr id="PrimarydiagnosisRow_${diagnosisId}">
+                <td style="display:none">${diagnosisId}</td>
+                <td>${diagnosisName}</td>
+                <td>${remarks}</td>
+                <td>
+                    <a href="#" onclick="removePrimaryDiagnosisRow('${diagnosisId}')">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        `;
+
+                $('#tblPrimaryDiagnosis tbody').append(newRow);
+            }
+
+            // Show table if hidden
+            $('#dvtblPrimaryDiagnosis').show();
+        }
+
+        function removePrimaryDiagnosisRow(diagnosisId) {
+            // Remove the row
+            $('#PrimarydiagnosisRow_' + diagnosisId).remove();
+
+            // Uncheck checkbox and clear textarea
+            $('#chk_Primary_Diagnosis_' + diagnosisId).prop('checked', false);
+            $('#txtPrimaryDiagnosis_' + diagnosisId).val('');
+
+            // Hide table if no rows left
+            if ($('#tblPrimaryDiagnosis tbody tr').length === 0) {
+                $('#dvtblPrimaryDiagnosis').hide();
+            }
+        }
+
+        // Event handler for checkbox changes - corrected class name
+        $(document).on('change', '.Primary_Diagnosis_checkbox', function () {
+            const diagnosisId = $(this).val();
+            const diagnosisName = $(this).next('label').text();
+
+            if ($(this).is(':checked')) {
+                handlePrimaryDiagnosisRow(diagnosisId, diagnosisName);
+            } else {
+                removePrimaryDiagnosisRow(diagnosisId);
+            }
+        });
+
+        // Event handler for textarea changes
+        $(document).on('input', '.primaryDiagnosisTextbox', function () {
+            const diagnosisId = $(this).attr('id').replace('txtPrimaryDiagnosis_', '');
+            const diagnosisName = $(this).prevAll('label').text();
+            const checkbox = $('#chk_Primary_Diagnosis_' + diagnosisId);
+
+            // Check the checkbox if not already checked
+            if (!checkbox.is(':checked')) {
+                checkbox.prop('checked', true);
+            }
+
+            handlePrimaryDiagnosisRow(diagnosisId, diagnosisName);
+        });
+
+        function handleFinalDiagnosisRow(diagnosisId, diagnosisName) {
+            // Get the textarea value
+            const remarks = $('#txtFinalDiagnosis_' + diagnosisId).val().trim();
+
+            // Check if row already exists
+            const existingRow = $('#FinaldiagnosisRow_' + diagnosisId);
+
+            if (existingRow.length) {
+                // Update existing row
+                existingRow.find('td:eq(2)').text(remarks);
+            } else {
+                // Create new row
+                const newRow = `
+            <tr id="FinaldiagnosisRow_${diagnosisId}">
+                <td style="display:none">${diagnosisId}</td>
+                <td>${diagnosisName}</td>
+                <td>${remarks}</td>
+                <td>
+                    <a href="#" onclick="removeFinalDiagnosisRow('${diagnosisId}')">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        `;
+
+                $('#tblFinalDiagnosis tbody').append(newRow);
+            }
+
+            // Show table if hidden
+            $('#dvtblFinalDiagnosis').show();
+        }
+
+        function removeFinalDiagnosisRow(diagnosisId) {
+            // Remove the row
+            $('#FinaldiagnosisRow_' + diagnosisId).remove();
+
+            // Uncheck checkbox and clear textarea
+            $('#chk_Final_Diagnosis_' + diagnosisId).prop('checked', false);
+            $('#txtFinalDiagnosis_' + diagnosisId).val('');
+
+            // Hide table if no rows left
+            if ($('#tblFinalDiagnosis tbody tr').length === 0) {
+                $('#dvtblFinalDiagnosis').hide();
+            }
+        }
+
+        // Event handler for checkbox changes - corrected class name
+        $(document).on('change', '.Final_Diagnosis_checkbox', function () {
+            const diagnosisId = $(this).val();
+            const diagnosisName = $(this).next('label').text();
+
+            if ($(this).is(':checked')) {
+                handleFinalDiagnosisRow(diagnosisId, diagnosisName);
+            } else {
+                removeFinalDiagnosisRow(diagnosisId);
+            }
+        });
+
+        // Event handler for textarea changes
+        $(document).on('input', '.finalDiagnosisTextbox', function () {
+            const diagnosisId = $(this).attr('id').replace('txtFinalDiagnosis_', '');
+            const diagnosisName = $(this).prevAll('label').text();
+            const checkbox = $('#chk_Final_Diagnosis_' + diagnosisId);
+
+            // Check the checkbox if not already checked
+            if (!checkbox.is(':checked')) {
+                checkbox.prop('checked', true);
+            }
+
+            handleFinalDiagnosisRow(diagnosisId, diagnosisName);
+        });
+
+        function FillLabTests(searchValue) {
+            debugger;
+            var html = '';
+
+            PageMethods.GetLabTests(searchValue, function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    html += '<div class="labtest-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0;">' +
+                        '<div style="display: flex; align-items: center;">' +
+                        '<input type="checkbox" id="LabTestchk_' + value.SerialNo + '" ' +
+                        'value="' + value.SerialNo + '" ' +
+                        'class="labtest_checkbox" ' +
+                        'onclick="this.checked ? Add_LabTestRow(\'' + value.SerialNo + '\', \'' + value.TestName + '\') : Remove_LabTestRow(\'' + value.SerialNo + '\')" />' +
+                        '<label class="labtest-label" for="LabTestchk_' + value.SerialNo + '" style="margin-left: 8px; font-size: 14px; color: #333;">' + value.TestName + '</label>' +
+                        '</div>' +
+                        '<button type="button" class="labtest-dropdown-btn" ' +
+                        'onclick="ShowLabTestDetails(\'' + value.SerialNo + '\', \'' + value.TestName + '\')" ' +
+                        'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
+                        '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
+                        '</button>' +
+                        '</div>';
+                });
+                $('#allLabTests').html(html);
+            });
+        }
+        function Remove_LabTestRow(serial) {
+            // Uncheck the checkbox
+            $('#LabTestchk_' + serial).prop('checked', false);
+
+            // Remove the row by finding the closest tr from the delete button
+            // This is more reliable than searching by testID
+            $('.tests-table tr').has('a[onclick*="Remove_LabTestRow(' + serial + ')"]').remove();
+
+            // Alternative if above doesn't work - remove all rows containing this serial
+            // $('.tests-table tr').has('input[value="' + serial + '"]').remove();
+
+            // Hide table if no rows left
+            if ($('.tests-table tr').length === 0) {
+                $('#dvtblLabtest').hide();
+            }
+        }
+        function ShowLabTestDetails(serialNo, testName) {
+            const $row = $(`#LabTestchk_${serialNo}`).closest('.labtest-row');
+            const $detailsDiv = $(`#labTestDetails_${serialNo}`);
+            const $checkbox = $(`#LabTestchk_${serialNo}`);
+            const $icon = $(this).find('i');
+
+            // Close all other open details divs first
+            $('.labtest-details').not($detailsDiv).each(function () {
+                const $otherDiv = $(this);
+                const otherSerialNo = $otherDiv.attr('id').replace('labTestDetails_', '');
+                const $otherCheckbox = $(`#LabTestchk_${otherSerialNo}`);
+                const $otherIcon = $(`#LabTestchk_${otherSerialNo}`).closest('.labtest-row').find('i');
+
+                $otherDiv.slideUp(300, function () {
+                    $otherCheckbox.show();
+                    $otherIcon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                });
+            });
+
+            if ($detailsDiv.length) {
+                // Toggle existing details
+                $detailsDiv.slideToggle(300, function () {
+                    $checkbox.toggle(!$detailsDiv.is(':visible'));
+                });
+            } else {
+                // Create new details section
+                const detailsHtml = `
+<div id="labTestDetails_${serialNo}" class="labtest-details" style="display: none; padding: 10px; background: #f5f5f5; margin-top: 5px;">
+    <div style="margin-bottom: 8px;">
+        <label style="display: block; margin-bottom: 4px; font-size: 13px;">Special Test</label>
+        <textarea id="specialTest_${serialNo}" class="form-control" 
+                  style="width: 100%; padding: 5px; min-height: 60px;"></textarea>
+    </div>
+    <div style="margin-bottom: 8px;">
+        <label style="display: block; margin-bottom: 4px; font-size: 13px;">Area of Interest</label>
+        <textarea id="areaOfInterest_${serialNo}" class="form-control" 
+                  style="width: 100%; padding: 5px; min-height: 60px;"></textarea>
+    </div>
+    <div style="text-align: right;">
+        <button type="button" class="btn-add-test" 
+                id="addTest_${serialNo}"
+                onclick="Add_LabTestRow('${serialNo}','${testName}')"
+                style="background: none; border: none; cursor: pointer; color: black;">
+            <i class="fa fa-plus-circle" style="color:black"></i> Add Test
+        </button>
+    </div>
+</div>`;
+
+                // Hide checkbox immediately
+                $checkbox.hide();
+
+                // Insert and show details
+                $row.after(detailsHtml)
+                    .next('.labtest-details')
+                    .slideDown(300, function () {
+                        $(`#specialTest_${serialNo}`).focus();
+                    });
+            }
+
+            // Toggle chevron icon
+            $icon.toggleClass('fa-chevron-down fa-chevron-up');
+        }
+        function Add_LabTestRow(serial, testName) {
+            var test = testName;
+            var maindpt = "001";
+
+            PageMethods.GetLabTestDDLDetails(test, maindpt, function (res) {
+                $.each(JSON.parse(res), function (key, value) {
+                    debugger;
+                    var Result = 'Result';
+                    var test = serial;
+                    var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+                    var dateValue = '<%= DateTime.Now%>';
+                    var TestMainDepartmentName;
+                    var row;
+                    var test_array;
+                    var txtSpecialTests = $('#specialTest_' + test).val() || "";
+                    var txtAreaOfInterest = $('#areaOfInterest_' + test).val() || "";
+
+                    // Check if this test already exists
+                    var existingRow = $('.tests-table').find('input[name="testID"][value="' + value.Test_ID + '"]').closest('tr');
+
+                    if (existingRow.length > 0) {
+                        // Update existing row instead of creating new one
+                        existingRow.find('input[name="testDate"]').val(dateValue);
+                        existingRow.find('td:first').text(date);
+                        existingRow.find('input[name="txtSpecial_Test"]').val(txtSpecialTests);
+                        existingRow.find('td:eq(4)').html('<input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' + txtSpecialTests);
+                        existingRow.find('input[name="txtArea_Of_Interest"]').val(txtAreaOfInterest);
+                        existingRow.find('td:eq(5)').html('<input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' + txtAreaOfInterest);
+                        return true; // Continue to next item
+                    }
+
+                    if (value.Test_ID != 0) {
+                        row = '<tr>' +
+                            '<td style="display:none"><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                            '<td ><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                            '<input type="hidden" name="txtRotation" value="0">' +
+                            '<input type="hidden" name="txtGroupCategory" value="0">' +
+                            '<input type="hidden" name="txtDeptID" value="001"/> ' +
+                            (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') +
+                            value.Test_Name +
+                            '</td>' +
+                            '<td style="display:none">No</td>' +
+                            '<td style="display:none">' + Result + '</td>' +
+                            '<td><input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' +
+                            txtSpecialTests + '</td>' +
+                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' +
+                            txtAreaOfInterest + '</td>' +
+                            '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_LabTestRow(' + test + ')">' +
+                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '</td></tr>';
+
+                        test_array = $('.tests-table').find('input[name=testID][value="' + value.Test_ID + '"]');
+                    }
+                    else {
+                        row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td><td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="deleteTest(this)">' +
+                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '</td></tr>';
+                        test_array = $('.tests-table').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
+                    }
+                    $('#LabTestchk_' + serial).prop('checked', true);
+                    $('.tests-table').append(row);
+                });
+                $('#dvtblLabtest').show();
+                // Hide the details div after adding/updating
+                var $detailsDiv = $('#labTestDetails_' + serial);
+                if ($detailsDiv.length) {
+                    $detailsDiv.slideUp(300, function () {
+                        $('#LabTestchk_' + serial).show();
+                        $detailsDiv.remove();
+                        $('.labtest-row').find('i.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                    });
+                }
+
+
+            }, function (err) { });
+        }
 
     </script>
 </asp:Content>
@@ -1314,7 +2002,7 @@
                             </div>
                         </div>
 
-                        <div class="menu-item" onclick="toggleMenu(this)">
+                        <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
                             <div class="menu-title">
                                 <span>Primary Diagnosis</span>
                             </div>
@@ -1889,6 +2577,80 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tabs" id="tab06">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewComplaint()" />
+                                </div>
+                                <div style="display: none" id="divAddNewComplaint">
+                                    <div style="display: flex; justify-content: center;">
+                                        <input type="text" id="NewComplaint" />
+                                        <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewComplaint" onclick="saveComplaint()" class="btn btn-primry" value="Save" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab06Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allComplaints"></div>
+                            </div>
+                            <div class="tabs" id="tab07" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
+                                </div>
+                                <div style="display: none" id="divAddNewPrimaryDiagnosis">
+                                    <div style="display: flex; justify-content: center;">
+                                        <input type="text" id="NewPrimaryDiagnosis" />
+                                        <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewPrimaryDiagnosis" onclick="savePrimaryDiagnosis()" class="btn btn-primry" value="Save" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab07Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allPrimaryDiagnosis"></div>
+                            </div>
+                            <div class="tabs" id="tab08" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewFinalDiagnosis()" />
+                                </div>
+                                <div style="display: none" id="divAddNewFinalDiagnosis">
+                                    <div style="display: flex; justify-content: center;">
+                                        <input type="text" id="NewFinalDiagnosis" />
+                                        <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewFinalDiagnosis" onclick="saveFinalDiagnosis()" class="btn btn-primry" value="Save" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab08Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allFinalDiagnosis"></div>
+                            </div>
+                            <div class="tabs" id="tab09" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+                                    <input style="margin-left: 5px" type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab09Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allLabTests"></div>
+                            </div>
 
                         </div>
                     </div>
@@ -2016,7 +2778,82 @@
                                 </div>
                             </div>
 
-</div>
+                        </div>
+                        <div class="col-lg-3" id="dvtblComplaints" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblComplaints">
+                                        <thead>
+                                            <tr>
+                                                <th style="display: none;">ComplaintID</th>
+                                                <th>Complaints</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" id="dvtblPrimaryDiagnosis" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblPrimaryDiagnosis">
+                                        <thead>
+                                            <tr>
+                                                <th style="display: none;">PrimaryDiagnosisID</th>
+                                                <th>Primary Diagnosis</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" id="dvtblFinalDiagnosis" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblFinalDiagnosis">
+                                        <thead>
+                                            <tr>
+                                                <th style="display: none;">FinalDiagnosisID</th>
+                                                <th>Final Diagnosis</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12" id="dvtblLabtest" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table id="tblLabtest" class="table table-bordered table-custom tests-table">
+                                        <thead>
+                                            <tr style="position: sticky; top: 0; z-index: 10;">
+                                                <th style="display:none">Date</th>
+                                                <th>Test Name</th>
+                                                <th style="display:none">Sample Received</th>
+                                                <th style="display:none">Result</th>
+                                                <th>Special Tests</th>
+                                                <th>Area Of Interest</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="loadtest">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
