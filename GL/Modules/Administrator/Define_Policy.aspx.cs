@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -14,6 +15,33 @@ namespace PMS.Modules.Administrator
         {
 
         }
+        [WebMethod]
+        public static string GetPolicyById(string policy_id)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var policy = db.Policies
+                                   .Where(p => p.Policy_ID.ToString() == policy_id)
+                                   .Select(p => new
+                                   {
+                                       p.Policy_ID,
+                                       p.Policy_Name,
+                                       p.Policy_Description,
+                                       p.Active
+                                   })
+                                   .FirstOrDefault();
+
+                    return new JavaScriptSerializer().Serialize(policy);
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
 
         [WebMethod]
         public static string SavePolicy(string policy_id, string policyName, string policyDescription, bool active)
@@ -60,6 +88,7 @@ namespace PMS.Modules.Administrator
             {
                 return "Error: " + ex.Message;
             }
+
         }
     }
 }

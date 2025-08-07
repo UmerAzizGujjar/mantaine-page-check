@@ -18,13 +18,11 @@
                     departmentOptions += '<option value="' + value.Department_ID + '">' + value.Department_Name + '</option>';
                 });
                 $("#ddlDepartment").html(departmentOptions).select2();
-                // Add initial row after department data is loaded
                 addRow();
             },
             error: function (xhr, status, error) {
                 console.error("Failed to load departments: ", error);
                 $("#ddlDepartment").html('<option value="0">Load Error</option>');
-                // Still try to add a row (with loading options)
                 addRow();
             }
         });
@@ -126,7 +124,7 @@
                     htmlContainer: 'swal-big-text'
                 }
             });
-            return; // Prevent deletion
+            return; 
         }
 
         $(this).closest("tr").remove();
@@ -219,7 +217,8 @@
     }
 
     $(document).ready(function () {
-        fillDepartment(); // Will trigger addRow() on success
+        $("#ddlPolicy").select2();
+        fillDepartment(); 
         fillPolicy();
         bindEvents();
         DepartmentPercentageValidation();
