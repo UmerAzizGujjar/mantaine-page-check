@@ -503,6 +503,19 @@ on d.Doctor_Id equals hr.Emp_ID
 
         }
         [WebMethod]
+        public static string LoadDoctor()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var doctor = (from emp in db.HR_Employees
+
+                              where emp.Resign_Date == null && emp.IsDoctor == true
+                              select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                return (new JavaScriptSerializer()).Serialize(doctor);
+            }
+            return "";
+        }
+        [WebMethod]
         public static string LoadDoctor_bydep(string depart)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -515,6 +528,19 @@ on d.Doctor_Id equals hr.Emp_ID
             }
             return "";
         }
+        [WebMethod]
+        public static string LoadDesignation(int DocID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var Designation = (from emp in db.HR_Employees
+
+                                   where emp.Emp_ID == DocID && emp.Resign_Date == null && emp.IsDoctor == true
+                                   select new { Emp_designatin = db.GetDataValueName("Designation", emp.Designation), }).FirstOrDefault();
+                return (new JavaScriptSerializer()).Serialize(Designation);
+            }
+            return "";
+        }
         private void BindDropDownList()
         {
             object valueset;   //declare a single object for all valueset            
@@ -524,6 +550,20 @@ on d.Doctor_Id equals hr.Emp_ID
             EmpList = (from tbl in db.HR_Employees
                        where tbl.IsDoctor == true
                        select tbl).ToList();
+
+            valueset = DBClass.GetValueSet("FollowUp");
+            ddlFOllowUp.DataSource = valueset;
+            ddlFOllowUp.DataTextField = "DataValue_Description";
+            ddlFOllowUp.DataValueField = "DataValue_Name";
+            ddlFOllowUp.Items.Add(new ListItem("Please Select", "0"));
+            ddlFOllowUp.DataBind();
+
+            valueset = DBClass.GetValueSet("Laundary From To");
+            ddlIssuance_Of.DataSource = valueset;
+            ddlIssuance_Of.DataTextField = "DataValue_Description";
+            ddlIssuance_Of.DataValueField = "DataValue_Name";
+            ddlIssuance_Of.Items.Add(new ListItem("Please Select", "0"));
+            ddlIssuance_Of.DataBind();
 
             valueset = DBClass.GetValueSet("Patient Main Category");
             ddlPatient_Main_Category.DataSource = valueset;

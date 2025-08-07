@@ -112,7 +112,7 @@
 
 
         .symptom-row, .vital-row, .history-row, .exam-row, .exam-text-row, .Systematic-Exam-Row, .refer-row,
-        .complaint-row, .Primary-Diagnosis-row, .Final-Diagnosis-row, .labtest-row, .diagnosticTest-row, .Medicene-row {
+        .complaint-row, .Primary-Diagnosis-row, .Final-Diagnosis-row, .labtest-row, .diagnosticTest-row, .Medicene-row, .FollowUp-Row {
             display: flex;
             align-items: center;
             margin-bottom: 2px;
@@ -134,7 +134,7 @@
 
             .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
             .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
-            .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover {
+            .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover {
                 background-color: black;
                 color: white !important;
                 /* Optional: Add slight scale effect */
@@ -413,6 +413,8 @@
 
     <script>
         $(document).ready(function () {
+            $("#ctl00_MainContent_FollowNoDate").datepicker();
+            loaddoctor();
             FillMainTestDepartment();
             FillLabTests('');
             fillComplaints("");
@@ -2470,7 +2472,7 @@
         function ShowAllMedicenesDiv() {
             $('.tab11subtab').hide();
             $('#tab11_01').show();
-            
+
         }
         function FillMediceneTemplates(searchValue) {
             var html = '';
@@ -2516,13 +2518,13 @@
             });
         }
         function Remove_MediceneByTemplateRow(serialNo) {
-             var rows = $('#tblMedicines tbody tr[value="' + serialNo + '"]');
+            var rows = $('#tblMedicines tbody tr[value="' + serialNo + '"]');
 
-             rows.each(function () {
-                 $(this).find('a[onclick*="deleteMedicine"]').trigger('click');
+            rows.each(function () {
+                $(this).find('a[onclick*="deleteMedicine"]').trigger('click');
             });
 
-         }
+        }
         function Add_MediceneByTemplateRow(serialNo) {
             var Templateid = serialNo;
             PageMethods.GetTemplateMedicine(Templateid, function (res) {
@@ -2537,13 +2539,68 @@
                     var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
                     debugger;
 
-                    rows += '<tr value=' + Templateid +'> <td style="display:none"><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="deleteMedicine(this)"> Delete </a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
+                    rows += '<tr value=' + Templateid + '> <td style="display:none"><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="deleteMedicine(this)"> Delete </a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
                 });
                 $('#tblMedicines tbody').append(rows);
                 $('#dvtblMedicines').show();
             })
         }
+        function LoadDesignation() {
+            debugger;
+            var DocID = $('#ctl00_MainContent_ddlDoctorName').val();
+            PageMethods.LoadDesignation(DocID, function (res) {
+                var doctor = JSON.parse(res);
+                var rowsText = '';
+                debugger;
+                $('#ctl00_MainContent_txtDesignation').val(doctor.Emp_designatin);
+            });
+            ConfigureAvailableDates(DocID);
+        }
+        function ConfigureAvailableDates(DocID) {
+            $.ajax({
+                type: "POST",
+                url: "OutPatients.aspx/GetAvailableDates",
+                data: JSON.stringify({ DocID: DocID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var availableDates = JSON.parse(response.d);
 
+                    $("#ctl00_MainContent_FollowNoDate").datepicker("destroy"); // Remove any previous config
+
+                    $("#ctl00_MainContent_FollowNoDate").datepicker({
+                        dateFormat: "yy-mm-dd", // format to match your returned data
+                        beforeShowDay: function (date) {
+                            var dmy = $.datepicker.formatDate("yy-mm-dd", date);
+                            if (availableDates.indexOf(dmy) !== -1) {
+                                return [true, "available-date", "Doctor Available"];
+                            } else {
+                                return [false, "", "Doctor Not Available"];
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
+        }
+        function loaddoctor() {
+            PageMethods.LoadDoctor(function (res) {
+                var doctor = JSON.parse(res);
+                var options = '<option value="0" >Please Select </option>';
+                var rowsText = '';
+
+                $.each(doctor, function (key, value) {
+
+                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                });
+
+                $('#ctl00_MainContent_ddlDoctorName').html(options)
+                $('#ctl00_MainContent_ddlDoctorName').select2();
+            });
+        }
+        
     </script>
 </asp:Content>
 
@@ -2833,7 +2890,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
                 </div>
 
@@ -3450,7 +3507,7 @@
                                     </div>
                                     <div id="allMedicenes"></div>
                                 </div>
-                                <div id="tab11_02" class="tab11subtab" style="display:none">
+                                <div id="tab11_02" class="tab11subtab" style="display: none">
                                     <div class="row">
                                         <div class="col-md-5 col-sm-12">
                                         </div>
@@ -3462,11 +3519,69 @@
                                 </div>
 
                             </div>
+                            <div class="tabs" id="tab12" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+                                    <input style="margin-left: 5px" type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+                                </div>
+                                <div class="row" style="width: 100%;">
+                                    <!-- Doctor Name -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblDoctorName" runat="server" Text="Doctor Name <span class='RedStar'>*</span>"></asp:Label>
+                                        <asp:DropDownList ID="ddlDoctorName" runat="server"
+                                            Style="width: 250px; height: 32px;"
+                                            CssClass="form-control"
+                                            AppendDataBoundItems="true"
+                                            onchange="LoadDesignation();">
+                                        </asp:DropDownList>
+                                    </div>
 
+                                    <!-- Designation -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblDesignation" runat="server" Text="Designation"></asp:Label>
+                                        <asp:TextBox ID="txtDesignation" runat="server"
+                                            Style="width: 250px; height: 32px;"
+                                            CssClass="form-control"
+                                            ReadOnly="true">
+                                        </asp:TextBox>
+                                    </div>
+
+                                    <!-- Admission -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblAdmission" runat="server" Text="Admission"></asp:Label>
+                                        <asp:DropDownList ID="ddlIssuance_Of" runat="server"
+                                            Style="height: 32px;"
+                                            CssClass="form-control"
+                                            AppendDataBoundItems="true">
+                                        </asp:DropDownList>
+                                    </div>
+
+                                    <!-- Follow Up -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUp" runat="server" Text="Follow Up <span class='RedStar'>*</span>"></asp:Label>
+                                        <asp:DropDownList ID="ddlFOllowUp" runat="server"
+                                            Style="height: 32px;"
+                                            CssClass="form-control"
+                                            AppendDataBoundItems="true">
+                                        </asp:DropDownList>
+                                    </div>
+
+                                    <!-- FollowUp Date -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUpDate" runat="server" Text="FollowUp Date <span class='RedStar'>*</span>"></asp:Label>
+                                        <asp:TextBox ID="FollowNoDate" runat="server"
+                                            Style="height: 32px;"
+                                            CssClass="form-control">
+                                        </asp:TextBox>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
         </div>
 
         <!-- Right Column (6 units) -->
@@ -3710,14 +3825,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="divtblFollowUp" style="display: none" class="col-lg-4">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblFollowUp">
+                                        <thead>
+                                            <tr>
+                                                <th>Follow Up</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 
 
