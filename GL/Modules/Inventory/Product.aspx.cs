@@ -7,6 +7,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static PMS.IssueMedicine;
 
 namespace PMS.Inventory
 {
@@ -52,9 +53,84 @@ namespace PMS.Inventory
 
             return max;
         }
-        //
         [WebMethod]
-        public static string AddItems(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService)
+        public static string Getbatch_grn(int item_id)
+        {
+            string data = string.Empty;
+            var batchStockListgrn = new List<BatchStock>();
+            var batchStockListst = new List<BatchStock>();
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var grnResult = (from dv in db.INV_Items
+                                 join ds in db.GRN_Details
+                                 on dv.Item_ID equals ds.Item_Id
+                                 where ds.Item_Id == item_id
+
+                                 select new
+                                 {
+                                     BatchNum = ds.BatchNum
+                                 }).ToList();
+                foreach (var batchNum in grnResult)
+                {
+                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, "008", batchNum.BatchNum));
+                    if (stock > 0)
+                    {
+                        batchStockListgrn.Add(new BatchStock
+                        {
+                            BatchNum = batchNum.BatchNum,
+
+                        });
+                    }
+                }
+                var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
+                                             where inv.Item_Id == Convert.ToString(item_id)
+                                              && inv.Status == "Approved"
+                                             orderby inv.Creation_Time descending
+                                             select new
+                                             {
+                                                 BatchNum = inv.Batch_No
+                                             }).ToList();
+                foreach (var batchNum in stockAdjustmentResult)
+                {
+                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, "008", batchNum.BatchNum));
+                    if (stock > 0)
+                    {
+                        batchStockListst.Add(new BatchStock
+                        {
+                            BatchNum = batchNum.BatchNum,
+                        });
+                    }
+                }
+                var combinedResult = new
+                {
+                    GRN_Details = batchStockListgrn,
+                    Stock_Adjustment_Details = batchStockListst
+                };
+                data = new JavaScriptSerializer().Serialize(combinedResult);
+            }
+           return data;
+        }
+
+        [WebMethod]
+        public static string LoadBatchsRate(int id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var details = (from m in db.INV_Item_RateBatchWises
+                           where m.Item_Id == id
+                           select new
+                           {
+                               m.Item_Rate_Id,
+                               m.Item_Sale_Rate,
+                               m.Batch_Num,
+                               m.Uom_Qty
+                           }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(details);
+        }
+        [WebMethod]
+        public static string AddItems(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService, List<BatchNum> batchList)
         {
             string result = string.Empty;
             string Id = "";
@@ -279,6 +355,21 @@ namespace PMS.Inventory
                 obj.Company_ID = AppConfig.Company_ID;
                 obj.Book_ID = AppConfig.Book_ID;
                 obj.Services = Convert.ToBoolean(IsService);
+                var existingMeds = db.INV_Item_RateBatchWises.Where(m => m.Item_Id == Convert.ToInt32(ItemId)).ToList();
+                db.INV_Item_RateBatchWises.DeleteAllOnSubmit(existingMeds);
+                foreach (var bth in batchList)
+                {
+                    INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                    {
+                        Item_Id = Convert.ToInt32(ItemId),
+                        Batch_Num = bth.ddlBatch,
+                        Item_Sale_Rate = bth.txtBatchRate,
+                        Uom_Qty = bth.txtUom_Qty,
+
+                    };
+                    db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
+                }
+
                 try
                 {
                     db.SubmitChanges();
@@ -396,6 +487,13 @@ namespace PMS.Inventory
                              Type = v.ValueSet_Description == "Patient Main Category" ? "Dept" : "Fed"
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+        public class BatchNum
+        {
+            public string Item_Id { get; set; }
+            public string ddlBatch { get; set; }
+            public decimal txtBatchRate { get; set; }
+            public decimal txtUom_Qty { get; set; }
         }
     }
 }
