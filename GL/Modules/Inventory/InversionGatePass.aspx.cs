@@ -309,14 +309,41 @@ namespace PMS.Inventory
         }
 
 
+        //[WebMethod]
+        //public static string getPurchaseOrderByID(string POID)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    int POId = Convert.ToInt32(POID);
+        //    var listPurchaseOrderDetails = db.sp_GetPODetailByPOID(POId).ToList();
+
+        //    var WareHouse = (from po in db.AP_Purchase_Orders
+        //                     where po.PO_ID == POId
+        //                     select po.Ware_House).FirstOrDefault();
+
+
+        //    return (new JavaScriptSerializer()).Serialize(listPurchaseOrderDetails);
+        //}
         [WebMethod]
         public static string getPurchaseOrderByID(string POID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             int POId = Convert.ToInt32(POID);
+
             var listPurchaseOrderDetails = db.sp_GetPODetailByPOID(POId).ToList();
-            return (new JavaScriptSerializer()).Serialize(listPurchaseOrderDetails);
+
+            var WareHouse = (from po in db.AP_Purchase_Orders
+                             where po.PO_ID == POId
+                             select po.Ware_House).FirstOrDefault();
+
+            var result = new
+            {
+                PurchaseOrderDetails = listPurchaseOrderDetails,
+                WareHouse = WareHouse
+            };
+
+            return (new JavaScriptSerializer()).Serialize(result);
         }
+
         [WebMethod]
         public static string ApproveIgp(string IgpId)
         {

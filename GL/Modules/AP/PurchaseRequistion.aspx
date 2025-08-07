@@ -624,44 +624,44 @@
                         $("#btnSave").prop("disabled", false);
                         return false;
                     }
-                    if (unitprice == "" || unitprice == 0 || unitprice < 0) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'Please Enter UnitPrice Or UnitPrice Must be Greater than zero',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
+                    //if (unitprice == "" || unitprice == 0 || unitprice < 0) {
+                    //    Swal.fire({
+                    //        icon: 'error',
+                    //        title: 'Error!',
+                    //        text: 'Please Enter UnitPrice Or UnitPrice Must be Greater than zero',
+                    //        showConfirmButton: false,
+                    //        timer: 2000,
+                    //        customClass: {
+                    //            popup: 'swal-big-popup',
+                    //            title: 'swal-big-title',
+                    //            htmlContainer: 'swal-big-text'
+                    //        }
+                    //    });
 
-                        $("#btnSave").prop("disabled", false);
-                        qtyOrAmtChck = true;
-                        return false;
-                    }
+                    //    $("#btnSave").prop("disabled", false);
+                    //    qtyOrAmtChck = true;
+                    //    return false;
+                    //}
 
 
-                    if (estimatecost == "" || estimatecost == 0 || estimatecost < 0) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'Please Enter EstimateCost Or EstimateCost Must be Greater than zero',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
+                    //if (estimatecost == "" || estimatecost == 0 || estimatecost < 0) {
+                    //    Swal.fire({
+                    //        icon: 'error',
+                    //        title: 'Error!',
+                    //        text: 'Please Enter EstimateCost Or EstimateCost Must be Greater than zero',
+                    //        showConfirmButton: false,
+                    //        timer: 2000,
+                    //        customClass: {
+                    //            popup: 'swal-big-popup',
+                    //            title: 'swal-big-title',
+                    //            htmlContainer: 'swal-big-text'
+                    //        }
+                    //    });
 
-                        $("#btnSave").prop("disabled", false);
-                        qtyOrAmtChck = true;
-                        return false;
-                    }
+                    //    $("#btnSave").prop("disabled", false);
+                    //    qtyOrAmtChck = true;
+                    //    return false;
+                    //}
                 });
                 var totalamt = parseFloat(totCost);
                 if (totalamt > 50000 && Pirority === '004') {
@@ -750,7 +750,7 @@
                 var MaterialRequest_Id = $(row).find('td:eq(13)').text();
                 var Req_Num = $(row).find('td:eq(14)').text();
 
-                if (Qty && UnitPrice && EstimateCost && RDate && itemId) {
+                if (Qty &&  RDate && itemId) {
                     var details = {
                         Qty: Qty,
                         UnitPrice: UnitPrice,
