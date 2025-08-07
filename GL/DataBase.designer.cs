@@ -22,8 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Hmis_Standard")]
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "TIBIT")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "tibb")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -865,7 +864,6 @@ namespace PMS
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
