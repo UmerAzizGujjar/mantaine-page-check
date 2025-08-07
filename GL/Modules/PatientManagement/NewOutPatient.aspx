@@ -1699,59 +1699,59 @@
                     var Result = 'Result';
                     var test = serial;
                     var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
-            var dateValue = '<%= DateTime.Now%>';
-            var TestMainDepartmentName;
-            var row;
-            var test_array;
-            var txtSpecialTests = $('#specialTest_' + test).val() || "";
-            var txtAreaOfInterest = $('#areaOfInterest_' + test).val() || "";
+                    var dateValue = '<%= DateTime.Now%>';
+                    var TestMainDepartmentName;
+                    var row;
+                    var test_array;
+                    var txtSpecialTests = $('#specialTest_' + test).val() || "";
+                    var txtAreaOfInterest = $('#areaOfInterest_' + test).val() || "";
 
-            // Check if this test already exists
-            var existingRow = $('.tests-table').find('input[name="testID"][value="' + value.Test_ID + '"]').closest('tr');
+                    // Check if this test already exists
+                    var existingRow = $('.tests-table').find('input[name="testID"][value="' + value.Test_ID + '"]').closest('tr');
 
-            if (existingRow.length > 0) {
-                // Update existing row instead of creating new one
-                existingRow.find('input[name="testDate"]').val(dateValue);
-                existingRow.find('td:first').text(date);
-                existingRow.find('input[name="txtSpecial_Test"]').val(txtSpecialTests);
-                existingRow.find('td:eq(4)').html('<input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' + txtSpecialTests);
-                existingRow.find('input[name="txtArea_Of_Interest"]').val(txtAreaOfInterest);
-                existingRow.find('td:eq(5)').html('<input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' + txtAreaOfInterest);
-                return true; // Continue to next item
-            }
+                    if (existingRow.length > 0) {
+                        // Update existing row instead of creating new one
+                        existingRow.find('input[name="testDate"]').val(dateValue);
+                        existingRow.find('td:first').text(date);
+                        existingRow.find('input[name="txtSpecial_Test"]').val(txtSpecialTests);
+                        existingRow.find('td:eq(4)').html('<input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' + txtSpecialTests);
+                        existingRow.find('input[name="txtArea_Of_Interest"]').val(txtAreaOfInterest);
+                        existingRow.find('td:eq(5)').html('<input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' + txtAreaOfInterest);
+                        return true; // Continue to next item
+                    }
 
-            if (value.Test_ID != 0) {
-                row = '<tr>' +
-                    '<td style="display:none"><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
-                    '<td ><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
-                    '<input type="hidden" name="txtRotation" value="0">' +
-                    '<input type="hidden" name="txtGroupCategory" value="0">' +
-                    '<input type="hidden" name="txtDeptID" value="001"/> ' +
-                    (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') +
-                    value.Test_Name +
-                    '</td>' +
-                    '<td style="display:none">No</td>' +
-                    '<td style="display:none">' + Result + '</td>' +
-                    '<td><input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' +
-                    txtSpecialTests + '</td>' +
-                    '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' +
-                    txtAreaOfInterest + '</td>' +
-                    '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
-                    '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_LabTestRow(' + test + ')">' +
-                    '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
-                    '</td></tr>';
+                    if (value.Test_ID != 0) {
+                        row = '<tr>' +
+                            '<td style="display:none"><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                            '<td ><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                            '<input type="hidden" name="txtRotation" value="0">' +
+                            '<input type="hidden" name="txtGroupCategory" value="0">' +
+                            '<input type="hidden" name="txtDeptID" value="001"/> ' +
+                            (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') +
+                            value.Test_Name +
+                            '</td>' +
+                            '<td style="display:none">No</td>' +
+                            '<td style="display:none">' + Result + '</td>' +
+                            '<td><input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' +
+                            txtSpecialTests + '</td>' +
+                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' +
+                            txtAreaOfInterest + '</td>' +
+                            '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_LabTestRow(' + test + ')">' +
+                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '</td></tr>';
 
-                test_array = $('.tests-table').find('input[name=testID][value="' + value.Test_ID + '"]');
-            }
-            else {
-                row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td><td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
-                    '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="deleteTest(this)">' +
-                    '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
-                    '</td></tr>';
-                test_array = $('.tests-table').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
-            }
+                        test_array = $('.tests-table').find('input[name=testID][value="' + value.Test_ID + '"]');
+                    }
+                    else {
+                        row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td><td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="deleteTest(this)">' +
+                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '</td></tr>';
+                        test_array = $('.tests-table').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
+                    }
                     $('#LabTestchk_' + serial).prop('checked', true);
-            $('.tests-table').append(row);
+                    $('.tests-table').append(row);
                 });
                 $('#dvtblLabtest').show();
                 // Hide the details div after adding/updating
@@ -1763,10 +1763,10 @@
                         $('.labtest-row').find('i.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
                     });
                 }
-       
 
-    }, function (err) { });
-        }    
+
+            }, function (err) { });
+        }
 
     </script>
 </asp:Content>
