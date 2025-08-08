@@ -15,6 +15,31 @@ namespace PMS.Modules.Administrator
 
         }
 
+
+        [WebMethod]
+        public static string CancelPolicy(int policyId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var policy = db.Policy_Department_Assignment.FirstOrDefault(p => p.Policy_Assign_Dep_id == policyId);
+                    if (policy != null)
+                    {
+                        policy.Is_Cancel = true;
+                        policy.Cancel_By = AppConfig.UserID;
+                        db.SubmitChanges();
+                        return "Policy canceled successfully.";
+                    }
+                    return "Policy not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
@@ -31,7 +56,7 @@ namespace PMS.Modules.Administrator
                                             select new
                                             {
                                                 Dep_ID = a.Policy_Assign_Dep_id,
-                                               // Department = _dbContext.GetDataValueName("Patient Main Category", a.Department_ID),
+                                                Department = _dbContext.GetDataValueName("Patient Main Category", a.Department_ID),
                                                 Policy_Name = p.Policy_Name,
                                                 Fees = a.Fees,
                                                 Hospital_Share = a.Hospital_Share,
