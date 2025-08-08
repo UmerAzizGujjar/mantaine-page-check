@@ -28,10 +28,12 @@
         });
     }
 
+    debugger;
     function loadDepartmentEdit(depId) {
+        debugger;
         $.ajax({
             type: "POST",
-            url: "Department_Assignment.aspx/GetDepartmentAssignments",
+            url: "Department_Assign_Policy.aspx/GetDepartmentAssignments",
             data: JSON.stringify({ dep_id: depId }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -61,6 +63,7 @@
             }
         });
     }
+
 
     
 
@@ -260,12 +263,12 @@
     }
 
     $(document).ready(function () {
-        fillDepartment();
+        fillDepartment(); 
         fillPolicy();
         bindEvents();
         DepartmentPercentageValidation();
 
-        llet depID = '<%= Request.QueryString["Dep_ID"] %>';
+        let depID = '<%= Request.QueryString["Dep_ID"] %>';
 
         if (depID && depID !== "null" && depID !== "") {
             loadDepartmentEdit(depID);
@@ -273,6 +276,8 @@
         } else {
             $("#btnSave").val("Save");
         }
+
+        
     });
 
 
