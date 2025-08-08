@@ -18,7 +18,7 @@
                     departmentOptions += '<option value="' + value.Department_ID + '">' + value.Department_Name + '</option>';
                 });
                 $("#ddlDepartment").html(departmentOptions).select2();
-                addRow();
+               // addRow();
             },
             error: function (xhr, status, error) {
                 console.error("Failed to load departments: ", error);
@@ -28,9 +28,7 @@
         });
     }
 
-    debugger;
     function loadDepartmentEdit(depId) {
-        debugger;
         $.ajax({
             type: "POST",
             url: "Department_Assign_Policy.aspx/GetDepartmentAssignments",
@@ -39,30 +37,34 @@
             dataType: "json",
             success: function (response) {
                 const data = JSON.parse(response.d);
-                $("#deptTable tbody").empty();
+                $("#policyTable tbody").empty();
 
                 $.each(data, function (index, d) {
                     const row = $(createRow());
 
-                    $("#deptTable tbody").append(row);
+                    $("#policyTable tbody").append(row);
 
                     row.data('id', d.Dep_ID);
-                    row.find('[name="Department_ID"]').val(d.Department_ID);
-                    row.find('[name="Policy_ID"]').val(d.Policy_ID);
                     row.find('[name="Fees"]').val(d.Fees);
                     row.find('[name="Hospital_Share"]').val(d.Hospital_Share);
                     row.find('[name="Doctor_Share"]').val(d.Doctor_Share);
                     row.find('[name="Expiry_Date"]').val(d.Expiry_Date);
                     row.find('[name="IsActive"]').prop("checked", d.IsActive);
 
-                    row.find('.expiryDate').datepicker({ dateFormat: 'dd M yy', minDate: 0 });
+                    row.find('[name="Department"]').select2({ width: '100%' });
+                    row.find('[name="Policy_ID"]').select2({ width: '100%' });
+
                     setTimeout(() => {
-                        row.find('.select2-dept, .select2-policy').select2({ width: '100%' });
-                    }, 100);
+                        row.find('[name="Department"]').val(d.Department_ID).trigger('change');
+                        row.find('[name="Policy_ID"]').val(d.Policy_ID).trigger('change');
+                    }, 200);
+
+                    row.find('.expiryDate').datepicker({ dateFormat: 'dd M yy', minDate: 0 });
                 });
             }
         });
     }
+
 
 
     
@@ -182,6 +184,7 @@
             let dept = $(this).find('[name="Department"] option:selected');
             let policy = $(this).find('[name="Policy_ID"] option:selected');
             data.push({
+                Dep_ID: $(this).data("id") || 0,
                 Department_ID: dept.val(),
                 Department_Name: dept.text(),
                 Policy_ID: policy.val(),
@@ -285,6 +288,7 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <input type="hidden" name="Dep_ID" value="0" />
     <div class="row">
         <div class="col-lg-1 col-md-4 col-sm-6">
             <input id="btnAddRow" type="button" class="btn btn-primry" value="+" />

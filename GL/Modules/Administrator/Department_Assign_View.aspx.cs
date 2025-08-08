@@ -39,6 +39,7 @@ namespace PMS.Modules.Administrator
                                             };
 
                     var FilteredCount = Department_Assign.Count();
+
                     switch (sortColumn)
                     {
                         case "Dep_ID":
@@ -49,11 +50,16 @@ namespace PMS.Modules.Administrator
                             break;
                     }
 
-
                     var PolicyList = Department_Assign.Skip(start).Take(length).ToList();
 
+                    var jsonData = new
+                    {
+                        draw = draw,
+                        recordsFiltered = FilteredCount,
+                        recordsTotal = Total_Department,
+                        data = PolicyList
+                    };
 
-                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Department, data = PolicyList };
                     return jsonData;
                 }
             }
@@ -61,7 +67,6 @@ namespace PMS.Modules.Administrator
             {
                 throw new Exception("Error fetching Department Assign list", ex);
             }
-
         }
     }
 }
