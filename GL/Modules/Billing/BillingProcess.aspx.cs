@@ -2035,7 +2035,7 @@ namespace PMS
                 else
                 {
                     var Test_Id = db.Lab_Tests
-                                    .Where(d => d.Test_ID == Convert.ToInt32(test_id))
+                                    .Where(d => d.Test_ID == Convert.ToInt32(test_id) && d.Test_Name == item_name)
                                     .Select(d => new { doc_share = 0, hos_share = d.Rate })
                                     .FirstOrDefault();
 
