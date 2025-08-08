@@ -2,25 +2,35 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 <script type="text/javascript">
     $(document).ready(function () {
-        // ✅ Declare policyOptions as a local variable instead of window.policyOptions
+
+        let PolicyID = '<%= Request.QueryString["Policy_ID"] %>';
+
+        if (PolicyID && PolicyID !== "null" && PolicyID !== "") {
+            loadPolicyEdit(PolicyID);
+            $("#btnSave").val("Update");
+        } else {
+            $("#btnSave").val("Save");
+        }
+
+
         let policyOptions = '<option value="">Select</option>';
 
-        // Initialize the module when DOM is ready
         initPolicyModule();
 
         function initPolicyModule() {
-            // Load policies and initialize UI
             loadPolicy();
             bindEvents();
         }
 
+        $('#btnView').click(function () {
+            window.location.href = 'Shift__Policy_View.aspx';
+        });
+
         function bindEvents() {
-            // Use event delegation for dynamic elements
             $(document).on('click', '#btnAddRow', addRow);
             $(document).on('click', '.btnDeleteRow', deleteRow);
             $(document).on('click', '#btnSave', savePolicies);
 
-            // Input validation for share percentages
             $(document).on('input', '[name="Hospital_Share"], [name="Doctor_Share"]', function () {
                 validateShare($(this).closest('tr'));
             });
@@ -36,16 +46,14 @@
             })
                 .done(function (response) {
                     const policies = response.d || [];
-                    policyOptions = '<option value="">Select</option>'; // ✅ Update local variable
+                    policyOptions = '<option value="">Select</option>';
 
                     $.each(policies, function (index, policy) {
                         policyOptions += `<option value="${policy.Policy_ID}">${policy.Policy_Name}</option>`;
                     });
 
-                    // Populate any existing dropdowns
                     populateDropdowns();
 
-                    // Add first row if none exists
                     if ($("#policyTable tbody tr").length === 0) {
                         addRow();
                     }
@@ -61,9 +69,77 @@
                 });
         }
 
+        function loadPolicyEdit(policyId) {
+            $.ajax({
+                type: "POST",
+                url: "Shift_Assign_Policy.aspx/GetPolicies",
+                data: JSON.stringify({ policy_id: policyId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const policies = JSON.parse(response.d);
+                    $("#policyTable tbody").empty();
+
+                    $.each(policies, function (index, policy) {
+                        const newRow = $(createRow());
+
+                        $("#policyTable tbody").append(newRow);
+
+                        newRow.data('id', policy.Policy_Detail_ID);
+                        newRow.find('[name="Policy_Detail_ID"]').val(policy.Policy_Detail_ID);
+                        newRow.find('[name="Policy_ID"]').val(policy.Policy_ID);
+                        newRow.find('[name="Fees"]').val(policy.Fees);
+                        newRow.find('[name="Hospital_Share"]').val(policy.Hospital_Share);
+                        newRow.find('[name="Doctor_Share"]').val(policy.Doctor_Share);
+                        newRow.find('[name="Expiry_Date"]').val(policy.Expiry_Date);
+                        newRow.find('[name="IsTime"]').prop("checked", policy.IsTime);
+                        newRow.find('[name="Start_Time"]').val(policy.Start_Time);
+                        newRow.find('[name="End_Time"]').val(policy.End_Time);
+                        newRow.find('[name="Next_Day"]').prop("checked", policy.Next_Day);
+
+                        newRow.find('.expiryDate').datepicker({
+                            dateFormat: 'dd M yy',
+                            changeMonth: true,
+                            changeYear: true,
+                            minDate: 0
+                        });
+                        setTimeout(() => {
+                            newRow.find('.select2-policy').select2({
+                                placeholder: "Select Policy",
+                                allowClear: true,
+                                width: '100%'
+                            });
+                            newRow.find('.select2-policy').val(policy.Policy_ID).trigger('change');
+                        }, 200); 
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading policies for edit:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Load Error',
+                        text: 'Could not load policy details for editing.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+
         function populateDropdowns() {
             $('.policyName, [name="Policy_ID"]').each(function () {
-                $(this).html(policyOptions); // ✅ Use local variable
+                const selected = $(this).val();
+                $(this).html(policyOptions);
+                if (selected) {
+                    $(this).val(selected).trigger('change'); 
+                }
+            });
+
+            $('.select2-policy').select2({
+                placeholder: "Select Policy",
+                allowClear: true,
+                width: '100%'
             });
         }
 
@@ -71,7 +147,7 @@
             return `
                 <tr>
                     <td>
-                        <select name="Policy_ID" class="form-select">
+                        <select name="Policy_ID" class="form-select select2-policy">
                             ${policyOptions || '<option value="">Loading...</option>'}
                         </select>
                     </td>
@@ -92,12 +168,18 @@
         function addRow() {
             const newRow = $(createRow());
             $("#policyTable tbody").append(newRow);
-            // Initialize datepicker on new date input
+
             newRow.find('.expiryDate').datepicker({
                 dateFormat: 'dd M yy',
                 changeMonth: true,
                 changeYear: true,
                 minDate: 0
+            });
+
+            newRow.find('.select2-policy').select2({
+                placeholder: "Select Policy",
+                allowClear: true,
+                width: '100%'
             });
         }
 
@@ -139,10 +221,10 @@
                 const $policySelect = $row.find('[name="Policy_ID"]');
                 const policyId = $policySelect.val();
 
-                // Skip empty or invalid rows
-                if (!policyId) return true; // continue to next
+                if (!policyId) return true;
 
                 policies.push({
+                    Policy_Detail_ID: $row.data('id') || 0,
                     Policy_ID: policyId,
                     Policy_Name: $policySelect.find('option:selected').text(),
                     Fees: $row.find('[name="Fees"]').val().trim(),
@@ -159,13 +241,12 @@
             return policies;
         }
 
+
         function savePolicies() {
-            // Re-validate all rows before saving
             $("#policyTable tbody tr").each(function () {
                 validateShare($(this));
             });
 
-            // Check for invalid shares
             if ($("#policyTable tbody tr.invalid-share").length > 0) {
                 Swal.fire({
                     icon: 'error',
@@ -189,7 +270,6 @@
                 return;
             }
 
-            // Send to server
             $.ajax({
                 type: "POST",
                 url: "Shift_Assign_Policy.aspx/SaveMultiplePolicies",
@@ -205,8 +285,6 @@
                         timer: 2500,
                         showConfirmButton: false
                     }).then(() => {
-                        // Optionally reload or reset
-                        // location.reload();
                     });
                 })
                 .fail(function (xhr, status, error) {
@@ -230,6 +308,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <input type="hidden" name="Policy_Detail_ID" value="0" />
     <div class="row">
         <div class="col-lg-1 col-md-4 col-sm-6">
             <input id="btnAddRow" type="button" class="btn btn-primry" value="+" />
@@ -257,6 +336,9 @@
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input id="btnSave" type="button" class="btn btn-primry" value="Save Policies" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input id="btnView" type="button" class="btn btn-primry" value="View" />
                 </div>
             </div>
         </div>

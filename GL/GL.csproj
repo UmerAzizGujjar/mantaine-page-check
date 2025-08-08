@@ -218,6 +218,7 @@
     <Content Include="Modules\Administrator\Define_Policy.aspx" />
     <Content Include="Modules\Administrator\Define_Policy_View.aspx" />
     <Content Include="Modules\Administrator\Department_Assign_Policy.aspx" />
+    <Content Include="Modules\Administrator\Department_Assign_View.aspx" />
     <Content Include="Modules\Administrator\Department_Packages_List.aspx" />
     <Content Include="Modules\Administrator\DoctorAgreementView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Packages_List.aspx" />
@@ -22166,6 +22167,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\Department_Assign_Policy.aspx.designer.cs">
       <DependentUpon>Department_Assign_Policy.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\Department_Assign_View.aspx.cs">
+      <DependentUpon>Department_Assign_View.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\Department_Assign_View.aspx.designer.cs">
+      <DependentUpon>Department_Assign_View.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\Department_Packages_List.aspx.cs">
       <DependentUpon>Department_Packages_List.aspx</DependentUpon>

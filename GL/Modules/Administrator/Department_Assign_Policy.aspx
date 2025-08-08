@@ -28,6 +28,43 @@
         });
     }
 
+    function loadDepartmentEdit(depId) {
+        $.ajax({
+            type: "POST",
+            url: "Department_Assignment.aspx/GetDepartmentAssignments",
+            data: JSON.stringify({ dep_id: depId }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                const data = JSON.parse(response.d);
+                $("#deptTable tbody").empty();
+
+                $.each(data, function (index, d) {
+                    const row = $(createRow());
+
+                    $("#deptTable tbody").append(row);
+
+                    row.data('id', d.Dep_ID);
+                    row.find('[name="Department_ID"]').val(d.Department_ID);
+                    row.find('[name="Policy_ID"]').val(d.Policy_ID);
+                    row.find('[name="Fees"]').val(d.Fees);
+                    row.find('[name="Hospital_Share"]').val(d.Hospital_Share);
+                    row.find('[name="Doctor_Share"]').val(d.Doctor_Share);
+                    row.find('[name="Expiry_Date"]').val(d.Expiry_Date);
+                    row.find('[name="IsActive"]').prop("checked", d.IsActive);
+
+                    row.find('.expiryDate').datepicker({ dateFormat: 'dd M yy', minDate: 0 });
+                    setTimeout(() => {
+                        row.find('.select2-dept, .select2-policy').select2({ width: '100%' });
+                    }, 100);
+                });
+            }
+        });
+    }
+
+    
+
+
     function fillPolicy() {
         $.ajax({
             type: "POST",
@@ -40,14 +77,14 @@
                 $.each(data, function (key, value) {
                     policyOptions += '<option value="' + value.Policy_ID + '">' + value.Policy_Name + '</option>';
                 });
-                $("#ddlPolicy").html(policyOptions).select2();
             },
             error: function (xhr, status, error) {
                 console.error("Failed to load policies: ", error);
-                $("#ddlPolicy").html('<option value="0">Load Error</option>');
             }
         });
     }
+
+
 
     function DepartmentPercentageValidation() {
         $("#policyTable").on("input", '[name="Hospital_Share"], [name="Doctor_Share"]', function () {
@@ -94,6 +131,11 @@
     }
 
     function addRow() {
+        if (!policyOptions) {
+            setTimeout(addRow, 200);
+            return;
+        }
+
         var $row = $(createRow());
         $("#policyTable tbody").append($row);
         $row.find(".department-select").select2();
@@ -106,6 +148,7 @@
             minDate: 0
         });
     }
+
 
     function deleteRow() {
         var $tableBody = $("#policyTable tbody");
@@ -217,12 +260,21 @@
     }
 
     $(document).ready(function () {
-        $("#ddlPolicy").select2();
-        fillDepartment(); 
+        fillDepartment();
         fillPolicy();
         bindEvents();
         DepartmentPercentageValidation();
+
+        llet depID = '<%= Request.QueryString["Dep_ID"] %>';
+
+        if (depID && depID !== "null" && depID !== "") {
+            loadDepartmentEdit(depID);
+            $("#btnSave").val("Update");
+        } else {
+            $("#btnSave").val("Save");
+        }
     });
+
 
 </script>
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -61,6 +62,45 @@ namespace PMS.Modules.Administrator
             public int Department_ID { get; set; }
             public string Department_Name { get; set; }
         }
+
+        [WebMethod]
+        public static string GetDepartmentAssignments(string dep_id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(dep_id))
+                    return new JavaScriptSerializer().Serialize(new List<object>());
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var assignments = db.Department_Assignments
+                        .Where(d => d.Dep_ID.ToString() == dep_id)
+                        .ToList()
+                        .Select(d => new
+                        {
+                            Dep_ID = d.Dep_ID,
+                            Department_ID = d.Department_ID,
+                            Policy_ID = d.Policy_ID,
+                            Fees = d.Fees,
+                            Hospital_Share = d.Hospital_Share ?? 0,
+                            Doctor_Share = d.Doctor_Share ?? 0,
+                            Expiry_Date = d.Expiry_Date.HasValue ? d.Expiry_Date.Value.ToString("dd MMM yyyy") : "",
+                            IsActive = d.IsActive ?? false
+                        })
+                        .ToList();
+
+                    return new JavaScriptSerializer().Serialize(assignments);
+                }
+            }
+            catch (Exception)
+            {
+                return new JavaScriptSerializer().Serialize(new List<object>());
+            }
+        }
+
+
+
+
 
         [WebMethod]
         public static string SaveMultipleDepartmentPolicies(List<DepartmentPolicyModel> departmentPolicies)
@@ -128,7 +168,5 @@ namespace PMS.Modules.Administrator
             public string Created_By { get; set; }
             public string Updated_By { get; set; }
         }
-
-
     }
 }
