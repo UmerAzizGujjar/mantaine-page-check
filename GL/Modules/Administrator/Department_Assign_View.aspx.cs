@@ -25,13 +25,14 @@ namespace PMS.Modules.Administrator
                     string userId = HttpContext.Current.Session["UserId"].ToString();
 
                     var Total_Department = _dbContext.Department_Assignments.Count();
+
                     var Department_Assign = from a in _dbContext.Department_Assignments
                                             join p in _dbContext.Policies on a.Policy_ID equals p.Policy_ID
                                             where p.Policy_Name.Contains(searchValue)
                                             select new
                                             {
                                                 Dep_ID = a.Dep_ID,
-                                               // Department = _dbContext.GetDataValueName("Patient Main Category", a.Department_ID),
+                                                Department = _dbContext.GetDataValueName("Patient Main Category", a.Department_ID.HasValue ? a.Department_ID.Value.ToString() : null),
                                                 Policy_Name = p.Policy_Name,
                                                 Fees = a.Fees,
                                                 Hospital_Share = a.Hospital_Share,
@@ -39,6 +40,7 @@ namespace PMS.Modules.Administrator
                                             };
 
                     var FilteredCount = Department_Assign.Count();
+
                     switch (sortColumn)
                     {
                         case "Dep_ID":
@@ -49,11 +51,16 @@ namespace PMS.Modules.Administrator
                             break;
                     }
 
-
                     var PolicyList = Department_Assign.Skip(start).Take(length).ToList();
 
+                    var jsonData = new
+                    {
+                        draw = draw,
+                        recordsFiltered = FilteredCount,
+                        recordsTotal = Total_Department,
+                        data = PolicyList
+                    };
 
-                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Department, data = PolicyList };
                     return jsonData;
                 }
             }
@@ -61,7 +68,6 @@ namespace PMS.Modules.Administrator
             {
                 throw new Exception("Error fetching Department Assign list", ex);
             }
-
         }
     }
 }
