@@ -1220,7 +1220,7 @@
             var Consumed_Procedure = 0;
             var Consumed_Package = 0;
             debugger;
-            function SaveRecord() {
+           async function SaveRecord() {
                 debugger;
                 if (validateSave()) {
                     var val = document.getElementById("hdnDuplicateCheck").value;
@@ -1281,10 +1281,10 @@
                             Over_and_Above = 0.00
                         }
                         if (Balance_Amount > 0.00) {
-                            Swal.fire({
+                            var result = await Swal.fire({
                                 icon: 'warning',
                                 title: 'Are you sure?',
-                                text: 'Are you sure to save bill with Balance “00”',
+                                text: 'Are you sure to save bill with Balance ' + Balance_Amount,
                                 showCancelButton: true,
                                 confirmButtonColor: '#d33',
                                 cancelButtonColor: '#3085d6',
@@ -1295,7 +1295,12 @@
                                     title: 'swal-big-title',
                                     htmlContainer: 'swal-big-text'
                                 }                           
-                            });
+                            })
+                            if (!result.isConfirmed) {
+                                $("#btnSave").prop("disabled", false);
+                                document.getElementById("hdnDuplicateCheck").value = "0";
+                                return;
+                            }
                         }
 
 
@@ -1394,7 +1399,19 @@
                             if (dataaaaaaaaaaaaaa == '') {
                                 PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
                                     debugger;
-                                    alert('Data Successfully Save');
+                                
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Data Successfully Save.',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
                                     window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + JSON.parse(resp));
                                     setTimeout(function () {
                                         window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
