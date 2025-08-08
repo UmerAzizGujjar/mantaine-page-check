@@ -29,9 +29,9 @@
             GetNewVendorNo();
             loadPayableCode();
             FillDropDownList();
-
             var VenId = '<%= Request.QueryString["ID"]%>';
-            if (VenId != null) {
+           
+            if (VenId != "") {
                 $('#btnSave').val('Update');
                 var VenId = '<%= Request.QueryString["ID"]%>';
                 $('#txtVendorId').val(VenId);

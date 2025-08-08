@@ -22,7 +22,7 @@ namespace PMS
 	using System;
 
 
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "tibb")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "prch")]
 	public partial class DataBaseDataContext : System.Data.Linq.DataContext
 	{
 
