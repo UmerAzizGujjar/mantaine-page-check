@@ -633,9 +633,11 @@
                 PageMethods.getPurchaseOrderByID(POId, function (res) {
                     var item = JSON.parse(res);
                     var rows = '';
+                    var warehouse = item.WareHouse;
+                    console.log("WareHoueeee " + warehouse)
                     var iteration = 0;
                     var datetime = '';
-                    $.each(item, function (key, value) {
+                    $.each(item.PurchaseOrderDetails, function (key, value) {
                         if (value.Unit == null)
                             value.Unit = "";
                         if (value.UnitName == null)
@@ -650,8 +652,8 @@
                         blncQty = value.BlncQty;
                         recqty = totalqty - blncQty;
 
-                        if (item[key].Delivery_Date != null) {
-                            datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(item[key].Delivery_Date.substring(6, 19))));
+                        if (value.Delivery_Date != null) {
+                            datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.Delivery_Date.substring(6, 19))));
                         }
                         iteration++;
                         var rowlength = (document.getElementById("tblItemDescription").rows.length + iteration) - 1;
@@ -685,6 +687,9 @@
                     BatchValidation2();
                     $('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
                     $('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
+                    $('#ddlInv_Org').val(warehouse).trigger('change');
+                    $('#ddlInv_Org').attr('disabled', true);
+                    
                 });
             }
             else {

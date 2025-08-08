@@ -73,10 +73,10 @@ $(document).ready(function () {
     showhide();
     fillEmployee();
     fillpanel();
-    FillCasher();
+   /* FillCasher();*/
     fillCountry();
     fillProvince();
-    fillCashInHand();
+   /* fillCashInHand();*/
     FillUserAccount();
 
 });
@@ -459,30 +459,6 @@ function FillPatientType() {
 }
 
 
-function FillCasher() {
-    var options = '<option value="0">Please Select</option>';
-
-    $.ajax({
-        url: 'OPD.aspx/GetCashier',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddlcashier').html(options);
-
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
 
 function FillUserAccount() {
     var options;
@@ -497,7 +473,12 @@ function FillUserAccount() {
             $.each(data, function (key, value) {
                 options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
             });
-            $('#ddlcashier').html(options);
+           
+            
+            $('#ddlCashInHand').html(options);
+
+          
+           
 
 
         },
@@ -682,31 +663,32 @@ function fillpanel() {
     return options;
 }
 
-function fillCashInHand() {
-    var options = '<option value="0">Please Select</option>';
+//function fillCashInHand() {
+//    var options = '<option value="0">Please Select</option>';
 
-    $.ajax({
-        url: 'OPD.aspx/GetGLAccounts',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
-            });
-            $('#ddlCashInHand').html(options);
+//    $.ajax({
+//        url: 'OPD.aspx/GetGLAccounts',
+//        type: 'POST',
+//        contentType: 'application/json; charset=utf-8',
+//        dataType: 'json',
+//        success: function (response) {
+//            var data = response.d ? JSON.parse(response.d) : response;
+//            $.each(data, function (key, value) {
+//                options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
+//            });
+
+//            $('#ddlCashInHand').html(options);
 
 
 
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error fetching area data:', error);
+//        }
+//    });
 
-    return options;
-}
+//    return options;
+//}
 function fillEmployee() {
     var options = '<option value="0">Please Select</option>';
 
@@ -1243,11 +1225,11 @@ function SaveData() {
         }
     }
 
-    if (!Cashier || Cashier === "0") {
+    if (!accountid || accountid === "0") {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
-            text: 'Please select a Cashier.',
+            text: 'Please select a Cash in Hand Account.',
             showConfirmButton: false,
             timer: 2000,
             customClass: {
