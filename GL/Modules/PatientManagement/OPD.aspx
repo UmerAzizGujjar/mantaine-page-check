@@ -18,16 +18,18 @@
             setTimeout(function () {
                 if (reg_id != "" && added == "true") {
                     Get_Pat_Info(reg_id);
+                    FillUserAccount();
                     $('#ddlPatient_Type').attr('disabled', false);
-                    $('#ddlcashier').attr('disabled', false);
+                    $('#ddlcashier').attr('disabled', true);
                 }
             }, 1000);
 
             setTimeout(function () {
                 if (apt_Id != "" && apdAdd == "true") {
                     Get_Pat_Info_Apt(reg_id, apt_Id);
+                    FillUserAccount();
                     $('#ddlPatient_Type').attr('disabled', false);
-                    $('#ddlcashier').attr('disabled', false);
+                    $('#ddlcashier').attr('disabled', true);
                 }
             }, 2500);
 
@@ -42,11 +44,11 @@
             }
             else {
                 $('#ddlPatient_Type').select2();
-                $('#ddlcashier').select2();
+              
                 $('#ddl_Gender').select2();
                 $('#ddlGender').select2();
                 $('#ddlpanel').select2();
-                $('#ddlCashInHand').select2();
+             
                 $('#ddlemployee').select2();
                 $('#ddldoctor').select2();
                 $('#ddlDepartment').select2();
@@ -377,8 +379,8 @@
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" >
                     <label>Cash In Hand</label>
-                    <select id="ddlCashInHand" class="form-control">
-                        <option value="0">Select</option>
+                    <select id="ddlCashInHand" >
+                       
                     </select>
                 </div>
 

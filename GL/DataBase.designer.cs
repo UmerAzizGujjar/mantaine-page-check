@@ -22,9 +22,9 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "TIBIT")]
-    public partial class DataBaseDataContext : System.Data.Linq.DataContext
-    {
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "prch")]
+	public partial class DataBaseDataContext : System.Data.Linq.DataContext
+	{
 
         private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
 

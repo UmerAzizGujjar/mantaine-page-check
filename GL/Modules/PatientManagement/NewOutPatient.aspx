@@ -112,7 +112,7 @@
 
 
         .symptom-row, .vital-row, .history-row, .exam-row, .exam-text-row, .Systematic-Exam-Row, .refer-row,
-        .complaint-row, .Primary-Diagnosis-row, .Final-Diagnosis-row, .labtest-row {
+        .complaint-row, .Primary-Diagnosis-row, .Final-Diagnosis-row, .labtest-row, .diagnosticTest-row, .Medicene-row, .FollowUp-Row {
             display: flex;
             align-items: center;
             margin-bottom: 2px;
@@ -134,7 +134,7 @@
 
             .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
             .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
-            .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover {
+            .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover {
                 background-color: black;
                 color: white !important;
                 /* Optional: Add slight scale effect */
@@ -144,6 +144,10 @@
             }
 
                 .labtest-row:hover .labtest-label {
+                    color: white !important;
+                }
+
+                .Medicene-row:hover .Medicene-label {
                     color: white !important;
                 }
 
@@ -177,6 +181,28 @@
                 background-color: #000; /* Black background on hover */
                 color: #fff !important; /* White text on hover */
             }
+
+        .Medicene-row {
+            position: relative;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .Medicene-details {
+            clear: both;
+            padding: 10px;
+            background: #f5f5f5;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .expanding-row {
+            margin-bottom: 15px; /* Extra space during animation */
+        }
+
+        .Medicene-row + .Medicene-details {
+            margin-top: -5px; /* Remove gap between row and details */
+        }
     </style>
 
     <script id="ScriptmanageSymptomsModal">
@@ -387,10 +413,14 @@
 
     <script>
         $(document).ready(function () {
+            $("#ctl00_MainContent_FollowNoDate").datepicker();
+            loaddoctor();
+            FillMainTestDepartment();
             FillLabTests('');
             fillComplaints("");
             fillPrimaryDiagnosis("");
             fillFinalDiagnosis("");
+            FillMedicene("");
             // Handle search input
             $('#tab06Search').on('input', function () {
                 const searchTerm = $(this).val().trim();
@@ -409,6 +439,18 @@
             $('#tab09Search').on('input', function () {
                 const searchTerm = $(this).val().trim();
                 FillLabTests(searchTerm);
+            });
+            $('#tab10Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                LoadTestByDepartment(searchTerm);
+            });
+            $('#filterMainDepartments').on('change', function () {
+                const searchTerm = $('#tab10Search').val().trim();
+                LoadTestByDepartment(searchTerm);
+            });
+            $('#tab11_02Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                FillMedicene(searchTerm);
             });
             const $patientCategory = $('#ctl00_MainContent_ddlPatient_Main_Category');
             const $doctorsDropdown = $('#ddldoctors');
@@ -1768,6 +1810,797 @@
             }, function (err) { });
         }
 
+        function LoadTestByDepartment(searchTerm) {
+            debugger;
+            var maindpt = $('#filterMainDepartments').val();
+
+
+
+            if (maindpt == "0") {
+                $('#ddlTestList').val("");
+                $('#ddlTestList').text("");
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+            else if (maindpt == "002") {
+                $('#ddlXRayLF').hide();
+                $('#ddl_xray_rotation').hide();
+                FillTestsByCategory('002', searchTerm);
+
+            }
+            else if (maindpt == "003") {
+                $('#ddl_xray_rotation').show();
+                FillTestsByCategory('003', searchTerm);
+                $('#ddlXRayLF').hide();
+            }
+            else if (maindpt == "004") {
+                $('#ddl_xray_rotation').hide();
+                FillTestsByCategory('004', searchTerm);
+                $('#ddlXRayLF').hide();
+
+            }
+            else if (maindpt == "005") {
+                $('#ddl_xray_rotation').hide();
+                FillProcedure("005", searchTerm);
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+            else if (maindpt == "006") {
+                $('#ddl_xray_rotation').hide();
+                FillProcedure("006", searchTerm);
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+            else if (maindpt == "007") {
+                $('#ddl_xray_rotation').hide();
+                FillProcedure("007", searchTerm);
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+        }
+        function FillTestsByCategory(CategoryID, searchTerm) {
+
+            PageMethods.FillTestsByCategory(CategoryID, searchTerm, function (Tests) {
+                debugger;
+                var html = '';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    html += '<div class="diagnosticTest-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0;">' +
+                        '<div style="display: flex; align-items: center;">' +
+                        '<input type="checkbox" id="DiagnosticTestchk_' + value.Test_ID + '" ' +
+                        'value="' + value.Test_ID + '" ' +
+                        'class="diagnostictest_checkbox" ' +
+                        'onclick="this.checked ? Add_DiagnosticTestRow(\'' + value.Test_ID + '\', \'' + value.Test_Name + '\') : Remove_DiagnosticTestRow(\'' + value.Test_ID + '\')" />' +
+                        '<label class="diagnostictest-label" for="DiagnosticTestchk_' + value.Test_ID + '" style="margin-left: 8px; font-size: 14px; color: #333;">' + value.Test_Name + '</label>' +
+                        '</div>' +
+                        '<button type="button" class="diagnostictest-dropdown-btn" ' +
+                        'onclick="ShowDiagnosticTestDetails(\'' + value.Test_ID + '\', \'' + value.Test_Name + '\', \'' + CategoryID + '\')" ' +
+                        'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
+                        '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
+                        '</button>' +
+                        '</div>';
+                });
+                $('#allDiagnosticTest').html(html);
+            });
+        }
+        function ShowDiagnosticTestDetails(serialNo, testName, maindepartment) {
+            // Fix: Use consistent class name (changed to match HTML)
+            const $row = $(`#DiagnosticTestchk_${serialNo}`).closest('.diagnosticTest-row');
+            const $detailsDiv = $(`#DiagnosticTestDetails_${serialNo}`);
+            const $checkbox = $(`#DiagnosticTestchk_${serialNo}`);
+            const $icon = $row.find('i');
+
+            // Close all other open details divs first
+            $('.diagnostictest-details').not($detailsDiv).each(function () {
+                const $otherDiv = $(this);
+                const otherSerialNo = $otherDiv.attr('id').replace('DiagnosticTestDetails_', '');
+                const $otherCheckbox = $(`#DiagnosticTestchk_${otherSerialNo}`);
+                const $otherRow = $otherCheckbox.closest('.diagnosticTest-row'); // Fixed class name
+                const $otherIcon = $otherRow.find('i');
+
+                $otherDiv.slideUp(300, function () {
+                    $otherCheckbox.show();
+                    $otherIcon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                });
+            });
+
+            if ($detailsDiv.length) {
+                // Toggle existing details
+                $detailsDiv.slideToggle(300, function () {
+                    $checkbox.toggle(!$detailsDiv.is(':visible'));
+                });
+            } else {
+                // Create new details section
+                let detailsHtml = `
+<div id="DiagnosticTestDetails_${serialNo}" class="diagnostictest-details" style="display: none; padding: 10px; background: #f5f5f5; margin-top: 5px;">
+    <div style="margin-bottom: 8px;">
+        <label style="display: block; margin-bottom: 4px; font-size: 13px;">Special Test</label>
+        <textarea id="DiagnosticspecialTest_${serialNo}" class="form-control" 
+                  style="width: 100%; padding: 5px; min-height: 60px;"></textarea>
+    </div>`;
+
+                // Add select dropdown for departments '003' or '004'
+                if (maindepartment === '003' || maindepartment === '004') {
+                    detailsHtml += `
+    <div style="margin-bottom: 8px;">
+        <label style="display: block; margin-bottom: 4px; font-size: 13px;">Rotation</label>
+        <select class="rotations_${maindepartment}" id="DiagnosticSelect_${serialNo}" class="form-control" style="width: 100%; padding: 5px;">
+           
+        </select>
+    </div>`;
+                }
+
+                detailsHtml += `
+    <div style="margin-bottom: 8px;">
+        <label style="display: block; margin-bottom: 4px; font-size: 13px;">Area of Interest</label>
+        <textarea id="DiagnosticareaOfInterest_${serialNo}" class="form-control" 
+                  style="width: 100%; padding: 5px; min-height: 60px;"></textarea>
+    </div>
+    <div style="text-align: right;">
+        <button type="button" class="btn-add-test" 
+                id="DiagnosticaddTest_${serialNo}"
+                onclick="Add_DiagnosticTestRow('${serialNo}','${testName}')"
+                style="background: none; border: none; cursor: pointer; color: black;">
+            <i class="fa fa-plus-circle" style="color:black"></i> Add Test
+        </button>
+    </div>
+</div>`;
+
+                // Hide checkbox immediately
+                $checkbox.hide();
+
+                //filldropdowns
+                if (maindepartment === '003') {
+                    PageMethods.GetRotationsCategoryWise('Test XRay Rotations', function (GetRotations) {
+                        debugger;
+                        var options = '<option value="0" >Select</option>';
+                        $.each(JSON.parse(GetRotations), function (key, value) {
+                            debugger;
+                            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                        });
+                        $('.rotations_003').html(options);
+                        $('.rotations_003').select2();
+                    });
+                }
+                if (maindepartment === '004') {
+                    PageMethods.GetRotationsCategoryWise('Test CT Scan Rotations', function (GetRotations) {
+                        debugger;
+                        var options = '<option value="0" >Select</option>';
+                        $.each(JSON.parse(GetRotations), function (key, value) {
+                            options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                        });
+                        $('.rotations_004').html(options);
+                        $('.rotations_004').select2();
+                    });
+                }
+                // Insert and show details - fixed insertion method
+                $row.after(detailsHtml);
+                const $newDetails = $(`#DiagnosticTestDetails_${serialNo}`);
+                $newDetails.slideDown(300, function () {
+                    $(`#DiagnosticspecialTest_${serialNo}`).focus();
+                });
+            }
+
+            // Toggle chevron icon
+            $icon.toggleClass('fa-chevron-down fa-chevron-up');
+        }
+        function FillMainTestDepartment() {
+
+            var options = '<option value="0" >Select Main Department</option>';
+
+            PageMethods.FillTestMainDepartment(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#filterMainDepartments').html(options);
+                $('#filterMainDepartments').select2();
+
+            });
+        }
+        function Add_DiagnosticTestRow(serial, testName) {
+            var test = testName;
+            var maindpt = $('#filterMainDepartments').val();
+
+            PageMethods.GetLabTestDDLDetails(test, maindpt, function (res) {
+                $.each(JSON.parse(res), function (key, value) {
+                    var Result = 'Result';
+                    var test = serial;
+                    var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+                    var dateValue = '<%= DateTime.Now%>';
+                    var TestMainDepartmentName;
+                    var row;
+                    var test_array;
+                    var txtSpecialTests = $('#DiagnosticspecialTest_' + test).val() || "";  // Fixed ID
+                    var txtAreaOfInterest = $('#DiagnosticareaOfInterest_' + test).val() || "";  // Fixed ID
+                    var selectedOption = $('#DiagnosticSelect_' + test).find('option:selected');
+                    var rotationVal = selectedOption.val() || "0";
+                    var rotationText = selectedOption.text() || "";
+
+                    // Check if this test already exists - fixed table selector
+                    var existingRow = $('#tblDiagnostictest').find('input[name="testID"][value="' + value.Test_ID + '"]').closest('tr');
+
+                    if (existingRow.length > 0) {
+                        // Update existing row instead of creating new one
+                        existingRow.find('input[name="testDate"]').val(dateValue);
+                        existingRow.find('td:first').text(date);
+                        existingRow.find('input[name="txtSpecial_Test"]').val(txtSpecialTests);
+                        existingRow.find('td:eq(4)').html('<input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' + txtSpecialTests);
+                        existingRow.find('input[name="txtArea_Of_Interest"]').val(txtAreaOfInterest);
+                        existingRow.find('td:eq(5)').html('<input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' + txtAreaOfInterest);
+                        return true; // Continue to next item
+                    }
+
+                    if (value.Test_ID != 0) {
+                        row = '<tr>' +
+                            '<td style="display:none"><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                            '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                            '<input type="hidden" name="txtRotation" value="0">' +
+                            '<input type="hidden" name="txtGroupCategory" value="0">' +
+                            '<input type="hidden" name="txtDeptID" value="001"/> ' +
+                            (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') +
+                            value.Test_Name +
+                            '</td>' +
+                            '<td style="display:none">No</td>' +
+                            '<td style="display:none">' + Result + '</td>' +
+                            '<td><input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' +
+                            txtSpecialTests + '</td>' +
+                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' +
+                            txtAreaOfInterest + '</td>' +
+                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + rotationVal + '"/> ' +
+                            rotationText + '</td>' +
+                            '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+
+                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +  // Fixed function name
+                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '</td></tr>';
+
+                        test_array = $('#tblDiagnostictest').find('input[name=testID][value="' + value.Test_ID + '"]');
+                    }
+                    else {
+                        row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                            '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                            '<input type="hidden" name="txtRotation" value="0">' +
+                            '<input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/>' +
+                            '<input type="hidden" name="txtDeptID" value="001"/> ' +
+                            (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + '</td>' +
+                            '<td>No</td>' +
+                            '<td>' + Result + '</td>' +
+                            '<td><input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' + txtSpecialTests + '</td>' +
+                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' + txtAreaOfInterest + '</td>' +
+                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + rotationVal + '"/> ' + rotationText + '</td>' +
+                            '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +
+                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '</td></tr>';
+                        test_array = $('#tblDiagnostictest').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
+                    }
+
+                    // Fixed checkbox ID
+                    $('#DiagnosticTestchk_' + serial).prop('checked', true);
+                    $('#tblDiagnostictest tbody').append(row);
+                });
+
+                $('#dvtblDiagnostictest').show();
+
+                // Hide the details div after adding/updating
+                var $detailsDiv = $('#DiagnosticTestDetails_' + serial);
+                if ($detailsDiv.length) {
+                    $detailsDiv.slideUp(300, function () {
+                        $('#DiagnosticTestchk_' + serial).show();
+                        $('.diagnosticTest-row').find('i.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                    });
+                }
+            }, function (err) {
+                console.error('Error:', err);
+            });
+        }
+        function Remove_DiagnosticTestRow(serial) {
+            // Uncheck the checkbox
+            $('#DiagnosticTestchk_' + serial).prop('checked', false);
+
+            // Remove the row by finding the testID input with this serial value
+            $('#tblDiagnostictest tr').has('input[name="testID"][value="' + serial + '"]').remove();
+
+            // Hide table if no rows left (checking only data rows, not header)
+            if ($('#tblDiagnostictest tbody tr').length === 0) {
+                $('#dvtblDiagnostictest').hide();
+            }
+        }
+
+
+        function FillMedicene(searchValue) {
+            var html = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/getpharmacyitems',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchValue || '' }), // Send empty string if searchValue is falsy
+                success: function (response) {
+                    try {
+                        var pharmacyItems = JSON.parse(response.d);
+                        if (pharmacyItems.length === 0) {
+                            html = '<div style="padding: 10px; color: #666; font-style: italic;">No items found</div>';
+                        } else {
+                            $.each(pharmacyItems, function (key, value) {
+                                html += '<div class="Medicene-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0;">' +
+                                    '<div style="display: flex; align-items: center;">' +
+                                    '<input style="display:none" type="checkbox" id="Medicenechk_' + value.Item_Code + '" class="Medicene-checkbox" ' +
+                                    'style="margin-right: 8px; cursor: pointer;">' +
+                                    '<label class="Medicene-label" for="Medicenechk_' + value.Item_Code + '" ' +
+                                    'style="margin-left: 8px; font-size: 14px; color: #333;">' +
+                                    value.Description +
+                                    '</label>' +
+                                    '</div>' +
+                                    '<button type="button" class="Medicene-dropdown-btn" ' +
+                                    'onclick="ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')" ' +
+                                    'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
+                                    '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
+                                    '</button>' +
+                                    '</div>';
+                            });
+                        }
+                        $('#allMedicenes').html(html);
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                        $('#allMedicenes').html('<div style="padding: 10px; color: red;">Error loading items</div>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                    $('#allMedicenes').html('<div style="padding: 10px; color: red;">Error loading items</div>');
+                }
+            });
+        }
+        function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}) {
+            const $row = $(`#Medicenechk_${serialNo}`).closest('.Medicene-row');
+            const $detailsDiv = $(`#MediceneDetails_${serialNo}`);
+            const $checkbox = $(`#Medicenechk_${serialNo}`);
+            const $icon = $(this).find('i');
+
+            // Close all other open details divs first
+            $('.Medicene-details').not($detailsDiv).each(function () {
+                const $otherDiv = $(this);
+                const otherSerialNo = $otherDiv.attr('id').replace('MediceneDetails_', '');
+                const $otherCheckbox = $(`#Medicenechk_${otherSerialNo}`);
+                const $otherIcon = $(`#Medicenechk_${otherSerialNo}`).closest('.Medicene-row').find('i');
+
+                $otherDiv.slideUp(300, function () {
+                    $otherIcon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                });
+            });
+
+            if ($detailsDiv.length) {
+                // Toggle existing details
+                $detailsDiv.slideToggle(300, function () {
+                });
+
+                // If in edit mode, populate the form with existing values
+                if (isEditMode && existingValues) {
+                    // Set values after dropdowns are populated
+                    setTimeout(() => {
+                        $(`#mediceneDose_${serialNo}`).val(existingValues.dose || '');
+                        $(`#mediceneDosageFrom_${serialNo}`).val(existingValues.dosageFrom || '');
+                        $(`#duration_${serialNo}`).val(existingValues.duration || '');
+                        $(`#mediceneroute_${serialNo}`).val(existingValues.route || '');
+                        $(`#medicenefrequency_${serialNo}`).val(existingValues.frequency || '');
+                        $(`#otherinstructions_${serialNo}`).val(existingValues.otherInstruction || '');
+                        $(`#specialinstructions_${serialNo}`).val(existingValues.specialInstructions || '');
+                    }, 100);
+                }
+            } else {
+                const detailsHtml = `
+<div id="MediceneDetails_${serialNo}" class="Medicene-details" style="display: none; padding: 10px; background: #f5f5f5; margin-top: 5px;">
+    <!-- First Row - 2 fields -->
+    <div class="row">
+        <div class="col-md-6" style="margin-bottom: 8px;">
+            <label style="display: block; margin-bottom: 4px; font-size: 13px;">Dose</label>
+            <select id="mediceneDose_${serialNo}" class="form-control" style="width: 100%; padding: 5px;">
+                <option value="">Select Dose</option>
+            </select>
+        </div>
+        <div class="col-md-6" style="margin-bottom: 8px;">
+            <label style="display: block; margin-bottom: 4px; font-size: 13px;">Dosage Form</label>
+            <select id="mediceneDosageFrom_${serialNo}" class="form-control" style="width: 100%; padding: 5px;">
+                <option value="">Select Form</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Second Row - 2 fields -->
+    <div class="row">
+        <div class="col-md-6" style="margin-bottom: 8px;">
+            <label style="display: block; margin-bottom: 4px; font-size: 13px;">Duration</label>
+            <input type="text" id="duration_${serialNo}" class="form-control" 
+                  style="width: 100%; padding: 5px;" placeholder="e.g., 7 days">
+        </div>
+        <div class="col-md-6" style="margin-bottom: 8px;">
+            <label style="display: block; margin-bottom: 4px; font-size: 13px;">Route</label>
+            <select id="mediceneroute_${serialNo}" class="form-control" style="width: 100%; padding: 5px;">
+                <option value="">Select Route</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Third Row - 1 field -->
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 8px;">
+            <label style="display: block; margin-bottom: 4px; font-size: 13px;">Frequency</label>
+            <select id="medicenefrequency_${serialNo}" class="form-control" style="width: 100%; padding: 5px;">
+                <option value="">Select Frequency</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Fourth Row - 1 field -->
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 8px;">
+            <label style="display: block; margin-bottom: 4px; font-size: 13px;">Other Instructions</label>
+            <select id="otherinstructions_${serialNo}" class="form-control" style="width: 100%; padding: 5px;">
+                <option value="">Select Instruction</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Special Instructions (full width) -->
+    <div style="margin-bottom: 8px;">
+        <label style="display: block; margin-bottom: 4px; font-size: 13px;">Special Instructions</label>
+        <input type="text" id="specialinstructions_${serialNo}" class="form-control" 
+              style="width: 100%; padding: 5px;" placeholder="Any special instructions">
+    </div>
+    
+    <!-- Add Test Button -->
+    <div style="text-align: right;">
+        <button type="button" class="btn-add-test" 
+                id="addTest_${serialNo}"
+                onclick="Add_MediceneRow('${serialNo}','${testName}')"
+                style="background: none; border: none; cursor: pointer; color: black;">
+            <i class="fa fa-plus-circle" style="color:black"></i> ${isEditMode ? 'Update' : 'Add'} Test
+        </button>
+    </div>
+</div>`;
+
+
+                // Insert and show details
+                $row.after(detailsHtml);
+                const $newDetailsDiv = $(`#MediceneDetails_${serialNo}`);
+                // Populate Dose dropdown and set existing value
+                PageMethods.FillDosageQty(function (Dosage) {
+                    var options = '<option value="">Select Dose</option>';
+                    $.each(JSON.parse(Dosage), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $(`#mediceneDose_${serialNo}`).html(options);
+
+                    // Set existing value after dropdown is populated
+                    if (isEditMode && existingValues.dose) {
+                        $(`#mediceneDose_${serialNo}`).val(existingValues.dose);
+                    }
+                });
+                // Populate all dropdowns and set values
+                PageMethods.FillDosageDropDown(function (Dosage) {
+                    var options = '<option value="">Select Dosage Form</option>';
+                    $.each(JSON.parse(Dosage), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $(`#mediceneDosageFrom_${serialNo}`).html(options);
+
+                    // Set existing value after dropdown is populated
+                    if (isEditMode && existingValues.dosageFrom) {
+                        $(`#mediceneDosageFrom_${serialNo}`).val(existingValues.dosageFrom);
+                    }
+                });
+
+                PageMethods.FillRoutesDropDown(function (Routes) {
+                    var options = '<option value="">Select Route</option>';
+                    $.each(JSON.parse(Routes), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $(`#mediceneroute_${serialNo}`).html(options);
+
+                    // Set existing value after dropdown is populated
+                    if (isEditMode && existingValues.route) {
+                        $(`#mediceneroute_${serialNo}`).val(existingValues.route);
+                    }
+                });
+
+                PageMethods.FillFrequencyDropDown(function (Frequency) {
+                    var options = '<option value="">Select Frequency</option>';
+                    $.each(JSON.parse(Frequency), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description +
+                            (value.Segment1 ? " - " + value.Segment1 : "") + '</option>';
+                    });
+                    $(`#medicenefrequency_${serialNo}`).html(options);
+
+                    // Set existing value after dropdown is populated
+                    if (isEditMode && existingValues.frequency) {
+                        $(`#medicenefrequency_${serialNo}`).val(existingValues.frequency);
+                    }
+                });
+
+                PageMethods.FillOtherInstruction(function (Instructions) {
+                    var options = '<option value="">Select Instruction</option>';
+                    $.each(JSON.parse(Instructions), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $(`#otherinstructions_${serialNo}`).html(options);
+
+                    // Set existing value after dropdown is populated
+                    if (isEditMode && existingValues.otherInstruction) {
+                        $(`#otherinstructions_${serialNo}`).val(existingValues.otherInstruction);
+                    }
+                });
+
+                // Set other values
+                if (isEditMode && existingValues) {
+                    $(`#duration_${serialNo}`).val(existingValues.duration || '');
+                    $(`#specialinstructions_${serialNo}`).val(existingValues.specialInstructions || '');
+                    $(`#mediceneDose_${serialNo}`).val(existingValues.dose || '');
+
+                    // Update button text
+                    $('#addTest_' + serialNo).html('<i class="fa fa-plus-circle" style="color:black"></i> Update');
+                }
+
+                // Show the details
+                $newDetailsDiv.slideDown(300, function () {
+                    $(`#mediceneDose_${serialNo}`).focus();
+                });
+            }
+
+            // Toggle chevron icon
+            $icon.toggleClass('fa-chevron-down fa-chevron-up');
+        }
+        function deleteMedicine(AnchorTag) {
+
+            var row = $(AnchorTag).parents('tr')[0];
+            row.remove();
+
+            if ($('#tblMedicines tbody tr').length === 0) {
+                $('#dvtblMedicines').hide();
+            }
+
+        }
+        function Add_MediceneRow(serialNo, testName) {
+            // Get all values from the dynamic form
+            var medicineName = testName;
+            var dose = $('#mediceneDose_' + serialNo).val();
+            var doseText = $('#mediceneDose_' + serialNo).find('option:selected').text().trim();
+            var dosageFrom = $('#mediceneDosageFrom_' + serialNo).val();
+            var dosageFromText = $('#mediceneDosageFrom_' + serialNo).find('option:selected').text().trim();
+            var duration = $('#duration_' + serialNo).val();
+            var route = $('#mediceneroute_' + serialNo).val();
+            var routeText = $('#mediceneroute_' + serialNo).find('option:selected').text().trim();
+            var frequency = $('#medicenefrequency_' + serialNo).val();
+            var frequencyText = $('#medicenefrequency_' + serialNo).find('option:selected').text().trim();
+            var otherInstruction = $('#otherinstructions_' + serialNo).val();
+            var otherInstructionText = $('#otherinstructions_' + serialNo).find('option:selected').text().trim();
+            var specialInstructions = $('#specialinstructions_' + serialNo).val();
+
+            // Get current datetime
+            var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
+            var datetimeValue = '<%= DateTime.Now%>';
+
+            // Validation
+            if (!dose) {
+                alert('Please select Dose');
+                return false;
+            }
+            if (!frequency) {
+                alert('Please select Frequency');
+                return false;
+            }
+            if (!duration) {
+                alert('Please enter Duration');
+                return false;
+            }
+
+            // Check if we're editing an existing row
+            var existingRow = $('input[name="uurowid"][value="' + serialNo + '"]').closest('tr');
+
+            if (existingRow.length > 0) {
+                // Update existing row - keeping your exact structure
+                existingRow.find('td').eq(0).html('<input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime);
+                existingRow.find('td').eq(1).html('<input type="hidden" name="hdnItemCode" value="0">' + medicineName);
+                existingRow.find('td').eq(2).html(frequencyText + '<input type="hidden" class="field-value" value="' + frequency + '">');
+                existingRow.find('td').eq(3).html(routeText + '<input type="hidden" class="field-value" value="' + route + '">');
+                existingRow.find('td').eq(4).html(duration);
+                existingRow.find('td').eq(5).html(specialInstructions);
+                existingRow.find('td').eq(6).html(dosageFromText + '<input type="hidden" class="field-value" value="' + dosageFrom + '">');
+                existingRow.find('td').eq(7).html(doseText + '<input type="hidden" class="field-value" value="' + dose + '">');
+                existingRow.find('td').eq(8).html(otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '">');
+            } else {
+                // Create new row - using your exact string concatenation style
+                var row = '<tr>' +
+                    '<td style="display:none"><input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + '</td>' +
+                    '<td><input type="hidden" name="hdnItemCode" value="0">' + medicineName + '</td>' +
+                    '<td>' + frequencyText + '<input type="hidden" class="field-value" value="' + frequency + '"></td>' +
+                    '<td>' + routeText + '<input type="hidden" class="field-value" value="' + route + '"></td>' +
+                    '<td>' + duration + '</td>' +
+                    '<td>' + specialInstructions + '</td>' +
+                    '<td>' + dosageFromText + '<input type="hidden" class="field-value" value="' + dosageFrom + '"></td>' +
+                    '<td>' + doseText + '<input type="hidden" class="field-value" value="' + dose + '"></td>' +
+                    '<td>' + otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '"></td>' +
+                    '<td>' +
+                    '<a href="#" onclick="editMedicine(this)">Edit</a> | ' +
+                    '<a href="#" onclick="deleteMedicine(this)">Delete</a>' +
+                    '<input type="hidden" name="uurowid" value="' + serialNo + '" />' +
+                    '</td>' +
+                    '<td style="display:none;"></td>' +
+                    '</tr>';
+
+                // Append to table
+                $('#tblMedicines tbody').append(row);
+            }
+
+            // Rest of your existing code remains exactly the same...
+            $('#dvtblMedicines').show();
+            $('#MediceneDetails_' + serialNo).hide();
+
+            if (existingRow.length === 0) {
+                $('#mediceneDose_' + serialNo).val('');
+                $('#mediceneDosageFrom_' + serialNo).val('');
+                $('#duration_' + serialNo).val('');
+                $('#mediceneroute_' + serialNo).val('');
+                $('#medicenefrequency_' + serialNo).val('');
+                $('#otherinstructions_' + serialNo).val('');
+                $('#specialinstructions_' + serialNo).val('');
+            }
+        }
+        function editMedicine(element) {
+            const $row = $(element).closest('tr');
+            const serialNo = $row.find('input[name="uurowid"]').val();
+            const testName = $row.find('td').eq(1).text().trim();
+
+            // Extract existing values from the row - now using the hidden input values
+            const existingValues = {
+                dose: $row.find('td').eq(7).find('.field-value').val(),
+                dosageFrom: $row.find('td').eq(6).find('.field-value').val(),
+                duration: $row.find('td').eq(4).text().trim(),
+                route: $row.find('td').eq(3).find('.field-value').val(),
+                frequency: $row.find('td').eq(2).find('.field-value').val(),
+                otherInstruction: $row.find('td').eq(8).find('.field-value').val(),
+                specialInstructions: $row.find('td').eq(5).text().trim()
+            };
+            console.log(existingValues);
+
+            // Call ShowMediceneDetails in edit mode with existing values
+            ShowMediceneDetails(serialNo, testName, true, existingValues);
+        }
+        function ShowMediceneTemplateDiv() {
+            $('.tab11subtab').hide();
+            $('#tab11_02').show();
+            FillMediceneTemplates("");
+        }
+        function ShowAllMedicenesDiv() {
+            $('.tab11subtab').hide();
+            $('#tab11_01').show();
+
+        }
+        function FillMediceneTemplates(searchValue) {
+            var html = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetTemplate',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchValue || '' }), // Send empty string if searchValue is falsy
+                success: function (response) {
+                    try {
+                        var templates = JSON.parse(response.d);
+                        if (templates.length === 0) {
+                            html = '<div style="padding: 10px; color: #666; font-style: italic;">No items found</div>';
+                        } else {
+                            $.each(templates, function (key, value) {
+                                html += `
+    <div class="Medicene-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0;">
+        <div style="display: flex; align-items: center;">
+            <input type="checkbox" 
+                   id="Medicenechk_${value.Template_Id}" 
+                   class="Medicene-checkbox"
+                   onclick="this.checked ? Add_MediceneByTemplateRow('${value.Template_Id}') : Remove_MediceneByTemplateRow('${value.Template_Id}')"
+                   style="margin-right: 8px; cursor: pointer;">
+            <label class="Medicene-label" 
+                   for="Medicenechk_${value.Template_Id}"
+                   style="margin-left: 8px; font-size: 14px; color: #333;">
+                ${value.Template_Name}
+            </label>
+        </div>
+    </div>`;
+                            });
+                        }
+                        $('#allMediceneTemplates').html(html);
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                        $('#allMediceneTemplates').html('<div style="padding: 10px; color: red;">Error loading items</div>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                    $('#allMediceneTemplates').html('<div style="padding: 10px; color: red;">Error loading items</div>');
+                }
+            });
+        }
+        function Remove_MediceneByTemplateRow(serialNo) {
+            var rows = $('#tblMedicines tbody tr[value="' + serialNo + '"]');
+
+            rows.each(function () {
+                $(this).find('a[onclick*="deleteMedicine"]').trigger('click');
+            });
+
+        }
+        function Add_MediceneByTemplateRow(serialNo) {
+            var Templateid = serialNo;
+            PageMethods.GetTemplateMedicine(Templateid, function (res) {
+                debugger;
+                var Medicines = JSON.parse(res);
+                var rows = '';
+                $.each(Medicines, function (key, value) {
+                    debugger;
+                    var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
+                    var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                    var datearray = date.split("/");
+                    var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+                    debugger;
+
+                    rows += '<tr value=' + Templateid + '> <td style="display:none"><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="deleteMedicine(this)"> Delete </a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
+                });
+                $('#tblMedicines tbody').append(rows);
+                $('#dvtblMedicines').show();
+            })
+        }
+        function LoadDesignation() {
+            debugger;
+            var DocID = $('#ctl00_MainContent_ddlDoctorName').val();
+            PageMethods.LoadDesignation(DocID, function (res) {
+                var doctor = JSON.parse(res);
+                var rowsText = '';
+                debugger;
+                $('#ctl00_MainContent_txtDesignation').val(doctor.Emp_designatin);
+            });
+            ConfigureAvailableDates(DocID);
+        }
+        function ConfigureAvailableDates(DocID) {
+            $.ajax({
+                type: "POST",
+                url: "OutPatients.aspx/GetAvailableDates",
+                data: JSON.stringify({ DocID: DocID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var availableDates = JSON.parse(response.d);
+
+                    $("#ctl00_MainContent_FollowNoDate").datepicker("destroy"); // Remove any previous config
+
+                    $("#ctl00_MainContent_FollowNoDate").datepicker({
+                        dateFormat: "yy-mm-dd", // format to match your returned data
+                        beforeShowDay: function (date) {
+                            var dmy = $.datepicker.formatDate("yy-mm-dd", date);
+                            if (availableDates.indexOf(dmy) !== -1) {
+                                return [true, "available-date", "Doctor Available"];
+                            } else {
+                                return [false, "", "Doctor Not Available"];
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
+        }
+        function loaddoctor() {
+            PageMethods.LoadDoctor(function (res) {
+                var doctor = JSON.parse(res);
+                var options = '<option value="0" >Please Select </option>';
+                var rowsText = '';
+
+                $.each(doctor, function (key, value) {
+
+                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                });
+
+                $('#ctl00_MainContent_ddlDoctorName').html(options)
+                $('#ctl00_MainContent_ddlDoctorName').select2();
+            });
+        }
+        
     </script>
 </asp:Content>
 
@@ -2032,19 +2865,14 @@
                             </div>
                         </div>
 
-                        <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Services</span>
-                            </div>
-                        </div>
 
-                        <div class="menu-item no-submenu" id="13" onclick="navigateAction(this)">
+                        <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
                             <div class="menu-title">
                                 <span>Follow Up</span>
                             </div>
                         </div>
 
-                        <div class="menu-item no-submenu" id="14" onclick="navigateAction(this)">
+                        <div class="menu-item no-submenu" id="13" onclick="navigateAction(this)">
                             <div class="menu-title">
                                 <span>Disposal</span>
                             </div>
@@ -2062,11 +2890,7 @@
                             </div>
                         </div>
 
-                        <div class="menu-item no-submenu" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Test Results</span>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -2651,11 +3475,113 @@
                                 </div>
                                 <div id="allLabTests"></div>
                             </div>
+                            <div class="tabs" id="tab10" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12">
+                                        <div class="big-select2">
+                                            <select class="enhanced-select2" id="filterMainDepartments">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 col-sm-12">
+                                        <input type="text" class="form-control mb-2" id="tab10Search" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div id="allDiagnosticTest"></div>
+                            </div>
+                            <div class="tabs" id="tab11" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="By Template" onclick="ShowMediceneTemplateDiv()" />
+                                    <input style="margin-left: 5px" type="button" class="mybutton" value="All Meds" onclick="ShowAllMedicenesDiv()" />
+                                </div>
+                                <div id="tab11_01" class="tab11subtab">
+                                    <div class="row">
+                                        <div class="col-md-5 col-sm-12">
+                                        </div>
+                                        <div class="col-md-7 col-sm-12">
+                                            <input type="text" class="form-control mb-2" id="tab11_01Search" placeholder="Search..." />
+                                        </div>
+                                    </div>
+                                    <div id="allMedicenes"></div>
+                                </div>
+                                <div id="tab11_02" class="tab11subtab" style="display: none">
+                                    <div class="row">
+                                        <div class="col-md-5 col-sm-12">
+                                        </div>
+                                        <div class="col-md-7 col-sm-12">
+                                            <input type="text" class="form-control mb-2" id="tab11_02Search" placeholder="Search..." />
+                                        </div>
+                                    </div>
+                                    <div id="allMediceneTemplates"></div>
+                                </div>
 
+                            </div>
+                            <div class="tabs" id="tab12" style="display: none">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+                                    <input style="margin-left: 5px" type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+                                </div>
+                                <div class="row" style="width: 100%;">
+                                    <!-- Doctor Name -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblDoctorName" runat="server" Text="Doctor Name <span class='RedStar'>*</span>"></asp:Label>
+                                        <asp:DropDownList ID="ddlDoctorName" runat="server"
+                                            Style="width: 250px; height: 32px;"
+                                            CssClass="form-control"
+                                            AppendDataBoundItems="true"
+                                            onchange="LoadDesignation();">
+                                        </asp:DropDownList>
+                                    </div>
+
+                                    <!-- Designation -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblDesignation" runat="server" Text="Designation"></asp:Label>
+                                        <asp:TextBox ID="txtDesignation" runat="server"
+                                            Style="width: 250px; height: 32px;"
+                                            CssClass="form-control"
+                                            ReadOnly="true">
+                                        </asp:TextBox>
+                                    </div>
+
+                                    <!-- Admission -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblAdmission" runat="server" Text="Admission"></asp:Label>
+                                        <asp:DropDownList ID="ddlIssuance_Of" runat="server"
+                                            Style="height: 32px;"
+                                            CssClass="form-control"
+                                            AppendDataBoundItems="true">
+                                        </asp:DropDownList>
+                                    </div>
+
+                                    <!-- Follow Up -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUp" runat="server" Text="Follow Up <span class='RedStar'>*</span>"></asp:Label>
+                                        <asp:DropDownList ID="ddlFOllowUp" runat="server"
+                                            Style="height: 32px;"
+                                            CssClass="form-control"
+                                            AppendDataBoundItems="true">
+                                        </asp:DropDownList>
+                                    </div>
+
+                                    <!-- FollowUp Date -->
+                                    <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUpDate" runat="server" Text="FollowUp Date <span class='RedStar'>*</span>"></asp:Label>
+                                        <asp:TextBox ID="FollowNoDate" runat="server"
+                                            Style="height: 32px;"
+                                            CssClass="form-control">
+                                        </asp:TextBox>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
         </div>
 
         <!-- Right Column (6 units) -->
@@ -2838,10 +3764,10 @@
                                     <table id="tblLabtest" class="table table-bordered table-custom tests-table">
                                         <thead>
                                             <tr style="position: sticky; top: 0; z-index: 10;">
-                                                <th style="display:none">Date</th>
+                                                <th style="display: none">Date</th>
                                                 <th>Test Name</th>
-                                                <th style="display:none">Sample Received</th>
-                                                <th style="display:none">Result</th>
+                                                <th style="display: none">Sample Received</th>
+                                                <th style="display: none">Result</th>
                                                 <th>Special Tests</th>
                                                 <th>Area Of Interest</th>
                                                 <th>Action</th>
@@ -2853,14 +3779,74 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-12" id="dvtblDiagnostictest" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table id="tblDiagnostictest" class="table table-bordered table-custom">
+                                        <thead>
+                                            <tr style="position: sticky; top: 0; z-index: 10;">
+                                                <th style="display: none">Date</th>
+                                                <th>Diagnostic Test Name</th>
+                                                <th style="display: none">Sample Received</th>
+                                                <th style="display: none">Result</th>
+                                                <th>Special Tests</th>
+                                                <th>Area Of Interest</th>
+                                                <th>Rotation</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="loadDiagnostictest">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12" id="dvtblMedicines" style="display: none">
+                            <div>
+                                <div class="table-responsive">
+                                    <table id="tblMedicines" class="table table-bordered table-custom">
+                                        <thead>
+                                            <tr style="position: sticky; top: 0px; z-index: 10;">
+                                                <th style="display: none">Date</th>
+                                                <th>Medicine Name</th>
+                                                <th>Frequency</th>
+                                                <th>Routes</th>
+                                                <th>Duration</th>
+                                                <th>Special Instructions</th>
+                                                <th>Dosage Form</th>
+                                                <th>Dosage Qty</th>
+                                                <th>Other Instructions</th>
+                                                <th>Edit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divtblFollowUp" style="display: none" class="col-lg-4">
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tblFollowUp">
+                                        <thead>
+                                            <tr>
+                                                <th>Follow Up</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 
 

@@ -70,6 +70,7 @@
         }
 
         function CreateUser() {
+            debugger;
             var Valid = true;
             var UserIDfromURL = '<%= Request.QueryString["UserID"] %>';
             var UserName = $('#UserName').val();
