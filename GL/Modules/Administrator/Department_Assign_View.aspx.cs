@@ -24,15 +24,14 @@ namespace PMS.Modules.Administrator
                 {
                     string userId = HttpContext.Current.Session["UserId"].ToString();
 
-                    var Total_Department = _dbContext.Department_Assignments.Count();
-
-                    var Department_Assign = from a in _dbContext.Department_Assignments
+                    var Total_Department = _dbContext.Policy_Department_Assignments.Count();
+                    var Department_Assign = from a in _dbContext.Policy_Department_Assignments
                                             join p in _dbContext.Policies on a.Policy_ID equals p.Policy_ID
                                             where p.Policy_Name.Contains(searchValue)
                                             select new
                                             {
-                                                Dep_ID = a.Dep_ID,
-                                                Department = _dbContext.GetDataValueName("Patient Main Category", a.Department_ID.HasValue ? a.Department_ID.Value.ToString() : null),
+                                                Dep_ID = a.Policy_Assign_Dep_id,
+                                               // Department = _dbContext.GetDataValueName("Patient Main Category", a.Department_ID),
                                                 Policy_Name = p.Policy_Name,
                                                 Fees = a.Fees,
                                                 Hospital_Share = a.Hospital_Share,

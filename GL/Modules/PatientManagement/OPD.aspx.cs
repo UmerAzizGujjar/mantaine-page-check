@@ -261,21 +261,21 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(department);
             }
             return "";
-        } 
+        }
         [WebMethod]
-        public static string GetFees()
+        public static string GetFees(string Department_id)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var Fees = (from tbl in db.sys_Parms
-                                  where tbl.Name == "OPD Fee"
-                                  select new
-                                  {
-                                      Code = tbl.Code
-                                  }).FirstOrDefault();
+                var Fees = (from tbl in db.Policy_Department_Assignments
+                            where tbl.Department_ID == Department_id && tbl.Expiry_Date < DateTime.Now
+                            orderby tbl.Policy_Assign_Dep_id descending
+                            select new
+                            {
+                                Code = tbl.Fees
+                            }).FirstOrDefault();
                 return (new JavaScriptSerializer()).Serialize(Fees);
             }
-            return "";
         }
         [WebMethod]
         public static string loadRegistrationFees(string Doc)
