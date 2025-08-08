@@ -210,7 +210,81 @@
             window.open(url, '_blank');
         }
 
+        function loaddoctor() {
+            debugger;
+            var appointmentid = $("#hdn_aptid").val();
+            var opdid = $('#hdn_opdId').val();
 
+            if (appointmentid != "" || opdid != "") {
+
+            }
+            else {
+                var dpt = $('#ddlDepartment').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "OPD.aspx/LoadDoctor",
+                    data: JSON.stringify({ dpt: dpt }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var doctor = JSON.parse(response.d);
+                        var options = '<option value=""> Please Select </option>';
+
+                        $.each(doctor, function (key, value) {
+                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                        });
+
+                        $('#ddldoctor').html(options);
+                        var type = $('#ddlPatient_Type').val();
+                     
+                        if (type != "02") {
+                          
+                            getGeneralFee();
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            }
+        }
+        function getGeneralFee() {
+            var Department_id = $('#ddlDepartment').val();
+
+            $.ajax({
+                url: 'OPD.aspx/GetFees',
+                type: 'POST',
+                data: JSON.stringify({ Department_id: Department_id }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (resp) {
+                    debugger;
+                    var data = JSON.parse(resp.d);
+                    $('#txtfees').val(data.Code);
+
+                },
+                error: function (response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: response.responseText,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    console.error("AJAX Error: ", response);
+                }
+            });
+
+        }
     </script>
 
 </asp:Content>

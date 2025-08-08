@@ -44,7 +44,7 @@ namespace PMS.Modules.Administrator
                                    where ds.ValueSet_Name == "Patient Main Category"
                                    select new DepartmentModel
                                    {
-                                       Department_ID = dv.DataValue_ID,
+                                       Department_ID = dv.DataValue_Name,
                                        Department_Name = dv.DataValue_Description
                                    }).ToList();
 
@@ -59,7 +59,7 @@ namespace PMS.Modules.Administrator
 
         public class DepartmentModel
         {
-            public int Department_ID { get; set; }
+            public string Department_ID { get; set; }
             public string Department_Name { get; set; }
         }
 
@@ -73,12 +73,12 @@ namespace PMS.Modules.Administrator
 
                 using (var db = new DataBaseDataContext())
                 {
-                    var assignments = db.Department_Assignments
-                        .Where(d => d.Dep_ID.ToString() == dep_id)
+                    var assignments = db.Policy_Department_Assignments
+                        .Where(d => d.Policy_Assign_Dep_id.ToString() == dep_id)
                         .ToList()
                         .Select(d => new
                         {
-                            Dep_ID = d.Dep_ID,
+                            Dep_ID = d.Policy_Assign_Dep_id,
                             Department_ID = d.Department_ID,
                             Policy_ID = d.Policy_ID,
                             Fees = d.Fees,
@@ -111,8 +111,8 @@ namespace PMS.Modules.Administrator
                 {
                     foreach (var policy in departmentPolicies)
                     {
-                        var existing = db.Department_Assignments
-                                          .FirstOrDefault(x => x.Dep_ID == policy.Dep_ID);
+                        var existing = db.Policy_Department_Assignments
+                                          .FirstOrDefault(x => x.Policy_Assign_Dep_id == policy.Dep_ID);
 
                         if (existing != null)
                         {
@@ -128,7 +128,7 @@ namespace PMS.Modules.Administrator
                         }
                         else
                         {
-                            Department_Assignment newRecord = new Department_Assignment
+                            Policy_Department_Assignment newRecord = new Policy_Department_Assignment
                             {
                                 Department_ID = policy.Department_ID,
                                 Policy_ID = policy.Policy_ID,
@@ -140,7 +140,7 @@ namespace PMS.Modules.Administrator
                                 Created_At = DateTime.Now,
                                 Created_By = AppConfig.UserID
                             };
-                            db.Department_Assignments.InsertOnSubmit(newRecord);
+                            db.Policy_Department_Assignments.InsertOnSubmit(newRecord);
                         }
                     }
 
@@ -158,7 +158,7 @@ namespace PMS.Modules.Administrator
         public class DepartmentPolicyModel
         {
             public int? Dep_ID { get; set; }
-            public int Department_ID { get; set; }
+            public string Department_ID { get; set; }
             public int Policy_ID { get; set; }
             public decimal Fees { get; set; }
             public int Hospital_Share { get; set; }
