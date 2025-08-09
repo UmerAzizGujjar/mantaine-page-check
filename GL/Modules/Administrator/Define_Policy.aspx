@@ -67,7 +67,7 @@
                             }
                         });
                         setTimeout(function () {
-                            window.location.reload();
+                            window.location.href = 'Define_Policy_View.aspx'; 
                         }, 2500);
                     },
                     error: function (xhr, status, error) {

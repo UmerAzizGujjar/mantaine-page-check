@@ -261,21 +261,35 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(department);
             }
             return "";
-        } 
+        }
         [WebMethod]
-        public static string GetFees()
+        public static string GetFees(string Department_id)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var Fees = (from tbl in db.sys_Parms
-                                  where tbl.Name == "OPD Fee"
-                                  select new
-                                  {
-                                      Code = tbl.Code
-                                  }).FirstOrDefault();
-                return (new JavaScriptSerializer()).Serialize(Fees);
+                var today = DateTime.Today.Date;
+                string formattedDate = DateTime.Today.ToString("yyyy-MM-dd");
+                var expirydate = (from tbl in db.Policy_Department_Assignments
+                           where tbl.Department_ID == Department_id
+                                 && tbl.IsActive == true
+                               
+                           orderby tbl.Policy_Assign_Dep_id descending
+                           select new
+                           {
+                               Code = tbl.Expiry_Date
+                           }).FirstOrDefault();
+
+                var fee = (from tbl in db.Policy_Department_Assignments
+                           where tbl.Department_ID == Department_id
+                                 && tbl.IsActive == true
+                                 && tbl.Expiry_Date > Convert.ToDateTime(formattedDate)
+                           orderby tbl.Policy_Assign_Dep_id descending
+                           select new
+                           {
+                               Code = tbl.Fees
+                           }).FirstOrDefault();
+                return (new JavaScriptSerializer()).Serialize(fee);
             }
-            return "";
         }
         [WebMethod]
         public static string loadRegistrationFees(string Doc)

@@ -26,6 +26,7 @@
             window.location.href = 'Shift__Policy_View.aspx';
         });
 
+
         function bindEvents() {
             $(document).on('click', '#btnAddRow', addRow);
             $(document).on('click', '.btnDeleteRow', deleteRow);
@@ -34,7 +35,20 @@
             $(document).on('input', '[name="Hospital_Share"], [name="Doctor_Share"]', function () {
                 validateShare($(this).closest('tr'));
             });
+
+            $(document).on('change', '[name="Start_Time"], [name="End_Time"], [name="Next_Day"]', function () {
+                validateTimeRange($(this).closest('tr'));
+            });
+
+            $(document).on('change', '[name="IsTime"]', function () {
+                const $row = $(this).closest('tr');
+                const isChecked = $(this).is(':checked');
+
+                $row.find('[name="Start_Time"]').prop('disabled', !isChecked);
+                $row.find('[name="End_Time"]').prop('disabled', !isChecked);
+            });
         }
+
 
         function loadPolicy() {
             $.ajax({
@@ -69,6 +83,8 @@
                 });
         }
 
+        
+
         function loadPolicyEdit(policyId) {
             $.ajax({
                 type: "POST",
@@ -82,17 +98,19 @@
 
                     $.each(policies, function (index, policy) {
                         const newRow = $(createRow());
-
                         $("#policyTable tbody").append(newRow);
 
                         newRow.data('id', policy.Policy_Detail_ID);
                         newRow.find('[name="Policy_Detail_ID"]').val(policy.Policy_Detail_ID);
-                        newRow.find('[name="Policy_ID"]').val(policy.Policy_ID);
                         newRow.find('[name="Fees"]').val(policy.Fees);
                         newRow.find('[name="Hospital_Share"]').val(policy.Hospital_Share);
                         newRow.find('[name="Doctor_Share"]').val(policy.Doctor_Share);
                         newRow.find('[name="Expiry_Date"]').val(policy.Expiry_Date);
+
                         newRow.find('[name="IsTime"]').prop("checked", policy.IsTime);
+                        newRow.find('[name="Start_Time"], [name="End_Time"]')
+                            .prop("disabled", !policy.IsTime); // Clean and simple
+
                         newRow.find('[name="Start_Time"]').val(policy.Start_Time);
                         newRow.find('[name="End_Time"]').val(policy.End_Time);
                         newRow.find('[name="Next_Day"]').prop("checked", policy.Next_Day);
@@ -103,14 +121,21 @@
                             changeYear: true,
                             minDate: 0
                         });
-                        setTimeout(() => {
-                            newRow.find('.select2-policy').select2({
-                                placeholder: "Select Policy",
-                                allowClear: true,
-                                width: '100%'
-                            });
-                            newRow.find('.select2-policy').val(policy.Policy_ID).trigger('change');
-                        }, 200); 
+
+                        const $select = newRow.find('[name="Policy_ID"]');
+                        $select.select2({
+                            placeholder: "Select Policy",
+                            allowClear: true,
+                            width: '100%',
+                            dropdownParent: $(document.body)
+                        });
+
+                        if (!$select.find('option[value="' + policy.Policy_ID + '"]').length) {
+                            const option = new Option(policy.Policy_Name, policy.Policy_ID, true, true);
+                            $select.append(option).trigger('change');
+                        } else {
+                            $select.val(policy.Policy_ID).trigger('change');
+                        }
                     });
                 },
                 error: function (xhr, status, error) {
@@ -124,6 +149,7 @@
                 }
             });
         }
+
 
 
 
@@ -145,25 +171,26 @@
 
         function createRow() {
             return `
-                <tr>
-                    <td>
-                        <select name="Policy_ID" class="form-select select2-policy">
-                            ${policyOptions || '<option value="">Loading...</option>'}
-                        </select>
-                    </td>
-                    <td><input type="text" name="Fees" class="form-control" placeholder="Fees"></td>
-                    <td><input type="number" name="Hospital_Share" class="form-control" placeholder="Hospital %" min="0" max="100"></td>
-                    <td><input type="number" name="Doctor_Share" class="form-control" placeholder="Doctor %" min="0" max="100"></td>
-                    <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
-                    <td><input type="checkbox" name="IsTime"></td>
-                    <td><input type="time" name="Start_Time" class="form-control"></td>
-                    <td><input type="checkbox" name="Next_Day"></td>
-                    <td><input type="time" name="End_Time" class="form-control"></td>
-                    <td>
-                        <i class="fa fa-trash text-danger btnDeleteRow" style="cursor:pointer; font-size:18px;" title="Delete Row"></i>
-                    </td>
-                </tr>`;
+        <tr>
+            <td>
+                <select name="Policy_ID" class="form-select select2-policy">
+                    ${policyOptions || '<option value="">Loading...</option>'}
+                </select>
+            </td>
+            <td><input type="text" name="Fees" class="form-control" placeholder="Fees"></td>
+            <td><input type="number" name="Hospital_Share" class="form-control" placeholder="Hospital %" min="0" max="100"></td>
+            <td><input type="number" name="Doctor_Share" class="form-control" placeholder="Doctor %" min="0" max="100"></td>
+            <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
+            <td><input type="checkbox" name="IsTime" class="isTimeCheck"></td>
+            <td><input type="time" name="Start_Time" class="form-control" disabled></td>
+            <td><input type="checkbox" name="Next_Day"></td>
+            <td><input type="time" name="End_Time" class="form-control" disabled></td>
+            <td>
+                <i class="fa fa-trash text-danger btnDeleteRow" style="cursor:pointer; font-size:18px;" title="Delete Row"></i>
+            </td>
+        </tr>`;
         }
+
 
         function addRow() {
             const newRow = $(createRow());
@@ -241,19 +268,65 @@
             return policies;
         }
 
+        function validateTimeRange($row) {
+            const startTime = $row.find('[name="Start_Time"]').val();
+            const endTime = $row.find('[name="End_Time"]').val();
+            const isNextDay = $row.find('[name="Next_Day"]').is(":checked");
+
+            if (startTime && endTime) {
+                const start = new Date(`1970-01-01T${startTime}:00`);
+                const end = new Date(`1970-01-01T${endTime}:00`);
+
+                if (start > end && !isNextDay) {
+                    $row.addClass("invalid-time");
+                    $row.find('[name="Start_Time"], [name="End_Time"], [name="Next_Day"]').css("border", "2px solid red");
+                } else {
+                    $row.removeClass("invalid-time");
+                    $row.find('[name="Start_Time"], [name="End_Time"], [name="Next_Day"]').css("border", "");
+                }
+            } else {
+                $row.removeClass("invalid-time");
+                $row.find('[name="Start_Time"], [name="End_Time"], [name="Next_Day"]').css("border", "");
+            }
+        }
+
+
+
 
         function savePolicies() {
             $("#policyTable tbody tr").each(function () {
                 validateShare($(this));
+                validateTimeRange($(this));
             });
 
             if ($("#policyTable tbody tr.invalid-share").length > 0) {
+
                 Swal.fire({
                     icon: 'error',
-                    title: 'Validation Error',
+                    title: 'Error!',
                     text: 'Each row must have Hospital + Doctor Share = 100%',
-                    timer: 2500,
-                    showConfirmButton: true
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            }
+
+            if ($("#policyTable tbody tr.invalid-time").length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Start Time must be greater the End Time',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
                 });
                 return;
             }
@@ -262,10 +335,16 @@
 
             if (policies.length === 0) {
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'No Data',
-                    text: 'Please add at least one valid policy.',
-                    timer: 2000
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Add Policy',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
                 });
                 return;
             }
@@ -280,11 +359,29 @@
                 .done(function (response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Saved!',
+                        title: 'Success!',
                         text: 'All policies saved successfully.',
+                        showConfirmButton: false,
                         timer: 2500,
-                        showConfirmButton: false
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'All Policy Saved Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
                     }).then(() => {
+                        window.location.reload();
                     });
                 })
                 .fail(function (xhr, status, error) {
@@ -339,6 +436,9 @@
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input id="btnView" type="button" class="btn btn-primry" value="View" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4">
+                    <input type="button" class="btn btn-yellow" id="btnNew" value="New" onclick="window.location = 'Shift_Assign_Policy.aspx'" />
                 </div>
             </div>
         </div>

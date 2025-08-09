@@ -55,7 +55,7 @@
           },
           "columns": [
               { "data": "Dep_ID", "visible": false, "width": "0%", "orderable": false },
-              { "data": "Department", "name": "Policy_Name", "width": "8%", "orderable": true },
+              { "data": "Department", "name": "Department", "width": "8%", "orderable": true },
               { "data": "Policy_Name", "name": "Policy_Name", "width": "8%", "orderable": true },
               { "data": "Fees", "width": "15%", "orderable": false },
               { "data": "Hospital_Share", "width": "15%", "orderable": false },
