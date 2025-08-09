@@ -24,6 +24,106 @@ namespace PMS.Modules.PatientManagement
             }
 
         }
+        [WebMethod]
+        public static string Getdoctors()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from hr in db.HR_Employees
+                              where hr.IsDoctor == true && hr.userid == Convert.ToString(AppConfig.UserID)
+
+                              select new
+                              {
+                                  hr.Emp_ID,
+                                  hr.Emp_Name
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string PendingPatients(string filterDepartment, string doc_name)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var data = (from p in db.Patients
+                        join u in db.aspnet_Users
+                        on p.Created_By equals u.UserId
+                        where Convert.ToDateTime(p.Created_Time).Month == DateTime.Now.Month &&
+                              Convert.ToDateTime(p.Created_Time).Year == DateTime.Now.Year &&
+                              Convert.ToDateTime(p.Created_Time).Day == DateTime.Now.Day &&
+                              p.Patient_Type == "01"
+
+                        select new
+                        {
+                            p.Patient_ID,
+                            p.Reg_PatId,
+                            Patient_No = p.Opd_No,
+                            p.Full_Name,
+                            p.NIC,
+                            DoctorName = (from d in db.HR_Employees
+                                          where d.Emp_ID == Convert.ToInt32(p.Doctor_ID)
+                                          select d.Emp_Name).FirstOrDefault(),
+                            Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
+                            Gender = db.GetDataValueName("Gender", p.Gender),
+                            p.Created_Time,
+                            u.UserName,
+                            p.Age_years,
+                            p.Patient_Type,
+                            p.Doctor_ID,
+                            Checked = ((from op in db.Out_Patients
+                                        where op.Patient_ID == p.Patient_ID
+                                        && op.Doctor_ID != null && op.Doctor_ID != ""
+                                        select op.Doctor_ID).FirstOrDefault()),
+                            Token_No = (from t in db.Patients
+                                        where t.Patient_ID < p.Patient_ID
+                                           && t.Created_Time.Value.Date == p.Created_Time.Value.Date
+                                           && t.Created_Time.Value.Month == p.Created_Time.Value.Month
+                                           && t.Created_Time.Value.Year == p.Created_Time.Value.Year
+                                           && t.Patient_Main_Category == p.Patient_Main_Category
+                                        select t).Count() + 1
+                        });
+
+            if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "0" && doc_name == "0")
+            {
+                data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment));
+            }
+
+            else if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "0" && !string.IsNullOrEmpty(doc_name))
+            {
+                data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment) && p.Doctor_ID == doc_name);
+            }
+
+            else if (!string.IsNullOrEmpty(doc_name) && (string.IsNullOrEmpty(filterDepartment) || filterDepartment == "0"))
+            {
+                data = data.Where(p => p.Doctor_ID == doc_name);
+            }
+
+            var result = data.ToList();
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+        [WebMethod]
+        public static string GetAllDeparmtent()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Main Category"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
 
         [WebMethod]
         public static string GetTemplateMedicine(int Templateid)
@@ -557,6 +657,13 @@ on d.Doctor_Id equals hr.Emp_ID
             ddlFOllowUp.DataValueField = "DataValue_Name";
             ddlFOllowUp.Items.Add(new ListItem("Please Select", "0"));
             ddlFOllowUp.DataBind();
+
+            valueset = DBClass.GetValueSet("Proto");
+            ddlProto.DataSource = valueset;
+            ddlProto.DataTextField = "DataValue_Description";
+            ddlProto.DataValueField = "DataValue_Name";
+            ddlProto.Items.Add(new ListItem("Please Select", "0"));
+            ddlProto.DataBind();
 
             valueset = DBClass.GetValueSet("Laundary From To");
             ddlIssuance_Of.DataSource = valueset;

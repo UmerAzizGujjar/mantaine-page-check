@@ -4,6 +4,86 @@
 
 
     <style title="sidebar">
+        label, span, .table > tbody > tr > td, select {
+            font-weight: normal !important
+        }
+
+        #retract {
+            transition: all 0.5s ease; /* Smooth sliding animation */
+            overflow: hidden; /* Hide overflowing content */
+            width: 16.66%; /* Default width when shown */
+        }
+
+            #retract.minimized {
+                width: 100px; /* Minimized width */
+            }
+
+                #retract.minimized span {
+                    display: none; /* Hide spans when minimized */
+                }
+
+        .preview {
+            transition: all 0.5s ease; /* Match the animation timing */
+            width: 50%; /* Default width when retract is shown */
+        }
+
+        #retract.minimized ~ .preview {
+            width: 61%; /* Width when retract is minimized */
+        }
+
+        .retractIcon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .retractIcon:hover {
+                background-color: rgba(0, 0, 0, 0.1);
+                transform: scale(1.1);
+            }
+
+                .retractIcon:hover img {
+                    filter: brightness(0.8) contrast(1.2);
+                    transform: rotate(10deg);
+                }
+
+        .sidebarToggleIcon {
+            width: 24px; /* Adjust as needed */
+            height: 24px; /* Adjust as needed */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* For a more dramatic effect on click */
+        .retractIcon:active {
+            transform: scale(0.95);
+        }
+
+        .sidebarIcon {
+            width: 30px;
+            margin-right: 25px;
+        }
+
+        .previewTable {
+            border: 3px solid #cccccc;
+            border-radius: 6px;
+            padding: 12px 16px;
+            background-color: #fff;
+            margin-bottom: 15px
+        }
+
+            .previewTable th {
+                background-color: #ffffff !important;
+                color: #6a6969 !important;
+            }
+
+        .table > tbody > tr > td {
+            border-top: 0px !important;
+        }
+
         .main textarea {
             margin-bottom: 0px !important;
             height: 50px !important;
@@ -37,12 +117,25 @@
         }
 
             .menu-item:hover {
-                background-color: #e9ecef;
+                background-color: #438eb9;
+                color: white !important;
+            }
+
+            .menu-item img {
+                transition: all 0.3s ease; /* Smooth transition for image */
+            }
+
+            .menu-item:hover img {
+                filter: brightness(0) invert(1); /* White color */
+                transform: scale(1.1); /* 10% enlargement */
+                /* For better rendering during scale */
+                backface-visibility: hidden;
+                transform-style: preserve-3d;
             }
 
         .menu-title {
             display: flex;
-            justify-content: space-between;
+            justify-content: start;
             align-items: center;
         }
 
@@ -112,7 +205,7 @@
 
 
         .symptom-row, .vital-row, .history-row, .exam-row, .exam-text-row, .Systematic-Exam-Row, .refer-row,
-        .complaint-row, .Primary-Diagnosis-row, .Final-Diagnosis-row, .labtest-row, .diagnosticTest-row, .Medicene-row, .FollowUp-Row {
+        .complaint-row, .Primary-Diagnosis-row, .Final-Diagnosis-row, .labtest-row, .diagnosticTest-row, .Medicene-row, .FollowUp-Row, .Disposal-row {
             display: flex;
             align-items: center;
             margin-bottom: 2px;
@@ -128,14 +221,14 @@
             cursor: pointer;
         }
 
-        .history-row, .exam-text-row, .Systematic-Exam-Row, .Primary-Diagnosis-row, .Final-Diagnosis-row {
+        .history-row, .exam-text-row, .Systematic-Exam-Row, .Primary-Diagnosis-row, .Final-Diagnosis-row, .Disposal-row {
             height: 60px !important;
         }
 
             .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
             .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
-            .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover {
-                background-color: black;
+            .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover, .Disposal-row:hover {
+                background-color: #438eb9;
                 color: white !important;
                 /* Optional: Add slight scale effect */
                 transform: scale(1.02);
@@ -147,13 +240,18 @@
                     color: white !important;
                 }
 
-                .Medicene-row:hover .Medicene-label {
-                    color: white !important;
-                }
+        diagnostictest-label
+        .Medicene-row:hover .Medicene-label {
+            color: white !important;
+        }
 
-                .symptom-row:hover .fa-plus-circle {
-                    color: white !important;
-                }
+        .diagnosticTest-row:hover .diagnostictest-label {
+            color: white !important;
+        }
+
+        .symptom-row:hover .fa-plus-circle {
+            color: white !important;
+        }
 
         .symptom-row label {
             margin-left: 10px;
@@ -161,13 +259,13 @@
         }
 
         .mybutton {
+            font-size: 19px !important;
             width: fit-content !important;
-            height: 30px;
             background-color: #f0f1f3;
             padding: 3px 12px;
             border-radius: 8px;
             margin: 0;
-            color: #EFA63E !important;
+            color: #438eb9 !important;
             font-weight: bold !important;
             font-size: 16px;
             transition: all 0.3s ease; /* Smooth transition for all properties */
@@ -177,10 +275,24 @@
             margin-right: 5px;
         }
 
-            .mybutton:hover {
-                background-color: #000; /* Black background on hover */
-                color: #fff !important; /* White text on hover */
-            }
+        .mybutton2 {
+            font-size: 16px !important;
+            width: fit-content !important;
+            background-color: #438eb9;
+            padding: 3px 12px;
+            border-radius: 8px;
+            margin: 0;
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 16px;
+            transition: all 0.3s ease; /* Smooth transition for all properties */
+            margin-bottom: 5px;
+            border: 0px !important;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+
 
         .Medicene-row {
             position: relative;
@@ -206,6 +318,7 @@
     </style>
 
     <script id="ScriptmanageSymptomsModal">
+       
         $(document).on('input', '#symptomSearch', function () {
             const searchTerm = $(this).val().trim();
             const selectedValue = $('#departments').val();
@@ -263,7 +376,7 @@
 
             // Check if table is empty after removal
             if ($('#tblsymptomspreview tbody tr').length === 0) {
-                $('#symptomspreview').hide();
+                $('#symptomspreview').slideUp();
             }
 
             // Also uncheck the corresponding checkbox
@@ -294,7 +407,7 @@
 
 
                 $('#tblsymptomspreview tbody').append(html);
-                $('#symptomspreview').show();
+                $('#symptomspreview').slideDown();
 
 
             } else {
@@ -338,7 +451,7 @@
 
                             $('#tblsymptomspreview tbody').append(html);
                         });
-                        $('#symptomspreview').hide();
+                        $('#symptomspreview').slideUp();
                     }
                 },
                 error: function (xhr, status, error) {
@@ -413,6 +526,24 @@
 
     <script>
         $(document).ready(function () {
+            fillDepartment();
+            filldoc();
+            fillPendingPatientsList();
+            $('#ctl00_MainContent_ddlPatientDepartment').on("change", function () {
+                $('#ctl00_MainContent_ddlPatientDepartment').find('option:selected')[0].value;
+    fillPendingPatientsList();
+})
+            $('#06').click();
+            // Bind change events to all relevant controls
+    $('#<%= ddlDoctorName.ClientID %>, #<%= ddlIssuance_Of.ClientID %>, #<%= ddlFOllowUp.ClientID %>').change(function() {
+        updateFollowUpTable();
+    });
+    
+    // For the date field, you might want to use change or blur event
+    $('#<%= FollowNoDate.ClientID %>').on('change blur', function() {
+        updateFollowUpTable();
+    });
+   
             $("#ctl00_MainContent_FollowNoDate").datepicker();
             loaddoctor();
             FillMainTestDepartment();
@@ -471,10 +602,21 @@
             }
 
             // Update table visibility based on content
-            function updateTableVisibility() {
-                const hasContent = $referTable.find('td').text().trim() !== '';
-                $divRefer.toggle(hasContent);
-            }
+           function updateTableVisibility() {
+    const hasContent = $referTable.find('td').text().trim() !== '';
+    
+    if (hasContent) {
+        if ($divRefer.is(':hidden')) {
+            $divRefer.slideDown(300); // Slide down to show if currently hidden
+        }
+        // If already visible, do nothing (no animation)
+    } else {
+        if ($divRefer.is(':visible')) {
+            $divRefer.slideUp(300); // Slide up to hide if currently visible
+        }
+        // If already hidden, do nothing
+    }
+}
 
             // Handle patient category change
             $patientCategory.on('change', function () {
@@ -487,12 +629,12 @@
                 if (selectedValue && selectedValue !== "0") {
                     // Update department row
                     $deptRow.find('td').text("Department: " + selectedText);
-                    $deptRow.show();
+                    $deptRow.slideDown();
                 } else {
                     // Remove department row and all other rows if department is 0
                     $referTextbox.empty();
                     $referTable.empty();
-                    $divRefer.hide();
+                    $divRefer.slideUp();
                     return;
                 }
 
@@ -511,12 +653,12 @@
                 if (selectedValue && selectedValue !== "0") {
                     // Update doctor row
                     $doctorRow.find('td').text("Doctor: " + selectedText);
-                    $doctorRow.show();
+                    $doctorRow.slideDown();
                 } else {
                     // Remove doctor row
 
                     $doctorRow.find('td').empty();
-                    $doctorRow.hide();
+                    $doctorRow.slideUp();
                 }
 
                 updateTableVisibility();
@@ -533,17 +675,18 @@
                 if (inputValue) {
                     // Update note row
                     $noteRow.find('td').text("Note: " + inputValue);
-                    $noteRow.show();
+                    $noteRow.slideDown();
                 } else {
                     // Remove note row
                     $noteRow.find('td').empty();
-                    $noteRow.hide();
+                    $noteRow.slideUp();
                 }
 
                 updateTableVisibility();
             });
             $('#filterExaminations').change(filterExaminations);
             updateHistoryTable();
+            updateDisposalTable();
             loadDepartments();
             $('#filterDepartments option[value="000"]').prop('selected', true);
             GetSymptomsByDepartment();
@@ -568,7 +711,7 @@
 
                     // Hide table if it's empty
                     if ($('#tblGeneralExam tbody tr').length === 0) {
-                        $('#divtblGeneralExam').hide();
+                        $('#divtblGeneralExam').slideUp();
                     }
 
                     return; // Exit
@@ -593,7 +736,7 @@
                 }
 
                 // Show table
-                $('#divtblGeneralExam').show();
+                $('#divtblGeneralExam').slideDown();
             });
             // Handle search input
             $('#tab01Search').on('input', function () {
@@ -602,7 +745,7 @@
                 fillSymptoms(selectedValue, searchTerm);
             });
 
-            $('#dvtblSymtomps').hide();
+            $('#dvtblSymtomps').slideUp();
 
             $('#filterSelect').select2();
 
@@ -645,6 +788,9 @@
         $(document).on('input', '.history-row textarea, .history-row input[type="text"]', function () {
             updateHistoryTable();
         });
+        $(document).on('input', '.Disposal-row textarea, .Disposal-row input[type="text"]', function () {
+    updateDisposalTable();
+});
         $(document).on('input', '.Systematic-Exam-Row textarea, .Systematic-Exam-Row input[type="text"]', function () {
             updateSystematicExamTable();
         });
@@ -659,24 +805,24 @@
 
             // Hide table if no rows
             if ($('#tblGeneralExam tbody tr').length === 0) {
-                $('#divtblGeneralExam').hide();
+                $('#divtblGeneralExam').slideUp();
             }
         }
         function filterExaminations() {
 
             const selectedValue = $('#filterExaminations').val();
 
-            $('.subtabs').hide();
+            $('.subtabs').slideUp();
 
             if (selectedValue === '001') {
-                $('#subTab001').show();
+                $('#subTab001').slideDown();
             }
 
             else if (selectedValue === '002') {
-                $('#subTab002').show();
+                $('#subTab002').slideDown();
             }
             else {
-                $('#subTab003').show();
+                $('#subTab003').slideDown();
             }
         }
         function loaddoctor_byDep() {
@@ -792,7 +938,7 @@
                         });
                     } else {
                         $('#tblSymtoms tbody').append(html);
-                        $('#dvtblSymtomps').show(); // 👈 Show the table container
+                        $('#dvtblSymtomps').slideDown(); // 👈 Show the table container
                         $('#AddSymptomsByModal').modal('hide'); // Close the modal after adding
                     }
 
@@ -852,7 +998,7 @@
                     });
                 } else {
                     $('#tblSymtoms tbody').append(html);
-                    $('#dvtblSymtomps').show(); // 👈 Show the table container
+                    $('#dvtblSymtomps').slideDown(); // 👈 Show the table container
                 }
 
                 $('#txtSymtom').tokenInput('clear');
@@ -887,7 +1033,7 @@
 
             // 👇 Hide table if no rows left
             if ($('#tblSymtoms tbody tr').length === 0) {
-                $('#dvtblSymtomps').hide();
+                $('#dvtblSymtomps').slideUp();
             }
         }
         function Remove_SymtomRow(id) {
@@ -898,7 +1044,7 @@
                     row.remove();
                 }
                 if ($('#tblSymtoms tbody tr').length === 0) {
-                    $('#dvtblSymtomps').hide();
+                    $('#dvtblSymtomps').slideUp();
                 }
             });
         }
@@ -977,7 +1123,7 @@
         <td>${weight || '-'}</td>
     `);
             tbody.append(newRow);
-            tableContainer.show();
+            tableContainer.slideDown();
         }
         function updateHistoryTable() {
             const historyTable = $('#tblHistory tbody');
@@ -1006,62 +1152,71 @@
 
             // Show/hide container based on whether there's data
             if (hasData) {
-                historyContainer.show();
+                historyContainer.slideDown();
             } else {
-                historyContainer.hide();
+                historyContainer.slideUp();
             }
         }
-        function updateSystematicExamTable() {
-            const SystematicExamTable = $('#SystematicExam tbody');
-            const SystematicExam = $('#divtblSystematicExam');
-            let hasData = false;
+      function updateSystematicExamTable() {
+    const SystematicExamTable = $('#SystematicExam tbody');
+    const SystematicExam = $('#divtblSystematicExam');
+    let hasData = false;
 
-            // Clear existing rows
-            SystematicExamTable.empty();
+    // Clear existing rows (no animation here)
+    SystematicExamTable.empty();
 
-            // Process each examination field
-            $('.Systematic-Exam-Row').each(function () {
-                // Get the label - ASP.NET renders it as a span with ID ending with "_LabelXX"
-                const labelSpan = $(this).find('span[id*="_Label"]');
-                const label = labelSpan.length ? labelSpan.text().trim() : '';
+    // Process each examination field (original logic)
+    $('.Systematic-Exam-Row').each(function() {
+        const labelSpan = $(this).find('span[id*="_Label"]');
+        const label = labelSpan.length ? labelSpan.text().trim() : '';
+        
+        const textbox = $(this).find('textarea, input[type="text"]');
+        const value = textbox.length ? textbox.val().trim() : '';
 
-                // Get the textbox value
-                const textbox = $(this).find('textarea, input[type="text"]');
-                const value = textbox.length ? textbox.val().trim() : '';
-
-                if (value) {
-                    // Append new row with formatted text
-                    SystematicExamTable.append(`
+        if (value) {
+            SystematicExamTable.append(`
                 <tr>
                     <td><strong>${label}:</strong> ${value}</td>
                 </tr>
             `);
-                    hasData = true;
-                }
-            });
-
-            // Show/hide container based on whether there's data
-            SystematicExam.toggle(hasData);
+            hasData = true;
         }
+    });
+
+    // Only use slide effects for showing/hiding the container
+    if (hasData) {
+        if (SystematicExam.is(':hidden')) {
+            SystematicExam.slideDown(300); // Slide down to show
+        }
+        // If already visible, just leave it visible (no animation)
+    } else {
+        if (SystematicExam.is(':visible')) {
+            SystematicExam.slideUp(300); // Slide up to hide
+        }
+        // If already hidden, just leave it hidden
+    }
+}
         // Handle click for items without submenu (e.g., navigation, actions)
-        function navigateAction(element) {
-            // Hide all tabs first
-            const allTabs = document.querySelectorAll('.tabs');
-            allTabs.forEach(tab => {
-                tab.style.display = 'none';
-            });
+      function navigateAction(element) {
+    // Hide all tabs first (with slide up animation)
+    const allTabs = document.querySelectorAll('.tabs');
+    $(allTabs).not('#tab' + element.id).slideUp(300); // Only slide up non-target tabs
 
-            // Get the ID of the tab to show (e.g., "tab02" for "Vitals")
-            const tabId = 'tab' + element.id;
+    // Get the ID of the tab to show
+    const tabId = 'tab' + element.id;
 
-            // Show the selected tab
-            const selectedTab = document.getElementById(tabId);
-            if (selectedTab) {
-                selectedTab.style.display = 'block';
-            }
+    // Show the selected tab (with slide down animation)
+    const selectedTab = document.getElementById(tabId);
+    if (selectedTab) {
+        $(selectedTab).slideDown(300);
+    }
 
-            // You can add additional navigation logic here if needed
-        }
+    // Update header with the clicked span's text
+    const spanText = $(element).find('span').text().trim();
+    if (spanText) {
+        $('.header').text(spanText); // Update header text
+    }
+}
         function Add_GeneralExamRow(examName) {
             const $tableBody = $('#tblGeneralExam tbody');
 
@@ -1082,7 +1237,7 @@
             $tableBody.append($row);
 
             // Show table container
-            $('#divtblGeneralExam').show();
+            $('#divtblGeneralExam').slideDown();
         }
         function Remove_GeneralExamRow(examName) {
             // Remove the row
@@ -1093,7 +1248,7 @@
 
             // Hide the table container if no rows
             if ($('#tblGeneralExam tbody tr').length === 0) {
-                $('#divtblGeneralExam').hide();
+                $('#divtblGeneralExam').slideUp();
             }
         }
 
@@ -1448,7 +1603,7 @@
 
 
                 $('#tblComplaints tbody').append(html);
-                $('#dvtblComplaints').show();
+                $('#dvtblComplaints').slideDown();
 
             } else {
                 Swal.fire({
@@ -1481,21 +1636,23 @@
 
             // Hide the table if there are no more rows
             if ($('#tblComplaints tbody tr').length === 0) {
-                $('#dvtblComplaints').hide();
+                $('#dvtblComplaints').slideUp();
             }
         }
 
         function handlePrimaryDiagnosisRow(diagnosisId, diagnosisName) {
+            debugger;
             // Get the textarea value
             const remarks = $('#txtPrimaryDiagnosis_' + diagnosisId).val().trim();
 
             // Check if row already exists
             const existingRow = $('#PrimarydiagnosisRow_' + diagnosisId);
-
+            debugger;
             if (existingRow.length) {
                 // Update existing row
                 existingRow.find('td:eq(2)').text(remarks);
-            } else {
+            }
+            else {
                 // Create new row
                 const newRow = `
             <tr id="PrimarydiagnosisRow_${diagnosisId}">
@@ -1509,12 +1666,12 @@
                 </td>
             </tr>
         `;
-
-                $('#tblPrimaryDiagnosis tbody').append(newRow);
+                 console.log(newRow);
+                $("#tblPrimaryDiagnosis tbody").append(newRow);
             }
 
             // Show table if hidden
-            $('#dvtblPrimaryDiagnosis').show();
+            $('#dvtblPrimaryDiagnosis').slideDown();
         }
 
         function removePrimaryDiagnosisRow(diagnosisId) {
@@ -1527,7 +1684,7 @@
 
             // Hide table if no rows left
             if ($('#tblPrimaryDiagnosis tbody tr').length === 0) {
-                $('#dvtblPrimaryDiagnosis').hide();
+                $('#dvtblPrimaryDiagnosis').slideUp();
             }
         }
 
@@ -1586,7 +1743,7 @@
             }
 
             // Show table if hidden
-            $('#dvtblFinalDiagnosis').show();
+            $('#dvtblFinalDiagnosis').slideDown();
         }
 
         function removeFinalDiagnosisRow(diagnosisId) {
@@ -1599,7 +1756,7 @@
 
             // Hide table if no rows left
             if ($('#tblFinalDiagnosis tbody tr').length === 0) {
-                $('#dvtblFinalDiagnosis').hide();
+                $('#dvtblFinalDiagnosis').slideUp();
             }
         }
 
@@ -1666,7 +1823,7 @@
 
             // Hide table if no rows left
             if ($('.tests-table tr').length === 0) {
-                $('#dvtblLabtest').hide();
+                $('#dvtblLabtest').slideUp();
             }
         }
         function ShowLabTestDetails(serialNo, testName) {
@@ -1683,7 +1840,7 @@
                 const $otherIcon = $(`#LabTestchk_${otherSerialNo}`).closest('.labtest-row').find('i');
 
                 $otherDiv.slideUp(300, function () {
-                    $otherCheckbox.show();
+                    $otherCheckbox.slideDown();
                     $otherIcon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
                 });
             });
@@ -1718,7 +1875,7 @@
 </div>`;
 
                 // Hide checkbox immediately
-                $checkbox.hide();
+                $checkbox.slideUp();
 
                 // Insert and show details
                 $row.after(detailsHtml)
@@ -1779,28 +1936,28 @@
                             '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' +
                             txtAreaOfInterest + '</td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
-                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_LabTestRow(' + test + ')">' +
-                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '<a href="javascript:void(0)" onclick="Remove_LabTestRow(' + test + ')">' +
+                            '<i class="fa fa-trash"></i></a>' +
                             '</td></tr>';
 
                         test_array = $('.tests-table').find('input[name=testID][value="' + value.Test_ID + '"]');
                     }
                     else {
                         row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td><td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
-                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="deleteTest(this)">' +
-                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '<a href="javascript:void(0)" onclick="deleteTest(this)">' +
+                            '<i class="fa fa-trash"></i></a>' +
                             '</td></tr>';
                         test_array = $('.tests-table').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
                     }
                     $('#LabTestchk_' + serial).prop('checked', true);
                     $('.tests-table').append(row);
                 });
-                $('#dvtblLabtest').show();
+                $('#dvtblLabtest').slideDown();
                 // Hide the details div after adding/updating
                 var $detailsDiv = $('#labTestDetails_' + serial);
                 if ($detailsDiv.length) {
                     $detailsDiv.slideUp(300, function () {
-                        $('#LabTestchk_' + serial).show();
+                        $('#LabTestchk_' + serial).slideDown();
                         $detailsDiv.remove();
                         $('.labtest-row').find('i.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
                     });
@@ -1819,43 +1976,43 @@
             if (maindpt == "0") {
                 $('#ddlTestList').val("");
                 $('#ddlTestList').text("");
-                $('#divRotation').hide();
-                $('#ddlXRayLF').hide();
+                $('#divRotation').slideUp();
+                $('#ddlXRayLF').slideUp();
             }
             else if (maindpt == "002") {
-                $('#ddlXRayLF').hide();
-                $('#ddl_xray_rotation').hide();
+                $('#ddlXRayLF').slideUp();
+                $('#ddl_xray_rotation').slideUp();
                 FillTestsByCategory('002', searchTerm);
 
             }
             else if (maindpt == "003") {
-                $('#ddl_xray_rotation').show();
+                $('#ddl_xray_rotation').slideDown();
                 FillTestsByCategory('003', searchTerm);
-                $('#ddlXRayLF').hide();
+                $('#ddlXRayLF').slideUp();
             }
             else if (maindpt == "004") {
-                $('#ddl_xray_rotation').hide();
+                $('#ddl_xray_rotation').slideUp();
                 FillTestsByCategory('004', searchTerm);
-                $('#ddlXRayLF').hide();
+                $('#ddlXRayLF').slideUp();
 
             }
             else if (maindpt == "005") {
-                $('#ddl_xray_rotation').hide();
+                $('#ddl_xray_rotation').slideUp();
                 FillProcedure("005", searchTerm);
-                $('#divRotation').hide();
-                $('#ddlXRayLF').hide();
+                $('#divRotation').slideUp();
+                $('#ddlXRayLF').slideUp();
             }
             else if (maindpt == "006") {
-                $('#ddl_xray_rotation').hide();
+                $('#ddl_xray_rotation').slideUp();
                 FillProcedure("006", searchTerm);
-                $('#divRotation').hide();
-                $('#ddlXRayLF').hide();
+                $('#divRotation').slideUp();
+                $('#ddlXRayLF').slideUp();
             }
             else if (maindpt == "007") {
-                $('#ddl_xray_rotation').hide();
+                $('#ddl_xray_rotation').slideUp();
                 FillProcedure("007", searchTerm);
-                $('#divRotation').hide();
-                $('#ddlXRayLF').hide();
+                $('#divRotation').slideUp();
+                $('#ddlXRayLF').slideUp();
             }
         }
         function FillTestsByCategory(CategoryID, searchTerm) {
@@ -1898,7 +2055,7 @@
                 const $otherIcon = $otherRow.find('i');
 
                 $otherDiv.slideUp(300, function () {
-                    $otherCheckbox.show();
+                    $otherCheckbox.slideDown();
                     $otherIcon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
                 });
             });
@@ -1946,7 +2103,7 @@
 </div>`;
 
                 // Hide checkbox immediately
-                $checkbox.hide();
+                $checkbox.slideUp();
 
                 //filldropdowns
                 if (maindepartment === '003') {
@@ -2049,8 +2206,8 @@
                             rotationText + '</td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
 
-                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +  // Fixed function name
-                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '<a href="javascript:void(0)" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +  // Fixed function name
+                            '<i class="fa fa-trash"></i></a>' +
                             '</td></tr>';
 
                         test_array = $('#tblDiagnostictest').find('input[name=testID][value="' + value.Test_ID + '"]');
@@ -2068,8 +2225,8 @@
                             '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' + txtAreaOfInterest + '</td>' +
                             '<td><input type="hidden" name="txtArea_Of_Interest" value="' + rotationVal + '"/> ' + rotationText + '</td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
-                            '<a href="javascript:void(0)" style="border-radius: 4px; background-color: #ad170c; margin-left: 4px; color:white; padding: 5px 8px;" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +
-                            '<i class="fa fa-trash" style="color: white !important;margin-top: 10px;"></i></a>' +
+                            '<a href="javascript:void(0)" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +
+                            '<i class="fa fa-trash" ></i></a>' +
                             '</td></tr>';
                         test_array = $('#tblDiagnostictest').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
                     }
@@ -2079,13 +2236,13 @@
                     $('#tblDiagnostictest tbody').append(row);
                 });
 
-                $('#dvtblDiagnostictest').show();
+                $('#dvtblDiagnostictest').slideDown();
 
                 // Hide the details div after adding/updating
                 var $detailsDiv = $('#DiagnosticTestDetails_' + serial);
                 if ($detailsDiv.length) {
                     $detailsDiv.slideUp(300, function () {
-                        $('#DiagnosticTestchk_' + serial).show();
+                        $('#DiagnosticTestchk_' + serial).slideDown();
                         $('.diagnosticTest-row').find('i.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
                     });
                 }
@@ -2102,7 +2259,7 @@
 
             // Hide table if no rows left (checking only data rows, not header)
             if ($('#tblDiagnostictest tbody tr').length === 0) {
-                $('#dvtblDiagnostictest').hide();
+                $('#dvtblDiagnostictest').slideUp();
             }
         }
 
@@ -2354,7 +2511,7 @@
             row.remove();
 
             if ($('#tblMedicines tbody tr').length === 0) {
-                $('#dvtblMedicines').hide();
+                $('#dvtblMedicines').slideUp();
             }
 
         }
@@ -2420,7 +2577,7 @@
                     '<td>' + otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '"></td>' +
                     '<td>' +
                     '<a href="#" onclick="editMedicine(this)">Edit</a> | ' +
-                    '<a href="#" onclick="deleteMedicine(this)">Delete</a>' +
+                    '<a href="#" onclick="deleteMedicine(this)"><i class="fa fa-trash"></i></a>' +
                     '<input type="hidden" name="uurowid" value="' + serialNo + '" />' +
                     '</td>' +
                     '<td style="display:none;"></td>' +
@@ -2431,8 +2588,8 @@
             }
 
             // Rest of your existing code remains exactly the same...
-            $('#dvtblMedicines').show();
-            $('#MediceneDetails_' + serialNo).hide();
+            $('#dvtblMedicines').slideDown();
+            $('#MediceneDetails_' + serialNo).slideUp();
 
             if (existingRow.length === 0) {
                 $('#mediceneDose_' + serialNo).val('');
@@ -2465,13 +2622,13 @@
             ShowMediceneDetails(serialNo, testName, true, existingValues);
         }
         function ShowMediceneTemplateDiv() {
-            $('.tab11subtab').hide();
-            $('#tab11_02').show();
+            $('.tab11subtab').slideUp();
+            $('#tab11_02').slideDown();
             FillMediceneTemplates("");
         }
         function ShowAllMedicenesDiv() {
-            $('.tab11subtab').hide();
-            $('#tab11_01').show();
+            $('.tab11subtab').slideUp();
+            $('#tab11_01').slideDown();
 
         }
         function FillMediceneTemplates(searchValue) {
@@ -2539,10 +2696,10 @@
                     var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
                     debugger;
 
-                    rows += '<tr value=' + Templateid + '> <td style="display:none"><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="deleteMedicine(this)"> Delete </a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
+                    rows += '<tr value=' + Templateid + '> <td style="display:none"><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="deleteMedicine(this)"><i class="fa fa-trash"></i></a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
                 });
                 $('#tblMedicines tbody').append(rows);
-                $('#dvtblMedicines').show();
+                $('#dvtblMedicines').slideDown();
             })
         }
         function LoadDesignation() {
@@ -2553,8 +2710,10 @@
                 var rowsText = '';
                 debugger;
                 $('#ctl00_MainContent_txtDesignation').val(doctor.Emp_designatin);
+                updateFollowUpTable();
             });
             ConfigureAvailableDates(DocID);
+            
         }
         function ConfigureAvailableDates(DocID) {
             $.ajax({
@@ -2600,7 +2759,202 @@
                 $('#ctl00_MainContent_ddlDoctorName').select2();
             });
         }
-        
+        function updateFollowUpTable() {
+    // Get values from form inputs
+    var doctorName = $('#<%= ddlDoctorName.ClientID %> option:selected').text();
+    var doctorId = $('#<%= ddlDoctorName.ClientID %>').val();
+    var designation = $('#<%= txtDesignation.ClientID %>').val();
+    var admission = $('#<%= ddlIssuance_Of.ClientID %> option:selected').text();
+    var admissionId = $('#<%= ddlIssuance_Of.ClientID %>').val();
+    var followUp = $('#<%= ddlFOllowUp.ClientID %> option:selected').text();
+    var followUpId = $('#<%= ddlFOllowUp.ClientID %>').val();
+    var followUpDate = $('#<%= FollowNoDate.ClientID %>').val();
+
+    // Only proceed if at least one field has a value
+    if (!doctorId && !followUpId && !followUpDate) {
+        return false;
+    }
+
+    var table = $('#tblFollowUp tbody');
+    var existingRow = table.find('tr').first();
+
+    if (existingRow.length > 0) {
+        // Update existing row
+        if (doctorId) {
+            existingRow.find('td:eq(0)').text(doctorName).attr('data-id', doctorId);
+            existingRow.find('td:eq(1)').text(designation);
+        }
+        if (admissionId) {
+            existingRow.find('td:eq(2)').text(admission).attr('data-id', admissionId);
+        }
+        if (followUpId) {
+            existingRow.find('td:eq(3)').text(followUp).attr('data-id', followUpId);
+        }
+        if (followUpDate) {
+            existingRow.find('td:eq(4)').text(followUpDate);
+        }
+    } else {
+        // Create new row only if at least one required field is filled
+        if (doctorId || followUpId || followUpDate) {
+            var newRow = $('<tr>').append(
+                $('<td>').text(doctorName || '').attr('data-id', doctorId || ''),
+                $('<td>').text(designation || ''),
+                $('<td>').text(admission || '').attr('data-id', admissionId || ''),
+                $('<td>').text(followUp || '').attr('data-id', followUpId || ''),
+                $('<td>').text(followUpDate || '')
+            );
+            
+            // Append to table
+            table.append(newRow);
+            $('#divtblFollowUp').slideDown();
+        }
+    }
+    
+    return true;
+}
+function updateDisposalTable() {
+    const DisposalTable = $('#tblDisposal tbody');
+    const DisposalContainer = $('#divtblDisposal');
+    let hasData = false;
+
+    // Clear existing rows
+    DisposalTable.empty();
+
+    // Process each Disposal field
+    $('.Disposal-row').each(function () {
+        const label = $(this).find('span').text().trim();
+        const textbox = $(this).find('textarea, input[type="text"]');
+        const value = textbox.val().trim();
+
+        if (value) {
+            // Append new row with formatted text
+            DisposalTable.append(`
+        <tr>
+            <td><strong>${label}:</strong> ${value}</td>
+        </tr>
+    `);
+            hasData = true;
+        }
+    });
+
+    // Show/hide container based on whether there's data
+    if (hasData) {
+        DisposalContainer.slideDown();
+    } else {
+        DisposalContainer.slideUp();
+    }
+}
+function AddProto() {
+    debugger;
+    var protoval = $('#ctl00_MainContent_ddlProto').val();
+    var prototext = $('#ctl00_MainContent_ddlProto option:selected').text();
+
+    var rows = '<tr><td ><input type="hidden" name="ProtoId" value="' + protoval + '" />' + prototext + '</td> <td style="text-align: left;"> <a  href="#" onclick="DeleteRow(this)">Delete</a> </td> </tr>';
+    $("#tblProto").append(rows);
+    $("#dvtblProto").slideDown();
+}
+function DeleteRow(anchor) {
+    var row = $(anchor).parents('tr')[0];
+    row.remove();
+    // Check if there are no more rows left in the tbody
+    if ($("#tblProto tbody tr").length === 0) {
+        $("#dvtblProto").slideUp();
+    }
+}
+function toggleRetract() {
+    const retractDiv = document.getElementById('retract');
+    retractDiv.classList.toggle('minimized');
+    
+    
+    // Update preview width
+    const preview = document.querySelector('.preview');
+    preview.style.width = retractDiv.classList.contains('minimized') ? "61%" : "50%";
+}
+ function fillDepartment() {
+     var options;
+     PageMethods.GetAllDeparmtent(function (data) {
+         debugger;
+         var options = '<option value="0" >Please Select</option>';
+         $.each(JSON.parse(data), function (key, value) {
+             options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+         });
+         $("#ctl00_MainContent_ddlPatientDepartment").html(options);
+         $("#ctl00_MainContent_ddlPatientDepartment").select2();
+     });
+     return options;
+ }
+
+ function filldoc() {
+     var options;
+     PageMethods.Getdoctors(function (data) {
+         debugger;
+         var options = '<option value="0" >Please Select</option>';
+         $.each(JSON.parse(data), function (key, value) {
+             options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+         });
+         $("#ctl00_MainContent_ddldocname").html(options);
+         $("#ctl00_MainContent_ddldocname").select2();
+     });
+     return options;
+ }
+ 
+function fillPendingPatientsList() {
+    debugger;
+    $(".se-pre-con").fadeIn("slow");
+    $($('#tabs').find('ul').find('li')[1]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[2]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[3]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[4]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[5]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[6]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[7]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[8]).css("pointer-events", "none");
+    $($('#tabs').find('ul').find('li')[9]).css("pointer-events", "auto");
+    var filterDepartment = $('#ctl00_MainContent_ddlPatientDepartment').val();
+    var doc_name = $('#ctl00_MainContent_ddldocname').val();
+    if (doc_name == null) {
+        doc_name == "0"
+    }
+
+    PageMethods.PendingPatients(filterDepartment, doc_name, function (data) {
+        debugger;
+        var parsedData = JSON.parse(data);
+        var rows = '';
+        $.each(parsedData, function (key, value) {
+            debugger;
+            var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
+            var retdate = moment(TrnsDate).format('LLLL');
+            var status = '';
+            if (value.Checked == null) {
+                status = 'Un Checked';
+            }
+            if (value.Checked != null) {
+                    var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
+            }
+
+            rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
+        });
+        debugger;
+        $('#tblPendingPatients tbody').html(rows);
+
+        $(".se-pre-con").fadeOut("slow");
+
+    }, function (exec) { })
+}
+function openQueue(){
+    // Check if QueueList is currently visible
+        if ($('#QueueList').is(':visible')) {
+            // Slide up QueueList and then show PreviewPane
+            $('#QueueList').slideUp('fast', function() {
+                $('#PreviewPane').slideDown('fast');
+            });
+        } else {
+            // Slide up PreviewPane and then show QueueList
+            $('#PreviewPane').slideUp('fast', function() {
+                $('#QueueList').slideDown('fast');
+            });
+        }
+}
     </script>
 </asp:Content>
 
@@ -2686,8 +3040,8 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <div class="card">
-                                <div class="card-body">
+                            <div class="cardd">
+                                <div class="cardd-body">
                                     <div id="symptomspreview">
                                         <div class="table-responsive">
                                             <table class="table" id="tblsymptomspreview">
@@ -2720,18 +3074,118 @@
     </div>
 
     <div class="row">
+        <!-- sidebar -->
+        <div class="col-md-2 col-sm-12 p-0" id="retract">
+            <div class="sidebarr">
+                <div class="menu-item no-submenu" id="06" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/complaints.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Complaints</span>
+                    </div>
+                </div>
+                <div class="menu-item no-submenu" id="01" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/symptoms.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Symptoms</span>
+                    </div>
+                </div>
+                <div class="menu-item no-submenu" id="02" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/vitals.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Vitals</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="03" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/history.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>History</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="04" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/examination.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Examination</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="05" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/refer.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Refer To</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/primarydiagnosis.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Primary Diagnosis</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="08" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/finaldiagnosis.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Final Diagnosis</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="09" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/investigation.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Investigation</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="10" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/diagnostics.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Diagnostics</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="11" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/medication.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Medication</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/followup.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Follow Up</span>
+                    </div>
+                </div>
+
+                <div class="menu-item no-submenu" id="13" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/disposal.png" alt="Profile Picture" class="sidebarIcon">
+                        <span>Disposal</span>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
         <!-- Left Column (6 units) -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <!-- Patient Card -->
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
+                    <div class="cardd">
+                        <div class="card-bodyy">
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-4 text-center">
-                                    <div class="image-container">
-                                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
+                                    <div class="row">
+                                        <div class="image-container">
+                                            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
+                                        </div>
                                     </div>
+                                    <div class="row">
+                                    </div>
+
                                 </div>
                                 <div class="col-lg-9 col-md-9 col-sm-8">
                                     <asp:TextBox ID="txtOut_Patient_ID" runat="server" ReadOnly="True" Style="display: none;"></asp:TextBox>
@@ -2794,114 +3248,26 @@
                         </div>
                     </div>
                 </div>
+                <hr />
             </div>
 
-            <!-- Sidebar and Content Area -->
+            <!--Content Area -->
             <div class="row">
-                <!-- Sidebar (4 units) -->
-                <div class="col-md-4 col-sm-12 p-0">
-                    <div class="sidebarr">
-                        <div class="menu-item no-submenu" id="06" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Complaints</span>
+                <div class="col-md-12 col-sm-12">
+                    <div class="cardd">
+                        <div class="cardd-body">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px">
+                                <div style="width: fit-content !important;" class="retractIcon">
+                                    <img onclick="toggleRetract()" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/sidebar.png"
+                                        alt="Sidebar Toggle" class="sidebarToggleIcon" />
+                                </div>
+                                <h2 class="header mybutton"></h2>
                             </div>
-                        </div>
-                        <div class="menu-item no-submenu" id="01" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Symptoms</span>
-                            </div>
-                        </div>
-                        <div class="menu-item no-submenu" id="02" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Vitals</span>
-                            </div>
-                        </div>
 
-                        <div class="menu-item no-submenu" id="03" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>History</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="04" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Examination</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="05" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Refer To</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Primary Diagnosis</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="08" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Final Diagnosis</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="09" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Investigation</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="10" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Diagnostics</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="11" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Medication</span>
-                            </div>
-                        </div>
-
-
-                        <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Follow Up</span>
-                            </div>
-                        </div>
-
-                        <div class="menu-item no-submenu" id="13" onclick="navigateAction(this)">
-                            <div class="menu-title">
-                                <span>Disposal</span>
-                            </div>
-                        </div>
-
-
-                        <div class="menu-item" onclick="toggleMenu(this)">
-                            <div class="menu-title">
-                                <span>Tests</span>
-                                <span class="toggle-icon"></span>
-                            </div>
-                            <div class="submenu">
-                                <div class="submenu-item">By Template</div>
-                                <div class="submenu-item">Add New</div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-
-                <!-- Content Area (8 units) -->
-                <div class="col-md-8 col-sm-12">
-                    <div class="card">
-                        <div class="card-body">
                             <div class="tabs" id="tab01" style="display: none">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
-                                    <input style="margin-left: 5px" type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+                                    <input type="button" class="mybutton2" value="Add New" onclick="AddNewSymptom()" />
+                                    <input style="margin-left: 5px" type="button" class="mybutton2" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
                                 </div>
                                 <div class="row">
                                     <div class="col-md-5 col-sm-12">
@@ -2918,7 +3284,7 @@
                             </div>
                             <div class="tabs" id="tab02" style="display: none">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add Vitals" onclick="AddVitals()" />
+                                    <input type="button" class="mybutton2" value="Add Vitals" onclick="AddVitals()" />
                                 </div>
                                 <div class="vitals-container">
                                     <!-- Pulse -->
@@ -3038,6 +3404,7 @@
 
                             </div>
                             <div class="tabs" id="tab03" style="display: none">
+
                                 <!-- History Section -->
                                 <div class="history-container">
 
@@ -3403,7 +3770,7 @@
                             </div>
                             <div class="tabs" id="tab06">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewComplaint()" />
+                                    <input type="button" class="mybutton2" value="Add New" onclick="AddNewComplaint()" />
                                 </div>
                                 <div style="display: none" id="divAddNewComplaint">
                                     <div style="display: flex; justify-content: center;">
@@ -3423,7 +3790,7 @@
                             </div>
                             <div class="tabs" id="tab07" style="display: none">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
+                                    <input type="button" class="mybutton2" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
                                 </div>
                                 <div style="display: none" id="divAddNewPrimaryDiagnosis">
                                     <div style="display: flex; justify-content: center;">
@@ -3443,7 +3810,7 @@
                             </div>
                             <div class="tabs" id="tab08" style="display: none">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewFinalDiagnosis()" />
+                                    <input type="button" class="mybutton2" value="Add New" onclick="AddNewFinalDiagnosis()" />
                                 </div>
                                 <div style="display: none" id="divAddNewFinalDiagnosis">
                                     <div style="display: flex; justify-content: center;">
@@ -3463,8 +3830,8 @@
                             </div>
                             <div class="tabs" id="tab09" style="display: none">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
-                                    <input style="margin-left: 5px" type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+                                    <input type="button" class="mybutton2" value="Add New" onclick="AddNewSymptom()" />
+                                    <input style="margin-left: 5px" type="button" class="mybutton2" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
                                 </div>
                                 <div class="row">
                                     <div class="col-md-5 col-sm-12">
@@ -3477,7 +3844,7 @@
                             </div>
                             <div class="tabs" id="tab10" style="display: none">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
+                                    <input type="button" class="mybutton2" value="Add New" onclick="AddNewSymptom()" />
                                 </div>
                                 <div class="row">
                                     <div class="col-md-5 col-sm-12">
@@ -3494,8 +3861,8 @@
                             </div>
                             <div class="tabs" id="tab11" style="display: none">
                                 <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="By Template" onclick="ShowMediceneTemplateDiv()" />
-                                    <input style="margin-left: 5px" type="button" class="mybutton" value="All Meds" onclick="ShowAllMedicenesDiv()" />
+                                    <input type="button" class="mybutton2" value="By Template" onclick="ShowMediceneTemplateDiv()" />
+                                    <input style="margin-left: 5px" type="button" class="mybutton2" value="All Meds" onclick="ShowAllMedicenesDiv()" />
                                 </div>
                                 <div id="tab11_01" class="tab11subtab">
                                     <div class="row">
@@ -3520,10 +3887,7 @@
 
                             </div>
                             <div class="tabs" id="tab12" style="display: none">
-                                <div style="display: flex; justify-content: flex-end;">
-                                    <input type="button" class="mybutton" value="Add New" onclick="AddNewSymptom()" />
-                                    <input style="margin-left: 5px" type="button" class="mybutton" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
-                                </div>
+
                                 <div class="row" style="width: 100%;">
                                     <!-- Doctor Name -->
                                     <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
@@ -3576,31 +3940,63 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tabs" id="tab13" style="display: none">
+                                <!-- Disposal Section -->
+                                <div class="Disposal-container">
+
+                                    <!-- Final Diagnosis -->
+                                    <div class="Disposal-row">
+                                        <div style="display: flex; align-items: center; width: 100%">
+                                            <asp:Label Style="width: 75%;" ID="Label20" runat="server" Text="Final Diagnosis"></asp:Label>
+                                            <asp:TextBox ID="txtFinalDiagnosis" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="1"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    <!-- Advice -->
+                                    <div class="Disposal-row">
+                                        <div style="display: flex; align-items: center; width: 100%">
+                                            <asp:Label Style="width: 75%;" ID="Label21" runat="server" Text="Advice"></asp:Label>
+                                            <asp:TextBox ID="txtAdvice" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="2"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+                                    <!-- Referral -->
+                                    <div class="Disposal-row">
+                                        <div style="display: flex; align-items: center; width: 100%">
+                                            <asp:Label Style="width: 75%;" ID="Label22" runat="server" Text="Referral"></asp:Label>
+                                            <asp:TextBox ID="Final_Rec" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="5"></asp:TextBox>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <h4 class="mybutton2">Protos:</h4>
+                                <asp:DropDownList ID="ddlProto" CssClass="dropdownBackgroud" Width="50%" runat="server" onchange="AddProto();" AppendDataBoundItems="true"></asp:DropDownList>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-
         </div>
 
         <!-- Right Column (6 units) -->
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-6 col-sm-12 preview">
 
             <div style="display: flex; justify-content: flex-end;">
-                <input type="button" class="mybutton" value="History" onclick="AddNewSymptom()" />
-                <input type="button" class="mybutton" value="Queue" onclick="openManageSymptomsModal()" />
-                <input type="button" class="mybutton" value="Discharge" onclick="AddNewSymptom()" />
-                <input type="button" class="mybutton" value="Reset" onclick="openManageSymptomsModal()" />
-                <input type="button" class="mybutton" value="Save" onclick="AddNewSymptom()" />
+                <input type="button" class="mybutton2" value="History" onclick="AddNewSymptom()" />
+                <input type="button" class="mybutton2" value="Queue" onclick="openQueue()" />
+                <input type="button" class="mybutton2" value="Discharge" onclick="AddNewSymptom()" />
+                <input type="button" class="mybutton2" value="Reset" onclick="openManageSymptomsModal()" />
+                <input type="button" class="mybutton2" value="Save" onclick="AddNewSymptom()" />
 
             </div>
-            <div class="card">
-                <div class="card-body">
+            <div id="PreviewPane" style="display: none">
+                <div>
                     <div class="row">
-                        <div class="col-lg-3" id="dvtblSymtomps">
+                        <div class="col-lg-3 " id="dvtblSymtomps">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table class="table" id="tblSymtoms">
                                         <thead>
                                             <tr>
@@ -3619,9 +4015,43 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="divtblVitals" style="display: none" class="col-lg-9">
+                        <div class="col-lg-3 " id="dvtblComplaints" style="display: none">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
+                                    <table class="table" id="tblComplaints">
+                                        <thead>
+                                            <tr>
+                                                <th style="display: none;">ComplaintID</th>
+                                                <th>Complaints</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divtblHistory" style="display: none" class="col-lg-6  ">
+                            <div>
+                                <div class="table-responsive previewTable">
+                                    <table class="table" id="tblHistory">
+                                        <thead>
+                                            <tr>
+                                                <th>History</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="divtblVitals" style="display: none" class="col-lg-9 ">
+                            <div>
+                                <div class="table-responsive previewTable">
                                     <table class="table" id="tblVitals">
                                         <thead>
                                             <tr>
@@ -3640,25 +4070,9 @@
                             </div>
 
                         </div>
-                        <div id="divtblHistory" style="display: none" class="col-lg-6">
+                        <div id="divtblGeneralExam" style="display: none" class="col-lg-3  ">
                             <div>
-                                <div class="table-responsive">
-                                    <table class="table" id="tblHistory">
-                                        <thead>
-                                            <tr>
-                                                <th>History</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div id="divtblGeneralExam" style="display: none" class="col-lg-3">
-                            <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table class="table" id="tblGeneralExam">
                                         <thead>
                                             <tr>
@@ -3673,9 +4087,10 @@
                             </div>
 
                         </div>
-                        <div id="divtblSystematicExam" style="display: none" class="col-lg-6">
+
+                        <div id="divtblSystematicExam" style="display: none" class="col-lg-6  ">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table class="table" id="SystematicExam">
                                         <thead>
                                             <tr>
@@ -3689,7 +4104,7 @@
                             </div>
 
                         </div>
-                        <div id="divtblRefer" style="display: none" class="col-lg-4">
+                        <div id="divtblRefer" style="display: none" class="col-lg-6 previewTable">
                             <div>
                                 <div class="table-responsive">
                                     <table class="table" id="tblRefer">
@@ -3705,26 +4120,10 @@
                             </div>
 
                         </div>
-                        <div class="col-lg-3" id="dvtblComplaints" style="display: none">
+
+                        <div class="col-lg-4  " id="dvtblPrimaryDiagnosis" style="display: none">
                             <div>
-                                <div class="table-responsive">
-                                    <table class="table" id="tblComplaints">
-                                        <thead>
-                                            <tr>
-                                                <th style="display: none;">ComplaintID</th>
-                                                <th>Complaints</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4" id="dvtblPrimaryDiagnosis" style="display: none">
-                            <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table class="table" id="tblPrimaryDiagnosis">
                                         <thead>
                                             <tr>
@@ -3740,9 +4139,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4" id="dvtblFinalDiagnosis" style="display: none">
+                        <div class="col-lg-4  " id="dvtblFinalDiagnosis" style="display: none">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table class="table" id="tblFinalDiagnosis">
                                         <thead>
                                             <tr>
@@ -3758,9 +4157,26 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12" id="dvtblLabtest" style="display: none">
+                        <div id="divtblDisposal" style="display: none" class="col-lg-4  ">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
+                                    <table class="table" id="tblDisposal">
+                                        <thead>
+                                            <tr>
+                                                <th>Disposal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-12  " id="dvtblLabtest" style="display: none">
+                            <div>
+                                <div class="table-responsive previewTable">
                                     <table id="tblLabtest" class="table table-bordered table-custom tests-table">
                                         <thead>
                                             <tr style="position: sticky; top: 0; z-index: 10;">
@@ -3779,9 +4195,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12" id="dvtblDiagnostictest" style="display: none">
+
+                        <div class="col-lg-12  " id="dvtblDiagnostictest" style="display: none">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table id="tblDiagnostictest" class="table table-bordered table-custom">
                                         <thead>
                                             <tr style="position: sticky; top: 0; z-index: 10;">
@@ -3801,9 +4218,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12" id="dvtblMedicines" style="display: none">
+
+                        <div class="col-lg-12  " id="dvtblMedicines" style="display: none">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table id="tblMedicines" class="table table-bordered table-custom">
                                         <thead>
                                             <tr style="position: sticky; top: 0px; z-index: 10;">
@@ -3825,13 +4243,35 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="divtblFollowUp" style="display: none" class="col-lg-4">
+
+                        <div id="divtblFollowUp" style="display: none" class="col-lg-8">
                             <div>
-                                <div class="table-responsive">
+                                <div class="table-responsive previewTable">
                                     <table class="table" id="tblFollowUp">
                                         <thead>
                                             <tr>
+                                                <th>Doctor Name</th>
+                                                <th>Designation</th>
+                                                <th>Admission</th>
                                                 <th>Follow Up</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="dvtblProto" style="display: none" class="col-lg-4  ">
+                            <div>
+                                <div class="table-responsive previewTable">
+                                    <table class="table" style="height: auto; overflow: scroll;" id="tblProto">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left;">Protos</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -3843,6 +4283,35 @@
                         </div>
 
                     </div>
+                </div>
+            </div>
+            <div id="QueueList">
+                <div class="row" style="margin-bottom:15px">
+                    <div class="col-lg-4"><select id="ddlPatientDepartment" runat="server"></select></div>
+                    <div class="col-lg-4"> <select id="ddldocname" onchange="fillPendingPatientsList();" runat="server"></select></div>
+                </div>
+                
+               
+                <div class="table-responsive previewTable">
+                    <table class="table table-bordered table-custom" id="tblPendingPatients">
+                        <thead id="ihead">
+                            <tr>
+                                <th>OPD No</th>
+                                <th>Token No</th>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Department</th>
+                                <th>Doctor</th>
+                                <th style="width: 173px;">Created Time</th>
+                                <th>Operator Name</th>
+                                <th>Status</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ibody">
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
