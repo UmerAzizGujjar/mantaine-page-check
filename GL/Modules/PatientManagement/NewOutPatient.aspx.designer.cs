@@ -15,15 +15,6 @@ namespace PMS.Modules.PatientManagement
     {
 
         /// <summary>
-        /// txtOut_Patient_ID control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtOut_Patient_ID;
-
-        /// <summary>
         /// lblPatient_Name control.
         /// </summary>
         /// <remarks>
@@ -1084,6 +1075,24 @@ namespace PMS.Modules.PatientManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlSelect ddldocname;
+
+        /// <summary>
+        /// txtOut_Patient_ID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOut_Patient_ID;
+
+        /// <summary>
+        /// txtPatient_ID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPatient_ID;
 
         /// <summary>
         /// hdfPatient_ID control.
