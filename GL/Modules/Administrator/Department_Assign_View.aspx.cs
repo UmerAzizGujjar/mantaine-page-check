@@ -23,7 +23,7 @@ namespace PMS.Modules.Administrator
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var policy = db.Policy_Department_Assignment.FirstOrDefault(p => p.Policy_Assign_Dep_id == policyId);
+                    var policy = db.Policy_Department_Assignments.FirstOrDefault(p => p.Policy_Assign_Dep_id == policyId);
                     if (policy != null)
                     {
                         policy.Is_Cancel = true;

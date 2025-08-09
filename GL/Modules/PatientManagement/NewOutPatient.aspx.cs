@@ -24,6 +24,60 @@ namespace PMS.Modules.PatientManagement
             }
 
         }
+        [System.Web.Services.WebMethod]
+        public static Detail GetDetail(string PatientID)
+        {
+            int Patien_No = DBClass.GetMRNOBy_PatientID(Convert.ToInt32(PatientID));
+            Detail pt = new Detail();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            Patient pat = new Patient();
+            pat = (from tbl in db.Patients
+                   where tbl.Patient_No == Patien_No
+                   orderby tbl.Entry_Date descending
+
+                   select tbl).FirstOrDefault();
+            if (pat != null)
+            {
+                pt.Name = pat.Full_Name;
+                pt.Gender = pat.Gender;
+                pt.Age = pat.Age_years.ToString();
+                if (pat.Entry_Date.HasValue)
+                    pt.Entry_Date = pat.Entry_Date.ToString();
+                pt.Address = pat.Permanent_Address;
+                pt.Mobile = pat.Mobile1;
+                pt.Entry_Date = pat.Created_Time.ToString();
+                pt.department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
+                HR_Employee doctor = null;
+
+                if (!string.IsNullOrEmpty(pat.Doctor_ID))
+                {
+                    doctor = db.HR_Employees.FirstOrDefault(e => e.Emp_ID == Convert.ToInt32(pat.Doctor_ID));
+                }
+                pt.dotorname = doctor != null ? doctor.Emp_Name : "";
+                pt.Patient_type = db.GetDataValueName("Patient Type", pat.Patient_Type);
+                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+                var Patientno = pat.Patient_No.ToString();
+                var count = (db.Patients.Where(v => v.Patient_No == Convert.ToInt32(Patientno)).ToList());
+                pt.Follow = count.Count.ToString();
+                return pt;
+            }
+            else
+                return pt;
+        }
+        public class Detail
+        {
+            public string Name;
+            public string Gender;
+            public string Age;
+            public string Mobile;
+            public string Address;
+            public string Entry_Date;
+            public string department;
+            public string Follow;
+            public string Patient_type;
+            public string dotorname;
+
+        }
         [WebMethod]
         public static string Getdoctors()
         {

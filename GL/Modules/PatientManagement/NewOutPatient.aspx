@@ -794,6 +794,50 @@
         $(document).on('input', '.Systematic-Exam-Row textarea, .Systematic-Exam-Row input[type="text"]', function () {
             updateSystematicExamTable();
         });
+        function loadPatient(PatientID) {
+           
+           
+                $.ajax({
+                    type: "POST",
+                    url: "OutPatients.aspx/GetDetail",
+                    data: "{'PatientID':" + PatientID + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccess,
+                    failure: function (response) {
+
+                    }
+                });
+            
+
+
+
+        }
+        function OnSuccess(data) {
+            if (data.d != '') {
+                var mydate = new Date(Date.parse(data.d.Entry_Date));
+                var dateR = mydate.toLocaleDateString();
+                var name = ReplaceNullWith_Space(data.d.Name);
+                var gender = ReplaceNullWith_Space(data.d.Gender);
+                var age = ReplaceNullWith_Space(data.d.Age);
+                var mobile = ReplaceNullWith_Space(data.d.Mobile);
+                var address = ReplaceNullWith_Space(data.d.Address);
+                var follow = ReplaceNullWith_Space(data.d.Follow);
+
+                // Display the data in the respective labels
+                $('#<%= vlblPatients_Name.ClientID %>').text(name);
+                $('#<%= vLbl_Age.ClientID %>').text(gender + "-" + age + "yrs"); // Combine Gender and Age
+                $('#<%= vLbl_Adress.ClientID %>').text(address);
+                $('#<%= vLbl_Contact.ClientID %>').text(mobile);
+                $('#<%= lblFollow.ClientID %>').text(follow);
+         <%--$('#<%= lblDoc.ClientID %>').text(ReplaceNullWith_Space(data.d.doctor));--%>
+       
+    }
+        }
+        function ReplaceNullWith_Space(value) {
+            // If the value is null or undefined, return an empty string (or a space if you prefer)
+            return value == null ? '' : value;
+        }
         function Remove_CustomInputRow() {
             const examName = 'CustomInput';
 
@@ -2932,7 +2976,7 @@ function fillPendingPatientsList() {
                     var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
             }
 
-            rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
+            rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
         });
         debugger;
         $('#tblPendingPatients tbody').html(rows);
@@ -4318,6 +4362,10 @@ function openQueue(){
     </div>
 
 
-
+     <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" ClientIDMode="Static" />
+ <asp:HiddenField ID="hdfReg_ID" Value="(New)" runat="server" ClientIDMode="Static" />
+ <asp:HiddenField ID="hdfPatient_No" runat="server" ClientIDMode="Static" />
+ <asp:HiddenField ID="hdfdhischarge" Value ="false" runat="server" ClientIDMode="Static" />
+ <asp:HiddenField ID="hdfFetch_ID" runat="server" ClientIDMode="Static" />
 
 </asp:Content>
