@@ -18,7 +18,7 @@
               fillDoctorBuilding();
               fillusers();
               fillroom();
-
+              fillPolicy();
               var time = new Date();
               var t = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
@@ -204,6 +204,7 @@
                       $("#ddlDesignation").val(empData.ddlDesignation);
                       $("#ddlFloor").val(empData.ddlFloor);
                       $("#ddlDepartment").val(empData.ddlDepartment);
+                      $("#ddlPolicy").val(empData.ddlPolicy).trigger('change');
                       $("#ddlPatientType").val(empData.ddlPatientType);
                       $("#btnSave").val(empData.btnSave);
                       $("#ChkDoctor").prop("checked", empData.ChkDoctor);
@@ -303,6 +304,7 @@
               var txtPanelAmount = $('#txtPanelAmount').val();
               var ddlPatientType = $('#ddlPatientType').val();
               var ddlDepartment = $('#ddlDepartment').val();
+              var ddlPolicy = $('#ddlPolicy').val();
               var ddlDesignation = $('#ddlDesignation').val();
               var txtEmployee_Phone2 = $('#txtEmployee_Phone2').val();
               var txtEmployee_Phone1 = $('#txtEmployee_Phone1').val();
@@ -355,6 +357,7 @@
                   "txtPanelAmount": txtPanelAmount,
                   "ddlPatientType": ddlPatientType,
                   "ddlDepartment": ddlDepartment,
+                  "ddlPolicy": ddlPolicy,
                   "ddlDesignation": ddlDesignation,
                   "txtEmployee_Phone2": txtEmployee_Phone2,
                   "txtEmployee_Phone1": txtEmployee_Phone1,
@@ -443,6 +446,27 @@
           function redirect() {
               window.location.href = "EmployeeView.aspx";
           }
+
+
+          function fillPolicy() {
+              $.ajax({
+                  url: 'Employee.aspx/GetAllPolicies',
+                  type: 'POST',
+                  contentType: 'application/json; charset=utf-8',
+                  dataType: 'json',
+                  success: function (res) {
+                      let data = res.d ? JSON.parse(res.d) : res;
+                      $('#ddlPolicy')
+                          .empty()
+                          .append('<option value="0">Please Select</option>')
+                          .append($.map(data, function (v) {
+                              return $('<option>', { value: v.Policy_ID, text: v.Policy_Name });
+                          }))
+                          .select2({ placeholder: "Please Select", allowClear: true, width: "90%" });
+                  }
+              });
+          }
+
 
       </script>
   
@@ -715,7 +739,12 @@
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Dependent</label>
                  <input type="text" id="txtdependent" name="txtdependent" />
-
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label>Policy</label>
+                <select id="ddlPolicy" name="ddlPolicy" class="form-control">
+                    <option value="">Please Select</option>
+                </select>
             </div>
                   <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
                  <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
