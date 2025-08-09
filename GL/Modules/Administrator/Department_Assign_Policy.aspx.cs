@@ -138,6 +138,7 @@ namespace PMS.Modules.Administrator
                                 Expiry_Date = policy.Expiry_Date,
                                 IsActive = policy.IsActive,
                                 Created_At = DateTime.Now,
+                                Is_Cancel = false,
                                 Created_By = AppConfig.UserID
                             };
                             db.Policy_Department_Assignments.InsertOnSubmit(newRecord);

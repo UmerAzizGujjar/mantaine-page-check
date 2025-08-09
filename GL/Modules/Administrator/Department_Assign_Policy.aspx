@@ -1,116 +1,138 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Department_Assign_Policy.aspx.cs" Inherits="PMS.Modules.Administrator.Department_Assign_Policy" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    var departmentOptions = "";
-    var policyOptions = "";
+        $(document).ready(function () {
+            fillDepartment();
+            let depID = '<%= Request.QueryString["Dep_ID"] %>';
 
-    function fillDepartment() {
-        $.ajax({
-            type: "POST",
-            url: "Department_Assign_Policy.aspx/GetAllDepartments",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                var data = response.d;
-                departmentOptions = '<option value="0">Please Select</option>';
-                $.each(data, function (key, value) {
-                    departmentOptions += '<option value="' + value.Department_ID + '">' + value.Department_Name + '</option>';
-                });
-                $("#ddlDepartment").html(departmentOptions).select2();
-               // addRow();
-            },
-            error: function (xhr, status, error) {
-                console.error("Failed to load departments: ", error);
-                $("#ddlDepartment").html('<option value="0">Load Error</option>');
-                addRow();
-            }
+            fillPolicy(function () {
+                bindEvents();
+                DepartmentPercentageValidation();
+
+                if (depID && depID !== "null" && depID !== "") {
+                    loadDepartmentEdit(depID);
+                    $("#btnSave").val("Update");
+                } else {
+                    addRow();
+                    $("#btnSave").val("Save");
+                }
+            });
         });
-    }
-
-    function loadDepartmentEdit(depId) {
-        $.ajax({
-            type: "POST",
-            url: "Department_Assign_Policy.aspx/GetDepartmentAssignments",
-            data: JSON.stringify({ dep_id: depId }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                const data = JSON.parse(response.d);
-                $("#policyTable tbody").empty();
-
-                $.each(data, function (index, d) {
-                    const row = $(createRow());
-
-                    $("#policyTable tbody").append(row);
-
-                    row.data('id', d.Dep_ID);
-                    row.find('[name="Fees"]').val(d.Fees);
-                    row.find('[name="Hospital_Share"]').val(d.Hospital_Share);
-                    row.find('[name="Doctor_Share"]').val(d.Doctor_Share);
-                    row.find('[name="Expiry_Date"]').val(d.Expiry_Date);
-                    row.find('[name="IsActive"]').prop("checked", d.IsActive);
-
-                    row.find('[name="Department"]').select2({ width: '100%' });
-                    row.find('[name="Policy_ID"]').select2({ width: '100%' });
-
-                    setTimeout(() => {
-                        row.find('[name="Department"]').val(d.Department_ID).trigger('change');
-                        row.find('[name="Policy_ID"]').val(d.Policy_ID).trigger('change');
-                    }, 200);
-
-                    row.find('.expiryDate').datepicker({ dateFormat: 'dd M yy', minDate: 0 });
-                });
-            }
-        });
-    }
 
 
+        var departmentOptions = "";
+        var policyOptions = "";
 
-    
+        function fillDepartment() {
+            $.ajax({
+                type: "POST",
+                url: "Department_Assign_Policy.aspx/GetAllDepartments",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = response.d;
+                    departmentOptions = '<option value="0">Please Select</option>';
+                    $.each(data, function (key, value) {
+                        departmentOptions += '<option value="' + value.Department_ID + '">' + value.Department_Name + '</option>';
+                    });
+                    $("#ddlDepartment").html(departmentOptions).select2();
+                    // addRow();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load departments: ", error);
+                    $("#ddlDepartment").html('<option value="0">Load Error</option>');
+                    addRow();
+                }
+            });
+        }
+
+        function loadDepartmentEdit(depId) {
+            $.ajax({
+                type: "POST",
+                url: "Department_Assign_Policy.aspx/GetDepartmentAssignments",
+                data: JSON.stringify({ dep_id: depId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const data = JSON.parse(response.d);
+                    $("#policyTable tbody").empty();
+
+                    $.each(data, function (index, d) {
+                        const row = $(createRow());
+
+                        $("#policyTable tbody").append(row);
+
+                        row.data('id', d.Dep_ID);
+                        row.find('[name="Fees"]').val(d.Fees);
+                        row.find('[name="Hospital_Share"]').val(d.Hospital_Share);
+                        row.find('[name="Doctor_Share"]').val(d.Doctor_Share);
+                        row.find('[name="Expiry_Date"]').val(d.Expiry_Date);
+                        row.find('[name="Active"]').prop("checked", d.IsActive);
+
+                        row.find('[name="Department"]').select2({ width: '100%' });
+                        row.find('[name="Policy_ID"]').select2({ width: '100%' });
+
+                        setTimeout(() => {
+                            row.find('[name="Department"]').val(d.Department_ID).trigger('change');
+                            row.find('[name="Policy_ID"]').val(d.Policy_ID).trigger('change');
+                        }, 200);
+
+                        row.find('.expiryDate').datepicker({ dateFormat: 'dd M yy', minDate: 0 });
+                    });
+                }
+            });
+        }
 
 
-    function fillPolicy() {
-        $.ajax({
-            type: "POST",
-            url: "Department_Assign_Policy.aspx/GetAllPolicies",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                var data = response.d;
-                policyOptions = '<option value="0">Please Select</option>';
-                $.each(data, function (key, value) {
-                    policyOptions += '<option value="' + value.Policy_ID + '">' + value.Policy_Name + '</option>';
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error("Failed to load policies: ", error);
-            }
-        });
-    }
 
 
 
-    function DepartmentPercentageValidation() {
-        $("#policyTable").on("input", '[name="Hospital_Share"], [name="Doctor_Share"]', function () {
-            let row = $(this).closest("tr");
-            let hospital = Number(row.find('[name="Hospital_Share"]').val()) || 0;
-            let doctor = Number(row.find('[name="Doctor_Share"]').val()) || 0;
 
-            if (hospital + doctor !== 100) {
-                row.addClass("invalid-share");
-                row.find('[name="Hospital_Share"], [name="Doctor_Share"]')
-                    .css("border", "2px solid red");
-            } else {
-                row.removeClass("invalid-share");
-                row.find('[name="Hospital_Share"], [name="Doctor_Share"]')
-                    .css("border", "");
-            }
-        });
-    }
+        function fillPolicy(callback) {
+            $.ajax({
+                type: "POST",
+                url: "Department_Assign_Policy.aspx/GetAllPolicies",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = response.d;
+                    policyOptions = '<option value="0">Please Select</option>';
+                    $.each(data, function (key, value) {
+                        policyOptions += '<option value="' + value.Policy_ID + '">' + value.Policy_Name + '</option>';
+                    });
+                    if (callback) callback();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load policies: ", error);
+                }
+            });
+        }
 
-    function createRow() {
-        return `
+
+
+
+        function DepartmentPercentageValidation() {
+            $("#policyTable").on("input", '[name="Hospital_Share"], [name="Doctor_Share"]', function () {
+                let row = $(this).closest("tr");
+                let hospital = Number(row.find('[name="Hospital_Share"]').val()) || 0;
+                let doctor = Number(row.find('[name="Doctor_Share"]').val()) || 0;
+
+                if (hospital + doctor !== 100) {
+                    row.find('[name="Hospital_Share"], [name="Doctor_Share"]')
+                        .attr("data-invalid-share", "true")
+                        .css("border", "2px solid red");
+                } else {
+                    row.find('[name="Hospital_Share"], [name="Doctor_Share"]')
+                        .removeAttr("data-invalid-share")
+                        .css("border", "");
+                }
+            });
+        }
+
+        function createRow() {
+            return `
     <tr>
         <td>
             <select name="Department" class="form-select department-select">
@@ -133,158 +155,144 @@
                title="Delete Row"></i>
         </td>
     </tr>`;
-    }
-
-    function addRow() {
-        if (!policyOptions) {
-            setTimeout(addRow, 200);
-            return;
         }
 
-        var $row = $(createRow());
-        $("#policyTable tbody").append($row);
-        $row.find(".department-select").select2();
-        $row.find(".policy-select").select2();
+        function addRow() {
+            if (!policyOptions) {
+                setTimeout(addRow, 200);
+                return;
+            }
 
-        $(".expiryDate").datepicker({
-            dateFormat: 'dd M yy',
-            changeMonth: true,
-            changeYear: true,
-            minDate: 0
-        });
-    }
+            var $row = $(createRow());
+            $("#policyTable tbody").append($row);
+            $row.find(".department-select").select2();
+            $row.find(".policy-select").select2();
 
-
-    function deleteRow() {
-        var $tableBody = $("#policyTable tbody");
-        var rowCount = $tableBody.children("tr").length;
-
-        if (rowCount <= 1) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Hold on!',
-                text: 'You must have at least one policy row.',
-                showConfirmButton: true,
-                confirmButtonText: 'OK',
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
+            $(".expiryDate").datepicker({
+                dateFormat: 'dd M yy',
+                changeMonth: true,
+                changeYear: true,
+                minDate: 0
             });
-            return; 
         }
 
-        $(this).closest("tr").remove();
-    }
 
-    function collectPolicies() {
-        let data = [];
-        $("#policyTable tbody tr").each(function () {
-            let dept = $(this).find('[name="Department"] option:selected');
-            let policy = $(this).find('[name="Policy_ID"] option:selected');
-            data.push({
-                Dep_ID: $(this).data("id") || 0,
-                Department_ID: dept.val(),
-                Department_Name: dept.text(),
-                Policy_ID: policy.val(),
-                Policy_Name: policy.text(),
-                Fees: $(this).find('[name="Fees"]').val(),
-                Hospital_Share: $(this).find('[name="Hospital_Share"]').val(),
-                Doctor_Share: $(this).find('[name="Doctor_Share"]').val(),
-                Expiry_Date: $(this).find('[name="Expiry_Date"]').val(),
-                IsActive: $(this).find('[name="Active"]').prop("checked")
-            });
-        });
-        return data;
-    }
+        function deleteRow() {
+            var $tableBody = $("#policyTable tbody");
+            var rowCount = $tableBody.children("tr").length;
 
-    function savePolicies() {
-        let data = collectPolicies();
-        if (data.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please add at least one policy.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-
-        if ($(".invalid-share").length > 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Hospital and Doctor share must total 100%',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "Department_Assign_Policy.aspx/SaveMultipleDepartmentPolicies",
-            data: JSON.stringify({ departmentPolicies: data }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function () {
+            if (rowCount <= 1) {
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Data saved successfully.',
-                    showConfirmButton: false,
-                    timer: 2500,
+                    icon: 'warning',
+                    title: 'Hold on!',
+                    text: 'You must have at least one policy row.',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
                     customClass: {
                         popup: 'swal-big-popup',
                         title: 'swal-big-title',
                         htmlContainer: 'swal-big-text'
                     }
                 });
-            },
-            error: function () {
-                Swal.fire("Error", "Failed to save.", "error");
+                return;
             }
-        });
-    }
 
-    function bindEvents() {
-        $("#btnAddRow").on("click", addRow);
-        $("#policyTable").on("click", ".btnDeleteRow", deleteRow);
-        $("#btnSave").on("click", savePolicies);
-    }
-
-    $(document).ready(function () {
-        fillDepartment(); 
-        fillPolicy();
-        bindEvents();
-        DepartmentPercentageValidation();
-
-        let depID = '<%= Request.QueryString["Dep_ID"] %>';
-
-        if (depID && depID !== "null" && depID !== "") {
-            loadDepartmentEdit(depID);
-            $("#btnSave").val("Update");
-        } else {
-            $("#btnSave").val("Save");
+            $(this).closest("tr").remove();
         }
 
+        function collectPolicies() {
+            let data = [];
+            $("#policyTable tbody tr").each(function () {
+                let dept = $(this).find('[name="Department"] option:selected');
+                let policy = $(this).find('[name="Policy_ID"] option:selected');
+                data.push({
+                    Dep_ID: $(this).data("id") || 0,
+                    Department_ID: dept.val(),
+                    Department_Name: dept.text(),
+                    Policy_ID: policy.val(),
+                    Policy_Name: policy.text(),
+                    Fees: $(this).find('[name="Fees"]').val(),
+                    Hospital_Share: $(this).find('[name="Hospital_Share"]').val(),
+                    Doctor_Share: $(this).find('[name="Doctor_Share"]').val(),
+                    Expiry_Date: $(this).find('[name="Expiry_Date"]').val(),
+                    IsActive: $(this).find('[name="Active"]').prop("checked")
+                });
+            });
+            return data;
+        }
+
+        function savePolicies() {
+            let data = collectPolicies();
+            if (data.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please add at least one policy.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            if ($('[name="Hospital_Share"][data-invalid-share="true"], [name="Doctor_Share"][data-invalid-share="true"]').length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Hospital and Doctor share must total 100%',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "Department_Assign_Policy.aspx/SaveMultipleDepartmentPolicies",
+                data: JSON.stringify({ departmentPolicies: data }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data saved successfully.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    window.location.reload();
+                },
+                error: function () {
+                    Swal.fire("Error", "Failed to save.", "error");
+                }
+            });
+        }
+
+        function bindEvents() {
+            $("#btnAddRow").on("click", addRow);
+            $("#policyTable").on("click", ".btnDeleteRow", deleteRow);
+            $("#btnSave").on("click", savePolicies);
+        }
+
+
         
-    });
 
 
-</script>
+    </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -315,6 +323,12 @@
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input id="btnSave" type="button" class="btn btn-primry" value="Save Data" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4">
+                    <input type="button" class="btn btn-primry" id="View" value="View" onclick="window.location = 'Department_Assign_View.aspx'" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4">
+                    <input type="button" class="btn btn-yellow" id="btnNew" value="New" onclick="window.location = 'Department_Assign_Policy.aspx'" />
                 </div>
             </div>
         </div>

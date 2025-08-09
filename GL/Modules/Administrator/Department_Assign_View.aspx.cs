@@ -52,7 +52,8 @@ namespace PMS.Modules.Administrator
                     var Total_Department = _dbContext.Policy_Department_Assignments.Count();
                     var Department_Assign = from a in _dbContext.Policy_Department_Assignments
                                             join p in _dbContext.Policies on a.Policy_ID equals p.Policy_ID
-                                            where p.Policy_Name.Contains(searchValue)
+                                            where a.Is_Cancel == false && 
+                                            p.Policy_Name.Contains(searchValue) 
                                             select new
                                             {
                                                 Dep_ID = a.Policy_Assign_Dep_id,

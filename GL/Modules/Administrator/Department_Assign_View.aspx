@@ -19,7 +19,7 @@
                   text: 'Add',
                   className: 'dt-button buttons-copy buttons-html5',
                   action: function () {
-                      window.location = 'shift_Assign_Policy.aspx';
+                      window.location = 'Department_Assign_Policy.aspx';
                   }
               },
               'copy', 'excel', 'pdf',
