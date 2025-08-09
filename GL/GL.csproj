@@ -4034,6 +4034,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Outpatient.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Pharmacy.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\pharmacyuser.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\Policy.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\PR.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Product.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Receipts.css" />
@@ -7582,6 +7583,7 @@
     <Content Include="wwwroot\khurshid\css\CustomCss\Outpatient.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Pharmacy.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\pharmacyuser.css" />
+    <Content Include="wwwroot\khurshid\css\CustomCss\Policy.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\PR.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Product.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Receipts.css" />
@@ -10977,6 +10979,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Maindashboard.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\Policy.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\registeruser.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Appointment.css" />
@@ -14166,6 +14169,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Maindashboard.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\Policy.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
@@ -14232,6 +14236,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Outpatient.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Pharmacy.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\pharmacyuser.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Policy.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\PR.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Product.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Receipts.css" />
@@ -14263,6 +14268,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\jquery.gritter.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Loader\Loader.css" />
     <Content Include="wwwroot\Tibbit_theme\css\MainDashboard.min.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\NewDatePicker.css" />
     <Content Include="wwwroot\Tibbit_theme\css\prettify.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\RegPat.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Report.css" />
@@ -17762,6 +17768,7 @@
     <Content Include="wwwroot\Tibbit_theme\Scripts\moment-with-locales.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\moment.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\moment.min.js" />
+    <Content Include="wwwroot\Tibbit_theme\Scripts\NewDatePicker.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\npm.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\requireFields.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\timepicki\bootstrap.min.js" />

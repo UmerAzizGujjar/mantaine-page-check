@@ -9,6 +9,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using static PMS.Modules.Administrator.Department_Assign_Policy;
 
 namespace PMS
 {
@@ -119,6 +120,7 @@ namespace PMS
                     txtFather_Name = employee.Father_Name,
                     txtEmployee_Date_of_Birth = employee.DOB.Value.ToString(AppConfig.DateFormat),
                     ddlDepartment = employee.Department,
+                    ddlPolicy = employee.Policy_id,
                     ddlDoctorBuilding = employee.Doctor_Building,
                     ddlDesignation = employee.Designation,
                     txtEmployee_Address = employee.Address,
@@ -327,6 +329,26 @@ namespace PMS
             }
             return data;
         }
+
+        [WebMethod]
+        public static string GetAllPolicies()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var policies = db.Policies
+                                 .Where(p => p.Active == true && p.Is_Cancel == false)
+                                 .Select(p => new
+                                 {
+                                     p.Policy_ID,
+                                     p.Policy_Name
+                                 })
+                                 .ToList();
+
+                return new JavaScriptSerializer().Serialize(policies);
+            }
+        }
+
+
         [WebMethod]
         public static string SaveData(EmployeeData dataa)
         {
@@ -397,6 +419,7 @@ namespace PMS
                 employee.Father_Name = dataa.txtFather_Name;
                 employee.DOB = Convert.ToDateTime(dataa.txtEmployee_Date_of_Birth);
                 employee.Department = dataa.ddlDepartment;
+                employee.Policy_id = dataa.ddlPolicy;
                 employee.userid = Convert.ToString(dataa.ddluser);
                 employee.Designation = dataa.ddlDesignation;
                 employee.Address = dataa.txtEmployee_Address;
@@ -621,6 +644,7 @@ namespace PMS
             public string txtPanelAmount { get; set; }
             public string ddlPatientType { get; set; }
             public string ddlDepartment { get; set; }
+            public int ddlPolicy { get; set; }
             public string ddlDesignation { get; set; }
             public string txtEmployee_Phone2 { get; set; }
             public string txtEmployee_Phone1 { get; set; }
