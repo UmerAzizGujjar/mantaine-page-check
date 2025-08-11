@@ -13,7 +13,6 @@
             var added = '<%= Request.QueryString["isAdd"] %>'
             var apdAdd = '<%= Request.QueryString["isAdd_apt"] %>'
             var OPDID = '<%= Request.QueryString["OPDID"] %>'
-
             $("#hdn_opdId").val(OPDID);
             setTimeout(function () {
                 if (reg_id != "" && added == "true") {
@@ -23,7 +22,6 @@
                     $('#ddlcashier').attr('disabled', true);
                 }
             }, 1000);
-
             setTimeout(function () {
                 if (apt_Id != "" && apdAdd == "true") {
                     Get_Pat_Info_Apt(reg_id, apt_Id);
@@ -32,39 +30,28 @@
                     $('#ddlcashier').attr('disabled', true);
                 }
             }, 2500);
-
-
             if (OPDID != "") {
                 setTimeout(function () {
                     loadPatientDetail(OPDID);
-
                     $('#btn-opdprint').show();
                     $('#btn-opdFormprint').show();
                 }, 1500);
             }
             else {
-                $('#ddlPatient_Type').select2();
-              
+                $('#ddlPatient_Type').select2();              
                 $('#ddl_Gender').select2();
                 $('#ddlGender').select2();
-                $('#ddlpanel').select2();
-             
+                $('#ddlpanel').select2();           
                 $('#ddlemployee').select2();
                 $('#ddldoctor').select2();
                 $('#ddlDepartment').select2();
-            }
-         
-           
-
-            
+            }                              
         });
         function DisableCardPrint() {
-
             var chkStatus = document.getElementById('<%=chckcardissue.ClientID%>');
             if (chkStatus.checked) {
                 $('#divcard').show();
                 $('#btnPrintBackCard').show()
-
             }
             else {
                 $('#divcard').hide();
@@ -73,7 +60,6 @@
         }
 
         function Approve() {
-            debugger;
             var pat_id = '<% =Request.QueryString["OPDID"] %>';
             var Pat_Category = $('#ddlPatient_Type').val();
             
