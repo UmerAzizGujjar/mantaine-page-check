@@ -291,16 +291,98 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(fee);
             }
         }
+        //[WebMethod]
+        //public static string loadRegistrationFees(string Doc)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+        //    var doc = (from emp in db.HR_Employees
+        //               where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+        //               select new { Amount = emp.Doctor_Amount + emp.Hospital_Amount }).FirstOrDefault();
+
+        //    return (new JavaScriptSerializer()).Serialize(doc);
+        //}
+
+        //[WebMethod]
+        //public static string loadRegistrationFees(string Doc)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+        //    int? policyId = (from emp in db.HR_Employees
+        //                     where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+        //                     select emp.Policy_id).FirstOrDefault();
+
+        //    if (policyId == null)
+        //        return (new JavaScriptSerializer()).Serialize(0); // no policy found
+
+        //    DateTime today = DateTime.Now;
+        //    TimeSpan currentTime = today.TimeOfDay;
+
+        //    var getAmount = (
+        //        from p in db.Policies
+        //        join pd in db.Policy_Details on p.Policy_ID equals pd.Policy_ID
+        //        where p.Policy_ID == policyId
+        //              && (
+        //                  (pd.Start_Time <= pd.End_Time &&
+        //                   pd.Start_Time <= currentTime && pd.End_Time >= currentTime)
+        //                  ||
+        //                  (pd.Start_Time > pd.End_Time &&
+        //                   (currentTime >= pd.Start_Time || currentTime <= pd.End_Time))
+        //              )
+        //        orderby pd.Policy_Detail_ID descending
+        //        select pd.Fees
+        //    ).FirstOrDefault();
+
+        //    return (new JavaScriptSerializer()).Serialize(getAmount ?? 0);
+        //}
+
         [WebMethod]
         public static string loadRegistrationFees(string Doc)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
-            var doc = (from emp in db.HR_Employees
-                       where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
-                       select new { Amount = emp.Doctor_Amount + emp.Hospital_Amount }).FirstOrDefault();
+            int? policyId = (from emp in db.HR_Employees
+                             where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+                             select emp.Policy_id).FirstOrDefault();
 
-            return (new JavaScriptSerializer()).Serialize(doc);
+            if (policyId == null)
+                return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy found." });
+
+            DateTime today = DateTime.Now;
+            TimeSpan currentTime = today.TimeOfDay;
+
+            // Get the policy details
+            var policyDetail = (
+                from pd in db.Policy_Details
+                where pd.Policy_ID == policyId
+                orderby pd.Policy_Detail_ID descending
+                select new { pd.Start_Time, pd.End_Time, pd.Fees }
+            ).FirstOrDefault();
+
+            if (policyDetail == null)
+                return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy detail found." });
+
+            bool isWithinTime =
+                (policyDetail.Start_Time <= policyDetail.End_Time &&
+                 policyDetail.Start_Time <= currentTime && policyDetail.End_Time >= currentTime)
+                ||
+                (policyDetail.Start_Time > policyDetail.End_Time && // overnight
+                 (currentTime >= policyDetail.Start_Time || currentTime <= policyDetail.End_Time));
+
+            if (!isWithinTime)
+            {
+                return (new JavaScriptSerializer()).Serialize(new
+                {
+                    success = false,
+                    message = "You cannot register at this time."
+                });
+            }
+
+            return (new JavaScriptSerializer()).Serialize(new
+            {
+                success = true,
+                fee = policyDetail.Fees
+            });
         }
         [WebMethod]
         public static string LoadEmplData(string employeeid)
