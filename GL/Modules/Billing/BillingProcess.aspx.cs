@@ -2393,12 +2393,6 @@ namespace PMS
                 pt.Room_Name = "";
                 pt.MainDepartment = "01";
 
-                //var inpatid_adv = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + " order by Advance_ID desc");
-                //if (inpatid_adv != "There is no row at position 0.")
-                //{
-                //    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpatid_adv);
-                //}
-
                 var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by Emergency_ID desc");
                 var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 1 order by In_Patient_ID desc");
                 var ipd_ids = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by In_Patient_ID desc");
@@ -2413,8 +2407,8 @@ namespace PMS
                 }
                 if (ipd_id != "There is no row at position 0.")
                 {
-                    pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where In_Patient_ID =" + ipd_id);
-                    pt.Balance = DBClass.getField("select sum(Balance_Amount) from Ar_Billings where In_Patient_ID =" + ipd_id);
+                    pt.paid_amount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
+                    pt.Balance = DBClass.getField("select sum(Balance_Amount) from Ar_Billings where Balance_Amount > 0 and In_Patient_ID =" + ipd_id);
                     pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
                     pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
                     pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);

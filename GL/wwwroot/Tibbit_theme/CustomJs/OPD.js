@@ -1062,6 +1062,8 @@ function SaveData() {
     var rollno = $('#ddlrollno').val();
     var Class = $('#ddlclass').val();
     var section = $('#ddlsection').val();
+    var FilterClinic = $('#ddlFilterClnic').val();
+    var Services = $('#ddlServices').val();
     var Cashier = $('#ddlcashier').val();
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked')
@@ -1297,6 +1299,8 @@ function SaveData() {
         rollno: rollno,
         Class: Class,
         section: section,
+        FilterClinic: FilterClinic,
+        Services: Services,
         Cashier: Cashier,
         accountid: accountid,
         IssueCard: IssueCard,
@@ -1361,13 +1365,11 @@ function get_pat_initial_info(ini_patientID) {
 }
 function loadFee() {
     debugger;
-    var res = '';
     var Doc = $('#ddldoctor').val();
-    var opdid = $('#hdn_opdId').val()
-    if (opdid != "" || opdid != "") {
+    var opdid = $('#hdn_opdId').val();
 
-    }
-    else {
+    if (opdid != "" || opdid != "") {       
+    } else {
         $.ajax({
             type: "POST",
             url: "OPD.aspx/loadRegistrationFees",
@@ -1376,25 +1378,31 @@ function loadFee() {
             dataType: "json",
             success: function (response) {
                 debugger;
-                var fee = JSON.parse(response.d);
-                if (fee == null) {
-                    $('#txtfees').val('');
+                var res = JSON.parse(response.d); 
+                if (!res.success) {                  
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: res.message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 } else {
-                    res = fee.Amount;
-                }
-                if (res != '') {
-                    $('#txtfees').val(parseInt(res));
-
+                   
+                    $('#txtfees').val(res.fee);
                 }
             },
             error: function (xhr, status, error) {
                 console.log("Error: " + error);
             }
         });
-
-
-
     }
+
     loadDepartment(Doc);
 }
 function loadDepartment(Doc) {
@@ -1553,6 +1561,8 @@ function loadPatientDetail(OPDID) {
             $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
             $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
+            $('#ddlServices').val(data.Service_id).trigger('change').attr('disabled', true);
+            $('#ddlFilterClnic').val(data.FilterClinic).trigger('change').attr('disabled', true);
 
             setTimeout(function () {
 

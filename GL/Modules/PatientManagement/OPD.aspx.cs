@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -16,9 +17,37 @@ namespace PMS.Modules.PatientManagement
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
         }
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public static Dictionary<string, bool> GetCompanyOPDPermissions()
+        {
+            try
+            {
+                int companyId = AppConfig.Company_ID; // Make sure this is accessible
 
+                if (companyId == 0 || companyId == null)
+                    return new Dictionary<string, bool>();
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var permissions = db.company_opd_policies
+                                       .Where(p => p.company_id == companyId)
+                                       .ToDictionary(
+                                           p => p.field_name.Trim(),
+                                           p => p.is_enabled
+                                       );
+
+                    return permissions;
+                }
+            }
+            catch
+            {
+                // Return empty to avoid crashing
+                return new Dictionary<string, bool>();
+            }
+        }
         [WebMethod]
         public static string approvepatient(string pat_id, string Pat_Category)
         {
@@ -43,6 +72,46 @@ namespace PMS.Modules.PatientManagement
                               {
                                   dv.DataValue_Name,
                                   dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }  
+        [WebMethod]
+        public static string GetClinics()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Filter Clinic"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string GetServices()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.INV_Items
+                              where dv.Services == true
+                              && dv.Active == true
+
+                              select new
+                              {
+                                  dv.Item_ID,
+                                  dv.Description
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
@@ -269,15 +338,7 @@ namespace PMS.Modules.PatientManagement
             {
                 var today = DateTime.Today.Date;
                 string formattedDate = DateTime.Today.ToString("yyyy-MM-dd");
-                var expirydate = (from tbl in db.Policy_Department_Assignments
-                           where tbl.Department_ID == Department_id
-                                 && tbl.IsActive == true
-                               
-                           orderby tbl.Policy_Assign_Dep_id descending
-                           select new
-                           {
-                               Code = tbl.Expiry_Date
-                           }).FirstOrDefault();
+             
 
                 var fee = (from tbl in db.Policy_Department_Assignments
                            where tbl.Department_ID == Department_id
@@ -291,16 +352,55 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(fee);
             }
         }
+      
+
         [WebMethod]
         public static string loadRegistrationFees(string Doc)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
-            var doc = (from emp in db.HR_Employees
-                       where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
-                       select new { Amount = emp.Doctor_Amount + emp.Hospital_Amount }).FirstOrDefault();
+            int? policyId = (from emp in db.HR_Employees
+                             where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+                             select emp.Policy_id).FirstOrDefault();
 
-            return (new JavaScriptSerializer()).Serialize(doc);
+            if (policyId == null)
+                return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy found." });
+
+            DateTime today = DateTime.Now;
+            TimeSpan currentTime = today.TimeOfDay;
+
+            // Get the policy details
+            var policyDetail = (
+                from pd in db.Policy_Details
+                where pd.Policy_ID == policyId
+                orderby pd.Policy_Detail_ID descending
+                select new { pd.Start_Time, pd.End_Time, pd.Fees }
+            ).FirstOrDefault();
+
+            if (policyDetail == null)
+                return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy detail found." });
+
+            bool isWithinTime =
+                (policyDetail.Start_Time <= policyDetail.End_Time &&
+                 policyDetail.Start_Time <= currentTime && policyDetail.End_Time >= currentTime)
+                ||
+                (policyDetail.Start_Time > policyDetail.End_Time && // overnight
+                 (currentTime >= policyDetail.Start_Time || currentTime <= policyDetail.End_Time));
+
+            if (!isWithinTime)
+            {
+                return (new JavaScriptSerializer()).Serialize(new
+                {
+                    success = false,
+                    message = "You cannot register at this time."
+                });
+            }
+
+            return (new JavaScriptSerializer()).Serialize(new
+            {
+                success = true,
+                fee = policyDetail.Fees
+            });
         }
         [WebMethod]
         public static string LoadEmplData(string employeeid)
@@ -419,6 +519,7 @@ namespace PMS.Modules.PatientManagement
                     pat.stno_mno = stno;
                     pat.city = city;
                     pat.area = area;
+                  
                     pat.val_city = city_val;
                     pat.val_area = area_val;
                     pat.Country = Country;
@@ -448,6 +549,7 @@ namespace PMS.Modules.PatientManagement
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
                 pat.Permanent_Address = houseno;
+         
                 pat.stno_mno = stno;
                 pat.city = city;
                 pat.area = area;
@@ -496,6 +598,8 @@ namespace PMS.Modules.PatientManagement
                     pat.Marital_Status = data.Martial_Status;
                     pat.Patient_Main_Category = data.Department;
                     pat.Doctor_ID = data.doctor;
+                    pat.filter_clinic = data.FilterClinic;
+                    pat.Service_id = data.Services;
                     pat.mr_no_sequence = data.patient_no;
                     pat.Updated_By = AppConfig.UserID;
                     pat.Updated_Time = DateTime.Now;
@@ -527,6 +631,8 @@ namespace PMS.Modules.PatientManagement
                 pat.Gender = data.Gender;
                 pat.NIC = data.NIC;
                 pat.Mobile1 = data.MobileNo;
+                pat.filter_clinic = data.FilterClinic;
+                pat.Service_id = data.Services;
                 pat.Permanent_Address = data.Address;
                 pat.Marital_Status = data.Martial_Status;
                 pat.Patient_Main_Category = data.Department;
@@ -791,7 +897,9 @@ namespace PMS.Modules.PatientManagement
                              free_check = p.free_check,
                              opdid = p.Patient_ID,
                              status=p.Status,
-                             account_id =p.AccountID
+                             account_id =p.AccountID,
+                             FilterClinic = p.filter_clinic,
+                             Service_id = p.Service_id,
 
 
                          }).FirstOrDefault();
@@ -992,7 +1100,10 @@ namespace PMS.Modules.PatientManagement
             public string Class { get; set; }
             public string section { get; set; }
             public string Cashier { get; set; }
+            public int Services { get; set; }
             public string accountid { get; set; }
+            public string FilterClinic { get; set; }
+   
             public Boolean IssueCard { get; set; }
             public Boolean FreeCheck { get; set; }
             public int Fees { get; set; }
