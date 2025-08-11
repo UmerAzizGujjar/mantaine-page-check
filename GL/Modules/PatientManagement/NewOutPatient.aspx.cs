@@ -1310,18 +1310,30 @@ on d.Doctor_Id equals hr.Emp_ID
                     if (test != null)
                         test.Patient_ID = OPD.Out_Patient_ID;
 
-                    // Setting 0 patient id inserted Ortho to current out patient id
-                    List<PMS.Ortho> ortholist = db.Orthos.Where(t => t.Patient_Type == "OutPatient" && t.Transaction_ID == 0).ToList();
-                    foreach (PMS.Ortho orth in ortholist)
-                    {
-                        orth.Transaction_ID = OPD.Out_Patient_ID;
-                    }
+                    
                     List<PMS.OutPatients_Proto> Protolist = db.OutPatients_Protos.Where(t => t.Outpatient_id ==  0).ToList();
                     foreach (PMS.OutPatients_Proto proto in Protolist)
                     {
                         proto.Outpatient_id = OPD.Out_Patient_ID;
                     }
 
+                    List<PMS.OutPatientPrimaryDiagnosi> OutPatientPrimaryDiagnosisList = db.OutPatientPrimaryDiagnosis.Where(t => t.OutPatientID == 0).ToList();
+                    foreach (PMS.OutPatientPrimaryDiagnosi oppd in OutPatientPrimaryDiagnosisList)
+                    {
+                        oppd.OutPatientID = OPD.Out_Patient_ID;
+                    }
+
+                    List<PMS.OutPatientFinalDiagnosi> OutPatientFinalDiagnosisList = db.OutPatientFinalDiagnosis.Where(t => t.OutPatientID == 0).ToList();
+                    foreach (PMS.OutPatientFinalDiagnosi opfd in OutPatientFinalDiagnosisList)
+                    {
+                        opfd.OutPatientID = OPD.Out_Patient_ID;
+                    }
+
+                    List<PMS.OutPatientComplaint> OutPatientComplaintList = db.OutPatientComplaints.Where(t => t.OutPatientID == 0).ToList();
+                    foreach (PMS.OutPatientComplaint opc in OutPatientComplaintList)
+                    {
+                        opc.OutPatientID = OPD.Out_Patient_ID;
+                    }
                     db.SubmitChanges();
                 }
 
@@ -1598,10 +1610,6 @@ on d.Doctor_Id equals hr.Emp_ID
                     {
                         int outPatientId = complaints[0].OutPatientID;
 
-                        if (outPatientId == 0)
-                        {
-                            outPatientId = Convert.ToInt32(DBClass.getField("select (isnull(max(Out_Patient_id),0)+1) from Out_Patient").ToString());
-                        }
 
                         /*********************Deleting Previous Complaints*************************/
                         var existingComplaints = db.OutPatientComplaints.Where(p => p.OutPatientID == outPatientId).ToList();
@@ -1657,11 +1665,6 @@ on d.Doctor_Id equals hr.Emp_ID
                     if (PrimaryDiagnosis.Count > 0)
                     {
                         int outPatientId = PrimaryDiagnosis[0].OutPatientID;
-
-                        if (outPatientId == 0)
-                        {
-                            outPatientId = Convert.ToInt32(DBClass.getField("select (isnull(max(Out_Patient_id),0)+1) from Out_Patient").ToString());
-                        }
 
                         /*********************Deleting Previous PrimaryDiagnosis*************************/
                         var existingPrimaryDiagnosis = db.OutPatientPrimaryDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
@@ -1719,11 +1722,6 @@ on d.Doctor_Id equals hr.Emp_ID
                     if (FinalDiagnosis.Count > 0)
                     {
                         int outPatientId = FinalDiagnosis[0].OutPatientID;
-
-                        if (outPatientId == 0)
-                        {
-                            outPatientId = Convert.ToInt32(DBClass.getField("select (isnull(max(Out_Patient_id),0)+1) from Out_Patient").ToString());
-                        }
 
                         /*********************Deleting Previous FinalDiagnosis*************************/
                         var existingFinalDiagnosis = db.OutPatientFinalDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();

@@ -314,10 +314,7 @@
     </style>
 
     <style>
-        .maxheightStyle{
-            max-height: 100vh;
-    overflow-y: scroll;
-        }
+        
         .previewTable {
             border: 3px solid #cccccc;
             border-radius: 6px;
@@ -337,8 +334,7 @@
 
         .container-fluid {
             padding-left: 0px !important;
-                    max-height: 90vh;
-    overflow: hidden;
+                  
         }
 
         input[type="checkbox"] {
@@ -3145,7 +3141,9 @@
 
             var PrimaryDiagnosisList = [];
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-if (OutPatientID == '(New)' || OutPatientID =="")
+            if (OutPatientID == '(New)' || OutPatientID == "") {
+                OutPatientID = 0;
+            }
             $.each($('#tblPrimaryDiagnosis tbody tr'), function (key, value) {
                 PrimaryDiagnosisList.push({
                     'OutPatientID': OutPatientID,
@@ -3163,7 +3161,9 @@ if (OutPatientID == '(New)' || OutPatientID =="")
 
             var FinalDiagnosisList = [];
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            if (OutPatientID == '(New)' || OutPatientID == "")
+            if (OutPatientID == '(New)' || OutPatientID == "") {
+                OutPatientID = 0;
+            }
             $.each($('#tblFinalDiagnosis tbody tr'), function (key, value) {
                 FinalDiagnosisList.push({
                     'OutPatientID': OutPatientID,
