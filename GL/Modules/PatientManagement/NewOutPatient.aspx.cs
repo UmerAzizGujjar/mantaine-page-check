@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using CrystalDecisions.CrystalReports.ViewerObjectModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -22,9 +24,335 @@ namespace PMS.Modules.PatientManagement
             if (!Page.IsPostBack)
             {
                 BindDropDownList();
+                if (Request.QueryString["ID"] != null)
+                {
+                    FillOutPatientForm(Convert.ToInt32(Request.QueryString["ID"]));
+                    OutpatientID = Convert.ToInt32(Request.QueryString["ID"]);
+                }
             }
 
         }
+        private void FillOutPatientForm(int PatientID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var doctorId = db.Out_Patients
+                .Where(dt => dt.Out_Patient_ID == PatientID)
+                .Select(dt => dt.Doctor_ID)
+                .FirstOrDefault();
+
+            if (doctorId != null)
+            {
+                ddlDoctorName.SelectedValue = doctorId.ToString();
+            }
+
+
+            var qry = db.sp_FillOutPatientForm(PatientID).FirstOrDefault();
+
+
+            if (qry.DRE.HasValue == true)
+                chkDRE.Checked = qry.DRE.Value;
+            else
+                chkDRE.Checked = false;
+
+            if (qry.Proctoscopy.HasValue == true)
+                chkProctoscopy.Checked = qry.Proctoscopy.Value;
+            else
+                chkProctoscopy.Checked = false;
+            txtAbdomin.Text = qry.Abdominal;
+
+
+ 
+
+            Final_Rec.Text = qry.Final_Rec;
+            vlblPatients_Name.Text = qry.Full_Name;
+            txtOut_Patient_ID.Text = PatientID.ToString();
+            hdfPatient_ID.Value = qry.Patient_ID.ToString();
+            hdfReg_ID.Value = qry.Reg_PatId.ToString();
+            
+            vlblPatients_Name.Text = qry.Full_Name;
+            vLbl_Age.Text = qry.Age_years;
+            vLbl_Contact.Text = qry.Mobile1;
+            vLbl_Adress.Text = qry.Permanent_Address;
+            
+            txtPuls.Text = qry.pulse_Min;
+            txtBP.Text = qry.BP_mm_Hg;
+            txtTemp.Text = qry.Temp_C;
+            txtRespiration.Text = qry.Respiration_Min;
+            txtHeight.Text = qry.Height_Cm;
+            txtWeight.Text = qry.Weight_Kg;
+            txtRefer_To_Hospital.Text = qry.Refer_To_Hospital;
+            txtLMP.Text = qry.L_M_P;
+            txtspo2.Text = qry.spo2;
+            txtedd.Text = qry.EDD;
+            txtBMI.Text = qry.BMI;
+            TxtBSR.Text = qry.BSR;
+            txtMUAC.Text = qry.MUAC;
+            txtOFC.Text = qry.OFC;
+            txtDevelopmentHistory.Text = qry.DevelopmentHistory;
+            txtVaccinationHistory.Text = qry.VaccinationHistory;
+            txtNutritionHistory.Text = qry.NutritionHistory;
+            // General Examination Checkboxes
+            // General Examination Checkboxes (improved variable names, same qry fields)
+            chkPallor.Checked = qry.chkPallor.Value;
+            chkJVP.Checked = qry.chkJVP.Value;
+            chkCyanosis.Checked = qry.chkaganoris.Value;       // Cyanosis (keeps qry.chkaganoris)
+            chkDisoriented.Checked = qry.chkunconceed.Value;   // Disoriented (keeps qry.chkunconceed)
+            chkJaundice.Checked = qry.chkjaundice.Value;       // Jaundice
+            chkDehydration.Checked = qry.hydration.Value;      // Dehydration
+            chkEdema.Checked = qry.edema.Value;                // Edema
+            chkLymphadenopathy.Checked = qry.chk1.Value;       // Lymphadenopathy (keeps qry.chk1)
+            chkClubbing.Checked = qry.chk2.Value;              // Clubbing (keeps qry.chk2)
+            chkDyspnoea.Checked = qry.chk3.Value;              // Dyspnoea (keeps qry.chk3)
+            chkNeckSwelling.Checked = qry.chk4.Value;          // Neck Swelling (keeps qry.chk4)
+            chkSkinLesions.Checked = qry.chk5.Value;           // Skin Lesions (keeps qry.chk5)
+            txtHistoryOfPeresentIllness.Text = qry.HistoryOfPeresentIllness;
+            txtHistoryOfFamily.Text = qry.HistoryOfFamily;
+            txtHistoryOfPastIllness.Text = qry.HistoryOfPastIllness;
+            txtCVS.Text = qry.CVS;
+            txtGIT.Text = qry.GIT;
+            txtRESP.Text = qry.RESP;
+            txtSocioEconomicHistory.Text = qry.SocioEconomicHistory;
+            txtCNS.Text = qry.CNS;
+            txtGYNAE.Text = qry.GYNAE;
+            txtUGS.Text = qry.URG;
+            txtLocal.Text = qry.Local;
+            txtMucculor.Text = qry.Mucculor;
+            txtObstetricHistory.Text = qry.ObstetricHistory;
+            txtAllergiesHistory.Text = qry.AllergiesHistory;
+            txtProvisionalDiagnosis.Text = qry.ProvisionalDiagnosis;
+            txtTreatmentHistory.Text = qry.TreatmentHistory;
+            txtRemarksHistory.Text = qry.txtRemarksHistory;
+            
+            txtDesignation.Text = qry.Designation;
+            txtFinalDiagnosis.Text = qry.Final_Diagnosis;
+            ddlIssuance_Of.SelectedValue = qry.Administration;
+            ddlFOllowUp.SelectedValue = qry.Follow_Up;
+            ddlProto.SelectedValue = qry.Proto;
+
+            if (qry.Folllow_Date != null)
+                FollowNoDate.Text = qry.Folllow_Date.Value.ToString(AppConfig.DateFormat);
+
+            txtAdvice.Text = qry.Advice;
+            
+            txtInputBox1.Text = qry.txtInputBox1;
+            txtBirthHistory.Text = qry.Birth_History;
+            ddlPatient_Main_Category.SelectedValue = qry.Reffer_To;
+            //fileupload.Text = qry.PDF_File;
+            txtRefferNote.Text = qry.Reffer_No;
+            txtDrugHistory.Text = qry.Drug_History;
+            txtPersonalHistory.Text = qry.Personal_History;
+           
+           
+            if (qry.Discharge == true)
+            {
+                hdfdhischarge.Value = Convert.ToString("true");
+            }
+            else
+            {
+                hdfdhischarge.Value = Convert.ToString("false");
+            }
+
+           
+        }
+        [WebMethod]
+        public static string LoadSymtompsHistory(int OutPatientID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+ 
+            var OutPatientlist = (
+                from s in db.Sysmtopms
+                where s.Out_Patient_ID == OutPatientID
+                select new { s.Symtom_ID, Symtom_Name = (DBClass.getField("select Datavalue_Description from ValueSet vs,DataValues dv where                                            vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Symtoms' and dv.DataValue_Name='" + s.Symtom_ID + "'").ToString()), s.Duration, Days_Years_Months = db.GetDataValueName("Days_Years_Months", s.Days_Years_Months), s.Remarks }
+                ).ToList();
+
+
+            List<SysmtopmsHistoryClass> list = new List<SysmtopmsHistoryClass>();
+            
+
+            foreach (var item in OutPatientlist)
+            {
+                SysmtopmsHistoryClass obj = new SysmtopmsHistoryClass();
+
+                obj.Symtom_ID = item.Symtom_ID;
+                obj.Duration = item.Duration;
+                obj.Symtom_Name = item.Symtom_Name;
+                obj.Days_Years_Months = item.Days_Years_Months;
+                obj.Remarks = item.Remarks;
+                obj.Status = "OutPatient";
+                list.Add(obj);
+            }
+            return (new JavaScriptSerializer().Serialize(list));
+        }
+        [WebMethod]
+        public static string GetTestListForHistory(int id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            int Patien_No = DBClass.GetMRNOBy_RgPatientID(Convert.ToInt32(id));
+
+            var OutPatienttestilst = (
+                                        from lbtM in db.Laboratory_Tests
+                                        join lbtD in db.Lab_Test_Details
+                                        on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+                                        join outpat in db.Out_Patients
+                                        on lbtM.Patient_ID equals outpat.Out_Patient_ID
+                                        join p in db.Patients
+                                        on outpat.Patient_ID equals p.Patient_ID
+                                        join rp in db.Reg_patients
+                                        on p.Reg_PatId equals rp.pat_id
+                                        where rp.Patient_No == Patien_No && lbtM.Transaction_Type == "OutPatient"
+
+
+                                        select new
+                                        {
+
+                                            outpat.Out_Patient_ID,
+                                            lbtD.Lab_Test_Detail_ID,
+                                            lbtD.Date,
+                                            lbtD.Remark,
+                                            lbtD.Catagory_ID,
+                                            lbtM.Lab_Test_ID,
+                                            lbtD.Test_ID,
+                                            lbtD.Dept_ID,
+                                            lbtD.L_R_Rotation_ID,
+                                            Value_Type = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Value_Type).FirstOrDefault(),
+                                            Value_TypeGroup = (from t in db.Lab_Tests where t.Group_Category == lbtD.Catagory_ID select t.Value_Type).FirstOrDefault(),
+                                            Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
+                                            Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
+                                            Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
+                                            DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                 Departments", t.Main_Department)).FirstOrDefault(),
+                                            Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
+                                            GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
+                                            Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
+                                            lbtD.Rotation_ID,
+                                            Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+                                            DataValue_Description = (from dv in db.DataValues
+                                                                     join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                                                     where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
+                                                                     select dv.DataValue_Description).FirstOrDefault(),
+
+                                            lbtD.Special_Tests,
+                                            lbtD.Area_Of_Interest,
+                                            lbtD.Doctor,
+                                            lbtD.Recieved_ID,
+                                            Is_Result = (from t in db.Lab_Test_Details where t.BillDetailID == lbtD.BillDetailID orderby t.Lab_Test_Detail_ID descending select t.isApproved).FirstOrDefault(),
+                                            outpat.Doctor_ID
+                                        }
+               ).ToList();
+
+
+            List<LabTestClass> list = new List<LabTestClass>();
+
+            
+            foreach (var item in OutPatienttestilst)
+            {
+                LabTestClass obj = new LabTestClass();
+
+                //// obj.IsBilled = (bool)item.IsBilled;
+                obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+                obj.Date = Convert.ToDateTime(item.Date);
+                obj.Remark = item.Remark;
+                obj.Catagory_ID = item.Catagory_ID;
+                obj.Lab_Test_ID = item.Lab_Test_ID.ToString();
+                obj.Test_ID = item.Test_ID;
+                obj.Dept_ID = item.Dept_ID;
+                obj.L_R_Rotation_ID = item.L_R_Rotation_ID;
+
+                obj.In_Patient_ID = item.Out_Patient_ID;
+
+                obj.Value_Type = item.Value_Type;
+                obj.Value_TypeGroup = item.Value_TypeGroup;
+                obj.Test_Name = item.Test_Name;
+                obj.Group_Department = item.Group_Department;
+                obj.Group_Category = item.Group_Category;
+                obj.DepartmentName = item.DepartmentName;
+                //obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+                obj.Department_ID = item.Department_ID;
+                obj.GroupName = item.GroupName;
+                obj.Group_Name = item.Group_Name;
+                obj.Rotation_ID = item.Rotation_ID;
+                obj.Rotation = item.Rotation;
+                obj.DataValue_Description = item.DataValue_Description;
+                obj.Special_Tests = item.Special_Tests;
+                obj.Area_Of_Interest = item.Area_Of_Interest;
+                obj.Doctor = item.Doctor;
+                obj.Recieved_ID = item.Recieved_ID;
+
+                if (item.Is_Result == null)
+                    obj.Is_Result = false;
+                else
+                    obj.Is_Result = (bool)item.Is_Result;
+                obj.DoctorName = item.Doctor_ID;
+                obj.Status = "OutPatient";
+                list.Add(obj);
+            }
+
+            return (new JavaScriptSerializer()).Serialize(list);
+        }
+        [WebMethod]
+        public static string LoadMedicines(int PatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == PatientID && p.Transaction_Type == "OutPatient").ToList();
+                return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string LoadComplaints(int OutPatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var Complaints = from opc in db.OutPatientComplaints
+                                       join cd in db.ComplaintsDefinitions
+                                       on opc.ComplaintID equals cd.ID
+                                       where opc.OutPatientID == OutPatientID
+                                       select new
+                                       {
+                                           ComplaintID = opc.ComplaintID,
+                                           ComplaintName = cd.ComplaintName
+                                       };
+                return (new JavaScriptSerializer()).Serialize(Complaints.ToList());
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string LoadPrimaryDiagnosis(int OutPatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var PrimaryDiagnosis = from oppd in db.OutPatientPrimaryDiagnosis
+                                       join pdd in db.DiagnosisDefinitions
+                                       on oppd.DiagnosisID equals pdd.ID
+                                       where oppd.OutPatientID == OutPatientID
+                                       select new
+                                       {
+                                           PrimaryDiagnosisID = oppd.DiagnosisID,
+                                           Remarks = oppd.Remarks,
+                                           DiagnosisName = pdd.DiagnosisName
+                                       };
+                return (new JavaScriptSerializer()).Serialize(PrimaryDiagnosis.ToList());
+            }
+        }
+        [WebMethod]
+        public static string LoadFinalDiagnosis(int OutPatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var FinalDiagnosis = from oppd in db.OutPatientFinalDiagnosis
+                                       join pdd in db.DiagnosisDefinitions
+                                       on oppd.DiagnosisID equals pdd.ID
+                                       where oppd.OutPatientID == OutPatientID
+                                       select new
+                                       {
+                                           FinalDiagnosisID = oppd.DiagnosisID,
+                                           Remarks = oppd.Remarks,
+                                           DiagnosisName = pdd.DiagnosisName
+                                       };
+                return (new JavaScriptSerializer()).Serialize(FinalDiagnosis.ToList());
+            }
+        }
+
         [System.Web.Services.WebMethod]
         public static Detail GetDetail(string PatientID)
         {
@@ -365,6 +693,7 @@ on d.Doctor_Id equals hr.Emp_ID
                        join v in db.ValueSets
                        on d.ValueSet_ID equals v.ValueSet_ID
                        where v.ValueSet_Name == "Main Test Departments"
+                       && d.DataValue_Name != "001"
                        select new
                        {
                            d.DataValue_Name,
@@ -372,6 +701,32 @@ on d.Doctor_Id equals hr.Emp_ID
                        }).ToList();
 
             return (new JavaScriptSerializer().Serialize(dpt));
+        }
+        [WebMethod]
+        public static string LoadProtoDetails(string patients_id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                List<ProtoDetailss> list = new List<ProtoDetailss>();
+                var OutPatients_Proto = db.OutPatients_Protos.DefaultIfEmpty().Where(w => w.Outpatient_id == Convert.ToInt32(patients_id)).ToList();
+
+                if (OutPatients_Proto.Count > 0 && OutPatients_Proto != null)
+                {
+                    //ServiceDetails sd = new ServiceDetails();
+                    //    sd.Service_ProcedureName=
+                    foreach (var item in OutPatients_Proto)
+                    {
+                        ProtoDetailss sd = new ProtoDetailss();
+                        sd.ProtoId = item.ProtoId;
+                        sd.Proto_Description = item.Proto_Description;
+
+                        list.Add(sd);
+                    }
+                }
+
+                return (new JavaScriptSerializer().Serialize(list));
+            }
+
         }
         [WebMethod]
         public static string GetLabTestDDLDetails(string SerialNo, string maindpt)
