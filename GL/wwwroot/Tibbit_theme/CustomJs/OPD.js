@@ -1062,6 +1062,8 @@ function SaveData() {
     var rollno = $('#ddlrollno').val();
     var Class = $('#ddlclass').val();
     var section = $('#ddlsection').val();
+    var FilterClinic = $('#ddlFilterClnic').val();
+    var Services = $('#ddlServices').val();
     var Cashier = $('#ddlcashier').val();
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked')
@@ -1297,6 +1299,8 @@ function SaveData() {
         rollno: rollno,
         Class: Class,
         section: section,
+        FilterClinic: FilterClinic,
+        Services: Services,
         Cashier: Cashier,
         accountid: accountid,
         IssueCard: IssueCard,
@@ -1557,6 +1561,8 @@ function loadPatientDetail(OPDID) {
             $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
             $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
+            $('#ddlServices').val(data.Service_id).trigger('change').attr('disabled', true);
+            $('#ddlFilterClnic').val(data.FilterClinic).trigger('change').attr('disabled', true);
 
             setTimeout(function () {
 

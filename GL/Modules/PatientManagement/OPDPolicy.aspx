@@ -774,16 +774,16 @@
                                     </div>
                                 </div>
                                 <div class="right-item" onclick="toggleRight(this)">
-                                    <input type="checkbox" id="Services" name="rights[]" value="follow_up" />
+                                    <input type="checkbox" id="Services" name="rights[]" value="Services" />
                                     <div>
-                                        <label for="follow_up">Service</label>
+                                        <label for="Service">Service</label>
                                         <div class="field-desc">Services Related options</div>
                                     </div>
                                 </div>
                                 <div class="right-item" onclick="toggleRight(this)">
-                                    <input type="checkbox" id="FilterClinic" name="rights[]" value="follow_up" />
+                                    <input type="checkbox" id="FilterClinic" name="rights[]" value="FilterClinic" />
                                     <div>
-                                        <label for="follow_up">Filter Clinic</label>
+                                        <label for="FilterClinic">FilterClinic</label>
                                         <div class="field-desc">Clinic Related options</div>
                                     </div>
                                 </div>
