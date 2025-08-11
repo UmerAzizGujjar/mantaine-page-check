@@ -215,12 +215,17 @@
                 $(this).closest("tr").remove();
             } else {
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'At least one row required',
-                    text: 'You cannot delete the last row.',
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'At least one row required',
+                    showConfirmButton: false,
                     timer: 2000,
-                    showConfirmButton: false
-                });
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });              
             }
         }
 

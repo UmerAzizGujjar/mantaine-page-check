@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Define_Policy.aspx.cs" Inherits="PMS.Modules.Administrator.Define_Policy" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Policy.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -105,36 +106,42 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <input type="hidden" id="hdPolicyID" />
-    <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <label for="txt_Policy">Policy Name</label>
-            <input type="text" id="txt_Policy" class="form-control" />
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-6">
-            <label for="txt_Policy_Description">Policy Description</label>
-            <input type="text" id="txt_Policy_Description" class="form-control" />
-        </div>
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <label for="chkActive" style="font-size: 16px;">Active</label>
-        </div>
-        <div class="col-lg-1 col-md-4 col-sm-6">
-            <input type="checkbox" style="margin-left:-93% !important" id="chkActive" checked />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-8 col-md-6 col-sm-6">
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" id="btnView" class="btn btn-primry" value="View" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" id="btnAddNew" class="btn btn-primry" value="New" />
-                </div>
+   <div class="card" style="margin: 0 auto;">
+    <div class="card-body">
+        <div class="row">
+            <div class="mb-3">
+                <label for="txt_Policy" class="label-field">Policy Name:</label>
+                <input type="text" id="txt_Policy" class="form-control textEntry" />
             </div>
         </div>
-    </div>
+        <div class="row">
+        <div class="mb-3">
+            <label for="txt_Policy_Description" class="label-field">Policy Description:</label>
+            <input type="text" id="txt_Policy_Description" class="form-control textEntry" />
+        </div>
+            </div>
+        <div class="row">
+        <div class="mb-3">
+            <div class="col-lg-1 col-md-3 col-sm-5">
+            <input type="checkbox" id="chkActive" checked />
+                </div>
+             <div class="col-lg-1 col-md-3 col-sm-5">
+            <label for="chkActive" style="font-size: 16px;">Active</label>
+        </div>
+            </div>
+        </div>
+       <div class="row">
+           <div class="col-lg-4 col-md-4 col-sm-6">
+               <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
+           </div>
+           <div class="col-lg-4 col-md-4 col-sm-6">
+               <input type="button" id="btnView" class="btn btn-primry" value="View" />
+           </div>
+           <div class="col-lg-4 col-md-4 col-sm-6">
+               <input type="button" id="btnAddNew" class="btn btn-yellow" value="New" />
+           </div>
+       </div>
+   </div>
+       </div>
 </asp:Content>
 

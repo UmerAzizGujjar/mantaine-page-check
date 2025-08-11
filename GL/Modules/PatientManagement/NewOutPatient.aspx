@@ -886,7 +886,7 @@
         });
     </script>
     <script id="functions">
-        function loadPatient(PatientID, opdNo) {
+        function loadPatient(PatientID, opdNo,regPatID) {
             $.ajax({
                 type: "POST",
                 url: "OutPatients.aspx/GetDetail",
@@ -913,6 +913,8 @@
                         $('#<%= lblFollow.ClientID %>').text(follow);
                         $('#<%= Label1.ClientID %>').text(opdNo);
                         $('#<%= txtPatient_ID.ClientID%>').val(PatientID);
+                        $("#<%= hdfPatient_ID.ClientID %>").val(PatientID);
+                        $("#<%= hdfReg_ID.ClientID %>").val(regPatID);
 
                     }
                 },
@@ -1066,10 +1068,11 @@
                         var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
                     }
 
-                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ',' + value.Patient_No + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
+                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ',' + value.Patient_No + ',' + value.Reg_PatId + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
                 });
                 debugger;
                 $('#tblPendingPatients tbody').html(rows);
+                
 
                 $(".se-pre-con").fadeOut("slow");
 
@@ -1390,7 +1393,7 @@
                 }
             }
         }
-      
+
         function AddVitals() {
             // Get all the input values using jQuery
             const pulse = $('#ctl00_MainContent_txtPuls').val();
@@ -1496,9 +1499,9 @@
         function Add_GeneralExamRow(examName) {
             const $tableBody = $('#tblGeneralExam tbody');
 
-             if ($tableBody.find(`tr[data-exam="${examName}"]`).length > 0) return;
+            if ($tableBody.find(`tr[data-exam="${examName}"]`).length > 0) return;
 
-             const $row = $(`
+            const $row = $(`
             <tr data-exam="${examName}">
                 <td>${examName}</td>
                 <td>
@@ -2024,12 +2027,12 @@
             });
         }
         function Remove_LabTestRow(serial) {
-             $('#LabTestchk_' + serial).prop('checked', false);
+            $('#LabTestchk_' + serial).prop('checked', false);
 
             $('.tests-table tr').has('a[onclick*="Remove_LabTestRow(' + serial + ')"]').remove();
 
- 
-             if ($('.tests-table tr').length === 0) {
+
+            if ($('.tests-table tr').length === 0) {
                 $('#dvtblLabtest').slideUp();
             }
         }
@@ -2142,6 +2145,7 @@
                             txtSpecialTests + '</td>' +
                             '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' +
                             txtAreaOfInterest + '</td>' +
+                            '<td><input type="hidden" name="rotation" value=""/></td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                             '<a href="javascript:void(0)" onclick="Remove_LabTestRow(' + test + ')">' +
                             '<i class="fa fa-trash"></i></a>' +
@@ -2150,7 +2154,8 @@
                         test_array = $('.tests-table').find('input[name=testID][value="' + value.Test_ID + '"]');
                     }
                     else {
-                        row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td><td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+                        row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value +
+                            ' </td><td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                             '<a href="javascript:void(0)" onclick="deleteTest(this)">' +
                             '<i class="fa fa-trash"></i></a>' +
                             '</td></tr>';
@@ -2396,7 +2401,7 @@
                             txtSpecialTests + '</td>' +
                             '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' +
                             txtAreaOfInterest + '</td>' +
-                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + rotationVal + '"/> ' +
+                            '<td><input type="hidden" name="rotation" value="' + rotationVal + '"/> ' +
                             rotationText + '</td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
 
@@ -2417,7 +2422,7 @@
                             '<td>' + Result + '</td>' +
                             '<td><input type="hidden" name="txtSpecial_Test" value="' + txtSpecialTests + '"/> ' + txtSpecialTests + '</td>' +
                             '<td><input type="hidden" name="txtArea_Of_Interest" value="' + txtAreaOfInterest + '"/> ' + txtAreaOfInterest + '</td>' +
-                            '<td><input type="hidden" name="txtArea_Of_Interest" value="' + rotationVal + '"/> ' + rotationText + '</td>' +
+                            '<td><input type="hidden" name="rotation" value="' + rotationVal + '"/> ' + rotationText + '</td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                             '<a href="javascript:void(0)" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +
                             '<i class="fa fa-trash" ></i></a>' +
@@ -2895,17 +2900,17 @@
                 $('#dvtblMedicines').slideDown();
             })
         }
-         
-         function updateFollowUpTable() {
+
+        function updateFollowUpTable() {
             // Get values from form inputs
             var doctorName = $('#<%= ddlDoctorName.ClientID %> option:selected').text();
-            var doctorId = $('#<%= ddlDoctorName.ClientID %>').val();
-            var designation = $('#<%= txtDesignation.ClientID %>').val();
-            var admission = $('#<%= ddlIssuance_Of.ClientID %> option:selected').text();
-            var admissionId = $('#<%= ddlIssuance_Of.ClientID %>').val();
-            var followUp = $('#<%= ddlFOllowUp.ClientID %> option:selected').text();
-            var followUpId = $('#<%= ddlFOllowUp.ClientID %>').val();
-            var followUpDate = $('#<%= FollowNoDate.ClientID %>').val();
+             var doctorId = $('#<%= ddlDoctorName.ClientID %>').val();
+             var designation = $('#<%= txtDesignation.ClientID %>').val();
+             var admission = $('#<%= ddlIssuance_Of.ClientID %> option:selected').text();
+             var admissionId = $('#<%= ddlIssuance_Of.ClientID %>').val();
+             var followUp = $('#<%= ddlFOllowUp.ClientID %> option:selected').text();
+             var followUpId = $('#<%= ddlFOllowUp.ClientID %>').val();
+             var followUpDate = $('#<%= FollowNoDate.ClientID %>').val();
 
             // Only proceed if at least one field has a value
             if (!doctorId && !followUpId && !followUpDate) {
@@ -2949,8 +2954,8 @@
 
             return true;
         }
-          
-         function updateDisposalTable() {
+
+        function updateDisposalTable() {
             const DisposalTable = $('#tblDisposal tbody');
             const DisposalContainer = $('#divtblDisposal');
             let hasData = false;
@@ -3089,6 +3094,57 @@
 
     </script>
     <script id="saveLogic">
+        function SaveComplaintsTab() {
+
+            var ComplaintsList = [];
+
+            $.each($('#tblComplaints tbody tr'), function (key, value) {
+                ComplaintsList.push({
+                    'OutPatientID': 0,
+                    'ComplaintID': $(value).find('.complainclass').val(), // Get the value from the hidden input
+                    'ComplaintText': $($(value).find('td')[1]).text().trim(), // Get text from second td
+                });
+            });
+
+          
+            PageMethods.SaveComplaintsOfPatient(JSON.stringify(ComplaintsList), function (response) {
+            });
+
+        }
+        function SavePrimaryDiagnosisTab() {
+
+            var PrimaryDiagnosisList = [];
+
+            $.each($('#tblPrimaryDiagnosis tbody tr'), function (key, value) {
+                PrimaryDiagnosisList.push({
+                    'OutPatientID': 0,
+                    'DiagnosisID': $($(value).find('td')[0]).text().trim(), // Get the value from the hidden input
+                    'Remarks': $($(value).find('td')[2]).text().trim(), // Get text from second td
+                });
+            });
+
+
+            PageMethods.SavePrimaryDiagnosisOfPatient(JSON.stringify(PrimaryDiagnosisList), function (response) {
+            });
+
+        }
+        function SaveFinalDiagnosisTab() {
+
+            var FinalDiagnosisList = [];
+
+            $.each($('#tblFinalDiagnosis tbody tr'), function (key, value) {
+                FinalDiagnosisList.push({
+                    'OutPatientID': 0,
+                    'DiagnosisID': $($(value).find('td')[0]).text().trim(), // Get the value from the hidden input
+                    'Remarks': $($(value).find('td')[2]).text().trim(), // Get text from second td
+                });
+            });
+
+
+            PageMethods.SaveFinalDiagnosisOfPatient(JSON.stringify(FinalDiagnosisList), function (response) {
+            });
+
+        }
         function SaveMedicines() {
             debugger;
             var table = $('#tblMedicines');
@@ -3102,31 +3158,49 @@
 
             });
 
-                    var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
+            var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
 
-                    var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+            var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
             if (OutPatID == '(New)' || OutPatID == '')
                 OutPatID = 0;
             var MedicineDetails = { Pat: PatID, PatientID: OutPatID, MedicineList: MedicinesList }
-
-            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) { saveTests(); });
+            console.log(MedicineDetails);
+            PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) {
+                saveTests(); SaveComplaintsTab(); SavePrimaryDiagnosisTab(); SaveFinalDiagnosisTab();
+            });
 
         }
         function saveTests() {
-            var table = $('.tests-table tbody');
             var test_list = [];
-            var tbl = document.getElementById('loadtest');
-            table.find('tr').each(function (key, value) {
-                var rotation = $(value).find('td').eq(1).text();
-                var showTestDescription = false;
-                if (rotation.includes('X-Ray') || rotation.includes('CT-Scan')) {
-                    showTestDescription = true;
-                }
+            function extractTestData(table) {
+                table.find('tr').each(function (key, value) {
+                    var rotationVal = $(value).find('td input[name="rotation"]').val();
+                    var rotationText = $(value).find('td').eq(6).text().trim();
 
-                var date = '<%= DateTime.Now%>';
-        test_list.push({ 'Date': $(value).find('td input[name=testDate]').val(), 'TestID': $(value).find('td input[name=testID]').val(), 'Catagory_ID': $(value).find('td input[name=txtGroupCategory]').val(), 'Dept_ID': $(value).find('td input[name=txtDeptID]').val(), 'RotationID': $(value).find('td input[name=txtRotation]').val(), 'L_R_Rotation_ID': $(value).find('td input[name=txtddlXRayLF_Name]').val(), 'Special_Tests': $(value).find('td input[name=txtSpecial_Test]').val(), 'Area_Of_Interest': $(value).find('td input[name=txtArea_Of_Interest]').val(), 'rotation': rotation, 'showTestDescription': showTestDescription });
+                    var showTestDescription = false;
+                    if (rotationText.includes('X-Ray') || rotationText.includes('CT-Scan')) {
+                        showTestDescription = true;
+                    }
 
-    });
+                    test_list.push({
+                        'Date': $(value).find('td input[name="testDate"]').val(),
+                        'TestID': $(value).find('td input[name="testID"]').val(),
+                        'Catagory_ID': $(value).find('td input[name="txtGroupCategory"]').val(),
+                        'Dept_ID': $(value).find('td input[name="txtDeptID"]').val(),
+                        'RotationID': rotationVal,
+                        'L_R_Rotation_ID': $(value).find('td input[name="txtddlXRayLF_Name"]').val(),
+                        'Special_Tests': $(value).find('td input[name="txtSpecial_Test"]').val(),
+                        'Area_Of_Interest': $(value).find('td input[name="txtArea_Of_Interest"]').val(),
+                        'rotation': rotationText,
+                        'showTestDescription': showTestDescription
+                    });
+                });
+            }
+            extractTestData($('.tests-table tbody'));
+            extractTestData($('#tblDiagnostictest tbody'));
+
+            // Now `test_list` contains data from both tables
+            console.log(test_list);
 
             var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
             var patientID = $('#<%= txtOut_Patient_ID.ClientID %>').val();
@@ -3135,9 +3209,207 @@
             var labTest = { 'PatientID': patientID, 'TestList': test_list, 'PatID': PatID };
             PageMethods.SaveTest(JSON.stringify(labTest), function (res) {
                 SaveHistoryTab();
+            });
+        }
+        function SaveHistoryTab() {
+
+            var SymtomsList = [];
+
+            $.each($('#tblSymtoms tbody tr'), function (key, value) {
+                debugger;
+                var dayYearMonthText = $($(value).find('td')[4]).text();
+                dayYearMonthText = dayYearMonthText.replace(/\s/g, "");
+
+                var dayYearMonthID = $('#ddlDaysMonthsYears').find('option:contains(' + dayYearMonthText + ')').val() || '';
+
+                SymtomsList.push({
+                    'SymtomID': $($(value).find('td')[1]).text(),
+                    'Duration': $($(value).find('td')[3]).text(),
+                    'DayYearMonth': dayYearMonthID,
+                    'Remarks': $($(value).find('td')[5]).text()
+                });
+            });
+
+            var SymtomsList = {
+                OutPatientID: ($('#ctl00_MainContent_txtOut_Patient_ID').val() != "(New)") ? $('#ctl00_MainContent_txtOut_Patient_ID').val() : "0",
+                SymtomsList: SymtomsList
+            }
+            console.log(SymtomsList);
+            PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), function (response) {
+                SaveProtos();
+                saveAllRecord();
+            });
+
+        }
+        function SaveProtos() {
+            debugger;
+            var table = $("#tblProto");
+            var ProcedureList = [];
+            var btnSave = $('#btnSave').val();
+            table.find("tbody tr").each(function (key, value) {
+                ProcedureList.push({
+                    'Proto_Description': $($(value).find("td")[0]).text(),
+                    'ProtoId': $($(value).find("td")[0]).find("input[name=ProtoId]").val(),
+                });
+            });
+            var patID = $('#<%= txtPatient_ID.ClientID%>').val();
+            var opdid = $('#<%= txtOut_Patient_ID.ClientID %>').val();
+            var ProtoDetails = { PatId: patID, opdid: opdid, ProtoList: ProcedureList };
+            console.log(ProtoDetails);
+            PageMethods.SaveProto(btnSave, JSON.stringify(ProtoDetails), function (response) {
 
             });
         }
+        function saveAllRecord() {
+            var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
+    var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
+    var Administration = $('#ctl00_MainContent_ddlIssuance_Of').val();
+    if (Administration == 0)
+        Administration = "";
+    var Out_Patient_ID = $('#ctl00_MainContent_txtOut_Patient_ID').val();
+    if (Out_Patient_ID == "(New)")
+        Out_Patient_ID = "";
+
+    // Helper function to safely get values
+    function safeGetValue(selector) {
+        var value = $(selector).val();
+        return value || "";
+    }
+
+    var data = {
+        // Tab02 - Vitals
+        pulse_Min: safeGetValue('#ctl00_MainContent_txtPuls'),
+        BP_mm_Hg: safeGetValue('#ctl00_MainContent_txtBP'),
+        Temp_C: safeGetValue('#ctl00_MainContent_txtTemp'),
+        Respiration_Min: safeGetValue('#ctl00_MainContent_txtRespiration'),
+        Height_Cm: safeGetValue('#ctl00_MainContent_txtHeight'),
+        Weight_Kg: safeGetValue('#ctl00_MainContent_txtWeight'),
+        SPO2: safeGetValue('#ctl00_MainContent_txtspo2'),
+        L_M_P: safeGetValue('#ctl00_MainContent_txtLMP'),
+        Bsr: safeGetValue('#ctl00_MainContent_TxtBSR'),
+        Bmi: safeGetValue('#ctl00_MainContent_txtBMI'),
+
+        // Tab03 - History
+        HistoryOfPeresentIllness: safeGetValue('#ctl00_MainContent_txtHistoryOfPeresentIllness'),
+        HistoryOfPastIllness: safeGetValue('#ctl00_MainContent_txtHistoryOfPastIllness'),
+        Birth_History: safeGetValue('#ctl00_MainContent_txtBirthHistory'),
+        GYNAE: safeGetValue('#ctl00_MainContent_txtGYNAE'),
+        Drug_History: safeGetValue('#ctl00_MainContent_txtDrugHistory'),
+        Personal_History: safeGetValue('#ctl00_MainContent_txtPersonalHistory'),
+        ObstetricHistory: safeGetValue('#ctl00_MainContent_txtObstetricHistory'),
+        AllergiesHistory: safeGetValue('#ctl00_MainContent_txtAllergiesHistory'),
+        TreatmentHistory: safeGetValue('#ctl00_MainContent_txtTreatmentHistory'),
+        DevelopmentHistory: safeGetValue('#ctl00_MainContent_txtDevelopmentHistory'),
+        VaccinationHistory: safeGetValue('#ctl00_MainContent_txtVaccinationHistory'),
+        NutritionHistory: safeGetValue('#ctl00_MainContent_txtNutritionHistory'),
+        HistoryOfFamily: safeGetValue('#ctl00_MainContent_txtHistoryOfFamily'),
+        SocioEconomicHistory: safeGetValue('#ctl00_MainContent_txtSocioEconomicHistory'),
+
+        // Tab04 - Examination
+        chkPallor: document.getElementById("ctl00_MainContent_chkPallor") ? document.getElementById("ctl00_MainContent_chkPallor").checked : false,
+        chkJVP: document.getElementById("ctl00_MainContent_chkJVP") ? document.getElementById("ctl00_MainContent_chkJVP").checked : false,
+        chkaganoris: document.getElementById("ctl00_MainContent_chkaganoris") ? document.getElementById("ctl00_MainContent_chkaganoris").checked : false,
+        chkunconceed: document.getElementById("ctl00_MainContent_chkunconceed") ? document.getElementById("ctl00_MainContent_chkunconceed").checked : false,
+        chkjaundice: document.getElementById("ctl00_MainContent_chkjaundice") ? document.getElementById("ctl00_MainContent_chkjaundice").checked : false,
+        hydration: document.getElementById("ctl00_MainContent_hydration") ? document.getElementById("ctl00_MainContent_hydration").checked : false,
+        edema: document.getElementById("ctl00_MainContent_edema") ? document.getElementById("ctl00_MainContent_edema").checked : false,
+        chk1: document.getElementById("ctl00_MainContent_chk1") ? document.getElementById("ctl00_MainContent_chk1").checked : false,
+        chk2: document.getElementById("ctl00_MainContent_chk2") ? document.getElementById("ctl00_MainContent_chk2").checked : false,
+        chk3: document.getElementById("ctl00_MainContent_chk3") ? document.getElementById("ctl00_MainContent_chk3").checked : false,
+        chk4: document.getElementById("ctl00_MainContent_ns") ? document.getElementById("ctl00_MainContent_ns").checked : false,
+        chk5: document.getElementById("ctl00_MainContent_sl") ? document.getElementById("ctl00_MainContent_sl").checked : false,
+        Other: safeGetValue('#ctl00_MainContent_txtInputBox1'),
+        CNS: safeGetValue('#ctl00_MainContent_txtCNS'),
+        CVS: safeGetValue('#ctl00_MainContent_txtCVS'),
+        RESP: safeGetValue('#ctl00_MainContent_txtRESP'),
+        GIT: safeGetValue('#ctl00_MainContent_txtGIT'),
+        Abdominal: safeGetValue("#ctl00_MainContent_txtAbdomin"),
+        URG: safeGetValue("#ctl00_MainContent_txtUGS"),
+        Mucculor: safeGetValue('#ctl00_MainContent_txtMucculor'),
+        Local: safeGetValue('#ctl00_MainContent_txtLocal'),
+        Provisional_Diagnosis: safeGetValue('#ctl00_MainContent_txtProvisionalDiagnosis'),
+        txtRemarksHistory: safeGetValue('#ctl00_MainContent_txtRemarksHistory'),
+
+        // Tab05 - Referral
+        Reffer_To: safeGetValue('#ctl00_MainContent_ddlPatient_Main_Category'),
+        Reffer_doc: safeGetValue('#ddldoctors'),
+        Reffer_No: safeGetValue('#ctl00_MainContent_txtRefferNote'),
+
+        // Tab12 - Follow Up
+        Doctor_ID: $('#ctl00_MainContent_ddlDoctorName option:selected').val() || "",
+        Designation: safeGetValue('#ctl00_MainContent_txtDesignation'),
+        Issuance_Of: safeGetValue('#ctl00_MainContent_ddlIssuance_Of'),
+        Follow_Up: safeGetValue('#ctl00_MainContent_ddlFOllowUp'),
+        FollowNoDate: safeGetValue('#ctl00_MainContent_FollowNoDate'),
+
+        // Tab13 - Disposal
+        FinalDiagnosis: safeGetValue('#ctl00_MainContent_txtFinalDiagnosis'),
+        Advice: safeGetValue('#ctl00_MainContent_txtAdvice'),
+        Final_Rec: safeGetValue("#ctl00_MainContent_Final_Rec"),
+        Proto: safeGetValue('#ctl00_MainContent_ddlProto'),
+
+        // Common Fields - ensure these are proper data types
+        Patient_ID: parseInt(Patient_ID) || 0,
+        reg_ID: reg_ID || "",
+        btnsave: safeGetValue('#btnSave') || "Save",
+        Discharged: document.getElementById("DischargeCheckBox") ? document.getElementById("DischargeCheckBox").checked : false,
+        Administration: Administration,
+        Out_Patient_ID: Out_Patient_ID
+    };
+
+    console.log("Data being sent:", data);
+
+    $.ajax({
+        type: "POST",
+        url: "NewOutPatient.aspx/SaveRecord",
+        data: JSON.stringify({ data: data }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            console.log("Response:", response);
+
+            // Check if the response indicates an error
+            if (response.d && response.d.startsWith("Error:")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: response.d,
+                    showConfirmButton: true
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Record has been saved successfully.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                $('#btnSave').val("Update");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                responseText: xhr.responseText,
+                error: error
+            });
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while saving the record. Please check the console for details.',
+                showConfirmButton: true
+            });
+        }
+    });
+}
+
 
     </script>
 </asp:Content>
@@ -4177,8 +4449,9 @@
                 <input type="button" class="mybutton2" value="History" onclick="AddNewSymptom()" />
                 <input type="button" class="mybutton2" value="Queue" onclick="openQueue()" />
                 <input type="button" class="mybutton2" value="Discharge" onclick="AddNewSymptom()" />
+                <input type="checkbox" id="DischargeCheckBox" />
                 <input type="button" class="mybutton2" value="Reset" onclick="openManageSymptomsModal()" />
-                <input type="button" class="mybutton2" value="Save" onclick="AddNewSymptom()" />
+                <input id="btnSave" type="button" class="mybutton2" value="Save" onclick="SaveMedicines()" />
 
             </div>
             <div id="PreviewPane" style="display: none">
@@ -4372,6 +4645,7 @@
                                                 <th style="display: none">Result</th>
                                                 <th>Special Tests</th>
                                                 <th>Area Of Interest</th>
+                                                <th style="display: none">Rotation</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -4503,8 +4777,8 @@
             </div>
         </div>
     </div>
-    <asp:TextBox ID="txtOut_Patient_ID" runat="server" ReadOnly="True" style="display:none;"></asp:TextBox>
-    <asp:TextBox ID="txtPatient_ID" runat="server" class="form-control" style="display:none" />
+    <asp:TextBox ID="txtOut_Patient_ID" runat="server" ReadOnly="True" Style="display: none;"></asp:TextBox>
+    <asp:TextBox ID="txtPatient_ID" runat="server" class="form-control" Style="display: none" />
     <asp:HiddenField ID="hdfPatient_ID" Value="(New)" runat="server" ClientIDMode="Static" />
     <asp:HiddenField ID="hdfReg_ID" Value="(New)" runat="server" ClientIDMode="Static" />
     <asp:HiddenField ID="hdfPatient_No" runat="server" ClientIDMode="Static" />
