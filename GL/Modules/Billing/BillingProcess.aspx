@@ -1249,10 +1249,28 @@
                         var Net_Amount = $('#txtNetPayable').val();
                         var Received_Amount = $('#txtAmountReceived').val();
                         var Balance_Amount = $('#txtBalances').val();
-                        if (Balance_Amount < 0) {
-                            alert("please Enter Valid Discount Amount ");
-                            $('#btnSave').removeAttr("disabled");
-                            return;
+                        //if (Balance_Amount < 0) {
+                        //    alert("please Enter Valid Discount Amount ");
+                        //    $('#btnSave').removeAttr("disabled");
+                        //    return;
+                        //}
+
+                        if (parseInt(Received_Amount) > 0 && parseInt(Balance_Amount) != 0) {
+                          
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please enter Complete received Amount or Not !',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            $("#btnSave").prop("disabled", false);
+                            return false;
                         }
 
                         var Previous_Balance = $('#txt_balance').val();
@@ -2251,7 +2269,7 @@
                     if ($('#txtTotalPayable').val() != '')
                     {
                         if (AmtReceived != '') {
-                            $('#txtBalances').val(((net + PreviousBalance) - (AmtReceived + AdvanceAmount)   ).toFixed());
+                            $('#txtBalances').val((net + PreviousPaid +PreviousBalance - AmtReceived - AdvanceAmount  ).toFixed());
                         }
                         else
                             $('#txtBalances').val(net.toFixed());
@@ -2878,10 +2896,15 @@
             function CountBalance()
             {
                 debugger;
+                var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
+                var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                debugger;
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
+                    var Totalpayable = (Math.round(parseFloat($('#txtNetPayable').val()))).toFixed(0)
                     if (AmtReceived != '') {
-                        $('#txtBalances').val((Math.round(parseFloat($('#txtNetPayable').val()) - parseFloat(AmtReceived))).toFixed(0));
+                        $('#txtBalances').val(parseFloat(Totalpayable) + PreviousPaid  +PreviousBalance - parseFloat(AmtReceived) - AdvanceAmount);
                     }
                     else
                         $('#txtBalances').val(parseFloat($('#txtNetPayable').val()).toFixed(0));
@@ -5456,7 +5479,7 @@
                 </select>
                 </div>
             <div class="col-lg-1 col-md-3 col-sm-4">
-                <input type="text" id="txtcashinhand" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()"/>
+                <input type="text" value="0" id="txtcashinhand" style="height: 30px;  text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()"/>
                 </div>
         </div>
 
@@ -5471,7 +5494,7 @@
                  </select>
                  </div>
              <div class="col-lg-1 col-md-4 col-sm-6">
-                 <input type="text" id="txtbankcash" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()" />
+                 <input type="text" id="txtbankcash" value="0" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()" />
                  </div>
              </div>
 
