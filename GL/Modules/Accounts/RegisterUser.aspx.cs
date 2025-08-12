@@ -123,7 +123,7 @@ namespace PMS.Modules.Accounts
                     user.UserName = data.UserName;
                     user.LoweredUserName = data.UserName.ToLower();
                     user.mobileno = data.Mobile;
-                    if (string.IsNullOrEmpty(user.Gl_Account))
+                    if (string.IsNullOrEmpty(data.Accounts) || data.Accounts == "0")
                     {
                         user.Gl_Account = "0";
                     }
@@ -131,6 +131,7 @@ namespace PMS.Modules.Accounts
                     {
                         user.Gl_Account = data.Accounts;
                     }
+
 
                     user.AllowPatientDelete = data.AllowPatientDelete;
                     user.AllPatientRecords = data.AllPatientRecords;
