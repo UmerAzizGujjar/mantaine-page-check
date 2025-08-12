@@ -123,7 +123,7 @@
                 });
                 Valid = false;
             }
-            else if (Password == "" || ConfirmPassword == "") {
+            else if ((Password == "" || ConfirmPassword == "") && UserIDfromURL == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -137,11 +137,8 @@
                     }
                 });
                 Valid = false;
-                if (UserIDfromURL != "") {
-                    Valid = true;
-                }
             }
-            else if (!hasMinLength || !hasSpecialChar) {
+            else if ((!hasMinLength || !hasSpecialChar) && UserIDfromURL == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -155,11 +152,8 @@
                     }
                 });
                 Valid = false;
-                if (UserIDfromURL != "") {
-                    Valid = true;
-                }
             }
-            else if (Password != ConfirmPassword) {
+            else if ((Password != ConfirmPassword) && UserIDfromURL == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -173,9 +167,6 @@
                     }
                 });
                 Valid = false;
-                if (UserIDfromURL != "") {
-                    Valid = true;
-                }
             }
 
                 if (!Accounts || Accounts === "0") {
