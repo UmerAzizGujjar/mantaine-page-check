@@ -318,6 +318,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
+                return;
             }
 
             if ($("#policyTable tbody tr.invalid-time").length > 0) {
