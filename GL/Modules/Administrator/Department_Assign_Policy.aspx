@@ -255,6 +255,33 @@
                 return;
             }
 
+            let invalidExpiry = false;
+            $('#policyTable tbody tr').each(function () {
+                const expiryDate = $(this).find('[name="Expiry_Date"]').val();
+                if (!expiryDate) {
+                    invalidExpiry = true;
+                    $(this).find('[name="Expiry_Date"]').css("border", "2px solid red");
+                } else {
+                    $(this).find('[name="Expiry_Date"]').css("border", "");
+                }
+            });
+
+            if (invalidExpiry) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Expiry Date is required for all policies.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             $.ajax({
                 type: "POST",
                 url: "Department_Assign_Policy.aspx/SaveMultipleDepartmentPolicies",
