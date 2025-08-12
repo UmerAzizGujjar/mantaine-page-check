@@ -34,7 +34,9 @@
                     $('#Email').val(data.Email);
                     $('#Mobile').val(data.mobileno);
                     $('#EmpCode').val(data.EmpCode);
-                    $('#ddlCashInHand').val(data.Accounts).trigger('change');
+                    setTimeout(function () {
+                        $('#ddlCashInHand').val(data.Accounts).trigger('change');
+                    }, 200);
                     // Checkboxes
                     $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
                     $('#AllowPatientDelete').prop('checked', data.AllowPatientDelete);
