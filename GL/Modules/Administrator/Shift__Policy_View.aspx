@@ -55,6 +55,7 @@
              },
              "columns": [
                  { "data": "Policy_Detail_ID", "visible": false, "width": "0%", "orderable": false },
+                 { "data": "Policy_ID", "visible": false, "width": "0%", "orderable": false },
                  { "data": "Policy_Name", "name": "Policy_Name", "width": "8%", "orderable": true },
                  { "data": "Fees", "width": "15%", "orderable": false },
                  { "data": "Hospital_Share", "width": "15%", "orderable": false },
@@ -75,7 +76,7 @@
                  },
                  {
                      render: function (data, type, full) {
-                         var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Policy_Detail_ID + ')" style="border-radius: 4px;   padding: 5px 8px 5px 8px;"><i  class="fa fa-pencil"></i></a>';
+                         var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Policy_ID + ')" style="border-radius: 4px;   padding: 5px 8px 5px 8px;"><i  class="fa fa-pencil"></i></a>';
 
                          var deleteBtn = '<a href="#" class="delListBtn" ' + 'onclick="cancelPolicy(' + full.Policy_Detail_ID + ')" ' + 'style="border-radius: 4px; margin-left: 4px; color: white; background-color: red; padding: 5px 8px;">' + '<i class="fa fa-trash"></i></a>';
 
@@ -190,6 +191,7 @@
             <table id="example" class="table table-striped table-bordered display">
                 <thead>
                     <tr>
+                        <th style="display: none; width: 0%;">Policy Det ID</th>
                         <th style="display: none; width: 0%;">Policy ID</th>
                         <th>Policy Name</th>
                         <th>Fees</th>
