@@ -4,9 +4,10 @@
 
     <script type="text/javascript" src="../../wwwroot/Tibbit_theme/CustomJs/OPD.js"></script>
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
-     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
+            loadOPDPermissions();
             DisableCardPrint();
             var reg_id = '<%= Request.QueryString["ID"] %>'
             var apt_Id = '<%= Request.QueryString["apt_id"] %>'
@@ -38,14 +39,19 @@
                 }, 1500);
             }
             else {
-                $('#ddlPatient_Type').select2();              
+                $('#ddlPatient_Type').select2();
                 $('#ddl_Gender').select2();
                 $('#ddlGender').select2();
-                $('#ddlpanel').select2();           
+                $('#ddlpanel').select2();
                 $('#ddlemployee').select2();
                 $('#ddldoctor').select2();
                 $('#ddlDepartment').select2();
-            }                              
+                $('#ddlFilterClnic').select2();
+                $('#ddlServices').select2();
+            }
+
+            FillClinics()
+            FillServices()
         });
         function DisableCardPrint() {
             var chkStatus = document.getElementById('<%=chckcardissue.ClientID%>');
@@ -59,10 +65,110 @@
             }
         }
 
+        function FillClinics() {
+            var options ;
+
+            $.ajax({
+                url: 'OPD.aspx/GetClinics',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlFilterClnic').html(options);
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+
+            return options;
+        }
+        function FillServices() {
+            var options = '<option value="0">Please Select</option>';
+
+            $.ajax({
+                url: 'OPD.aspx/GetServices',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Item_ID + '">' + value.Description + '</option>';
+                    });
+                    $('#ddlServices').html(options);
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+
+            return options;
+        }
+        function loadOPDPermissions() {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/GetCompanyOPDPermissions",  // Correct page name
+                data: "{}",  // ← Required even for no parameters
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var permissions = response.d;
+
+                    var fieldContainers = {
+                        "mr_no": "field_mr_no",
+                        "patient_name": "field_Patient_name",
+                        "last_name": "field_Last_name",
+                        "opd_no": "field_OPD_No",
+                        "cash_in_hand": "Field-CIH",
+                        "mode_presentation": "field_Mode_Reg",
+                        "mobile": "field_Mobile",
+                        "cnic": "field_CNIC",
+                        "patient_category": "field_Category",
+                        "marital_status": "field_Martial_Status",
+                        "age": "field_age",
+                        "gender": "field_Gender",
+                        "fee": "field_Fee",
+                        "address": "field_Address",
+                        "card": "Field_Card",
+                        "follow_up": "Field_FollowUP",
+                        "Services": "field_Services",
+                        "FilterClinic": "field_Clinic",
+                    };
+
+                    for (var dbField in fieldContainers) {
+                        debugger;
+                        var containerId = fieldContainers[dbField];
+                        var $container = $("#" + containerId);
+
+                        if ($container.length > 0) {
+                            if (permissions[dbField] === true) {
+                                $container.show();
+                            } else {
+                                $container.hide();
+                            }
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    console.error("Response:", xhr.responseText);
+                    alert("Could not load form settings.");
+                }
+            });
+        }
+
         function Approve() {
             var pat_id = '<% =Request.QueryString["OPDID"] %>';
             var Pat_Category = $('#ddlPatient_Type').val();
-            
+
             PageMethods.approvepatient(pat_id, Pat_Category, function (Tests) {
                 debugger
                 var message = JSON.parse(Tests);
@@ -127,31 +233,31 @@
         //Print
         function OPD_Print() {
             debugger;
-             var ID = '<%= Request.QueryString["OPDID"]%>';
-             var locationInfo = window.location;
-             var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
+            var ID = '<%= Request.QueryString["OPDID"]%>';
+            var locationInfo = window.location;
+            var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
             if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
-                 var urlInfo = window.location.href.split('/');
-                 var ip = urlInfo[2];
-                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername +  "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
-             }
-             window.open(url, '_blank');
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
+            }
+            window.open(url, '_blank');
         }
 
         function OPD_Form_Print() {
             debugger;
             var ID = '<%= Request.QueryString["OPDID"]%>';
-                    var locationInfo = window.location;
+            var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
-                    if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
-                        var urlInfo = window.location.href.split('/');
-                        var ip = urlInfo[2];
-                        var foldername = urlInfo[3];
-                        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
-                    }
-                    window.open(url, '_blank');
-                }
+            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + ID;
+            }
+            window.open(url, '_blank');
+        }
         debugger
         function PrintPatientCard() {
             debugger
@@ -172,7 +278,7 @@
                         debugger;
                     console.log(msg.d);
                     var url = "../../ReportViewer.aspx?ReportName=PrintPatientCard&ReportTitle=OPD Patient Card&MrNo=" + ID;
-                   
+
                     window.open(url, '_blank');
                 },
                 Error: function (x, e) {
@@ -224,9 +330,9 @@
 
                         $('#ddldoctor').html(options);
                         var type = $('#ddlPatient_Type').val();
-                     
+
                         if (type != "02") {
-                          
+
                             getGeneralFee();
                         }
 
@@ -250,6 +356,9 @@
                     debugger;
                     var data = JSON.parse(resp.d);
                     $('#txtfees').val(data.Code);
+                    //sharing if private()
+                    $('#hdnDocshare').val(data.D_Share);
+                    $('#hdnhospShare').val(data.H_Share);
 
                 },
                 error: function (response) {
@@ -281,12 +390,14 @@
     <input type="text" id="hdn_aptid" style="display: none;" />
     <input type="text" id="hdn_regid" style="display: none;" />
     <input type="text" id="hdn_opdId" style="display: none;" />
+    <input type="text" id="hdnDocshare" style="display: none;" />
+    <input type="text" id="hdnhospShare" style="display: none;" />
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
             <div class="col-lg-4 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="32" height="32">
-                    <span><a class="anchorOnOPD" >Register a new patient</a></span>
+                    <span><a class="anchorOnOPD">Register a new patient</a></span>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12" style="cursor: pointer" id="btnSearchApp_Patient" onclick="SearchPop_App()">
@@ -317,75 +428,79 @@
                 <div class="row show">
 
                     <input type="text" id="txt_reg_patno" style="display: none" />
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_mr_no">
                         <label>MR No</label>
                         <input type="text" runat="server" id="txtPatient_ID" style="display: none" />
                         <input type="text" id="txtpatient_no" style="display: none" />
                         <input type="text" id="txtPatientNo" value="New" readonly="readonly" />
                         <input type="hidden" id="hdnPatientID" runat="server" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Patient_name">
                         <label>Name *</label>
                         <input type="text" id="txt_patname" value="" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Last_name">
                         <label>Last Name *</label>
                         <input type="text" id="txt_F_Name" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_OPD_No">
                         <label>OpdNo *</label>
                         <input type="text" id="txt_opd_no" value="New" readonly="readonly" />
                     </div>
-                </div>
-                <div class="row show">
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Mode_Reg">
                         <label>Mode Of Presentation</label>
                         <select id="ddlMode_Of_Registration" readonly="readonly"></select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Mobile">
                         <label>Mobile *</label>
                         <input type="text" id="txtmobile" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_CNIC">
                         <label>CNIC *</label>
                         <input type="text" id="txtnic" value="" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Category">
                         <label>Patient Category</label>
                         <select id="ddlPatient_Type" onchange="loaddata()" disabled>
                         </select>
                     </div>
-
-                </div>
-
-                <div class="row show">
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Martial_Status">
                         <label>Martial Status</label>
                         <select id="ddlmartialstatus"></select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_age">
                         <label>Age</label>
                         <input type="text" id="txtage" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Gender">
                         <label>Gender</label>
                         <select id="ddlGender"></select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Fee">
                         <label>Fee</label>
                         <input type="text" id="txtfees" readonly="readonly" class="form-control" />
                     </div>
-                </div>
-
-                <div class="row show">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-12 col-md-12 col-sm-12" id="field_Address">
                         <label>Address *</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
+                        <label>Services</label>
+                        <select id="ddlServices"></select>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Clinic">
+                        <label>Filter Clinic</label>
+                        <select id="ddlFilterClnic"></select>
+                    </div>
                 </div>
+
+
+
+
+
             </div>
 
-        
+
         </div>
 
         <div class="col-lg-3 col-md-4" id="right-section">
@@ -433,31 +548,30 @@
                         <option value="0">Select</option>
                     </select>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" style="display:none" >
+                <div class="col-lg-12 col-md-12 col-sm-12" style="display: none">
                     <label>Cashier</label>
-                    <select id="ddlcashier" class="form-control" ></select>
+                    <select id="ddlcashier" class="form-control"></select>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" >
+                <div class="col-lg-12 col-md-12 col-sm-12" id="Field-CIH">
                     <label>Cash In Hand</label>
-                    <select id="ddlCashInHand" >
-                       
+                    <select id="ddlCashInHand">
                     </select>
                 </div>
 
                 <!-- Checkboxes Section -->
-                <div class="row " style="width: 100%;">
+                <div class="row " style="width: 100%;" id="Field_Card">
                     <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop mleft">
                         <label for="chckcardissue" class="ml-2">Card</label>
                         <input type="checkbox" id="chckcardissue" runat="server" class="custom-checkbox" onclick="DisableCardPrint()" />
-                    </div>  
-                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop">
+                    </div>
+                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop" id="Field_FollowUP">
                         <label for="lblfollowup" class="ml-2">Follow Up</label>
                         <span id="follow_up"></span>
                     </div>
-                    
+
                 </div>
-                <div class="row"  style="display:none">
-                    <div class="col-lg-7 col-md-4 col-sm-6 d-flex align-items-center mtop" style="display:none">
+                <div class="row" style="display: none">
+                    <div class="col-lg-7 col-md-4 col-sm-6 d-flex align-items-center mtop" style="display: none">
                         <label for="chckfreecheck" class="ml-2 wdth">Free Check</label>
                         <input type="checkbox" id="chckfreecheck" class="custom-checkbox " />
                     </div>
@@ -465,36 +579,36 @@
             </div>
         </div>
     </div>
-         <div class="row mtop">
-              <div class =" col-lg-8">
-                  <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input type="button" class="btn-primry " id="btnsave" value="Save&Print" onclick="SaveData()" />
+    <div class="row mtop">
+        <div class=" col-lg-8">
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <input type="button" class="btn-primry " id="btnsave" value="Save&Print" onclick="SaveData()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4">
+                    <input type="button" class="btn btn-yellow " id="btnNew" value="New" onclick="window.location = 'OPD.aspx'" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <input type="button" class="btn btn-gray " id="btnView" value="View" onclick="window.location = 'OPDView.aspx'" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4" id="divcard">
+                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCard" onclick="getcardAmount()" value="Card" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
+                    <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none;">
+                    <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6" id="divvoucher">
+                    <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" style="display: none;" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
+                    <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" style="display: none;" />
+                </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4">
-                <input type="button" class="btn btn-yellow " id="btnNew" value="New" onclick="window.location = 'OPD.aspx'" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
-                <input type="button" class="btn btn-gray " id="btnView" value="View" onclick="window.location = 'OPDView.aspx'" />
-            </div>
-               <div class="col-lg-2 col-md-3 col-sm-4" id="divcard">
-                <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCard" onclick="getcardAmount()" value="Card" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
-                <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display:none;">
-                <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6" id="divvoucher">
-                <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" style="display: none;" />
-            </div>  
-            <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
-             <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" style="display: none;" />
-            </div>
-                  </div>
-              </div>
-         </div>
+        </div>
+    </div>
 
     <%--patient modal--%>
     <div id="PatientModel" class="modal fade" tabindex="-1" role="dialog">
@@ -515,7 +629,7 @@
                         </div>
                         <div class="col-lg-1 col-md-4 col-sm-6">
                             <label for="ddl_name">Name<span style="color: red;">*</span></label>
-                            <select id="ddl_name" class="form-control" style="width:137%">
+                            <select id="ddl_name" class="form-control" style="width: 137%">
                                 <option value="Mr.">Mr.</option>
                                 <option value="Mrs.">Mrs.</option>
                                 <option value="Ms.">Ms.</option>
@@ -551,7 +665,7 @@
                         </div>
                         <div class="col-lg-1 col-md-4 col-sm-6" style="margin-top: 8px;">
                             <label></label>
-                            <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" style="width:137% !important" />
+                            <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" style="width: 137% !important" />
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top: 7px;">
                             <label></label>

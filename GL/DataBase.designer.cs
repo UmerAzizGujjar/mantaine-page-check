@@ -870,12 +870,12 @@ namespace PMS
 		partial void InsertHR_Employee(HR_Employee instance);
 		partial void UpdateHR_Employee(HR_Employee instance);
 		partial void DeleteHR_Employee(HR_Employee instance);
-		partial void InsertPatient(Patient instance);
-		partial void UpdatePatient(Patient instance);
-		partial void DeletePatient(Patient instance);
 		partial void Insertcompany_opd_policy(company_opd_policy instance);
 		partial void Updatecompany_opd_policy(company_opd_policy instance);
 		partial void Deletecompany_opd_policy(company_opd_policy instance);
+		partial void InsertPatient(Patient instance);
+		partial void UpdatePatient(Patient instance);
+		partial void DeletePatient(Patient instance);
 		#endregion
 
 		public DataBaseDataContext() :
@@ -3180,19 +3180,19 @@ namespace PMS
 			}
 		}
 
-		public System.Data.Linq.Table<Patient> Patients
-		{
-			get
-			{
-				return this.GetTable<Patient>();
-			}
-		}
-
 		public System.Data.Linq.Table<company_opd_policy> company_opd_policies
 		{
 			get
 			{
 				return this.GetTable<company_opd_policy>();
+			}
+		}
+
+		public System.Data.Linq.Table<Patient> Patients
+		{
+			get
+			{
+				return this.GetTable<Patient>();
 			}
 		}
 
@@ -147557,6 +147557,236 @@ namespace PMS
 		}
 	}
 
+	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.company_opd_policy")]
+	public partial class company_opd_policy : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+		private int _id;
+
+		private int _company_id;
+
+		private string _field_name;
+
+		private bool _is_enabled;
+
+		private System.Nullable<System.DateTime> _created_time;
+
+		private System.Nullable<System.Guid> _created_by;
+
+		private System.Nullable<System.DateTime> _updated_time;
+
+		private System.Nullable<System.Guid> _updated_by;
+
+		#region Extensibility Method Definitions
+		partial void OnLoaded();
+		partial void OnValidate(System.Data.Linq.ChangeAction action);
+		partial void OnCreated();
+		partial void OnidChanging(int value);
+		partial void OnidChanged();
+		partial void Oncompany_idChanging(int value);
+		partial void Oncompany_idChanged();
+		partial void Onfield_nameChanging(string value);
+		partial void Onfield_nameChanged();
+		partial void Onis_enabledChanging(bool value);
+		partial void Onis_enabledChanged();
+		partial void Oncreated_timeChanging(System.Nullable<System.DateTime> value);
+		partial void Oncreated_timeChanged();
+		partial void Oncreated_byChanging(System.Nullable<System.Guid> value);
+		partial void Oncreated_byChanged();
+		partial void Onupdated_timeChanging(System.Nullable<System.DateTime> value);
+		partial void Onupdated_timeChanged();
+		partial void Onupdated_byChanging(System.Nullable<System.Guid> value);
+		partial void Onupdated_byChanged();
+		#endregion
+
+		public company_opd_policy()
+		{
+			OnCreated();
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_company_id", DbType = "Int NOT NULL")]
+		public int company_id
+		{
+			get
+			{
+				return this._company_id;
+			}
+			set
+			{
+				if ((this._company_id != value))
+				{
+					this.Oncompany_idChanging(value);
+					this.SendPropertyChanging();
+					this._company_id = value;
+					this.SendPropertyChanged("company_id");
+					this.Oncompany_idChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_field_name", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
+		public string field_name
+		{
+			get
+			{
+				return this._field_name;
+			}
+			set
+			{
+				if ((this._field_name != value))
+				{
+					this.Onfield_nameChanging(value);
+					this.SendPropertyChanging();
+					this._field_name = value;
+					this.SendPropertyChanged("field_name");
+					this.Onfield_nameChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_is_enabled", DbType = "Bit NOT NULL")]
+		public bool is_enabled
+		{
+			get
+			{
+				return this._is_enabled;
+			}
+			set
+			{
+				if ((this._is_enabled != value))
+				{
+					this.Onis_enabledChanging(value);
+					this.SendPropertyChanging();
+					this._is_enabled = value;
+					this.SendPropertyChanged("is_enabled");
+					this.Onis_enabledChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_created_time", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> created_time
+		{
+			get
+			{
+				return this._created_time;
+			}
+			set
+			{
+				if ((this._created_time != value))
+				{
+					this.Oncreated_timeChanging(value);
+					this.SendPropertyChanging();
+					this._created_time = value;
+					this.SendPropertyChanged("created_time");
+					this.Oncreated_timeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_created_by", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> created_by
+		{
+			get
+			{
+				return this._created_by;
+			}
+			set
+			{
+				if ((this._created_by != value))
+				{
+					this.Oncreated_byChanging(value);
+					this.SendPropertyChanging();
+					this._created_by = value;
+					this.SendPropertyChanged("created_by");
+					this.Oncreated_byChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_updated_time", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> updated_time
+		{
+			get
+			{
+				return this._updated_time;
+			}
+			set
+			{
+				if ((this._updated_time != value))
+				{
+					this.Onupdated_timeChanging(value);
+					this.SendPropertyChanging();
+					this._updated_time = value;
+					this.SendPropertyChanged("updated_time");
+					this.Onupdated_timeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_updated_by", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> updated_by
+		{
+			get
+			{
+				return this._updated_by;
+			}
+			set
+			{
+				if ((this._updated_by != value))
+				{
+					this.Onupdated_byChanging(value);
+					this.SendPropertyChanging();
+					this._updated_by = value;
+					this.SendPropertyChanged("updated_by");
+					this.Onupdated_byChanged();
+				}
+			}
+		}
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+
 	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Patients")]
 	public partial class Patient : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -147901,6 +148131,10 @@ namespace PMS
 
 		private string _Status;
 
+		private System.Nullable<int> _Service_id;
+
+		private System.Nullable<decimal> _Hospital_share;
+
 		#region Extensibility Method Definitions
 		partial void OnLoaded();
 		partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -148243,6 +148477,10 @@ namespace PMS
 		partial void OnAccountIDChanged();
 		partial void OnStatusChanging(string value);
 		partial void OnStatusChanged();
+		partial void OnService_idChanging(System.Nullable<int> value);
+		partial void OnService_idChanged();
+		partial void OnHospital_shareChanging(System.Nullable<decimal> value);
+		partial void OnHospital_shareChanged();
 		#endregion
 
 		public Patient()
@@ -151630,232 +151868,42 @@ namespace PMS
 			}
 		}
 
-		public event PropertyChangingEventHandler PropertyChanging;
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-
-	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.company_opd_policy")]
-	public partial class company_opd_policy : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-		private int _id;
-
-		private int _company_id;
-
-		private string _field_name;
-
-		private bool _is_enabled;
-
-		private System.Nullable<System.DateTime> _created_time;
-
-		private System.Nullable<System.Guid> _created_by;
-
-		private System.Nullable<System.DateTime> _updated_time;
-
-		private System.Nullable<System.Guid> _updated_by;
-
-		#region Extensibility Method Definitions
-		partial void OnLoaded();
-		partial void OnValidate(System.Data.Linq.ChangeAction action);
-		partial void OnCreated();
-		partial void OnidChanging(int value);
-		partial void OnidChanged();
-		partial void Oncompany_idChanging(int value);
-		partial void Oncompany_idChanged();
-		partial void Onfield_nameChanging(string value);
-		partial void Onfield_nameChanged();
-		partial void Onis_enabledChanging(bool value);
-		partial void Onis_enabledChanged();
-		partial void Oncreated_timeChanging(System.Nullable<System.DateTime> value);
-		partial void Oncreated_timeChanged();
-		partial void Oncreated_byChanging(System.Nullable<System.Guid> value);
-		partial void Oncreated_byChanged();
-		partial void Onupdated_timeChanging(System.Nullable<System.DateTime> value);
-		partial void Onupdated_timeChanged();
-		partial void Onupdated_byChanging(System.Nullable<System.Guid> value);
-		partial void Onupdated_byChanged();
-		#endregion
-
-		public company_opd_policy()
-		{
-			OnCreated();
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-		public int id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Service_id", DbType = "Int")]
+		public System.Nullable<int> Service_id
 		{
 			get
 			{
-				return this._id;
+				return this._Service_id;
 			}
 			set
 			{
-				if ((this._id != value))
+				if ((this._Service_id != value))
 				{
-					this.OnidChanging(value);
+					this.OnService_idChanging(value);
 					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
+					this._Service_id = value;
+					this.SendPropertyChanged("Service_id");
+					this.OnService_idChanged();
 				}
 			}
 		}
 
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_company_id", DbType = "Int NOT NULL")]
-		public int company_id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_share", DbType = "Decimal(18,2)")]
+		public System.Nullable<decimal> Hospital_share
 		{
 			get
 			{
-				return this._company_id;
+				return this._Hospital_share;
 			}
 			set
 			{
-				if ((this._company_id != value))
+				if ((this._Hospital_share != value))
 				{
-					this.Oncompany_idChanging(value);
+					this.OnHospital_shareChanging(value);
 					this.SendPropertyChanging();
-					this._company_id = value;
-					this.SendPropertyChanged("company_id");
-					this.Oncompany_idChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_field_name", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
-		public string field_name
-		{
-			get
-			{
-				return this._field_name;
-			}
-			set
-			{
-				if ((this._field_name != value))
-				{
-					this.Onfield_nameChanging(value);
-					this.SendPropertyChanging();
-					this._field_name = value;
-					this.SendPropertyChanged("field_name");
-					this.Onfield_nameChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_is_enabled", DbType = "Bit NOT NULL")]
-		public bool is_enabled
-		{
-			get
-			{
-				return this._is_enabled;
-			}
-			set
-			{
-				if ((this._is_enabled != value))
-				{
-					this.Onis_enabledChanging(value);
-					this.SendPropertyChanging();
-					this._is_enabled = value;
-					this.SendPropertyChanged("is_enabled");
-					this.Onis_enabledChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_created_time", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> created_time
-		{
-			get
-			{
-				return this._created_time;
-			}
-			set
-			{
-				if ((this._created_time != value))
-				{
-					this.Oncreated_timeChanging(value);
-					this.SendPropertyChanging();
-					this._created_time = value;
-					this.SendPropertyChanged("created_time");
-					this.Oncreated_timeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_created_by", DbType = "UniqueIdentifier")]
-		public System.Nullable<System.Guid> created_by
-		{
-			get
-			{
-				return this._created_by;
-			}
-			set
-			{
-				if ((this._created_by != value))
-				{
-					this.Oncreated_byChanging(value);
-					this.SendPropertyChanging();
-					this._created_by = value;
-					this.SendPropertyChanged("created_by");
-					this.Oncreated_byChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_updated_time", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> updated_time
-		{
-			get
-			{
-				return this._updated_time;
-			}
-			set
-			{
-				if ((this._updated_time != value))
-				{
-					this.Onupdated_timeChanging(value);
-					this.SendPropertyChanging();
-					this._updated_time = value;
-					this.SendPropertyChanged("updated_time");
-					this.Onupdated_timeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_updated_by", DbType = "UniqueIdentifier")]
-		public System.Nullable<System.Guid> updated_by
-		{
-			get
-			{
-				return this._updated_by;
-			}
-			set
-			{
-				if ((this._updated_by != value))
-				{
-					this.Onupdated_byChanging(value);
-					this.SendPropertyChanging();
-					this._updated_by = value;
-					this.SendPropertyChanged("updated_by");
-					this.Onupdated_byChanged();
+					this._Hospital_share = value;
+					this.SendPropertyChanged("Hospital_share");
+					this.OnHospital_shareChanged();
 				}
 			}
 		}

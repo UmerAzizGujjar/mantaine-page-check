@@ -1051,17 +1051,21 @@ function SaveData() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
-    var Fees = $('#txtfees').val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
     var employee_id = $('#Employe_id').val();
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
+    var Fees = $('#txtfees').val();
     var discount = $('#txtdiscount').val();
+    var Doc_Share = $('#hdnDocshare').val();
+    var Hosp_share = $('#hdnhospShare').val();
     var dependent = $('#txtdependent').val();
     var rollno = $('#ddlrollno').val();
     var Class = $('#ddlclass').val();
     var section = $('#ddlsection').val();
+    var FilterClinic = $('#ddlFilterClnic').val();
+    var Services = $('#ddlServices').val();
     var Cashier = $('#ddlcashier').val();
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked')
@@ -1297,6 +1301,10 @@ function SaveData() {
         rollno: rollno,
         Class: Class,
         section: section,
+        FilterClinic: FilterClinic,
+        Services: Services,
+        Doc_Share: Doc_Share,
+        Hosp_share: Hosp_share,
         Cashier: Cashier,
         accountid: accountid,
         IssueCard: IssueCard,
@@ -1557,6 +1565,8 @@ function loadPatientDetail(OPDID) {
             $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
             $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
+            $('#ddlServices').val(data.Service_id).trigger('change').attr('disabled', true);
+            $('#ddlFilterClnic').val(data.FilterClinic).trigger('change').attr('disabled', true);
 
             setTimeout(function () {
 
