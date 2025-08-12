@@ -1367,13 +1367,11 @@ function get_pat_initial_info(ini_patientID) {
 }
 function loadFee() {
     debugger;
-    var res = '';
     var Doc = $('#ddldoctor').val();
-    var opdid = $('#hdn_opdId').val()
-    if (opdid != "" || opdid != "") {
+    var opdid = $('#hdn_opdId').val();
 
-    }
-    else {
+    if (opdid != "" || opdid != "") {
+    } else {
         $.ajax({
             type: "POST",
             url: "OPD.aspx/loadRegistrationFees",
@@ -1382,25 +1380,33 @@ function loadFee() {
             dataType: "json",
             success: function (response) {
                 debugger;
-                var fee = JSON.parse(response.d);
-                if (fee == null) {
-                    $('#txtfees').val('');
+                var res = JSON.parse(response.d);
+                if (!res.success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: res.message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 } else {
-                    res = fee.Amount;
-                }
-                if (res != '') {
-                    $('#txtfees').val(parseInt(res));
 
+                    $('#txtfees').val(res.fee);
+                    $('#hdnhospShare').val(res.Hospital_Share);
+                    $('#hdnDocshare').val(res.Doctor_Share);
                 }
             },
             error: function (xhr, status, error) {
                 console.log("Error: " + error);
             }
         });
-
-
-
     }
+
     loadDepartment(Doc);
 }
 function loadDepartment(Doc) {
