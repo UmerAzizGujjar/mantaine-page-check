@@ -54,6 +54,7 @@ namespace PMS.Modules.Administrator
                                        select new
                                        {
                                            Policy_Detail_ID = a.Policy_Detail_ID,
+                                           Policy_ID = a.Policy_ID,
                                            Policy_Name = a.Policy_Name,
                                            Fees = a.Fees,
                                            Hospital_Share = a.Hospital_Share,

@@ -17,7 +17,7 @@ namespace PMS.Modules.PatientManagement
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+
         }
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
@@ -76,7 +76,7 @@ namespace PMS.Modules.PatientManagement
                 data = new JavaScriptSerializer().Serialize(result);
             }
             return data;
-        }  
+        }
         [WebMethod]
         public static string GetClinics()
         {
@@ -198,7 +198,7 @@ namespace PMS.Modules.PatientManagement
             return data;
         }
 
-        
+
         [WebMethod]
         public static string GetUserAccount()
         {
@@ -259,7 +259,7 @@ namespace PMS.Modules.PatientManagement
                               {
                                   account.Account_ID,
                                   account.Account_Name,
-                                  account.Parent_Code,                                
+                                  account.Parent_Code,
                               }).ToList();
 
                 data = new JavaScriptSerializer().Serialize(result);
@@ -315,18 +315,18 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
             return "";
-        }  
+        }
         [WebMethod]
         public static string LoadDepartment(string Doc)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var department = (from emp in db.HR_Employees
-                           where emp.Emp_ID == Convert.ToInt32(Doc)
-                           select new
-                           {
-                                Department = emp.Department
-                           }).FirstOrDefault();
+                                  where emp.Emp_ID == Convert.ToInt32(Doc)
+                                  select new
+                                  {
+                                      Department = emp.Department
+                                  }).FirstOrDefault();
                 return (new JavaScriptSerializer()).Serialize(department);
             }
             return "";
@@ -338,16 +338,18 @@ namespace PMS.Modules.PatientManagement
             {
                 var today = DateTime.Today.Date;
                 string formattedDate = DateTime.Today.ToString("yyyy-MM-dd");
-             
+
 
                 var fee = (from tbl in db.Policy_Department_Assignments
                            where tbl.Department_ID == Department_id
                                  && tbl.IsActive == true
-                                 && tbl.Expiry_Date > Convert.ToDateTime(formattedDate)
+                                 && tbl.Expiry_Date >= Convert.ToDateTime(formattedDate)
                            orderby tbl.Policy_Assign_Dep_id descending
                            select new
                            {
-                               Code = tbl.Fees
+                               Code = tbl.Fees,
+                               D_Share = tbl.Doctor_Share,
+                               H_Share = tbl.Hospital_Share
                            }).FirstOrDefault();
                 return (new JavaScriptSerializer()).Serialize(fee);
             }
@@ -573,7 +575,7 @@ namespace PMS.Modules.PatientManagement
                     pat.stno_mno = stno;
                     pat.city = city;
                     pat.area = area;
-                  
+
                     pat.val_city = city_val;
                     pat.val_area = area_val;
                     pat.Country = Country;
@@ -603,7 +605,7 @@ namespace PMS.Modules.PatientManagement
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
                 pat.Permanent_Address = houseno;
-         
+
                 pat.stno_mno = stno;
                 pat.city = city;
                 pat.area = area;
@@ -673,10 +675,12 @@ namespace PMS.Modules.PatientManagement
                 {
                     pat.appointment_id = Convert.ToInt32(data.appid);
                 }
-                var opdfee = (from tbl in db.sys_Parms
-                              where tbl.Name == "OPD Fee"
-                              select tbl.Code).FirstOrDefault();
-                pat.Full_Name = data.Full_Name;
+                //var opdfee = (from tbl in db.sys_Parms
+                //              where tbl.Name == "OPD Fee"
+                //              select tbl.Code).FirstOrDefault(); from system params 
+
+                var opdfee = data.Fees;
+               pat.Full_Name = data.Full_Name;
                 pat.Age_years = data.Age;
                 pat.Mode_Of_Registration = data.modeof_presentation;
                 pat.Patient_Type = data.pat_category;
@@ -712,6 +716,7 @@ namespace PMS.Modules.PatientManagement
                 {
                     pat.discount_amt = Convert.ToInt32(data.discount);
                 }
+              
 
 
                 if (data.doctor == "0" || data.doctor == "")
@@ -731,7 +736,7 @@ namespace PMS.Modules.PatientManagement
                                   && p.Created_Time.Value.Day == DateTime.Now.Day
                                   && p.Doctor_ID == data.doctor).Count() + 1;
                 }
-            
+
                 pat.Employee_Name = data.employee;
                 pat.PanelCompany = Convert.ToInt32(data.panel);
                 pat.employee_ID = Convert.ToString(data.employee_id);
@@ -758,7 +763,41 @@ namespace PMS.Modules.PatientManagement
                 {
                     DBClass.executeNonQueryWithoutBegin("update Appointment_Form set Status='Visited' where Appointment_ID=" + data.appid);
                 }
+                decimal disc;
+                var opdfees = data.Fees;
+                var hospital_share = data.Hosp_share;
+                var Doctor_share = data.Doc_Share;
 
+                // Handle null or empty discount
+                if (string.IsNullOrEmpty(data.discount))
+                {
+                    disc = 0;
+                }
+                else
+                {
+                    disc = Convert.ToDecimal(data.discount); // Assign to outer 'disc'
+                }
+
+                // Now use disc safely
+                if (data.pat_category == "02")
+                {
+                    // Calculate discount as percentage
+                    decimal DiscountAmount = opdfees * (disc / 100);
+
+                    // Prevent over-discount
+                    if (DiscountAmount > opdfees)
+                        DiscountAmount = opdfees;
+
+                    decimal Net_Amount = opdfees - DiscountAmount;
+
+                    // Split net amount based on sharing ratio
+                    decimal Hospital_Amount = Math.Round((Net_Amount * hospital_share) / 100, 2);
+                    decimal Doctor_Amount = Math.Round((Net_Amount * Doctor_share) / 100, 2);
+
+                    // Assign result
+                    pat.doc_fee = Doctor_Amount.ToString("F2"); // Better formatting
+                    pat.Hospital_share = Hospital_Amount;
+                }
 
                 db.Patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
@@ -869,7 +908,7 @@ namespace PMS.Modules.PatientManagement
                              Reg_PatientID = rg.pat_id,
                              opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id)
 
-        }).FirstOrDefault();
+                         }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(query);
         }
         [WebMethod]
@@ -950,8 +989,8 @@ namespace PMS.Modules.PatientManagement
                              Card_Issued = p.Card_Issued,
                              free_check = p.free_check,
                              opdid = p.Patient_ID,
-                             status=p.Status,
-                             account_id =p.AccountID,
+                             status = p.Status,
+                             account_id = p.AccountID,
                              FilterClinic = p.filter_clinic,
                              Service_id = p.Service_id,
 
@@ -1155,9 +1194,11 @@ namespace PMS.Modules.PatientManagement
             public string section { get; set; }
             public string Cashier { get; set; }
             public int Services { get; set; }
+            public decimal Doc_Share { get; set; }
+            public decimal Hosp_share { get; set; }
             public string accountid { get; set; }
             public string FilterClinic { get; set; }
-   
+
             public Boolean IssueCard { get; set; }
             public Boolean FreeCheck { get; set; }
             public int Fees { get; set; }

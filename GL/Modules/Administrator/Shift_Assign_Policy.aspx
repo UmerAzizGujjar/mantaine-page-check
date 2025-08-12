@@ -299,13 +299,67 @@
 
 
         function savePolicies() {
+            let hasInvalidExpiry = false;
+            let hasInvalidTimeFields = false;
+
             $("#policyTable tbody tr").each(function () {
                 validateShare($(this));
                 validateTimeRange($(this));
+
+                const $row = $(this);
+                const expiryDate = $row.find('[name="Expiry_Date"]').val();
+
+                // Expiry date validation
+                if (!expiryDate) {
+                    $row.addClass("invalid-expiry");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Expiry Date is Required for all Policies',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    hasInvalidExpiry = true;
+                    return false; // break loop
+                } else {
+                    $row.removeClass("invalid-expiry");
+                    $row.find('[name="Expiry_Date"]').css("border", "");
+                }
+
+                // NEW: If IsTime is checked, require Start and End Time
+                if ($row.find('[name="IsTime"]').is(":checked")) {
+                    const startTime = $row.find('[name="Start_Time"]').val();
+                    const endTime = $row.find('[name="End_Time"]').val();
+
+                    if (!startTime || !endTime) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Start Time and End Time are required when "Is Time" is checked.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        hasInvalidTimeFields = true;
+                        return false; // break loop
+                    }
+                }
             });
 
-            if ($("#policyTable tbody tr.invalid-share").length > 0) {
+            if (hasInvalidExpiry || hasInvalidTimeFields) {
+                return; // stop saving
+            }
 
+            if ($("#policyTable tbody tr.invalid-share").length > 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -318,13 +372,14 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
+                return;
             }
 
             if ($("#policyTable tbody tr.invalid-time").length > 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Start Time must be greater the End Time',
+                    text: 'Start Time must be greater than End Time',
                     showConfirmButton: false,
                     timer: 2000,
                     customClass: {
@@ -337,19 +392,13 @@
             }
 
             const policies = collectPolicies();
-
             if (policies.length === 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
                     text: 'Please Add Policy',
                     showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
+                    timer: 2000
                 });
                 return;
             }
@@ -361,23 +410,11 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json"
             })
-                .done(function (response) {
+                .done(function () {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
                         text: 'All policies saved successfully.',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'All Policy Saved Successfully',
                         showConfirmButton: false,
                         timer: 2500,
                         customClass: {
@@ -394,7 +431,6 @@
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMsg = xhr.responseJSON.message;
                     }
-
                     Swal.fire({
                         icon: 'error',
                         title: 'Save Failed',
@@ -403,6 +439,8 @@
                     });
                 });
         }
+
+
     });
 </script>
 

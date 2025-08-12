@@ -1051,13 +1051,15 @@ function SaveData() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
-    var Fees = $('#txtfees').val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
     var employee_id = $('#Employe_id').val();
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
+    var Fees = $('#txtfees').val();
     var discount = $('#txtdiscount').val();
+    var Doc_Share = $('#hdnDocshare').val();
+    var Hosp_share = $('#hdnhospShare').val();
     var dependent = $('#txtdependent').val();
     var rollno = $('#ddlrollno').val();
     var Class = $('#ddlclass').val();
@@ -1301,6 +1303,8 @@ function SaveData() {
         section: section,
         FilterClinic: FilterClinic,
         Services: Services,
+        Doc_Share: Doc_Share,
+        Hosp_share: Hosp_share,
         Cashier: Cashier,
         accountid: accountid,
         IssueCard: IssueCard,

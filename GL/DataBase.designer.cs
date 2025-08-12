@@ -148133,6 +148133,8 @@ namespace PMS
 
 		private System.Nullable<int> _Service_id;
 
+		private System.Nullable<decimal> _Hospital_share;
+
 		#region Extensibility Method Definitions
 		partial void OnLoaded();
 		partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -148477,6 +148479,8 @@ namespace PMS
 		partial void OnStatusChanged();
 		partial void OnService_idChanging(System.Nullable<int> value);
 		partial void OnService_idChanged();
+		partial void OnHospital_shareChanging(System.Nullable<decimal> value);
+		partial void OnHospital_shareChanged();
 		#endregion
 
 		public Patient()
@@ -151880,6 +151884,26 @@ namespace PMS
 					this._Service_id = value;
 					this.SendPropertyChanged("Service_id");
 					this.OnService_idChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_share", DbType = "Decimal(18,2)")]
+		public System.Nullable<decimal> Hospital_share
+		{
+			get
+			{
+				return this._Hospital_share;
+			}
+			set
+			{
+				if ((this._Hospital_share != value))
+				{
+					this.OnHospital_shareChanging(value);
+					this.SendPropertyChanging();
+					this._Hospital_share = value;
+					this.SendPropertyChanged("Hospital_share");
+					this.OnHospital_shareChanged();
 				}
 			}
 		}

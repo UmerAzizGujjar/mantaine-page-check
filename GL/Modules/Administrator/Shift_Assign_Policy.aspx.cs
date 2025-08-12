@@ -57,7 +57,7 @@ namespace PMS.Modules.Administrator
                 using (var db = new DataBaseDataContext())
                 {
                     var policies = db.Policy_Details
-                                     .Where(p => p.Policy_Detail_ID.ToString() == policy_id)
+                                     .Where(p => p.Policy_ID.ToString() == policy_id)
                                      .ToList()
                                      .Select(p => new
                                      {
