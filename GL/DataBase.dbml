@@ -6817,6 +6817,7 @@
       <Column Name="AccountID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Status" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="Service_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Hospital_share" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

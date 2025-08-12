@@ -356,6 +356,9 @@
                     debugger;
                     var data = JSON.parse(resp.d);
                     $('#txtfees').val(data.Code);
+                    //sharing if private()
+                    $('#hdnDocshare').val(data.D_Share);
+                    $('#hdnhospShare').val(data.H_Share);
 
                 },
                 error: function (response) {
@@ -387,6 +390,8 @@
     <input type="text" id="hdn_aptid" style="display: none;" />
     <input type="text" id="hdn_regid" style="display: none;" />
     <input type="text" id="hdn_opdId" style="display: none;" />
+    <input type="text" id="hdnDocshare" style="display: none;" />
+    <input type="text" id="hdnhospShare" style="display: none;" />
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
             <div class="col-lg-4 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
