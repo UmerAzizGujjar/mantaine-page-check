@@ -1399,6 +1399,8 @@ function loadFee() {
                 } else {
                    
                     $('#txtfees').val(res.fee);
+                    $('#hdnhospShare').val(res.Hospital_Share);
+                    $('#hdnDocshare').val(res.Doctor_Share);
                 }
             },
             error: function (xhr, status, error) {
