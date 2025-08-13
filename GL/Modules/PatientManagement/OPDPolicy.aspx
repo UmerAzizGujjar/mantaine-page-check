@@ -472,30 +472,30 @@
             }, 3000);
         }
 
-        //function renderCompanies() {
-        //    const $container = $('#companies-container');
+        function renderCompanies() {
+            const $container = $('#companies-container');
 
-        //    if (companiesData.length === 0) {
-        //        $container.html('<p style="color: #718096; text-align: center; padding: 20px;">No companies configured yet. Create your first company above.</p>');
-        //        return;
-        //    }
+            if (companiesData.length === 0) {
+                $container.html('<p style="color: #718096; text-align: center; padding: 20px;">No companies configured yet. Create your first company above.</p>');
+                return;
+            }
 
-        //    const html = companiesData.map(function (company, index) {
-        //        return `
-        //        <div class="company-item">
-        //            <div class="company-info">
-        //                <div class="company-name">${company.name} (${company.code})</div>
-        //                <div class="company-rights-count">${company.rights.length} fields permitted</div>
-        //            </div>
-        //            <div class="company-actions">
-        //                <button class="btn-small btn-edit" onclick="editCompany(${index})">Edit</button>
-        //                <button class="btn-small btn-delete" onclick="deleteCompany(${index})">Delete</button>
-        //            </div>
-        //        </div>`;
-        //    }).join('');
+            const html = companiesData.map(function (company, index) {
+                return `
+                <div class="company-item">
+                    <div class="company-info">
+                        <div class="company-name">${company.name} (${company.code})</div>
+                        <div class="company-rights-count">${company.rights.length} fields permitted</div>
+                    </div>
+                    <div class="company-actions">
+                        <button class="btn-small btn-edit" onclick="editCompany(${index})">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteCompany(${index})">Delete</button>
+                    </div>
+                </div>`;
+            }).join('');
 
-        //    $container.html(html);
-        //}
+            $container.html(html);
+        }
 
         function editCompany(index) {
             const company = companiesData[index];
@@ -935,7 +935,7 @@
                 </form>
             </div>
 
-<%--            <div class="companies-list">
+          <%--  <div class="companies-list">
                 <h3>Saved Companies</h3>
                 <div id="companies-container">
                     <p style="color: #718096; text-align: center; padding: 20px;">No companies configured yet. Create your first company above.</p>
@@ -943,7 +943,7 @@
             </div>--%>
         </div>
     </div>
-     <%--<div class="col-lg-4 col-md-6 col-sm-8 company-section">
+     <div class="col-lg-4 col-md-6 col-sm-8 company-section">
                 <table id="example" class="table table-striped table-bordered display">
                     <thead>
                         <tr>
@@ -957,5 +957,5 @@
                 </table>
             </div>
             </div>       
-        </div>--%>
+        </div>
 </asp:Content>
