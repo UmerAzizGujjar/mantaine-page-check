@@ -2,6 +2,10 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
+        .dt-buttons {
+            display:none;
+        }
+
         .company-section {
             padding: 25px;
             border-radius: 12px;
@@ -296,20 +300,26 @@
     </style>
 
     <script type="text/javascript">
-        // Store companies data
-        let companiesData = [];
-
+        let companiesData = [];     
         $(document).ready(function () {
-            FillCompany(); // Load dropdown
-            renderCompanies(); // Render saved companies
-            // Save Button
-            // Save Button
+            FillCompany(); 
+            renderCompanies(); 
+
+            const params = new URLSearchParams(window.location.search);
+            const companyId = params.get("Company_ID");
+
+            if (companyId) {
+                loadCompanyEdit(companyId);
+                $("#saveRights").val("Update");
+            }
+
+
             $("#saveRights").on("click", function () {
                 var companyId = $("#company_name").val();
                 var companyCode = $("#company_code").val();
                 var description = $("#company_description").val();
 
-                // ✅ Send ALL fields (checked and unchecked)
+                // 
                 var allRights = [];
                 $('.rights-grid input[type="checkbox"]').each(function () {
                     allRights.push({
@@ -338,7 +348,7 @@
                         company_id: parseInt(companyId),
                         company_code: companyCode,
                         description: description,
-                        rights: allRights  // Array of { field_name, is_enabled }
+                        rights: allRights  
                     }),
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -358,6 +368,8 @@
                                         title: 'swal-big-title',
                                         htmlContainer: 'swal-big-text'
                                     }
+                                }).then(() => {
+                                    window.location.reload();
                                 });
                             } else {
                                 Swal.fire({
@@ -394,7 +406,6 @@
             });
         });
 
-        // Toggle right selection
         function toggleRight(item) {
             const $item = $(item);
             const $checkbox = $item.find('input[type="checkbox"]');
@@ -404,7 +415,6 @@
             $item.toggleClass('selected', isChecked);
         }
 
-        // Select all rights
         function selectAllRights() {
             $('.right-item input[type="checkbox"]').each(function () {
                 $(this).prop('checked', true);
@@ -412,7 +422,6 @@
             });
         }
 
-        // Clear all rights
         function clearAllRights() {
             $('.right-item input[type="checkbox"]').each(function () {
                 $(this).prop('checked', false);
@@ -420,7 +429,6 @@
             });
         }
 
-        // Select basic fields only
         function selectBasicFields() {
             clearAllRights();
             const basicFields = ['mr_no', 'opd_no', 'cash_in_hand', 'mode_presentation', 'cnic', 'patient_category','marital_status', 'patient_name', 'last_name', 'mobile', 'age', 'gender', 'address'];
@@ -435,13 +443,11 @@
 
     
     
-        // Clear form
         function clearForm() {
             $('#rightsForm')[0].reset();
             clearAllRights();
         }
 
-        // Preview selected rights
         function previewRights() {
             const companyName = $('#company_name').val().trim();
             const selectedRights = [];
@@ -458,7 +464,6 @@
             alert(preview);
         }
 
-        // Show success message
         function showSuccessMessage() {
             const $successMsg = $('#success-message');
             $successMsg.show().css('display', 'flex');
@@ -467,7 +472,6 @@
             }, 3000);
         }
 
-        // Render companies list
         function renderCompanies() {
             const $container = $('#companies-container');
 
@@ -493,7 +497,6 @@
             $container.html(html);
         }
 
-        // Edit company
         function editCompany(index) {
             const company = companiesData[index];
             $('#company_name').val(company.name);
@@ -514,7 +517,6 @@
             renderCompanies();
         }
 
-        // Delete company
         function deleteCompany(index) {
             if (confirm('Are you sure you want to delete this company?')) {
                 companiesData.splice(index, 1);
@@ -522,7 +524,6 @@
             }
         }
 
-        // Fill company dropdown via AJAX
         function FillCompany() {
             let options = '<option value="0">Please Select</option>';
             $.ajax({
@@ -544,7 +545,6 @@
             });
         }
 
-        // Handle form submission
         $('#rightsForm').on('submit', function (e) {
             e.preventDefault();
 
@@ -587,6 +587,142 @@
             showSuccessMessage();
             renderCompanies();
         });
+
+        $(document).ready(function () {
+            debugger;
+            $('#ctl00_lblMessage').hide();
+            LoadPage();
+        });
+
+
+        function LoadPage() {
+            $("#example").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'Define_Policy.aspx';
+                        }
+                    },
+                    'copy', 'excel', 'pdf',
+                ],
+                "filter": true,
+                "order": [[1, "asc"]],
+                "ajax": function (data, callback, settings) {
+                    $.ajax({
+                        type: "POST",
+                        url: "OPDPolicy.aspx/ViewList",
+                        data: JSON.stringify({
+                            draw: data.draw,
+                            start: data.start,
+                            length: data.length,
+                            sortColumn: data.columns[data.order[0].column].name,
+                            sortColumnDirection: data.order[0].dir,
+                            searchValue: data.search.value
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            callback({
+                                draw: response.d.draw,
+                                recordsTotal: response.d.recordsTotal,
+                                recordsFiltered: response.d.recordsFiltered,
+                                data: response.d.data
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                },
+                "columns": [
+                    { "data": "Company_ID", "visible": false, "width": "0%", "orderable": false },
+                    { "data": "Company_Name", "name": "Company_Name", "width": "8%", "orderable": true },
+                    {
+                        render: function (data, type, full) {
+                            var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Company_ID + ')" style="border-radius: 4px;   padding: 5px 8px 5px 8px;"><i  class="fa fa-pencil"></i></a>';
+
+                            var deleteBtn = '<a href="#" class="delListBtn" ' + 'onclick="cancelPolicy(' + full.Company_ID + ')" ' + 'style="border-radius: 4px; margin-left: 4px; color: white; background-color: red; padding: 5px 8px;">' + '<i class="fa fa-trash"></i></a>';
+
+
+
+                            var result;
+                            result = res + deleteBtn;
+                            return result;
+                        }, "width": "8%", "orderable": false
+                    }
+                ],
+                "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#example_length');
+                    var lengthDropdown = document.querySelector('#example_length select');
+                    var label = document.querySelector('#example_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    } else {
+                        console.log("Length dropdown, label, or container not found");
+                    }
+                }
+
+
+            });
+        }
+
+
+        function editOpen(id) {
+            window.location.href = "OPDPolicy.aspx?Company_ID=" + id;
+        }
+
+        debugger;
+        function loadCompanyEdit(companyId) {
+            debugger;
+            $.ajax({
+                url: 'OPDPolicy.aspx/GetCompanyDetails',
+                type: 'POST',
+                data: JSON.stringify({ company_id: parseInt(companyId) }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    const data = response.d ? JSON.parse(response.d) : response;
+
+                    if (data) {
+                        if (data.Company_ID) {
+                            $("#company_name").val(data.Company_ID).trigger("change");
+                        }
+                        if (data.Rights) {
+                            clearAllRights();
+                            data.Rights.forEach(function (right) {
+                                const $checkbox = $('#' + right.field_name);
+                                if ($checkbox.length) {
+                                    $checkbox.prop('checked', right.is_enabled);
+                                    $checkbox.closest('.right-item')
+                                        .toggleClass('selected', right.is_enabled);
+                                }
+                            });
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading company:", error);
+                }
+            });
+        }
+
     </script>
 
 </asp:Content>
@@ -596,7 +732,8 @@
             <h1>Company Rights Management</h1>
             <p>Configure field access permissions for companies</p>
         </div>
-
+        <div class="row">
+            <div class="col-lg-8 col-md-4 col-sm-6">
         <div class="content">
             <div class="company-section">
                 <form id="rightsForm">
@@ -789,10 +926,7 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8">
                             <div class="col-lg-2 col-md-2 col-sm-2">
@@ -814,4 +948,19 @@
             </div>
         </div>
     </div>
+     <div class="col-lg-4 col-md-6 col-sm-8 company-section">
+                <table id="example" class="table table-striped table-bordered display">
+                    <thead>
+                        <tr>
+                            <th style="display: none; width: 0%;">Company ID</th>
+                            <th>Company Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblbody">
+                    </tbody>
+                </table>
+            </div>
+            </div>       
+        </div>
 </asp:Content>
