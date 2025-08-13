@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="prch" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=prch;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="prchConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Tibb" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=Tibb;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="TibbConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6795,7 +6795,7 @@
       <Column Name="filter_clinic" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="tokenNo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="doc_fee" Type="System.String" DbType="VarChar(70)" CanBeNull="true" />
+      <Column Name="doc_share" Type="System.String" DbType="VarChar(70)" CanBeNull="true" />
       <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Doc_Token" Type="System.Int32" DbType="Int" CanBeNull="true" />
@@ -6816,8 +6816,9 @@
       <Column Name="Dependent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="AccountID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Status" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="Service_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Hospital_share" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Service_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Share_Transfered" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
