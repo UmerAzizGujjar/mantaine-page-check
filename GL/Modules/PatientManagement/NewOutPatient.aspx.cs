@@ -26,7 +26,6 @@ namespace PMS.Modules.PatientManagement
                 BindDropDownList();
                 if (Request.QueryString["ID"] != null)
                 {
-                    FillOutPatientForm(Convert.ToInt32(Request.QueryString["ID"]));
                     OutpatientID = Convert.ToInt32(Request.QueryString["ID"]);
                 }
             }
@@ -664,127 +663,135 @@ namespace PMS.Modules.PatientManagement
                 return "Error: " + ex.Message; // Return error message
             }
         }
-        private void FillOutPatientForm(int PatientID)
+        [WebMethod]
+        public static string GetPatientFormData(int PatientID)
         {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var doctorId = db.Out_Patients
-                .Where(dt => dt.Out_Patient_ID == PatientID)
-                .Select(dt => dt.Doctor_ID)
-                .FirstOrDefault();
-
-            if (doctorId != null)
+            try
             {
-                ddlDoctorName.SelectedValue = doctorId.ToString();
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                var doctorId = db.Out_Patients
+                    .Where(dt => dt.Out_Patient_ID == PatientID)
+                    .Select(dt => dt.Doctor_ID)
+                    .FirstOrDefault();
+
+                var qry = db.sp_FillOutPatientForm(PatientID).FirstOrDefault();
+
+                if (qry == null)
+                {
+                    return JsonConvert.SerializeObject(new { success = false, message = "Patient data not found" });
+                }
+
+                var patientData = new
+                {
+                    success = true,
+                    data = new
+                    {
+                        // Doctor Information
+                        DoctorId = doctorId?.ToString() ?? "",
+
+                        // Basic Patient Info
+                        PatientName = qry.Full_Name ?? "",
+                        Age = qry.Age_years ?? "",
+                        Contact = qry.Mobile1 ?? "",
+                        Address = qry.Permanent_Address ?? "",
+                        OutPatientId = PatientID.ToString(),
+                        PatientId = qry.Patient_ID.ToString(),
+                        RegId = qry.Reg_PatId?.ToString() ?? "",
+
+                        // Vital Signs
+                        Pulse = qry.pulse_Min ?? "",
+                        BP = qry.BP_mm_Hg ?? "",
+                        Temperature = qry.Temp_C ?? "",
+                        Respiration = qry.Respiration_Min ?? "",
+                        Height = qry.Height_Cm ?? "",
+                        Weight = qry.Weight_Kg ?? "",
+                        SPO2 = qry.spo2 ?? "",
+                        BMI = qry.BMI ?? "",
+                        BSR = qry.BSR ?? "",
+                        MUAC = qry.MUAC ?? "",
+                        OFC = qry.OFC ?? "",
+
+                        // Medical History
+                        LMP = qry.L_M_P ?? "",
+                        EDD = qry.EDD ?? "",
+                        DevelopmentHistory = qry.DevelopmentHistory ?? "",
+                        VaccinationHistory = qry.VaccinationHistory ?? "",
+                        NutritionHistory = qry.NutritionHistory ?? "",
+                        HistoryOfPresentIllness = qry.HistoryOfPeresentIllness ?? "",
+                        HistoryOfFamily = qry.HistoryOfFamily ?? "",
+                        HistoryOfPastIllness = qry.HistoryOfPastIllness ?? "",
+                        SocioEconomicHistory = qry.SocioEconomicHistory ?? "",
+                        ObstetricHistory = qry.ObstetricHistory ?? "",
+                        AllergiesHistory = qry.AllergiesHistory ?? "",
+                        TreatmentHistory = qry.TreatmentHistory ?? "",
+                        DrugHistory = qry.Drug_History ?? "",
+                        PersonalHistory = qry.Personal_History ?? "",
+                        BirthHistory = qry.Birth_History ?? "",
+
+                        // Physical Examination
+                        CVS = qry.CVS ?? "",
+                        GIT = qry.GIT ?? "",
+                        RESP = qry.RESP ?? "",
+                        CNS = qry.CNS ?? "",
+                        GYNAE = qry.GYNAE ?? "",
+                        UGS = qry.URG ?? "",
+                        Local = qry.Local ?? "",
+                        Muscular = qry.Mucculor ?? "",
+                        Abdominal = qry.Abdominal ?? "",
+
+                        // Checkboxes - General Examination
+                        Pallor = qry.chkPallor?.ToString().ToLower() ?? "false",
+                        JVP = qry.chkJVP?.ToString().ToLower() ?? "false",
+                        Cyanosis = qry.chkaganoris?.ToString().ToLower() ?? "false",
+                        Disoriented = qry.chkunconceed?.ToString().ToLower() ?? "false",
+                        Jaundice = qry.chkjaundice?.ToString().ToLower() ?? "false",
+                        Dehydration = qry.hydration?.ToString().ToLower() ?? "false",
+                        Edema = qry.edema?.ToString().ToLower() ?? "false",
+                        Lymphadenopathy = qry.chk1?.ToString().ToLower() ?? "false",
+                        Clubbing = qry.chk2?.ToString().ToLower() ?? "false",
+                        Dyspnoea = qry.chk3?.ToString().ToLower() ?? "false",
+                        NeckSwelling = qry.chk4?.ToString().ToLower() ?? "false",
+                        SkinLesions = qry.chk5?.ToString().ToLower() ?? "false",
+
+                        // Special Checkboxes
+                        DRE = qry.DRE?.ToString().ToLower() ?? "false",
+                        Proctoscopy = qry.Proctoscopy?.ToString().ToLower() ?? "false",
+
+                        // Diagnosis and Treatment
+                        ProvisionalDiagnosis = qry.ProvisionalDiagnosis ?? "",
+                        FinalDiagnosis = qry.Final_Diagnosis ?? "",
+                        FinalRecommendation = qry.Final_Rec ?? "",
+                        Advice = qry.Advice ?? "",
+                        ReferToHospital = qry.Refer_To_Hospital ?? "",
+                        Designation = qry.Designation ?? "",
+                        referDoc = qry.reffer_doc ?? 0,
+
+                        // Dropdowns
+                        IssuanceOf = qry.Administration ?? "",
+                        FollowUp = qry.Follow_Up ?? "",
+                        Proto = qry.Proto ?? "",
+                        PatientMainCategory = qry.Reffer_To ?? "",
+
+                        // Dates
+                        FollowDate = qry.Folllow_Date?.ToString("dd/MM/yyyy") ?? "",
+
+                        // Additional Fields
+                        InputBox1 = qry.txtInputBox1 ?? "",
+                        ReferNote = qry.Reffer_No ?? "",
+                        RemarksHistory = qry.txtRemarksHistory ?? "",
+
+                        // Status
+                        Discharge = qry.Discharge?.ToString().ToLower() ?? "false"
+                    }
+                };
+
+                return JsonConvert.SerializeObject(patientData);
             }
-
-
-            var qry = db.sp_FillOutPatientForm(PatientID).FirstOrDefault();
-
-
-            if (qry.DRE.HasValue == true)
-                chkDRE.Checked = qry.DRE.Value;
-            else
-                chkDRE.Checked = false;
-
-            if (qry.Proctoscopy.HasValue == true)
-                chkProctoscopy.Checked = qry.Proctoscopy.Value;
-            else
-                chkProctoscopy.Checked = false;
-            txtAbdomin.Text = qry.Abdominal;
-
-
- 
-
-            Final_Rec.Text = qry.Final_Rec;
-            vlblPatients_Name.Text = qry.Full_Name;
-            txtOut_Patient_ID.Text = PatientID.ToString();
-            hdfPatient_ID.Value = qry.Patient_ID.ToString();
-            hdfReg_ID.Value = qry.Reg_PatId.ToString();
-            
-            vlblPatients_Name.Text = qry.Full_Name;
-            vLbl_Age.Text = qry.Age_years;
-            vLbl_Contact.Text = qry.Mobile1;
-            vLbl_Adress.Text = qry.Permanent_Address;
-            
-            txtPuls.Text = qry.pulse_Min;
-            txtBP.Text = qry.BP_mm_Hg;
-            txtTemp.Text = qry.Temp_C;
-            txtRespiration.Text = qry.Respiration_Min;
-            txtHeight.Text = qry.Height_Cm;
-            txtWeight.Text = qry.Weight_Kg;
-            txtRefer_To_Hospital.Text = qry.Refer_To_Hospital;
-            txtLMP.Text = qry.L_M_P;
-            txtspo2.Text = qry.spo2;
-            txtedd.Text = qry.EDD;
-            txtBMI.Text = qry.BMI;
-            TxtBSR.Text = qry.BSR;
-            txtMUAC.Text = qry.MUAC;
-            txtOFC.Text = qry.OFC;
-            txtDevelopmentHistory.Text = qry.DevelopmentHistory;
-            txtVaccinationHistory.Text = qry.VaccinationHistory;
-            txtNutritionHistory.Text = qry.NutritionHistory;
-            // General Examination Checkboxes
-            // General Examination Checkboxes (improved variable names, same qry fields)
-            chkPallor.Checked = qry.chkPallor.Value;
-            chkJVP.Checked = qry.chkJVP.Value;
-            chkCyanosis.Checked = qry.chkaganoris.Value;       // Cyanosis (keeps qry.chkaganoris)
-            chkDisoriented.Checked = qry.chkunconceed.Value;   // Disoriented (keeps qry.chkunconceed)
-            chkJaundice.Checked = qry.chkjaundice.Value;       // Jaundice
-            chkDehydration.Checked = qry.hydration.Value;      // Dehydration
-            chkEdema.Checked = qry.edema.Value;                // Edema
-            chkLymphadenopathy.Checked = qry.chk1.Value;       // Lymphadenopathy (keeps qry.chk1)
-            chkClubbing.Checked = qry.chk2.Value;              // Clubbing (keeps qry.chk2)
-            chkDyspnoea.Checked = qry.chk3.Value;              // Dyspnoea (keeps qry.chk3)
-            chkNeckSwelling.Checked = qry.chk4.Value;          // Neck Swelling (keeps qry.chk4)
-            chkSkinLesions.Checked = qry.chk5.Value;           // Skin Lesions (keeps qry.chk5)
-            txtHistoryOfPeresentIllness.Text = qry.HistoryOfPeresentIllness;
-            txtHistoryOfFamily.Text = qry.HistoryOfFamily;
-            txtHistoryOfPastIllness.Text = qry.HistoryOfPastIllness;
-            txtCVS.Text = qry.CVS;
-            txtGIT.Text = qry.GIT;
-            txtRESP.Text = qry.RESP;
-            txtSocioEconomicHistory.Text = qry.SocioEconomicHistory;
-            txtCNS.Text = qry.CNS;
-            txtGYNAE.Text = qry.GYNAE;
-            txtUGS.Text = qry.URG;
-            txtLocal.Text = qry.Local;
-            txtMucculor.Text = qry.Mucculor;
-            txtObstetricHistory.Text = qry.ObstetricHistory;
-            txtAllergiesHistory.Text = qry.AllergiesHistory;
-            txtProvisionalDiagnosis.Text = qry.ProvisionalDiagnosis;
-            txtTreatmentHistory.Text = qry.TreatmentHistory;
-            txtRemarksHistory.Text = qry.txtRemarksHistory;
-            
-            txtDesignation.Text = qry.Designation;
-            txtFinalDiagnosis.Text = qry.Final_Diagnosis;
-            ddlIssuance_Of.SelectedValue = qry.Administration;
-            ddlFOllowUp.SelectedValue = qry.Follow_Up;
-            ddlProto.SelectedValue = qry.Proto;
-
-            if (qry.Folllow_Date != null)
-                FollowNoDate.Text = qry.Folllow_Date.Value.ToString(AppConfig.DateFormat);
-
-            txtAdvice.Text = qry.Advice;
-            
-            txtInputBox1.Text = qry.txtInputBox1;
-            txtBirthHistory.Text = qry.Birth_History;
-            ddlPatient_Main_Category.SelectedValue = qry.Reffer_To;
-            //fileupload.Text = qry.PDF_File;
-            txtRefferNote.Text = qry.Reffer_No;
-            txtDrugHistory.Text = qry.Drug_History;
-            txtPersonalHistory.Text = qry.Personal_History;
-           
-           
-            if (qry.Discharge == true)
+            catch (Exception ex)
             {
-                hdfdhischarge.Value = Convert.ToString("true");
+                return JsonConvert.SerializeObject(new { success = false, message = ex.Message });
             }
-            else
-            {
-                hdfdhischarge.Value = Convert.ToString("false");
-            }
-
-           
         }
         [WebMethod]
         public static string LoadSymtompsHistory(int OutPatientID)
