@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 63.875, 134.25" name="DataBase">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 71.625, 134.25" name="DataBase">
   <DataContextMoniker Name="/DataBaseDataContext" />
   <nestedChildShapes>
     <classShape Id="fa9019b7-a859-464e-8cc1-67828fbc07fe" isExpanded="false" absoluteBounds="3.875, 9.125, 2, 0.45">
@@ -1859,10 +1859,10 @@
         <elementListCompartment Id="20f3620c-3a77-4b4b-8068-81439e43e2d0" absoluteBounds="12.39, 40.71, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="4fc50c22-a3e4-4e72-ae0b-ea8c001c0a5f" absoluteBounds="61.625, 26, 2, 33.6929345703125">
+    <classShape Id="fd70f0e8-13bb-41d2-bcc0-54185e18ac65" absoluteBounds="69.375, 31.25, 2, 33.885236002604167">
       <DataClassMoniker Name="/DataBaseDataContext/Patient" />
       <nestedChildShapes>
-        <elementListCompartment Id="dcf9e0e4-61ef-4abd-886f-cf593a96ca35" absoluteBounds="61.64, 26.46, 1.9700000000000002, 33.1329345703125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="3d9b9305-0bf1-4e11-91ed-39a4cf3be63b" absoluteBounds="69.39, 31.71, 1.9700000000000002, 33.325236002604164" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

@@ -22,7 +22,7 @@ namespace PMS
 	using System;
 
 
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "prch")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Tibb")]
 	public partial class DataBaseDataContext : System.Data.Linq.DataContext
 	{
 
@@ -148089,7 +148089,7 @@ namespace PMS
 
 		private System.Nullable<int> _tokenNo;
 
-		private string _doc_fee;
+		private string _doc_share;
 
 		private string _mr_no_sequence;
 
@@ -148131,9 +148131,11 @@ namespace PMS
 
 		private string _Status;
 
+		private System.Nullable<decimal> _Hospital_share;
+
 		private System.Nullable<int> _Service_id;
 
-		private System.Nullable<decimal> _Hospital_share;
+		private System.Nullable<bool> _Share_Transfered;
 
 		#region Extensibility Method Definitions
 		partial void OnLoaded();
@@ -148435,8 +148437,8 @@ namespace PMS
 		partial void OnOpd_NoChanged();
 		partial void OntokenNoChanging(System.Nullable<int> value);
 		partial void OntokenNoChanged();
-		partial void Ondoc_feeChanging(string value);
-		partial void Ondoc_feeChanged();
+		partial void Ondoc_shareChanging(string value);
+		partial void Ondoc_shareChanged();
 		partial void Onmr_no_sequenceChanging(string value);
 		partial void Onmr_no_sequenceChanged();
 		partial void OnReg_PatIdChanging(System.Nullable<int> value);
@@ -148477,10 +148479,12 @@ namespace PMS
 		partial void OnAccountIDChanged();
 		partial void OnStatusChanging(string value);
 		partial void OnStatusChanged();
-		partial void OnService_idChanging(System.Nullable<int> value);
-		partial void OnService_idChanged();
 		partial void OnHospital_shareChanging(System.Nullable<decimal> value);
 		partial void OnHospital_shareChanged();
+		partial void OnService_idChanging(System.Nullable<int> value);
+		partial void OnService_idChanged();
+		partial void OnShare_TransferedChanging(System.Nullable<bool> value);
+		partial void OnShare_TransferedChanged();
 		#endregion
 
 		public Patient()
@@ -151448,22 +151452,22 @@ namespace PMS
 			}
 		}
 
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_fee", DbType = "VarChar(70)")]
-		public string doc_fee
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_share", DbType = "VarChar(70)")]
+		public string doc_share
 		{
 			get
 			{
-				return this._doc_fee;
+				return this._doc_share;
 			}
 			set
 			{
-				if ((this._doc_fee != value))
+				if ((this._doc_share != value))
 				{
-					this.Ondoc_feeChanging(value);
+					this.Ondoc_shareChanging(value);
 					this.SendPropertyChanging();
-					this._doc_fee = value;
-					this.SendPropertyChanged("doc_fee");
-					this.Ondoc_feeChanged();
+					this._doc_share = value;
+					this.SendPropertyChanged("doc_share");
+					this.Ondoc_shareChanged();
 				}
 			}
 		}
@@ -151868,6 +151872,26 @@ namespace PMS
 			}
 		}
 
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_share", DbType = "Decimal(18,2)")]
+		public System.Nullable<decimal> Hospital_share
+		{
+			get
+			{
+				return this._Hospital_share;
+			}
+			set
+			{
+				if ((this._Hospital_share != value))
+				{
+					this.OnHospital_shareChanging(value);
+					this.SendPropertyChanging();
+					this._Hospital_share = value;
+					this.SendPropertyChanged("Hospital_share");
+					this.OnHospital_shareChanged();
+				}
+			}
+		}
+
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Service_id", DbType = "Int")]
 		public System.Nullable<int> Service_id
 		{
@@ -151888,22 +151912,22 @@ namespace PMS
 			}
 		}
 
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_share", DbType = "Decimal(18,2)")]
-		public System.Nullable<decimal> Hospital_share
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Share_Transfered", DbType = "Bit")]
+		public System.Nullable<bool> Share_Transfered
 		{
 			get
 			{
-				return this._Hospital_share;
+				return this._Share_Transfered;
 			}
 			set
 			{
-				if ((this._Hospital_share != value))
+				if ((this._Share_Transfered != value))
 				{
-					this.OnHospital_shareChanging(value);
+					this.OnShare_TransferedChanging(value);
 					this.SendPropertyChanging();
-					this._Hospital_share = value;
-					this.SendPropertyChanged("Hospital_share");
-					this.OnHospital_shareChanged();
+					this._Share_Transfered = value;
+					this.SendPropertyChanged("Share_Transfered");
+					this.OnShare_TransferedChanged();
 				}
 			}
 		}

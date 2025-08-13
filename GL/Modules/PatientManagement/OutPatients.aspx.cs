@@ -2046,8 +2046,8 @@ namespace PMS
                         on p.Created_By equals u.UserId
                         where Convert.ToDateTime(p.Created_Time).Month == DateTime.Now.Month &&
                               Convert.ToDateTime(p.Created_Time).Year == DateTime.Now.Year &&
-                              Convert.ToDateTime(p.Created_Time).Day == DateTime.Now.Day &&
-                              p.Patient_Type == "01"
+                              Convert.ToDateTime(p.Created_Time).Day == DateTime.Now.Day 
+                              //p.Patient_Type == "01"
 
                         select new
                         {

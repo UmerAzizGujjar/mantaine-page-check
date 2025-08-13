@@ -650,7 +650,7 @@ namespace PMS
                     }
                  
                     var a = txt_doc_fee.Text;
-                    pat.doc_fee = txt_doc_fee.Text;
+                    pat.doc_share = txt_doc_fee.Text;
                     if(txtdiscount.Text == "")
                     {
                         txtdiscount.Text = "0";

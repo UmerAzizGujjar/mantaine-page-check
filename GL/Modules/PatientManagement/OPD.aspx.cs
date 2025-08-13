@@ -719,36 +719,33 @@ namespace PMS.Modules.PatientManagement
                 var opdfees = data.Fees;
                 var hospital_share = data.Hosp_share;
                 var Doctor_share = data.Doc_Share;
-
-                // Handle null or empty discount
                 if (string.IsNullOrEmpty(data.discount))
                 {
                     disc = 0;
                 }
                 else
                 {
-                    disc = Convert.ToDecimal(data.discount); // Assign to outer 'disc'
+                    disc = Convert.ToDecimal(data.discount); 
                 }
-
-                // Now use disc safely
-                if (data.pat_category == "02")
+                if (data.pat_category == "02" || data.pat_category == "01")
                 {
-                    // Calculate discount as percentage
                     decimal DiscountAmount = opdfees * (disc / 100);
-
-                    // Prevent over-discount
                     if (DiscountAmount > opdfees)
                         DiscountAmount = opdfees;
 
                     decimal Net_Amount = opdfees - DiscountAmount;
-
-                    // Split net amount based on sharing ratio
                     decimal Hospital_Amount = Math.Round((Net_Amount * hospital_share) / 100, 2);
                     decimal Doctor_Amount = Math.Round((Net_Amount * Doctor_share) / 100, 2);
-
-                    // Assign result
-                    pat.doc_fee = Doctor_Amount.ToString("F2"); // Better formatting
+                    pat.doc_share = Doctor_Amount.ToString("F2");
                     pat.Hospital_share = Hospital_Amount;
+                }
+                if(data.pat_category == "02")
+                {
+                    pat.Share_Transfered = true;
+                }
+                else if (data.pat_category == "01")
+                {
+                    pat.Share_Transfered = false;
                 }
 
                 db.Patients.InsertOnSubmit(pat);
