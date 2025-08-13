@@ -356,54 +356,6 @@ namespace PMS.Modules.PatientManagement
         }
 
 
-        //[WebMethod]
-        //public static string loadRegistrationFees(string Doc)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-
-        //    int? policyId = (from emp in db.HR_Employees
-        //                     where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
-        //                     select emp.Policy_id).FirstOrDefault();
-
-        //    if (policyId == null)
-        //        return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy found." });
-
-        //    DateTime today = DateTime.Now;
-        //    TimeSpan currentTime = today.TimeOfDay;
-
-        //    // Get the policy details
-        //    var policyDetail = (
-        //        from pd in db.Policy_Details
-        //        where pd.Policy_ID == policyId
-        //        orderby pd.Policy_Detail_ID descending
-        //        select new { pd.Start_Time, pd.End_Time, pd.Fees }
-        //    ).FirstOrDefault();
-
-        //    if (policyDetail == null)
-        //        return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy detail found." });
-
-        //    bool isWithinTime =
-        //        (policyDetail.Start_Time <= policyDetail.End_Time &&
-        //         policyDetail.Start_Time <= currentTime && policyDetail.End_Time >= currentTime)
-        //        ||
-        //        (policyDetail.Start_Time > policyDetail.End_Time && // overnight
-        //         (currentTime >= policyDetail.Start_Time || currentTime <= policyDetail.End_Time));
-
-        //    if (!isWithinTime)
-        //    {
-        //        return (new JavaScriptSerializer()).Serialize(new
-        //        {
-        //            success = false,
-        //            message = "You cannot register at this time."
-        //        });
-        //    }
-
-        //    return (new JavaScriptSerializer()).Serialize(new
-        //    {
-        //        success = true,
-        //        fee = policyDetail.Fees
-        //    });
-        //}
 
         [WebMethod]
         public static string loadRegistrationFees(string Doc)
