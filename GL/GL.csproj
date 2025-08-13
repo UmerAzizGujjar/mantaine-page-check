@@ -14269,7 +14269,6 @@
     <Content Include="wwwroot\Tibbit_theme\css\jquery.gritter.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Loader\Loader.css" />
     <Content Include="wwwroot\Tibbit_theme\css\MainDashboard.min.css" />
-    <Content Include="wwwroot\Tibbit_theme\css\NewDatePicker.css" />
     <Content Include="wwwroot\Tibbit_theme\css\prettify.min.css" />
     <Content Include="wwwroot\Tibbit_theme\css\RegPat.css" />
     <Content Include="wwwroot\Tibbit_theme\css\Report.css" />
@@ -17769,7 +17768,6 @@
     <Content Include="wwwroot\Tibbit_theme\Scripts\moment-with-locales.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\moment.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\moment.min.js" />
-    <Content Include="wwwroot\Tibbit_theme\Scripts\NewDatePicker.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\npm.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\requireFields.js" />
     <Content Include="wwwroot\Tibbit_theme\Scripts\timepicki\bootstrap.min.js" />

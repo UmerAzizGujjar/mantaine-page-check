@@ -325,13 +325,12 @@
                         }
                     });
                     hasInvalidExpiry = true;
-                    return false; // break loop
+                    return false; 
                 } else {
                     $row.removeClass("invalid-expiry");
                     $row.find('[name="Expiry_Date"]').css("border", "");
                 }
 
-                // NEW: If IsTime is checked, require Start and End Time
                 if ($row.find('[name="IsTime"]').is(":checked")) {
                     const startTime = $row.find('[name="Start_Time"]').val();
                     const endTime = $row.find('[name="End_Time"]').val();
@@ -350,14 +349,10 @@
                             }
                         });
                         hasInvalidTimeFields = true;
-                        return false; // break loop
+                        return false; 
                     }
                 }
             });
-
-            if (hasInvalidExpiry || hasInvalidTimeFields) {
-                return; // stop saving
-            }
 
             if ($("#policyTable tbody tr.invalid-share").length > 0) {
                 Swal.fire({
@@ -374,6 +369,13 @@
                 });
                 return;
             }
+
+
+            if (hasInvalidExpiry || hasInvalidTimeFields) {
+                return;
+            }
+
+            
 
             if ($("#policyTable tbody tr.invalid-time").length > 0) {
                 Swal.fire({

@@ -32,6 +32,638 @@ namespace PMS.Modules.PatientManagement
             }
 
         }
+        [WebMethod]
+        public static string SaveRecord(PatientVisitData data)
+        {
+            try
+            {
+                var id = "";
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    Out_Patient OPD;
+                    if (data.btnsave == "Save")
+                    {
+                        OPD = new Out_Patient();
+                        OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
+                        OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+                    }
+                    else
+                    {
+                        // Add null check and better error handling
+                        int outPatientId;
+                        if (!int.TryParse(data.Out_Patient_ID, out outPatientId))
+                        {
+                            throw new Exception("Invalid Out_Patient_ID for update operation");
+                        }
+
+                        OPD = (from tbl in db.Out_Patients
+                               where tbl.Out_Patient_ID == outPatientId
+                               select tbl).FirstOrDefault();
+
+                        if (OPD == null)
+                        {
+                            throw new Exception("Patient record not found for update");
+                        }
+
+                        OPD.Updated_By = AppConfig.UserID;
+                        OPD.Updated_Time = DateTime.Now;
+                    }
+
+                    // Safely assign fields with null checks and proper conversions
+                    OPD.L_M_P = data.L_M_P;
+                    OPD.spo2 = data.SPO2;
+                    OPD.BSR = data.Bsr;
+                    OPD.BMI = data.Bmi;
+                    OPD.pulse_Min = data.pulse_Min;
+                    OPD.BP_mm_Hg = data.BP_mm_Hg;
+                    OPD.Temp_C = data.Temp_C;
+                    OPD.Respiration_Min = data.Respiration_Min;
+                    OPD.Height_Cm = data.Height_Cm;
+                    OPD.Weight_Kg = data.Weight_Kg;
+                    OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
+                    OPD.HistoryOfPeresentIllness = data.HistoryOfPeresentIllness;
+                    OPD.HistoryOfFamily = data.HistoryOfFamily;
+                    OPD.HistoryOfPastIllness = data.HistoryOfPastIllness;
+                    OPD.DevelopmentHistory = data.DevelopmentHistory;
+                    OPD.VaccinationHistory = data.VaccinationHistory;
+                    OPD.NutritionHistory = data.NutritionHistory;
+                    OPD.CVS = data.CVS;
+                    OPD.GIT = data.GIT;
+                    OPD.RESP = data.RESP;
+                    OPD.AllergiesHistory = data.AllergiesHistory;
+                    OPD.TreatmentHistory = data.TreatmentHistory;
+                    OPD.SocioEconomicHistory = data.SocioEconomicHistory;
+                    OPD.CNS = data.CNS;
+                    OPD.URG = data.URG;
+                    OPD.GYNAE = data.GYNAE;
+                    OPD.Local = data.Local;
+                    OPD.Mucculor = data.Mucculor;
+                    OPD.ObstetricHistory = data.ObstetricHistory;
+                    OPD.txtRemarksHistory = data.txtRemarksHistory;
+                    OPD.chkJVP = data.chkJVP;
+                    OPD.chkPallor = data.chkPallor;
+                    OPD.chkaganoris = data.chkaganoris;
+                    OPD.chkunconceed = data.chkunconceed;
+                    OPD.chkjaundice = data.chkjaundice;
+                    OPD.hydration = data.hydration;
+                    OPD.edema = data.edema;
+                    OPD.chk1 = data.chk1;
+                    OPD.chk2 = data.chk2;
+                    OPD.chk3 = data.chk3;
+                    OPD.chk4 = data.chk4;
+                    OPD.chk5 = data.chk5;
+                    OPD.Discharge = data.Discharged;
+                    OPD.txtInputBox1 = data.Other;
+
+                    if (data.Discharged == true)
+                    {
+                        OPD.discharge_date = DateTime.Now;
+                    }
+
+                    // Safe conversion for Doctor_ID
+                    int doctorId;
+                    if (int.TryParse(data.Doctor_ID, out doctorId))
+                    {
+                        OPD.Doctor_ID = doctorId.ToString();
+                    }
+
+                    OPD.Designation = data.Designation;
+                    OPD.Final_Rec = data.Final_Rec;
+                    OPD.Final_Diagnosis = data.FinalDiagnosis;
+                    OPD.Administration = data.Administration?.ToString();
+                    OPD.Control_Date = DateTime.Now;
+                    OPD.Follow_Up = data.Follow_Up?.ToString();
+                    OPD.Proto = data.Proto?.ToString();
+                    OPD.Advice = data.Advice;
+                    OPD.Birth_History = data.Birth_History;
+
+                    // Handle referral logic with proper validation
+                    if (!string.IsNullOrEmpty(data.Reffer_To))
+                    {
+                        var P = (from tbl in db.Patients
+                                 where tbl.Patient_ID == data.Patient_ID
+                                 select tbl).FirstOrDefault();
+
+                        if (P != null)
+                        {
+                            P.Patient_Main_Category = data.Reffer_To;
+                            db.SubmitChanges();
+
+                            var D = (from tbl in db.Previous_Dpts
+                                     where tbl.Patient_ID == data.Patient_ID && tbl.Perivious_Dpt_Name == data.Reffer_To
+                                     select tbl).FirstOrDefault();
+                            if (D == null)
+                            {
+                                Previous_Dpt Previous_Dpt = new Previous_Dpt();
+                                Previous_Dpt.Patient_ID = data.Patient_ID;
+                                Previous_Dpt.Perivious_Dpt_Name = data.Reffer_To;
+                                Previous_Dpt.Created_Time = DateTime.Now;
+                                db.Previous_Dpts.InsertOnSubmit(Previous_Dpt);
+                                db.SubmitChanges();
+                            }
+                        }
+                    }
+
+                    OPD.Reffer_To = data.Reffer_To?.ToString();
+                    OPD.Reffer_No = data.Reffer_No;
+
+                    // Safe conversion for Reffer_doc
+                    int refferDocId;
+                    if (int.TryParse(data.Reffer_doc, out refferDocId))
+                    {
+                        OPD.reffer_doc = refferDocId;
+                    }
+
+                    OPD.Drug_History = data.Drug_History;
+                    OPD.Personal_History = data.Personal_History;
+                    OPD.Abdominal = data.Abdominal;
+
+                    if (data.btnsave == "Save")
+                    {
+                        OPD.Book_ID = AppConfig.Book_ID;
+                        OPD.Created_By = AppConfig.UserID;
+                        OPD.Created_Time = DateTime.Now;
+                        OPD.Company_ID = AppConfig.Company_ID;
+                        db.Out_Patients.InsertOnSubmit(OPD);
+                    }
+
+                    // Submit changes before getting the ID
+                    db.SubmitChanges();
+
+                    // Now safely get the Out_Patient_ID
+                    id = OPD.Out_Patient_ID.ToString();
+
+                    // Setting 0 patient id inserted medicine to current out patient id
+                    List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").ToList();
+                    foreach (In_Patient_Medicine med in list)
+                    {
+                        med.Patient_ID = OPD.Out_Patient_ID;
+                    }
+
+                    // Setting 0 patient id inserted eyes to current out patient id
+                    List<PMS.EyeDetail> eyelist = db.EyeDetails.Where(t => t.TransactionType == "OutPatient" && t.TransactionID == 0).ToList();
+                    foreach (PMS.EyeDetail eye in eyelist)
+                    {
+                        eye.TransactionID = OPD.Out_Patient_ID;
+                    }
+
+                    // Setting 0 patient id inserted test to current out patient id
+                    Laboratory_Test test = db.Laboratory_Tests.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").FirstOrDefault();
+                    if (test != null)
+                        test.Patient_ID = OPD.Out_Patient_ID;
+
+
+                    List<PMS.OutPatients_Proto> Protolist = db.OutPatients_Protos.Where(t => t.Outpatient_id == 0).ToList();
+                    foreach (PMS.OutPatients_Proto proto in Protolist)
+                    {
+                        proto.Outpatient_id = OPD.Out_Patient_ID;
+                    }
+
+                    List<PMS.OutPatientPrimaryDiagnosi> OutPatientPrimaryDiagnosisList = db.OutPatientPrimaryDiagnosis.Where(t => t.OutPatientID == 0).ToList();
+                    foreach (PMS.OutPatientPrimaryDiagnosi oppd in OutPatientPrimaryDiagnosisList)
+                    {
+                        oppd.OutPatientID = OPD.Out_Patient_ID;
+                    }
+
+                    List<PMS.OutPatientFinalDiagnosi> OutPatientFinalDiagnosisList = db.OutPatientFinalDiagnosis.Where(t => t.OutPatientID == 0).ToList();
+                    foreach (PMS.OutPatientFinalDiagnosi opfd in OutPatientFinalDiagnosisList)
+                    {
+                        opfd.OutPatientID = OPD.Out_Patient_ID;
+                    }
+
+                    List<PMS.OutPatientComplaint> OutPatientComplaintList = db.OutPatientComplaints.Where(t => t.OutPatientID == 0).ToList();
+                    foreach (PMS.OutPatientComplaint opc in OutPatientComplaintList)
+                    {
+                        opc.OutPatientID = OPD.Out_Patient_ID;
+                    }
+                    db.SubmitChanges();
+                }
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                // Log the full exception details for debugging
+                System.Diagnostics.Debug.WriteLine($"SaveRecord Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                // Return a more descriptive error message
+                return $"Error: {ex.Message}";
+            }
+        }
+        [WebMethod]
+        public static string SaveMedicines(string MedicineDetails)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    /********************Deleting Previous 0 Value Saved Rows.***********************************/
+                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "OutPatient").ToList();
+                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
+                    db.SubmitChanges();
+
+                    int couterNewRecords = 0;
+
+                    if (MedicineDetail.PatientID != 0)
+                    {
+                        /*********************Deleting Previous Entry On Every Insert Or Update*************************/
+                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "OutPatient").ToList();
+                        if (inPatmedicineList != null)
+                        {
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
+                            couterNewRecords++;
+                        }
+                    }
+                    couterNewRecords = 0;
+                    /*********************Inserting New Entry On Every Insert Or Update*************************/
+                    foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
+                    {
+                        In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
+                        {
+
+                            Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                            Item_Code = oIn_Patient_Medicine.ItemCode,
+                            Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
+                            Transaction_Type = "OutPatient",
+                            Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
+                            Oral = oIn_Patient_Medicine.Oral,
+                            Injections = oIn_Patient_Medicine.Injection,
+                            Dosage_From = oIn_Patient_Medicine.Dosage_From,
+                            AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
+                            Frequency = oIn_Patient_Medicine.Frequency,
+                            Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
+                            Other_Instruction = oIn_Patient_Medicine.Other_Instruction
+
+                        };
+                        db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
+                        couterNewRecords++;
+                    }
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string SaveTest(string tlist)
+        {
+            string LabtestID = "";
+            Laboratory_Test lt = new Laboratory_Test();
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            JavaScriptSerializer oJS = new JavaScriptSerializer();
+            var record = oJS.Deserialize<LabTest>(tlist);
+            /********************Deleting Previous 0 Value Saved Rows.***********************************/
+            List<Laboratory_Test> Laboratory_TestList = db.Laboratory_Tests.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "OutPatient").ToList();
+            db.Laboratory_Tests.DeleteAllOnSubmit(Laboratory_TestList);
+            db.SubmitChanges();
+
+            if (record.PatientID != null && record.PatientID != "(New)")
+            {
+                var lstTests = (from t in db.Laboratory_Tests
+                                where t.Patient_ID == int.Parse(record.PatientID) && t.Transaction_Type == "OutPatient"
+                                select t).FirstOrDefault();
+                if (lstTests != null)
+                {
+                    lstTests.Created_Time = DateTime.Now;
+                    LabtestID = lstTests.Lab_Test_ID.ToString();
+                    lt.Patient_ID = Convert.ToInt32(record.PatientID);
+                }
+                else
+                {
+                    lt.Patient_ID = Convert.ToInt32(record.PatientID);
+                    lt.Transaction_Type = "OutPatient";
+                    lt.Created_Time = DateTime.Now;
+                    db.Laboratory_Tests.InsertOnSubmit(lt);
+                    db.SubmitChanges();
+                    LabtestID = lt.Lab_Test_ID.ToString();
+                }
+            }
+            else
+            {
+                lt.Patient_ID = Convert.ToInt32(record.PatientID);
+                lt.Transaction_Type = "OutPatient";
+                lt.Created_Time = DateTime.Now;
+                db.Laboratory_Tests.InsertOnSubmit(lt);
+                db.SubmitChanges();
+                LabtestID = lt.Lab_Test_ID.ToString();
+            }
+            /**********Getting Previous details to delete**************/
+            var lstTestDetails = db.Lab_Test_Details.Where(t => t.Lab_Test_ID == int.Parse(LabtestID)).ToList();
+            var labID = int.Parse(LabtestID);
+            DBClass.executeNonQueryWithoutBegin("delete from Lab_Test_Detail where Actual_Patient_ID='" + record.PatID + "'");
+            foreach (var test in record.TestList)
+            {
+                Lab_Test_Detail ltd = new Lab_Test_Detail();
+
+                ltd.Lab_Test_ID = labID;
+                ltd.Patient_ID = Convert.ToInt32(record.PatientID);
+                var reg_id = (from rg in db.Reg_patients
+                              join p in db.Patients on rg.pat_id equals p.Reg_PatId
+                              where p.Patient_ID == int.Parse(record.PatID)
+                              orderby p.Reg_PatId descending
+                              select p.Reg_PatId).FirstOrDefault();
+
+
+                //ltd.Actual_Patient_ID = Convert.ToInt32(record.PatID);
+
+                ltd.Date = DateTime.Now;
+                //ltd.Date = Convert.ToDateTime(test.Date);
+                ltd.Test_ID = Convert.ToInt32(test.TestID);
+                ltd.Rotation_ID = test.RotationID;
+                ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
+                ltd.Catagory_ID = test.Catagory_ID;
+                ltd.Dept_ID = test.Dept_ID;
+                ltd.Actual_Patient_ID = reg_id;
+                ltd.Special_Tests = test.Special_Tests;
+                ltd.Area_Of_Interest = test.Area_Of_Interest;
+                ltd.Test_Description = test.rotation;
+                ltd.showTestDescription = test.showTestDescription;
+                bool Duplicate = false;
+                Lab_Test_Detail chkasTest = lstTestDetails.Where(tst => tst.Test_ID == ltd.Test_ID && tst.Test_ID != 0).FirstOrDefault();
+                if (chkasTest != null)
+                {
+                    ltd.Recieved_ID = chkasTest.Recieved_ID;
+                    ltd.IsBilled = chkasTest.IsBilled;
+                    ltd.Is_Result = chkasTest.Is_Result;
+                    db.Lab_Test_Details.InsertOnSubmit(ltd);
+                    db.SubmitChanges();
+                    Duplicate = true;
+                }
+
+                if (chkasTest == null)
+                {
+                    var chkasCategory = lstTestDetails.Where(tst => tst.Catagory_ID == ltd.Catagory_ID && tst.Test_ID == 0).FirstOrDefault();
+                    if (chkasCategory != null)
+                    {
+                        ltd.Recieved_ID = chkasCategory.Recieved_ID;
+                        ltd.IsBilled = chkasCategory.IsBilled;
+                        ltd.Is_Result = chkasCategory.Is_Result;
+                        Duplicate = true;
+                        if (chkasCategory != null)
+                        {
+                            var PrntID = db.Laboratory_Tests.Where(t => t.Parent_Transaction_Type_ID == chkasCategory.Lab_Test_Detail_ID).FirstOrDefault();
+                            db.Lab_Test_Details.InsertOnSubmit(ltd);
+                            db.SubmitChanges();
+                            if (PrntID != null)
+                            {
+                                PrntID.Parent_Transaction_Type_ID = ltd.Lab_Test_Detail_ID;
+                                db.SubmitChanges();
+                            }
+                        }
+                    }
+                }
+                if (!Duplicate)
+                {
+                    db.Lab_Test_Details.InsertOnSubmit(ltd);
+                    db.SubmitChanges();
+                }
+
+            }
+            /**********Deleting Previous details**************/
+            db.Lab_Test_Details.DeleteAllOnSubmit(lstTestDetails);
+            db.SubmitChanges();
+            return "";
+        }
+        [WebMethod]
+        public static string SaveSymtoms(string SymtomsList)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var data = js.Deserialize<Symtom>(SymtomsList);
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    if (data.OutPatientID == 0)
+                        data.OutPatientID = Convert.ToInt32(DBClass.getField("select (isnull(max(Out_Patient_id),0)+1) from Out_Patient").ToString());
+                    int couterNewRecords = 0;
+                    /*********************Deleting Previous Entry On Every Insert Or Update*************************/
+                    List<Sysmtopm> SysmtopmList = db.Sysmtopms.Where(p => p.Out_Patient_ID == data.OutPatientID).ToList();
+                    if (SysmtopmList != null)
+                    {
+                        db.Sysmtopms.DeleteAllOnSubmit(SysmtopmList);
+                        couterNewRecords++;
+                    }
+                    couterNewRecords = 0;
+                    /*********************Inserting New Entry On Every Insert Or Update*************************/
+
+                    foreach (SymtomsList oSymtomsList in data.SymtomsList)
+                    {
+                        Sysmtopm oSysmtopm = new Sysmtopm()
+                        {
+                            Out_Patient_ID = data.OutPatientID,
+                            Symtom_ID = oSymtomsList.SymtomID.Replace(" ", ""),
+                            Duration = oSymtomsList.Duration,
+                            Days_Years_Months = oSymtomsList.DayYearMonth,
+                            Remarks = oSymtomsList.Remarks
+                        };
+                        db.Sysmtopms.InsertOnSubmit(oSysmtopm);
+                        couterNewRecords++;
+                    }
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string SaveProto(string btnSave, string ProtoDetailss)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var ProtDetailList = js.Deserialize<Proto>(ProtoDetailss);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+
+                    var pat_id = (from p in db.Reg_patients
+                                  join vs in db.Patients on p.pat_id equals vs.Reg_PatId
+                                  where vs.Patient_ID == Convert.ToInt32(ProtDetailList.PatId)
+                                  select p.pat_id).FirstOrDefault();
+
+                    if (btnSave == "Update")
+                    {
+                        List<OutPatients_Proto> outpatient_protos = db.OutPatients_Protos.Where(w => w.Outpatient_id == ProtDetailList.opdid).ToList();
+                        db.OutPatients_Protos.DeleteAllOnSubmit(outpatient_protos);
+                        db.SubmitChanges();
+                    }
+                    foreach (var item in ProtDetailList.ProtoList)
+                    {
+                        OutPatients_Proto ipser = new OutPatients_Proto
+                        {
+                            Patient_Id = pat_id,
+                            ProtoId = item.ProtoId,
+                            Outpatient_id = 0,
+                            Proto_Description = item.Proto_Description
+                        };
+
+                        db.OutPatients_Protos.InsertOnSubmit(ipser);
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+                return "Error: " + ex.Message;
+            }
+
+            return "Success";
+        }
+        [WebMethod]
+        public static string SaveComplaintsOfPatient(string ComplaintsList)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                // Deserialize as a List of complaints
+                var complaints = js.Deserialize<List<complainList>>(ComplaintsList);
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    if (complaints.Count > 0)
+                    {
+                        int outPatientId = complaints[0].OutPatientID;
+
+
+                        /*********************Deleting Previous Complaints*************************/
+                        var existingComplaints = db.OutPatientComplaints.Where(p => p.OutPatientID == outPatientId).ToList();
+                        if (existingComplaints != null && existingComplaints.Count > 0)
+                        {
+                            db.OutPatientComplaints.DeleteAllOnSubmit(existingComplaints);
+                        }
+
+                        /*********************Inserting New Complaints*************************/
+                        foreach (var complaint in complaints)
+                        {
+                            OutPatientComplaint newComplaint = new OutPatientComplaint()
+                            {
+                                OutPatientID = outPatientId,
+                                ComplaintID = complaint.ComplaintID,
+                                PatientID = 0 // You might want to set this properly
+                            };
+                            db.OutPatientComplaints.InsertOnSubmit(newComplaint);
+                        }
+
+                        db.SubmitChanges();
+                        return "Success"; // Return meaningful status
+                    }
+                    return "No complaints to save";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return "Error: " + ex.Message; // Return error message
+            }
+        }
+        [WebMethod]
+        public static string SavePrimaryDiagnosisOfPatient(string PrimaryDiagnosisList)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                // Deserialize as a List of PrimaryDiagnosis
+                var PrimaryDiagnosis = js.Deserialize<List<PrimaryDiagnosisList>>(PrimaryDiagnosisList);
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    if (PrimaryDiagnosis.Count > 0)
+                    {
+                        int outPatientId = PrimaryDiagnosis[0].OutPatientID;
+
+                        /*********************Deleting Previous PrimaryDiagnosis*************************/
+                        var existingPrimaryDiagnosis = db.OutPatientPrimaryDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
+                        if (existingPrimaryDiagnosis != null && existingPrimaryDiagnosis.Count > 0)
+                        {
+                            db.OutPatientPrimaryDiagnosis.DeleteAllOnSubmit(existingPrimaryDiagnosis);
+                        }
+
+                        /*********************Inserting New PrimaryDiagnosis*************************/
+                        foreach (var primaryDiagnosis in PrimaryDiagnosis)
+                        {
+                            OutPatientPrimaryDiagnosi newprimaryDiagnosis = new OutPatientPrimaryDiagnosi()
+                            {
+                                OutPatientID = outPatientId,
+                                DiagnosisID = primaryDiagnosis.DiagnosisID,
+                                PatientID = 0,
+                                Remarks = primaryDiagnosis.Remarks
+
+                            };
+                            db.OutPatientPrimaryDiagnosis.InsertOnSubmit(newprimaryDiagnosis);
+                        }
+
+                        db.SubmitChanges();
+                        return "Success"; // Return meaningful status
+                    }
+                    return "No PrimaryDiagnosis to save";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return "Error: " + ex.Message; // Return error message
+            }
+        }
+        [WebMethod]
+        public static string SaveFinalDiagnosisOfPatient(string FinalDiagnosisList)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                // Deserialize as a List of FinalDiagnosis
+                var FinalDiagnosis = js.Deserialize<List<FinalDiagnosisList>>(FinalDiagnosisList);
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    if (FinalDiagnosis.Count > 0)
+                    {
+                        int outPatientId = FinalDiagnosis[0].OutPatientID;
+
+                        /*********************Deleting Previous FinalDiagnosis*************************/
+                        var existingFinalDiagnosis = db.OutPatientFinalDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
+                        if (existingFinalDiagnosis != null && existingFinalDiagnosis.Count > 0)
+                        {
+                            db.OutPatientFinalDiagnosis.DeleteAllOnSubmit(existingFinalDiagnosis);
+                        }
+
+                        /*********************Inserting New FinalDiagnosis*************************/
+                        foreach (var finalDiagnosis in FinalDiagnosis)
+                        {
+                            OutPatientFinalDiagnosi newFinalDiagnosis = new OutPatientFinalDiagnosi()
+                            {
+                                OutPatientID = outPatientId,
+                                DiagnosisID = finalDiagnosis.DiagnosisID,
+                                PatientID = 0,
+                                Remarks = finalDiagnosis.Remarks
+
+                            };
+                            db.OutPatientFinalDiagnosis.InsertOnSubmit(newFinalDiagnosis);
+                        }
+
+                        db.SubmitChanges();
+                        return "Success"; // Return meaningful status
+                    }
+                    return "No FinalDiagnosis to save";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return "Error: " + ex.Message; // Return error message
+            }
+        }
         private void FillOutPatientForm(int PatientID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -365,8 +997,17 @@ namespace PMS.Modules.PatientManagement
                    orderby tbl.Entry_Date descending
 
                    select tbl).FirstOrDefault();
+            Out_Patient OutPat = db.Out_Patients
+     .FirstOrDefault(tbl => tbl.Patient_ID.ToString() == PatientID);
+            var OutpatientID = "0";
+            if (OutPat != null && OutPat.Out_Patient_ID.ToString() != "0")
+            {
+                  OutpatientID = OutPat.Out_Patient_ID.ToString();
+            }
+           
             if (pat != null)
             {
+                pt.OutPatientID = OutpatientID ?? "0"; // This replaces null with "0"
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
                 pt.Age = pat.Age_years.ToString();
@@ -395,6 +1036,7 @@ namespace PMS.Modules.PatientManagement
         }
         public class Detail
         {
+            public string OutPatientID;
             public string Name;
             public string Gender;
             public string Age;
@@ -638,7 +1280,7 @@ on d.Doctor_Id equals hr.Emp_ID
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                IQueryable<INV_Item> query = db.INV_Items.Where(d => d.IsPharmacyItem == false);
+                IQueryable<INV_Item> query = db.INV_Items.Where(d => d.IsPharmacyItem == true);
 
                 // Only apply the search filter if searchString is not empty
                 if (!string.IsNullOrEmpty(searchString))
@@ -856,65 +1498,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string GroupName { get; set; }
             public string MainDepartmentName { get; set; }
         }
-        [WebMethod]
-        public static string SaveMedicines(string MedicineDetails)
-        {
-            try
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
-
-                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    /********************Deleting Previous 0 Value Saved Rows.***********************************/
-                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "OutPatient").ToList();
-                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
-                    db.SubmitChanges();
-
-                    int couterNewRecords = 0;
-
-                    if (MedicineDetail.PatientID != 0)
-                    {
-                        /*********************Deleting Previous Entry On Every Insert Or Update*************************/
-                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "OutPatient").ToList();
-                        if (inPatmedicineList != null)
-                        {
-                            db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
-                            couterNewRecords++;
-                        }
-                    }
-                    couterNewRecords = 0;
-                    /*********************Inserting New Entry On Every Insert Or Update*************************/
-                    foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
-                    {
-                        In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
-                        {
-
-                            Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                            Item_Code = oIn_Patient_Medicine.ItemCode,
-                            Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
-                            Transaction_Type = "OutPatient",
-                            Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
-                            Oral = oIn_Patient_Medicine.Oral,
-                            Injections = oIn_Patient_Medicine.Injection,
-                            Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                            AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
-                            Frequency = oIn_Patient_Medicine.Frequency,
-                            Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                            Other_Instruction = oIn_Patient_Medicine.Other_Instruction
-
-                        };
-                        db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
-                        couterNewRecords++;
-                    }
-                    db.SubmitChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return "";
-        }
+       
         public class Medicine
         {
             public int Pat { get; set; }
@@ -935,126 +1519,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string Dosage_Qty;
             public string Other_Instruction;
         }
-        [WebMethod]
-        public static string SaveTest(string tlist)
-        {
-            string LabtestID = "";
-            Laboratory_Test lt = new Laboratory_Test();
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            JavaScriptSerializer oJS = new JavaScriptSerializer();
-            var record = oJS.Deserialize<LabTest>(tlist);
-            /********************Deleting Previous 0 Value Saved Rows.***********************************/
-            List<Laboratory_Test> Laboratory_TestList = db.Laboratory_Tests.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "OutPatient").ToList();
-            db.Laboratory_Tests.DeleteAllOnSubmit(Laboratory_TestList);
-            db.SubmitChanges();
-
-            if (record.PatientID != null && record.PatientID != "(New)")
-            {
-                var lstTests = (from t in db.Laboratory_Tests
-                                where t.Patient_ID == int.Parse(record.PatientID) && t.Transaction_Type == "OutPatient"
-                                select t).FirstOrDefault();
-                if (lstTests != null)
-                {
-                    lstTests.Created_Time = DateTime.Now;
-                    LabtestID = lstTests.Lab_Test_ID.ToString();
-                    lt.Patient_ID = Convert.ToInt32(record.PatientID);
-                }
-                else
-                {
-                    lt.Patient_ID = Convert.ToInt32(record.PatientID);
-                    lt.Transaction_Type = "OutPatient";
-                    lt.Created_Time = DateTime.Now;
-                    db.Laboratory_Tests.InsertOnSubmit(lt);
-                    db.SubmitChanges();
-                    LabtestID = lt.Lab_Test_ID.ToString();
-                }
-            }
-            else
-            {
-                lt.Patient_ID = Convert.ToInt32(record.PatientID);
-                lt.Transaction_Type = "OutPatient";
-                lt.Created_Time = DateTime.Now;
-                db.Laboratory_Tests.InsertOnSubmit(lt);
-                db.SubmitChanges();
-                LabtestID = lt.Lab_Test_ID.ToString();
-            }
-            /**********Getting Previous details to delete**************/
-            var lstTestDetails = db.Lab_Test_Details.Where(t => t.Lab_Test_ID == int.Parse(LabtestID)).ToList();
-            var labID = int.Parse(LabtestID);
-            DBClass.executeNonQueryWithoutBegin("delete from Lab_Test_Detail where Actual_Patient_ID='" + record.PatID + "'");
-            foreach (var test in record.TestList)
-            {
-                Lab_Test_Detail ltd = new Lab_Test_Detail();
-
-                ltd.Lab_Test_ID = labID;
-                ltd.Patient_ID = Convert.ToInt32(record.PatientID);
-                var reg_id = (from rg in db.Reg_patients
-                              join p in db.Patients on rg.pat_id equals p.Reg_PatId
-                              where p.Patient_ID == int.Parse(record.PatID)
-                              orderby p.Reg_PatId descending
-                              select p.Reg_PatId).FirstOrDefault();
-
-
-                //ltd.Actual_Patient_ID = Convert.ToInt32(record.PatID);
-
-                ltd.Date = DateTime.Now;
-                //ltd.Date = Convert.ToDateTime(test.Date);
-                ltd.Test_ID = Convert.ToInt32(test.TestID);
-                ltd.Rotation_ID = test.RotationID;
-                ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
-                ltd.Catagory_ID = test.Catagory_ID;
-                ltd.Dept_ID = test.Dept_ID;
-                ltd.Actual_Patient_ID = reg_id;
-                ltd.Special_Tests = test.Special_Tests;
-                ltd.Area_Of_Interest = test.Area_Of_Interest;
-                ltd.Test_Description = test.rotation;
-                ltd.showTestDescription = test.showTestDescription;
-                bool Duplicate = false;
-                Lab_Test_Detail chkasTest = lstTestDetails.Where(tst => tst.Test_ID == ltd.Test_ID && tst.Test_ID != 0).FirstOrDefault();
-                if (chkasTest != null)
-                {
-                    ltd.Recieved_ID = chkasTest.Recieved_ID;
-                    ltd.IsBilled = chkasTest.IsBilled;
-                    ltd.Is_Result = chkasTest.Is_Result;
-                    db.Lab_Test_Details.InsertOnSubmit(ltd);
-                    db.SubmitChanges();
-                    Duplicate = true;
-                }
-
-                if (chkasTest == null)
-                {
-                    var chkasCategory = lstTestDetails.Where(tst => tst.Catagory_ID == ltd.Catagory_ID && tst.Test_ID == 0).FirstOrDefault();
-                    if (chkasCategory != null)
-                    {
-                        ltd.Recieved_ID = chkasCategory.Recieved_ID;
-                        ltd.IsBilled = chkasCategory.IsBilled;
-                        ltd.Is_Result = chkasCategory.Is_Result;
-                        Duplicate = true;
-                        if (chkasCategory != null)
-                        {
-                            var PrntID = db.Laboratory_Tests.Where(t => t.Parent_Transaction_Type_ID == chkasCategory.Lab_Test_Detail_ID).FirstOrDefault();
-                            db.Lab_Test_Details.InsertOnSubmit(ltd);
-                            db.SubmitChanges();
-                            if (PrntID != null)
-                            {
-                                PrntID.Parent_Transaction_Type_ID = ltd.Lab_Test_Detail_ID;
-                                db.SubmitChanges();
-                            }
-                        }
-                    }
-                }
-                if (!Duplicate)
-                {
-                    db.Lab_Test_Details.InsertOnSubmit(ltd);
-                    db.SubmitChanges();
-                }
-
-            }
-            /**********Deleting Previous details**************/
-            db.Lab_Test_Details.DeleteAllOnSubmit(lstTestDetails);
-            db.SubmitChanges();
-            return "";
-        }
+       
         public class TestValue
         {
             public string Date { get; set; }
@@ -1074,50 +1539,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string PatID { get; set; }
             public List<TestValue> TestList { get; set; }
         }
-        [WebMethod]
-        public static string SaveSymtoms(string SymtomsList)
-        {
-            try
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                var data = js.Deserialize<Symtom>(SymtomsList);
-                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    if (data.OutPatientID == 0)
-                        data.OutPatientID = Convert.ToInt32(DBClass.getField("select (isnull(max(Out_Patient_id),0)+1) from Out_Patient").ToString());
-                    int couterNewRecords = 0;
-                    /*********************Deleting Previous Entry On Every Insert Or Update*************************/
-                    List<Sysmtopm> SysmtopmList = db.Sysmtopms.Where(p => p.Out_Patient_ID == data.OutPatientID).ToList();
-                    if (SysmtopmList != null)
-                    {
-                        db.Sysmtopms.DeleteAllOnSubmit(SysmtopmList);
-                        couterNewRecords++;
-                    }
-                    couterNewRecords = 0;
-                    /*********************Inserting New Entry On Every Insert Or Update*************************/
-
-                    foreach (SymtomsList oSymtomsList in data.SymtomsList)
-                    {
-                        Sysmtopm oSysmtopm = new Sysmtopm()
-                        {
-                            Out_Patient_ID = data.OutPatientID,
-                            Symtom_ID = oSymtomsList.SymtomID.Replace(" ", ""),
-                            Duration = oSymtomsList.Duration,
-                            Days_Years_Months = oSymtomsList.DayYearMonth,
-                            Remarks = oSymtomsList.Remarks
-                        };
-                        db.Sysmtopms.InsertOnSubmit(oSysmtopm);
-                        couterNewRecords++;
-                    }
-                    db.SubmitChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return "";
-        }
+        
         public class Symtom
         {
             public int OutPatientID { get; set; }
@@ -1130,225 +1552,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string DayYearMonth { get; set; }
             public string Remarks { get; set; }
         }
-        [WebMethod]
-        public static string SaveRecord(PatientVisitData data)
-        {
-            try
-            {
-                var id = "";
-                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    Out_Patient OPD;
-                    if (data.btnsave == "Save")
-                    {
-                        OPD = new Out_Patient();
-                        OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
-                        OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
-                    }
-                    else
-                    {
-                        // Add null check and better error handling
-                        int outPatientId;
-                        if (!int.TryParse(data.Out_Patient_ID, out outPatientId))
-                        {
-                            throw new Exception("Invalid Out_Patient_ID for update operation");
-                        }
-
-                        OPD = (from tbl in db.Out_Patients
-                               where tbl.Out_Patient_ID == outPatientId
-                               select tbl).FirstOrDefault();
-
-                        if (OPD == null)
-                        {
-                            throw new Exception("Patient record not found for update");
-                        }
-
-                        OPD.Updated_By = AppConfig.UserID;
-                        OPD.Updated_Time = DateTime.Now;
-                    }
-
-                    // Safely assign fields with null checks and proper conversions
-                    OPD.L_M_P = data.L_M_P;
-                    OPD.spo2 = data.SPO2;
-                    OPD.BSR = data.Bsr;
-                    OPD.BMI = data.Bmi;
-                    OPD.pulse_Min = data.pulse_Min;
-                    OPD.BP_mm_Hg = data.BP_mm_Hg;
-                    OPD.Temp_C = data.Temp_C;
-                    OPD.Respiration_Min = data.Respiration_Min;
-                    OPD.Height_Cm = data.Height_Cm;
-                    OPD.Weight_Kg = data.Weight_Kg;
-                    OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
-                    OPD.HistoryOfPeresentIllness = data.HistoryOfPeresentIllness;
-                    OPD.HistoryOfFamily = data.HistoryOfFamily;
-                    OPD.HistoryOfPastIllness = data.HistoryOfPastIllness;
-                    OPD.DevelopmentHistory = data.DevelopmentHistory;
-                    OPD.VaccinationHistory = data.VaccinationHistory;
-                    OPD.NutritionHistory = data.NutritionHistory;
-                    OPD.CVS = data.CVS;
-                    OPD.GIT = data.GIT;
-                    OPD.RESP = data.RESP;
-                    OPD.AllergiesHistory = data.AllergiesHistory;
-                    OPD.TreatmentHistory = data.TreatmentHistory;
-                    OPD.SocioEconomicHistory = data.SocioEconomicHistory;
-                    OPD.CNS = data.CNS;
-                    OPD.URG = data.URG;
-                    OPD.GYNAE = data.GYNAE;
-                    OPD.Local = data.Local;
-                    OPD.Mucculor = data.Mucculor;
-                    OPD.ObstetricHistory = data.ObstetricHistory;
-                    OPD.txtRemarksHistory = data.txtRemarksHistory;
-                    OPD.chkJVP = data.chkJVP;
-                    OPD.chkPallor = data.chkPallor;
-                    OPD.chkaganoris = data.chkaganoris;
-                    OPD.chkunconceed = data.chkunconceed;
-                    OPD.chkjaundice = data.chkjaundice;
-                    OPD.hydration = data.hydration;
-                    OPD.edema = data.edema;
-                    OPD.chk1 = data.chk1;
-                    OPD.chk2 = data.chk2;
-                    OPD.chk3 = data.chk3;
-                    OPD.chk4 = data.chk4;
-                    OPD.chk5 = data.chk5;
-                    OPD.Discharge = data.Discharged;
-                    OPD.txtInputBox1 = data.Other;
-
-                    if (data.Discharged == true)
-                    {
-                        OPD.discharge_date = DateTime.Now;
-                    }
-
-                    // Safe conversion for Doctor_ID
-                    int doctorId;
-                    if (int.TryParse(data.Doctor_ID, out doctorId))
-                    {
-                        OPD.Doctor_ID = doctorId.ToString();
-                    }
-
-                    OPD.Designation = data.Designation;
-                    OPD.Final_Rec = data.Final_Rec;
-                    OPD.Final_Diagnosis = data.FinalDiagnosis;
-                    OPD.Administration = data.Administration?.ToString();
-                    OPD.Control_Date = DateTime.Now;
-                    OPD.Follow_Up = data.Follow_Up?.ToString();
-                    OPD.Proto = data.Proto?.ToString();
-                    OPD.Advice = data.Advice;
-                    OPD.Birth_History = data.Birth_History;
-
-                    // Handle referral logic with proper validation
-                    if (!string.IsNullOrEmpty(data.Reffer_To))
-                    {
-                        var P = (from tbl in db.Patients
-                                 where tbl.Patient_ID == data.Patient_ID
-                                 select tbl).FirstOrDefault();
-
-                        if (P != null)
-                        {
-                            P.Patient_Main_Category = data.Reffer_To;
-                            db.SubmitChanges();
-
-                            var D = (from tbl in db.Previous_Dpts
-                                     where tbl.Patient_ID == data.Patient_ID && tbl.Perivious_Dpt_Name == data.Reffer_To
-                                     select tbl).FirstOrDefault();
-                            if (D == null)
-                            {
-                                Previous_Dpt Previous_Dpt = new Previous_Dpt();
-                                Previous_Dpt.Patient_ID = data.Patient_ID;
-                                Previous_Dpt.Perivious_Dpt_Name = data.Reffer_To;
-                                Previous_Dpt.Created_Time = DateTime.Now;
-                                db.Previous_Dpts.InsertOnSubmit(Previous_Dpt);
-                                db.SubmitChanges();
-                            }
-                        }
-                    }
-
-                    OPD.Reffer_To = data.Reffer_To?.ToString();
-                    OPD.Reffer_No = data.Reffer_No;
-
-                    // Safe conversion for Reffer_doc
-                    int refferDocId;
-                    if (int.TryParse(data.Reffer_doc, out refferDocId))
-                    {
-                        OPD.reffer_doc = refferDocId;
-                    }
-
-                    OPD.Drug_History = data.Drug_History;
-                    OPD.Personal_History = data.Personal_History;
-                    OPD.Abdominal = data.Abdominal;
-
-                    if (data.btnsave == "Save")
-                    {
-                        OPD.Book_ID = AppConfig.Book_ID;
-                        OPD.Created_By = AppConfig.UserID;
-                        OPD.Created_Time = DateTime.Now;
-                        OPD.Company_ID = AppConfig.Company_ID;
-                        db.Out_Patients.InsertOnSubmit(OPD);
-                    }
-
-                    // Submit changes before getting the ID
-                    db.SubmitChanges();
-
-                    // Now safely get the Out_Patient_ID
-                    id = OPD.Out_Patient_ID.ToString();
-
-                    // Setting 0 patient id inserted medicine to current out patient id
-                    List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").ToList();
-                    foreach (In_Patient_Medicine med in list)
-                    {
-                        med.Patient_ID = OPD.Out_Patient_ID;
-                    }
-
-                    // Setting 0 patient id inserted eyes to current out patient id
-                    List<PMS.EyeDetail> eyelist = db.EyeDetails.Where(t => t.TransactionType == "OutPatient" && t.TransactionID == 0).ToList();
-                    foreach (PMS.EyeDetail eye in eyelist)
-                    {
-                        eye.TransactionID = OPD.Out_Patient_ID;
-                    }
-
-                    // Setting 0 patient id inserted test to current out patient id
-                    Laboratory_Test test = db.Laboratory_Tests.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").FirstOrDefault();
-                    if (test != null)
-                        test.Patient_ID = OPD.Out_Patient_ID;
-
-                    
-                    List<PMS.OutPatients_Proto> Protolist = db.OutPatients_Protos.Where(t => t.Outpatient_id ==  0).ToList();
-                    foreach (PMS.OutPatients_Proto proto in Protolist)
-                    {
-                        proto.Outpatient_id = OPD.Out_Patient_ID;
-                    }
-
-                    List<PMS.OutPatientPrimaryDiagnosi> OutPatientPrimaryDiagnosisList = db.OutPatientPrimaryDiagnosis.Where(t => t.OutPatientID == 0).ToList();
-                    foreach (PMS.OutPatientPrimaryDiagnosi oppd in OutPatientPrimaryDiagnosisList)
-                    {
-                        oppd.OutPatientID = OPD.Out_Patient_ID;
-                    }
-
-                    List<PMS.OutPatientFinalDiagnosi> OutPatientFinalDiagnosisList = db.OutPatientFinalDiagnosis.Where(t => t.OutPatientID == 0).ToList();
-                    foreach (PMS.OutPatientFinalDiagnosi opfd in OutPatientFinalDiagnosisList)
-                    {
-                        opfd.OutPatientID = OPD.Out_Patient_ID;
-                    }
-
-                    List<PMS.OutPatientComplaint> OutPatientComplaintList = db.OutPatientComplaints.Where(t => t.OutPatientID == 0).ToList();
-                    foreach (PMS.OutPatientComplaint opc in OutPatientComplaintList)
-                    {
-                        opc.OutPatientID = OPD.Out_Patient_ID;
-                    }
-                    db.SubmitChanges();
-                }
-
-                return id;
-            }
-            catch (Exception ex)
-            {
-                // Log the full exception details for debugging
-                System.Diagnostics.Debug.WriteLine($"SaveRecord Error: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-
-                // Return a more descriptive error message
-                return $"Error: {ex.Message}";
-            }
-        }
+        
         public class PatientVisitData
         {
             // Tab02 - Vitals
@@ -1430,53 +1634,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string Administration { get; set; }
             public string Out_Patient_ID { get; set; }
         }
-        [WebMethod]
-        public static string SaveProto(string btnSave, string ProtoDetailss)
-        {
-            try
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                var ProtDetailList = js.Deserialize<Proto>(ProtoDetailss);
-
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-
-                    var pat_id = (from p in db.Reg_patients
-                                  join vs in db.Patients on p.pat_id equals vs.Reg_PatId
-                                  where vs.Patient_ID == Convert.ToInt32(ProtDetailList.PatId)
-                                  select p.pat_id).FirstOrDefault();
-
-                    if (btnSave == "Update")
-                    {
-                        List<OutPatients_Proto> outpatient_protos = db.OutPatients_Protos.Where(w => w.Outpatient_id == ProtDetailList.opdid).ToList();
-                        db.OutPatients_Protos.DeleteAllOnSubmit(outpatient_protos);
-                        db.SubmitChanges();
-                    }
-                    foreach (var item in ProtDetailList.ProtoList)
-                    {
-                        OutPatients_Proto ipser = new OutPatients_Proto
-                        {
-                            Patient_Id = pat_id,
-                            ProtoId = item.ProtoId,
-                            Outpatient_id = 0,
-                            Proto_Description = item.Proto_Description
-                        };
-
-                        db.OutPatients_Protos.InsertOnSubmit(ipser);
-                    }
-
-                    db.SubmitChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex.Message);
-                return "Error: " + ex.Message;
-            }
-
-            return "Success";
-        }
+        
 
         [WebMethod]
         public static string SaveNewDiagnosis(string Text)
@@ -1595,53 +1753,7 @@ on d.Doctor_Id equals hr.Emp_ID
                 return "[]"; // Return empty array on error
             }
         }
-        [WebMethod]
-        public static string SaveComplaintsOfPatient(string ComplaintsList)
-        {
-            try
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                // Deserialize as a List of complaints
-                var complaints = js.Deserialize<List<complainList>>(ComplaintsList);
-
-                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    if (complaints.Count > 0)
-                    {
-                        int outPatientId = complaints[0].OutPatientID;
-
-
-                        /*********************Deleting Previous Complaints*************************/
-                        var existingComplaints = db.OutPatientComplaints.Where(p => p.OutPatientID == outPatientId).ToList();
-                        if (existingComplaints != null && existingComplaints.Count > 0)
-                        {
-                            db.OutPatientComplaints.DeleteAllOnSubmit(existingComplaints);
-                        }
-
-                        /*********************Inserting New Complaints*************************/
-                        foreach (var complaint in complaints)
-                        {
-                            OutPatientComplaint newComplaint = new OutPatientComplaint()
-                            {
-                                OutPatientID = outPatientId,
-                                ComplaintID = complaint.ComplaintID,
-                                PatientID = 0 // You might want to set this properly
-                            };
-                            db.OutPatientComplaints.InsertOnSubmit(newComplaint);
-                        }
-
-                        db.SubmitChanges();
-                        return "Success"; // Return meaningful status
-                    }
-                    return "No complaints to save";
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return "Error: " + ex.Message; // Return error message
-            }
-        }
+      
 
         // Renamed to singular since it represents a single complaint
         public class complainList
@@ -1651,54 +1763,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string ComplaintText { get; set; }
         }
 
-        [WebMethod]
-        public static string SavePrimaryDiagnosisOfPatient(string PrimaryDiagnosisList)
-        {
-            try
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                // Deserialize as a List of PrimaryDiagnosis
-                var PrimaryDiagnosis = js.Deserialize<List<PrimaryDiagnosisList>>(PrimaryDiagnosisList);
-
-                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    if (PrimaryDiagnosis.Count > 0)
-                    {
-                        int outPatientId = PrimaryDiagnosis[0].OutPatientID;
-
-                        /*********************Deleting Previous PrimaryDiagnosis*************************/
-                        var existingPrimaryDiagnosis = db.OutPatientPrimaryDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
-                        if (existingPrimaryDiagnosis != null && existingPrimaryDiagnosis.Count > 0)
-                        {
-                            db.OutPatientPrimaryDiagnosis.DeleteAllOnSubmit(existingPrimaryDiagnosis);
-                        }
-
-                        /*********************Inserting New PrimaryDiagnosis*************************/
-                        foreach (var primaryDiagnosis in PrimaryDiagnosis)
-                        {
-                            OutPatientPrimaryDiagnosi newprimaryDiagnosis = new OutPatientPrimaryDiagnosi()
-                            {
-                                OutPatientID = outPatientId,
-                                DiagnosisID = primaryDiagnosis.DiagnosisID,
-                                PatientID = 0 ,
-                                Remarks = primaryDiagnosis.Remarks
-                                
-                            };
-                            db.OutPatientPrimaryDiagnosis.InsertOnSubmit(newprimaryDiagnosis);
-                        }
-
-                        db.SubmitChanges();
-                        return "Success"; // Return meaningful status
-                    }
-                    return "No PrimaryDiagnosis to save";
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return "Error: " + ex.Message; // Return error message
-            }
-        }
+   
 
         // Renamed to singular since it represents a single complaint
         public class PrimaryDiagnosisList
@@ -1708,54 +1773,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string Remarks { get; set; }
         }
 
-        [WebMethod]
-        public static string SaveFinalDiagnosisOfPatient(string FinalDiagnosisList)
-        {
-            try
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                // Deserialize as a List of FinalDiagnosis
-                var FinalDiagnosis = js.Deserialize<List<FinalDiagnosisList>>(FinalDiagnosisList);
-
-                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    if (FinalDiagnosis.Count > 0)
-                    {
-                        int outPatientId = FinalDiagnosis[0].OutPatientID;
-
-                        /*********************Deleting Previous FinalDiagnosis*************************/
-                        var existingFinalDiagnosis = db.OutPatientFinalDiagnosis.Where(p => p.OutPatientID == outPatientId).ToList();
-                        if (existingFinalDiagnosis != null && existingFinalDiagnosis.Count > 0)
-                        {
-                            db.OutPatientFinalDiagnosis.DeleteAllOnSubmit(existingFinalDiagnosis);
-                        }
-
-                        /*********************Inserting New FinalDiagnosis*************************/
-                        foreach (var finalDiagnosis in FinalDiagnosis)
-                        {
-                            OutPatientFinalDiagnosi newFinalDiagnosis = new OutPatientFinalDiagnosi()
-                            {
-                                OutPatientID = outPatientId,
-                                DiagnosisID = finalDiagnosis.DiagnosisID,
-                                PatientID = 0,
-                                Remarks = finalDiagnosis.Remarks
-
-                            };
-                            db.OutPatientFinalDiagnosis.InsertOnSubmit(newFinalDiagnosis);
-                        }
-
-                        db.SubmitChanges();
-                        return "Success"; // Return meaningful status
-                    }
-                    return "No FinalDiagnosis to save";
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return "Error: " + ex.Message; // Return error message
-            }
-        }
+       
 
         // Renamed to singular since it represents a single complaint
         public class FinalDiagnosisList

@@ -7,17 +7,19 @@
             fillDepartment();
             let depID = '<%= Request.QueryString["Dep_ID"] %>';
 
-            fillPolicy(function () {
-                bindEvents();
-                DepartmentPercentageValidation();
+            fillDepartment(function () { 
+                fillPolicy(function () {
+                    bindEvents();
+                    DepartmentPercentageValidation();
 
-                if (depID && depID !== "null" && depID !== "") {
-                    loadDepartmentEdit(depID);
-                    $("#btnSave").val("Update");
-                } else {
-                    addRow();
-                    $("#btnSave").val("Save");
-                }
+                    if (depID && depID !== "null" && depID !== "") {
+                        loadDepartmentEdit(depID);
+                        $("#btnSave").val("Update");
+                    } else {
+                        addRow();
+                        $("#btnSave").val("Save");
+                    }
+                });
             });
         });
 
@@ -25,7 +27,7 @@
         var departmentOptions = "";
         var policyOptions = "";
 
-        function fillDepartment() {
+        function fillDepartment(callback) {
             $.ajax({
                 type: "POST",
                 url: "Department_Assign_Policy.aspx/GetAllDepartments",
@@ -38,15 +40,37 @@
                         departmentOptions += '<option value="' + value.Department_ID + '">' + value.Department_Name + '</option>';
                     });
                     $("#ddlDepartment").html(departmentOptions).select2();
-                    // addRow();
+                    if (callback) callback();
                 },
-                error: function (xhr, status, error) {
-                    console.error("Failed to load departments: ", error);
-                    $("#ddlDepartment").html('<option value="0">Load Error</option>');
-                    addRow();
+                error: function () {
+                    departmentOptions = '<option value="0">Load Error</option>';
+                    $("#ddlDepartment").html(departmentOptions);
+                    if (callback) callback();
                 }
             });
         }
+
+        function fillPolicy(callback) {
+            $.ajax({
+                type: "POST",
+                url: "Department_Assign_Policy.aspx/GetAllPolicies",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = response.d;
+                    policyOptions = '<option value="0">Please Select</option>';
+                    $.each(data, function (key, value) {
+                        policyOptions += '<option value="' + value.Policy_ID + '">' + value.Policy_Name + '</option>';
+                    });
+                    if (callback) callback();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load policies: ", error);
+                }
+            });
+        }
+
+
 
         function loadDepartmentEdit(depId) {
             $.ajax({
@@ -90,26 +114,7 @@
 
 
 
-        function fillPolicy(callback) {
-            $.ajax({
-                type: "POST",
-                url: "Department_Assign_Policy.aspx/GetAllPolicies",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var data = response.d;
-                    policyOptions = '<option value="0">Please Select</option>';
-                    $.each(data, function (key, value) {
-                        policyOptions += '<option value="' + value.Policy_ID + '">' + value.Policy_Name + '</option>';
-                    });
-                    if (callback) callback();
-                },
-                error: function (xhr, status, error) {
-                    console.error("Failed to load policies: ", error);
-                }
-            });
-        }
-
+        
 
 
 
