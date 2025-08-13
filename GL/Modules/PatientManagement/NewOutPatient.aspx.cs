@@ -816,110 +816,51 @@ namespace PMS.Modules.PatientManagement
             return (new JavaScriptSerializer().Serialize(list));
         }
         [WebMethod]
-        public static string GetTestListForHistory(int id)
+        public static string GetTestList(int id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            int Patien_No = DBClass.GetMRNOBy_RgPatientID(Convert.ToInt32(id));
 
-            var OutPatienttestilst = (
-                                        from lbtM in db.Laboratory_Tests
-                                        join lbtD in db.Lab_Test_Details
-                                        on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
-                                        join outpat in db.Out_Patients
-                                        on lbtM.Patient_ID equals outpat.Out_Patient_ID
-                                        join p in db.Patients
-                                        on outpat.Patient_ID equals p.Patient_ID
-                                        join rp in db.Reg_patients
-                                        on p.Reg_PatId equals rp.pat_id
-                                        where rp.Patient_No == Patien_No && lbtM.Transaction_Type == "OutPatient"
+            var testDetailst = (from lbtM in db.Laboratory_Tests
+                                join lbtD in db.Lab_Test_Details
+                                on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+                                join outpat in db.Out_Patients
+                                on lbtM.Patient_ID equals outpat.Out_Patient_ID
+                                where outpat.Out_Patient_ID == id && lbtM.Transaction_Type == "OutPatient"
+                                select new
+                                {
+                                    lbtD.Lab_Test_Detail_ID,
+                                    lbtD.Date,
+                                    lbtD.Remark,
+                                    lbtD.Catagory_ID,
+                                    lbtM.Lab_Test_ID,
+                                    lbtD.Test_ID,
+                                    lbtD.Dept_ID,
+                                    lbtD.L_R_Rotation_ID,
+                                    Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
+                                    Value_Type = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Value_Type).FirstOrDefault(),
+                                    Value_TypeGroup = (from t in db.Lab_Tests where t.Group_Category == lbtD.Catagory_ID select t.Value_Type).FirstOrDefault(),
+                                    Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
+                                    Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
+                                    DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault(),
+                                    Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
+                                    GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
+                                    Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
+                                    lbtD.Rotation_ID,
+                                    Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+                                    DataValue_Description = (from dv in db.DataValues
+                                                             join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                                             where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
+                                                             select dv.DataValue_Description).FirstOrDefault(),
+                                    lbtD.Special_Tests,
+                                    lbtD.Area_Of_Interest,
+                                    lbtD.Recieved_ID,
+                                    lbtD.Is_Result,
 
-
-                                        select new
-                                        {
-
-                                            outpat.Out_Patient_ID,
-                                            lbtD.Lab_Test_Detail_ID,
-                                            lbtD.Date,
-                                            lbtD.Remark,
-                                            lbtD.Catagory_ID,
-                                            lbtM.Lab_Test_ID,
-                                            lbtD.Test_ID,
-                                            lbtD.Dept_ID,
-                                            lbtD.L_R_Rotation_ID,
-                                            Value_Type = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Value_Type).FirstOrDefault(),
-                                            Value_TypeGroup = (from t in db.Lab_Tests where t.Group_Category == lbtD.Catagory_ID select t.Value_Type).FirstOrDefault(),
-                                            Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
-                                            Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Department).FirstOrDefault(),
-                                            Group_Category = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Group_Category).FirstOrDefault(),
-                                            DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                 Departments", t.Main_Department)).FirstOrDefault(),
-                                            Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
-                                            GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", t.Group_Category)).FirstOrDefault(),
-                                            Group_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
-                                            lbtD.Rotation_ID,
-                                            Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
-                                            DataValue_Description = (from dv in db.DataValues
-                                                                     join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
-                                                                     where vs.ValueSet_Name == ("Test XRay Rotations").ToString() && dv.DataValue_Name == lbtD.Rotation_ID
-                                                                     select dv.DataValue_Description).FirstOrDefault(),
-
-                                            lbtD.Special_Tests,
-                                            lbtD.Area_Of_Interest,
-                                            lbtD.Doctor,
-                                            lbtD.Recieved_ID,
-                                            Is_Result = (from t in db.Lab_Test_Details where t.BillDetailID == lbtD.BillDetailID orderby t.Lab_Test_Detail_ID descending select t.isApproved).FirstOrDefault(),
-                                            outpat.Doctor_ID
-                                        }
-               ).ToList();
-
-
-            List<LabTestClass> list = new List<LabTestClass>();
-
-            
-            foreach (var item in OutPatienttestilst)
-            {
-                LabTestClass obj = new LabTestClass();
-
-                //// obj.IsBilled = (bool)item.IsBilled;
-                obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
-                obj.Date = Convert.ToDateTime(item.Date);
-                obj.Remark = item.Remark;
-                obj.Catagory_ID = item.Catagory_ID;
-                obj.Lab_Test_ID = item.Lab_Test_ID.ToString();
-                obj.Test_ID = item.Test_ID;
-                obj.Dept_ID = item.Dept_ID;
-                obj.L_R_Rotation_ID = item.L_R_Rotation_ID;
-
-                obj.In_Patient_ID = item.Out_Patient_ID;
-
-                obj.Value_Type = item.Value_Type;
-                obj.Value_TypeGroup = item.Value_TypeGroup;
-                obj.Test_Name = item.Test_Name;
-                obj.Group_Department = item.Group_Department;
-                obj.Group_Category = item.Group_Category;
-                obj.DepartmentName = item.DepartmentName;
-                //obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
-                obj.Department_ID = item.Department_ID;
-                obj.GroupName = item.GroupName;
-                obj.Group_Name = item.Group_Name;
-                obj.Rotation_ID = item.Rotation_ID;
-                obj.Rotation = item.Rotation;
-                obj.DataValue_Description = item.DataValue_Description;
-                obj.Special_Tests = item.Special_Tests;
-                obj.Area_Of_Interest = item.Area_Of_Interest;
-                obj.Doctor = item.Doctor;
-                obj.Recieved_ID = item.Recieved_ID;
-
-                if (item.Is_Result == null)
-                    obj.Is_Result = false;
-                else
-                    obj.Is_Result = (bool)item.Is_Result;
-                obj.DoctorName = item.Doctor_ID;
-                obj.Status = "OutPatient";
-                list.Add(obj);
-            }
-
-            return (new JavaScriptSerializer()).Serialize(list);
+                                }
+                ).ToList();
+            return (new JavaScriptSerializer()).Serialize(testDetailst);
         }
+        
         [WebMethod]
         public static string LoadMedicines(int PatientID)
         {
@@ -1111,17 +1052,17 @@ namespace PMS.Modules.PatientManagement
                                         select t).Count() + 1
                         });
 
-            if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "0" && doc_name == "0")
+            if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && doc_name == "")
             {
                 data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment));
             }
 
-            else if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "0" && !string.IsNullOrEmpty(doc_name))
+            else if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && !string.IsNullOrEmpty(doc_name))
             {
                 data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment) && p.Doctor_ID == doc_name);
             }
 
-            else if (!string.IsNullOrEmpty(doc_name) && (string.IsNullOrEmpty(filterDepartment) || filterDepartment == "0"))
+            else if (!string.IsNullOrEmpty(doc_name) && (string.IsNullOrEmpty(filterDepartment) || filterDepartment == ""))
             {
                 data = data.Where(p => p.Doctor_ID == doc_name);
             }
@@ -1326,6 +1267,7 @@ on d.Doctor_Id equals hr.Emp_ID
 
             return (new JavaScriptSerializer()).Serialize(tests);
         }
+        
         [WebMethod]
         public static string FillTestMainDepartment()
         {
@@ -1839,9 +1781,14 @@ on d.Doctor_Id equals hr.Emp_ID
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var doctor = (from emp in db.HR_Employees
+                              where emp.IsDoctor == true
+                              select new { emp.Emp_ID, emp.Emp_Name,emp.Department });
 
-                              where emp.Department == depart && emp.IsDoctor == true
-                              select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                // Apply search filter if searchTerm is not empty
+                if (!string.IsNullOrEmpty(depart))
+                {
+                    doctor = doctor.Where(t => t.Department == depart);
+                }
                 return (new JavaScriptSerializer()).Serialize(doctor);
             }
             return "";
