@@ -338,8 +338,7 @@
             transition: all 0.5s ease;
         }
 
-        #retract.minimized ~ .preview {
-        }
+        
 
         .retractIcon {
             display: flex;
@@ -460,31 +459,11 @@
             font-weight: bold;
         }
 
-        label, span, .table > tbody > tr > td, select {
-            font-weight: normal !important
-        }
+         
 
 
 
-        .retractIcon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-            .retractIcon:hover {
-                background-color: rgba(0, 0, 0, 0.1);
-                transform: scale(1.1);
-            }
-
-                .retractIcon:hover img {
-                    filter: brightness(0.8) contrast(1.2);
-                    transform: rotate(10deg);
-                }
+        
 
         .sidebarToggleIcon {
             width: 24px;
@@ -492,10 +471,7 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        .retractIcon:active {
-            transform: scale(0.95);
-        }
-
+       
         .sidebarIcon {
             width: 30px;
             margin-right: 25px;
@@ -1410,8 +1386,7 @@ margin-right: 5px;
                 updateDisposalTable();
                 updateHistoryTable();
                 // Show success message
-                showSuccessMessage("Patient data loaded successfully!");
-                AddVitals();
+                 AddVitals();
                 setDropdownValue('ctl00_MainContent_ddldoctors', data.referDoc);
                 
             } catch (error) {
@@ -1455,14 +1430,7 @@ margin-right: 5px;
                 }, 500); // Match this duration with your CSS transition time
             }
         }
-
-        function showSuccessMessage(message) {
-            // Add your success message display logic here
-            // For example, using a toast notification or alert
-            console.log(message);
-            // Uncomment the line below if you want to show an alert
-            // alert(message);
-        }
+         
 
         // Example usage:
         // Call this function with a patient ID to load the form
@@ -3678,14 +3646,11 @@ margin-right: 5px;
             element.classList.toggle('active');
         }
         function navigateAction(element) {
-            // Remove 'selected' class from all menu items
-            $('.menu-item').removeClass('selected');
+             $('.menu-item').removeClass('selected');
 
-            // Add 'selected' class to clicked item
-            $(element).addClass('selected');
+             $(element).addClass('selected');
 
-            // Hide all tabs except the selected one
-            const allTabs = document.querySelectorAll('.tabs');
+             const allTabs = document.querySelectorAll('.tabs');
             $(allTabs).not('#tab' + element.id).slideUp(300);
 
             const tabId = 'tab' + element.id;
@@ -3694,8 +3659,7 @@ margin-right: 5px;
                 $(selectedTab).slideDown(300);
             }
 
-            // Update header with selected menu text
-            const spanText = $(element).find('span').text().trim();
+             const spanText = $(element).find('span').text().trim();
             if (spanText) {
                 $('.header').text(spanText);
             }
@@ -4727,7 +4691,6 @@ margin-right: 5px;
                             <div class="cardd">
                                 <div class="cardd-body">
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px">
-
                                         <h2 class="header mybutton"></h2>
                                     </div>
 
