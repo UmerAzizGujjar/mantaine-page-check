@@ -1,12 +1,8 @@
 $(document).ready(function () {
-    fillgender();
-    fillmartial();
-    fillArea();
-    fillCity();
-    fillBloodBank();
-    fillProvince();
+
+
     clearPatient();
-    fillCountry();
+ 
     
     MaskedInput({
         elm: document.getElementById('txt_mobile'),
@@ -20,31 +16,89 @@ $(document).ready(function () {
         separator: '-'
 
     });
+    //$('#ddl_Gender').select2().on('select2:open', function () {
+    //    fillDropdown($(this), 'GetGender');
+    //});
+
+    //$('#ddlCountry').select2().on('select2:open', function () {
+    //    fillDropdown($(this), 'GetCountry');
+    //});
+    //$('#ddl_status').select2().on('select2:open', function () {
+    //    fillDropdown($(this), 'GetMartailStatus');
+    //});
+    //$('#txtarea').select2().on('select2:open', function () {
+    //    fillDropdown($(this), 'GetArea');
+    //});
+    //$('#txtcity').select2().on('select2:open', function () {
+    //    fillDropdown($(this), 'GetCity');
+    //});
+    //$('#ddl_bloodGroup').select2().on('select2:open', function () {
+    //    fillDropdown($(this), 'GetBloodBank');
+    //});
+    //$('#ddlstate').select2().on('select2:open', function () {
+    //    fillDropdown($(this), 'GetProvince');
+    //});
+
+    var  dropdowns = [
+        { id: '#ddl_Gender', method: 'GetGender' },
+        { id: '#ddlCountry', method: 'GetCountry' },
+        { id: '#ddl_status', method: 'GetMartailStatus' },
+        { id: '#txtarea', method: 'GetArea' },
+        { id: '#txtcity', method: 'GetCity' },
+        { id: '#ddl_bloodGroup', method: 'GetBloodBank' },
+        { id: '#ddlstate', method: 'GetProvince' }
+    ];
+
+    dropdowns.forEach(item => {
+        const $element = $(item.id);
+        $element.select2();
+        $element.off('select2:open').on('select2:open', function () {
+            fillDropdown($element, item.method);
+        });
+    });
+ 
 });
+function fillDropdown($dropdown, methodName) {
+    if ($dropdown.data('filled')) return;
 
+    $dropdown.data('filled', false);
 
-function fillCountry() {
-    var options = '<option value="0">Please Select</option>';
     $.ajax({
-        url: 'RegisterPatient.aspx/GetCountry',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
+        type: "POST",
+        url: "RegisterPatient.aspx/" + methodName,
+        data: '{}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
         success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddlCountry').html(options);
+            try {
+                const data = JSON.parse(response.d);
+                var options = '<option value="0">Please Select</option>'; 
 
+                $.each(data, function (key, value) {
+                    options += `<option value="${value.DataValue_Name}">
+                                    ${value.DataValue_Description}
+                                </option>`;
+                });
+
+                $dropdown.html(options)
+                    .data('filled', true) 
+                    .trigger('change');  
+                if ($dropdown.hasClass('select2-hidden-accessible')) {
+                    $dropdown.select2('close').select2('open');
+                }
+            } catch (e) {
+                console.error(`Error parsing data from ${methodName}:`, e);
+                $dropdown.data('filled', false); 
+            }
         },
         error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
+            console.error(`Error fetching ${methodName}:`, error);
+            $dropdown.data('filled', false); 
         }
     });
-
-    return options;
 }
+
+
 
 function clearPatient() {
 
@@ -68,7 +122,7 @@ function fillmrno() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            debugger;
+          
             var max_mr = data.d;
             $('#txt_Mrno').val('New');
         },
@@ -77,30 +131,8 @@ function fillmrno() {
         }
     });
 }
-function fillgender() {
-    var options = '<option value="0">Please Select</option>';
-    PageMethods.GetGender(function (data) {
-        $.each(JSON.parse(data), function (key, value) {
-            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-        });
-        $('#ddl_Gender').html(options);
-        //$('#ddl_Gender').select2();
 
-    });
-    return options;
-}
-function fillmartial() {
-    var options = '<option value="0">Please Select</option>';
-    PageMethods.GetMartailStatus(function (data) {
-        $.each(JSON.parse(data), function (key, value) {
-            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-        });
-        $('#ddl_status').html(options);
-        //$('#ddl_status').select2();
 
-    });
-    return options;
-}
 
 function fillArea() {
     var options = '<option value="0">Please Select</option>';
@@ -176,7 +208,7 @@ function fillProvince() {
 
 
 function CalculateDateOfBirth() {
-    debugger;
+    
     var now = moment();
     var year = $('#txt_dob').val();
     var calculateDate = now.subtract(year, 'years');
@@ -196,9 +228,9 @@ function CalculateDateOfBirth() {
     $("#txtAge_yearss").mask("99/99/9999");
 }
 
-debugger;
+
 function SavePatient() {
-    debugger;
+  
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
@@ -284,7 +316,7 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            debugger;
+            
             var ini_patientID = data.d;
 
             toasterMessage(false, "Data Saved Successfully");
@@ -299,7 +331,7 @@ function SavePatient() {
     });
 }
 function toasterMessage(isError = false, title, message) {
-    debugger;
+    
     toastr.options = {
         "closeButton": true,
         "debug": false,
@@ -333,9 +365,9 @@ function Get_Pat_Info(reg_id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            debugger;
+            
             var data = JSON.parse(resp.d);
-            debugger;
+            
 
             $('#txt_Mrno').val(data.Mr_No);
             $('#txt_name').val(data.Name);
@@ -355,7 +387,12 @@ function Get_Pat_Info(reg_id) {
             $('#txt_mobile').val(data.Mobile);
             $('#txt_Address').val(data.Address);
             $('#txt_cnic').val(data.CNIC);
-            $('#ddl_status').val(data.MaritalStatus);
+            $('#ddl_status').append(
+                $('<option>', {
+                    value: data.MaritalStatus,  
+                    text: data.MaritalStatus_text 
+                })
+            );
             $('#hdn_regid').val(reg_id);
             $('#ddlCountry').val(data.Country);
             $('#ddlstate').val(data.state);

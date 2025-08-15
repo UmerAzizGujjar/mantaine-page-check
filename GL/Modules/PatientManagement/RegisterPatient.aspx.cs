@@ -258,6 +258,7 @@ namespace PMS.Modules.PatientManagement
                              DOB = rg.DOB,
                              Age = rg.Age_years,
                              MaritalStatus = rg.Martial_Status,
+                             MaritalStatus_text = db.GetDataValueName("Marital Status",rg.Martial_Status),
                              Mr_No = rg.mr_no_sequence,
                              pat_no = rg.Patient_No,
                              Address = rg.Permanent_Address,
