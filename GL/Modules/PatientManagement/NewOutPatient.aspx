@@ -1004,6 +1004,7 @@
                 AppendPrimaryDiagnosisHistory();
                 AppendFinalDiagnosisHistory();
                 AppendComplaintsHistory();
+                updateHistoryTable();
 
                 $('.exam-row input[type="checkbox"]').each(function () {
                     var param = this.id.split('_chk').pop();
