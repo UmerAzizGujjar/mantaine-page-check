@@ -4,161 +4,140 @@
 
 
     <style title="sidebar">
-        /* Modern Loading Overlay Styles */
-        .modern-loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 20, 60, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            animation: fadeIn 0.4s ease forwards;
-        }
+       /* Modern Loading Overlay - Whitish Background with #EFA63E Theme */
+.modern-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(245, 245, 245, 0.95); /* Whitish semi-transparent */
+     z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 0.4s ease forwards;
+}
 
-        .loading-content {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            color: white;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            transform: scale(0.8);
-            animation: scaleIn 0.4s ease 0.2s forwards;
-            min-width: 200px;
-        }
+.loading-content {
+    background: rgba(255, 255, 255, 0.85); /* Solid whitish */
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(239, 166, 62, 0.4); /* Subtle orange border */
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: #333; /* Dark text for contrast */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: scale(0.8);
+    animation: scaleIn 0.4s ease 0.2s forwards;
+    min-width: 200px;
+}
 
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 20px;
-            position: relative;
-        }
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    position: relative;
+}
 
-        .spinner-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 3px solid transparent;
-            border-top: 3px solid #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+.spinner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(239, 166, 62, 0.1); /* Very subtle orange */
+    border-top: 3px solid #EFA63E; /* Bright orange */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
 
-        .spinner-ring:nth-child(2) {
-            border-top-color: #87ceeb;
-            animation-duration: 1.5s;
-            animation-direction: reverse;
-            width: 80%;
-            height: 80%;
-            top: 10%;
-            left: 10%;
-        }
+.spinner-ring:nth-child(2) {
+    border-top-color: rgba(239, 166, 62, 0.7);
+    animation-duration: 1.5s;
+    animation-direction: reverse;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+}
 
-        .spinner-ring:nth-child(3) {
-            border-top-color: #4a90e2;
-            animation-duration: 2s;
-            width: 60%;
-            height: 60%;
-            top: 20%;
-            left: 20%;
-        }
+.spinner-ring:nth-child(3) {
+    border-top-color: rgba(239, 166, 62, 0.4);
+    animation-duration: 2s;
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+}
 
-        .loading-text {
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #ffffff, #87ceeb, #4a90e2);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 3s ease infinite;
-        }
+.loading-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #EFA63E, #d18d2f, #EFA63E);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+}
 
-        .loading-subtext {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-bottom: 20px;
-        }
+.loading-subtext {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.7); /* Darker subtext */
+    margin-bottom: 20px;
+}
 
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ffffff, #87ceeb, #4a90e2);
-            border-radius: 2px;
-            animation: progressMove 2s ease-in-out infinite;
-        }
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #EFA63E, transparent);
+    border-radius: 2px;
+    animation: progressMove 2s ease-in-out infinite;
+}
 
-        /* Floating particles */
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            animation: float 3s ease-in-out infinite;
-        }
+/* Floating particles - adjusted for light background */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(239, 166, 62, 0.5);
+    border-radius: 50%;
+    animation: float 3s ease-in-out infinite;
+}
 
-        .particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
-        .particle:nth-child(2) { top: 80%; left: 80%; animation-delay: 1s; }
-        .particle:nth-child(3) { top: 60%; left: 10%; animation-delay: 2s; }
-        .particle:nth-child(4) { top: 30%; left: 90%; animation-delay: 1.5s; }
+/* Keep original particle positions */
+.particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+.particle:nth-child(2) { top: 80%; left: 80%; animation-delay: 1s; }
+.particle:nth-child(3) { top: 60%; left: 10%; animation-delay: 2s; }
+.particle:nth-child(4) { top: 30%; left: 90%; animation-delay: 1.5s; }
 
-        /* Animations */
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        @keyframes scaleIn {
-            to { transform: scale(1); }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes progressMove {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(200%); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
-        }
-
-        /* Fade out animation */
-        .fade-out {
-            animation: fadeOut 0.4s ease forwards;
-        }
-
-        @keyframes fadeOut {
-            to { 
-                opacity: 0; 
-                transform: scale(0.95);
-            }
-        }
+/* Animations remain unchanged */
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes scaleIn { to { transform: scale(1); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+@keyframes progressMove {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+    50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+}
+.fade-out { animation: fadeOut 0.4s ease forwards; }
+@keyframes fadeOut { to { opacity: 0; transform: scale(0.95); } }
         #hamburger {
             display: none !important
         }
@@ -194,8 +173,8 @@
         .mybutton2-wrapper {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #438eb9;
-            color: white;
+            background-color: #EFA63E;
+            color: black;
             border-radius: 4px;
             cursor: pointer;
             user-select: none;
@@ -256,9 +235,11 @@
 
                 .card-header h4 i {
                     margin-right: 10px;
-                    color: #3498db;
+                    color: #EFA63E;
                 }
-
+                .fa{
+                    color:black 
+                }
         .btn-icon {
             background: transparent;
             border: none;
@@ -303,6 +284,7 @@
             .modern-table tbody tr:last-child td {
                 border-bottom: none;
             }
+           
 
         .actions-col {
             width: 80px;
@@ -418,8 +400,7 @@
 
 
         .sidebarr {
-            background-color: #f8f9fa;
-            border-right: 1px solid #dee2e6;
+             border-right: 1px solid #dee2e6;
             padding: 0;
         }
 
@@ -431,31 +412,16 @@
             font-size: 15px
         }
 
-            .menu-item:hover {
-                background-color: #438eb9;
-                color: white !important;
-            }
-
-            .menu-item img {
-                transition: all 0.3s ease;
-            }
-
-            .menu-item:hover img {
-                filter: brightness(0) invert(1);
-                transform: scale(1.1);
-                backface-visibility: hidden;
-                transform-style: preserve-3d;
-            }
+            
 
             .menu-item.selected {
-                background-color: #438eb9;
-                color: white !important;
+                background-color: #EFA63E;
+                color: black !important;
             }
 
                 .menu-item.selected img {
-                    filter: brightness(0) invert(1);
-                    transform: scale(1.1);
-                }
+                    filter: brightness(0) ;
+                 }
 
 
         .menu-title {
@@ -557,12 +523,7 @@
                 color: #0c5460;
             }
 
-
-        .sidebarr {
-            background-color: #f8f9fa;
-            border-right: 1px solid #dee2e6;
-            padding: 0;
-        }
+ 
 
         .menu-item {
             cursor: pointer;
@@ -573,20 +534,25 @@
         }
 
             .menu-item:hover {
-                background-color: #438eb9;
-                color: white !important;
+                background-color: #EFA63E;
+                color: black !important;
             }
 
             .menu-item img {
+                filter: 
+        sepia(100%)     
+        saturate(450%)   
+        hue-rotate(330deg) 
+        brightness(1);   
                 transition: all 0.3s ease;
             }
 
             .menu-item:hover img {
-                filter: brightness(0) invert(1);
-                transform: scale(1.1);
-                backface-visibility: hidden;
-                transform-style: preserve-3d;
-            }
+    filter: brightness(0) !important; /* Force black, no blur */
+     backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: filter 0.3s ease, transform 0.3s ease; /* Control transitions */
+}
 
         .menu-title {
             display: flex;
@@ -638,14 +604,16 @@
                 background-color: #ffffff !important;
                 color: #6a6969 !important;
             }
-
+            #clear{
+                display:none
+            }
         th {
             color: white !important
         }
 
         .container-fluid {
             padding-left: 0px !important;
-            padding-right: 15px !important;
+            padding-right: 0px !important;
         }
 
         input[type="checkbox"] {
@@ -696,9 +664,9 @@
             .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
             .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
             .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover, .Disposal-row:hover {
-                background-color: #438eb9;
-                color: white !important;
-                transform: scale(1.02);
+                background-color: #EFA63E;
+                color: black !important;
+                 transform: scale(1.02);
                 transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
             }
 
@@ -731,7 +699,7 @@
             padding: 3px 12px;
             border-radius: 8px;
             margin: 0;
-            color: #438eb9 !important;
+            color: #EFA63E !important;
             font-weight: bold !important;
             font-size: 16px;
             transition: all 0.3s ease;
@@ -741,22 +709,19 @@
             margin-right: 5px;
         }
 
-        .mybutton2 {
-            font-size: 16px !important;
-            width: fit-content !important;
-            background-color: #438eb9;
+      
+        .btn-primry{
             padding: 3px 12px;
-            border-radius: 8px;
-            margin: 0;
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            margin-bottom: 5px;
-            border: 0px !important;
-            margin-left: 5px;
-            margin-right: 5px;
-        }
+            font-weight:normal !important;
+ width: fit-content !important;
+ border-radius: 8px;
+ margin: 0;
+ transition: all 0.3s ease;
+margin-bottom: 5px;
+border: 0px !important;
+margin-left: 5px;
+margin-right: 5px;
+         }
 
 
 
@@ -869,7 +834,7 @@
                 var html = '<tr> <td style="display:none;"><input type="text" class="deptid" value="' + deptId + '"/></td>' +
                     '<td style="display:none;"><input type="text" class="symptomid" value="' + id + '"/></td>' +
                     '<td> ' + name + ' </td>' +
-                    '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + id + '\')"><i class="fa fa-trash"></i></a></td></tr>';
+                    '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + id + '\')"><i class="fa fa-times"></i></a></td></tr>';
 
 
                 $('#tblsymptomspreview tbody').append(html);
@@ -912,7 +877,7 @@
                                 '<input type="text" class="symptomid" value="' + symptom.SymptomId + '"/>' +
                                 '</td>' +
                                 '<td>' + symptom.Description + '</td>' +
-                                '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + symptom.SymptomId + '\')"><i class="fa fa-trash"></i></a></td>' +
+                                '<td><a href="#" onclick="RemoveSymtomRowInModal(\'' + symptom.SymptomId + '\')"><i class="fa fa-times"></i></a></td>' +
                                 '</tr>';
 
                             $('#tblsymptomspreview tbody').append(html);
@@ -991,7 +956,24 @@
     <script id="DocumentReady">
         $(document).ready(function () {
 
+            $('.modern-table').each(function () {
+                const observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (mutation) {
+                        if (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0) {
+                            const $table = $(mutation.target).closest('table');
+                            $table.attr('tabindex', '-1')
+                                .get(0)
+                                .scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            $table.focus();
+                        }
+                    });
+                });
 
+                observer.observe(this, {
+                    childList: true,
+                    subtree: true
+                });
+            });
             loaddoctor_byDep();
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != "") {
@@ -1133,7 +1115,7 @@
               <td>${inputVal}</td>
               <td>
                   <a href="javascript:void(0)" onclick="Remove_CustomInputRow()" class="remove-input">
-                      <i class="fa fa-trash"></i>
+                      <i class="fa fa-times"></i>
                   </a>
               </td>
           </tr>
@@ -1777,7 +1759,7 @@
                         '<td style="display:none;"> ' + Duration + ' </td>' +
                         '<td style="display:none;"> ' + DurationSuffix + ' </td>' +
                         '<td style="display:none;"> ' + Remarks + ' </td>' +
-                        '<td> <a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-trash"></i></a></td></tr>';
+                        '<td> <a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-times"></i></a></td></tr>';
 
                     if (symp === "") {
                         Swal.fire({
@@ -1837,7 +1819,7 @@
                     '<td  style="display:none;"> ' + $('#txtDuration').val() + ' </td>' +
                     '<td  style="display:none;"> ' + $('#ddlDaysMonthsYears').find('option:selected').text() + ' </td>' +
                     '<td  style="display:none;"> ' + $('#txtRemarks').val() + ' </td>' +
-                    '<td> <a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-trash"></i></a></td></tr>';
+                    '<td> <a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-times"></i></a></td></tr>';
 
                 if (symp === "") {
                     Swal.fire({
@@ -1857,8 +1839,7 @@
                     $('#dvtblSymtomps').slideDown(); // 👈 Show the table container
                 }
 
-                $('#txtSymtom').tokenInput('clear');
-                $('#txtDuration').val("");
+                 $('#txtDuration').val("");
                 $('#ddlDaysMonthsYears').val("001");
                 $('#txtRemarks').val("");
             } else {
@@ -2119,7 +2100,7 @@
             <tr data-exam="${examName}">
                 <td>${examName}</td>
                 <td>
-                    <a onclick="Remove_GeneralExamRow('${examName}')" class="remove-exam" data-exam="${examName}"><i class="fa fa-trash"></i></a>
+                    <a onclick="Remove_GeneralExamRow('${examName}')" class="remove-exam" data-exam="${examName}"><i class="fa fa-times"></i></a>
                 </td>
             </tr>
         `);
@@ -2217,7 +2198,7 @@
 
                 var html = '<tr> <td style="display:none;"> <input type="hidden" class="complainclass" value="' + id + '" />' + id + ' </td>' +
                     '<td> ' + name + ' </td>' +
-                    '<td  > <a href="#" onclick="Remove_ComplaintRow(\'' + id + '\')"><i class="fa fa-trash"></i></a></td></tr>';
+                    '<td  > <a href="#" onclick="Remove_ComplaintRow(\'' + id + '\')"><i class="fa fa-times"></i></a></td></tr>';
 
 
                 $('#tblComplaints tbody').append(html);
@@ -2410,7 +2391,7 @@
         <td>${remarks}</td>
         <td>
             <a href="#" onclick="removePrimaryDiagnosisRow('${diagnosisId}')">
-                <i class="fa fa-trash"></i>
+                <i class="fa fa-times"></i>
             </a>
         </td>
     </tr>
@@ -2570,7 +2551,7 @@
                 <td>${remarks}</td>
                 <td>
                     <a href="#" onclick="removeFinalDiagnosisRow('${diagnosisId}')">
-                        <i class="fa fa-trash"></i>
+                        <i class="fa fa-times"></i>
                     </a>
                 </td>
             </tr>
@@ -2765,7 +2746,7 @@
                             '<td style="display:none"><input type="hidden" name="rotation" value=""/></td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                             '<a href="javascript:void(0)" onclick="Remove_LabTestRow(' + test + ')">' +
-                            '<i class="fa fa-trash"></i></a>' +
+                            '<i class="fa fa-times"></i></a>' +
                             '</td></tr>';
 
                         test_array = $('#tblLabtest').find('input[name=testID][value="' + value.Test_ID + '"]');
@@ -2774,7 +2755,7 @@
                         row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value +
                             ' </td><td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                             '<a href="javascript:void(0)" onclick="deleteTest(this)">' +
-                            '<i class="fa fa-trash"></i></a>' +
+                            '<i class="fa fa-times"></i></a>' +
                             '</td></tr>';
                         test_array = $('#tblLabtest').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
                     }
@@ -3049,7 +3030,7 @@
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
 
                             '<a href="javascript:void(0)" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +  // Fixed function name
-                            '<i class="fa fa-trash"></i></a>' +
+                            '<i class="fa fa-times"></i></a>' +
                             '</td></tr>';
 
                         test_array = $('#tblDiagnostictest').find('input[name=testID][value="' + value.Test_ID + '"]');
@@ -3068,7 +3049,7 @@
                             '<td><input type="hidden" name="rotation" value="' + rotationVal + '"/> ' + rotationText + '</td>' +
                             '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                             '<a href="javascript:void(0)" onclick="Remove_DiagnosticTestRow(\'' + test + '\')">' +
-                            '<i class="fa fa-trash" ></i></a>' +
+                            '<i class="fa fa-times" ></i></a>' +
                             '</td></tr>';
                         test_array = $('#tblDiagnostictest').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
                     }
@@ -3404,7 +3385,7 @@
                     '<td>' + otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '"></td>' +
                     '<td>' +
                     '<a href="#" onclick="editMedicine(this)">Edit</a> | ' +
-                    '<a href="#" onclick="deleteMedicine(this)"><i class="fa fa-trash"></i></a>' +
+                    '<a href="#" onclick="deleteMedicine(this)"><i class="fa fa-times"></i></a>' +
                     '<input type="hidden" name="uurowid" value="' + serialNo + '" />' +
                     '</td>' +
                     '<td style="display:none;"></td>' +
@@ -3523,7 +3504,7 @@
                     var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
                     debugger;
 
-                    rows += '<tr value=' + Templateid + '> <td style="display:none"><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="deleteMedicine(this)"><i class="fa fa-trash"></i></a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
+                    rows += '<tr value=' + Templateid + '> <td style="display:none"><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="deleteMedicine(this)"><i class="fa fa-times"></i></a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
                 });
                 $('#tblMedicines tbody').append(rows);
                 $('#dvtblMedicines').slideDown();
@@ -3622,7 +3603,7 @@
             var protoval = $('#ctl00_MainContent_ddlProto').val();
             var prototext = $('#ctl00_MainContent_ddlProto option:selected').text();
 
-            var rows = '<tr><td ><input type="hidden" name="ProtoId" value="' + protoval + '" />' + prototext + '</td> <td style="text-align: left;"> <a  href="#" onclick="DeleteRow(this)"><i class="fa fa-trash"></i></a> </td> </tr>';
+            var rows = '<tr><td ><input type="hidden" name="ProtoId" value="' + protoval + '" />' + prototext + '</td> <td style="text-align: left;"> <a  href="#" onclick="DeleteRow(this)"><i class="fa fa-times"></i></a> </td> </tr>';
             $("#tblProto").append(rows);
             $("#dvtblProto").slideDown();
         }
@@ -4081,7 +4062,7 @@
                         '<td style="display:none;">' + value.Duration + '</td>' +
                         '<td style="display:none;">' + value.Days_Years_Months + '</td>' +
                         '<td style="display:none;">' + value.Remarks + '</td>' +
-                        '<td><a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-trash"></i></a></td>' +
+                        '<td><a href="#" onclick="Delete_Symtom(this)"><i class="fa fa-times"></i></a></td>' +
                         '</tr>';
                 });
 
@@ -4150,7 +4131,7 @@
                                 (value.Rotation || '') + '</td>' +
                                 '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                                 '<a href="javascript:void(0)" onclick="Remove_LabTestRow(' + value.Test_ID + ')">' +
-                                '<i class="fa fa-trash"></i></a>' +
+                                '<i class="fa fa-times"></i></a>' +
                                 '</td></tr>';
                         }
                         else {
@@ -4184,7 +4165,7 @@
                                 (value.Rotation || '') + '</td>' +
                                 '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
                                 '<a href="javascript:void(0)" onclick="Remove_DiagnosticTestRow(' + value.Test_ID + ')">' +
-                                '<i class="fa fa-trash"></i></a>' +
+                                '<i class="fa fa-times"></i></a>' +
                                 '</td></tr>';
                         }
                     });
@@ -4248,7 +4229,7 @@
                             '<td>' + (dosageFrom || '') + '<input type="hidden" class="field-value" value="' + (dosageFrom || '') + '"></td>' +
                             '<td>' + (dosageQty || '') + '<input type="hidden" class="field-value" value="' + (dosageQty || '') + '"></td>' +
                             '<td>' + (otherInstruction || '') + '<input type="hidden" class="field-value" value="' + (otherInstruction || '') + '"></td>' +
-                            '<td><a href="#" onclick="editMedicine(this); return false;">Edit</a> | <a href="#" onclick="deleteMedicine(this); return false;"><i class="fa fa-trash"></i></a><input type="hidden" name="uurowid" value="' + uuid() + '"></td>' +
+                            '<td><a href="#" onclick="editMedicine(this); return false;">Edit</a> | <a href="#" onclick="deleteMedicine(this); return false;"><i class="fa fa-times"></i></a><input type="hidden" name="uurowid" value="' + uuid() + '"></td>' +
                             '<td style="display:none;"></td>' +
                             '</tr>';
                     });
@@ -4278,7 +4259,7 @@
                 $.each(Complaints, function (key, value) {
                     rows += '<tr> <td style="display:none;"> <input type="hidden" class="complainclass" value="' + value.ComplaintID + '" />' + value.ComplaintID + ' </td>' +
                         '<td> ' + value.ComplaintName + ' </td>' +
-                        '<td> <a href="#" onclick="Remove_ComplaintRow(\'' + value.ComplaintID + '\')"><i class="fa fa-trash"></i></a></td></tr>';
+                        '<td> <a href="#" onclick="Remove_ComplaintRow(\'' + value.ComplaintID + '\')"><i class="fa fa-times"></i></a></td></tr>';
 
                     // Check the corresponding checkbox
                     $('#chk_complaint_' + value.ComplaintID).prop('checked', true);
@@ -4309,7 +4290,7 @@
                         value.FinalDiagnosisID + '</td>' +
                         '<td>' + value.DiagnosisName + '</td>' +
                         '<td>' + (value.Remarks || '') + '</td>' +
-                        '<td><a href="#" onclick="removeFinalDiagnosisRow(\'' + value.FinalDiagnosisID + '\'); return false;"><i class="fa fa-trash"></i></a></td>' +
+                        '<td><a href="#" onclick="removeFinalDiagnosisRow(\'' + value.FinalDiagnosisID + '\'); return false;"><i class="fa fa-times"></i></a></td>' +
                         '</tr>';
 
                     // Check the corresponding checkbox and fill remarks
@@ -4339,7 +4320,7 @@
                         value.PrimaryDiagnosisID + '</td>' +
                         '<td>' + value.DiagnosisName + '</td>' +
                         '<td>' + (value.Remarks || '') + '</td>' +
-                        '<td><a href="#" onclick="removePrimaryDiagnosisRow(\'' + value.PrimaryDiagnosisID + '\'); return false;"><i class="fa fa-trash"></i></a></td>' +
+                        '<td><a href="#" onclick="removePrimaryDiagnosisRow(\'' + value.PrimaryDiagnosisID + '\'); return false;"><i class="fa fa-times"></i></a></td>' +
                         '</tr>';
 
                     // Check the corresponding checkbox and fill remarks
@@ -4360,7 +4341,7 @@
                     var rows = "";
 
                     $.each(Proto, function (key, value) {
-                        rows += '<tr><td><input type="hidden" name="ProtoId" value="' + value.ProtoId + '" />' + value.Proto_Description + '</td><td style="text-align: left;"><a href="#" onclick="DeleteRow(this)"><i class="fa fa-trash"></i></a></td></tr>';
+                        rows += '<tr><td><input type="hidden" name="ProtoId" value="' + value.ProtoId + '" />' + value.Proto_Description + '</td><td style="text-align: left;"><a href="#" onclick="DeleteRow(this)"><i class="fa fa-times"></i></a></td></tr>';
                     });
                     $('#tblProto tbody').append(rows);
                     $('#dvtblProto').toggle(Proto.length > 0);
@@ -4446,7 +4427,7 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                    <button id="saveNewSymptom" type="button" class="mybutton2">Save</button>
+                    <button id="saveNewSymptom" type="button" class="btn btn-primry">Save</button>
                 </div>
             </div>
         </div>
@@ -4482,7 +4463,7 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                    <button id="saveSymptomByModal" type="button" class="mybutton2">Save</button>
+                    <button id="saveSymptomByModal" type="button" class="btn btn-primry">Save</button>
                 </div>
             </div>
         </div>
@@ -4532,7 +4513,7 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                    <button type="button" class="mybutton2" onclick="saveSymptomsToDatabase()">Save</button>
+                    <button type="button" class="btn btn-primry" onclick="saveSymptomsToDatabase()">Save</button>
                 </div>
             </div>
         </div>
@@ -4633,7 +4614,7 @@
 
             </div>
         </div>
-        <div class="col-lg-10 grow-col">
+        <div class="col-lg-10 grow-col" style="margin-top:10px">
             <div class="row">
                 <div class="col-lg-2">
                     <div style="width: fit-content !important;" class="retractIcon">
@@ -4643,14 +4624,14 @@
                 </div>
                 <div class="col-lg-10">
                     <div style="display: flex; justify-content: flex-end;">
-                        <input type="button" class="mybutton2" value="History" onclick="AddNewSymptom()" />
-                        <input type="button" class="mybutton2" value="Queue" onclick="openQueue()" />
+                        <input type="button" class="btn btn-primry" value="History" onclick="AddNewSymptom()" />
+                        <input type="button" class="btn btn-primry" value="Queue" onclick="openQueue()" />
                         <label class="mybutton2-wrapper">
                             <input type="checkbox" id="DischargeCheckBox" onchange="toggleDischarge(this)" />
                             <span id="DischargeButtonText">Discharge</span>
                         </label>
-                        <input type="button" class="mybutton2" value="Reset" onclick="openManageSymptomsModal()" />
-                        <input id="btnSave" type="button" class="mybutton2" value="Save" onclick="SaveMedicines()" />
+                        <input type="button" class="btn btn-primry" value="Reset" onclick="openManageSymptomsModal()" />
+                        <input id="btnSave" type="button" class="btn btn-primry" value="Save" onclick="SaveMedicines()" />
 
                     </div>
                 </div>
@@ -4752,13 +4733,13 @@
 
                                     <div class="tabs" id="tab01" style="display: none">
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="mybutton2" value="Add New" onclick="AddNewSymptom()" />
-                                            <input style="margin-left: 5px" type="button" class="mybutton2" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
+                                            <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewSymptom()" />
+                                            <input style="margin-left: 5px" type="button" class="btn btn-primry" value="Manage Symptoms" onclick="openManageSymptomsModal()" />
                                         </div>
                                         <div style="display: none" id="divAddNewSymptom">
                                             <div style="display: flex; justify-content: center;">
                                                 <input type="text" id="NewSymptom" />
-                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewSymptom" onclick="saveSymptom()" class="mybutton2" value="Save" />
+                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewSymptom" onclick="saveSymptom()" class="btn btn-primry" value="Save" />
                                             </div>
                                         </div>
                                         <div class="row">
@@ -4777,7 +4758,7 @@
                                     </div>
                                     <div class="tabs" id="tab02" style="display: none">
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="mybutton2" value="Add Vitals" onclick="AddVitals()" />
+                                            <input type="button" class="btn btn-primry" value="Add Vitals" onclick="AddVitals()" />
                                         </div>
                                         <div class="vitals-container">
                                             <!-- Pulse -->
@@ -5275,12 +5256,12 @@
                                     </div>
                                     <div class="tabs" id="tab06">
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="mybutton2" value="Add New" onclick="AddNewComplaint()" />
+                                            <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewComplaint()" />
                                         </div>
                                         <div style="display: none" id="divAddNewComplaint">
                                             <div style="display: flex; justify-content: center;">
                                                 <input type="text" id="NewComplaint" />
-                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewComplaint" onclick="saveComplaint()" class="mybutton2" value="Save" />
+                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewComplaint" onclick="saveComplaint()" class="btn btn-primry" value="Save" />
                                             </div>
                                         </div>
 
@@ -5296,12 +5277,12 @@
                                     </div>
                                     <div class="tabs" id="tab07" style="display: none">
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="mybutton2" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
+                                            <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
                                         </div>
                                         <div style="display: none" id="divAddNewPrimaryDiagnosis">
                                             <div style="display: flex; justify-content: center;">
                                                 <input type="text" id="NewPrimaryDiagnosis" />
-                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewPrimaryDiagnosis" onclick="savePrimaryDiagnosis()" class="mybutton2" value="Save" />
+                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewPrimaryDiagnosis" onclick="savePrimaryDiagnosis()" class="btn btn-primry" value="Save" />
                                             </div>
                                         </div>
 
@@ -5317,12 +5298,12 @@
                                     </div>
                                     <div class="tabs" id="tab08" style="display: none">
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="mybutton2" value="Add New" onclick="AddNewFinalDiagnosis()" />
+                                            <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewFinalDiagnosis()" />
                                         </div>
                                         <div style="display: none" id="divAddNewFinalDiagnosis">
                                             <div style="display: flex; justify-content: center;">
                                                 <input type="text" id="NewFinalDiagnosis" />
-                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewFinalDiagnosis" onclick="saveFinalDiagnosis()" class="mybutton2" value="Save" />
+                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewFinalDiagnosis" onclick="saveFinalDiagnosis()" class="btn btn-primry" value="Save" />
                                             </div>
                                         </div>
 
@@ -5365,8 +5346,8 @@
                                     </div>
                                     <div class="tabs" id="tab11" style="display: none">
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="mybutton2" value="By Template" onclick="ShowMediceneTemplateDiv()" />
-                                            <input style="margin-left: 5px" type="button" class="mybutton2" value="All Meds" onclick="ShowAllMedicenesDiv()" />
+                                            <input type="button" class="btn btn-primry" value="By Template" onclick="ShowMediceneTemplateDiv()" />
+                                            <input style="margin-left: 5px" type="button" class="btn btn-primry" value="All Meds" onclick="ShowAllMedicenesDiv()" />
                                         </div>
                                         <div id="tab11_01" class="tab11subtab">
                                             <div class="row editMed">
@@ -5476,7 +5457,7 @@
 
 
                                         </div>
-                                        <h4 style="margin-top: 20px" class="mybutton2">Protos:</h4>
+                                        <h4 style="margin-top: 20px" class="btn btn-primry">Protos:</h4>
                                         <asp:DropDownList ID="ddlProto" CssClass="dropdownBackgroud" Width="50%" runat="server" onchange="AddProto();" AppendDataBoundItems="true"></asp:DropDownList>
                                     </div>
                                 </div>

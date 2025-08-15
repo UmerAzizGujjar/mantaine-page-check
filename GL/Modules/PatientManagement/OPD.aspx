@@ -425,7 +425,7 @@
     <div class="row mtop">
         <div class="col-lg-9 col-md-8 sm-12">
             <div class="card">
-                <div class="row show">
+                <div class="row show g-3">
 
                     <input type="text" id="txt_reg_patno" style="display: none" />
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_mr_no">
@@ -480,18 +480,19 @@
                         <label>Fee</label>
                         <input type="text" id="txtfees" readonly="readonly" class="form-control" />
                     </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
+    <label>Services</label>
+    <select id="ddlServices"></select>
+</div>
+<div class="col-lg-3 col-md-6 col-sm-12" id="field_Clinic">
+    <label>Filter Clinic</label>
+    <select id="ddlFilterClnic"></select>
+</div>
                     <div class="col-lg-12 col-md-12 col-sm-12" id="field_Address">
                         <label>Address *</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
-                        <label>Services</label>
-                        <select id="ddlServices"></select>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Clinic">
-                        <label>Filter Clinic</label>
-                        <select id="ddlFilterClnic"></select>
-                    </div>
+                    
                 </div>
 
 
