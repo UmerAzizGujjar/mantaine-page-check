@@ -1520,24 +1520,7 @@
                         "title": "Instructions",
                         "width": "20%",
                         "orderable": false
-                    },
-                    {
-                        "data": null,
-                        "title": "Actions",
-                        "render": function (data, type, row) {
-                            var actions = '';
-
-                            // Print button
-                            actions += '<a class="btn btn-xs btn-primary" style="margin-right: 2px;" href="#" onclick="PrintEMERGENCY(' + row.EMERGENCY_ID + ')" title="Print">' +
-                                '<i class="fa fa-print"></i></a>';
-
-
-
-                            return actions;
-                        },
-                        "width": "10%",
-                        "orderable": false
-                    }
+                    } 
                 ],
                 "order": [[0, "desc"]], // Default sort by prescription date descending
                 "pageLength": 25,
@@ -1690,23 +1673,7 @@
                         "width": "15%",
                         "orderable": false,
                         "defaultContent": "N/A"
-                    },
-                    {
-                        "data": null,
-                        "title": "Actions",
-                        "render": function (data, type, row) {
-                            var actions = '';
-
-
-                            // Print button
-                            actions += '<a class="btn btn-xs btn-primary" style="margin-right: 2px;" href="#" onclick="PrintInvestigation(' + row.Lab_Test_Detail_ID + ')" title="Print">' +
-                                '<i class="fa fa-print"></i></a>';
-
-                            return actions;
-                        },
-                        "width": "10%",
-                        "orderable": false
-                    }
+                    } 
                 ],
                 "order": [[0, "desc"]], // Default sort by test date descending
                 "pageLength": 25,
@@ -1875,21 +1842,7 @@
                         "width": "10%",
                         "orderable": false,
                         "defaultContent": "N/A"
-                    },
-                    {
-                        "data": null,
-                        "title": "Actions",
-                        "render": function (data, type, row) {
-                            var actions = ''; 
-                            // Print button
-                            actions += '<a class="btn btn-xs btn-primary" style="margin-right: 2px;" href="#" onclick="PrintDiagnostic(' + row.Lab_Test_Detail_ID + ')" title="Print">' +
-                                '<i class="fa fa-print"></i></a>';
-
-                            return actions;
-                        },
-                        "width": "6%",
-                        "orderable": false
-                    }
+                    } 
                 ],
                 "order": [[0, "desc"]], // Default sort by test date descending
                 "pageLength": 25,
@@ -2205,8 +2158,7 @@
                                 <th>Duration</th>
                                 <th>Frequency</th>
                                 <th>Instructions</th>
-                                <th>Actions</th>
-                            </tr>
+                             </tr>
                         </thead>
                         <tbody>
                             <!-- Data will be populated by DataTables -->
@@ -2226,8 +2178,7 @@
                                  <th>Special Test</th>
                                 <th>Area of Interest</th>
                                 <th>Remarks</th>
-                                <th>Actions</th>
-                            </tr>
+                             </tr>
                         </thead>
                         <tbody>
                             <!-- Data will be populated by DataTables -->
@@ -2249,8 +2200,7 @@
                                 <th>Area of Interest</th>
                                 <th>Rotation</th>
                                 <th>Remarks</th>
-                                <th>Actions</th>
-                            </tr>
+                             </tr>
                         </thead>
                         <tbody>
                             <!-- Data will be populated by DataTables -->
