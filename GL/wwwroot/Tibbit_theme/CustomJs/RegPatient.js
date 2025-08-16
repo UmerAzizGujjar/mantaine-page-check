@@ -16,29 +16,7 @@ $(document).ready(function () {
         separator: '-'
 
     });
-    //$('#ddl_Gender').select2().on('select2:open', function () {
-    //    fillDropdown($(this), 'GetGender');
-    //});
-
-    //$('#ddlCountry').select2().on('select2:open', function () {
-    //    fillDropdown($(this), 'GetCountry');
-    //});
-    //$('#ddl_status').select2().on('select2:open', function () {
-    //    fillDropdown($(this), 'GetMartailStatus');
-    //});
-    //$('#txtarea').select2().on('select2:open', function () {
-    //    fillDropdown($(this), 'GetArea');
-    //});
-    //$('#txtcity').select2().on('select2:open', function () {
-    //    fillDropdown($(this), 'GetCity');
-    //});
-    //$('#ddl_bloodGroup').select2().on('select2:open', function () {
-    //    fillDropdown($(this), 'GetBloodBank');
-    //});
-    //$('#ddlstate').select2().on('select2:open', function () {
-    //    fillDropdown($(this), 'GetProvince');
-    //});
-
+   
     var  dropdowns = [
         { id: '#ddl_Gender', method: 'GetGender' },
         { id: '#ddlCountry', method: 'GetCountry' },
