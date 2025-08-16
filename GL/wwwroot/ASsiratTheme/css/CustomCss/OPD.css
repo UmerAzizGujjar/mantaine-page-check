@@ -1,7 +1,9 @@
 .forcolor {
     background-color: #308665db  !important;
 }
-
+.col-lg-3, .col-md-6, .col-sm-12 {
+    height: 70px !important
+}
 .mleft {
     margin-left: 15px !important;
 }
