@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <style title="sidebar">
        /* Modern Loading Overlay - Whitish Background with #EFA63E Theme */
 .modern-loading-overlay {
