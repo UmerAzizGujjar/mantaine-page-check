@@ -8,10 +8,10 @@
           $(document).ready(function () {
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
-             setTimeout(function () {
+            
              Get_Pat_Info(reg_id);
              
-             }, 2500);
+          
              $('#SavePatient_Data').val('Update');
          }
          else {

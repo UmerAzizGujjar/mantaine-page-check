@@ -110,8 +110,8 @@ namespace PMS.Modules.PatientManagement
 
                               select new
                               {
-                                  dv.Item_ID,
-                                  dv.Description
+                                  DataValue_Name =dv.Item_ID,
+                                  DataValue_Description = dv.Description
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
@@ -238,8 +238,8 @@ namespace PMS.Modules.PatientManagement
 
                               select new
                               {
-                                  pnl.Panel_ID,
-                                  pnl.Company_Name
+                                  DataValue_Name = pnl.Panel_ID,
+                                  DataValue_Description= pnl.Company_Name
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
@@ -257,8 +257,8 @@ namespace PMS.Modules.PatientManagement
                               where account.Parent_Code == 244
                               select new
                               {
-                                  account.Account_ID,
-                                  account.Account_Name,
+                                  DataValue_Name= account.Account_ID,
+                                  DataValue_Description = account.Account_Name,
                                   account.Parent_Code,
                               }).ToList();
 
@@ -278,8 +278,8 @@ namespace PMS.Modules.PatientManagement
                               where emp.IsDoctor == false
                               select new
                               {
-                                  emp.Emp_ID,
-                                  emp.Emp_Name
+                                  DataValue_Name = emp.Emp_ID,
+                                  DataValue_Description = emp.Emp_Name
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
@@ -296,8 +296,8 @@ namespace PMS.Modules.PatientManagement
                               where emp.IsDoctor == true
                               select new
                               {
-                                  emp.Emp_ID,
-                                  emp.Emp_Name
+                                  DataValue_Name = emp.Emp_ID,
+                                  DataValue_Description = emp.Emp_Name
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
@@ -843,6 +843,8 @@ namespace PMS.Modules.PatientManagement
                              DOB = rg.DOB,
                              Age = rg.Age_years,
                              MaritalStatus = rg.Martial_Status,
+                             MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
+                             Gender_text = db.GetDataValueName("Gender", rg.Gender),
                              Mr_No = rg.mr_no_sequence,
                              pat_no = rg.Patient_No,
                              Address = rg.Permanent_Address /*"H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city*/,
@@ -887,6 +889,8 @@ namespace PMS.Modules.PatientManagement
                              Area = rg.area,
                              StreetNo = rg.stno_mno,
                              City = rg.city,
+                             MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
+                             Gender_text = db.GetDataValueName("Gender", rg.Gender),
                              ValArea = rg.val_area,
                              ValCity = rg.val_city,
                              Reg_PatientID = rg.pat_id,
@@ -921,10 +925,15 @@ namespace PMS.Modules.PatientManagement
                              NIC = p.NIC,
                              Mobile1 = p.Mobile1,
                              Marital_Status = p.Marital_Status,
+                             MaritalStatus_text = db.GetDataValueName("Marital Status", p.Marital_Status),
+                             Gender_text = db.GetDataValueName("Gender", p.Gender),
                              Permanent_Address = p.Permanent_Address,
                              Receipt_Amount = p.Receipt_Amount,
                              Patient_Main_Category = p.Patient_Main_Category,
+                             Type_text = db.GetDataValueName("Patient Type", p.Patient_Type),
+                             Category_text = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
                              Doctor_ID = p.Doctor_ID,
+                             Doc_text = (from a in db.HR_Employees where a.Emp_ID == Convert.ToInt32(p.Doctor_ID) select a.Emp_Name),
                              PanelCompany = p.PanelCompany,
                              employee_ID = p.employee_ID,
                              Refference_No = p.Refference_No,
@@ -941,7 +950,9 @@ namespace PMS.Modules.PatientManagement
                              status = p.Status,
                              account_id = p.AccountID,
                              FilterClinic = p.filter_clinic,
+                             Clinic_text = db.GetDataValueName("Filter Clinic", p.filter_clinic),
                              Service_id = p.Service_id,
+                             Service_text = (from a in db.INV_Items where a.Item_ID == p.Service_id select a.Description)
 
 
                          }).FirstOrDefault();
