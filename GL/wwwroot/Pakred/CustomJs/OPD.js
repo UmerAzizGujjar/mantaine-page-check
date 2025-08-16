@@ -1,4 +1,4 @@
-
+﻿
 $(document).ready(function () {
     debugger;
 
@@ -7,10 +7,6 @@ $(document).ready(function () {
     $('#divapprove').hide();
     $('#btn-opdprint').hide();
     $('#divvoucher').hide();
-
-
-    get_totalpatient();
-
     $("#tabs").on('click', 'li', function () {
         debugger;
         var activeTab = $(this).find('a').html();
@@ -60,27 +56,108 @@ $(document).ready(function () {
             }
         }
     });
+    var dropdowns = [
+        { id: '#ddlMode_Of_Registration', method: 'ModePresentation' },
+        { id: '#ddlPatient_Type', method: 'PatientType' },
+        { id: '#ddl_Gender', method: 'GetGender' },
+        { id: '#ddl_status', method: 'GetMartailStatus' },
+        { id: '#ddlCountry', method: 'GetCountry' },
+        { id: '#ddl_Province', method: 'GetProvince' },
+        { id: '#txtcity', method: 'GetCity' },
+        { id: '#ddlFilterClnic', method: 'GetClinics' },
+        { id: '#ddlServices', method: 'GetServices' },
+        { id: '#ddlDepartment', method: 'GetDepartment' },
+        { id: '#ddldoctor', method: 'GetDoctor' },
+        { id: '#ddlpanel', method: 'GetPanel' }
 
-    FillModePresentation();
-    FillPatientType();
-    fillgender();
-    fillmartial();
-    fillArea();
-    fillCity();
-    fillmrno();
-    FillDepartment();
-    filldoctor();
+    ];
+
+    dropdowns.forEach(item => {
+
+        const $element = $(item.id);
+        $element.select2();
+        $element.off('select2:open').on('select2:open', function () {
+            fillDropdown($element, item.method);
+        });
+
+        // special case: Patient_Type → call loaddata() on select
+        if (item.id === '#ddlPatient_Type') {
+            $element.prop('disabled', false);
+            $element.off('select2:select').on('select2:select', function () {
+                loaddata();
+                $(this).prop('disabled', true);
+            });
+        }
+
+        if (item.id === '#ddlDepartment') {
+            $element.prop('disabled', false);
+            $element.off('select2:select').on('select2:select', function () {
+                loaddoctor(); // Load doctors when department changes
+            });
+        }
+
+        if (item.id === '#ddldoctor') {
+
+            $element.off('select2:select');
+
+            $element.on('select2:select', function (e) {
+                var selectedVal = $(this).val();
+                if (selectedVal) {
+                    loadFee();
+                }
+            });
+
+            $element.off('select2:open');
+        }
+
+
+    });
+
     showhide();
-    fillEmployee();
-    fillpanel();
-   /* FillCasher();*/
-    fillCountry();
-    fillProvince();
-   /* fillCashInHand();*/
+    FillModePresentation();
+    get_totalpatient();
     FillUserAccount();
 
 });
+function fillDropdown($dropdown, methodName) {
+    if ($dropdown.data('filled')) return;
 
+    $dropdown.data('filled', false);
+
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/" + methodName,
+        data: '{}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            try {
+                const data = JSON.parse(response.d);
+                var options = '<option value="0">Please Select</option>';
+
+                $.each(data, function (key, value) {
+                    options += `<option value="${value.DataValue_Name}">
+                                    ${value.DataValue_Description}
+                                </option>`;
+                });
+
+                $dropdown.html(options)
+                    .data('filled', true)
+                    .trigger('change');
+                if ($dropdown.hasClass('select2-hidden-accessible')) {
+                    $dropdown.select2('close').select2('open');
+                }
+            } catch (e) {
+                console.error(`Error parsing data from ${methodName}:`, e);
+                $dropdown.data('filled', false);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(`Error fetching ${methodName}:`, error);
+            $dropdown.data('filled', false);
+        }
+    });
+}
 var selected_tabs = 1;
 $(function () {
     var tabs = $("#tabs").tabs({
@@ -89,6 +166,7 @@ $(function () {
         }
     });
 });
+
 
 
 function showhide() {
@@ -154,10 +232,18 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#ddlDepartment').attr('disabled', true);
             $('#ddldoctor').val(data.doctorId[0]).trigger('change');
             $('#ddldoctor').attr('disabled', true);
-            setTimeout(function () {
-                $('#ddlmartialstatus').val(data.MaritalStatus).trigger('change');
-                $('#ddlGender').val(data.Gender).trigger('change');
-            }, 1500);
+            $('#ddlmartialstatus').html(
+                $('<option>', {
+                    value: data.MaritalStatus,
+                    text: data.MaritalStatus_text
+                })
+            );
+            $('#ddlGender').html(
+                $('<option>', {
+                    value: data.Gender,
+                    text: data.Gender_text
+                })
+            );
 
         },
         error: function (response) {
@@ -187,10 +273,21 @@ function Get_Pat_Info(reg_id) {
             $('#txtAdrress').val(data.Address);
             $('#hdn_regid').val(reg_id);
             $('#follow_up').text(data.opdCount);
-            setTimeout(function () {
-                $('#ddlmartialstatus').val(data.MaritalStatus).trigger('change');
-                $('#ddlGender').val(data.Gender).trigger('change');
-            }, 1000);
+            $('#ddlmartialstatus').html(
+                $('<option>', {
+                    value: data.MaritalStatus,
+                    text: data.MaritalStatus_text
+                })
+            );
+            $('#ddlGender').html(
+                $('<option>', {
+                    value: data.Gender,
+                    text: data.Gender_text
+                })
+            );
+
+
+
 
         },
         error: function (response) {
@@ -253,7 +350,6 @@ function ClearPatientResults() {
     }
 }
 function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-    debugger;
     tblLength = tblPatientsResult.rows.length;
 
     var row = iPatientsBody.insertRow(-1);
@@ -433,30 +529,6 @@ function FillModePresentation() {
 
     return options;
 }
-function FillPatientType() {
-    var options = '<option value="0">Please Select</option>';
-
-    $.ajax({
-        url: 'OPD.aspx/PatientType',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddlPatient_Type').html(options);
-
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
 
 
 
@@ -473,13 +545,8 @@ function FillUserAccount() {
             $.each(data, function (key, value) {
                 options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
             });
-           
-            
             $('#ddlCashInHand').html(options);
 
-          
-           
-
 
         },
         error: function (xhr, status, error) {
@@ -489,58 +556,7 @@ function FillUserAccount() {
 
     return options;
 }
-function fillgender() {
-    var options = '<option value="0">Please Select</option>';
 
-    $.ajax({
-        url: 'OPD.aspx/GetGender',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddl_Gender').html(options);
-            $('#ddlGender').html(options);
-
-            $('#ddlGender').attr('disabled', true);
-
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
-function fillmartial() {
-    var options = '<option value="0">Please Select</option>';
-
-    $.ajax({
-        url: 'OPD.aspx/GetMartailStatus',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddlmartialstatus').html(options);
-            $('#ddlmartialstatus').attr('disabled', true);
-            $('#ddl_status').html(options);
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
 
 var originalFee;
 
@@ -566,111 +582,87 @@ function Calc_Discount() {
 }
 
 
+function loaddoctor() {
+    debugger;
+    var appointmentid = $("#hdn_aptid").val();
+    var opdid = $('#hdn_opdId').val();
 
-function fillpanel() {
-    var options = '<option value="0">Please Select</option>';
+    if (appointmentid != "" || opdid != "") {
 
+    }
+    else {
+        var dpt = $('#ddlDepartment').val();
+
+        $.ajax({
+            type: "POST",
+            url: "OPD.aspx/LoadDoctor",
+            data: JSON.stringify({ dpt: dpt }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                var doctor = JSON.parse(response.d);
+                var options = '<option value=""> Please Select </option>';
+
+                $.each(doctor, function (key, value) {
+                    options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                });
+
+                $('#ddldoctor').html(options);
+                var type = $('#ddlPatient_Type').val();
+                if (type != "02") {
+
+                    getGeneralFee();
+                }
+
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
+            }
+        });
+    }
+}
+function getGeneralFee() {
     $.ajax({
-        url: 'OPD.aspx/GetPanel',
+        url: 'OPD.aspx/GetFees',
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.Panel_ID + '">' + value.Company_Name + '</option>';
-            });
-            $('#ddlpanel').html(options);
-
-
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
-
-//function fillCashInHand() {
-//    var options = '<option value="0">Please Select</option>';
-
-//    $.ajax({
-//        url: 'OPD.aspx/GetGLAccounts',
-//        type: 'POST',
-//        contentType: 'application/json; charset=utf-8',
-//        dataType: 'json',
-//        success: function (response) {
-//            var data = response.d ? JSON.parse(response.d) : response;
-//            $.each(data, function (key, value) {
-//                options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
-//            });
-
-//            $('#ddlCashInHand').html(options);
-
-
-
-//        },
-//        error: function (xhr, status, error) {
-//            console.error('Error fetching area data:', error);
-//        }
-//    });
-
-//    return options;
-//}
-function fillEmployee() {
-    var options = '<option value="0">Please Select</option>';
-
-    $.ajax({
-        url: 'OPD.aspx/GetEmployee',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-            });
-            $('#Employe_id').html(options);
-            $('#ddlemployee').html(options);
-
-
+        success: function (resp) {
+            debugger;
+            var data = JSON.parse(resp.d);
+            var Category = $('#ddlPatient_Type').val();
+            if (Category == "06") {
+                $('#txtfees').val("0")
+            }
+            else {
+                $('#txtfees').val(data.Code);
+            }
 
 
         },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
-function filldoctor() {
-    var options = '<option value="0">Please Select</option>';
-
-    $.ajax({
-        url: 'OPD.aspx/GetDoctor',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+        error: function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: response.responseText,
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
             });
-            $('#ddldoctor').html(options);
 
-            /*        $('#ddl_status').html(options);*/
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
+            console.error("AJAX Error: ", response);
         }
     });
 
-    return options;
 }
+
+
+
 function fillArea() {
     var options = '<option value="0">Please Select</option>';
 
@@ -695,100 +687,43 @@ function fillArea() {
     return options;
 
 }
-
-function fillCountry() {
-    var options = '<option value="0">Please Select</option>';
+var editrights;
+function AllowOPdEdit() {
+    debugger;
     $.ajax({
-        url: 'OPD.aspx/GetCountry',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddlCountry').html(options);
+        type: "POST",
+        url: "OPD.aspx/checlkeditRights",
+        data: "",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: true,
+        success: function (data) {
+            debugger;
+            editrights = data.d;
+
+            if (editrights == "true") {
+                console.log(editrights);
+                $('#btnsave').attr('disabled', false);
+            }
+            else {
+                $('#btnsave').attr('disabled', false);
+            }
 
         },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
+        failure: function () {
+            alert("Error");
         }
     });
 
-    return options;
-}
-function fillProvince() {
-    var options = '<option value="0">Please Select</option>';
-    $.ajax({
-        url: 'OPD.aspx/GetProvince',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddl_Province').html(options);
 
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
 }
 
 
 
-function fillCity() {
-    var options = '<option value="0">Please Select</option>';
-    $.ajax({
-        url: 'OPD.aspx/GetCity',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#txtcity').html(options);
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
-
-function FillDepartment() {
-    var options = '<option value="0">Please Select</option>';
-    $.ajax({
-        url: 'OPD.aspx/GetDepartment',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddlDepartment').html(options);
 
 
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
 
-    return options;
-}
+
 debugger;
 function CalculateDateOfBirth() {
     debugger;
@@ -953,17 +888,21 @@ function SaveData() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
-    var Fees = $('#txtfees').val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
     var employee_id = $('#Employe_id').val();
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
+    var Fees = $('#txtfees').val();
     var discount = $('#txtdiscount').val();
+    var Doc_Share = $('#hdnDocshare').val();
+    var Hosp_share = $('#hdnhospShare').val();
     var dependent = $('#txtdependent').val();
     var rollno = $('#ddlrollno').val();
     var Class = $('#ddlclass').val();
     var section = $('#ddlsection').val();
+    var FilterClinic = $('#ddlFilterClnic').val();
+    var Services = $('#ddlServices').val();
     var Cashier = $('#ddlcashier').val();
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked')
@@ -971,8 +910,8 @@ function SaveData() {
     if (Fees == "") {
         Fees = 0;
     }
-
-    if (!pat_no || pat_no === "0") {
+    txtPatientNo
+    if (!txtPatientNo || txtPatientNo === "0") {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1155,21 +1094,6 @@ function SaveData() {
         }
     }
 
-    if (!accountid || accountid === "0") {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Please select a Cash in Hand Account.',
-            showConfirmButton: false,
-            timer: 2000,
-            customClass: {
-                popup: 'swal-big-popup',
-                title: 'swal-big-title',
-                htmlContainer: 'swal-big-text'
-            }
-        });
-        return;
-    }
 
     if (!accountid || accountid === "0") {
         Swal.fire({
@@ -1214,6 +1138,10 @@ function SaveData() {
         rollno: rollno,
         Class: Class,
         section: section,
+        FilterClinic: FilterClinic,
+        Services: Services,
+        Doc_Share: Doc_Share,
+        Hosp_share: Hosp_share,
         Cashier: Cashier,
         accountid: accountid,
         IssueCard: IssueCard,
@@ -1243,7 +1171,7 @@ function SaveData() {
                     htmlContainer: 'swal-big-text'
                 }
             });
-            var url = "../../ReportViewer.aspx?ReportName=OPDForm&Title=OPD FORM &OPD_ID=" + patientID;
+            var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
             window.location.href = "OPDView.aspx"
 
@@ -1424,7 +1352,7 @@ function getpanelRate() {
 function loadPatientDetail(OPDID) {
     $('#btnsave').val('Update');
     $('#btnsave').attr('disabled', true);
-
+    AllowOPdEdit();
 
     $.ajax({
         type: "POST",
@@ -1446,41 +1374,90 @@ function loadPatientDetail(OPDID) {
             $('#txt_opd_no').val(data.Opd_No).attr('disabled', true);
             $('#txt_patname').val(data.Name).attr('disabled', true);
             $('#txt_F_Name').val(data.Father_Name).attr('disabled', true);
-            setTimeout(function () {
-                $('#ddlPatient_Type').val(data.Patient_Type).attr('disabled', true);
-                loaddata();
-            }, 1500)
-            setTimeout(function () {
-                $('#ddlMode_Of_Registration').val(data.Mode_Of_Registration).attr('disabled', true);
-            }, 1500)
+            $('#ddlMode_Of_Registration').val(data.Mode_Of_Registration).attr('disabled', true);
             $('#txtage').val(data.Age_years).attr('disabled', true);
-            $('#ddlGender').val(data.Gender).trigger('change').attr('disabled', true);
+
             $('#txtnic').val(data.NIC).attr('disabled', true);
             $('#txtmobile').val(data.Mobile1).attr('disabled', true);
-            $('#ddlmartialstatus').val(data.Marital_Status).trigger('change').attr('disabled', true);
+
             $('#txtAdrress').val(data.Permanent_Address).attr('disabled', true);
             $('#chckcardissue').prop('checked', data.Card_Issued).attr('disabled', true);
             $('#chckfreecheck').prop('checked', data.free_check).attr('disabled', true);
-            setTimeout(function () { $('#ddlcashier').val(data.Casher).trigger('change').attr('disabled', true); }, 1500)
-            setTimeout(function () {
-                $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
-            }, 1500)
             $('#txtdiscount').val(data.discount_amt).attr('disabled', true);
             $('#txtdependent').val(data.Dependent).attr('disabled', true);
             $('#txtemployee').val(data.Employee_Name).attr('disabled', true);
             $('#txtreferenceno').val(data.Refference_No).attr('disabled', true);
-            $('#ddlDepartment').val(data.Patient_Main_Category).trigger('change').attr('disabled', true);
+
             $('#ddldoctor').val(data.Doctor_ID).trigger('change').attr('disabled', true);
             $('#ddlpanel').val(data.PanelCompany).attr('disabled', true);
             $('#Employe_id').val(data.employee_ID).trigger('change').attr('disabled', true);
             $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
             $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
+            $('#ddlServices').val(data.Service_id).trigger('change').attr('disabled', true);
 
-            setTimeout(function () {
+            $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
+            $('#ddlmartialstatus').html(
+                $('<option>', {
+                    value: data.MaritalStatus,
+                    text: data.MaritalStatus_text
+                })
+            ).attr('disabled', true);
 
-                $('#ddlGender').val(data.Gender).trigger('change');
-            }, 1500);
+            $('#ddlGender').html(
+                $('<option>', {
+                    value: data.Gender,
+                    text: data.Gender_text
+                })
+            ).attr('disabled', true);
+
+            $('#ddlFilterClnic').html(
+                $('<option>', {
+                    value: data.FilterClinic,
+                    text: data.Clinic_text
+                })
+            ).attr('disabled', true);
+
+            $('#ddlServices').html(
+                $('<option>', {
+                    value: data.Service_id,
+                    text: data.Service_text
+                })
+            ).attr('disabled', true);
+
+            $('#ddlPatient_Type').html(
+                $('<option>', {
+                    value: data.Patient_Type,
+                    text: data.Type_text
+                })
+            ).attr('disabled', true);
+
+
+            // Re-attach change event
+            $('#ddlPatient_Type').off('change').on('change', function () {
+                loaddata();
+            });
+
+            // Run once on load (because no change will happen if only one option exists)
+            loaddata();
+            $('#ddlDepartment').html(
+                $('<option>', {
+                    value: data.Patient_Main_Category,
+                    text: data.Category_text
+                })
+            ).attr('disabled', true);
+            $('#ddldoctor').html(
+                $('<option>', {
+                    value: data.Doctor_ID,
+                    text: data.Doc_text
+                })
+            ).attr('disabled', true);
+            // Run once on load (because no change will happen if only one option exists)
+
+
+
+
+
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
             debugger;
             if (stat != "Approved") {
@@ -1607,7 +1584,25 @@ function loaddata() {
         /*  $('#txtfees').val('');*/
         $('#emp_id').hide();
     }
+    else if (Category == "06") {
+        $('#fees').show();
+        $('#department').show();
+        $('#doctor').hide();
+        $('#pnlcompany').hide();
+        $('#employee').hide();
+        $('#refference').hide();
+        /*        $('#txtfees').val('');*/
+        $('#discount').show();
+        $('#empname').hide();
+        $('#designation').hide();
+        $('#rollno').hide();
+        $('#class').hide();
+        $('#section').hide();
+        $('#dependent').hide();
 
+        $('#emp_id').hide();
+
+    }
 }
 
 $(document).ready(function () {

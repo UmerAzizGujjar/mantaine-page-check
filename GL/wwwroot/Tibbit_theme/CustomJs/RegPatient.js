@@ -112,76 +112,6 @@ function fillmrno() {
 
 
 
-function fillArea() {
-    var options = '<option value="0">Please Select</option>';
-    PageMethods.GetArea(function (data) {
-        $.each(JSON.parse(data), function (key, value) {
-            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-        });
-        $('#txtarea').html(options);
-      /*  $('#txtarea').select2();*/
-
-    });
-    return options;
-}
-function fillCity() {
-    var options = '<option value="0">Please Select</option>';
-    PageMethods.GetCity(function (data) {
-        $.each(JSON.parse(data), function (key, value) {
-            options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-        });
-        $('#txtcity').html(options);
-        //$('#txtcity').select2();
-
-    });
-    return options;
-}
-function fillBloodBank() {
-    var options = '<option value="0">Please Select</option>';
-    $.ajax({
-        url: 'RegisterPatient.aspx/GetBloodBank',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddl_bloodGroup').html(options);
-            //$('#ddl_bloodGroup').select2();
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
-function fillProvince() {
-    var options = '<option value="0">Please Select</option>';
-    $.ajax({
-        url: 'RegisterPatient.aspx/GetProvince',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-            });
-            $('#ddlstate').html(options);
-            //$('#ddlstate').select2();
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
-        }
-    });
-
-    return options;
-}
 
 
 
@@ -336,6 +266,7 @@ function toasterMessage(isError = false, title, message) {
 }
 
 function Get_Pat_Info(reg_id) {
+    debugger;
     $.ajax({
         type: "POST",
         url: "RegisterPatient.aspx/GetRegData",
@@ -343,14 +274,14 @@ function Get_Pat_Info(reg_id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            
+            debugger;
             var data = JSON.parse(resp.d);
             
 
             $('#txt_Mrno').val(data.Mr_No);
             $('#txt_name').val(data.Name);
-            $('#ddl_Gender').val(data.Gender);
-            $('#ddl_bloodGroup').val(data.BloodGroup);
+          
+      
             $('#ddlRelation').val(data.Relation);
             $('#txt_relation').val(data.FatherName);
             $('#txt_dob').val(data.Age);
@@ -361,21 +292,53 @@ function Get_Pat_Info(reg_id) {
             var finalDate = moment(timestamp).format("DD/MM/YYYY");
            
             $('#txtAge_yearss').val(finalDate);
-
             $('#txt_mobile').val(data.Mobile);
             $('#txt_Address').val(data.Address);
             $('#txt_cnic').val(data.CNIC);
-            $('#ddl_status').append(
+            $('#hdn_regid').val(reg_id);
+            $('#txtcity').val(data.ValCity);
+            $('#ddl_status').html(
                 $('<option>', {
-                    value: data.MaritalStatus,  
-                    text: data.MaritalStatus_text 
+                    value: data.MaritalStatus,
+                    text: data.MaritalStatus_text
                 })
             );
-            $('#hdn_regid').val(reg_id);
-            $('#ddlCountry').val(data.Country);
-            $('#ddlstate').val(data.state);
-            $('#txtcity').val(data.ValCity);
-            $('#txtarea').val(data.ValArea).trigger('change');
+            $('#ddlCountry').html(
+                $('<option>', {
+                    value: data.Country,
+                    text: data.Country_text
+                })
+            );
+            $('#ddl_bloodGroup').html(
+                $('<option>', {
+                    value: data.BloodGroup,
+                    text: data.B_Grtoup_text
+                })
+            );
+            $('#txtarea').html(
+                $('<option>', {
+                    value: data.ValArea,
+                    text: data.Area_text
+                })
+            );
+            $('#ddl_Gender').html(
+                $('<option>', {
+                    value: data.Gender,
+                    text: data.Gender_text
+                })
+            );
+            $('#ddlstate').html(
+                $('<option>', {
+                    value: data.state,
+                    text: data.State_text
+                })
+            );
+            $('#txtcity').html(
+                $('<option>', {
+                    value: data.ValCity,
+                    text: data.City_text
+                })
+            );
         
         },
         error: function (response) {
