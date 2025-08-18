@@ -1388,16 +1388,13 @@ function loadPatientDetail(OPDID) {
             $('#txtdependent').val(data.Dependent).attr('disabled', true);
             $('#txtemployee').val(data.Employee_Name).attr('disabled', true);
             $('#txtreferenceno').val(data.Refference_No).attr('disabled', true);
-         
-            $('#ddldoctor').val(data.Doctor_ID).trigger('change').attr('disabled', true);
-            $('#ddlpanel').val(data.PanelCompany).attr('disabled', true);
-            $('#Employe_id').val(data.employee_ID).trigger('change').attr('disabled', true);
-            $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
-            $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
-            $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
-            $('#ddlServices').val(data.Service_id).trigger('change').attr('disabled', true);
-            
-            $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
+
+
+
+           
+          
+          
+
             $('#ddlmartialstatus').html(
                 $('<option>', {
                     value: data.MaritalStatus,
@@ -1432,8 +1429,6 @@ function loadPatientDetail(OPDID) {
                     text: data.Type_text
                 })
             ).attr('disabled', true);
-
-
             // Re-attach change event
             $('#ddlPatient_Type').off('change').on('change', function () {
                 loaddata();
@@ -1449,12 +1444,27 @@ function loadPatientDetail(OPDID) {
             ).attr('disabled', true);
             $('#ddldoctor').html(
                 $('<option>', {
-                    value: data.Doctor_ID,
+                    value: data.PanelCompany,
                     text: data.Doc_text
                 })
             ).attr('disabled', true);
-            // Run once on load (because no change will happen if only one option exists)
-           
+            $('#ddlpanel').html(
+                $('<option>', {
+                    value: data.PanelCompany,
+                    text: data.PanelCompany_text
+                })
+            ).attr('disabled', true);
+            
+            $('#Employe_id').html(
+                $('<option>', {
+                    value: data.employee_ID,
+                    text: data.employee_text
+                })
+            ).attr('disabled', true);
+            $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
+            $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
+            $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
+            $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
                 
                 

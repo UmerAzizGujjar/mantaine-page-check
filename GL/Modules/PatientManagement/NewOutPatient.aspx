@@ -724,7 +724,7 @@ margin-right: 5px;
         }
     </style>
 
-    <script id="ScriptmanageSymptomsModal">
+    <script id="ScriptmanageSymptomsModal" type="text/javascript">
 
         $(document).on('input', '#symptomSearch', function () {
             const searchTerm = $(this).val().trim();
@@ -1222,7 +1222,7 @@ margin-right: 5px;
             });
         });
     </script>
-    <script id="functions">
+    <script id="functions" type="text/javascript">
         function loadPatientFormData(patientId) {
             // Show loading indicator
             showLoading();
@@ -3861,6 +3861,7 @@ margin-right: 5px;
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
             var Administration = $('#ctl00_MainContent_ddlIssuance_Of').val();
+            var doc_id_hdn = $('#ctl00_MainContent_hdndoctors_id').val();
             if (Administration == 0)
                 Administration = "";
             var Out_Patient_ID = $('#ctl00_MainContent_txtOut_Patient_ID').val();
@@ -3948,6 +3949,7 @@ margin-right: 5px;
                 // Common Fields - ensure these are proper data types
                 Patient_ID: parseInt(Patient_ID) || 0,
                 reg_ID: reg_ID || "",
+                doc_id_hdn: doc_id_hdn || "",
                 btnsave: safeGetValue('#btnSave') || "Save",
                 Discharged: document.getElementById("DischargeCheckBox") ? document.getElementById("DischargeCheckBox").checked : false,
                 Administration: Administration,
@@ -4009,7 +4011,7 @@ margin-right: 5px;
         }
     </script>
 
-    <script id="updateLogic">
+    <script id="updateLogic" type="text/javascript">
 
         function AppendSymtompsHistory() {
             var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
@@ -4675,6 +4677,15 @@ margin-right: 5px;
                                                 </div>
                                                 <div class="col-md-7 col-sm-6">
                                                     <asp:Label ID="lblFollow" runat="server"></asp:Label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-5 col-sm-6">
+                                                    <asp:Label ID="Doctor" CssClass="labels" runat="server" Text="Doctor:"></asp:Label>
+                                                    <input type="hidden" id="hdndoctors_id" runat="server" />
+                                                </div>
+                                                <div class="col-md-7 col-sm-6">
+                                                    <asp:Label ID="lblDoctor" runat="server"></asp:Label>
                                                 </div>
                                             </div>
                                         </div>
