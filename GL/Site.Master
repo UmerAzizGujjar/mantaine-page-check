@@ -108,7 +108,21 @@
             $('#ctl00_lblMessage').hide();
 
         });
+        document.oncontextmenu = function () {
 
+            return false;
+        }
+        document.onkeydown = function (e) {
+            // Disable F12
+            if (e.keyCode == 123) {
+                return false;
+            }
+            // Disable Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+                return false;
+            }
+
+        };
 
 
 
@@ -867,7 +881,7 @@
                 <div id="sidebar" runat="server" class="sidebar h-sidebar navbar-collapse collapse"></div>
                 <div class="main">
 
-                    <div style="clear: both; height: 10px;"></div>
+                    <div id="clear" style="clear: both; height: 10px;"></div>
                     <div class="row hamburger-row" style="margin-left:-13% !important; display:none  " >
                         <div class="col-2">
                             <button type="button" onclick="hideNavbar" id="hamburger" class="hamburger-btn" aria-label="Toggle navigation">

@@ -8,16 +8,16 @@
           $(document).ready(function () {
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
-             setTimeout(function () {
+            
              Get_Pat_Info(reg_id);
              
-             }, 2500);
+          
              $('#SavePatient_Data').val('Update');
          }
          else {
              $('#btnPrint').prop('disabled', true);
              fillmrno();
-             $('#ddl_Gender').select2();
+           
              $('#ddl_status').select2();
              $('#ddl_bloodGroup').select2();
              $('#ddlCountry').select2();
@@ -28,8 +28,13 @@
              $('#ddl_name').select2();
              $('#PrefixAge').select2();
 
-         }
+              }
+
+             
+          
+             
           });
+          
           //Print
           debugger
           function PrintReceipt() {
@@ -106,12 +111,18 @@
         </div>
     <div class="row">
         <div class="col-lg-2 col-md-6 col-sm-9">
-            <label for="ddl_Gender">Gender</label>
-            <select id="ddl_Gender" class="form-control"></select>
-        </div>
+    <label for="ddl_Gender">Gender</label>
+    <select id="ddl_Gender" >
+        <option value="0">Select Gender</option>
+    </select>
+</div>
+  
+
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="ddl_status">Marital Status</label>
-            <select id="ddl_status" class="form-control"></select>
+            <select id="ddl_status" class="form-control">
+                <option value="0">Select Martial Status</option>
+            </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
@@ -120,7 +131,9 @@
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="ddl_bloodGroup">Blood Group</label>
-            <select id="ddl_bloodGroup" class="form-control"></select>
+            <select id="ddl_bloodGroup" class="form-control">
+                <option value="0">Select Blood Group</option>
+            </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txt_cnic">CNIC</label>
@@ -128,21 +141,29 @@
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label>Country</label>
-            <select id="ddlCountry" class="form-control"></select>
+            <select id="ddlCountry" class="form-control">
+                 <option value="0">Select Country</option>
+            </select>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="ddlstate">Province</label>
-            <select id="ddlstate" class="form-control"></select>
+            <select id="ddlstate" class="form-control">
+                 <option value="0">Select Province</option>
+            </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtcity">City</label>
-            <select id="txtcity" class="form-control"></select>
+            <select id="txtcity" class="form-control">
+                <option value="0">Select City</option>
+            </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtarea">Area</label>
-            <select id="txtarea" class="form-control"></select>
+            <select id="txtarea" class="form-control">
+                <option value="0">Select Area</option>
+            </select>
         </div>
         <div class="col-lg-6 col-md-8 col-sm-10">
             <label for="txt_Address">Address<span style="color: red;">*</span></label>

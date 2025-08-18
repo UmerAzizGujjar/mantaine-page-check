@@ -6,40 +6,39 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
+      
+        // Example (unreliable) attempt to detect DevTools
+        let devtools = false;
+        console.log('%c', {
+            toString: () => { devtools = true; }
+        });
+
+        setInterval(() => {
+            if (devtools) {
+                alert("DevTools detected!");
+                // Maybe redirect or block
+            }
+        }, 1000);
         $(document).ready(function () {
+
             loadOPDPermissions();
             DisableCardPrint();
+
             var reg_id = '<%= Request.QueryString["ID"] %>'
             var apt_Id = '<%= Request.QueryString["apt_id"] %>'
             var added = '<%= Request.QueryString["isAdd"] %>'
             var apdAdd = '<%= Request.QueryString["isAdd_apt"] %>'
             var OPDID = '<%= Request.QueryString["OPDID"] %>'
             $("#hdn_opdId").val(OPDID);
-            setTimeout(function () {
-                if (reg_id != "" && added == "true") {
-                    Get_Pat_Info(reg_id);
-                    FillUserAccount();
-                    $('#ddlPatient_Type').attr('disabled', false);
-                    $('#ddlcashier').attr('disabled', true);
-                }
-            }, 1000);
-            setTimeout(function () {
-                if (apt_Id != "" && apdAdd == "true") {
-                    Get_Pat_Info_Apt(reg_id, apt_Id);
-                    FillUserAccount();
-                    $('#ddlPatient_Type').attr('disabled', false);
-                    $('#ddlcashier').attr('disabled', true);
-                }
-            }, 2500);
             if (OPDID != "") {
-                setTimeout(function () {
-                    loadPatientDetail(OPDID);
-                    $('#btn-opdprint').show();
-                    $('#btn-opdFormprint').show();
-                }, 1500);
+
+                loadPatientDetail(OPDID);
+                $('#btn-opdprint').show();
+                $('#btn-opdFormprint').show();
+
             }
             else {
-                $('#ddlPatient_Type').select2();
+
                 $('#ddl_Gender').select2();
                 $('#ddlGender').select2();
                 $('#ddlpanel').select2();
@@ -49,9 +48,22 @@
                 $('#ddlFilterClnic').select2();
                 $('#ddlServices').select2();
             }
+                if (reg_id != "" && added == "true") {
+                    Get_Pat_Info(reg_id);
+               
+                    $('#ddlPatient_Type').attr('disabled', false);
+                    $('#ddlcashier').attr('disabled', true);
+                }
+     
+                if (apt_Id != "" && apdAdd == "true") {
+                    Get_Pat_Info_Apt(reg_id, apt_Id);
+           
+                    $('#ddlPatient_Type').attr('disabled', false);
+                    $('#ddlcashier').attr('disabled', true);
+                }
+          
+            
 
-            FillClinics()
-            FillServices()
         });
         function DisableCardPrint() {
             var chkStatus = document.getElementById('<%=chckcardissue.ClientID%>');
@@ -65,52 +77,7 @@
             }
         }
 
-        function FillClinics() {
-            var options ;
 
-            $.ajax({
-                url: 'OPD.aspx/GetClinics',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-                    });
-                    $('#ddlFilterClnic').html(options);
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-
-            return options;
-        }
-        function FillServices() {
-            var options = '<option value="0">Please Select</option>';
-
-            $.ajax({
-                url: 'OPD.aspx/GetServices',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.Item_ID + '">' + value.Description + '</option>';
-                    });
-                    $('#ddlServices').html(options);
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-
-            return options;
-        }
         function loadOPDPermissions() {
             $.ajax({
                 type: "POST",
@@ -119,7 +86,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
+                    
                     var permissions = response.d;
 
                     var fieldContainers = {
@@ -144,7 +111,7 @@
                     };
 
                     for (var dbField in fieldContainers) {
-                        debugger;
+                        
                         var containerId = fieldContainers[dbField];
                         var $container = $("#" + containerId);
 
@@ -224,10 +191,10 @@
                 });
 
             }
-            setTimeout(function () {
+         
                 debugger;
                 PrintPatientCard();
-            }, 1500)
+    
 
         }
         //Print
@@ -425,7 +392,7 @@
     <div class="row mtop">
         <div class="col-lg-9 col-md-8 sm-12">
             <div class="card">
-                <div class="row show">
+                <div class="row show g-3">
 
                     <input type="text" id="txt_reg_patno" style="display: none" />
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_mr_no">
@@ -461,12 +428,15 @@
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Category">
                         <label>Patient Category</label>
-                        <select id="ddlPatient_Type" onchange="loaddata()" disabled>
+                        <select id="ddlPatient_Type" disabled>
+                            <option value="0">Select Category</option>
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Martial_Status">
                         <label>Martial Status</label>
-                        <select id="ddlmartialstatus"></select>
+                        <select id="ddlmartialstatus">
+                             <option value="0">Select Status</option>
+                        </select>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_age">
                         <label>Age</label>
@@ -474,24 +444,31 @@
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Gender">
                         <label>Gender</label>
-                        <select id="ddlGender"></select>
+                        <select id="ddlGender">
+                             <option value="0">Select Gender</option>
+                        </select>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Fee">
                         <label>Fee</label>
                         <input type="text" id="txtfees" readonly="readonly" class="form-control" />
                     </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
+                        <label>Services</label>
+                        <select id="ddlServices">
+                            <option value="0">Select Service</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Clinic">
+                        <label>Filter Clinic</label>
+                        <select id="ddlFilterClnic">
+                            <option value="0">Select Clinic</option>
+                        </select>
+                    </div>
                     <div class="col-lg-12 col-md-12 col-sm-12" id="field_Address">
                         <label>Address *</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
-                        <label>Services</label>
-                        <select id="ddlServices"></select>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Clinic">
-                        <label>Filter Clinic</label>
-                        <select id="ddlFilterClnic"></select>
-                    </div>
+
                 </div>
 
 
@@ -508,15 +485,21 @@
                 <!-- Other form elements -->
                 <div class="col-lg-12 col-md-12 col-sm-12" id="department">
                     <label>Department</label>
-                    <select id="ddlDepartment" onchange="loaddoctor();" class="form-control"></select>
+                    <select id="ddlDepartment"  class="form-control">
+                        <option value="0">Select Department</option>
+                    </select>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="doctor">
                     <label>Doctor</label>
-                    <select id="ddldoctor" onchange="loadFee();" class="form-control"></select>
+                    <select id="ddldoctor"  class="form-control">
+                        <option value="0">Select Doctor</option>
+                    </select>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="pnlcompany">
                     <label>Panel company</label>
-                    <select id="ddlpanel" onchange="getpanelRate();" class="form-control"></select>
+                    <select id="ddlpanel" onchange="getpanelRate();" class="form-control">
+                        <option value="0">Select panel</option>
+                    </select>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="employee">
                     <label>Employee ID</label>
@@ -673,7 +656,9 @@
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="ddl_Gender">Gender<span style="color: red;">*</span></label>
-                            <select id="ddl_Gender" class="form-control"></select>
+                            <select id="ddl_Gender" class="form-control">
+                                <option value="0">Select Gender</option>
+                            </select>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_cnic">CNIC<span style="color: red;">*</span></label>

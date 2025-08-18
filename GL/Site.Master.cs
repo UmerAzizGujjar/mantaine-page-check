@@ -553,7 +553,7 @@ namespace PMS
 
             return returnVal;
         }
-
+        
         protected void HeadLoginStatus_LoggedOut(object sender, EventArgs e)
         {
             Session.Abandon();

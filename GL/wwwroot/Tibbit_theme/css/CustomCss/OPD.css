@@ -5,7 +5,9 @@
 .mleft{
     margin-left:15px !important;
 }
-
+.col-lg-3, .col-md-6, .col-sm-12{
+    height:70px !important
+}
 .card {
     border: 1px solid #C4C4C4;
     background-color: #f9f9f9;
@@ -28,13 +30,11 @@
         text-align: center;
         padding: 5px;
         border-radius: 6px;
-        /* Position the tooltip above the icon */
         position: absolute;
         z-index: 1;
-        bottom: 125%; /* Position tooltip above the icon */
+        bottom: 125%;
         left: 50%;
-        margin-left: -60px; /* Center the tooltip */
-        /* Fade-in effect */
+        margin-left: -60px; 
         opacity: 0;
         transition: opacity 0.3s;
     }
