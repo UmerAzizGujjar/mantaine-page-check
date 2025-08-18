@@ -66,19 +66,23 @@ namespace PMS.Modules.PatientManagement
                         OPD = new Out_Patient();
                         OPD.Patient_ID = Convert.ToInt32(data.Patient_ID);
                         OPD.Reg_PatId = Convert.ToInt32(data.reg_ID);
+
+                        // Required fields for new records
+                        OPD.Book_ID = AppConfig.Book_ID;
+                        OPD.Created_By = AppConfig.UserID;
+                        OPD.Created_Time = DateTime.Now;
+                        OPD.Company_ID = AppConfig.Company_ID;
+                        OPD.OPD_Entry_Date = DateTime.Now.Date;
                     }
                     else
                     {
-                        // Add null check and better error handling
                         int outPatientId;
                         if (!int.TryParse(data.Out_Patient_ID, out outPatientId))
                         {
                             throw new Exception("Invalid Out_Patient_ID for update operation");
                         }
 
-                        OPD = (from tbl in db.Out_Patients
-                               where tbl.Out_Patient_ID == outPatientId
-                               select tbl).FirstOrDefault();
+                        OPD = db.Out_Patients.FirstOrDefault(tbl => tbl.Out_Patient_ID == outPatientId);
 
                         if (OPD == null)
                         {
@@ -89,40 +93,347 @@ namespace PMS.Modules.PatientManagement
                         OPD.Updated_Time = DateTime.Now;
                     }
 
-                    // Safely assign fields with null checks and proper conversions
-                    OPD.L_M_P = data.L_M_P;
-                    OPD.spo2 = data.SPO2;
-                    OPD.BSR = data.Bsr;
-                    OPD.BMI = data.Bmi;
-                    OPD.pulse_Min = data.pulse_Min;
-                    OPD.BP_mm_Hg = data.BP_mm_Hg;
-                    OPD.Temp_C = data.Temp_C;
-                    OPD.Respiration_Min = data.Respiration_Min;
-                    OPD.Height_Cm = data.Height_Cm;
-                    OPD.Weight_Kg = data.Weight_Kg;
-                    OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
-                    OPD.HistoryOfPeresentIllness = data.HistoryOfPeresentIllness;
-                    OPD.HistoryOfFamily = data.HistoryOfFamily;
-                    OPD.HistoryOfPastIllness = data.HistoryOfPastIllness;
-                    OPD.DevelopmentHistory = data.DevelopmentHistory;
-                    OPD.VaccinationHistory = data.VaccinationHistory;
-                    OPD.NutritionHistory = data.NutritionHistory;
-                    OPD.CVS = data.CVS;
-                    OPD.GIT = data.GIT;
-                    OPD.RESP = data.RESP;
-                    OPD.AllergiesHistory = data.AllergiesHistory;
-                    OPD.TreatmentHistory = data.TreatmentHistory;
-                    OPD.SocioEconomicHistory = data.SocioEconomicHistory;
-                    OPD.CNS = data.CNS;
-                    OPD.URG = data.URG;
-                    OPD.GYNAE = data.GYNAE;
-                    OPD.Local = data.Local;
-                    OPD.Mucculor = data.Mucculor;
-                    OPD.ObstetricHistory = data.ObstetricHistory;
-                    OPD.txtRemarksHistory = data.txtRemarksHistory;
-                    OPD.chkJVP = data.chkJVP;
-                    OPD.chkPallor = data.chkPallor;
-                    OPD.chkaganoris = data.chkaganoris;
+                    // Initialize only fields that aren't being set elsewhere in the code
+
+                    // General Fields
+                    OPD.Suffering_Days = "";
+                    OPD.Recommended_Department = "";
+                    OPD.Recommended_Doctor = "";
+                    OPD.Health_Complaints = "";
+                    OPD.Refering_Doctor = "";
+                    OPD.Patient_Status = "";
+                    OPD.Refer_To_Hospital = "";
+                    OPD.Complaints = "";
+                    OPD.Prior_Reports = "";
+                    OPD.Medical_Reports = "";
+                    OPD.Physical_Condition = "";
+                    OPD.EDD = "";
+                    OPD.Special_Test = "";
+                    OPD.Area_Of_Interest = "";
+
+                    // ENT Fields
+                    OPD.ENT_Throat_IDL = "";
+                    OPD.ENT_Throat_Nose = "";
+                    OPD.ENT_Ear_Right = "";
+                    OPD.Ent_Ear_Left = "";
+                    OPD.ENT_Rinnes_Right_PosNeg = false;
+                    OPD.ENT_Rinnes_Lft_PosNeg = false;
+                    OPD.ENT_Rinnes_Right_FalseNeg = false;
+                    OPD.ENT_Rinnes_Lft_FalseNeg = false;
+                    OPD.ENT_Webber_Central = false;
+                    OPD.ENT_Webber_Lateralized = false;
+                    OPD.ENT_Investigation_PTA = false;
+                    OPD.ENT_Investigation_Tympanometry = false;
+
+                    // Derma Fields
+                    OPD.DermaFace = "";
+                    OPD.DermaNeck = "";
+                    OPD.DermaTrunk = "";
+                    OPD.DermaUpperLimb = "";
+                    OPD.DermaLowerLimb = "";
+                    OPD.DermaFlexures = "";
+                    OPD.DermaGenitalias = "";
+                    OPD.DermaHair = "";
+                    OPD.DermaNail = "";
+                    OPD.DermaMucousMembrane = "";
+                    OPD.DermaEyes = "";
+                    OPD.DermaEars = "";
+                    OPD.DermaNose = "";
+                    OPD.DermaLips = "";
+
+                    // Psychiatry Fields
+                    OPD.Psychiatry_Informant = "";
+                    OPD.Psychiatry_Source_Referral = "";
+                    OPD.Psychiatry_Neck_Holding = false;
+                    OPD.Psychiatry_Walking = false;
+                    OPD.Psychiatry_Talking = false;
+                    OPD.Psychiatry_Others = false;
+                    OPD.Psychiatry_Menarche = "";
+                    OPD.Psychiatry_Menstrual = "";
+                    OPD.Psychiatry_Attachment_Separation = "";
+                    OPD.Psychiatry_Health = "";
+                    OPD.Psychiatry_Nail_Biting = "";
+                    OPD.Psychiatry_Temper_Tantrums = "";
+                    OPD.Psychiatry_Bed_Wetting = "";
+                    OPD.Psychiatry_Academics = "";
+                    OPD.Psychiatry_Peer_Relationship = "";
+                    OPD.Psychiatry_Behaviour = "";
+                    OPD.Psychiatry_Occupational_History = "";
+                    OPD.Psychiatry_Sexual_History = "";
+                    OPD.Psychiatry_Substance_Use = "";
+                    OPD.Psychiatry_Forensic_Use = "";
+                    OPD.Psychiatry_Relationship = "";
+                    OPD.Psychiatry_Leisure_Activities = "";
+                    OPD.Psychiatry_Attitude_Standards = "";
+                    OPD.Psychiatry_Prevalling_Mood = "";
+                    OPD.Psychiatry_Reaction_Stress = "";
+                    OPD.Psychiatry_Religious_Practices = "";
+                    OPD.Psychiatry_Father = "";
+                    OPD.Psychiatry_Mother = "";
+                    OPD.Psychiatry_Siblings = "";
+                    OPD.Psychiatry_Home_Atmosphere = "";
+                    OPD.Psychiatry_Familial_Illness = "";
+                    OPD.Psychiatry_Actual_age = "";
+                    OPD.Psychiatry_Race = "";
+                    OPD.Psychiatry_Tattoos_body_scars = "";
+                    OPD.Psychiatry_Body_Habitus = "";
+                    OPD.Psychiatry_Dress = "";
+                    OPD.Psychiatry_Hygiene = "";
+                    OPD.Psychiatry_Psychomotor_Activity = "";
+                    OPD.Psychiatry_Involuntary_movements = "";
+                    OPD.Psychiatry_Dystonia_EPS = "";
+                    OPD.Psychiatry_Tardive_dyskinesia = "";
+                    OPD.Psychiatry_Tics = "";
+                    OPD.Psychiatry_Tremors = "";
+                    OPD.Psychiatry_Attentiveness_interview = "";
+                    OPD.Psychiatry_Eye_Contact = "";
+                    OPD.Psychiatry_Level_Consciousness = "";
+                    OPD.Psychiatry_Rate = "";
+                    OPD.Psychiatry_Rhythm = "";
+                    OPD.Psychiatry_Volume = "";
+                    OPD.Psychiatry_Tone = "";
+                    OPD.Psychiatry_Modulation = "";
+                    OPD.Psychiatry_Depressed = "";
+                    OPD.Psychiatry_Elated = "";
+                    OPD.Psychiatry_Irritable = "";
+                    OPD.Psychiatry_Labile = "";
+                    OPD.Psychiatry_Incongruent = "";
+                    OPD.Psychiatry_Blunting_Flattening_Apathy = "";
+                    OPD.Psychiatry_Thinking = "";
+                    OPD.Psychiatry_Plans = "";
+                    OPD.Psychiatry_Actions = "";
+                    OPD.Psychiatry_Preservative = "";
+                    OPD.Psychiatry_LoosAssociation = "";
+                    OPD.Psychiatry_Tangentiaility = "";
+                    OPD.Psychiatry_Circumstantiality = "";
+                    OPD.Psychiatry_Flight_Ideas = "";
+                    OPD.Psychiatry_Thought_Insertion = "";
+                    OPD.Psychiatry_Thought_Withdrawal = "";
+                    OPD.Psychiatry_Thought_Broadcasting = "";
+                    OPD.Psychiatry_Thought_Control = "";
+                    OPD.Psychiatry_Dellusion = "";
+                    OPD.Psychiatry_Overvalued_Ideas = "";
+                    OPD.Psychiatry_Depresonalization = "";
+                    OPD.Psychiatry_Derealization = "";
+                    OPD.Psychiatry_Obsession = "";
+                    OPD.Psychiatry_Phobies = "";
+                    OPD.Psychiatry_Homocidial_Ideas = "";
+                    OPD.Psychiatry_Illusion = "";
+                    OPD.Psychiatry_Hallucination = "";
+                    OPD.Psychiatry_Orientation_Time = "";
+                    OPD.Psychiatry_Place = "";
+                    OPD.Psychiatry_Person = "";
+                    OPD.Psychiatry_Attention_Concentration = "";
+                    OPD.Psychiatry_Days_Week = "";
+                    OPD.Psychiatry_Immediate_Memory = "";
+                    OPD.Psychiatry_Recent_Events = "";
+                    OPD.Psychiatry_Adress_Recall_Two = "";
+                    OPD.Psychiatry_Remote_Events = "";
+                    OPD.Psychiatry_Adress_Recall_Five = "";
+                    OPD.Psychiatry_General_knowledge = "";
+                    OPD.Psychiatry_Arthemetic_Calculation = "";
+                    OPD.Psychiatry_Abstraction = "";
+                    OPD.Psychiatry_Insight = "";
+                    OPD.Psychiatry_HBM_Problem = "";
+                    OPD.Psychiatry_HBM_Caused = "";
+                    OPD.Psychiatry_HBM_Started = "";
+                    OPD.Psychiatry_HBM_Course = "";
+                    OPD.Psychiatry_HBM_Treatment = "";
+                    OPD.Psychiatry_HBM_Effects = "";
+                    OPD.Psychiatry_PE_Pluse = "";
+                    OPD.Psychiatry_PE_BP = "";
+                    OPD.Psychiatry_PE_Temperature = "";
+                    OPD.Psychiatry_PE_Weight = "";
+                    OPD.Psychiatry_PE_RespiratoryRate = "";
+                    OPD.Psychiatry_PE_Jaundice = "";
+                    OPD.Psychiatry_PE_Anemia = "";
+                    OPD.Psychiatry_PE_Cyanosis = "";
+                    OPD.Psychiatry_PE_Clubbing = "";
+                    OPD.Psychiatry_PE_JVP = "";
+                    OPD.Psychiatry_PE_LymphNodes = "";
+                    OPD.Psychiatry_PE_Edema = "";
+                    OPD.Psychiatry_PE_Respiratory = "";
+                    OPD.Psychiatry_PE_Cardiovascular = "";
+                    OPD.Psychiatry_PE_Gastro_Intestinal = "";
+                    OPD.Psychiatry_PE_Observation = "";
+                    OPD.Psychiatry_PE_Cranial_Nerves = "";
+                    OPD.Psychiatry_PE_Limb_Strength = "";
+                    OPD.Psychiatry_PE_Spasticity = "";
+                    OPD.Psychiatry_PE_Position = "";
+                    OPD.Psychiatry_PE_Vibration = "";
+                    OPD.Psychiatry_PE_Stereognosis = "";
+                    OPD.Psychiatry_PE_Pain = "";
+                    OPD.Psychiatry_PE_Biceps = "";
+                    OPD.Psychiatry_PE_Triceps = "";
+                    OPD.Psychiatry_PE_Brachioradialis = "";
+                    OPD.Psychiatry_PE_Quadriceps = "";
+                    OPD.Psychiatry_PE_Patellar = "";
+                    OPD.Psychiatry_PE_Achilles = "";
+                    OPD.Psychiatry_PE_Extensor = "";
+                    OPD.Psychiatry_PE_Frontal = "";
+                    OPD.Psychiatry_PE_Finger = "";
+                    OPD.Psychiatry_PE_Heel = "";
+                    OPD.Psychiatry_PE_Movements = "";
+                    OPD.Psychiatry_PE_Gait = "";
+                    OPD.Psychiatry_PE_Neck_Rigidity = false;
+                    OPD.Psychiatry_PE_Kerning_Sign = false;
+                    OPD.Psychiatry_PE_Brudzinki_Sign = false;
+                    OPD.Psychiatry_For_Summary = "";
+                    OPD.Psychiatry_For_Diagnosis = "";
+                    OPD.Psychiatry_For_AxisI = "";
+                    OPD.Psychiatry_For_AxisII = "";
+                    OPD.Psychiatry_For_AxisIII = "";
+                    OPD.Psychiatry_For_AxisIV = "";
+                    OPD.Psychiatry_For_AxisV = "";
+                    OPD.Psychiatry_For_PredisposingFactors = "";
+                    OPD.Psychiatry_For_PrecipitatingFactors = "";
+                    OPD.Psychiatry_For_PrepetuatingFactors = "";
+                    OPD.Psychiatry_For_Investigation = "";
+                    OPD.Psychiatry_For_Medical = "";
+                    OPD.Psychiatry_For_Psychological = "";
+                    OPD.Psychiatry_Major_Issues = "";
+                    OPD.Psychiatry_For_Strengths = "";
+                    OPD.Psychiatry_For_Goals = "";
+                    OPD.Psychiatry_For_Strategies = "";
+
+                    // Paeds Fields
+                    OPD.Peads_weight = "";
+                    OPD.Peads_Length = "";
+                    OPD.Peads_HC = "";
+                    OPD.Peads_General_Appearance = "";
+                    OPD.Peads_Cyanosis = false;
+                    OPD.Peads_Jaundice = false;
+                    OPD.Peads_Lethargy = false;
+                    OPD.Peads_Rash = false;
+                    OPD.Peads_Others = "";
+                    OPD.Peads_Caput = false;
+                    OPD.Peads_Cephalhematoma = false;
+                    OPD.Peads_Anterioropen = false;
+                    OPD.Peads_AnteriorClose = false;
+                    OPD.Peads_Dextrocardia = false;
+                    OPD.Peads_Bulging = false;
+                    OPD.Peads_Murmur = false;
+                    OPD.Peads_HeartSound = "";
+                    OPD.Peads_Nasal = false;
+                    OPD.Peads_Recessions = false;
+                    OPD.Peads_AddedSounds = "";
+                    OPD.Peads_Flat = false;
+                    OPD.Peads_Distended = false;
+                    OPD.Peads_Scaphoid = false;
+                    OPD.Peads_Liver = false;
+                    OPD.Peads_Spleen = false;
+                    OPD.Peads_GITOthers = "";
+                    OPD.Peads_Sucking = false;
+                    OPD.Peads_Rooting = false;
+                    OPD.Peads_Moro = false;
+                    OPD.Peads_CNSOthers = "";
+                    OPD.Peads_FullTerm = false;
+                    OPD.Peads_PreTerm = false;
+                    OPD.Peads_DateOfDelivery = null;
+                    OPD.Peads_TimeOfDelivery = "";
+                    OPD.Peads_Booked = false;
+                    OPD.Peads_UnBooked = false;
+                    OPD.Peads_DAIHandling = false;
+                    OPD.Peads_ANTURash = false;
+                    OPD.Peads_PIH = false;
+                    OPD.Peads_GDM = false;
+                    OPD.Peads_Vacinated = false;
+                    OPD.Peads_ANTOthers = "";
+                    OPD.Peads_SVD = false;
+                    OPD.Peads_LSCS = false;
+                    OPD.Peads_Emergency = false;
+                    OPD.Peads_Elective = false;
+                    OPD.Peads_PlaceOfDelivery = "";
+                    OPD.Peads_IndicationForLSCS = "";
+                    OPD.Peads_apgerScore1min = "";
+                    OPD.Peads_apgerScore5min = "";
+                    OPD.Peads_Resuscitation = false;
+                    OPD.Peads_NatalOthers = "";
+                    OPD.Peads_Moaning = false;
+                    OPD.Peads_RespDistress = false;
+                    OPD.Peads_PostNATALCyanosis = false;
+                    OPD.Peads_Fits = false;
+                    OPD.Peads_ReluctanceToFeed = false;
+                    OPD.Peads_PostNatalOthers = "";
+
+                    // Other Fields
+                    OPD.DRE = false;
+                    OPD.Proctoscopy = false;
+                    OPD.PA_Gynae = "";
+                    OPD.PS_Gynae = "";
+                    OPD.Uterus = "";
+                    OPD.FX = "";
+                    OPD.PS_Obs = "";
+                    OPD.PV_Obs = "";
+                    OPD.SFH = "";
+                    OPD.LIE = "";
+                    OPD.Presentation = "";
+                    OPD.FHR = "";
+                    OPD.Engagement = "";
+                    OPD.Ent_Com_Right_pos = "";
+                    OPD.Ent_Com_Left_pos = "";
+                    OPD.Ent_Com_Right_Neg = "";
+                    OPD.Ent_Com_Left_Neg = "";
+                    OPD.Ent_Com_Right_False = "";
+                    OPD.Ent_Com_Left_False = "";
+                    OPD.Ent_Com_Right_False_Neg = "";
+                    OPD.Ent_Com_Left_False_Neg = "";
+                    OPD.Ent_Com_Central = "";
+                    OPD.Ent_Com_Lateralized = "";
+                    OPD.Ent_Com_PTA = "";
+                    OPD.Ent_Com_Tympanometry = "";
+                    OPD.MUAC = "";
+                    OPD.OFC = "";
+                    OPD.Heptomology = "";
+                    OPD.Splenomegaly = "";
+                    OPD.NextPlan = "";
+                    OPD.No_medicine = false;
+                    OPD.No_LabTest = false;
+                    OPD.Prepared_Status = false;
+                    OPD.PDF_File = "";
+                    OPD.Folllow_Date = null;
+                    OPD.chk6 = false;
+                    OPD.chk7 = false;
+                    OPD.chk8 = false;
+                    OPD.ENT_Rinnes_Right_Neg = false;
+                    OPD.ENT_Rinnes_Lft_Neg = false;
+                    OPD.ENT_Rinnes_Right_FNeg = false;
+                    OPD.ENT_Rinnes_Lft_FNeg = false;
+
+                    
+                    if (data.L_M_P != null) OPD.L_M_P = data.L_M_P;
+                    if (data.SPO2 != null) OPD.spo2 = data.SPO2;
+                    if (data.Bsr != null) OPD.BSR = data.Bsr;
+                    if (data.Bmi != null) OPD.BMI = data.Bmi;
+                    if (data.pulse_Min != null) OPD.pulse_Min = data.pulse_Min;
+                    if (data.BP_mm_Hg != null) OPD.BP_mm_Hg = data.BP_mm_Hg;
+                    if (data.Temp_C != null) OPD.Temp_C = data.Temp_C;
+                    if (data.Respiration_Min != null) OPD.Respiration_Min = data.Respiration_Min;
+                    if (data.Height_Cm != null) OPD.Height_Cm = data.Height_Cm;
+                    if (data.Weight_Kg != null) OPD.Weight_Kg = data.Weight_Kg;
+                    if (data.Provisional_Diagnosis != null) OPD.ProvisionalDiagnosis = data.Provisional_Diagnosis;
+                    if (data.HistoryOfPeresentIllness != null) OPD.HistoryOfPeresentIllness = data.HistoryOfPeresentIllness;
+                    if (data.HistoryOfFamily != null) OPD.HistoryOfFamily = data.HistoryOfFamily;
+                    if (data.HistoryOfPastIllness != null) OPD.HistoryOfPastIllness = data.HistoryOfPastIllness;
+                    if (data.DevelopmentHistory != null) OPD.DevelopmentHistory = data.DevelopmentHistory;
+                    if (data.VaccinationHistory != null) OPD.VaccinationHistory = data.VaccinationHistory;
+                    if (data.NutritionHistory != null) OPD.NutritionHistory = data.NutritionHistory;
+                    if (data.CVS != null) OPD.CVS = data.CVS;
+                    if (data.GIT != null) OPD.GIT = data.GIT;
+                    if (data.RESP != null) OPD.RESP = data.RESP;
+                    if (data.AllergiesHistory != null) OPD.AllergiesHistory = data.AllergiesHistory;
+                    if (data.TreatmentHistory != null) OPD.TreatmentHistory = data.TreatmentHistory;
+                    if (data.SocioEconomicHistory != null) OPD.SocioEconomicHistory = data.SocioEconomicHistory;
+                    if (data.CNS != null) OPD.CNS = data.CNS;
+                    if (data.URG != null) OPD.URG = data.URG;
+                    if (data.GYNAE != null) OPD.GYNAE = data.GYNAE;
+                    if (data.Local != null) OPD.Local = data.Local;
+                    if (data.Mucculor != null) OPD.Mucculor = data.Mucculor;
+                    if (data.ObstetricHistory != null) OPD.ObstetricHistory = data.ObstetricHistory;
+                    if (data.txtRemarksHistory != null) OPD.txtRemarksHistory = data.txtRemarksHistory;
+                     OPD.chkJVP = data.chkJVP;
+                      OPD.chkPallor = data.chkPallor;
+                      OPD.chkaganoris = data.chkaganoris;
                     OPD.chkunconceed = data.chkunconceed;
                     OPD.chkjaundice = data.chkjaundice;
                     OPD.hydration = data.hydration;
@@ -140,38 +451,29 @@ namespace PMS.Modules.PatientManagement
                         OPD.discharge_date = DateTime.Now;
                     }
 
-                    // Safe conversion for Doctor_ID
-                    int doctorId;
-                    if (int.TryParse(data.Doctor_ID, out doctorId))
-                    {
-                        OPD.Doctor_ID = doctorId.ToString();
-                    }
-
-                    OPD.Designation = data.Designation;
-                    OPD.Final_Rec = data.Final_Rec;
-                    OPD.Final_Diagnosis = data.FinalDiagnosis;
-                    OPD.Administration = data.Administration?.ToString();
+                    if (data.Doctor_ID != null) OPD.Doctor_ID = data.Doctor_ID;
+                    if (data.Designation != null) OPD.Designation = data.Designation;
+                    if (data.Final_Rec != null) OPD.Final_Rec = data.Final_Rec;
+                    if (data.FinalDiagnosis != null) OPD.Final_Diagnosis = data.FinalDiagnosis;
+                    if (data.Administration != null) OPD.Administration = data.Administration.ToString();
                     OPD.Control_Date = DateTime.Now;
-                    OPD.Follow_Up = data.Follow_Up?.ToString();
-                    OPD.Proto = data.Proto?.ToString();
-                    OPD.Advice = data.Advice;
-                    OPD.Birth_History = data.Birth_History;
+                    if (data.Follow_Up != null) OPD.Follow_Up = data.Follow_Up.ToString();
+                    if (data.Proto != null) OPD.Proto = data.Proto.ToString();
+                    if (data.Advice != null) OPD.Advice = data.Advice;
+                    if (data.Birth_History != null) OPD.Birth_History = data.Birth_History;
 
-                    // Handle referral logic with proper validation
+                    // Handle referral logic only if Reffer_To is provided
                     if (!string.IsNullOrEmpty(data.Reffer_To))
                     {
-                        var P = (from tbl in db.Patients
-                                 where tbl.Patient_ID == data.Patient_ID
-                                 select tbl).FirstOrDefault();
-
+                        var P = db.Patients.FirstOrDefault(tbl => tbl.Patient_ID == data.Patient_ID);
                         if (P != null)
                         {
                             P.Patient_Main_Category = data.Reffer_To;
                             db.SubmitChanges();
 
-                            var D = (from tbl in db.Previous_Dpts
-                                     where tbl.Patient_ID == data.Patient_ID && tbl.Perivious_Dpt_Name == data.Reffer_To
-                                     select tbl).FirstOrDefault();
+                            var D = db.Previous_Dpts.FirstOrDefault(tbl =>
+                                tbl.Patient_ID == data.Patient_ID &&
+                                tbl.Perivious_Dpt_Name == data.Reffer_To);
                             if (D == null)
                             {
                                 Previous_Dpt Previous_Dpt = new Previous_Dpt();
@@ -184,92 +486,104 @@ namespace PMS.Modules.PatientManagement
                         }
                     }
 
-                    OPD.Reffer_To = data.Reffer_To?.ToString();
-                    OPD.Reffer_No = data.Reffer_No;
-
-                    // Safe conversion for Reffer_doc
-                    int refferDocId;
-                    if (int.TryParse(data.Reffer_doc, out refferDocId))
+                    if (data.Reffer_To != null) OPD.Reffer_To = data.Reffer_To;
+                    if (data.Reffer_No != null) OPD.Reffer_No = data.Reffer_No;
+                    if (data.Reffer_doc != null && int.TryParse(data.Reffer_doc, out int refferDocId))
                     {
                         OPD.reffer_doc = refferDocId;
                     }
 
-                    OPD.Drug_History = data.Drug_History;
-                    OPD.Personal_History = data.Personal_History;
-                    OPD.Abdominal = data.Abdominal;
+                    if (data.Drug_History != null) OPD.Drug_History = data.Drug_History;
+                    if (data.Personal_History != null) OPD.Personal_History = data.Personal_History;
+                    if (data.Abdominal != null) OPD.Abdominal = data.Abdominal;
 
                     if (data.btnsave == "Save")
                     {
-                        OPD.Book_ID = AppConfig.Book_ID;
-                        OPD.Created_By = AppConfig.UserID;
-                        OPD.Created_Time = DateTime.Now;
-                        OPD.Company_ID = AppConfig.Company_ID;
                         db.Out_Patients.InsertOnSubmit(OPD);
                     }
 
-                    // Submit changes before getting the ID
                     db.SubmitChanges();
-
-                    // Now safely get the Out_Patient_ID
                     id = OPD.Out_Patient_ID.ToString();
 
-                    // Setting 0 patient id inserted medicine to current out patient id
-                    List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").ToList();
-                    foreach (In_Patient_Medicine med in list)
-                    {
-                        med.Patient_ID = OPD.Out_Patient_ID;
-                    }
-
-                    // Setting 0 patient id inserted eyes to current out patient id
-                    List<PMS.EyeDetail> eyelist = db.EyeDetails.Where(t => t.TransactionType == "OutPatient" && t.TransactionID == 0).ToList();
-                    foreach (PMS.EyeDetail eye in eyelist)
-                    {
-                        eye.TransactionID = OPD.Out_Patient_ID;
-                    }
-
-                    // Setting 0 patient id inserted test to current out patient id
-                    Laboratory_Test test = db.Laboratory_Tests.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").FirstOrDefault();
-                    if (test != null)
-                        test.Patient_ID = OPD.Out_Patient_ID;
-
-
-                    List<PMS.OutPatients_Proto> Protolist = db.OutPatients_Protos.Where(t => t.Outpatient_id == 0).ToList();
-                    foreach (PMS.OutPatients_Proto proto in Protolist)
-                    {
-                        proto.Outpatient_id = OPD.Out_Patient_ID;
-                    }
-
-                    List<PMS.OutPatientPrimaryDiagnosi> OutPatientPrimaryDiagnosisList = db.OutPatientPrimaryDiagnosis.Where(t => t.OutPatientID == 0).ToList();
-                    foreach (PMS.OutPatientPrimaryDiagnosi oppd in OutPatientPrimaryDiagnosisList)
-                    {
-                        oppd.OutPatientID = OPD.Out_Patient_ID;
-                    }
-
-                    List<PMS.OutPatientFinalDiagnosi> OutPatientFinalDiagnosisList = db.OutPatientFinalDiagnosis.Where(t => t.OutPatientID == 0).ToList();
-                    foreach (PMS.OutPatientFinalDiagnosi opfd in OutPatientFinalDiagnosisList)
-                    {
-                        opfd.OutPatientID = OPD.Out_Patient_ID;
-                    }
-
-                    List<PMS.OutPatientComplaint> OutPatientComplaintList = db.OutPatientComplaints.Where(t => t.OutPatientID == 0).ToList();
-                    foreach (PMS.OutPatientComplaint opc in OutPatientComplaintList)
-                    {
-                        opc.OutPatientID = OPD.Out_Patient_ID;
-                    }
-                    db.SubmitChanges();
+                    // Update related records with the new Out_Patient_ID
+                    UpdateRelatedRecords(db, OPD.Out_Patient_ID);
                 }
 
                 return id;
             }
             catch (Exception ex)
             {
-                // Log the full exception details for debugging
                 System.Diagnostics.Debug.WriteLine($"SaveRecord Error: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-
-                // Return a more descriptive error message
                 return $"Error: {ex.Message}";
             }
+        }
+
+        private static void UpdateRelatedRecords(DataBaseDataContext db, int outPatientId)
+        {
+            // Update medicines
+            var medicines = db.In_Patient_Medicines
+                .Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient")
+                .ToList();
+            foreach (var med in medicines)
+            {
+                med.Patient_ID = outPatientId;
+            }
+
+            // Update eye details
+            var eyeDetails = db.EyeDetails
+                .Where(t => t.TransactionType == "OutPatient" && t.TransactionID == 0)
+                .ToList();
+            foreach (var eye in eyeDetails)
+            {
+                eye.TransactionID = outPatientId;
+            }
+
+            // Update lab tests
+            var labTest = db.Laboratory_Tests
+                .FirstOrDefault(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient");
+            if (labTest != null)
+            {
+                labTest.Patient_ID = outPatientId;
+            }
+
+            // Update protocols
+            var protocols = db.OutPatients_Protos
+                .Where(t => t.Outpatient_id == 0)
+                .ToList();
+            foreach (var proto in protocols)
+            {
+                proto.Outpatient_id = outPatientId;
+            }
+
+            // Update primary diagnoses
+            var primaryDiagnoses = db.OutPatientPrimaryDiagnosis
+                .Where(t => t.OutPatientID == 0)
+                .ToList();
+            foreach (var oppd in primaryDiagnoses)
+            {
+                oppd.OutPatientID = outPatientId;
+            }
+
+            // Update final diagnoses
+            var finalDiagnoses = db.OutPatientFinalDiagnosis
+                .Where(t => t.OutPatientID == 0)
+                .ToList();
+            foreach (var opfd in finalDiagnoses)
+            {
+                opfd.OutPatientID = outPatientId;
+            }
+
+            // Update complaints
+            var complaints = db.OutPatientComplaints
+                .Where(t => t.OutPatientID == 0)
+                .ToList();
+            foreach (var opc in complaints)
+            {
+                opc.OutPatientID = outPatientId;
+            }
+
+            db.SubmitChanges();
         }
         [WebMethod]
         public static string SaveMedicines(string MedicineDetails)
