@@ -870,12 +870,12 @@ namespace PMS
 		partial void InsertPatient(Patient instance);
 		partial void UpdatePatient(Patient instance);
 		partial void DeletePatient(Patient instance);
-		partial void InsertHR_Employee(HR_Employee instance);
-		partial void UpdateHR_Employee(HR_Employee instance);
-		partial void DeleteHR_Employee(HR_Employee instance);
 		partial void Insertsys_Company(sys_Company instance);
 		partial void Updatesys_Company(sys_Company instance);
 		partial void Deletesys_Company(sys_Company instance);
+		partial void InsertHR_Employee(HR_Employee instance);
+		partial void UpdateHR_Employee(HR_Employee instance);
+		partial void DeleteHR_Employee(HR_Employee instance);
 		#endregion
 
 		public DataBaseDataContext() :
@@ -3180,19 +3180,19 @@ namespace PMS
 			}
 		}
 
-		public System.Data.Linq.Table<HR_Employee> HR_Employees
-		{
-			get
-			{
-				return this.GetTable<HR_Employee>();
-			}
-		}
-
 		public System.Data.Linq.Table<sys_Company> sys_Companies
 		{
 			get
 			{
 				return this.GetTable<sys_Company>();
+			}
+		}
+
+		public System.Data.Linq.Table<HR_Employee> HR_Employees
+		{
+			get
+			{
+				return this.GetTable<HR_Employee>();
 			}
 		}
 
@@ -150251,6 +150251,524 @@ namespace PMS
 		}
 	}
 
+	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.sys_Companys")]
+	public partial class sys_Company : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+		private int _Company_ID;
+
+		private string _Company_Name;
+
+		private string _Company_Address;
+
+		private string _Company_Email;
+
+		private string _Company_Phone1;
+
+		private string _Company_Phone2;
+
+		private string _Company_Fax;
+
+		private string _Company_UserField1;
+
+		private string _Company_UserField2;
+
+		private string _Company_UserField3;
+
+		private System.Nullable<int> _Book_ID;
+
+		private System.Data.Linq.Binary _Company_Image;
+
+		private string _Company_SalesTax_No;
+
+		private string _Company_NTN_No;
+
+		private string _Company_Fiscal_Year;
+
+		private string _Earning;
+
+		private System.Nullable<bool> _Auto_Posting;
+
+		private string _ImageURL;
+
+		private string _CompanyCode;
+
+		private string _Company_ReportFolder;
+
+		#region Extensibility Method Definitions
+		partial void OnLoaded();
+		partial void OnValidate(System.Data.Linq.ChangeAction action);
+		partial void OnCreated();
+		partial void OnCompany_IDChanging(int value);
+		partial void OnCompany_IDChanged();
+		partial void OnCompany_NameChanging(string value);
+		partial void OnCompany_NameChanged();
+		partial void OnCompany_AddressChanging(string value);
+		partial void OnCompany_AddressChanged();
+		partial void OnCompany_EmailChanging(string value);
+		partial void OnCompany_EmailChanged();
+		partial void OnCompany_Phone1Changing(string value);
+		partial void OnCompany_Phone1Changed();
+		partial void OnCompany_Phone2Changing(string value);
+		partial void OnCompany_Phone2Changed();
+		partial void OnCompany_FaxChanging(string value);
+		partial void OnCompany_FaxChanged();
+		partial void OnCompany_UserField1Changing(string value);
+		partial void OnCompany_UserField1Changed();
+		partial void OnCompany_UserField2Changing(string value);
+		partial void OnCompany_UserField2Changed();
+		partial void OnCompany_UserField3Changing(string value);
+		partial void OnCompany_UserField3Changed();
+		partial void OnBook_IDChanging(System.Nullable<int> value);
+		partial void OnBook_IDChanged();
+		partial void OnCompany_ImageChanging(System.Data.Linq.Binary value);
+		partial void OnCompany_ImageChanged();
+		partial void OnCompany_SalesTax_NoChanging(string value);
+		partial void OnCompany_SalesTax_NoChanged();
+		partial void OnCompany_NTN_NoChanging(string value);
+		partial void OnCompany_NTN_NoChanged();
+		partial void OnCompany_Fiscal_YearChanging(string value);
+		partial void OnCompany_Fiscal_YearChanged();
+		partial void OnEarningChanging(string value);
+		partial void OnEarningChanged();
+		partial void OnAuto_PostingChanging(System.Nullable<bool> value);
+		partial void OnAuto_PostingChanged();
+		partial void OnImageURLChanging(string value);
+		partial void OnImageURLChanged();
+		partial void OnCompanyCodeChanging(string value);
+		partial void OnCompanyCodeChanged();
+		partial void OnCompany_ReportFolderChanging(string value);
+		partial void OnCompany_ReportFolderChanged();
+		#endregion
+
+		public sys_Company()
+		{
+			OnCreated();
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+		public int Company_ID
+		{
+			get
+			{
+				return this._Company_ID;
+			}
+			set
+			{
+				if ((this._Company_ID != value))
+				{
+					this.OnCompany_IDChanging(value);
+					this.SendPropertyChanging();
+					this._Company_ID = value;
+					this.SendPropertyChanged("Company_ID");
+					this.OnCompany_IDChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Name", DbType = "VarChar(100)")]
+		public string Company_Name
+		{
+			get
+			{
+				return this._Company_Name;
+			}
+			set
+			{
+				if ((this._Company_Name != value))
+				{
+					this.OnCompany_NameChanging(value);
+					this.SendPropertyChanging();
+					this._Company_Name = value;
+					this.SendPropertyChanged("Company_Name");
+					this.OnCompany_NameChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Address", DbType = "VarChar(250)")]
+		public string Company_Address
+		{
+			get
+			{
+				return this._Company_Address;
+			}
+			set
+			{
+				if ((this._Company_Address != value))
+				{
+					this.OnCompany_AddressChanging(value);
+					this.SendPropertyChanging();
+					this._Company_Address = value;
+					this.SendPropertyChanged("Company_Address");
+					this.OnCompany_AddressChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Email", DbType = "VarChar(50)")]
+		public string Company_Email
+		{
+			get
+			{
+				return this._Company_Email;
+			}
+			set
+			{
+				if ((this._Company_Email != value))
+				{
+					this.OnCompany_EmailChanging(value);
+					this.SendPropertyChanging();
+					this._Company_Email = value;
+					this.SendPropertyChanged("Company_Email");
+					this.OnCompany_EmailChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Phone1", DbType = "VarChar(50)")]
+		public string Company_Phone1
+		{
+			get
+			{
+				return this._Company_Phone1;
+			}
+			set
+			{
+				if ((this._Company_Phone1 != value))
+				{
+					this.OnCompany_Phone1Changing(value);
+					this.SendPropertyChanging();
+					this._Company_Phone1 = value;
+					this.SendPropertyChanged("Company_Phone1");
+					this.OnCompany_Phone1Changed();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Phone2", DbType = "VarChar(50)")]
+		public string Company_Phone2
+		{
+			get
+			{
+				return this._Company_Phone2;
+			}
+			set
+			{
+				if ((this._Company_Phone2 != value))
+				{
+					this.OnCompany_Phone2Changing(value);
+					this.SendPropertyChanging();
+					this._Company_Phone2 = value;
+					this.SendPropertyChanged("Company_Phone2");
+					this.OnCompany_Phone2Changed();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Fax", DbType = "VarChar(50)")]
+		public string Company_Fax
+		{
+			get
+			{
+				return this._Company_Fax;
+			}
+			set
+			{
+				if ((this._Company_Fax != value))
+				{
+					this.OnCompany_FaxChanging(value);
+					this.SendPropertyChanging();
+					this._Company_Fax = value;
+					this.SendPropertyChanged("Company_Fax");
+					this.OnCompany_FaxChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_UserField1", DbType = "VarChar(50)")]
+		public string Company_UserField1
+		{
+			get
+			{
+				return this._Company_UserField1;
+			}
+			set
+			{
+				if ((this._Company_UserField1 != value))
+				{
+					this.OnCompany_UserField1Changing(value);
+					this.SendPropertyChanging();
+					this._Company_UserField1 = value;
+					this.SendPropertyChanged("Company_UserField1");
+					this.OnCompany_UserField1Changed();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_UserField2", DbType = "VarChar(50)")]
+		public string Company_UserField2
+		{
+			get
+			{
+				return this._Company_UserField2;
+			}
+			set
+			{
+				if ((this._Company_UserField2 != value))
+				{
+					this.OnCompany_UserField2Changing(value);
+					this.SendPropertyChanging();
+					this._Company_UserField2 = value;
+					this.SendPropertyChanged("Company_UserField2");
+					this.OnCompany_UserField2Changed();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_UserField3", DbType = "VarChar(50)")]
+		public string Company_UserField3
+		{
+			get
+			{
+				return this._Company_UserField3;
+			}
+			set
+			{
+				if ((this._Company_UserField3 != value))
+				{
+					this.OnCompany_UserField3Changing(value);
+					this.SendPropertyChanging();
+					this._Company_UserField3 = value;
+					this.SendPropertyChanged("Company_UserField3");
+					this.OnCompany_UserField3Changed();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
+		public System.Nullable<int> Book_ID
+		{
+			get
+			{
+				return this._Book_ID;
+			}
+			set
+			{
+				if ((this._Book_ID != value))
+				{
+					this.OnBook_IDChanging(value);
+					this.SendPropertyChanging();
+					this._Book_ID = value;
+					this.SendPropertyChanged("Book_ID");
+					this.OnBook_IDChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Image", DbType = "Image", UpdateCheck = UpdateCheck.Never)]
+		public System.Data.Linq.Binary Company_Image
+		{
+			get
+			{
+				return this._Company_Image;
+			}
+			set
+			{
+				if ((this._Company_Image != value))
+				{
+					this.OnCompany_ImageChanging(value);
+					this.SendPropertyChanging();
+					this._Company_Image = value;
+					this.SendPropertyChanged("Company_Image");
+					this.OnCompany_ImageChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_SalesTax_No", DbType = "VarChar(50)")]
+		public string Company_SalesTax_No
+		{
+			get
+			{
+				return this._Company_SalesTax_No;
+			}
+			set
+			{
+				if ((this._Company_SalesTax_No != value))
+				{
+					this.OnCompany_SalesTax_NoChanging(value);
+					this.SendPropertyChanging();
+					this._Company_SalesTax_No = value;
+					this.SendPropertyChanged("Company_SalesTax_No");
+					this.OnCompany_SalesTax_NoChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_NTN_No", DbType = "VarChar(50)")]
+		public string Company_NTN_No
+		{
+			get
+			{
+				return this._Company_NTN_No;
+			}
+			set
+			{
+				if ((this._Company_NTN_No != value))
+				{
+					this.OnCompany_NTN_NoChanging(value);
+					this.SendPropertyChanging();
+					this._Company_NTN_No = value;
+					this.SendPropertyChanged("Company_NTN_No");
+					this.OnCompany_NTN_NoChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Fiscal_Year", DbType = "VarChar(50)")]
+		public string Company_Fiscal_Year
+		{
+			get
+			{
+				return this._Company_Fiscal_Year;
+			}
+			set
+			{
+				if ((this._Company_Fiscal_Year != value))
+				{
+					this.OnCompany_Fiscal_YearChanging(value);
+					this.SendPropertyChanging();
+					this._Company_Fiscal_Year = value;
+					this.SendPropertyChanged("Company_Fiscal_Year");
+					this.OnCompany_Fiscal_YearChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Earning", DbType = "VarChar(9)")]
+		public string Earning
+		{
+			get
+			{
+				return this._Earning;
+			}
+			set
+			{
+				if ((this._Earning != value))
+				{
+					this.OnEarningChanging(value);
+					this.SendPropertyChanging();
+					this._Earning = value;
+					this.SendPropertyChanged("Earning");
+					this.OnEarningChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Auto_Posting", DbType = "Bit")]
+		public System.Nullable<bool> Auto_Posting
+		{
+			get
+			{
+				return this._Auto_Posting;
+			}
+			set
+			{
+				if ((this._Auto_Posting != value))
+				{
+					this.OnAuto_PostingChanging(value);
+					this.SendPropertyChanging();
+					this._Auto_Posting = value;
+					this.SendPropertyChanged("Auto_Posting");
+					this.OnAuto_PostingChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ImageURL", DbType = "NVarChar(100)")]
+		public string ImageURL
+		{
+			get
+			{
+				return this._ImageURL;
+			}
+			set
+			{
+				if ((this._ImageURL != value))
+				{
+					this.OnImageURLChanging(value);
+					this.SendPropertyChanging();
+					this._ImageURL = value;
+					this.SendPropertyChanged("ImageURL");
+					this.OnImageURLChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CompanyCode", DbType = "NVarChar(50)")]
+		public string CompanyCode
+		{
+			get
+			{
+				return this._CompanyCode;
+			}
+			set
+			{
+				if ((this._CompanyCode != value))
+				{
+					this.OnCompanyCodeChanging(value);
+					this.SendPropertyChanging();
+					this._CompanyCode = value;
+					this.SendPropertyChanged("CompanyCode");
+					this.OnCompanyCodeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ReportFolder", DbType = "NVarChar(100)")]
+		public string Company_ReportFolder
+		{
+			get
+			{
+				return this._Company_ReportFolder;
+			}
+			set
+			{
+				if ((this._Company_ReportFolder != value))
+				{
+					this.OnCompany_ReportFolderChanging(value);
+					this.SendPropertyChanging();
+					this._Company_ReportFolder = value;
+					this.SendPropertyChanged("Company_ReportFolder");
+					this.OnCompany_ReportFolderChanged();
+				}
+			}
+		}
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+
 	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.HR_Employees")]
 	public partial class HR_Employee : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -150347,7 +150865,7 @@ namespace PMS
 
 		private System.Nullable<decimal> _priority_fee;
 
-		private System.Nullable<System.Guid> _userid;
+		private string _userid;
 
 		private string _Dependent;
 
@@ -150449,7 +150967,7 @@ namespace PMS
 		partial void OnchckpriorityChanged();
 		partial void Onpriority_feeChanging(System.Nullable<decimal> value);
 		partial void Onpriority_feeChanged();
-		partial void OnuseridChanging(System.Nullable<System.Guid> value);
+		partial void OnuseridChanging(string value);
 		partial void OnuseridChanged();
 		partial void OnDependentChanging(string value);
 		partial void OnDependentChanged();
@@ -151364,8 +151882,8 @@ namespace PMS
 			}
 		}
 
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_userid", DbType = "UniqueIdentifier")]
-		public System.Nullable<System.Guid> userid
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_userid", DbType = "NVarChar(MAX)")]
+		public string userid
 		{
 			get
 			{
@@ -151440,524 +151958,6 @@ namespace PMS
 					this._Policy_id = value;
 					this.SendPropertyChanged("Policy_id");
 					this.OnPolicy_idChanged();
-				}
-			}
-		}
-
-		public event PropertyChangingEventHandler PropertyChanging;
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-
-	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.sys_Companys")]
-	public partial class sys_Company : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-		private int _Company_ID;
-
-		private string _Company_Name;
-
-		private string _Company_Address;
-
-		private string _Company_Email;
-
-		private string _Company_Phone1;
-
-		private string _Company_Phone2;
-
-		private string _Company_Fax;
-
-		private string _Company_UserField1;
-
-		private string _Company_UserField2;
-
-		private string _Company_UserField3;
-
-		private System.Nullable<int> _Book_ID;
-
-		private System.Data.Linq.Binary _Company_Image;
-
-		private string _Company_SalesTax_No;
-
-		private string _Company_NTN_No;
-
-		private string _Company_Fiscal_Year;
-
-		private string _Earning;
-
-		private System.Nullable<bool> _Auto_Posting;
-
-		private string _ImageURL;
-
-		private string _CompanyCode;
-
-		private string _Company_ReportFolder;
-
-		#region Extensibility Method Definitions
-		partial void OnLoaded();
-		partial void OnValidate(System.Data.Linq.ChangeAction action);
-		partial void OnCreated();
-		partial void OnCompany_IDChanging(int value);
-		partial void OnCompany_IDChanged();
-		partial void OnCompany_NameChanging(string value);
-		partial void OnCompany_NameChanged();
-		partial void OnCompany_AddressChanging(string value);
-		partial void OnCompany_AddressChanged();
-		partial void OnCompany_EmailChanging(string value);
-		partial void OnCompany_EmailChanged();
-		partial void OnCompany_Phone1Changing(string value);
-		partial void OnCompany_Phone1Changed();
-		partial void OnCompany_Phone2Changing(string value);
-		partial void OnCompany_Phone2Changed();
-		partial void OnCompany_FaxChanging(string value);
-		partial void OnCompany_FaxChanged();
-		partial void OnCompany_UserField1Changing(string value);
-		partial void OnCompany_UserField1Changed();
-		partial void OnCompany_UserField2Changing(string value);
-		partial void OnCompany_UserField2Changed();
-		partial void OnCompany_UserField3Changing(string value);
-		partial void OnCompany_UserField3Changed();
-		partial void OnBook_IDChanging(System.Nullable<int> value);
-		partial void OnBook_IDChanged();
-		partial void OnCompany_ImageChanging(System.Data.Linq.Binary value);
-		partial void OnCompany_ImageChanged();
-		partial void OnCompany_SalesTax_NoChanging(string value);
-		partial void OnCompany_SalesTax_NoChanged();
-		partial void OnCompany_NTN_NoChanging(string value);
-		partial void OnCompany_NTN_NoChanged();
-		partial void OnCompany_Fiscal_YearChanging(string value);
-		partial void OnCompany_Fiscal_YearChanged();
-		partial void OnEarningChanging(string value);
-		partial void OnEarningChanged();
-		partial void OnAuto_PostingChanging(System.Nullable<bool> value);
-		partial void OnAuto_PostingChanged();
-		partial void OnImageURLChanging(string value);
-		partial void OnImageURLChanged();
-		partial void OnCompanyCodeChanging(string value);
-		partial void OnCompanyCodeChanged();
-		partial void OnCompany_ReportFolderChanging(string value);
-		partial void OnCompany_ReportFolderChanged();
-		#endregion
-
-		public sys_Company()
-		{
-			OnCreated();
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-		public int Company_ID
-		{
-			get
-			{
-				return this._Company_ID;
-			}
-			set
-			{
-				if ((this._Company_ID != value))
-				{
-					this.OnCompany_IDChanging(value);
-					this.SendPropertyChanging();
-					this._Company_ID = value;
-					this.SendPropertyChanged("Company_ID");
-					this.OnCompany_IDChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Name", DbType = "VarChar(100)")]
-		public string Company_Name
-		{
-			get
-			{
-				return this._Company_Name;
-			}
-			set
-			{
-				if ((this._Company_Name != value))
-				{
-					this.OnCompany_NameChanging(value);
-					this.SendPropertyChanging();
-					this._Company_Name = value;
-					this.SendPropertyChanged("Company_Name");
-					this.OnCompany_NameChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Address", DbType = "VarChar(250)")]
-		public string Company_Address
-		{
-			get
-			{
-				return this._Company_Address;
-			}
-			set
-			{
-				if ((this._Company_Address != value))
-				{
-					this.OnCompany_AddressChanging(value);
-					this.SendPropertyChanging();
-					this._Company_Address = value;
-					this.SendPropertyChanged("Company_Address");
-					this.OnCompany_AddressChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Email", DbType = "VarChar(50)")]
-		public string Company_Email
-		{
-			get
-			{
-				return this._Company_Email;
-			}
-			set
-			{
-				if ((this._Company_Email != value))
-				{
-					this.OnCompany_EmailChanging(value);
-					this.SendPropertyChanging();
-					this._Company_Email = value;
-					this.SendPropertyChanged("Company_Email");
-					this.OnCompany_EmailChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Phone1", DbType = "VarChar(50)")]
-		public string Company_Phone1
-		{
-			get
-			{
-				return this._Company_Phone1;
-			}
-			set
-			{
-				if ((this._Company_Phone1 != value))
-				{
-					this.OnCompany_Phone1Changing(value);
-					this.SendPropertyChanging();
-					this._Company_Phone1 = value;
-					this.SendPropertyChanged("Company_Phone1");
-					this.OnCompany_Phone1Changed();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Phone2", DbType = "VarChar(50)")]
-		public string Company_Phone2
-		{
-			get
-			{
-				return this._Company_Phone2;
-			}
-			set
-			{
-				if ((this._Company_Phone2 != value))
-				{
-					this.OnCompany_Phone2Changing(value);
-					this.SendPropertyChanging();
-					this._Company_Phone2 = value;
-					this.SendPropertyChanged("Company_Phone2");
-					this.OnCompany_Phone2Changed();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Fax", DbType = "VarChar(50)")]
-		public string Company_Fax
-		{
-			get
-			{
-				return this._Company_Fax;
-			}
-			set
-			{
-				if ((this._Company_Fax != value))
-				{
-					this.OnCompany_FaxChanging(value);
-					this.SendPropertyChanging();
-					this._Company_Fax = value;
-					this.SendPropertyChanged("Company_Fax");
-					this.OnCompany_FaxChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_UserField1", DbType = "VarChar(50)")]
-		public string Company_UserField1
-		{
-			get
-			{
-				return this._Company_UserField1;
-			}
-			set
-			{
-				if ((this._Company_UserField1 != value))
-				{
-					this.OnCompany_UserField1Changing(value);
-					this.SendPropertyChanging();
-					this._Company_UserField1 = value;
-					this.SendPropertyChanged("Company_UserField1");
-					this.OnCompany_UserField1Changed();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_UserField2", DbType = "VarChar(50)")]
-		public string Company_UserField2
-		{
-			get
-			{
-				return this._Company_UserField2;
-			}
-			set
-			{
-				if ((this._Company_UserField2 != value))
-				{
-					this.OnCompany_UserField2Changing(value);
-					this.SendPropertyChanging();
-					this._Company_UserField2 = value;
-					this.SendPropertyChanged("Company_UserField2");
-					this.OnCompany_UserField2Changed();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_UserField3", DbType = "VarChar(50)")]
-		public string Company_UserField3
-		{
-			get
-			{
-				return this._Company_UserField3;
-			}
-			set
-			{
-				if ((this._Company_UserField3 != value))
-				{
-					this.OnCompany_UserField3Changing(value);
-					this.SendPropertyChanging();
-					this._Company_UserField3 = value;
-					this.SendPropertyChanged("Company_UserField3");
-					this.OnCompany_UserField3Changed();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
-		public System.Nullable<int> Book_ID
-		{
-			get
-			{
-				return this._Book_ID;
-			}
-			set
-			{
-				if ((this._Book_ID != value))
-				{
-					this.OnBook_IDChanging(value);
-					this.SendPropertyChanging();
-					this._Book_ID = value;
-					this.SendPropertyChanged("Book_ID");
-					this.OnBook_IDChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Image", DbType = "Image", UpdateCheck = UpdateCheck.Never)]
-		public System.Data.Linq.Binary Company_Image
-		{
-			get
-			{
-				return this._Company_Image;
-			}
-			set
-			{
-				if ((this._Company_Image != value))
-				{
-					this.OnCompany_ImageChanging(value);
-					this.SendPropertyChanging();
-					this._Company_Image = value;
-					this.SendPropertyChanged("Company_Image");
-					this.OnCompany_ImageChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_SalesTax_No", DbType = "VarChar(50)")]
-		public string Company_SalesTax_No
-		{
-			get
-			{
-				return this._Company_SalesTax_No;
-			}
-			set
-			{
-				if ((this._Company_SalesTax_No != value))
-				{
-					this.OnCompany_SalesTax_NoChanging(value);
-					this.SendPropertyChanging();
-					this._Company_SalesTax_No = value;
-					this.SendPropertyChanged("Company_SalesTax_No");
-					this.OnCompany_SalesTax_NoChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_NTN_No", DbType = "VarChar(50)")]
-		public string Company_NTN_No
-		{
-			get
-			{
-				return this._Company_NTN_No;
-			}
-			set
-			{
-				if ((this._Company_NTN_No != value))
-				{
-					this.OnCompany_NTN_NoChanging(value);
-					this.SendPropertyChanging();
-					this._Company_NTN_No = value;
-					this.SendPropertyChanged("Company_NTN_No");
-					this.OnCompany_NTN_NoChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Fiscal_Year", DbType = "VarChar(50)")]
-		public string Company_Fiscal_Year
-		{
-			get
-			{
-				return this._Company_Fiscal_Year;
-			}
-			set
-			{
-				if ((this._Company_Fiscal_Year != value))
-				{
-					this.OnCompany_Fiscal_YearChanging(value);
-					this.SendPropertyChanging();
-					this._Company_Fiscal_Year = value;
-					this.SendPropertyChanged("Company_Fiscal_Year");
-					this.OnCompany_Fiscal_YearChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Earning", DbType = "VarChar(9)")]
-		public string Earning
-		{
-			get
-			{
-				return this._Earning;
-			}
-			set
-			{
-				if ((this._Earning != value))
-				{
-					this.OnEarningChanging(value);
-					this.SendPropertyChanging();
-					this._Earning = value;
-					this.SendPropertyChanged("Earning");
-					this.OnEarningChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Auto_Posting", DbType = "Bit")]
-		public System.Nullable<bool> Auto_Posting
-		{
-			get
-			{
-				return this._Auto_Posting;
-			}
-			set
-			{
-				if ((this._Auto_Posting != value))
-				{
-					this.OnAuto_PostingChanging(value);
-					this.SendPropertyChanging();
-					this._Auto_Posting = value;
-					this.SendPropertyChanged("Auto_Posting");
-					this.OnAuto_PostingChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ImageURL", DbType = "NVarChar(100)")]
-		public string ImageURL
-		{
-			get
-			{
-				return this._ImageURL;
-			}
-			set
-			{
-				if ((this._ImageURL != value))
-				{
-					this.OnImageURLChanging(value);
-					this.SendPropertyChanging();
-					this._ImageURL = value;
-					this.SendPropertyChanged("ImageURL");
-					this.OnImageURLChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CompanyCode", DbType = "NVarChar(50)")]
-		public string CompanyCode
-		{
-			get
-			{
-				return this._CompanyCode;
-			}
-			set
-			{
-				if ((this._CompanyCode != value))
-				{
-					this.OnCompanyCodeChanging(value);
-					this.SendPropertyChanging();
-					this._CompanyCode = value;
-					this.SendPropertyChanged("CompanyCode");
-					this.OnCompanyCodeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ReportFolder", DbType = "NVarChar(100)")]
-		public string Company_ReportFolder
-		{
-			get
-			{
-				return this._Company_ReportFolder;
-			}
-			set
-			{
-				if ((this._Company_ReportFolder != value))
-				{
-					this.OnCompany_ReportFolderChanging(value);
-					this.SendPropertyChanging();
-					this._Company_ReportFolder = value;
-					this.SendPropertyChanged("Company_ReportFolder");
-					this.OnCompany_ReportFolderChanged();
 				}
 			}
 		}

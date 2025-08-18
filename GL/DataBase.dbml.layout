@@ -1705,7 +1705,7 @@
         <classShapeMoniker Id="fc151a2f-f742-44ec-b47e-5bb5c32e3909" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.25 : 4.075); (2.25 : 4.1475); (2.34628205128205 : 4.1475 : JumpStart); (2.51294871794872 : 4.1475 : JumpEnd); (2.7975 : 4.1475); (2.7975 : 74.0872713216146); (23.5625 : 74.0872713216146); (23.5625 : 113.051414388021); (41.03125 : 113.051414388021); (41.03125 : 74.0872713216146); (41.125 : 74.0872713216146)]" fixedFrom="NotFixed" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.25 : 4.075); (2.25 : 4.1475); (2.34628205128205 : 4.1475 : JumpStart); (2.51294871794872 : 4.1475 : JumpEnd); (2.7975 : 4.1475); (2.7975 : 74.0872713216146); (23.5775 : 74.0872713216146); (23.5775 : 112.951414388021); (41.03125 : 112.951414388021); (41.03125 : 74.0872713216146); (41.125 : 74.0872713216146)]" fixedFrom="NotFixed" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataBaseDataContext/aspnet_Application/aspnet_Application_aspnet_User" />
       <nodes>
         <classShapeMoniker Id="59e65987-e576-4b67-b0c2-f95d5990dd1c" />
@@ -1853,16 +1853,16 @@
         <elementListCompartment Id="3d9b9305-0bf1-4e11-91ed-39a4cf3be63b" absoluteBounds="69.39, 31.71, 1.9700000000000002, 33.325236002604164" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="18a482dd-b22a-4d4a-82f5-8413269007ee" absoluteBounds="32.75, 47.75, 2, 10.232159830729165">
-      <DataClassMoniker Name="/DataBaseDataContext/HR_Employee" />
-      <nestedChildShapes>
-        <elementListCompartment Id="5266bb71-5471-4547-be31-cf4f765a384b" absoluteBounds="32.765, 48.21, 1.9700000000000002, 9.6721598307291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="54d29b72-c0c1-4ebb-b5b8-c9787201b230" absoluteBounds="31, 53.5, 2, 4.6554182942708326">
       <DataClassMoniker Name="/DataBaseDataContext/sys_Company" />
       <nestedChildShapes>
         <elementListCompartment Id="d02dab6e-eb60-4998-83d1-fc4b786d5770" absoluteBounds="31.015, 53.96, 1.9700000000000002, 4.095418294270833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="6afe0721-975c-489f-baa7-1641f535fb27" absoluteBounds="31.625, 47.75, 2, 10.232159830729165">
+      <DataClassMoniker Name="/DataBaseDataContext/HR_Employee" />
+      <nestedChildShapes>
+        <elementListCompartment Id="deb5b7f5-a6cb-48cf-a5a8-68f571803253" absoluteBounds="31.64, 48.21, 1.9700000000000002, 9.6721598307291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

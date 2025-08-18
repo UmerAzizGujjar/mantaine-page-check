@@ -150,6 +150,15 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label Doctor;
 
         /// <summary>
+        /// hdndoctors_id control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdndoctors_id;
+
+        /// <summary>
         /// lblDoctor control.
         /// </summary>
         /// <remarks>
