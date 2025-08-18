@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Tibb" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=Tibb;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="TibbConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="prch" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7904,23 +7903,6 @@
   <Function Name="dbo.GetSequentialMrNo" Method="GetSequentialMrNo" IsComposable="true">
     <Return Type="System.String" />
   </Function>
-  <Function Name="dbo.sp_loadAppointment" Method="sp_loadAppointment">
-    <Parameter Name="appID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_loadAppointmentResult">
-      <Column Name="Appointment_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Age" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Consultant_ID" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Patient_Name" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Phone" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Appointment_No" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="app_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Time" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Sub_Department" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(5000)" CanBeNull="true" />
-      <Column Name="Reg_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.GetItemBatchStock" Method="GetItemBatchStock" IsComposable="true">
     <Parameter Name="Item_ID" Parameter="item_ID" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="Batch_No" Parameter="batch_No" Type="System.String" DbType="VarChar(100)" />
@@ -10421,6 +10403,25 @@
       <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_loadAppointment" Method="sp_loadAppointment">
+    <Parameter Name="appID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_loadAppointmentResult">
+      <Column Name="Appointment_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Age" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Consultant_ID" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="doctor_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Patient_Name" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Appointment_No" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="app_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Time" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Sub_Department" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Department_name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(5000)" CanBeNull="true" />
+      <Column Name="Reg_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
