@@ -6,7 +6,21 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
+      
+        // Example (unreliable) attempt to detect DevTools
+        let devtools = false;
+        console.log('%c', {
+            toString: () => { devtools = true; }
+        });
+
+        setInterval(() => {
+            if (devtools) {
+                alert("DevTools detected!");
+                // Maybe redirect or block
+            }
+        }, 1000);
         $(document).ready(function () {
+
             loadOPDPermissions();
             DisableCardPrint();
 
