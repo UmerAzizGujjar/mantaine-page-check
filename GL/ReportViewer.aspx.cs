@@ -74,7 +74,8 @@ namespace PMS
             SqlConnectionStringBuilder SSB = new SqlConnectionStringBuilder(ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString);
             string reportName = Request.QueryString["ReportName"];
             string reportTitle = Request.QueryString["ReportTitle"];
-            string reportPath = Server.MapPath("~/Reports/");
+            string CompanyNamefolder = DBClass.getField("select Company_ReportFolder from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
+            string reportPath = Server.MapPath("~/Reports/"+ CompanyNamefolder + "/");
             rd = new ReportDocument();
             paramFields = new ParameterFields();
             bool Export = Convert.ToBoolean(Request.QueryString["ExportPDF"]);
@@ -344,25 +345,37 @@ namespace PMS
             }
             else if (reportName == "AdminissionSlip")
             {
-                reportPath += "Patients/rptAdmissionPrint.rpt";
+               
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath +=  "InPatient/rptAdmissionPrint.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@patientId", Convert.ToInt32(Request.QueryString["Inpatient_ID"]));
             }
             else if (reportName == "DischargePrint")
             {
-                reportPath += "Patients/rptDischargeSlip.rpt";
+               
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath +=  "InPatient/rptDischargeSlip.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("@PatientId", int.Parse(Request.QueryString["InPatientId"]));
             }
             else if (reportName == "Emergencypatient")
             {
                 string Emergency_ID = Request.QueryString["Emergency_ID"].ToString();
-                reportPath += "Patients/rptEmergencypatientDetails.rpt";
+                
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath +=  "Emergency/rptEmergencypatientDetails.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID));
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[1].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[2].Name.ToString());
@@ -370,9 +383,13 @@ namespace PMS
             }
             else if (reportName == "CONSULTANT_Wise_Statistics")
             {
+               
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 reportPath += "Patients/rptCounsltant_Wise_stat_report.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
                 string Doctor = Request.QueryString["Doctor"].ToString();
                 string stDate = Request.QueryString["StartDate"].ToString();
@@ -392,10 +409,14 @@ namespace PMS
             }
             else if (reportName == "Counsltant_Day_Wise_report")
             {
+
+                
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 reportPath += "Patients/rptCounsltant_Day_Wise_report.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
 
                 string stDate = Request.QueryString["StartDate"].ToString();
                 string stTime = Request.QueryString["StartTime"].ToString();
@@ -415,10 +436,13 @@ namespace PMS
             }
             else if (reportName == "HospitalCashReport")
             {
+               
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 reportPath += "Patients/rptPatients_Info.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
 
                 string stDate = Request.QueryString["StartDate"].ToString();
                 string stTime = Request.QueryString["StartTime"].ToString();
@@ -439,7 +463,10 @@ namespace PMS
             }
             else if (reportName == "OPDDetailReport")
             {
-                string rptFileName = "Patients/OPDDetailReport.rpt";
+               
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName =  "Patients/OPDDetailReport.rpt";
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
                 //Mohsin
@@ -458,6 +485,7 @@ namespace PMS
                 rd.Load(reportPath);
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@FromDate", sqlStartDateTime);
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
@@ -470,10 +498,13 @@ namespace PMS
             {
                 if (Request.QueryString["MrNo"] != null)
                 {
+                    
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptPatient_Card.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@MR_No", Request.QueryString["MrNo"]);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                 }
             }
@@ -481,6 +512,8 @@ namespace PMS
             {
                 if (Request.QueryString["MrNo"] != null)
                 {
+                  
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptPatientCard_Back.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@MR_No", Request.QueryString["MrNo"]);
@@ -492,10 +525,14 @@ namespace PMS
             {
                 if (Request.QueryString["OPD_ID"] != null)
                 {
-                    reportPath += "Patients/rpt_OPD_Patient_Print.rpt";
+                  
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                    reportPath +=  "Patients/rpt_OPD_Patient_Print.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@OPD_ID", Request.QueryString["OPD_ID"]);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                 }
             }
@@ -504,10 +541,13 @@ namespace PMS
             {
                 if (Request.QueryString["OPD_ID"] != null)
                 {
+                   
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptOutPatient.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@patient_ID", Request.QueryString["OPD_ID"]);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                 }
             }
@@ -515,19 +555,28 @@ namespace PMS
             else if (reportName == "consent_slip")
             {
                 string inPatientID = Request.QueryString["In_Patient_ID"].ToString();
-                reportPath += "Patients/rptconsent.rpt";
+                
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath +=  "Patients/rptconsent.rpt";
                 rd.Load(reportPath);
 
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@Inp_patientID", inPatientID);
 
             }
             else if (reportName == "OutPatient")
             {
+              
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()"); 
+
                 string out_Patient_ID = Request.QueryString["outPatientID"].ToString();
                 reportPath += "Patients/rptOutpatientDetails.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID));
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[1].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[2].Name.ToString());
@@ -537,11 +586,15 @@ namespace PMS
             {
                 if (Request.QueryString["Patient_ID"] != null)
                 {
-                    reportPath += "Patients/rptReg_Patient_Print.rpt";
+                    
+                   
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                    reportPath +=  "Patients/rptReg_Patient_Print.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@pat_Id", Request.QueryString["Patient_ID"]);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    //rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);                 
                 }
             }
             else if (reportName == "TotalIncome")
@@ -601,11 +654,18 @@ namespace PMS
                     {
                         edateTime = Convert.ToDateTime(edateTime).ToString(DateTimeFormate);
                     }
+                    
+                    var ComapnyPhone = DBClass.getField("select Company_Phone1 from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
+                    var ComapnyEmail = DBClass.getField("select Company_Email from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptAllCashReport.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("ComapnyPhone", ComapnyPhone);
+                    rd.SetParameterValue("ComapnyEmail", ComapnyEmail);
                     rd.SetParameterValue("@sDateTime", sdateTime);
                     rd.SetParameterValue("@endDateTime", edateTime);
                 }
@@ -663,8 +723,12 @@ namespace PMS
                     //bool date_Only_Boolean_converted = Convert.ToBoolean(dateOnly);
                     bool AllPatientsRecords_Boolean_Converted = Convert.ToBoolean(AllPatientsRecords);
                     bool summary_Boolean_Converted = Convert.ToBoolean(summary);
+
+                   
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                     //Mohsin
-                    reportPath += "Patients/rptPatientsDetails.rpt";
+                    reportPath +="Patients/rptPatientsDetails.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
                     rd.SetParameterValue("@sDate", sdateTime);
@@ -680,8 +744,9 @@ namespace PMS
                     rd.SetParameterValue("@Operator", Operator);                  
                     rd.SetParameterValue("STime", STIME);
                     rd.SetParameterValue("ETime", ETIME);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     //rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
-                  
+
 
                 }
                 catch (Exception ex)
@@ -2190,9 +2255,13 @@ namespace PMS
             else if (reportName == "InpatientDetail")
             {
                 string InPatient_ID = Request.QueryString["InPatient_ID"].ToString();
+             
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 reportPath += "InPatient/rptInpatientDetails.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID));
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[1].Name.ToString());
@@ -5132,20 +5201,25 @@ namespace PMS
             }
             else if (reportName == "LabSlip")
             {
-                reportPath += "rptLabSlip.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "LabRadiology/rptLabSlip.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Lab_ID", int.Parse(Request.QueryString["Lab_ID"]));
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                 rd.SetParameterValue("Phone", DBClass.getField("select Company_Phone1 from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
             }
             else if (reportName == "EmergencyPrint")
             {
-                string rptFileName = "rptDeath_Certifcate.rpt";
+               
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "Emergency/rptDeath_Certifcate.rpt";
                 reportPath += rptFileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", "Death Certifcate");
                 rd.SetParameterValue("@Emergency_ID", Convert.ToInt32(Request.QueryString["Emergency_ID"]));
 
