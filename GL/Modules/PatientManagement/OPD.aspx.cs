@@ -937,6 +937,7 @@ namespace PMS.Modules.PatientManagement
                              PanelCompany = p.PanelCompany,
                              PanelCompany_text = (from a in db.Panels where a.Panel_ID == Convert.ToInt32(p.PanelCompany) select a.Company_Name),
                              employee_ID = p.employee_ID,
+                             employee_text = (from a in db.HR_Employees where a.Emp_ID == Convert.ToInt32(p.employee_ID) select a.Emp_Name),
                              Refference_No = p.Refference_No,
                              Employee_Name = p.Employee_Name,
                              discount_amt = p.discount_amt,

@@ -29,7 +29,8 @@ namespace PMS.Modules.PatientManagement
                     OutpatientID = Convert.ToInt32(Request.QueryString["ID"]);
                 }
             }
-
+            using (DataBaseDataContext db = new DataBaseDataContext())
+                Doctor.Text = (from a in db.HR_Employees where a.userid == AppConfig.UserID select a.Emp_Name.FirstOrDefault());
         }
         [WebMethod]
         public static string GetAvailableDates(int DocID)

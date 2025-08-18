@@ -108,21 +108,21 @@
             $('#ctl00_lblMessage').hide();
 
         });
-        document.oncontextmenu = function () {
+        //document.oncontextmenu = function () {
 
-            return false;
-        }
-        document.onkeydown = function (e) {
-            // Disable F12
-            if (e.keyCode == 123) {
-                return false;
-            }
-            // Disable Ctrl+Shift+I
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
-                return false;
-            }
+        //    return false;
+        //}
+        //document.onkeydown = function (e) {
+        //    // Disable F12
+        //    if (e.keyCode == 123) {
+        //        return false;
+        //    }
+        //    // Disable Ctrl+Shift+I
+        //    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+        //        return false;
+        //    }
 
-        };
+        //};
 
 
 

@@ -724,7 +724,7 @@ margin-right: 5px;
         }
     </style>
 
-    <script id="ScriptmanageSymptomsModal">
+    <script id="ScriptmanageSymptomsModal" type="text/javascript">
 
         $(document).on('input', '#symptomSearch', function () {
             const searchTerm = $(this).val().trim();
@@ -1222,7 +1222,7 @@ margin-right: 5px;
             });
         });
     </script>
-    <script id="functions">
+    <script id="functions" type="text/javascript">
         function loadPatientFormData(patientId) {
             // Show loading indicator
             showLoading();
@@ -4675,6 +4675,14 @@ margin-right: 5px;
                                                 </div>
                                                 <div class="col-md-7 col-sm-6">
                                                     <asp:Label ID="lblFollow" runat="server"></asp:Label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-5 col-sm-6">
+                                                    <asp:Label ID="Doctor" CssClass="labels" runat="server" Text="Doctor:"></asp:Label>
+                                                </div>
+                                                <div class="col-md-7 col-sm-6">
+                                                    <asp:Label ID="lblDoctor" runat="server"></asp:Label>
                                                 </div>
                                             </div>
                                         </div>

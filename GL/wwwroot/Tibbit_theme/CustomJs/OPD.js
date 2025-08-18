@@ -1391,13 +1391,10 @@ function loadPatientDetail(OPDID) {
 
 
 
-            $('#Employe_id').val(data.employee_ID).trigger('change').attr('disabled', true);
-            $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
-            $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
-            $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
-         
-            
-            $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
+           
+          
+          
+
             $('#ddlmartialstatus').html(
                 $('<option>', {
                     value: data.MaritalStatus,
@@ -1457,8 +1454,17 @@ function loadPatientDetail(OPDID) {
                     text: data.PanelCompany_text
                 })
             ).attr('disabled', true);
-       
-           
+            
+            $('#Employe_id').html(
+                $('<option>', {
+                    value: data.employee_ID,
+                    text: data.employee_text
+                })
+            ).attr('disabled', true);
+            $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
+            $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
+            $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
+            $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
                 
                 

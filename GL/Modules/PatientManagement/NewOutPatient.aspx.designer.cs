@@ -141,6 +141,24 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label lblFollow;
 
         /// <summary>
+        /// Doctor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Doctor;
+
+        /// <summary>
+        /// lblDoctor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDoctor;
+
+        /// <summary>
         /// LblPuls control.
         /// </summary>
         /// <remarks>
