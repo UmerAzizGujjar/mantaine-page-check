@@ -375,7 +375,6 @@
     <Content Include="Modules\BloodBank\BloodTransfusionForm.aspx" />
     <Content Include="Modules\BloodBank\BloodTransfusionList.aspx" />
     <Content Include="Modules\Accounts\ChangeAccount.aspx" />
-    <Content Include="Reports\Patients\rptPatientsDetails.rpt" />
     <Content Include="upload\ChartofAccountExcelUpload.aspx" />
     <Content Include="Modules\PatientManagement\ChildBirth.aspx" />
     <Content Include="Modules\PatientManagement\ChildBirthView.aspx" />
@@ -21627,7 +21626,6 @@
     <Content Include="upload\ExcelUploadSamples\COAExcelUploadSample.xlsx" />
     <Content Include="upload\ExcelUploadSamples\StockUploadSample.xlsx" />
     <Content Include="upload\ExcelUploadSamples\VoucherUploadSample.xlsx" />
-    <Content Include="Reports\Inventory\rptBatchExpiry.rpt" />
     <Content Include="Reports\Inventory\rptMinimumStock.rpt" />
     <Content Include="Reports\Inventory\rptMIR_Summary_Department_Wise.rpt" />
     <Content Include="Reports\Inventory\rptSINSummary.rpt" />
