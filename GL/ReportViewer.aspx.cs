@@ -476,7 +476,6 @@ namespace PMS
                 {
                     departmentID = "All";
                 }
-                string Doctor = Request.QueryString["Doctor"].ToString();
                 string Operator = Request.QueryString["Operator"].ToString();
                 reportPath += rptFileName;
                 rd.Load(reportPath);
