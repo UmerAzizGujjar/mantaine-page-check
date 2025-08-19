@@ -419,6 +419,10 @@
 
 
 
+        .result-item.highlighted {
+    background: #e2e8f0; /* light gray */
+    cursor: pointer;
+}
 
 
             .result-item:last-child {
@@ -489,14 +493,11 @@
 
     <script type="text/javascript" id="ready">
         $(document).ready(function () {
-
-        });
+         });
         function selectPatient(patientNo, RegID) {
             $("#hdfReg_ID").val(RegID);
-            checkVisits();
             fetchPatientInfo();
-            hideResults();
-            $('#Information').slideDown();
+            checkVisits();
             LoadOPDTable();
             LoadIPDTable();
             LoadEMERGENCYTable();
@@ -667,48 +668,69 @@
 
             let searchTimeout;
             let currentXHR = null;
+            let highlightedIndex = -1; // Track which result is highlighted
 
             searchInput.addEventListener('input', function (e) {
                 const query = e.target.value.trim();
-
                 clearTimeout(searchTimeout);
 
-                // Cancel previous AJAX request if still pending
                 if (currentXHR && currentXHR.readyState !== 4) {
                     currentXHR.abort();
                 }
 
-                // Add small delay for better UX
                 searchTimeout = setTimeout(() => {
-
-
                     showLoading();
-
                     searchPatients(query);
                 }, 300);
             });
 
-            // Hide results when clicking outside
-            document.addEventListener('click', function (e) {
-                if (!e.target.closest('.search-container')) {
+            // Handle keyboard navigation
+            searchInput.addEventListener('keydown', function (e) {
+                const items = searchResults.querySelectorAll('.result-item');
+                if (items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % items.length;
+                    updateHighlight(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + items.length) % items.length;
+                    updateHighlight(items);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (highlightedIndex >= 0) {
+                        const selectedItem = items[highlightedIndex];
+                        selectedItem.click(); // trigger selection
+                    } else if (items.length > 0) {
+                        items[0].click(); // default: first item
+                    }
                     hideResults();
                 }
             });
+
+            function updateHighlight(items) {
+                items.forEach(item => item.classList.remove('highlighted'));
+                if (highlightedIndex >= 0) {
+                    items[highlightedIndex].classList.add('highlighted');
+                    items[highlightedIndex].scrollIntoView({ block: "nearest" });
+                }
+            }
+
             function searchPatients(searchValue) {
                 currentXHR = $.ajax({
                     type: "POST",
-                    url: "NewEMR.aspx/GetPatients", // Replace 'YourPage.aspx' with your actual page name
+                    url: "NewEMR.aspx/GetPatients",
                     data: JSON.stringify({ searchValue: searchValue }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
                         try {
                             const patients = JSON.parse(response.d);
-
-                            // Check if response contains error
                             if (patients.error) {
                                 showError(patients.error);
                             } else {
+                                highlightedIndex = -1; // reset highlight
                                 showResults(patients, searchValue);
                             }
                         } catch (e) {
@@ -724,53 +746,39 @@
             function showResults(patients, query) {
                 if (!patients || patients.length === 0) {
                     searchResults.innerHTML = `
-            <div class="no-results">
-                No patients found for "${query}"
-            </div>
-        `;
+                <div class="no-results">
+                    No patients found for "${query}"
+                </div>`;
                 } else {
                     searchResults.innerHTML = patients.map(patient => {
                         const displayText = `${patient.PatientNo}-${patient.FullName}`;
                         return `
-                <div class="result-item" onclick="selectPatient('${patient.PatientNo}','${patient.RegID}')">
-                    <div>${highlightText(displayText, query)}</div>
-                </div>
-            `;
+                    <div class="result-item" onclick="selectPatient('${patient.PatientNo}','${patient.RegID}')">
+                        <div>${highlightText(displayText, query)}</div>
+                    </div>`;
                     }).join('');
                 }
-
                 searchResults.classList.add('active');
             }
 
             function showLoading() {
                 searchResults.innerHTML = `
-        <div class="no-results">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <div class="loading-spinner"></div>
-                Searching patients...
-            </div>
-        </div>
-    `;
+            <div class="no-results">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <div class="loading-spinner"></div>
+                    Searching patients...
+                </div>
+            </div>`;
                 searchResults.classList.add('active');
             }
 
             function showError(errorMessage) {
                 searchResults.innerHTML = `
-        <div class="no-results" style="color: #ff6b6b;">
-            ⚠️ Error: ${errorMessage}
-        </div>
-    `;
+            <div class="no-results" style="color: #ff6b6b;">
+                ⚠️ Error: ${errorMessage}
+            </div>`;
                 searchResults.classList.add('active');
             }
-
-
-
-            // Listen for patient selection (example usage)
-            document.addEventListener('patientSelected', function (e) {
-                console.log('Patient Selected Event:', e.detail);
-                // You can handle the selected patient here
-                // Example: Load patient details, update forms, etc.
-            });
 
             function highlightText(text, query) {
                 if (!query) return text;
@@ -782,7 +790,6 @@
                 return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             }
 
-            // Show focus effect
             searchInput.addEventListener('focus', function () {
                 if (this.value.trim().length >= 2) {
                     const query = this.value.trim();
@@ -791,6 +798,7 @@
                 }
             });
         });
+
         function LoadOPDTable() {
             var ID = $("#hdfReg_ID").val();
 
@@ -2104,15 +2112,12 @@
                     }
                 },
                 "columns": [
-                    { "data": "ID", "width": "8%", "orderable": true },
-                    { "data": "OutPatientID", "width": "12%", "orderable": true },
-                    { "data": "PatientID", "width": "12%", "orderable": true },
-                    { "data": "DiagnosisName", "width": "35%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "ComplaintName", "width": "35%", "orderable": true, "defaultContent": "N/A" },
                     { "data": "Remarks", "width": "25%", "orderable": true, "defaultContent": "" },
 
                 ]
             });
-        } 
+        }
         function LoadPatientSymptomsTable() {
             var ID = $("#hdfReg_ID").val();
 
@@ -2163,8 +2168,6 @@
                     }
                 },
                 "columns": [
-                    { "data": "ID", "width": "8%", "orderable": true },
-                    { "data": "PatientID", "width": "10%", "orderable": true },
                     { "data": "SymptomName", "width": "25%", "orderable": true, "defaultContent": "N/A" },
                     { "data": "Duration", "width": "10%", "orderable": true },
                     { "data": "DurationUnit", "width": "12%", "orderable": true, "defaultContent": "N/A" },
@@ -2173,7 +2176,7 @@
 
                 ]
             });
-        } 
+        }
         function LoadPrimaryDiagnosisTable() {
             var ID = $("#hdfReg_ID").val();
 
@@ -2224,15 +2227,12 @@
                     }
                 },
                 "columns": [
-                    { "data": "ID", "width": "8%", "orderable": true },
-                    { "data": "OutPatientID", "width": "12%", "orderable": true },
-                    { "data": "PatientID", "width": "12%", "orderable": true },
                     { "data": "DiagnosisName", "width": "35%", "orderable": true, "defaultContent": "N/A" },
                     { "data": "Remarks", "width": "25%", "orderable": true, "defaultContent": "" },
 
                 ]
             });
-        } 
+        }
         function LoadFinalDiagnosisTable() {
             var ID = $("#hdfReg_ID").val();
 
@@ -2282,16 +2282,13 @@
                         console.error("Primary Diagnosis AJAX Error:", status, error);
                     }
                 },
-                "columns": [ 
+                "columns": [
                     { "data": "DiagnosisName", "width": "35%", "orderable": true, "defaultContent": "N/A" },
                     { "data": "Remarks", "width": "25%", "orderable": true, "defaultContent": "" },
 
                 ]
             });
         }
-
-
-
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -2376,12 +2373,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/followup.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Advices</span>
-                    </div>
-                </div>
+                 
             </div>
         </div>
         <div class="col-lg-10">
@@ -2491,7 +2483,7 @@
                 </div>
             </div>
             <h2 class="header mybutton"></h2>
-            <div id="tab01" style="display: none" class="tabs">
+            <div id="tab01" style="display:none" class="tabs">
                 <div class="table-container col-lg-12 col-md-12 col-sm-10">
                     <table class="table modern-table" id="tblOPD">
                         <thead id="OPDhead">
@@ -2643,11 +2635,11 @@
                     </table>
                 </div>
             </div>
-             <div id="tab08" style="display: none" class="tabs">
+            <div id="tab08" style="display: none" class="tabs">
                 <div class="table-container col-lg-12 col-md-12 col-sm-10">
                     <table class="table modern-table" id="tblPatientSymptoms">
                         <thead id="SymptomsHead">
-                            <tr> 
+                            <tr>
                                 <th>Symptom</th>
                                 <th>Duration</th>
                                 <th>Duration Unit</th>
@@ -2660,12 +2652,12 @@
                     </table>
                 </div>
             </div>
-             <div id="tab09" style="display: none" class="tabs">
+            <div id="tab09" style="display: none" class="tabs">
                 <div class="table-container col-lg-12 col-md-12 col-sm-10">
                     <table class="table modern-table" id="tblPatientComplaints">
                         <thead id="ComplaintsHead">
                             <tr>
-                                 
+
                                 <th>Complaint</th>
                                 <th>Remarks</th>
                             </tr>
@@ -2676,11 +2668,11 @@
                 </div>
             </div>
 
-             <div id="tab10" style="display: none" class="tabs">
+            <div id="tab10" style="display: none" class="tabs">
                 <div class="table-container col-lg-12 col-md-12 col-sm-10">
                     <table class="table modern-table" id="tblPrimaryDiagnosis">
                         <thead id="PrimaryDiagnosisHead">
-                            <tr> 
+                            <tr>
                                 <th>Primary Diagnosis</th>
                                 <th>Remarks</th>
                             </tr>
@@ -2691,11 +2683,11 @@
                 </div>
             </div>
 
-             <div id="tab11" style="display: none" class="tabs">
+            <div id="tab11" style="display: none" class="tabs">
                 <div class="table-container col-lg-12 col-md-12 col-sm-10">
                     <table class="table modern-table" id="tblFinalDiagnosis">
                         <thead id="FinalDiagnosisHead">
-                            <tr> 
+                            <tr>
                                 <th>Final Diagnosis</th>
                                 <th>Remarks</th>
                             </tr>

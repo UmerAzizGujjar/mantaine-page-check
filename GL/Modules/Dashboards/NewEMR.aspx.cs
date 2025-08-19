@@ -1141,18 +1141,21 @@ namespace PMS.Modules.Dashboards
                     // Get total count from OutPatientComplaints
                     var Total_complaints = _dbContext.OutPatientComplaints.Count(opc =>
                         patientIds.Contains(opc.OutPatientID) || opc.PatientID == regID);
+                    var query =
+                        from opc in _dbContext.OutPatientComplaints
+                        join cd in _dbContext.ComplaintsDefinitions
+                            on opc.ComplaintID equals cd.ID into gj
+                        from cd in gj.DefaultIfEmpty()
+                        where patientIds.Contains(opc.OutPatientID) || opc.PatientID == regID
+                        select new
+                        {
+                            ID = opc.ID,
+                            OutPatientID = opc.OutPatientID,
+                            PatientID = opc.PatientID,
+                            ComplaintID = opc.ComplaintID,
+                            ComplaintName = cd.ComplaintName ?? "N/A"
+                        };
 
-                    var query = from opc in _dbContext.OutPatientComplaints
-                                where patientIds.Contains(opc.OutPatientID) || opc.PatientID == regID
-                                select new
-                                {
-                                    ID = opc.ID,
-                                    OutPatientID = opc.OutPatientID,
-                                    PatientID = opc.PatientID,
-                                    ComplaintID = opc.ComplaintID,
-                                    ComplaintName = _dbContext.ComplaintsDefinitions.Where(c => c.ID == opc.ComplaintID).Select(c => c.ComplaintName).FirstOrDefault() ?? "N/A"
-                                }
-                ;
 
                     // Apply search filter if searchValue is provided
                     if (!string.IsNullOrEmpty(searchValue))
