@@ -622,6 +622,7 @@
             var tableGeneralItems = $('#VendorGeneralItemlist');
             var tablePharmacyItems = $('#VendorPharmacyItemlist');
             var tableCompany = $('#VendorCompanieslist');
+            var hdfAccount_ID = $('#hdfAccount_ID').val();
             var VendorId = $('#txtVendorId').val();
             var VendorCode = $('#txtVendorCode').val();
             var Person_list = [];
