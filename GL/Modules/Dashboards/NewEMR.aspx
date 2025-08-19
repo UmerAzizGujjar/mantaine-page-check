@@ -504,6 +504,10 @@
             LoadDiagnosticsTable();
             LoadInvestigationTable();
             LoadPatientServicesTable();
+            LoadPatientComplaintsTable();
+            LoadPatientSymptomsTable();
+            LoadPrimaryDiagnosisTable();
+            LoadFinalDiagnosisTable();
         }
         function fetchPatientInfo() {
             debugger;
@@ -630,6 +634,7 @@
                     $("#medicationCount").text(data.MediceneCount);
                     $("#investigationCount").text(data.InvestigationCount);
                     $("#diagnosticsCount").text(data.DiagnosticCount);
+                    $("#proceduresCount").text(data.ProceduresCount);
 
 
                 },
@@ -1521,7 +1526,7 @@
                         "title": "Instructions",
                         "width": "20%",
                         "orderable": false
-                    } 
+                    }
                 ],
                 "order": [[0, "desc"]], // Default sort by prescription date descending
                 "pageLength": 25,
@@ -1650,7 +1655,7 @@
                         },
                         "width": "10%",
                         "orderable": true
-                    },  
+                    },
                     {
                         "data": "Special_Tests",
                         "name": "Special_Tests",
@@ -1674,7 +1679,7 @@
                         "width": "15%",
                         "orderable": false,
                         "defaultContent": "N/A"
-                    } 
+                    }
                 ],
                 "order": [[0, "desc"]], // Default sort by test date descending
                 "pageLength": 25,
@@ -1811,7 +1816,7 @@
                         "width": "8%",
                         "orderable": true
                     },
-                    
+
                     {
                         "data": "Special_Tests",
                         "name": "Special_Tests",
@@ -1843,7 +1848,7 @@
                         "width": "10%",
                         "orderable": false,
                         "defaultContent": "N/A"
-                    } 
+                    }
                 ],
                 "order": [[0, "desc"]], // Default sort by test date descending
                 "pageLength": 25,
@@ -2024,18 +2029,7 @@
                         "orderable": true,
                         "defaultContent": "Not Billed"
                     },
-                    {
-                        "data": null,
-                        "render": function (data, type, row) {
-                            var actions = '<div class="btn-group" role="group">';
-                            actions += '<a class="btn btn-sm btn-info" style="margin-right: 2px;" href="#" onclick="ViewService(' + row.ServicesId + ')" title="View Service"><i class="fa fa-eye"></i></a>';
-                            actions += '<a class="btn btn-sm btn-primary" href="#" onclick="PrintService(' + row.ServicesId + ')" title="Print Service"><i class="fa fa-print"></i></a>';
-                            actions += '</div>';
-                            return actions;
-                        },
-                        "width": "12%",
-                        "orderable": false
-                    }
+
                 ],
                 "initComplete": function (settings, json) {
                     var lengthContainer = document.querySelector('#tblPatientServices_length');
@@ -2060,19 +2054,242 @@
                 }
             });
         }
+        function LoadPatientComplaintsTable() {
+            var ID = $("#hdfReg_ID").val();
 
-        // Additional helper functions for the action buttons
-        function ViewService(serviceId) {
-            // Implement service view logic
-            console.log("Viewing service:", serviceId);
-            // You can add modal popup or redirect logic here
+            if ($.fn.DataTable.isDataTable('#tblPatientComplaints')) {
+                $('#tblPatientComplaints').DataTable().destroy();
+            }
+
+            $("#tblPatientComplaints").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": {
+                    "url": "NewEMR.aspx/PatientComplaintsViewList",
+                    "type": "POST",
+                    "contentType": "application/json; charset=utf-8",
+                    "dataType": "json",
+                    "data": function (d) {
+                        return JSON.stringify({
+                            regID: parseInt(ID) || 0,
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            sortColumn: d.columns && d.order && d.order[0] ? d.columns[d.order[0].column].data : "",
+                            sortColumnDirection: d.order && d.order[0] ? d.order[0].dir : "desc",
+                            searchValue: d.search ? d.search.value : ""
+                        });
+                    },
+                    "dataSrc": function (json) {
+                        console.log("Final Diagnosis response:", json);
+                        if (json.d) {
+                            var result = {
+                                draw: json.d.draw || 0,
+                                recordsTotal: json.d.recordsTotal || 0,
+                                recordsFiltered: json.d.recordsFiltered || 0,
+                                data: json.d.data || []
+                            };
+                            this.recordsTotal = result.recordsTotal;
+                            this.recordsFiltered = result.recordsFiltered;
+                            return result.data;
+                        }
+                        return [];
+                    },
+                    "error": function (xhr, status, error) {
+                        console.error("Final Diagnosis AJAX Error:", status, error);
+                    }
+                },
+                "columns": [
+                    { "data": "ID", "width": "8%", "orderable": true },
+                    { "data": "OutPatientID", "width": "12%", "orderable": true },
+                    { "data": "PatientID", "width": "12%", "orderable": true },
+                    { "data": "DiagnosisName", "width": "35%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "Remarks", "width": "25%", "orderable": true, "defaultContent": "" },
+
+                ]
+            });
+        } 
+        function LoadPatientSymptomsTable() {
+            var ID = $("#hdfReg_ID").val();
+
+            if ($.fn.DataTable.isDataTable('#tblPatientSymptoms')) {
+                $('#tblPatientSymptoms').DataTable().destroy();
+            }
+
+            $("#tblPatientSymptoms").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": {
+                    "url": "NewEMR.aspx/PatientSymptomsViewList",
+                    "type": "POST",
+                    "contentType": "application/json; charset=utf-8",
+                    "dataType": "json",
+                    "data": function (d) {
+                        return JSON.stringify({
+                            regID: parseInt(ID) || 0,
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            sortColumn: d.columns && d.order && d.order[0] ? d.columns[d.order[0].column].data : "",
+                            sortColumnDirection: d.order && d.order[0] ? d.order[0].dir : "desc",
+                            searchValue: d.search ? d.search.value : ""
+                        });
+                    },
+                    "dataSrc": function (json) {
+                        console.log("Symptoms response:", json);
+                        if (json.d) {
+                            var result = {
+                                draw: json.d.draw || 0,
+                                recordsTotal: json.d.recordsTotal || 0,
+                                recordsFiltered: json.d.recordsFiltered || 0,
+                                data: json.d.data || []
+                            };
+                            this.recordsTotal = result.recordsTotal;
+                            this.recordsFiltered = result.recordsFiltered;
+                            return result.data;
+                        }
+                        return [];
+                    },
+                    "error": function (xhr, status, error) {
+                        console.error("Symptoms AJAX Error:", status, error);
+                    }
+                },
+                "columns": [
+                    { "data": "ID", "width": "8%", "orderable": true },
+                    { "data": "PatientID", "width": "10%", "orderable": true },
+                    { "data": "SymptomName", "width": "25%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "Duration", "width": "10%", "orderable": true },
+                    { "data": "DurationUnit", "width": "12%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "PatientType", "width": "12%", "orderable": true },
+                    { "data": "Remarks", "width": "15%", "orderable": true, "defaultContent": "" },
+
+                ]
+            });
+        } 
+        function LoadPrimaryDiagnosisTable() {
+            var ID = $("#hdfReg_ID").val();
+
+            if ($.fn.DataTable.isDataTable('#tblPrimaryDiagnosis')) {
+                $('#tblPrimaryDiagnosis').DataTable().destroy();
+            }
+
+            $("#tblPrimaryDiagnosis").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": {
+                    "url": "NewEMR.aspx/PrimaryDiagnosisViewList",
+                    "type": "POST",
+                    "contentType": "application/json; charset=utf-8",
+                    "dataType": "json",
+                    "data": function (d) {
+                        return JSON.stringify({
+                            regID: parseInt(ID) || 0,
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            sortColumn: d.columns && d.order && d.order[0] ? d.columns[d.order[0].column].data : "",
+                            sortColumnDirection: d.order && d.order[0] ? d.order[0].dir : "desc",
+                            searchValue: d.search ? d.search.value : ""
+                        });
+                    },
+                    "dataSrc": function (json) {
+                        console.log("Primary Diagnosis response:", json);
+                        if (json.d) {
+                            var result = {
+                                draw: json.d.draw || 0,
+                                recordsTotal: json.d.recordsTotal || 0,
+                                recordsFiltered: json.d.recordsFiltered || 0,
+                                data: json.d.data || []
+                            };
+                            this.recordsTotal = result.recordsTotal;
+                            this.recordsFiltered = result.recordsFiltered;
+                            return result.data;
+                        }
+                        return [];
+                    },
+                    "error": function (xhr, status, error) {
+                        console.error("Primary Diagnosis AJAX Error:", status, error);
+                    }
+                },
+                "columns": [
+                    { "data": "ID", "width": "8%", "orderable": true },
+                    { "data": "OutPatientID", "width": "12%", "orderable": true },
+                    { "data": "PatientID", "width": "12%", "orderable": true },
+                    { "data": "DiagnosisName", "width": "35%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "Remarks", "width": "25%", "orderable": true, "defaultContent": "" },
+
+                ]
+            });
+        } 
+        function LoadFinalDiagnosisTable() {
+            var ID = $("#hdfReg_ID").val();
+
+            if ($.fn.DataTable.isDataTable('#tblFinalDiagnosis')) {
+                $('#tblFinalDiagnosis').DataTable().destroy();
+            }
+
+            $("#tblFinalDiagnosis").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": {
+                    "url": "NewEMR.aspx/FinalDiagnosisViewList",
+                    "type": "POST",
+                    "contentType": "application/json; charset=utf-8",
+                    "dataType": "json",
+                    "data": function (d) {
+                        return JSON.stringify({
+                            regID: parseInt(ID) || 0,
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            sortColumn: d.columns && d.order && d.order[0] ? d.columns[d.order[0].column].data : "",
+                            sortColumnDirection: d.order && d.order[0] ? d.order[0].dir : "desc",
+                            searchValue: d.search ? d.search.value : ""
+                        });
+                    },
+                    "dataSrc": function (json) {
+                        console.log("Primary Diagnosis response:", json);
+                        if (json.d) {
+                            var result = {
+                                draw: json.d.draw || 0,
+                                recordsTotal: json.d.recordsTotal || 0,
+                                recordsFiltered: json.d.recordsFiltered || 0,
+                                data: json.d.data || []
+                            };
+                            this.recordsTotal = result.recordsTotal;
+                            this.recordsFiltered = result.recordsFiltered;
+                            return result.data;
+                        }
+                        return [];
+                    },
+                    "error": function (xhr, status, error) {
+                        console.error("Primary Diagnosis AJAX Error:", status, error);
+                    }
+                },
+                "columns": [ 
+                    { "data": "DiagnosisName", "width": "35%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "Remarks", "width": "25%", "orderable": true, "defaultContent": "" },
+
+                ]
+            });
         }
 
-        function PrintService(serviceId) {
-            // Implement service print logic
-            console.log("Printing service:", serviceId);
-            // You can add print logic here
-        }
 
 
     </script>
@@ -2356,7 +2573,7 @@
                                 <th>Duration</th>
                                 <th>Frequency</th>
                                 <th>Instructions</th>
-                             </tr>
+                            </tr>
                         </thead>
                         <tbody>
                             <!-- Data will be populated by DataTables -->
@@ -2373,10 +2590,10 @@
                                 <th>Lab Test ID</th>
                                 <th>Test Name</th>
                                 <th>Date</th>
-                                 <th>Special Test</th>
+                                <th>Special Test</th>
                                 <th>Area of Interest</th>
                                 <th>Remarks</th>
-                             </tr>
+                            </tr>
                         </thead>
                         <tbody>
                             <!-- Data will be populated by DataTables -->
@@ -2394,11 +2611,11 @@
                                 <th>Test Name</th>
                                 <th>Department</th>
                                 <th>Date</th>
-                                 <th>Special Test</th>
+                                <th>Special Test</th>
                                 <th>Area of Interest</th>
                                 <th>Rotation</th>
                                 <th>Remarks</th>
-                             </tr>
+                            </tr>
                         </thead>
                         <tbody>
                             <!-- Data will be populated by DataTables -->
@@ -2407,26 +2624,89 @@
                 </div>
             </div>
             <div id="tab07" style="display: none" class="tabs">
-    <div class="table-container col-lg-12 col-md-12 col-sm-10">
-        <table class="table modern-table" id="tblPatientServices">
-            <thead id="ServicesHead">
-                <tr>
-                    <th>Service ID</th>
-                    <th>Service Name</th>
-                    <th>Service Type</th>
-                    <th>Amount</th>
-                    <th>Patient Type</th>
-                    <th>Created Date</th>
-                    <th>Created By</th>
-                    <th>Billing Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="ServicesBody">
-            </tbody>
-        </table>
-    </div>
-</div>
+                <div class="table-container col-lg-12 col-md-12 col-sm-10">
+                    <table class="table modern-table" id="tblPatientServices">
+                        <thead id="ServicesHead">
+                            <tr>
+                                <th>Service ID</th>
+                                <th>Service Name</th>
+                                <th>Service Type</th>
+                                <th>Amount</th>
+                                <th>Patient Type</th>
+                                <th>Created Date</th>
+                                <th>Created By</th>
+                                <th>Billing Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ServicesBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+             <div id="tab08" style="display: none" class="tabs">
+                <div class="table-container col-lg-12 col-md-12 col-sm-10">
+                    <table class="table modern-table" id="tblPatientSymptoms">
+                        <thead id="SymptomsHead">
+                            <tr> 
+                                <th>Symptom</th>
+                                <th>Duration</th>
+                                <th>Duration Unit</th>
+                                <th>Patient Type</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="SymptomsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+             <div id="tab09" style="display: none" class="tabs">
+                <div class="table-container col-lg-12 col-md-12 col-sm-10">
+                    <table class="table modern-table" id="tblPatientComplaints">
+                        <thead id="ComplaintsHead">
+                            <tr>
+                                 
+                                <th>Complaint</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ComplaintsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+             <div id="tab10" style="display: none" class="tabs">
+                <div class="table-container col-lg-12 col-md-12 col-sm-10">
+                    <table class="table modern-table" id="tblPrimaryDiagnosis">
+                        <thead id="PrimaryDiagnosisHead">
+                            <tr> 
+                                <th>Primary Diagnosis</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="PrimaryDiagnosisBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+             <div id="tab11" style="display: none" class="tabs">
+                <div class="table-container col-lg-12 col-md-12 col-sm-10">
+                    <table class="table modern-table" id="tblFinalDiagnosis">
+                        <thead id="FinalDiagnosisHead">
+                            <tr> 
+                                <th>Final Diagnosis</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="FinalDiagnosisBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
         </div>
     </div>
 
