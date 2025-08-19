@@ -3960,7 +3960,7 @@
                                                     <asp:Label ID="lblFollow" runat="server"></asp:Label>
                                                 </div>
                                             </div>
-                                            <div class="row mb-3">
+                                            <div class="row mb-3" style="display:none">
                                                 <div class="col-md-5 col-sm-6">
                                                     <asp:Label ID="Doctor" CssClass="labels" runat="server" Text="Doctor:"></asp:Label>
                                                     <input type="hidden" id="hdndoctors_id" runat="server" />

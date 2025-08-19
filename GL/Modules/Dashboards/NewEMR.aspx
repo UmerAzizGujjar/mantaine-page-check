@@ -503,6 +503,7 @@
             LoadMedicineTable();
             LoadDiagnosticsTable();
             LoadInvestigationTable();
+            LoadPatientServicesTable();
         }
         function fetchPatientInfo() {
             debugger;
@@ -1875,6 +1876,203 @@
                 }
             });
         }
+        function LoadPatientServicesTable() {
+            var ID = $("#hdfReg_ID").val();
+
+            // Destroy existing table if it exists
+            if ($.fn.DataTable.isDataTable('#tblPatientServices')) {
+                $('#tblPatientServices').DataTable().destroy();
+            }
+
+            $("#tblPatientServices").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": {
+                    "url": "NewEMR.aspx/PatientServicesViewList",
+                    "type": "POST",
+                    "contentType": "application/json; charset=utf-8",
+                    "dataType": "json",
+                    "data": function (d) {
+                        return JSON.stringify({
+                            regID: parseInt(ID) || 0,
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            sortColumn: d.columns && d.order && d.order[0] ? d.columns[d.order[0].column].data : "",
+                            sortColumnDirection: d.order && d.order[0] ? d.order[0].dir : "desc",
+                            searchValue: d.search ? d.search.value : ""
+                        });
+                    },
+                    "dataSrc": function (json) {
+                        console.log("Server response:", json); // Debug log
+
+                        if (json.d) {
+                            // Ensure all required properties exist
+                            var result = {
+                                draw: json.d.draw || 0,
+                                recordsTotal: json.d.recordsTotal || 0,
+                                recordsFiltered: json.d.recordsFiltered || 0,
+                                data: json.d.data || []
+                            };
+
+                            // Handle null values in the response
+                            result.data = result.data.map(function (item) {
+                                return {
+                                    ServicesId: item.ServicesId || '',
+                                    ServiceName: item.ServiceName || 'N/A',
+                                    ServiceType: item.ServiceType || 'N/A',
+                                    Amount: item.Amount || '0.00',
+                                    PatientType: item.PatientType || 'N/A',
+                                    CreatedDate: item.CreatedDate || '',
+                                    UserName: item.UserName || 'N/A',
+                                    IsBilled: item.IsBilled || 'Not Billed'
+                                };
+                            });
+
+                            // Set the values for DataTables
+                            this.recordsTotal = result.recordsTotal;
+                            this.recordsFiltered = result.recordsFiltered;
+
+                            return result.data;
+                        } else if (json.error) {
+                            console.error("Server error:", json.error);
+                            return [];
+                        }
+                        return [];
+                    },
+                    "error": function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                        console.error("Response:", xhr.responseText);
+                    }
+                },
+                "columns": [
+                    {
+                        "data": "ServicesId",
+                        "name": "ServicesId",
+                        "width": "8%",
+                        "orderable": true
+                    },
+                    {
+                        "data": "ServiceName",
+                        "name": "ServiceName",
+                        "width": "20%",
+                        "orderable": true,
+                        "defaultContent": "N/A"
+                    },
+                    {
+                        "data": "ServiceType",
+                        "name": "ServiceType",
+                        "width": "12%",
+                        "orderable": true,
+                        "defaultContent": "N/A"
+                    },
+                    {
+                        "data": "Amount",
+                        "name": "Amount",
+                        "render": function (data) {
+                            if (!data || data === '0.00') return '0.00';
+                            // Ensure proper currency formatting
+                            var amount = parseFloat(data.replace(/,/g, ''));
+                            return isNaN(amount) ? '0.00' : amount.toFixed(2);
+                        },
+                        "width": "10%",
+                        "orderable": true,
+                        "className": "text-right" // Right align for currency
+                    },
+                    {
+                        "data": "PatientType",
+                        "name": "PatientType",
+                        "width": "12%",
+                        "orderable": true,
+                        "defaultContent": "N/A"
+                    },
+                    {
+                        "data": "CreatedDate",
+                        "name": "CreatedDate",
+                        "render": function (data) {
+                            if (!data) return '';
+                            // Handle different date formats
+                            var date = moment(data);
+                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        },
+                        "width": "12%",
+                        "orderable": true
+                    },
+                    {
+                        "data": "UserName",
+                        "name": "UserName",
+                        "width": "12%",
+                        "orderable": true,
+                        "defaultContent": "N/A"
+                    },
+                    {
+                        "data": "IsBilled",
+                        "name": "IsBilled",
+                        "render": function (data) {
+                            // Add styling based on billing status
+                            if (data === 'Billed') {
+                                return '<span class="badge badge-success">' + data + '</span>';
+                            } else {
+                                return '<span class="badge badge-warning">' + data + '</span>';
+                            }
+                        },
+                        "width": "10%",
+                        "orderable": true,
+                        "defaultContent": "Not Billed"
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            var actions = '<div class="btn-group" role="group">';
+                            actions += '<a class="btn btn-sm btn-info" style="margin-right: 2px;" href="#" onclick="ViewService(' + row.ServicesId + ')" title="View Service"><i class="fa fa-eye"></i></a>';
+                            actions += '<a class="btn btn-sm btn-primary" href="#" onclick="PrintService(' + row.ServicesId + ')" title="Print Service"><i class="fa fa-print"></i></a>';
+                            actions += '</div>';
+                            return actions;
+                        },
+                        "width": "12%",
+                        "orderable": false
+                    }
+                ],
+                "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#tblPatientServices_length');
+                    var lengthDropdown = document.querySelector('#tblPatientServices_length select');
+                    var label = document.querySelector('#tblPatientServices_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    } else {
+                        console.log("Length dropdown, label, or container not found");
+                    }
+                }
+            });
+        }
+
+        // Additional helper functions for the action buttons
+        function ViewService(serviceId) {
+            // Implement service view logic
+            console.log("Viewing service:", serviceId);
+            // You can add modal popup or redirect logic here
+        }
+
+        function PrintService(serviceId) {
+            // Implement service print logic
+            console.log("Printing service:", serviceId);
+            // You can add print logic here
+        }
 
 
     </script>
@@ -2208,6 +2406,27 @@
                     </table>
                 </div>
             </div>
+            <div id="tab07" style="display: none" class="tabs">
+    <div class="table-container col-lg-12 col-md-12 col-sm-10">
+        <table class="table modern-table" id="tblPatientServices">
+            <thead id="ServicesHead">
+                <tr>
+                    <th>Service ID</th>
+                    <th>Service Name</th>
+                    <th>Service Type</th>
+                    <th>Amount</th>
+                    <th>Patient Type</th>
+                    <th>Created Date</th>
+                    <th>Created By</th>
+                    <th>Billing Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ServicesBody">
+            </tbody>
+        </table>
+    </div>
+</div>
         </div>
     </div>
 
