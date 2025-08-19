@@ -75,7 +75,7 @@ namespace PMS
             string reportName = Request.QueryString["ReportName"];
             string reportTitle = Request.QueryString["ReportTitle"];
             string CompanyNamefolder = DBClass.getField("select Company_ReportFolder from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
-            string reportPath = Server.MapPath("~/Reports/"+ CompanyNamefolder + "/");
+            string reportPath = Server.MapPath("~/Reports/");
             rd = new ReportDocument();
             paramFields = new ParameterFields();
             bool Export = Convert.ToBoolean(Request.QueryString["ExportPDF"]);
@@ -469,7 +469,6 @@ namespace PMS
                 string rptFileName =  "Patients/OPDDetailReport.rpt";
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
-                //Mohsin
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");               
                 string departmentID = Request.QueryString["Department"].ToString();               
@@ -477,8 +476,6 @@ namespace PMS
                 {
                     departmentID = "All";
                 }
-                //Mohsin
-                string FilterClinic = Request.QueryString["FilterClinic"].ToString();
                 string Doctor = Request.QueryString["Doctor"].ToString();
                 string Operator = Request.QueryString["Operator"].ToString();
                 reportPath += rptFileName;
@@ -491,8 +488,61 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Department", departmentID);             
-                rd.SetParameterValue("@FilterClinic", FilterClinic);
-                rd.SetParameterValue("@DoctorName", Doctor);
+            }
+            else if (reportName == "IPDDetailReport")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "InPatient/IPD_Detail_Report.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string departmentID = Request.QueryString["Department"].ToString();
+                if (departmentID == "0")
+                {
+                    departmentID = "All";
+                }
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+              
+                string Operator = Request.QueryString["Operator"].ToString();
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyAddress", companyAddress);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@FromDate", sqlStartDateTime);
+                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Department", departmentID);
+            }
+            else if (reportName == "EmerDetailReport")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Emergency/Emergency_Detail_Report.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+
+                string Operator = Request.QueryString["Operator"].ToString();
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyAddress", companyAddress);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@FromDate", sqlStartDateTime);
+                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", Operator);
             }
             else if (reportName == "PrintPatientCard")
             {
