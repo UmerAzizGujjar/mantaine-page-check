@@ -6,7 +6,9 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
+      
         $(document).ready(function () {
+
             loadOPDPermissions();
             DisableCardPrint();
 
@@ -430,7 +432,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Gender">
                         <label>Gender</label>
-                        <select id="ddlGender">
+                        <select id="ddlGender" >
                              <option value="0">Select Gender</option>
                         </select>
                     </div>

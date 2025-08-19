@@ -21,6 +21,11 @@ namespace PMS.Modules.PatientManagement
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            DataBaseDataContext db = new DataBaseDataContext();
+              
+
+
+
             if (!Page.IsPostBack)
             {
                 BindDropDownList();
@@ -29,7 +34,14 @@ namespace PMS.Modules.PatientManagement
                     OutpatientID = Convert.ToInt32(Request.QueryString["ID"]);
                 }
             }
+            lblDoctor.Text = (from a in db.HR_Employees
+                           where a.userid == AppConfig.UserID.ToString()
+                           select a.Emp_Name).FirstOrDefault();
 
+
+            hdndoctors_id.Value = (from a in db.HR_Employees
+                                   where a.userid == AppConfig.UserID.ToString()
+                                   select a.Emp_ID.ToString()).FirstOrDefault();
         }
         [WebMethod]
         public static string GetAvailableDates(int DocID)
@@ -58,6 +70,7 @@ namespace PMS.Modules.PatientManagement
             try
             {
                 var id = "";
+                var doctor_id =""; 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     Out_Patient OPD;
@@ -73,6 +86,7 @@ namespace PMS.Modules.PatientManagement
                         OPD.Created_Time = DateTime.Now;
                         OPD.Company_ID = AppConfig.Company_ID;
                         OPD.OPD_Entry_Date = DateTime.Now.Date;
+                       
                     }
                     else
                     {
@@ -110,6 +124,7 @@ namespace PMS.Modules.PatientManagement
                     OPD.EDD = "";
                     OPD.Special_Test = "";
                     OPD.Area_Of_Interest = "";
+                    
 
                     // ENT Fields
                     OPD.ENT_Throat_IDL = "";
@@ -399,7 +414,16 @@ namespace PMS.Modules.PatientManagement
                     OPD.ENT_Rinnes_Lft_Neg = false;
                     OPD.ENT_Rinnes_Right_FNeg = false;
                     OPD.ENT_Rinnes_Lft_FNeg = false;
+                    var checkpat_type = (from a in db.Patients
+                                          where a.Patient_ID == data.Patient_ID
+                                          select a.Patient_Type).FirstOrDefault();
+                    doctor_id = data.doc_id_hdn;
 
+                    if (doctor_id != "" && checkpat_type == "01" )
+                    {
+                        DBClass.executeNonQueryWithoutBegin("update Patients set Share_Transfered=1, Doctor_ID =" + doctor_id + " where Patient_ID=" + data.Patient_ID);
+                    }
+                
                     
                     if (data.L_M_P != null) OPD.L_M_P = data.L_M_P;
                     if (data.SPO2 != null) OPD.spo2 = data.SPO2;
@@ -1300,14 +1324,15 @@ namespace PMS.Modules.PatientManagement
                 pt.Mobile = pat.Mobile1;
                 pt.Entry_Date = pat.Created_Time.ToString();
                 pt.department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
+                pt.Patient_type = db.GetDataValueName("Patient Type", pat.Patient_Type);
                 HR_Employee doctor = null;
 
-                if (!string.IsNullOrEmpty(pat.Doctor_ID))
+                if (!string.IsNullOrEmpty(pat.Doctor_ID) )
                 {
                     doctor = db.HR_Employees.FirstOrDefault(e => e.Emp_ID == Convert.ToInt32(pat.Doctor_ID));
                 }
                 pt.dotorname = doctor != null ? doctor.Emp_Name : "";
-                pt.Patient_type = db.GetDataValueName("Patient Type", pat.Patient_Type);
+               
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 var Patientno = pat.Patient_No.ToString();
                 var count = (db.Patients.Where(v => v.Patient_No == Convert.ToInt32(Patientno)).ToList());
@@ -1913,6 +1938,7 @@ on d.Doctor_Id equals hr.Emp_ID
             // Common Fields
             public int Patient_ID { get; set; }
             public string reg_ID { get; set; }
+            public string doc_id_hdn { get; set; }
             public string btnsave { get; set; }
             public bool Discharged { get; set; }
             public string Administration { get; set; }
