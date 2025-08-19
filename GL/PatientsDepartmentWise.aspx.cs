@@ -124,30 +124,92 @@ namespace PMS
                     string x = "OPD Detail Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    tr1MedicalSubsidy.Visible = true;
+                    tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
-                    //SetDepartent();
-                    trDoctor.Visible = false;
-                    lbPanelCompany.Text = "Doctor";
+                    trDoctor.Visible = false;                  
                     tr_Summary.Visible = false;
-                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
-                    ddlPanelCompany.DataSource = dt;
-                    ddlPanelCompany.DataValueField = "Emp_ID";
-                    ddlPanelCompany.DataTextField = "Emp_Name";
-                    ddlPanelCompany.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
-                    ddlPanelCompany.DataBind();
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Text = "Operators";
                     object valusets;
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
-                    ddlFilterClinic.DataSource = valusets;
-                    ddlFilterClinic.DataTextField = "DataValue_Description";
-                    ddlFilterClinic.DataValueField = "DataValue_Name";
-                    ddlFilterClinic.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                    ddlFilterClinic.DataBind();
-                    op_FilterClinic.Visible = true;
+                    valusets = DBClass.GetValueSet("Patient Main Category");
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();    
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
-                    op_PanelCompany.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                      select new { d.UserName, d.UserId };
+                    ddlPatientType.DataSource = valusetss;
+                    ddlPatientType.DataTextField = "UserName";
+                    ddlPatientType.DataValueField = "UserId";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                }
+
+                else if (this.PageTitle == "IPD_Detail_Report")
+                {
+                    string x = "IPD Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Text = "Operators";
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Main Category");
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                       select new { d.UserName, d.UserId };
+                    ddlPatientType.DataSource = valusetss;
+                    ddlPatientType.DataTextField = "UserName";
+                    ddlPatientType.DataValueField = "UserId";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                }
+
+                else if (this.PageTitle == "Emer_Detail_Report")
+                {
+                    string x = "Emergency Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Text = "Operators";
+
+
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+                    optRw.Visible = true;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                       select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
                 }
                 #endregion
                 #region Inventory
