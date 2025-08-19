@@ -987,6 +987,133 @@ namespace PMS.Modules.Dashboards
                 };
             }
         }
+        [WebMethod]
+        public static object PatientServicesViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        {
+            try
+            {
+                using (var _dbContext = new DataBaseDataContext())
+                {
+                    // Get total count from InPatientServices where PatientId matches regID
+                    var Total_services = _dbContext.InPatientServices.Count(ips => ips.PatientId == regID);
+
+                    var query = from ips in _dbContext.InPatientServices
+                                where ips.PatientId == regID
+                                select new
+                                {
+                                    ServicesId = ips.ServicesId,
+                                    ServiceName = ips.Services_Procedure_ItemName ?? "N/A",
+                                    ServiceType = ips.ServiceType ?? "N/A",
+                                    Amount = ips.ServiceAmount ?? 0,
+                                    PatientType = ips.PatientType ?? "N/A",
+                                    CreatedDate = ips.CreatedDate.HasValue ? ips.CreatedDate.Value.Date : (DateTime?)null,
+                                    UserName = ips.UserName ?? "N/A",
+                                    IsBilled = ips.isbilled.HasValue ? (ips.isbilled.Value ? "Billed" : "Not Billed") : "Not Billed"
+                                };
+
+                    // Apply search filter if searchValue is provided
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        DateTime searchDate;
+                        decimal searchAmount;
+                        bool isDateSearch = DateTime.TryParse(searchValue, out searchDate);
+                        bool isAmountSearch = decimal.TryParse(searchValue, out searchAmount);
+
+                        query = query.Where(x =>
+                            x.ServicesId.ToString().Contains(searchValue) ||
+                            (x.ServiceName != null && x.ServiceName.Contains(searchValue)) ||
+                            (x.ServiceType != null && x.ServiceType.Contains(searchValue)) ||
+                            (x.PatientType != null && x.PatientType.Contains(searchValue)) ||
+                            (x.UserName != null && x.UserName.Contains(searchValue)) ||
+                            x.IsBilled.Contains(searchValue) ||
+                            (isAmountSearch && x.Amount == searchAmount) ||
+                            (isDateSearch && x.CreatedDate.HasValue && x.CreatedDate.Value.Date == searchDate.Date)
+                        );
+                    }
+
+                    var FilteredCount = query.Count();
+
+                    // Apply sorting
+                    if (!string.IsNullOrEmpty(sortColumn))
+                    {
+                        switch (sortColumn)
+                        {
+                            case "ServicesId":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.ServicesId) : query.OrderByDescending(x => x.ServicesId);
+                                break;
+                            case "ServiceName":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.ServiceName) : query.OrderByDescending(x => x.ServiceName);
+                                break;
+                            case "ServiceType":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.ServiceType) : query.OrderByDescending(x => x.ServiceType);
+                                break;
+                            case "Amount":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Amount) : query.OrderByDescending(x => x.Amount);
+                                break;
+                            case "PatientType":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.PatientType) : query.OrderByDescending(x => x.PatientType);
+                                break;
+                            case "CreatedDate":
+                                query = sortColumnDirection == "asc" ?
+                                    query.OrderBy(x => x.CreatedDate.HasValue ? x.CreatedDate : DateTime.MaxValue) :
+                                    query.OrderByDescending(x => x.CreatedDate.HasValue ? x.CreatedDate : DateTime.MinValue);
+                                break;
+                            case "UserName":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.UserName) : query.OrderByDescending(x => x.UserName);
+                                break;
+                            case "IsBilled":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.IsBilled) : query.OrderByDescending(x => x.IsBilled);
+                                break;
+                            default:
+                                query = query.OrderByDescending(x => x.CreatedDate.HasValue ? x.CreatedDate : DateTime.MinValue);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        query = query.OrderByDescending(x => x.CreatedDate.HasValue ? x.CreatedDate : DateTime.MinValue);
+                    }
+
+                    // Apply paging and format dates/amounts
+                    var data = query.Skip(start).Take(length).AsEnumerable()
+                        .Select(x => new
+                        {
+                            ServicesId = x.ServicesId,
+                            ServiceName = x.ServiceName ?? "N/A",
+                            ServiceType = x.ServiceType ?? "N/A",
+                            Amount = x.Amount.ToString("N2"), // Format as currency with 2 decimals
+                            PatientType = x.PatientType ?? "N/A",
+                            CreatedDate = x.CreatedDate.HasValue ? x.CreatedDate.Value.ToString("MM/dd/yyyy") : "",
+                            UserName = x.UserName ?? "N/A",
+                            IsBilled = x.IsBilled ?? "Not Billed"
+                        }).ToList();
+
+                    // Return the proper DataTables structure
+                    var jsonData = new
+                    {
+                        draw = draw,
+                        recordsFiltered = FilteredCount,
+                        recordsTotal = Total_services,
+                        data = data
+                    };
+
+                    return jsonData;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and return empty result
+                // Consider logging: ex.Message, ex.StackTrace
+                return new
+                {
+                    draw = draw,
+                    recordsFiltered = 0,
+                    recordsTotal = 0,
+                    data = new List<object>(),
+                    error = ex.Message
+                };
+            }
+        }
 
     }
 }
