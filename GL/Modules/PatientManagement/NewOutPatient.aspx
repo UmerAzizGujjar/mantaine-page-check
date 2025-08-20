@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
      <link href="../../wwwroot/Tibbit_theme/css/CustomCss/NewOutPatient.css" rel="stylesheet" />
-     
+      
     <script id="ScriptmanageSymptomsModal">
 
         $(document).on('input', '#symptomSearch', function () {
@@ -233,11 +233,7 @@
                         Add_GeneralExamRow(param);
                     }
                 });
-
-                if ($('#DischargeCheckBox').is(':checked')) {
-                    $('#btnSave').hide();
-                    $('#DischargeCheckBox').prop('disabled', true);
-                }
+ 
             }
             else {
                 openQueue();
@@ -491,8 +487,7 @@
                             $table.attr('tabindex', '-1')
                                 .get(0)
                                 .scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                            $table.focus();
-                        }
+                         }
                     });
                 });
 
@@ -513,6 +508,7 @@
                 url: "NewOutPatient.aspx/GetPatientFormData",
                 data: JSON.stringify({ PatientID: patientId }),
                 contentType: "application/json; charset=utf-8",
+                contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
                    
@@ -522,6 +518,11 @@
 
                     if (result.success) {
                         populatePatientForm(result.data);
+                        if (result.data.Discharge == "true") {
+
+                            $('#btnSave').hide();
+                            $('.mybutton2-wrapper').hide();
+                        }
                     } else {
                         alert("Error: " + result.message);
                     }
@@ -742,6 +743,21 @@
 
             $('#ctl00_MainContent_txtBMI').val(calcBMI.toFixed(2));
         }
+        function ResetForm() {
+            window.location.href = "NewOutPatient.aspx";
+        }
+        function ShowHistory() {
+            var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
+
+            if (reg_ID) {
+                var url = "/Modules/Dashboards/NewEMR.aspx?RegID=" + encodeURIComponent(reg_ID);
+                window.open(url, "_blank"); // open in new tab
+            } else {
+                alert("No RegID found!");
+            }
+        }
+
+
         function openQueue() {
             fillPendingPatientsList();
             $('#queueModal').modal('show');
@@ -2463,7 +2479,7 @@
                 id="addTest_${serialNo}"
                 onclick="Add_MediceneRow('${serialNo}','${testName}')"
                 style="background: none; border: none; cursor: pointer; color: black;">
-            <i class="fa fa-plus-circle" style="color:black"></i> ${isEditMode ? 'Update' : 'Add'} Test
+            <i class="fa fa-plus-circle" style="color:black"></i> ${isEditMode ? 'Update' : 'Add'} Medicene
         </button>
     </div>
 </div>`;
@@ -3871,13 +3887,13 @@
                 </div>
                 <div class="col-lg-10">
                     <div style="display: flex; justify-content: flex-end;">
-                        <input type="button" class="btn btn-primry" value="History" onclick="AddNewSymptom()" />
+                        <input type="button" class="btn btn-primry" value="History" onclick="ShowHistory()" />
                         <input type="button" class="btn btn-primry" value="Queue" onclick="openQueue()" />
                         <label class="mybutton2-wrapper">
                             <input type="checkbox" id="DischargeCheckBox" onchange="toggleDischarge(this)" />
                             <span id="DischargeButtonText">Discharge</span>
                         </label>
-                        <input type="button" class="btn btn-primry" value="Reset" onclick="openManageSymptomsModal()" />
+                        <input type="button" class="btn btn-primry" value="Reset" onclick="ResetForm()" />
                         <input id="btnSave" type="button" class="btn btn-primry" value="Save" onclick="SaveMedicines()" />
 
                     </div>
@@ -4770,13 +4786,13 @@
 
                                                     <tr style="position: sticky; top: 0; z-index: 10;">
                                                         <th style="display: none">Date</th>
-                                                        <th>Test Name</th>
+                                                        <th style="width:30%">Test Name</th>
                                                         <th style="display: none">Sample Received</th>
                                                         <th style="display: none">Result</th>
-                                                        <th>Special Tests</th>
-                                                        <th>Area Of Interest</th>
-                                                        <th>Rotation</th>
-                                                        <th class="actions-col">Action</th>
+                                                        <th style="width:30%">Special Tests</th>
+                                                        <th style="width:20%">Area Of Interest</th>
+                                                        <th style="width:10%">Rotation</th>
+                                                        <th style="width:10%" class="actions-col">Action</th>
                                                     </tr>
 
                                                 </thead>
