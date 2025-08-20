@@ -491,42 +491,7 @@ label, span, .table > tbody > tr > td, select {
     justify-content: start;
     align-items: center;
 }
-
-.submenu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    background-color: #fff;
-}
-
-.submenu-item {
-    padding: 12px 20px 12px 40px;
-    border-bottom: 1px solid #f1f1f1;
-    cursor: pointer;
-}
-
-    .submenu-item:hover {
-        background-color: #f1f1f1;
-    }
-
-.menu-item.active .submenu {
-    max-height: 500px;
-}
-
-.menu-item.active .toggle-icon::after {
-    content: "−";
-}
-
-.toggle-icon::after {
-    content: "+";
-    font-weight: bold;
-}
-
-
-
-
-
-
+ 
 
 .sidebarToggleIcon {
     width: 24px;
