@@ -493,8 +493,20 @@
 
     <script type="text/javascript" id="ready">
         $(document).ready(function () {
-         });
-        function selectPatient(patientNo, RegID) {
+
+            $('#ctl00_notification').hide();
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const regId = urlParams.get("RegID");
+
+            if (regId) {
+                selectPatient(regId);
+            }
+        });
+
+        function selectPatient(RegID) {
+            hideResults();
             $("#hdfReg_ID").val(RegID);
             fetchPatientInfo();
             checkVisits();
@@ -753,7 +765,7 @@
                     searchResults.innerHTML = patients.map(patient => {
                         const displayText = `${patient.PatientNo}-${patient.FullName}`;
                         return `
-                    <div class="result-item" onclick="selectPatient('${patient.PatientNo}','${patient.RegID}')">
+                    <div class="result-item" onclick="selectPatient('${patient.RegID}')">
                         <div>${highlightText(displayText, query)}</div>
                     </div>`;
                     }).join('');

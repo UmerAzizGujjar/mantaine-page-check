@@ -12,7 +12,12 @@
     opacity: 0;
     animation: fadeIn 0.4s ease forwards;
 }
-
+.modern-table tbody td {
+    white-space: normal !important; /* allow text wrapping */
+    word-wrap: break-word; /* wrap long words */
+    word-break: break-word; /* force breaking if needed */
+    vertical-align: top; /* keep text aligned to top */
+}
 .loading-content {
     background: rgba(255, 255, 255, 0.85); /* Solid whitish */
     backdrop-filter: blur(20px);
