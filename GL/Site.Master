@@ -125,7 +125,8 @@
 
                         
                         
-                        window.location.href = "/Login.aspx";
+                        window.location.href = "<%= ResolveUrl("~/Login.aspx") %>";
+
                       
                     }
                 }
