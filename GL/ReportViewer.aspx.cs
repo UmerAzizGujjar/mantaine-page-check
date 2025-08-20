@@ -233,9 +233,11 @@ namespace PMS
                     string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                     reportPath += "Inventory/rptIGP_Print.rpt";
                     rd.Load(reportPath);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.SetParameterValue("@IGP_ID", Convert.ToInt32(Request.QueryString["Igpid"]));
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
             }
             else if (reportName == "GRNList")
@@ -244,10 +246,12 @@ namespace PMS
                 {
                     string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                     reportPath += "Inventory/rptGRN_Print.rpt";
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.Load(reportPath);
                     rd.SetParameterValue("@GRN_ID", Convert.ToInt32(Request.QueryString["GRNid"]));
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
             }
             else if (reportName == "StoreTransferPrint")
