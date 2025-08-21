@@ -1255,23 +1255,23 @@
                         //    return;
                         //}
 
-                        if (parseInt(Received_Amount) > 0 && parseInt(Balance_Amount) != 0) {
+                        //if (parseInt(Received_Amount) > 0 && parseInt(Balance_Amount) != 0) {
                           
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Please enter Complete received Amount or Not !',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-                            $("#btnSave").prop("disabled", false);
-                            return false;
-                        }
+                        //    Swal.fire({
+                        //        icon: 'error',
+                        //        title: 'Error!',
+                        //        text: 'Please enter Complete received Amount or Not !',
+                        //        showConfirmButton: false,
+                        //        timer: 2000,
+                        //        customClass: {
+                        //            popup: 'swal-big-popup',
+                        //            title: 'swal-big-title',
+                        //            htmlContainer: 'swal-big-text'
+                        //        }
+                        //    });
+                        //    $("#btnSave").prop("disabled", false);
+                        //    return false;
+                        //}
 
                         var Previous_Balance = $('#txt_balance').val();
                         var Previous_Paid = $('#txtprevious_paid').val();
