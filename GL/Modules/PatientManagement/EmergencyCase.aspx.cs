@@ -56,6 +56,32 @@ namespace PMS
             {
             }
         }
+        [WebMethod]
+        public static string GetPatients(string searchValue)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var patients = (from p in db.Reg_patients
+                                    where (p.Patient_No != null && p.Patient_No.ToString().Contains(searchValue))
+                                          || (p.Full_Name != null && p.Full_Name.Contains(searchValue))
+                                    select new
+                                    {
+                                        PatientNo = p.Patient_No,
+                                        FullName = p.Full_Name,
+                                        RegID = p.pat_id,
+                                    }).Take(5).ToList();
+
+                    return new JavaScriptSerializer().Serialize(patients);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                return new JavaScriptSerializer().Serialize(new { error = ex.Message });
+            }
+        }
         private void BindingDropDown()
         {
   

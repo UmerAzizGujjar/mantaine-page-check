@@ -1,7 +1,14 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcess.aspx.cs" Inherits="PMS.BillingProcess" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style>
+        div.token-input-dropdown {
+    overflow: auto;
+    max-height: 150px;
+}
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Billing.css" rel="stylesheet" />
     <div style="margin: 0px 0px 0px 0px;">
      
@@ -859,55 +866,67 @@
                 var CheckTest = $('#ddlTestList').val();
                 var patient_ID = $('#hdfPatient_ID').val();
                 var test_Name = $('#ddlTestList').find('option:selected').text();
+                 var matchingInputs = $('#tbltestModelTable input[name="hdnItemName"]').filter(function () {
+                    return $(this).val() === test_Name;
+                 });
+                var MatchingInputsDetailTable = $('#tblDetails input[name="hdnItemName"]').filter(function () {
+                    return $(this).val() === test_Name;
+                });
 
-                var patient_category_description = $('#lblPatientCategory').val();
-                var inpatientCat = $('#lblPatientDiscountType').text();
-                if (inpatientCat != "") {
-                    patient_category_description = inpatientCat;
-                }
-                if (patient_id_old != 0 || patient_id_old == null) {
-                    patient_ID = patient_id_old;
-                }
-                if (CheckTest != 0 || CheckTest != null) {
+                if (matchingInputs.length > 0 || MatchingInputsDetailTable.length > 0 ) {
+                     alert('Found ' + matchingInputs.length + ' matching input(s) with value: ' + test_Name);
+                     return;
+                } else {
+                     var patient_category_description = $('#lblPatientCategory').val();
+                     var inpatientCat = $('#lblPatientDiscountType').text();
+                     if (inpatientCat != "") {
+                         patient_category_description = inpatientCat;
+                     }
+                     if (patient_id_old != 0 || patient_id_old == null) {
+                         patient_ID = patient_id_old;
+                     }
+                     if (CheckTest != 0 || CheckTest != null) {
 
-                    $.ajax({
-                        type: "post",
-                        url: "BillingProcess.aspx/GetTestRate",
-                        data: JSON.stringify({
-                            "Patient_ID": patient_ID,
-                            "Test_Name": test_Name,
-                            "Patient_Category_Description": patient_category_description
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
+                         $.ajax({
+                             type: "post",
+                             url: "BillingProcess.aspx/GetTestRate",
+                             data: JSON.stringify({
+                                 "Patient_ID": patient_ID,
+                                 "Test_Name": test_Name,
+                                 "Patient_Category_Description": patient_category_description
+                             }),
+                             contentType: "application/json; charset=utf-8",
+                             dataType: "json",
+                             success: function (response) {
 
-                            if (response.d != 0) {
-                                globalTestRate = response.d;
-                            }
-                            else {
-                                globalTestRate = 0;
-                            }
-                            if (maindpt == "001") {
-                                AddLabTest(maindpt);
-                            }
-                            else if (maindpt == "002") {
-                                AddRadialogyTest(maindpt);
-                            }
-                            else if (maindpt == "003") {
-                                AddRadialogyTest(maindpt);
-                            }
-                            else if (maindpt == "004") {
-                                AddRadialogyTest(maindpt);
-                            }
-                            else {
-                                AddLabTest(maindpt);
-                            }
-                            
-                        },
-                        failure: function (response) { }
-                    });
+                                 if (response.d != 0) {
+                                     globalTestRate = response.d;
+                                 }
+                                 else {
+                                     globalTestRate = 0;
+                                 }
+                                 if (maindpt == "001") {
+                                     AddLabTest(maindpt);
+                                 }
+                                 else if (maindpt == "002") {
+                                     AddRadialogyTest(maindpt);
+                                 }
+                                 else if (maindpt == "003") {
+                                     AddRadialogyTest(maindpt);
+                                 }
+                                 else if (maindpt == "004") {
+                                     AddRadialogyTest(maindpt);
+                                 }
+                                 else {
+                                     AddLabTest(maindpt);
+                                 }
+
+                             },
+                             failure: function (response) { }
+                         });
+                     }
                 }
+                
             }
             var category = "0";
             function LoadTestByDepartment() {

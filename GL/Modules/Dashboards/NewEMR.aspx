@@ -95,9 +95,7 @@
             });
 
         }
-        function hideResults() {
-            searchResults.classList.remove('active');
-        }
+        
         function fetchAppointment() {
             var Patient_ID = $("#hdfReg_ID").val();
             $.ajax({
@@ -213,6 +211,10 @@
                     $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
                 });
             }
+        }
+
+        function hideResults() {
+            searchResults.classList.remove('active');
         }
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('searchInput');
