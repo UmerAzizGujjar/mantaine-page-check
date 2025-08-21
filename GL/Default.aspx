@@ -94,7 +94,7 @@
 
 
     <div class="col-sm-6 col-sm-offset-4" style="margin-top: 47px;">
-        <asp:Image ID="imgLogo" runat="server" ImageUrl="~../../wwwroot/images/HMIS_Icons/TibbITLogo_2.png" Style="height: 245px; width: 408px; border-width: 0px;" />
+        <asp:Image ID="imgLogo" runat="server" ImageUrl="~../../wwwroot/Tibbit_theme/images/TibbIT_icons/logo.png" Style="height: 245px; width: 408px; border-width: 0px;" />
 
     </div>
 

@@ -1273,7 +1273,7 @@
                         //    return false;
                         //}
 
-                        var Previous_Balance = $('#txt_balance').val();
+                        var Previous_Balance = $('#txtPreviousBlnc').val();
                         var Previous_Paid = $('#txtprevious_paid').val();
                         var Over_and_Above = $('#txtOver_and_Above').val();
                         var Cash_In_Hand = $('#txtcashinhand').val();
@@ -1592,6 +1592,7 @@
                 var Qty = 0;
                 var TotalAmount = parseFloat($("#txtTotalAmount").val()) || 0;
                 var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
 
@@ -2257,19 +2258,22 @@
                     });
                     var TotalAmount = Net_Amt;
                     var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                    var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                     var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                     var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
                     debugger;
                     $('#txtTotalAmount').val(Net_Amt);
-                    $('#txtTotalPayable').val(Net_Amt + PreviousBalance);
+                    $('#txtTotalPayable').val(Net_Amt );
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
-                    $('#txtNetPayable').val(total_amt + PreviousBalance );
+                    $('#txtNetPayable').val(total_amt);
                     var AmtReceived = $('#txtAmountReceived').val();
+                    var amt = parseFloat(AmtReceived) || 0;
                     if ($('#txtTotalPayable').val() != '')
                     {
                         if (AmtReceived != '') {
-                            $('#txtBalances').val((net + PreviousPaid +PreviousBalance - AmtReceived - AdvanceAmount  ).toFixed());
+                            $('#txtBalances').val(((net  +PreviousAmount) - (amt + AdvanceAmount + PreviousPaid) ).toFixed());
+                       
                         }
                         else
                             $('#txtBalances').val(net.toFixed());
@@ -2897,6 +2901,7 @@
             {
                 debugger;
                 var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+                var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
                 debugger;
@@ -2904,7 +2909,10 @@
                 if ($('#txtTotalPayable').val() != '') {
                     var Totalpayable = (Math.round(parseFloat($('#txtNetPayable').val()))).toFixed(0)
                     if (AmtReceived != '') {
-                        $('#txtBalances').val(parseFloat(Totalpayable) + PreviousPaid  +PreviousBalance - parseFloat(AmtReceived) - AdvanceAmount);
+                        $('#txtBalances').val((parseFloat(Totalpayable)  +PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount +PreviousPaid));
+
+                        var prebln  =  parseFloat(Totalpayable) - parseFloat(AmtReceived)
+                        $('#txtPreviousBlnc').val(prebln);
                     }
                     else
                         $('#txtBalances').val(parseFloat($('#txtNetPayable').val()).toFixed(0));
@@ -4099,6 +4107,7 @@
                     $('#lblContactNo').text(ReplaceNullWith_Space(data.d.Mobile));
                     $('#txtadvance_amount').val(data.d.advance_amount);
                     $('#txtprevious_paid').val(data.d.paid_amount);
+                    $('#txtprevious_Amount').val(data.d.PreviousTotalAmount);
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
                     $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
@@ -5407,14 +5416,25 @@
                  <input type="text" id="txtTotalAmount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
                 </div>
         </div>
-                <div class="row">
+
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-9"></div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label>Previous Amount</label>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="text" id="txtprevious_Amount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-lg-6 col-md-8 col-sm-9"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Previous Paid</label>
-                </div>
+            </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                 <input type="text" id="txtprevious_paid" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-                </div>
+                <input type="text" id="txtprevious_paid" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+            </div>
         </div>
 
         <div class="row">
@@ -5525,6 +5545,7 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="text" id="txtBalances" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
+                <input type="hidden" id="txtPreviousBlnc" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
             </div>
         </div>
             </div>
