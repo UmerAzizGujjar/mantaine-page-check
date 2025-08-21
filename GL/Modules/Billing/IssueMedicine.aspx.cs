@@ -337,7 +337,8 @@ namespace PMS
             newBill.line_disc = data.linediscount;
             newBill.pharmacy_Department = data.Dept;
             newBill.Patient_ID = patId;
-            newBill.Ware_House = "008";
+            var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
+            newBill.Ware_House =Convert.ToString(PharmacyCodes);
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsPharmacy = true;
