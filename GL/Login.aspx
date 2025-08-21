@@ -6,8 +6,8 @@
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/login.css" rel="stylesheet" />
-    
-
+    <script src="wwwroot/Tibbit_theme/js/swalalert.js"></script>
+    <link href="wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
 
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">

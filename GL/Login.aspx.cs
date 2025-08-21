@@ -59,6 +59,101 @@ namespace PMS
         {
 
         }
+        //protected void LoginButton_Click(object sender, EventArgs e)
+        //{
+        //    string userName = UserLogin.UserName.Trim();
+        //    string pass = UserLogin.Password.ToString();
+
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var userExists = (from u in db.aspnet_Users
+        //                          where u.UserName == userName
+        //                          select u.UserId).FirstOrDefault();
+
+        //        if (userExists != null)
+        //        {
+        //            var membershipRecord = (from m in db.aspnet_Memberships
+        //                                    where m.UserId == userExists
+        //                                    select new { m.Password, m.PasswordSalt }).FirstOrDefault();
+
+        //            if (membershipRecord != null)
+        //            {
+        //                string hashedInputPassword = EncryptPassword(pass, membershipRecord.PasswordSalt);
+        //                if (hashedInputPassword == membershipRecord.Password)
+        //                {
+        //                    ViewState["usrname"] = userName.Trim();
+        //                    ViewState["psword"] = pass;
+
+        //                    var block_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.BlockUser).FirstOrDefault();
+        //                    var otp_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.OTPUsers).FirstOrDefault();
+        //                    var mblnumber = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.mobileno).FirstOrDefault();
+
+        //                    if (block_user == true)
+        //                    {
+        //                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{"User Blocked"}');", true);
+        //                        return;
+
+        //                    }
+
+        //                    if (otp_user == true)
+        //                    {
+        //                        loginportion.Visible = false;
+        //                        VerifyPanel.Visible = true;
+        //                        if (!string.IsNullOrEmpty(mblnumber))
+        //                        {
+        //                            string session = "";
+        //                            bool sentStatus = false;
+        //                            string statusMsg = string.Empty;
+        //                            Random random = new Random();
+        //                            int value = random.Next(1001, 9999);
+        //                            string masking = "TibbIT";
+        //                            string message = "Verification Code:  " + value + "";
+        //                            string message1 = HttpUtility.UrlEncode(message);
+        //                            MyWebRequest myRequest = new MyWebRequest("https://connect.jazzcmt.com/sendsms_url.html?Username=03091893765&Password=XQoQwxAc&From=" + masking + "&To=" + mblnumber + "&Message=" + message1 + "");
+
+
+        //                            string s = myRequest.GetResponse();
+
+
+        //                            session = s;
+        //                            Console.WriteLine(session); // Display in console
+        //                            if (session.Contains("Message Sent"))
+        //                            {
+        //                                sentStatus = true;
+        //                                session = "SMS Sent Successfully";
+        //                            }
+        //                            else
+        //                            {
+        //                                Console.WriteLine(session);
+        //                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{session}');", true);
+        //                                session = "Error";
+        //                                sentStatus = false;
+
+        //                            }
+
+        //                            // Display in console again
+        //                            Console.WriteLine(session);
+
+        //                            Session["OTP"] = value;
+        //                        }
+        //                        return;
+        //                    }
+
+        //                    var user_detail = Membership.GetUser(userName.Trim());
+        //                    Session["MenuLoaded"] = false;
+        //                    PasswordChangeAlter_ModalPopupExtender.Hide();
+
+        //                    LoadUserDetail();
+        //                }
+        //                else
+        //                {
+        //                    // Password mismatch
+        //                    // Show error message (e.g., "Invalid username or password.")
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
         protected void LoginButton_Click(object sender, EventArgs e)
         {
             string userName = UserLogin.UserName.Trim();
@@ -68,92 +163,161 @@ namespace PMS
             {
                 var userExists = (from u in db.aspnet_Users
                                   where u.UserName == userName
-                                  select u.UserId).FirstOrDefault();
+                                  select new { u.UserId, u.BlockUser, u.OTPUsers, u.mobileno }).FirstOrDefault();
 
-                if (userExists != null)
+                if (userExists == null)
                 {
-                    var membershipRecord = (from m in db.aspnet_Memberships
-                                            where m.UserId == userExists
-                                            select new { m.Password, m.PasswordSalt }).FirstOrDefault();
+                    // No such user
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Invalid username or password.');", true);
+                    return;
+                }
 
-                    if (membershipRecord != null)
+                var membershipRecord = (from m in db.aspnet_Memberships
+                                        where m.UserId == userExists.UserId
+                                        select m).FirstOrDefault();
+
+                if (membershipRecord == null)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Invalid username or password.');", true);
+                    return;
+                }
+
+                // ✅ Check if account is already locked out
+                // Check if account is locked out
+                if (membershipRecord.IsLockedOut)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "accountLockedAlert", @"
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Account Locked',
+                            text: 'Account is locked due to too many failed login attempts. Contact administrator.',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });", true);
+
+                    return;
+                }
+
+                // ✅ Validate password manually
+                string hashedInputPassword = EncryptPassword(pass, membershipRecord.PasswordSalt);
+                if (hashedInputPassword == membershipRecord.Password)
+                {
+                    // ✅ CORRECT PASSWORD: Reset failed attempts and unlock if needed
+                    membershipRecord.FailedPasswordAttemptCount = 0;
+                    membershipRecord.LastLoginDate = DateTime.Now;
+                    membershipRecord.LastLoginDate = DateTime.Now;
+                    if (membershipRecord.IsLockedOut)
+                        membershipRecord.IsLockedOut = false;
+
+                    db.SubmitChanges(); // Save reset
+
+                    // Store in ViewState (avoid storing password ideally)
+                    ViewState["usrname"] = userName;
+                    ViewState["psword"] = pass;
+
+                    // Check block/OTP status
+                    if (userExists.BlockUser == true)
                     {
-                        string hashedInputPassword = EncryptPassword(pass, membershipRecord.PasswordSalt);
-                        if (hashedInputPassword == membershipRecord.Password)
-                        {
-                            ViewState["usrname"] = userName.Trim();
-                            ViewState["psword"] = pass;
-
-                            var block_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.BlockUser).FirstOrDefault();
-                            var otp_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.OTPUsers).FirstOrDefault();
-                            var mblnumber = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.mobileno).FirstOrDefault();
-
-                            if (block_user == true)
-                            {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{"User Blocked"}');", true);
-                                return;
-                            
-                            }
-
-                            if (otp_user == true)
-                            {
-                                loginportion.Visible = false;
-                                VerifyPanel.Visible = true;
-                                if (!string.IsNullOrEmpty(mblnumber))
-                                {
-                                    string session = "";
-                                    bool sentStatus = false;
-                                    string statusMsg = string.Empty;
-                                    Random random = new Random();
-                                    int value = random.Next(1001, 9999);
-                                    string masking = "TibbIT";
-                                    string message = "Verification Code:  " + value + "";
-                                    string message1 = HttpUtility.UrlEncode(message);
-                                    MyWebRequest myRequest = new MyWebRequest("https://connect.jazzcmt.com/sendsms_url.html?Username=03091893765&Password=XQoQwxAc&From=" + masking + "&To=" + mblnumber + "&Message=" + message1 + "");
-
-
-                                    string s = myRequest.GetResponse();
-
-
-                                    session = s;
-                                    Console.WriteLine(session); // Display in console
-                                    if (session.Contains("Message Sent"))
-                                    {
-                                        sentStatus = true;
-                                        session = "SMS Sent Successfully";
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine(session);
-                                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{session}');", true);
-                                        session = "Error";
-                                        sentStatus = false;
-
-                                    }
-
-                                    // Display in console again
-                                    Console.WriteLine(session);
-
-                                    Session["OTP"] = value;
-                                }
-                                return;
-                            }
-
-                            var user_detail = Membership.GetUser(userName.Trim());
-                            Session["MenuLoaded"] = false;
-                            PasswordChangeAlter_ModalPopupExtender.Hide();
-
-                            LoadUserDetail();
-                        }
-                        else
-                        {
-                            // Password mismatch
-                            // Show error message (e.g., "Invalid username or password.")
-                        }
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('User Blocked');", true);
+                        return;
                     }
+
+                    if (userExists.OTPUsers == true)
+                    {
+                        loginportion.Visible = false;
+                        VerifyPanel.Visible = true;
+
+                        if (!string.IsNullOrEmpty(userExists.mobileno))
+                        {
+                            Random random = new Random();
+                            int otp = random.Next(1001, 9999);
+                            string message = "Verification Code: " + otp;
+                            string encodedMessage = HttpUtility.UrlEncode(message);
+                            string masking = "TibbIT";
+                            string apiUrl = $"https://connect.jazzcmt.com/sendsms_url.html?Username=03091893765&Password=XQoQwxAc&From={masking}&To={userExists.mobileno}&Message={encodedMessage}";
+
+                            MyWebRequest myRequest = new MyWebRequest(apiUrl);
+                            string response = myRequest.GetResponse();
+
+                            if (response.Contains("Message Sent"))
+                            {
+                                Session["OTP"] = otp;
+                            }
+                            else
+                            {
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('SMS failed: {response}');", true);
+                                return;
+                            }
+                        }
+                        return;
+                    }
+
+                    // Load user session
+                    Session["MenuLoaded"] = false;
+                    PasswordChangeAlter_ModalPopupExtender.Hide();
+                    LoadUserDetail();
+                }
+                else
+                {
+                    // ❌ WRONG PASSWORD: Increment failed attempts
+                    membershipRecord.FailedPasswordAttemptCount += 1;
+                    membershipRecord.LastLoginDate = DateTime.Now;
+
+                    // Lock account if 10 or more failed attempts
+                    if (membershipRecord.FailedPasswordAttemptCount >= 10)
+                    {
+                        membershipRecord.IsLockedOut = true;
+
+                        string lockScript = @"
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Account Locked',
+                                    text: 'Account locked after 10 failed attempts.',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });";
+
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "accountLocked", lockScript, true);
+                    }
+                    else
+                    {
+                        int remaining = 10 - membershipRecord.FailedPasswordAttemptCount;
+
+                        string script = $@"
+                            Swal.fire({{
+                                icon: 'warning',
+                                title: 'Invalid Password',
+                                text: 'Invalid password. {remaining} attempt(s) remaining.',
+                                timer: 2000,
+                                showConfirmButton: false,
+                                customClass: {{
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }}
+                            }});";
+
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "passwordWarning", script, true);
+                    }
+
+                    // Save changes to DB
+                    db.SubmitChanges();
                 }
             }
         }
+
+
+
 
         private string EncryptPassword(string password, string salt)
         {
