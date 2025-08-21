@@ -58,6 +58,7 @@
 
                 setTimeout(function () {
                     selectPatient(Reg_ID);
+                     
                 }, 1000);
             } else {
             }
@@ -4829,6 +4830,156 @@
             $('#ctl00_MainContent_txtIn_Patient_ID').val("(New)");
             LoadHistory();
         }
+        function hideResults() {
+            searchResults.classList.remove('active');
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+
+            let searchTimeout;
+            let currentXHR = null;
+            let highlightedIndex = -1;
+
+            function hideResults() {
+                searchResults.classList.remove('active');
+            }
+
+            searchInput.addEventListener('input', function (e) {
+                const query = e.target.value.trim();
+                clearTimeout(searchTimeout);
+
+                if (currentXHR && currentXHR.readyState !== 4) {
+                    currentXHR.abort();
+                }
+
+                searchTimeout = setTimeout(() => {
+                    showLoading();
+                    searchPatients(query);
+                }, 300);
+            });
+
+            // Keyboard navigation
+            searchInput.addEventListener('keydown', function (e) {
+                const items = searchResults.querySelectorAll('.result-item');
+                if (items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % items.length;
+                    updateHighlight(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + items.length) % items.length;
+                    updateHighlight(items);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (highlightedIndex >= 0) {
+                        items[highlightedIndex].click();
+                    } else if (items.length > 0) {
+                        items[0].click();
+                    }
+                    hideResults();
+                }
+            });
+
+            function updateHighlight(items) {
+                items.forEach(item => item.classList.remove('highlighted'));
+                if (highlightedIndex >= 0) {
+                    items[highlightedIndex].classList.add('highlighted');
+                    items[highlightedIndex].scrollIntoView({ block: "nearest" });
+                }
+            }
+
+            function searchPatients(searchValue) {
+                currentXHR = $.ajax({
+                    type: "POST",
+                    url: "EmergencyCase.aspx/GetPatients",
+                    data: JSON.stringify({ searchValue: searchValue }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        try {
+                            const patients = JSON.parse(response.d);
+                            if (patients.error) {
+                                showError(patients.error);
+                            } else {
+                                highlightedIndex = -1;
+                                showResults(patients, searchValue);
+                            }
+                        } catch (e) {
+                            showError('Error parsing response: ' + e.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        showError('Server error: ' + error);
+                    }
+                });
+            }
+
+            function showResults(patients, query) {
+                if (!patients || patients.length === 0) {
+                    searchResults.innerHTML = `
+                <div class="no-results">
+                    No patients found for "${query}"
+                </div>`;
+                } else {
+                    searchResults.innerHTML = patients.map(patient => {
+                        const displayText = `${patient.PatientNo}-${patient.FullName}`;
+                        return `
+                    <div class="result-item" 
+                         onclick="selectPatient('${patient.RegID}'); document.getElementById('searchResults').classList.remove('active');">
+                        <div>${highlightText(displayText, query)}</div>
+                    </div>`;
+                    }).join('');
+                }
+                searchResults.classList.add('active');
+            }
+
+            function showLoading() {
+                searchResults.innerHTML = `
+            <div class="no-results">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <div class="loading-spinner"></div>
+                    Searching patients...
+                </div>
+            </div>`;
+                searchResults.classList.add('active');
+            }
+
+            function showError(errorMessage) {
+                searchResults.innerHTML = `
+            <div class="no-results" style="color: #ff6b6b;">
+                ⚠️ Error: ${errorMessage}
+            </div>`;
+                searchResults.classList.add('active');
+            }
+
+            function highlightText(text, query) {
+                if (!query) return text;
+                const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+                return text.replace(regex, '<strong style="background: rgba(102, 126, 234, 0.2); border-radius: 3px; padding: 0 2px;">$1</strong>');
+            }
+
+            function escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+
+            searchInput.addEventListener('focus', function () {
+                if (this.value.trim().length >= 2) {
+                    const query = this.value.trim();
+                    showLoading();
+                    searchPatients(query);
+                }
+            });
+
+            // ✅ Hide results if click happens outside input or results
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    hideResults();
+                }
+            });
+        });
 
         function ClearAll() {
 
@@ -5524,13 +5675,25 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-8">
-            <div class="row">
-                <div class="col-md-2 text-end">
-                    <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
-                </div>
-            </div>
+        <div class="col-lg-4 col-md-3 col-sm-3">
+             
         </div>
+        <div class="col-lg-4">
+    <div class="search-container">
+        <div class="search-input-wrapper">
+            <input
+                type="text"
+                class="search-input"
+                placeholder="Search for anything..."
+                id="searchInput"
+                autocomplete="off"
+                style="height: 45px; width: 100% !important; padding: 16px 50px 16px 20px !important; border: 1.5px solid #ccc !important; border-radius: 25px !important; background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; color: black !important; font-size: 16px !important; box-shadow: none !important" />
+            <div class="search-icon">🔍</div>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+</div>
+        <div class="col-lg-4"></div>
     </div>
     
 

@@ -1580,8 +1580,7 @@ function loaddata() {
     }
     else if (Category == "05") {
         $('#fees').hide();
-        $('#department').show();
-        $('#doctor').show();
+        $('#department').show(); 
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
