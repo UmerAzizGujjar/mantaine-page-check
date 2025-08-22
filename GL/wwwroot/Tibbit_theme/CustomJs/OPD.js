@@ -226,12 +226,9 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(reg_id);
             $('#hdn_aptid').val(apt_Id);
-            $('#ddlPatient_Type').val("02").trigger('change');
+          
             debugger;
-            $('#ddlDepartment').val(data.departmentid[0]).trigger('change');
-            $('#ddlDepartment').attr('disabled', true);
-            $('#ddldoctor').val(data.doctorId[0]).trigger('change');
-            $('#ddldoctor').attr('disabled', true);
+        
             $('#ddlmartialstatus').html(
                 $('<option>', {
                     value: data.MaritalStatus,
@@ -245,6 +242,31 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 })
             );
 
+
+            $('#ddlPatient_Type').html(
+                $('<option>', {
+                    value: data.pat_type_Val,
+                    text: data.pat_type_text
+                })
+            ); loaddata();
+
+            $('#ddldoctor').html(
+                $('<option>', {
+                    value: data.doctorId,
+                    text: data.DoctorName
+                })
+            );
+            $('#ddlDepartment').html(
+                $('<option>', {
+                    value: data.departmentid,
+                    text: data.department_Text
+                })
+            );
+            //$('#ddlDepartment').val(data.departmentid[0]).trigger('change');
+            //$('#ddlDepartment').attr('disabled', true);
+            //$('#ddldoctor').val(data.doctorId[0]).trigger('change');
+            //$('#ddldoctor').attr('disabled', true);
+       
         },
         error: function (response) {
             alert("Error: " + response.responseText);
