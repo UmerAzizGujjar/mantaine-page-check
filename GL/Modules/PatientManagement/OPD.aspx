@@ -349,22 +349,28 @@
     <input type="text" id="hdnhospShare" style="display: none;" />
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
-            <div class="col-lg-4 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
+            <div class="col-lg-3 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="32" height="32">
                     <span><a class="anchorOnOPD">Register a new patient</a></span>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12" style="cursor: pointer" id="btnSearchApp_Patient" onclick="SearchPop_App()">
+            <div class="col-lg-3 col-md-4 col-sm-12" style="cursor: pointer" id="btnSearchApp_Patient" onclick="SearchPop_App()">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" width="32" height="32">
                     <span><a class="anchorOnOPD">Search in appointment</a></span>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12" style="cursor: pointer" id="btnsearchpatlist">
+            <div class="col-lg-3 col-md-4 col-sm-12" style="cursor: pointer" id="btnsearchpatlist">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/existingpaticon.png" alt="Search" h="32" height="32">
                     <span><a class="anchorOnOPD">Search an existing patient</a></span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" style="cursor: pointer" id="btnsearchEmergencylist">
+                <div class="icon-text">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/existingpaticon.png" alt="Search" h="32" height="32">
+                    <span><a class="anchorOnOPD">Emergency Refer Patient</a></span>
                 </div>
             </div>
         </div>
@@ -781,4 +787,41 @@
             </div>
         </div>
     </div>
+
+      <div id="SearchEmergencyPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <fieldset class="form-group">
+                      <div class="form-row">
+                          <div class="col-md-6">
+                              <h5>Search Your Patients:</h5>
+                              <input type="text" id="txtEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                          </div>
+                      </div>
+                  </fieldset>
+                  <div class="table-responsive">
+                      <table class="table table-hover table-striped table-bordered" id="tblEmergencyResult">
+                          <thead>
+                              <tr>
+                                  <th style="display: none;">Patient ID</th>
+                                  <th>MR No</th>
+                                  <th>Patient Name</th>
+                                  <th>Father Name</th>
+                                  <th>CNIC</th>
+                                  <th>Contact No</th>
+                                  <th>Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody id="EmergencyPatientsBody">
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
 </asp:Content>
