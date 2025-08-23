@@ -864,48 +864,144 @@ namespace PMS.Modules.PatientManagement
                          }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(query);
         }
+        //[WebMethod]
+        //public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    var query = (from rg in db.Reg_patients
+        //                 where rg.pat_id == reg_id
+        //                 select new
+        //                 {
+
+        //                     Name = rg.Full_Name,
+        //                     FatherName = rg.Father_Name,
+        //                     Relation = rg.Relation_prefix,
+        //                     Gender = rg.Gender,
+        //                     DOB = rg.DOB,
+        //                     Age = rg.Age_years,
+        //                     MaritalStatus = rg.Martial_Status,
+        //                     Mr_No = rg.mr_no_sequence,
+        //                     pat_no = rg.Patient_No,
+        //                     Address = "H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city,
+        //                     PermanentAdrress = rg.Permanent_Address,
+        //                     Mobile = rg.Mobile1,
+        //                     CNIC = rg.NIC,
+        //                     HouseNo = rg.House_No,
+        //                     Area = rg.area,
+        //                     StreetNo = rg.stno_mno,
+        //                     City = rg.city,
+        //                     MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
+        //                     Gender_text = db.GetDataValueName("Gender", rg.Gender),
+        //                     pat_type_Val = "02",
+        //                     pat_type_text = db.GetDataValueName("Patient Type", "02"),
+        //                     ValArea = rg.val_area,
+        //                     ValCity = rg.val_city,
+        //                     Reg_PatientID = rg.pat_id,
+        //                     doctorId = (from appointment in db.Appointment_Forms
+        //                                 where appointment.Appointment_ID == apt_Id
+        //                                 select appointment.Consultant_ID),
+        //                     doctor_Text= (from hr in db.HR_Employees join ap in db.Appointment_Forms
+        //                                   on hr.Emp_ID  equals ap.Consultant_ID
+        //                                   select new { hr.Emp_Name }).FirstOrDefault(),
+        //                     departmentid = (from appointment in db.Appointment_Forms
+        //                                     where appointment.Appointment_ID == apt_Id
+        //                                     select appointment.Sub_Department)
+
+        //                 }).FirstOrDefault();
+        //    return (new JavaScriptSerializer()).Serialize(query);
+        //}
+
         [WebMethod]
         public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var query = (from rg in db.Reg_patients
-                         where rg.pat_id == reg_id
-                         select new
-                         {
+            var patient = (from rg in db.Reg_patients
+                           where rg.pat_id == reg_id
+                           select new
+                           {
+                               rg.Full_Name,
+                               rg.Father_Name,
+                               rg.Relation_prefix,
+                               rg.Gender,
+                               rg.DOB,
+                               rg.Age_years,
+                               rg.Martial_Status,
+                               rg.mr_no_sequence,
+                               rg.Patient_No,
+                               rg.House_No,
+                               rg.stno_mno,
+                               rg.area,
+                               rg.city,
+                               rg.Permanent_Address,
+                               rg.Mobile1,
+                               rg.NIC,
+                               rg.val_area,
+                               rg.val_city,
+                               rg.pat_id
+                           }).FirstOrDefault();
 
-                             Name = rg.Full_Name,
-                             FatherName = rg.Father_Name,
-                             Relation = rg.Relation_prefix,
-                             Gender = rg.Gender,
-                             DOB = rg.DOB,
-                             Age = rg.Age_years,
-                             MaritalStatus = rg.Martial_Status,
-                             Mr_No = rg.mr_no_sequence,
-                             pat_no = rg.Patient_No,
-                             Address = "H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city,
-                             PermanentAdrress = rg.Permanent_Address,
-                             Mobile = rg.Mobile1,
-                             CNIC = rg.NIC,
-                             HouseNo = rg.House_No,
-                             Area = rg.area,
-                             StreetNo = rg.stno_mno,
-                             City = rg.city,
-                             MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
-                             Gender_text = db.GetDataValueName("Gender", rg.Gender),
-                             ValArea = rg.val_area,
-                             ValCity = rg.val_city,
-                             Reg_PatientID = rg.pat_id,
-                             doctorId = (from appointment in db.Appointment_Forms
-                                         where appointment.Appointment_ID == apt_Id
-                                         select appointment.Consultant_ID),
-                             departmentid = (from appointment in db.Appointment_Forms
-                                             where appointment.Appointment_ID == apt_Id
-                                             select appointment.Sub_Department)
+            if (patient == null)
+                return new JavaScriptSerializer().Serialize(null);
 
-                         }).FirstOrDefault();
-            return (new JavaScriptSerializer()).Serialize(query);
+            string pat_type_Val = "02";
+            string pat_type_text = db.GetDataValueName("Patient Type", pat_type_Val);
+            string maritalStatus_text = db.GetDataValueName("Marital Status", patient.Martial_Status);
+            string gender_text = db.GetDataValueName("Gender", patient.Gender);
+
+            var doctorId = db.Appointment_Forms
+                             .Where(a => a.Appointment_ID == apt_Id)
+                             .Select(a => a.Consultant_ID)
+                             .FirstOrDefault();
+
+            string DoctorName = db.HR_Employees
+                             .Where(a => a.Emp_ID ==Convert.ToInt32( doctorId))
+                             .Select(a => a.Emp_Name)
+                             .FirstOrDefault();
+
+            var departmentid = db.Appointment_Forms
+                                 .Where(a => a.Appointment_ID == apt_Id)
+                                 .Select(a => a.Sub_Department)
+                                 .FirstOrDefault();
+            string department_Text = db.GetDataValueName("Patient Main Category", departmentid);
+
+            var result = new
+            {
+                Name = patient.Full_Name,
+                FatherName = patient.Father_Name,
+                Relation = patient.Relation_prefix,
+                Gender = patient.Gender,
+                DOB = patient.DOB,
+                Age = patient.Age_years,
+                MaritalStatus = patient.Martial_Status,
+                Mr_No = patient.mr_no_sequence,
+                pat_no = patient.Patient_No,
+                Address = $"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}",
+                PermanentAdrress = patient.Permanent_Address,
+                Mobile = patient.Mobile1,
+                CNIC = patient.NIC,
+                HouseNo = patient.House_No,
+                Area = patient.area,
+                StreetNo = patient.stno_mno,
+                City = patient.city,
+                MaritalStatus_text = maritalStatus_text,
+                Gender_text = gender_text,
+                pat_type_Val = pat_type_Val,
+                pat_type_text = pat_type_text,
+                ValArea = patient.val_area,
+                ValCity = patient.val_city,
+                Reg_PatientID = patient.pat_id,
+                doctorId = doctorId,
+                DoctorName= DoctorName,
+                departmentid = departmentid,
+                department_Text = department_Text
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
         }
+
+
         [WebMethod]
         public static string GetPatientDetail(int OPDID)
         {
