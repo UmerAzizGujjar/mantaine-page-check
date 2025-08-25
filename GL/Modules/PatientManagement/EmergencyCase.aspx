@@ -5676,8 +5676,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
         <div class="col-lg-4 col-md-3 col-sm-3">
-             
-        </div>
+                      <input type="button" value="Add Patient" id="btnSearchPatient" style="width: 140px !important;" onclick="OpenModal()" class="btn-primry" />
+         </div>
         <div class="col-lg-4">
     <div class="search-container">
         <div class="search-input-wrapper">

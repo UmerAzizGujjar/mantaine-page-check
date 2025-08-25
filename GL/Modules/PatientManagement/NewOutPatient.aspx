@@ -4173,7 +4173,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label15" runat="server" Text="Birth History"></asp:Label>
-                                                    <asp:TextBox ID="txtBirthHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="5"></asp:TextBox>
+                                                    <asp:TextBox ID="txtBirthHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="3"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4181,7 +4181,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label16" runat="server" Text="Gynae"></asp:Label>
-                                                    <asp:TextBox ID="txtGYNAE" TextMode="MultiLine" Rows="3" Width="100%" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtGYNAE" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="4"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4189,7 +4189,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label8" runat="server" Text="Drug History"></asp:Label>
-                                                    <asp:TextBox ID="txtDrugHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="6"></asp:TextBox>
+                                                    <asp:TextBox ID="txtDrugHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="5"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4197,7 +4197,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label17" runat="server" Text="Personal History"></asp:Label>
-                                                    <asp:TextBox ID="txtPersonalHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="7"></asp:TextBox>
+                                                    <asp:TextBox ID="txtPersonalHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="6"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4213,7 +4213,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label9" runat="server" Text="Allergies History"></asp:Label>
-                                                    <asp:TextBox ID="txtAllergiesHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="9"></asp:TextBox>
+                                                    <asp:TextBox ID="txtAllergiesHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="8"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4221,7 +4221,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label11" runat="server" Text="Treatment History"></asp:Label>
-                                                    <asp:TextBox ID="txtTreatmentHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="10"></asp:TextBox>
+                                                    <asp:TextBox ID="txtTreatmentHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="9"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4237,7 +4237,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="lblVaccinationHistory" runat="server" Text="Vaccination History"></asp:Label>
-                                                    <asp:TextBox ID="txtVaccinationHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="10"></asp:TextBox>
+                                                    <asp:TextBox ID="txtVaccinationHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="11"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4245,7 +4245,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="lblNutritionHistory" runat="server" Text="Nutrition History"></asp:Label>
-                                                    <asp:TextBox ID="txtNutritionHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="10"></asp:TextBox>
+                                                    <asp:TextBox ID="txtNutritionHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="12"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4253,7 +4253,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label3" runat="server" Text="Family History"></asp:Label>
-                                                    <asp:TextBox ID="txtHistoryOfFamily" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="3"></asp:TextBox>
+                                                    <asp:TextBox ID="txtHistoryOfFamily" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="13"></asp:TextBox>
                                                 </div>
                                             </div>
 
@@ -4261,7 +4261,7 @@
                                             <div class="history-row">
                                                 <div style="display: flex; align-items: center; width: 100%">
                                                     <asp:Label Style="width: 75%;" ID="Label5" runat="server" Text="SocioEconomic History"></asp:Label>
-                                                    <asp:TextBox ID="txtSocioEconomicHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="4"></asp:TextBox>
+                                                    <asp:TextBox ID="txtSocioEconomicHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="14"></asp:TextBox>
                                                 </div>
                                             </div>
 
