@@ -38,7 +38,7 @@ namespace PMS.Modules.Inventory
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var panel = (from tbl in db.Panel_Packages_Detail_Rates
+                var panel = (from tbl in db.Panel_Packages_Details
                              where tbl.Pan_Pakages_Id == Convert.ToInt32(Id) 
                              select tbl).ToList();
 
@@ -74,7 +74,7 @@ namespace PMS.Modules.Inventory
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var pkgdetail = (from pkgd in db.Pan_Packages_Details
+            var pkgdetail = (from pkgd in db.Panel_Packages_Detail_Rates
                              where pkgd.Pan_Packages_ID == Convert.ToInt32(id)
                              select new
                              {
@@ -232,8 +232,8 @@ namespace PMS.Modules.Inventory
 
             if (btnSave == "Update")
             {
-                var PacktDetails = db.Pan_Packages_Details.Where(t => t.Pan_Packages_ID == int.Parse(Package_ID)).ToList();
-                db.Pan_Packages_Details.DeleteAllOnSubmit(PacktDetails);
+                var PacktDetails = db.Panel_Packages_Detail_Rates.Where(t => t.Pan_Packages_ID == int.Parse(Package_ID)).ToList();
+                db.Panel_Packages_Detail_Rates.DeleteAllOnSubmit(PacktDetails);
                 db.SubmitChanges();
             }
 
@@ -241,7 +241,7 @@ namespace PMS.Modules.Inventory
             var PackageID = int.Parse(Package_ID);
             foreach (var test in record.PKDetail)
             {
-                Pan_Packages_Detail pkgdetail = new Pan_Packages_Detail();
+                Panel_Packages_Detail_Rate pkgdetail = new Panel_Packages_Detail_Rate();
                 pkgdetail.Item_Code = Convert.ToInt32(test.Item);
                 pkgdetail.Pan_Packages_ID = Convert.ToInt32(Package_ID);
                 pkgdetail.QTY = Convert.ToInt32(test.QTy);
@@ -257,23 +257,23 @@ namespace PMS.Modules.Inventory
                 {
                     pkgdetail.IsFixed = false;
                 }
-                db.Pan_Packages_Details.InsertOnSubmit(pkgdetail);
+                db.Panel_Packages_Detail_Rates.InsertOnSubmit(pkgdetail);
                 db.SubmitChanges();
             }
 
             if (btnSave == "Update")
             {
-                var PacktDetails = db.Panel_Packages_Detail_Rates.Where(t => t.Pan_Pakages_Id == int.Parse(Package_ID)).ToList();
-                db.Panel_Packages_Detail_Rates.DeleteAllOnSubmit(PacktDetails);
+                var PacktDetails = db.Panel_Packages_Details.Where(t => t.Pan_Pakages_Id == int.Parse(Package_ID)).ToList();
+                db.Panel_Packages_Details.DeleteAllOnSubmit(PacktDetails);
                 db.SubmitChanges();
             }
 
             foreach (var test in records.PKRateDetail)
             {
-                Panel_Packages_Detail_Rate PKRateDetail = new Panel_Packages_Detail_Rate();
+                Panel_Packages_Detail PKRateDetail = new Panel_Packages_Detail();
                 PKRateDetail.Pan_Pakages_Id = Convert.ToInt32(Package_ID);
                 PKRateDetail.Panel_Id = test.Panel_Id;
-                db.Panel_Packages_Detail_Rates.InsertOnSubmit(PKRateDetail);
+                db.Panel_Packages_Details.InsertOnSubmit(PKRateDetail);
                 db.SubmitChanges();
             }
             return PackageID;

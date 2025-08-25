@@ -2303,7 +2303,7 @@ namespace PMS
             if (PackType == 01)
             {
                 var doc_pack = (from m in db.DoctorPackages
-                                join d in db.Doc_Packages_Details
+                                join d in db.Doctor_Packages_Detail_Rates
                                   on m.Doc_Packages_ID equals d.Doc_Packages_ID
                                 where m.Doc_Packages_ID == packname
                                 select new
@@ -2329,7 +2329,7 @@ namespace PMS
             else if (PackType == 02)
             {
                 var Dep_pack = (from m in db.DepartmentPackages
-                                join d in db.Dep_Packages_Details
+                                join d in db.Department_Packages_Detail_Rates
                                   on m.Dep_Packages_ID equals d.Dep_Packages_ID
                                 where m.Dep_Packages_ID == packname
                                 select new
@@ -2355,7 +2355,7 @@ namespace PMS
             else if (PackType == 03)
             {
                 var Panel_pack = (from m in db.PanelPackages
-                                  join d in db.Pan_Packages_Details
+                                  join d in db.Panel_Packages_Detail_Rates
                                     on m.Pan_Packages_ID equals d.Pan_Packages_ID
                                   where m.Pan_Packages_ID == packname
                                   select new
@@ -2393,7 +2393,7 @@ namespace PMS
             if (PackType == 01)
             {
                 var doc_pack = (from m in db.DoctorPackages
-                                join d in db.Doc_Packages_Details
+                                join d in db.Doctor_Packages_Detail_Rates
                                   on m.Doc_Packages_ID equals d.Doc_Packages_ID
                                 where m.Doc_Packages_ID == packname &&
                                       d.Item_Code == itemid
@@ -2416,7 +2416,7 @@ namespace PMS
             else if (PackType == 02)
             {
                 var dep_pack = (from m in db.DepartmentPackages
-                                join d in db.Dep_Packages_Details
+                                join d in db.Department_Packages_Detail_Rates
                                   on m.Dep_Packages_ID equals d.Dep_Packages_ID
                                 where m.Dep_Packages_ID == packname &&
                                       d.Item_Code == itemid
@@ -2439,7 +2439,7 @@ namespace PMS
             else if (PackType == 03)
             {
                 var panel_pack = (from m in db.PanelPackages
-                                  join d in db.Pan_Packages_Details
+                                  join d in db.Panel_Packages_Detail_Rates
                                     on m.Pan_Packages_ID equals d.Pan_Packages_ID
                                   where m.Pan_Packages_ID == packname &&
                                         d.Item_Code == itemid

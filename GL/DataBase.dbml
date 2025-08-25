@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="prch" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Hmis_Standard" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3941,57 +3941,6 @@
       <Column Name="Doc_No" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Dep_Packages_Detail" Member="Dep_Packages_Details">
-    <Type Name="Dep_Packages_Detail">
-      <Column Name="Dep_Package_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Dep_Packages_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Price" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_per" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
-      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsFixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ItemsOrderBy" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Doc_Packages_Detail" Member="Doc_Packages_Details">
-    <Type Name="Doc_Packages_Detail">
-      <Column Name="Doc_Package_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Doc_Packages_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Price" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_per" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
-      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsFixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ItemsOrderBy" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Pan_Packages_Detail" Member="Pan_Packages_Details">
-    <Type Name="Pan_Packages_Detail">
-      <Column Name="Pan_Package_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Pan_Packages_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Price" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_per" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
-      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsFixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ItemsOrderBy" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Test_Defination_Detail_Rates" Member="Test_Defination_Detail_Rates">
     <Type Name="Test_Defination_Detail_Rate">
       <Column Name="Test_Defination_Detail_Rates_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -4004,39 +3953,6 @@
       <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="isGroupTest" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Doctor_Packages_Detail_Rates" Member="Doctor_Packages_Detail_Rates">
-    <Type Name="Doctor_Packages_Detail_Rate">
-      <Column Name="Doctor_Detail_Rates_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Doc_Pakages_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Panel_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Department_Id" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="SubDepartment" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Package_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Panel_Packages_Detail_Rates" Member="Panel_Packages_Detail_Rates">
-    <Type Name="Panel_Packages_Detail_Rate">
-      <Column Name="Panel_Detail_Rates_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Pan_Pakages_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Panel_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Department_Id" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="SubDepartment" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Package_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Department_Packages_Detail_Rates" Member="Department_Packages_Detail_Rates">
-    <Type Name="Department_Packages_Detail_Rate">
-      <Column Name="Dep_Detail_Rates_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Dep_Pakages_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Panel_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Department_Id" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="SubDepartment" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Package_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Doctor_Agreement" Member="Doctor_Agreements">
@@ -6824,6 +6740,93 @@
       <Column Name="CancelledBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Refer_To_OPD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Doctor_Packages_Detail" Member="Doctor_Packages_Details">
+    <Type Name="Doctor_Packages_Detail">
+      <Column Name="Doctor_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Doc_Pakages_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Panel_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Department_Id" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="SubDepartment" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Package_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Doctor_Packages_Detail_Rates" Member="Doctor_Packages_Detail_Rates">
+    <Type Name="Doctor_Packages_Detail_Rate">
+      <Column Name="Doc_Package_Detail_Rate_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Doc_Packages_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Price" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_per" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsFixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ItemsOrderBy" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="is_expense" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Department_Packages_Detail" Member="Department_Packages_Details">
+    <Type Name="Department_Packages_Detail">
+      <Column Name="Dep_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Dep_Pakages_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Panel_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Department_Id" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="SubDepartment" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Package_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Department_Packages_Detail_Rates" Member="Department_Packages_Detail_Rates">
+    <Type Name="Department_Packages_Detail_Rate">
+      <Column Name="Dep_Package_Detail_Rate_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Dep_Packages_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Price" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_per" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsFixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ItemsOrderBy" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="is_expense" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Panel_Packages_Detail" Member="Panel_Packages_Details">
+    <Type Name="Panel_Packages_Detail">
+      <Column Name="Panel_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Pan_Pakages_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Panel_Id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Department_Id" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="SubDepartment" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Package_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Panel_Packages_Detail_Rates" Member="Panel_Packages_Detail_Rates">
+    <Type Name="Panel_Packages_Detail_Rate">
+      <Column Name="Pan_Package_Detail_Rate_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Pan_Packages_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="QTY" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Price" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_per" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsFixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ItemsOrderBy" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="is_expense" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

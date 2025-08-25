@@ -48,7 +48,7 @@ namespace PMS.Modules.Inventory
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var panel = (from tbl in db.Doctor_Packages_Detail_Rates
+                var panel = (from tbl in db.Doctor_Packages_Details
                              where tbl.Doc_Pakages_Id == Convert.ToInt32(Id)
                              select tbl).ToList();
                 return (new JavaScriptSerializer()).Serialize(panel);
@@ -60,7 +60,7 @@ namespace PMS.Modules.Inventory
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var pkgdetail = (from pkgd in db.Doc_Packages_Details
+            var pkgdetail = (from pkgd in db.Doctor_Packages_Detail_Rates
                              where pkgd.Doc_Packages_ID == Convert.ToInt32(id)
                              select new
                              {
@@ -318,15 +318,15 @@ namespace PMS.Modules.Inventory
 
             if (btnSave == "Update")
             {
-                var PacktDetails = db.Doc_Packages_Details.Where(t => t.Doc_Packages_ID == int.Parse(Package_ID)).ToList();
-                db.Doc_Packages_Details.DeleteAllOnSubmit(PacktDetails);
+                var PacktDetails = db.Doctor_Packages_Detail_Rates.Where(t => t.Doc_Packages_ID == int.Parse(Package_ID)).ToList();
+                db.Doctor_Packages_Detail_Rates.DeleteAllOnSubmit(PacktDetails);
                 db.SubmitChanges();
             }
 
             var PackageID = int.Parse(Package_ID);
             foreach (var test in record.PKDetail)
             {
-                Doc_Packages_Detail pkgdetail = new Doc_Packages_Detail();
+                Doctor_Packages_Detail_Rate pkgdetail = new Doctor_Packages_Detail_Rate();
                 pkgdetail.Item_Code = Convert.ToInt32(test.Item);
                 pkgdetail.Doc_Packages_ID = Convert.ToInt32(Package_ID);
                 pkgdetail.QTY = Convert.ToInt32(test.QTy);
@@ -342,26 +342,26 @@ namespace PMS.Modules.Inventory
                 {
                     pkgdetail.IsFixed = false;
                 }
-                db.Doc_Packages_Details.InsertOnSubmit(pkgdetail);
+                db.Doctor_Packages_Detail_Rates.InsertOnSubmit(pkgdetail);
                 db.SubmitChanges();
             }
 
             if (btnSave == "Update")
             {
-                var PacktDetails = db.Doctor_Packages_Detail_Rates.Where(t => t.Doc_Pakages_Id == int.Parse(Package_ID)).ToList();
-                db.Doctor_Packages_Detail_Rates.DeleteAllOnSubmit(PacktDetails);
+                var PacktDetails = db.Doctor_Packages_Details.Where(t => t.Doc_Pakages_Id == int.Parse(Package_ID)).ToList();
+                db.Doctor_Packages_Details.DeleteAllOnSubmit(PacktDetails);
                 db.SubmitChanges();
             }
         
             foreach (var test in records.PKRateDetail)
             {
-                Doctor_Packages_Detail_Rate PKRateDetail = new Doctor_Packages_Detail_Rate();
+                Doctor_Packages_Detail PKRateDetail = new Doctor_Packages_Detail();
 
                 PKRateDetail.Doc_Pakages_Id = Convert.ToInt32(Package_ID);
                 PKRateDetail.Doctor_Id = test.Doctor_Id;
                 PKRateDetail.Department_Id = test.Department_Id;
                 
-                db.Doctor_Packages_Detail_Rates.InsertOnSubmit(PKRateDetail);
+                db.Doctor_Packages_Details.InsertOnSubmit(PKRateDetail);
                 db.SubmitChanges();
             }
             return PackageID;
