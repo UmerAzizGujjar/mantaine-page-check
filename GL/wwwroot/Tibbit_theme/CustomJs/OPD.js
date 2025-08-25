@@ -19,6 +19,11 @@ $(document).ready(function () {
         $("#PatientsSearchModel").modal('show');
         FillPatientsList();
     });
+
+    $('#btnsearchEmergencylist').click(function () {
+        $("#SearchEmergencyPatients").modal('show');
+        FillEmergencyPatientsList();
+    });
     $("#txtSearch").keypress(function (event) {
         debugger;
         var SearchString = $('#txtSearch').val();
@@ -226,12 +231,9 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(reg_id);
             $('#hdn_aptid').val(apt_Id);
-            $('#ddlPatient_Type').val("02").trigger('change');
+          
             debugger;
-            $('#ddlDepartment').val(data.departmentid[0]).trigger('change');
-            $('#ddlDepartment').attr('disabled', true);
-            $('#ddldoctor').val(data.doctorId[0]).trigger('change');
-            $('#ddldoctor').attr('disabled', true);
+        
             $('#ddlmartialstatus').html(
                 $('<option>', {
                     value: data.MaritalStatus,
@@ -245,6 +247,31 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 })
             );
 
+
+            $('#ddlPatient_Type').html(
+                $('<option>', {
+                    value: data.pat_type_Val,
+                    text: data.pat_type_text
+                })
+            ); loaddata();
+
+            $('#ddldoctor').html(
+                $('<option>', {
+                    value: data.doctorId,
+                    text: data.DoctorName
+                })
+            );
+            $('#ddlDepartment').html(
+                $('<option>', {
+                    value: data.departmentid,
+                    text: data.department_Text
+                })
+            );
+            //$('#ddlDepartment').val(data.departmentid[0]).trigger('change');
+            //$('#ddlDepartment').attr('disabled', true);
+            //$('#ddldoctor').val(data.doctorId[0]).trigger('change');
+            //$('#ddldoctor').attr('disabled', true);
+       
         },
         error: function (response) {
             alert("Error: " + response.responseText);
@@ -661,6 +688,7 @@ function getGeneralFee() {
     });
 
 }
+
 
 
 
@@ -1623,4 +1651,72 @@ $(document).ready(function () {
     });
 
 });
+
+
+
+function FillEmergencyPatientsList() {
+    debugger;
+    $('#tblEmergencyResult tbody').empty();
+
+    var SearchString = '';
+
+    PageMethods.SearchEmergencyPatients(SearchString, OnFilterEmergencyPatients, OnFailEmergencyPatients);
+}
+
+function OnFilterEmergencyPatients(data) {
+
+    ClearEmergencyPatientResults();
+    for (var i = 0; i < data.length; i++) {
+        AddEmergencyPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].Father_Name,data[i].NIC,data[i].Mobile1);
+    }  
+}
+
+
+
+function OnFailEmergencyPatients(exc) {
+    alert(exc.get_message());
+}
+
+function ClearEmergencyPatientResults() {
+    $('#tblEmergencyResult tbody').empty();
+}
+
+function AddEmergencyPatientsResult(Patient_ID, Patient_No, Full_Name, Father_Name, NIC, Mobile1) {
+    var tblLength = tblEmergencyResult.rows.length;
+    var row = EmergencyPatientsBody.insertRow(-1);
+    var cell;
+
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span id="spnPatID' + tblLength + '">' + Patient_ID + '</span>';
+    cell.className = "hide";
+
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+    cell = row.insertCell(-1);
+    var actions = '';
+    actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;display:flex;justify-content:center;" href="#" onclick=AddEmergencyPatientDetail(' + Patient_ID + ')><i class="fa fa-plus-circle"></i><span class="tooltiptxt">Add</span></a>';
+    actions += '<a class="tooltips" style="color:#FDC303;font-size:16px;display:none" href="#" onclick=EditEmergencyPatientDetail(' + Patient_ID + ')><i class="fa fa-pencil-square-o"></i><span class="tooltiptxt">Edit</span></a>';
+    cell.innerHTML = actions;
+}
+
+function AddEmergencyPatientDetail(reg_id) {
+    debugger;
+    try {
+        isAdd = true;
+        window.location.href = "OPD.aspx?ID=" + reg_id + "&isAdd=" + isAdd;
+
+    } catch (err) {
+        alert(err.message);
+    }
+
+}
+
 

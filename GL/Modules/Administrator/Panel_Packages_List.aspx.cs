@@ -59,7 +59,7 @@ namespace PMS.Modules.Inventory
                                     a.Duration,
                                     a.Remarks,
                                     PanelNames = (from p in _dbContext.Panels
-                                                  join pck in _dbContext.Panel_Packages_Detail_Rates on a.Pan_Packages_ID equals pck.Pan_Pakages_Id
+                                                  join pck in _dbContext.Panel_Packages_Details on a.Pan_Packages_ID equals pck.Pan_Pakages_Id
                                                   where p.Panel_ID == Convert.ToInt32(pck.Panel_Id)
                                                   select p.Company_Name).Distinct().ToList()
                                 };

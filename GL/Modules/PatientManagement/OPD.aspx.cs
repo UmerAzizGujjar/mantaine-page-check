@@ -651,6 +651,8 @@ namespace PMS.Modules.PatientManagement
                 pat.Patient_No = Convert.ToInt32(data.pat_no);
                 pat.Refference_No = data.reffer_no;
 
+
+
                 if (data.pat_category == "01" && data.discount == "")
                 {
                     pat.Receipt_Amount = Convert.ToDecimal(opdfee);
@@ -862,48 +864,144 @@ namespace PMS.Modules.PatientManagement
                          }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(query);
         }
+        //[WebMethod]
+        //public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    var query = (from rg in db.Reg_patients
+        //                 where rg.pat_id == reg_id
+        //                 select new
+        //                 {
+
+        //                     Name = rg.Full_Name,
+        //                     FatherName = rg.Father_Name,
+        //                     Relation = rg.Relation_prefix,
+        //                     Gender = rg.Gender,
+        //                     DOB = rg.DOB,
+        //                     Age = rg.Age_years,
+        //                     MaritalStatus = rg.Martial_Status,
+        //                     Mr_No = rg.mr_no_sequence,
+        //                     pat_no = rg.Patient_No,
+        //                     Address = "H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city,
+        //                     PermanentAdrress = rg.Permanent_Address,
+        //                     Mobile = rg.Mobile1,
+        //                     CNIC = rg.NIC,
+        //                     HouseNo = rg.House_No,
+        //                     Area = rg.area,
+        //                     StreetNo = rg.stno_mno,
+        //                     City = rg.city,
+        //                     MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
+        //                     Gender_text = db.GetDataValueName("Gender", rg.Gender),
+        //                     pat_type_Val = "02",
+        //                     pat_type_text = db.GetDataValueName("Patient Type", "02"),
+        //                     ValArea = rg.val_area,
+        //                     ValCity = rg.val_city,
+        //                     Reg_PatientID = rg.pat_id,
+        //                     doctorId = (from appointment in db.Appointment_Forms
+        //                                 where appointment.Appointment_ID == apt_Id
+        //                                 select appointment.Consultant_ID),
+        //                     doctor_Text= (from hr in db.HR_Employees join ap in db.Appointment_Forms
+        //                                   on hr.Emp_ID  equals ap.Consultant_ID
+        //                                   select new { hr.Emp_Name }).FirstOrDefault(),
+        //                     departmentid = (from appointment in db.Appointment_Forms
+        //                                     where appointment.Appointment_ID == apt_Id
+        //                                     select appointment.Sub_Department)
+
+        //                 }).FirstOrDefault();
+        //    return (new JavaScriptSerializer()).Serialize(query);
+        //}
+
         [WebMethod]
         public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var query = (from rg in db.Reg_patients
-                         where rg.pat_id == reg_id
-                         select new
-                         {
+            var patient = (from rg in db.Reg_patients
+                           where rg.pat_id == reg_id
+                           select new
+                           {
+                               rg.Full_Name,
+                               rg.Father_Name,
+                               rg.Relation_prefix,
+                               rg.Gender,
+                               rg.DOB,
+                               rg.Age_years,
+                               rg.Martial_Status,
+                               rg.mr_no_sequence,
+                               rg.Patient_No,
+                               rg.House_No,
+                               rg.stno_mno,
+                               rg.area,
+                               rg.city,
+                               rg.Permanent_Address,
+                               rg.Mobile1,
+                               rg.NIC,
+                               rg.val_area,
+                               rg.val_city,
+                               rg.pat_id
+                           }).FirstOrDefault();
 
-                             Name = rg.Full_Name,
-                             FatherName = rg.Father_Name,
-                             Relation = rg.Relation_prefix,
-                             Gender = rg.Gender,
-                             DOB = rg.DOB,
-                             Age = rg.Age_years,
-                             MaritalStatus = rg.Martial_Status,
-                             Mr_No = rg.mr_no_sequence,
-                             pat_no = rg.Patient_No,
-                             Address = "H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city,
-                             PermanentAdrress = rg.Permanent_Address,
-                             Mobile = rg.Mobile1,
-                             CNIC = rg.NIC,
-                             HouseNo = rg.House_No,
-                             Area = rg.area,
-                             StreetNo = rg.stno_mno,
-                             City = rg.city,
-                             MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
-                             Gender_text = db.GetDataValueName("Gender", rg.Gender),
-                             ValArea = rg.val_area,
-                             ValCity = rg.val_city,
-                             Reg_PatientID = rg.pat_id,
-                             doctorId = (from appointment in db.Appointment_Forms
-                                         where appointment.Appointment_ID == apt_Id
-                                         select appointment.Consultant_ID),
-                             departmentid = (from appointment in db.Appointment_Forms
-                                             where appointment.Appointment_ID == apt_Id
-                                             select appointment.Sub_Department)
+            if (patient == null)
+                return new JavaScriptSerializer().Serialize(null);
 
-                         }).FirstOrDefault();
-            return (new JavaScriptSerializer()).Serialize(query);
+            string pat_type_Val = "02";
+            string pat_type_text = db.GetDataValueName("Patient Type", pat_type_Val);
+            string maritalStatus_text = db.GetDataValueName("Marital Status", patient.Martial_Status);
+            string gender_text = db.GetDataValueName("Gender", patient.Gender);
+
+            var doctorId = db.Appointment_Forms
+                             .Where(a => a.Appointment_ID == apt_Id)
+                             .Select(a => a.Consultant_ID)
+                             .FirstOrDefault();
+
+            string DoctorName = db.HR_Employees
+                             .Where(a => a.Emp_ID ==Convert.ToInt32( doctorId))
+                             .Select(a => a.Emp_Name)
+                             .FirstOrDefault();
+
+            var departmentid = db.Appointment_Forms
+                                 .Where(a => a.Appointment_ID == apt_Id)
+                                 .Select(a => a.Sub_Department)
+                                 .FirstOrDefault();
+            string department_Text = db.GetDataValueName("Patient Main Category", departmentid);
+
+            var result = new
+            {
+                Name = patient.Full_Name,
+                FatherName = patient.Father_Name,
+                Relation = patient.Relation_prefix,
+                Gender = patient.Gender,
+                DOB = patient.DOB,
+                Age = patient.Age_years,
+                MaritalStatus = patient.Martial_Status,
+                Mr_No = patient.mr_no_sequence,
+                pat_no = patient.Patient_No,
+                Address = $"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}",
+                PermanentAdrress = patient.Permanent_Address,
+                Mobile = patient.Mobile1,
+                CNIC = patient.NIC,
+                HouseNo = patient.House_No,
+                Area = patient.area,
+                StreetNo = patient.stno_mno,
+                City = patient.city,
+                MaritalStatus_text = maritalStatus_text,
+                Gender_text = gender_text,
+                pat_type_Val = pat_type_Val,
+                pat_type_text = pat_type_text,
+                ValArea = patient.val_area,
+                ValCity = patient.val_city,
+                Reg_PatientID = patient.pat_id,
+                doctorId = doctorId,
+                DoctorName= DoctorName,
+                departmentid = departmentid,
+                department_Text = department_Text
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
         }
+
+
         [WebMethod]
         public static string GetPatientDetail(int OPDID)
         {
@@ -1050,6 +1148,89 @@ namespace PMS.Modules.PatientManagement
             return list;
         }
         [WebMethod]
+        public static List<EmergencyResult> SearchEmergencyPatients(string SearchString)
+        {
+            string SearchSql = "";
+
+            if (string.IsNullOrEmpty(SearchString))
+            {
+                SearchSql = @"SELECT TOP 10  
+                            r.pat_id, 
+                            ISNULL(r.mr_no_sequence,'') AS Patient_No,
+                            ISNULL(r.Full_Name,'') AS Full_Name,
+                            ISNULL(r.NIC,'') AS NIC,
+                            ISNULL(r.Mobile1,'') AS ContactNo,
+                            ISNULL(r.Father_Name,'') AS Father_Name,
+                            e.Patient_ID, 
+                            ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
+                          FROM Reg_Patient r 
+                          INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
+                          WHERE r.Patient_No <> 0  
+                            AND r.Patient_No IS NOT NULL 
+                            AND ISNULL(r.isCancel,0) != 1   
+                            AND ISNULL(e.Refer_To_OPD,0) = 1 
+                          ORDER BY r.pat_id DESC";
+            }
+            else
+            {
+                SearchSql = @"SELECT 
+                            r.pat_id,
+                            ISNULL(r.mr_no_sequence,'') AS Patient_No,
+                            ISNULL(r.Full_Name,'') AS Full_Name,
+                            ISNULL(r.NIC,'') AS NIC, 
+                            ISNULL(r.Mobile1,'') AS ContactNo,
+                            ISNULL(r.Father_Name,'') AS Father_Name,
+                            e.Patient_ID,
+                            ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
+                          FROM Reg_Patient r 
+                          INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
+                          WHERE r.Patient_No <> 0 
+                            AND r.Patient_No IS NOT NULL 
+                            AND ISNULL(r.isCancel,0) != 1
+                            AND ISNULL(e.Refer_To_OPD,0) = 1 
+                            AND (LTRIM(RTRIM(r.patient_no)) LIKE '%" + SearchString.Trim() + @"%' 
+                                 OR LTRIM(RTRIM(r.full_name)) LIKE '%" + SearchString.Trim() + @"%' 
+                                 OR LTRIM(RTRIM(r.mobile1)) LIKE '%" + SearchString.Trim() + @"%' 
+                                 OR LTRIM(RTRIM(r.nic)) LIKE '%" + SearchString.Trim() + @"%')
+                          ORDER BY r.pat_id DESC";
+            }
+
+            DataTable dt = DBClass.getDataTable(SearchSql);
+
+            List<EmergencyResult> list = new List<EmergencyResult>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                EmergencyResult rslt = new EmergencyResult()
+                {
+                    Reg_Patient_ID = dr["pat_id"] == DBNull.Value ? "" : dr["pat_id"].ToString(),
+                    Patient_No = dr["Patient_No"] == DBNull.Value ? "" : dr["Patient_No"].ToString(),
+                    Full_Name = dr["Full_Name"] == DBNull.Value ? "" : dr["Full_Name"].ToString(),
+                    NIC = dr["NIC"] == DBNull.Value ? "" : dr["NIC"].ToString(),
+                    Mobile1 = dr["ContactNo"] == DBNull.Value ? "" : dr["ContactNo"].ToString(),
+                    Father_Name = dr["Father_Name"] == DBNull.Value ? "" : dr["Father_Name"].ToString(),
+                    Emergency_ID = dr["Patient_ID"] == DBNull.Value ? "" : dr["Patient_ID"].ToString(),
+                    Refer_To_OPD = dr["Refer_To_OPD"] == DBNull.Value ? "0" : dr["Refer_To_OPD"].ToString()
+                };
+                list.Add(rslt);
+            }
+
+            return list;
+        }
+
+        public class EmergencyResult
+        {
+            public string Reg_Patient_ID { get; set; }
+            public string Patient_No { get; set; }
+            public string Full_Name { get; set; }
+            public string NIC { get; set; }
+            public string Mobile1 { get; set; }
+            public string Father_Name { get; set; }
+            public string Emergency_ID { get; set; }
+            public string Refer_To_OPD { get; set; }
+        }
+    
+    [WebMethod]
         public static bool CardFee(string PatID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());

@@ -1766,189 +1766,7 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(Details);
         }
-        //[WebMethod]
-        //public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
-        //{
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        // for services check other wis eif it is test than go to else part
 
-        //        var check = (from data in db.Doctor_Agreements
-        //                     join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                     where data.Doctor == doc_id
-        //                     && item_id == Convert.ToString(dd.item_id)
-        //                     && dd.item_id != 0
-        //                     && dd.test_id == 0
-        //                     && dd.services == "002"
-        //                     && dd.AgrementTypeId == Aggreement_Type
-        //                     && dd.service_description.Contains(item_name)
-        //                     //&& dd.isactive == true
-        //                     //orderby dd.doc_detail_id descending
-        //                     select new
-        //                     {
-        //                         data.Doctor,
-        //                         dd.services,
-        //                     }).FirstOrDefault();
-
-        //        if (Aggreement_Type == "03")
-        //        {
-        //            if (check != null)
-        //            {
-        //                if (check.services == "002")
-        //                {
-        //                    var serv = (from data in db.Doctor_Agreements
-        //                                join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                where dd.services == "002"
-        //                                && data.Doctor == doc_id
-        //                                && item_id == Convert.ToString(dd.item_id)
-        //                                && dd.AgrementTypeId == Aggreement_Type
-        //                                && dd.isactive == true
-        //                                //orderby dd.doc_detail_id descending
-        //                                select new
-        //                                {
-        //                                    dd.doc_share,
-        //                                    dd.hos_share,
-        //                                }).FirstOrDefault();
-
-        //                    if (serv == null)
-        //                    {
-        //                        var inactive_srv = (from data in db.Panels
-        //                                            join dd in db.Panel_Detail_Services on data.Panel_ID equals dd.Panel_ID
-        //                                            where dd.Item_Code != 0
-        //                                            && item_id == Convert.ToString(dd.Item_ID)
-        //                                            select new
-        //                                            {
-        //                                                doc_share = 0,
-        //                                                hos_share = dd.Rate,
-
-        //                                            }).FirstOrDefault();
-        //                        return (new JavaScriptSerializer()).Serialize(inactive_srv);
-        //                    }
-        //                    return (new JavaScriptSerializer()).Serialize(serv);
-        //                }
-        //                else
-        //                {
-        //                    var items = (from data in db.Doctor_Agreements
-        //                                 join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                 where data.Doctor == doc_id && dd.services == null && dd.test_id == Convert.ToInt32(test_id) && dd.item_id == 0
-        //                                 && dd.isactive == true
-        //                                 select new
-        //                                 {
-        //                                     dd.doc_share,
-        //                                     dd.hos_share,
-        //                                 }).FirstOrDefault();
-        //                    return (new JavaScriptSerializer()).Serialize(items);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                var items = (from data in db.Doctor_Agreements
-        //                             join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                             where data.Doctor == doc_id && dd.services == null && dd.test_id == Convert.ToInt32(test_id) && dd.item_id == 0 && dd.AgrementTypeId == Aggreement_Type
-        //                              && dd.isactive == true
-        //                             select new
-        //                             {
-        //                                 dd.doc_share,
-        //                                 dd.hos_share,
-        //                             }).FirstOrDefault();
-        //                if (items == null)
-        //                {
-        //                    var inactive_item = (from data in db.Panels
-        //                                         join dd in db.Panel_Detail_Services on data.Panel_ID equals dd.Panel_ID
-        //                                         where dd.Item_Code == 0
-        //                                         && item_id == Convert.ToString(dd.Test_ID)
-        //                                         select new
-        //                                         {
-        //                                             doc_share = 0,
-        //                                             hos_share = dd.Rate,
-        //                                         }).FirstOrDefault();
-        //                    return (new JavaScriptSerializer()).Serialize(inactive_item);
-        //                }
-        //                return (new JavaScriptSerializer()).Serialize(items);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (check != null)
-        //            {
-        //                if (check.services == "002")
-        //                {
-        //                    var serv = (from data in db.Doctor_Agreements
-        //                                join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                where dd.services == "002"
-        //                                && data.Doctor == doc_id
-        //                                && item_id == Convert.ToString(dd.item_id)
-        //                                && dd.AgrementTypeId == Aggreement_Type
-        //                                && dd.isactive == true
-        //                                //orderby dd.doc_detail_id descending
-        //                                select new
-        //                                {
-        //                                    dd.doc_share,
-        //                                    dd.hos_share,
-        //                                }).FirstOrDefault();
-
-        //                    if (serv == null)
-        //                    {
-        //                        var inactive_srv = (from data in db.Doctor_Agreements
-        //                                            join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                            where dd.services == "002"
-        //                                            && item_id == Convert.ToString(dd.item_id)
-        //                                             && data.Doctor == doc_id
-        //                                             && dd.AgrementTypeId == Aggreement_Type
-        //                                            && dd.isactive == false
-        //                                            select new
-        //                                            {
-        //                                                doc_share = 0,
-        //                                                hos_share = dd.Actual_amount,
-        //                                            }).FirstOrDefault();
-        //                        return (new JavaScriptSerializer()).Serialize(inactive_srv);
-        //                    }
-
-        //                    return (new JavaScriptSerializer()).Serialize(serv);
-        //                }
-        //                else
-        //                {
-        //                    var items = (from data in db.Doctor_Agreements
-        //                                 join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                 where data.Doctor == doc_id && dd.services == null && dd.test_id == Convert.ToInt32(test_id) && dd.item_id == 0
-        //                                 && dd.isactive == true
-        //                                 select new
-        //                                 {
-        //                                     dd.doc_share,
-        //                                     dd.hos_share,
-        //                                 }).FirstOrDefault();
-        //                    return (new JavaScriptSerializer()).Serialize(items);
-        //                }
-
-        //            }
-        //            else
-        //            {
-        //                var items = (from data in db.Doctor_Agreements
-        //                             join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                             where data.Doctor == doc_id && dd.services == null && dd.test_id == Convert.ToInt32(test_id) && dd.item_id == 0 && dd.AgrementTypeId == Aggreement_Type
-        //                              && dd.isactive == true
-        //                             select new
-        //                             {
-        //                                 dd.doc_share,
-        //                                 dd.hos_share,
-        //                             }).FirstOrDefault();
-        //                if (items == null)
-        //                {
-        //                    var inactive_item = (from data in db.Lab_Tests
-        //                                         where data.Test_ID == Convert.ToInt32(test_id)
-        //                                         select new
-        //                                         {
-        //                                             doc_share = 0,
-        //                                             hos_share = data.Rate,
-
-        //                                         }).FirstOrDefault();
-        //                    return (new JavaScriptSerializer()).Serialize(inactive_item);
-        //                }
-        //                return (new JavaScriptSerializer()).Serialize(items);
-        //            }
-        //        }
-        //    }
-        //}
         [WebMethod]
         public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
         {
@@ -2046,194 +1864,26 @@ namespace PMS
                                         .Select(inv => new { doc_share = 0, hos_share = inv.Sale_Rate })
                                        // .Select(inv => new { doc_share = (inv.Doctor_Share / 100) * inv.Sale_Rate, hos_share = (inv.Hospital_Share / 100) * inv.Sale_Rate })
                                         .FirstOrDefault();
+                        if(Service == null)
+                        {
+                            var Services = db.DataValues
+                                       .Where(inv => inv.DataValue_Name == item_id && inv.DataValue_Description == item_name)
+                                       .Select(inv => new { doc_share = 0, hos_share = inv.Segment1 })
+                                       // .Select(inv => new { doc_share = (inv.Doctor_Share / 100) * inv.Sale_Rate, hos_share = (inv.Hospital_Share / 100) * inv.Sale_Rate })
+                                       .FirstOrDefault();
+
+                            return new JavaScriptSerializer().Serialize(Services);
+                        }
 
                         return new JavaScriptSerializer().Serialize(Service);
                     }
-                    else
-                    {
-                        var Service = db.DataValues
-                                        .Where(inv => inv.DataValue_Name == item_id && inv.DataValue_Description == item_name)
-                                        .Select(inv => new { doc_share = 0, hos_share = inv.Segment1 })
-                                        // .Select(inv => new { doc_share = (inv.Doctor_Share / 100) * inv.Sale_Rate, hos_share = (inv.Hospital_Share / 100) * inv.Sale_Rate })
-                                        .FirstOrDefault();
-
-                        return new JavaScriptSerializer().Serialize(Service);
-                    }
+                   
 
                     return new JavaScriptSerializer().Serialize(Test_Id);
                 }
             }
         }
-        //[WebMethod]
-        //public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
-        //{
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        // for services check other wis eif it is test than go to else part
 
-
-        //        var Check_Doc = (from data in db.Doctor_Agreements
-        //                         where data.Doctor == doc_id
-        //                         select new
-        //                         {
-        //                             data.Doctor
-        //                         }).FirstOrDefault();
-
-        //        if (Check_Doc != null)
-        //        {
-
-        //            var check = (from data in db.Doctor_Agreements
-        //                         join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                         where data.Doctor == doc_id
-        //                         && item_id == Convert.ToString(dd.item_id)
-        //                         && dd.item_id != 0
-        //                         && dd.test_id == 0
-        //                         && dd.services == "002"
-        //                         && dd.AgrementTypeId == Aggreement_Type
-        //                         && dd.service_description.Contains(item_name)
-
-        //                         select new
-        //                         {
-        //                             data.Doctor,
-        //                             dd.services,
-        //                         }).FirstOrDefault();
-
-        //            if (Aggreement_Type == "03")
-        //            {
-        //                if (check != null)
-        //                {
-        //                    if (check.services == "002")
-        //                    {
-        //                        var serv = (from data in db.Doctor_Agreements
-        //                                    join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                    where dd.services == "002"
-        //                                    && data.Doctor == doc_id
-        //                                    && item_id == Convert.ToString(dd.item_id)
-        //                                    && dd.AgrementTypeId == Aggreement_Type
-        //                                    && dd.isactive == true
-        //                                    select new
-        //                                    {
-        //                                        dd.doc_share,
-        //                                        dd.hos_share,
-        //                                    }).FirstOrDefault();
-
-
-        //                        return (new JavaScriptSerializer()).Serialize(serv);
-        //                    }
-
-        //                }
-        //                else
-        //                {
-        //                    var items = (from data in db.Doctor_Agreements
-        //                                 join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                 where data.Doctor == doc_id && dd.services == null && dd.test_id == Convert.ToInt32(test_id) && dd.item_id == 0 && dd.AgrementTypeId == Aggreement_Type
-        //                                  && dd.isactive == true
-        //                                 select new
-        //                                 {
-        //                                     dd.doc_share,
-        //                                     dd.hos_share,
-        //                                 }).FirstOrDefault();
-
-        //                    return (new JavaScriptSerializer()).Serialize(items);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                if (check != null)
-        //                {
-        //                    if (check.services == "002")
-        //                    {
-        //                        var serv = (from data in db.Doctor_Agreements
-        //                                    join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                    where dd.services == "002"
-        //                                    && data.Doctor == doc_id
-        //                                    && item_id == Convert.ToString(dd.item_id)
-        //                                    && dd.AgrementTypeId == Aggreement_Type
-        //                                    && dd.isactive == true
-        //                                    //orderby dd.doc_detail_id descending
-        //                                    select new
-        //                                    {
-        //                                        dd.doc_share,
-        //                                        dd.hos_share,
-        //                                    }).FirstOrDefault();
-
-
-        //                        return (new JavaScriptSerializer()).Serialize(serv);
-        //                    }
-
-        //                }
-        //                else
-        //                {
-        //                    var items = (from data in db.Doctor_Agreements
-        //                                 join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
-        //                                 where data.Doctor == doc_id && dd.services == null && dd.test_id == Convert.ToInt32(test_id) && dd.item_id == 0 && dd.AgrementTypeId == Aggreement_Type
-        //                                  && dd.isactive == true
-        //                                 select new
-        //                                 {
-        //                                     dd.doc_share,
-        //                                     dd.hos_share,
-        //                                 }).FirstOrDefault();
-        //                    return (new JavaScriptSerializer()).Serialize(items);
-        //                }
-        //            }
-        //        }
-        //        if (Check_Doc == null)
-        //        {
-        //            if (Aggreement_Type == "03")
-        //            {
-        //                var Panel_Test = (from data in db.Panel_Detail_Services
-        //                                     where data.Test_ID == test_id && data.Item_ID == null
-        //                                     select new
-        //                                     {
-        //                                         doc_share = 0,
-        //                                         hos_share = data.Rate,
-
-        //                                     }).FirstOrDefault();
-
-        //                if(Panel_Test == null)
-        //                {
-        //                    var Panel_Service = (from data in db.Panel_Detail_Services
-        //                                         where data.Test_ID == null && data.Item_ID == item_id
-        //                                         select new
-        //                                         {
-        //                                             doc_share = 0,
-        //                                             hos_share = data.Rate,
-
-        //                                         }).FirstOrDefault();
-        //                    return (new JavaScriptSerializer()).Serialize(Panel_Service);
-
-        //                }
-        //                return (new JavaScriptSerializer()).Serialize(Panel_Test);
-        //            }
-        //            else
-        //            {
-        //                var Test_Id = (from data in db.Lab_Tests
-        //                                     where data.Test_ID == Convert.ToInt32(test_id)
-        //                                     select new
-        //                                     {
-        //                                         doc_share = 0,
-        //                                         hos_share = data.Rate,
-
-        //                                     }).FirstOrDefault();
-        //                if(Test_Id == null)
-        //                {
-        //                    var Service = (from inv in db.INV_Items
-        //                                   where inv.Item_ID ==Convert.ToInt32(item_id) && inv.Item_Type == "002"
-        //                                   select new
-        //                                   {
-        //                                       doc_share = 0,
-        //                                       hos_share = inv.Hospital_Share
-
-        //                                   }).FirstOrDefault();
-        //                    return (new JavaScriptSerializer()).Serialize(Service);
-        //                }
-
-        //                return (new JavaScriptSerializer()).Serialize(Test_Id);
-
-        //            }
-        //        }
-        //    }
-        //}
 
         [WebMethod]
         public static string LoadDocShare(int Bill_ID)
@@ -2417,8 +2067,9 @@ namespace PMS
                 }
                 if (ipd_id != "There is no row at position 0.")
                 {
-                    pt.paid_amount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
-                    pt.Balance = DBClass.getField("select sum(Balance_Amount) from Ar_Billings where Balance_Amount > 0 and In_Patient_ID =" + ipd_id);
+                    pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
+                    pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
+                    pt.Balance = DBClass.getField("select sum(Previous_Balance) from Ar_Billings where  In_Patient_ID =" + ipd_id);
                     pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
                     pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
                     pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
@@ -2600,6 +2251,7 @@ namespace PMS
             public string advance_amount { get; set; }
             public string paid_amount { get; set; }
             public string Balance { get; set; }
+            public string PreviousTotalAmount { get; set; }
 
 
         }
@@ -2651,7 +2303,7 @@ namespace PMS
             if (PackType == 01)
             {
                 var doc_pack = (from m in db.DoctorPackages
-                                join d in db.Doc_Packages_Details
+                                join d in db.Doctor_Packages_Detail_Rates
                                   on m.Doc_Packages_ID equals d.Doc_Packages_ID
                                 where m.Doc_Packages_ID == packname
                                 select new
@@ -2677,7 +2329,7 @@ namespace PMS
             else if (PackType == 02)
             {
                 var Dep_pack = (from m in db.DepartmentPackages
-                                join d in db.Dep_Packages_Details
+                                join d in db.Department_Packages_Detail_Rates
                                   on m.Dep_Packages_ID equals d.Dep_Packages_ID
                                 where m.Dep_Packages_ID == packname
                                 select new
@@ -2703,7 +2355,7 @@ namespace PMS
             else if (PackType == 03)
             {
                 var Panel_pack = (from m in db.PanelPackages
-                                  join d in db.Pan_Packages_Details
+                                  join d in db.Panel_Packages_Detail_Rates
                                     on m.Pan_Packages_ID equals d.Pan_Packages_ID
                                   where m.Pan_Packages_ID == packname
                                   select new
@@ -2741,7 +2393,7 @@ namespace PMS
             if (PackType == 01)
             {
                 var doc_pack = (from m in db.DoctorPackages
-                                join d in db.Doc_Packages_Details
+                                join d in db.Doctor_Packages_Detail_Rates
                                   on m.Doc_Packages_ID equals d.Doc_Packages_ID
                                 where m.Doc_Packages_ID == packname &&
                                       d.Item_Code == itemid
@@ -2764,7 +2416,7 @@ namespace PMS
             else if (PackType == 02)
             {
                 var dep_pack = (from m in db.DepartmentPackages
-                                join d in db.Dep_Packages_Details
+                                join d in db.Department_Packages_Detail_Rates
                                   on m.Dep_Packages_ID equals d.Dep_Packages_ID
                                 where m.Dep_Packages_ID == packname &&
                                       d.Item_Code == itemid
@@ -2787,7 +2439,7 @@ namespace PMS
             else if (PackType == 03)
             {
                 var panel_pack = (from m in db.PanelPackages
-                                  join d in db.Pan_Packages_Details
+                                  join d in db.Panel_Packages_Detail_Rates
                                     on m.Pan_Packages_ID equals d.Pan_Packages_ID
                                   where m.Pan_Packages_ID == packname &&
                                         d.Item_Code == itemid

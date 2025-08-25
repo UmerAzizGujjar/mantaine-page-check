@@ -59,9 +59,9 @@ namespace PMS.Modules.Inventory
                                     a.Package_Name,
                                     a.Duration,
                                     a.Remarks,
-                                    DoctorIds = (from p in _dbContext.HR_Employees join dpck in _dbContext.Doctor_Packages_Detail_Rates on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
+                                    DoctorIds = (from p in _dbContext.HR_Employees join dpck in _dbContext.Doctor_Packages_Details on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
                                                  where p.Emp_ID == Convert.ToInt32(dpck.Doctor_Id) select p.Emp_Name).ToList(),
-                                    DepartmentIds = (from p in _dbContext.ValueSets join dpck in _dbContext.Doctor_Packages_Detail_Rates on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
+                                    DepartmentIds = (from p in _dbContext.ValueSets join dpck in _dbContext.Doctor_Packages_Details on a.Doc_Packages_ID equals dpck.Doc_Pakages_Id
                                                      join d in _dbContext.DataValues on p.ValueSet_ID equals d.ValueSet_ID where p.ValueSet_Description == "Patient Main Category" && d.DataValue_Name == dpck.Department_Id
                                                      select d.DataValue_Description).ToList()
                                 };
