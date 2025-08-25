@@ -651,6 +651,8 @@ namespace PMS.Modules.PatientManagement
                 pat.Patient_No = Convert.ToInt32(data.pat_no);
                 pat.Refference_No = data.reffer_no;
 
+
+
                 if (data.pat_category == "01" && data.discount == "")
                 {
                     pat.Receipt_Amount = Convert.ToDecimal(opdfee);
@@ -1146,6 +1148,89 @@ namespace PMS.Modules.PatientManagement
             return list;
         }
         [WebMethod]
+        public static List<EmergencyResult> SearchEmergencyPatients(string SearchString)
+        {
+            string SearchSql = "";
+
+            if (string.IsNullOrEmpty(SearchString))
+            {
+                SearchSql = @"SELECT TOP 10  
+                            r.pat_id, 
+                            ISNULL(r.mr_no_sequence,'') AS Patient_No,
+                            ISNULL(r.Full_Name,'') AS Full_Name,
+                            ISNULL(r.NIC,'') AS NIC,
+                            ISNULL(r.Mobile1,'') AS ContactNo,
+                            ISNULL(r.Father_Name,'') AS Father_Name,
+                            e.Patient_ID, 
+                            ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
+                          FROM Reg_Patient r 
+                          INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
+                          WHERE r.Patient_No <> 0  
+                            AND r.Patient_No IS NOT NULL 
+                            AND ISNULL(r.isCancel,0) != 1   
+                            AND ISNULL(e.Refer_To_OPD,0) = 1 
+                          ORDER BY r.pat_id DESC";
+            }
+            else
+            {
+                SearchSql = @"SELECT 
+                            r.pat_id,
+                            ISNULL(r.mr_no_sequence,'') AS Patient_No,
+                            ISNULL(r.Full_Name,'') AS Full_Name,
+                            ISNULL(r.NIC,'') AS NIC, 
+                            ISNULL(r.Mobile1,'') AS ContactNo,
+                            ISNULL(r.Father_Name,'') AS Father_Name,
+                            e.Patient_ID,
+                            ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
+                          FROM Reg_Patient r 
+                          INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
+                          WHERE r.Patient_No <> 0 
+                            AND r.Patient_No IS NOT NULL 
+                            AND ISNULL(r.isCancel,0) != 1
+                            AND ISNULL(e.Refer_To_OPD,0) = 1 
+                            AND (LTRIM(RTRIM(r.patient_no)) LIKE '%" + SearchString.Trim() + @"%' 
+                                 OR LTRIM(RTRIM(r.full_name)) LIKE '%" + SearchString.Trim() + @"%' 
+                                 OR LTRIM(RTRIM(r.mobile1)) LIKE '%" + SearchString.Trim() + @"%' 
+                                 OR LTRIM(RTRIM(r.nic)) LIKE '%" + SearchString.Trim() + @"%')
+                          ORDER BY r.pat_id DESC";
+            }
+
+            DataTable dt = DBClass.getDataTable(SearchSql);
+
+            List<EmergencyResult> list = new List<EmergencyResult>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                EmergencyResult rslt = new EmergencyResult()
+                {
+                    Reg_Patient_ID = dr["pat_id"] == DBNull.Value ? "" : dr["pat_id"].ToString(),
+                    Patient_No = dr["Patient_No"] == DBNull.Value ? "" : dr["Patient_No"].ToString(),
+                    Full_Name = dr["Full_Name"] == DBNull.Value ? "" : dr["Full_Name"].ToString(),
+                    NIC = dr["NIC"] == DBNull.Value ? "" : dr["NIC"].ToString(),
+                    Mobile1 = dr["ContactNo"] == DBNull.Value ? "" : dr["ContactNo"].ToString(),
+                    Father_Name = dr["Father_Name"] == DBNull.Value ? "" : dr["Father_Name"].ToString(),
+                    Emergency_ID = dr["Patient_ID"] == DBNull.Value ? "" : dr["Patient_ID"].ToString(),
+                    Refer_To_OPD = dr["Refer_To_OPD"] == DBNull.Value ? "0" : dr["Refer_To_OPD"].ToString()
+                };
+                list.Add(rslt);
+            }
+
+            return list;
+        }
+
+        public class EmergencyResult
+        {
+            public string Reg_Patient_ID { get; set; }
+            public string Patient_No { get; set; }
+            public string Full_Name { get; set; }
+            public string NIC { get; set; }
+            public string Mobile1 { get; set; }
+            public string Father_Name { get; set; }
+            public string Emergency_ID { get; set; }
+            public string Refer_To_OPD { get; set; }
+        }
+    
+    [WebMethod]
         public static bool CardFee(string PatID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
