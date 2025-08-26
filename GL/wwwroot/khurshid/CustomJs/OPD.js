@@ -19,6 +19,11 @@ $(document).ready(function () {
         $("#PatientsSearchModel").modal('show');
         FillPatientsList();
     });
+
+    $('#btnsearchEmergencylist').click(function () {
+        $("#SearchEmergencyPatients").modal('show');
+        FillEmergencyPatientsList();
+    });
     $("#txtSearch").keypress(function (event) {
         debugger;
         var SearchString = $('#txtSearch').val();
@@ -226,12 +231,9 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(reg_id);
             $('#hdn_aptid').val(apt_Id);
-            $('#ddlPatient_Type').val("02").trigger('change');
+
             debugger;
-            $('#ddlDepartment').val(data.departmentid[0]).trigger('change');
-            $('#ddlDepartment').attr('disabled', true);
-            $('#ddldoctor').val(data.doctorId[0]).trigger('change');
-            $('#ddldoctor').attr('disabled', true);
+
             $('#ddlmartialstatus').html(
                 $('<option>', {
                     value: data.MaritalStatus,
@@ -244,6 +246,31 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                     text: data.Gender_text
                 })
             );
+
+
+            $('#ddlPatient_Type').html(
+                $('<option>', {
+                    value: data.pat_type_Val,
+                    text: data.pat_type_text
+                })
+            ); loaddata();
+
+            $('#ddldoctor').html(
+                $('<option>', {
+                    value: data.doctorId,
+                    text: data.DoctorName
+                })
+            );
+            $('#ddlDepartment').html(
+                $('<option>', {
+                    value: data.departmentid,
+                    text: data.department_Text
+                })
+            );
+            //$('#ddlDepartment').val(data.departmentid[0]).trigger('change');
+            //$('#ddlDepartment').attr('disabled', true);
+            //$('#ddldoctor').val(data.doctorId[0]).trigger('change');
+            //$('#ddldoctor').attr('disabled', true);
 
         },
         error: function (response) {
@@ -663,6 +690,7 @@ function getGeneralFee() {
 
 
 
+
 function fillArea() {
     var options = '<option value="0">Please Select</option>';
 
@@ -872,6 +900,8 @@ function SavePatient() {
 }
 function SaveData() {
     debugger;
+
+    // Collect all field values
     var regid = $('#hdn_regid').val();
     var appid = $('#hdn_aptid').val();
     var opdid = $('#hdn_opdId').val();
@@ -893,10 +923,13 @@ function SaveData() {
     var employee_id = $('#Employe_id').val();
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
-    var Fees = $('#txtfees').val();
-    var discount = $('#txtdiscount').val();
-    var Doc_Share = $('#hdnDocshare').val();
-    var Hosp_share = $('#hdnhospShare').val();
+
+    // ✅ FIX: Parse Fees as number, default to 0
+    var Fees = parseFloat($('#txtfees').val()) || 0;
+
+    var discount = parseFloat($('#txtdiscount').val()) || 0;
+    var Doc_Share = parseFloat($('#hdnDocshare').val()) || 0;
+    var Hosp_share = parseFloat($('#hdnhospShare').val()) || 0;
     var dependent = $('#txtdependent').val();
     var rollno = $('#ddlrollno').val();
     var Class = $('#ddlclass').val();
@@ -905,13 +938,11 @@ function SaveData() {
     var Services = $('#ddlServices').val();
     var Cashier = $('#ddlcashier').val();
     var accountid = $('#ddlCashInHand').val();
-    var IssueCard = $('#chckcardissue').prop('checked')
-    var FreeCheck = $('#chckfreecheck').prop('checked')
-    if (Fees == "") {
-        Fees = 0;
-    }
-    txtPatientNo
-    if (!txtPatientNo || txtPatientNo === "0") {
+    var IssueCard = $('#chckcardissue').prop('checked');
+    var FreeCheck = $('#chckfreecheck').prop('checked');
+
+    // Validation: Patient No
+    if (!patient_no || patient_no === "0") {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -926,6 +957,8 @@ function SaveData() {
         });
         return;
     }
+
+    // Validation: Patient Category
     if (!pat_category || pat_category === "0") {
         Swal.fire({
             icon: 'error',
@@ -942,7 +975,8 @@ function SaveData() {
         return;
     }
 
-    if (pat_category === "01" && (!Department || Department === "0")) {
+    // Additional validations based on category (kept as-is)
+    if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -958,142 +992,37 @@ function SaveData() {
         return;
     }
 
-    if (pat_category === "02") {
-        if (!Department || Department === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a department for the selected patient category.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-
-        if (!doctor || doctor === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a doctor for the selected patient category',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
+    if (["02", "03", "04", "05"].includes(pat_category) && (!doctor || doctor === "0")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select a doctor for the selected patient category.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
     }
 
-    if (pat_category === "03") {
-        if (!doctor || doctor === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a doctor for the selected patient category.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-
-        if (!panel || panel === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a panel for the selected patient category.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
+    if (pat_category === "03" && (!panel || panel === "0")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select a panel for the selected patient category.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
     }
-
-    if (pat_category === "04") {
-        if (!Department || Department === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a department for the selected patient category.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-
-        if (!doctor || doctor === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a doctor for the selected patient category.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-    }
-
-    if (pat_category === "05") {
-        if (!Department || Department === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a department for the selected patient category.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-
-        if (!doctor || doctor === "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please select a doctor for the selected patient category.',
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            return;
-        }
-    }
-
 
     if (!accountid || accountid === "0") {
         Swal.fire({
@@ -1111,6 +1040,7 @@ function SaveData() {
         return;
     }
 
+    // Final data object — all numeric fields are numbers
     var data = {
         regid: regid,
         appid: appid,
@@ -1127,28 +1057,28 @@ function SaveData() {
         Martial_Status: Martial_Status,
         Address: Address,
         Department: Department,
-        Fees: Fees,
         doctor: doctor,
         employee: employee,
         employee_id: employee_id,
         panel: panel,
         reffer_no: reffer_no,
-        discount: discount,
+        Fees: Fees,           // ✅ Now guaranteed to be a number
+        discount: discount,   // Same
+        Doc_Share: Doc_Share,
+        Hosp_share: Hosp_share,
         dependent: dependent,
         rollno: rollno,
         Class: Class,
         section: section,
         FilterClinic: FilterClinic,
         Services: Services,
-        Doc_Share: Doc_Share,
-        Hosp_share: Hosp_share,
         Cashier: Cashier,
         accountid: accountid,
         IssueCard: IssueCard,
         FreeCheck: FreeCheck
     };
 
-    console.log(data);
+    console.log("Data being sent:", data);
 
     $.ajax({
         type: "POST",
@@ -1173,11 +1103,11 @@ function SaveData() {
             });
             var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
-            window.location.href = "OPDView.aspx"
-
+            window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
             console.error("Error: ", error);
+            console.log("Response Text: ", xhr.responseText); // Helps debug server error
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -1206,47 +1136,55 @@ function get_pat_initial_info(ini_patientID) {
 }
 function loadFee() {
     debugger;
+
     var Doc = $('#ddldoctor').val();
     var opdid = $('#hdn_opdId').val();
+    var emer_reffered = $("#hdn_emer_reffered").val();
+    if (emer_reffered != "") {
+        $('#txtfees').val("0");
+    }
+    else {
+        if (opdid != "" || opdid != "") {
 
-    if (opdid != "" || opdid != "") {
-    } else {
-        $.ajax({
-            type: "POST",
-            url: "OPD.aspx/loadRegistrationFees",
-            data: JSON.stringify({ Doc: Doc }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                debugger;
-                var res = JSON.parse(response.d);
-                if (!res.success) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: res.message,
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                } else {
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/loadRegistrationFees",
+                data: JSON.stringify({ Doc: Doc }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var res = JSON.parse(response.d);
+                    if (!res.success) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: res.message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                    } else {
 
-                    $('#txtfees').val(res.fee);
-                    $('#hdnhospShare').val(res.Hospital_Share);
-                    $('#hdnDocshare').val(res.Doctor_Share);
+                        $('#txtfees').val(res.fee);
+                        $('#hdnhospShare').val(res.Hospital_Share);
+                        $('#hdnDocshare').val(res.Doctor_Share);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.log("Error: " + error);
-            }
-        });
+            });
+        }
+
+        loadDepartment(Doc);
     }
 
-    loadDepartment(Doc);
 }
 function loadDepartment(Doc) {
     var opdid = $('#hdn_opdId').val()
@@ -1388,15 +1326,12 @@ function loadPatientDetail(OPDID) {
             $('#txtemployee').val(data.Employee_Name).attr('disabled', true);
             $('#txtreferenceno').val(data.Refference_No).attr('disabled', true);
 
-            $('#ddldoctor').val(data.Doctor_ID).trigger('change').attr('disabled', true);
-            $('#ddlpanel').val(data.PanelCompany).attr('disabled', true);
-            $('#Employe_id').val(data.employee_ID).trigger('change').attr('disabled', true);
-            $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
-            $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
-            $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
-            $('#ddlServices').val(data.Service_id).trigger('change').attr('disabled', true);
 
-            $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
+
+
+
+
+
             $('#ddlmartialstatus').html(
                 $('<option>', {
                     value: data.MaritalStatus,
@@ -1431,8 +1366,6 @@ function loadPatientDetail(OPDID) {
                     text: data.Type_text
                 })
             ).attr('disabled', true);
-
-
             // Re-attach change event
             $('#ddlPatient_Type').off('change').on('change', function () {
                 loaddata();
@@ -1448,12 +1381,27 @@ function loadPatientDetail(OPDID) {
             ).attr('disabled', true);
             $('#ddldoctor').html(
                 $('<option>', {
-                    value: data.Doctor_ID,
+                    value: data.PanelCompany,
                     text: data.Doc_text
                 })
             ).attr('disabled', true);
-            // Run once on load (because no change will happen if only one option exists)
+            $('#ddlpanel').html(
+                $('<option>', {
+                    value: data.PanelCompany,
+                    text: data.PanelCompany_text
+                })
+            ).attr('disabled', true);
 
+            $('#Employe_id').html(
+                $('<option>', {
+                    value: data.employee_ID,
+                    text: data.employee_text
+                })
+            ).attr('disabled', true);
+            $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
+            $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
+            $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
+            $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
 
 
@@ -1570,7 +1518,6 @@ function loaddata() {
     else if (Category == "05") {
         $('#fees').hide();
         $('#department').show();
-        $('#doctor').show();
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
@@ -1613,4 +1560,72 @@ $(document).ready(function () {
     });
 
 });
+
+
+
+function FillEmergencyPatientsList() {
+    debugger;
+    $('#tblEmergencyResult tbody').empty();
+
+    var SearchString = '';
+
+    PageMethods.SearchEmergencyPatients(SearchString, OnFilterEmergencyPatients, OnFailEmergencyPatients);
+}
+
+function OnFilterEmergencyPatients(data) {
+
+    ClearEmergencyPatientResults();
+    for (var i = 0; i < data.length; i++) {
+        AddEmergencyPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].Father_Name, data[i].NIC, data[i].Mobile1);
+    }
+}
+
+
+
+function OnFailEmergencyPatients(exc) {
+    alert(exc.get_message());
+}
+
+function ClearEmergencyPatientResults() {
+    $('#tblEmergencyResult tbody').empty();
+}
+
+function AddEmergencyPatientsResult(Patient_ID, Patient_No, Full_Name, Father_Name, NIC, Mobile1) {
+    var tblLength = tblEmergencyResult.rows.length;
+    var row = EmergencyPatientsBody.insertRow(-1);
+    var cell;
+
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span id="spnPatID' + tblLength + '">' + Patient_ID + '</span>';
+    cell.className = "hide";
+
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+    cell = row.insertCell(-1);
+    var actions = '';
+    actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;display:flex;justify-content:center;" href="#" onclick=AddEmergencyPatientDetail(' + Patient_ID + ')><i class="fa fa-plus-circle"></i><span class="tooltiptxt">Add</span></a>';
+    actions += '<a class="tooltips" style="color:#FDC303;font-size:16px;display:none" href="#" onclick=EditEmergencyPatientDetail(' + Patient_ID + ')><i class="fa fa-pencil-square-o"></i><span class="tooltiptxt">Edit</span></a>';
+    cell.innerHTML = actions;
+}
+
+function AddEmergencyPatientDetail(reg_id) {
+    debugger;
+    try {
+        isAdd = true;
+        window.location.href = "OPD.aspx?Reffered_id=" + reg_id + "&isAdd=" + isAdd;
+
+    } catch (err) {
+        alert(err.message);
+    }
+
+}
+
 
