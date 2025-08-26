@@ -63,7 +63,13 @@ namespace PMS.Modules.Inventory
                            p.Duration,
                            p.PerDay_Charges,                         
                            p.Panel_id,
-                        
+                           p.Total_Amount,
+                           p.Total_Expense,
+                           p.Doctor_Share,
+                           p.Hospital_Share,
+                           p.Net_Amount,
+                           p.Share_type,
+
                        }).FirstOrDefault();
 
             return (new JavaScriptSerializer()).Serialize(qry);
@@ -91,6 +97,7 @@ namespace PMS.Modules.Inventory
                                  pkgd.Amount,
                                  pkgd.Item_Type,
                                  pkgd.IsFixed,
+                                 pkgd.is_expense,
                                  ItemsOrderBy = pkgd.ItemsOrderBy == null ? 0 : pkgd.ItemsOrderBy
 
                              }
@@ -143,8 +150,16 @@ namespace PMS.Modules.Inventory
             ddlPackageType.DataTextField = "DataValue_Description";
             ddlPackageType.DataValueField = "DataValue_Name";
             ddlPackageType.Items.Add(new ListItem("Please Select", "0"));
-            ddlPackageType.DataBind();         
+            ddlPackageType.DataBind();
+            object valuesets;
+            DataBaseDataContext dbs = new DataBaseDataContext();
 
+            valuesets = DBClass.GetValueSet("Package Share Type");
+            ddlShareType.DataSource = valuesets;
+            ddlShareType.DataTextField = "DataValue_Description";
+            ddlShareType.DataValueField = "DataValue_Name";
+            ddlShareType.Items.Add(new ListItem("Please Select", "0"));
+            ddlShareType.DataBind();
         }
 
         [WebMethod]
@@ -172,6 +187,7 @@ namespace PMS.Modules.Inventory
             public string Amount { get; set; }
             public string ItemType { get; set; }
             public int ItemsOrder { get; set; }
+            public bool isExpense { get; set; }
 
             public string IsFix { get; set; }
         }
@@ -188,7 +204,7 @@ namespace PMS.Modules.Inventory
 
         }
         [WebMethod]
-        public static int SavePackage(string btnSave, string PAckID, string Package, string Remarks, string PackageType, string duration, string PAKg, string PAKrate, decimal PerDay_Charges)
+        public static int SavePackage(string btnSave, string PAckID, string Package, string Remarks, string PackageType, string TotalAmount, string TotalExpense, string NetAmount, string Doctor_Share, string Hospital_Share, string ShareType, string duration, string PAKg, string PAKrate, decimal PerDay_Charges)
         {
 
             string Package_ID = "";
@@ -208,6 +224,12 @@ namespace PMS.Modules.Inventory
                 lstTests.PerDay_Charges = PerDay_Charges;
                 lstTests.Duration = duration;
                 lstTests.Package_Type = PackageType;
+                lstTests.Share_type = ShareType;
+                lstTests.Total_Amount = Convert.ToDecimal(TotalAmount);
+                lstTests.Total_Expense = Convert.ToDecimal(TotalExpense);
+                lstTests.Net_Amount = Convert.ToDecimal(NetAmount);
+                lstTests.Doctor_Share = Convert.ToDecimal(Doctor_Share);
+                lstTests.Hospital_Share = Convert.ToDecimal(Hospital_Share);
                 lstTests.Updated_By = AppConfig.UserID;
                 lstTests.Updation_Date = DateTime.Now;
 
@@ -223,6 +245,12 @@ namespace PMS.Modules.Inventory
                 pkg.Duration = duration;
                 pkg.Package_Type = PackageType;
                 pkg.PerDay_Charges = PerDay_Charges;
+                pkg.Share_type = ShareType;
+                pkg.Total_Amount = Convert.ToDecimal(TotalAmount);
+                pkg.Total_Expense = Convert.ToDecimal(TotalExpense);
+                pkg.Net_Amount = Convert.ToDecimal(NetAmount);
+                pkg.Doctor_Share = Convert.ToDecimal(Doctor_Share);
+                pkg.Hospital_Share = Convert.ToDecimal(Hospital_Share);
                 pkg.Created_By = AppConfig.UserID;
                 pkg.Creation_Date = DateTime.Now;
                 db.PanelPackages.InsertOnSubmit(pkg);
@@ -249,6 +277,7 @@ namespace PMS.Modules.Inventory
                 pkgdetail.Amount = Convert.ToDecimal(test.Amount);
                 pkgdetail.Item_Type = test.ItemType;
                 pkgdetail.ItemsOrderBy = test.ItemsOrder;
+                pkgdetail.is_expense = test.isExpense;
                 if (test.IsFix == "true" || test.IsFix == "True")
                 {
                     pkgdetail.IsFixed = true;

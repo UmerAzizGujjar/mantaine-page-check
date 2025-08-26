@@ -901,7 +901,6 @@ namespace PMS
             newBill.Referred_By = data.referred_by_doctor;
             newBill.Previous_Paid = data.Previous_Paid;
             newBill.Previous_Balance = data.Previous_Balance;
-            //newBill.Total_Doctor_Share = data.Total_Doctor_Share;
             newBill.Over_and_Above = data.Over_and_Above;
             newBill.Cash_In_Hand = data.Cash_In_Hand;
             newBill.Cash_In_Hand_Account = data.Cash_In_Hand_Account;
@@ -916,6 +915,18 @@ namespace PMS
             if (ipdid != "There is no row at position 0.")
             {
                 newBill.In_Patient_ID = Convert.ToInt32(ipdid);
+                var Discharge = (from ipd in db.In_Patients
+                                 where ipd.In_Patient_ID == Convert.ToInt32(ipdid)
+                                 orderby ipd.Created_Time descending
+                                 select ipd.Discharge
+                                 ).FirstOrDefault();
+                if (Discharge == true)
+                {
+                    newBill.Package_Type = data.PackageType;
+                    newBill.Package_Name = data.PackageName;
+                }
+
+
             }
             else
             {
@@ -1606,6 +1617,8 @@ namespace PMS
             public int Patient_ID { get; set; }
             public int Opd_id { get; set; }
             public string referred_by_doctor { get; set; }
+            public string PackageName { get; set; }
+            public string PackageType { get; set; }
             public string Casher { get; set; }
             public DateTime Bill_Date { get; set; }
             public string Remarks { get; set; }

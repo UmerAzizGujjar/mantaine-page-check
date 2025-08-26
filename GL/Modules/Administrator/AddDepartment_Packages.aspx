@@ -26,6 +26,12 @@
             var PackageType = $('#ctl00_MainContent_ddlPackageType').val();
             var duration = $('#ctl00_MainContent_txtDuration').val();
             var PerDay_Charges = $('#ctl00_MainContent_txtPerDayCharges').val();
+            var ShareType = $('#ctl00_MainContent_ddlShareType').val();
+            var TotalAmount = $('#txttotalAMount').val();
+            var TotalExpense = $('#txtExpense').val();
+            var NetAmount = $('#txtnetAmount').val();
+            var Doctor_Share = $('#Doctor_Share').val();
+            var Hospital_Share = $('#Hospital_Share').val();
             if (PerDay_Charges == '' || PerDay_Charges == "") {
                 PerDay_Charges = 0.00
             }
@@ -34,8 +40,9 @@
                 debugger;
                 var Amount = $(value).find('td input[name=txAmount]').val();
                 if (Amount == "" || Amount == null) Amount = 0;
+                var isExpense = $(value).find('td input[name=chkExpense]').is(':checked') ? true : false;
 
-                Pkg_list.push({ 'Item': $(value).find('td input[name=txtDes]').val(), 'QTy': $(value).find('td input[name=txtQTy]').val(), 'Price': $(value).find('td input[name=txPrice]').val(), 'Amount': Amount, 'ItemType': $(value).find('td input[name=ItemType]').val() });
+                Pkg_list.push({ 'Item': $(value).find('td input[name=txtDes]').val(), 'QTy': $(value).find('td input[name=txtQTy]').val(), 'Price': $(value).find('td input[name=txPrice]').val(), 'isExpense': isExpense, 'Amount': Amount, 'ItemType': $(value).find('td input[name=ItemType]').val() });
 
             });
             var PAKg = { 'PKDetail': Pkg_list };
@@ -66,7 +73,7 @@
             }
             var PAKrate = { 'PKRateDetail': Dep_list };
             
-            PageMethods.SavePackage(btnSave, PAckID, Package, Remarks, PackageType, duration, JSON.stringify(PAKg), JSON.stringify(PAKrate), PerDay_Charges, function (res) {
+            PageMethods.SavePackage(btnSave, PAckID, Package, Remarks, PackageType, TotalAmount, TotalExpense, NetAmount, Doctor_Share, Hospital_Share, ShareType, duration, JSON.stringify(PAKg), JSON.stringify(PAKrate), PerDay_Charges, function (res) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -93,59 +100,42 @@
         }   
         $('#add-new-testDirect').click(function () {
             PageMethods.GetLabTestDDLDetails(ddlLabTest.value, function (res) {
+                console.clear();
                 $.each(JSON.parse(res), function (key, value) {
 
                     var Result = 'Result';
                     var test = $('#ddlLabTest').val();
                     var date = '<%= DateTime.Now %>';
-                var TestMainDepartmentName;
-                var lenght = tblbodyPackage.rows.length + 1;
-                if (lenght >= 2) {
-                    var tbody = document.getElementById('tblbodyPackage');
-                    var rowlenth = tbody.rows.length;
-                    var total = 0.00;
-                    for (var i = 1; i <= rowlenth; i++) {
-                        var id;
+                    var lenght = tblbodyPackage.rows.length + 1;
 
-                        id = $('#txtDes' + i + '').val();
-                        if (id == value.TestID) {
-                        }
-                    }
-                }
-                if (value.Rate == null || value.Rate == "")
-                    value.Rate = 0;
+                    if (value.Rate == null || value.Rate == "")
+                        value.Rate = 0;
 
-                var row = '<tr><td>' + lenght + '</td>  <td><input type="hidden" name="txtDes" id="txtDes' + lenght + '" value="' + value.TestID + '" /> <input type="hidden" name="txtRotation" value="0"> ' + (value.MainDepartmentName == null ? '' : value.MainDepartmentName + ', ') + ' ' + value.TestName + ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td><td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width:  57px !important;    height: 28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td><td><input type="text" name="txPrice" id="txPrice' + lenght + '" value="' + value.Rate + '" style="width:  75px !important;    height: 28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td></td> <td> <input type="hidden" name="txAmount" id="txAmount' + lenght + '"/><span id="Amountspan' + lenght + '"></span></td><td><input type="hidden" name="ItemType" id="ItemType' + lenght + '"  value="Test"/> <a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
+                    var row = '<tr>' +
+                        '<td>' + lenght + '</td>' +
+                        '<td><input type="hidden" name="txtDes" id="txtDes' + lenght + '" value="' + value.TestID + '" />' +
+                        '<input type="hidden" name="txtRotation" value="0"> ' +
+                        (value.MainDepartmentName == null ? '' : value.MainDepartmentName + ', ') + ' ' + value.TestName +
+                        ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td>' +
+                        '<td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width:57px;height:28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td>' +
+                        '<td><input type="text" name="txPrice" id="txPrice' + lenght + '" value="' + value.Rate + '" style="width:75px;height:28px;" onkeyup="UpdateAmount(' + lenght + ')"/></td>' +
+                        '<td><input type="checkbox" class="chkExpense" name="chkExpense" id="chkExpense' + lenght + '" onclick="calculateTotals()"/></td>' +
+                        '<td><input type="hidden" name="txAmount" id="txAmount' + lenght + '"/><span id="Amountspan' + lenght + '"></span></td>' +
+                        '<td><input type="hidden" name="ItemType" id="ItemType' + lenght + '" value="Test"/> ' +
+                        '<a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td>' +
+                        '</tr>';
 
-                $('#tblPackage').append(row);
-                $('#TestModel').modal('hide');
-                var qty = $('#txtQty' + lenght + '').val();
-                var price = $('#txPrice' + lenght + '').val();
-                var amount = qty * price;
-                $('#Amountspan' + lenght + '').text(amount);
-                $('#txAmount' + lenght + '').val(amount);
-                var tbody = document.getElementById('tblbodyPackage');
-                var rowlenth = tbody.rows.length;
-                var total = 0.00;
-                for (var i = 0; i <= rowlenth; i++) {
-                    var samt;
-                    samt = $('#txAmount' + i + '').val();
-                    if (samt != '') {
-                        var amt = parseFloat(samt);
-                        if (isNaN(amt) == false) {
-                            total += amt;
-                        }
-                    }
-                }
-                if (total == 0 || isNaN(total)) {
-                    $('#txttotalAMount').text("0");
-                }
-                else {
-                    $('#txttotalAMount').text(total.toFixed(2));
-                }
-            });
-        }, function (err) { });
-    });
+                    $('#tblPackage').append(row);
+                    $('#TestModel').modal('hide');
+                    var qty = $('#txtQty' + lenght).val();
+                    var price = $('#txPrice' + lenght).val();
+                    var amount = qty * price;
+                    $('#Amountspan' + lenght).text(amount.toFixed(2));
+                    $('#txAmount' + lenght).val(amount);
+                    calculateTotals();
+                });
+            }, function (err) { });
+        });
         $('#ctl00_MainContent_ddlDoctors').select2();
         $('#ctl00_MainContent_ddlPanel').select2();
         $('#ctl00_MainContent_ddlPatient_Main_Category').select2();
@@ -160,11 +150,19 @@
                 $('#ctl00_MainContent_txtDuration').val(data.Duration);
                 $('#ctl00_MainContent_txtPerDayCharges').val(data.PerDay_Charges);
                 $('#ctl00_MainContent_txtRemarks').val(data.Remarks);
+                $('#txttotalAMount').val(data.Total_Amount);
+                $('#txtExpense').val(data.Total_Expense);
+                $('#Doctor_Share').val(data.Doctor_Share);
+                $('#Hospital_Share').val(data.Hospital_Share);
+                $('#txtnetAmount').val(data.Net_Amount);
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPackageType').val(data.Package_Type).trigger('change');
                 }, 1000)
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPanel').val(data.Panel_id).trigger('change');
+                }, 1000)
+                setTimeout(function () {
+                    $('#ctl00_MainContent_Share_type').val(data.Sub_Department).trigger('change');
                 }, 1000)
                 PopulatePackageDetail(id);
             },
@@ -184,42 +182,44 @@
                 var result;
                 $.each(item, function (key, value) {
                     debugger;
-                    var checked = "false";
-                    var isFixed = value.IsFixed;
-                    if (isFixed == true) {
-                        checked = "true";
-                    }
                     var lenght = tblbodyPackage.rows.length + 1;
                     var desc = (value.Item_Type != 'Test') ? value.Item_Code + "-" + value.itemanme : " " + value.itemanme;
-                    var rows = '<tr><td>' + lenght + ' </td><td> <input type="hidden" name="txtDes" id="txtDes' + lenght + '" style="width: 189px !important;" value="' + value.Item_Code + '"/>' + value.itemanme + '</td><td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width:  57px !important;    height: 28px;" value="' + value.QTY + '" onkeyup="UpdateAmount(' + lenght + ') "/></td><td><input type="text" name="txPrice" id="txPrice' + lenght + '" value="' + value.Price + '" style="width:  75px !important;    height: 28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td><td><input type="hidden" name="txAmount" id="txAmount' + lenght + '"/><span id="Amountspan' + lenght + '"></span></td> <td> <input type="hidden" name="ItemType" id="ItemType' + lenght + '"  value="' + value.Item_Type + '"/> <a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
+                    var expenseChecked = (value.IsExpense === true) ? "checked" : "";
+
+                    var rows = '<tr>' +
+                        '<td>' + lenght + ' </td>' +
+                        '<td><input type="hidden" name="txtDes" id="txtDes' + lenght + '" style="width: 189px !important;" value="' + value.Item_Code + '"/>' + value.itemanme + '</td>' +
+                        '<td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width: 57px !important; height: 28px;" value="' + value.QTY + '" onkeyup="UpdateAmount(' + lenght + ') "/></td>' +
+                        '<td><input type="text" name="txPrice" id="txPrice' + lenght + '" value="' + value.Price + '" style="width: 75px !important; height: 28px;" onkeyup="UpdateAmount(' + lenght + ')"/></td>' +
+                        '<td><input type="checkbox" class="chkExpense" name="chkExpense" id="chkExpense' + lenght + '" onclick="calculateTotals()" ' + expenseChecked + '/></td>' +
+                        '<td><input type="hidden" name="txAmount" id="txAmount' + lenght + '"/><span id="Amountspan' + lenght + '"></span></td>' +
+                        '<td><input type="hidden" name="ItemType" id="ItemType' + lenght + '"  value="' + value.Item_Type + '"/> <a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td>' +
+                        '</tr>';
+
                     $('#tblPackage').append(rows);
-                    var qty = $('#txtQty' + lenght + '').val();
-                    var price = $('#txPrice' + lenght + '').val();
+
+                    var qty = $('#txtQty' + lenght).val();
+                    var price = $('#txPrice' + lenght).val();
                     var amount = qty * price;
-                    $('#Amountspan' + lenght + '').text(amount);
-                    $('#txAmount' + lenght + '').val(amount);
-                    if (value.IsFixed == true) {
-                        $('#checkbox' + lenght + '').prop('checked', true);
+                    $('#Amountspan' + lenght).text(amount);
+                    $('#txAmount' + lenght).val(amount);
+
+                    if (value.IsFixed === true) {
+                        $('#checkbox' + lenght).prop('checked', true);
                     }
                     var tbody = document.getElementById('tblbodyPackage');
                     var rowlenth = tbody.rows.length;
                     var total = 0.00;
                     for (var i = 0; i <= rowlenth; i++) {
-                        var samt;
-                        samt = $('#txAmount' + i + '').val();
+                        var samt = $('#txAmount' + i).val();
                         if (samt != '') {
                             var amt = parseFloat(samt);
-                            if (isNaN(amt) == false) {
+                            if (!isNaN(amt)) {
                                 total += amt;
                             }
                         }
                     }
-                    if (total == 0 || isNaN(total)) {
-                        $('#txttotalAMount').text("0");
-                    }
-                    else {
-                        $('#txttotalAMount').text(total.toFixed(2));
-                    }
+                    $('#txttotalAMount').text((total === 0 || isNaN(total)) ? "0" : total.toFixed(2));
                 });
             });
             $('#btnSave').val("Update");
@@ -291,7 +291,43 @@
             $('#ddlLabTest').select2();
             localStorage.TestForCategoryWiseSelections = options;
         });
-    }
+        }
+        function calculateTotals() {
+            var tbody = document.getElementById('tblbodyPackage');
+            var rowLength = tbody.rows.length;
+            var totalExpense = 0.00;
+            var totalNet = 0.00;
+
+            for (var i = 1; i <= rowLength; i++) {
+                var amount = parseFloat($('#txAmount' + i).val());
+                if (isNaN(amount)) continue;
+
+                var isExpenseChecked = $('#chkExpense' + i).is(':checked');
+                if (isExpenseChecked) {
+                    totalExpense += amount;
+                } else {
+                    totalNet += amount;
+                }
+            }
+
+            var grandTotal = totalExpense + totalNet;
+
+            $('#txtExpense').val(totalExpense.toFixed(2));
+            $('#txtnetAmount').val(totalNet.toFixed(2));
+            $('#txttotalAMount').val(grandTotal.toFixed(2));
+        }
+
+        // ✅ Function to update row amount when Qty or Price changes
+        function UpdateAmount(index) {
+            var qty = parseFloat($('#txtQty' + index).val()) || 0;
+            var price = parseFloat($('#txPrice' + index).val()) || 0;
+            var amount = qty * price;
+
+            $('#Amountspan' + index).text(amount.toFixed(2));
+            $('#txAmount' + index).val(amount);
+
+            calculateTotals();
+        }
     function new_value() {
         debugger;
 
@@ -299,56 +335,33 @@
         var item = $('#ddlItems').val();
         var Rate = $('#ddlItems').find('option:selected').attr('Rate');
         PageMethods.AddItem(item, function (res) {
-            debugger;
             var item = JSON.parse(res);
-            var rows = '';
-            var result;
-            $.each(item, function (key, value) {
-                debugger;
-                var lenght = tblbodyPackage.rows.length + 1;
-                if (lenght >= 2) {
-                    var tbody = document.getElementById('tblbodyPackage');
-                    var rowlenth = tbody.rows.length;
-                    var total = 0.00;
-                    for (var i = 1; i <= rowlenth; i++) {
-                        var id;
-                        id = $('#txtDes' + i + '').val();
-                        if (id == value.Item_ID) {
-                        }
 
-                    }
-                }
-                var ItemType;
+            $.each(item, function (key, value) {
+                var lenght = tblbodyPackage.rows.length + 1;
+
                 if (value.Services == true)
                     ItemType = "Service";
                 else
                     ItemType = "Item";
-                var rows = '<tr><td>' + lenght + ' </td><td> <input type="hidden" name="txtDes" id="txtDes' + lenght + '" style="width: 189px !important;" value="' + value.Item_ID + '"/>' + value.Description + '</td><td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width:  57px !important;    height: 28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td><td><input type="text" name="txPrice" id="txPrice' + lenght + '" value="' + Rate + '" style="width:  75px !important;    height: 28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td><td><input type="hidden" name="txAmount" id="txAmount' + lenght + '"/><span id="Amountspan' + lenght + '"></span></td> <td><input type="hidden" name="ItemType" id="ItemType' + lenght + '"  value="' + ItemType + '"/><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
+                var rows = '<tr>' +
+                    '<td>' + lenght + '</td>' +
+                    '<td><input type="hidden" name="txtDes" id="txtDes' + lenght + '" value="' + value.Item_ID + '" />' + value.Description + '</td>' +
+                    '<td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width:57px;height:28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td>' +
+                    '<td><input type="text" name="txPrice" id="txPrice' + lenght + '" value="' + Rate + '" style="width:75px;height:28px;" onkeyup="UpdateAmount(' + lenght + ')"/></td>' +
+                    '<td><input type="checkbox" class="chkExpense" name="chkExpense" id="chkExpense' + lenght + '" onclick="calculateTotals()"/></td>' +
+                    '<td><input type="hidden" name="txAmount" id="txAmount' + lenght + '"/><span id="Amountspan' + lenght + '"></span></td>' +
+                    '<td><input type="hidden" name="ItemType" id="ItemType' + lenght + '" value="' + ItemType + '"/> ' +
+                    '<a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td>' +
+                    '</tr>';
+
                 $('#tblPackage').append(rows);
-                var qty = $('#txtQty' + lenght + '').val();
-                var price = $('#txPrice' + lenght + '').val();
+                var qty = $('#txtQty' + lenght).val();
+                var price = $('#txPrice' + lenght).val();
                 var amount = qty * price;
-                $('#Amountspan' + lenght + '').text(amount);
-                $('#txAmount' + lenght + '').val(amount);             
-                var tbody = document.getElementById('tblbodyPackage');
-                var rowlenth = tbody.rows.length;
-                var total = 0.00;
-                for (var i = 0; i <= rowlenth; i++) {              
-                   var samt;
-                    samt = $('#txAmount' + i + '').val();
-                    if (samt != '') {
-                        var amt = parseFloat(samt);
-                        if (isNaN(amt) == false) {
-                            total += amt;
-                        }
-                    }
-                }
-                if (total == 0 || isNaN(total)) {
-                    $('#txttotalAMount').text("0");                  
-                }
-                else {
-                    $('#txttotalAMount').text(total.toFixed(2));
-                }
+                $('#Amountspan' + lenght).text(amount.toFixed(2));
+                $('#txAmount' + lenght).val(amount);
+                calculateTotals();
             });
         });
         }
@@ -404,6 +417,10 @@
              <asp:Label ID="Label4" runat="server" Text="Remarks"></asp:Label>
              <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" Style="width: 100%; height: 38px !important; border-radius: 5px !important"></asp:TextBox>
          </div>
+         <div class="col-lg-3 col-md-4 col-sm-6">
+             <asp:Label ID="Label7" runat="server" Text="Share Type"></asp:Label>
+             <asp:DropDownList ID="ddlShareType" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+         </div>
          <div class="col-lg-2 col-md-4 col-sm-6">
              <asp:Label ID="Label2" runat="server" Text="Services"></asp:Label>
              <select id="ddlItems">
@@ -437,15 +454,35 @@
                     <th style="width: 200px">Description</th>
                     <th style="width: 63px;">Qty</th>
                     <th style="width: 57px">Charges</th>
+                     <th style="width: 57px">Is Expense</th>
                     <th style="width: 38px">Amount</th>
                     <th style="width: 56px">Action</th>
                 </thead>
                 <tbody id="tblbodyPackage"></tbody>
             </table>
                 </div>
-                 <div class="row">
-             <div style="margin-left: 226px;"><b>Total Amount:</b> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span id="txttotalAMount"></span></div>
-     </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <label>Total Amount:</label>
+                    <input type="text" id="txttotalAMount" value="0" readonly="readonly" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <label>Expens Amount:</label>
+                    <input type="text" id="txtExpense" value="0" readonly="readonly" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <label>Net Amount:</label>
+                    <input type="text" id="txtnetAmount" value="0" readonly="readonly" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <label>Doctor Share:</label>
+                    <input type="text" id="Doctor_Share" value="0" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <label>Hospital Share:</label>
+                    <input type="text" id="Hospital_Share" value="0" />
+                </div>
+            </div>
         </div>
         <div id="doc_div" class="col-lg-4 col-md-6 col-sm-12" style="overflow: scroll; height: 200px;">
             <table id="tblDoc" class="table" style="width: 100%!important;">
