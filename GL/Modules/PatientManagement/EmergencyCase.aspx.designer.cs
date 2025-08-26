@@ -1185,6 +1185,15 @@ namespace PMS
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox cb_death;
 
         /// <summary>
+        /// ReferToOPD control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ReferToOPD;
+
+        /// <summary>
         /// lblDeath_Certificate control.
         /// </summary>
         /// <remarks>
@@ -1201,15 +1210,6 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbDeath_Certificate;
-
-        /// <summary>
-        /// ReferToOPD control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ReferToOPD;
 
         /// <summary>
         /// lblIdentificationMarks control.

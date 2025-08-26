@@ -6720,6 +6720,10 @@
                                                     <asp:Label ID="lbldeath" runat="server" Text="Death" ></asp:Label>
                                                       <input type="checkbox" style="margin-top: 9px;width: 58px !important;" ID="cb_death"  runat="server" onchange="showdeathtab();" />
                                                 </td>
+                                                <td>
+                                                    <label class="form-check-label" for="ReferOPD" style="margin-bottom: -21px;">Refer To OPD</label>
+                                                    <asp:CheckBox runat="server" style="margin-top: 9px;width: 58px !important;" ID="ReferToOPD" ClientIDMode="Static" />
+                                                </td>
                                             </tr>
                                             <tr>
                          
@@ -6729,16 +6733,6 @@
                                                 </td>
                                                 <td>
                                                     <asp:CheckBox ID="cbDeath_Certificate" runat="server" style="display:none"></asp:CheckBox>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                         
-                                            
-                                                <td class="mgTab">
-                                                   <label class="form-check-label" for="ReferOPD">Refer To OPD</label>
-                                                </td>
-                                                <td>
-                                                          <asp:CheckBox runat="server" ID="ReferToOPD" ClientIDMode="Static" />
                                                 </td>
                                             </tr>
                                         

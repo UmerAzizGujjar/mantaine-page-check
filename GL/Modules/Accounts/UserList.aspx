@@ -202,7 +202,7 @@
                             var result;
                             result = res + Del + reset;
                             return result;
-                        }, "width": "2%", "orderable": false
+                        }, "width": "5%", "orderable": false
                     }
 
                 ],
