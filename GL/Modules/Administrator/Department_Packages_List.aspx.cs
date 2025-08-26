@@ -58,7 +58,7 @@ namespace PMS.Modules.Inventory
                                     a.Package_Name,
                                     a.Duration,
                                     a.Remarks,
-                                    DepartmentIds = (from p in _dbContext.ValueSets join dpck in _dbContext.Department_Packages_Detail_Rates
+                                    DepartmentIds = (from p in _dbContext.ValueSets join dpck in _dbContext.Department_Packages_Details
                                                      on a.Dep_Packages_ID equals dpck.Dep_Pakages_Id join d in _dbContext.DataValues
                                                      on p.ValueSet_ID equals d.ValueSet_ID where p.ValueSet_Description == "Patient Main Category"
                                                      && d.DataValue_Name == dpck.Department_Id select d.DataValue_Description).Distinct().ToList()
