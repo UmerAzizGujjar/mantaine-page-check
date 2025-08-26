@@ -1584,7 +1584,14 @@ namespace PMS
                     if (ddlIssuance_Of == "001")
                     {
                         OPD.Ward_ID = Convert.ToInt32(ddlWard_No);
-                        OPD.Bed_No = Convert.ToInt32(txtBed_No);
+                        if (string.IsNullOrWhiteSpace(txtBed_No))
+                        {
+                            OPD.Bed_No = 0; // or null if nullable
+                        }
+                        else if (int.TryParse(txtBed_No, out int bedNo))
+                        {
+                            OPD.Bed_No = bedNo;
+                        }
 
                     }
                     else

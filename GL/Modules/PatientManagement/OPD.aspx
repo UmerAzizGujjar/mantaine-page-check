@@ -17,6 +17,9 @@
             var added = '<%= Request.QueryString["isAdd"] %>'
             var apdAdd = '<%= Request.QueryString["isAdd_apt"] %>'
             var OPDID = '<%= Request.QueryString["OPDID"] %>'
+            var Reffered_id = '<%= Request.QueryString["Reffered_id"] %>'
+
+
             $("#hdn_opdId").val(OPDID);
             if (OPDID != "") {
 
@@ -49,7 +52,16 @@
                     $('#ddlPatient_Type').attr('disabled', false);
                     $('#ddlcashier').attr('disabled', true);
                 }
-          
+            debugger;
+            if (Reffered_id != "" && added == "true") {
+                debugger;
+                $("#hdn_emer_reffered").val(Reffered_id);
+                console.log(Reffered_id);
+                    Get_Pat_Info(Reffered_id);
+                    
+                    $('#ddlPatient_Type').attr('disabled', false);
+                    $('#ddlcashier').attr('disabled', true);
+                }
             
 
         });
@@ -299,40 +311,48 @@
             }
         }
         function getGeneralFee() {
+            debugger;
             var Department_id = $('#ddlDepartment').val();
 
-            $.ajax({
-                url: 'OPD.aspx/GetFees',
-                type: 'POST',
-                data: JSON.stringify({ Department_id: Department_id }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (resp) {
-                    debugger;
-                    var data = JSON.parse(resp.d);
-                    $('#txtfees').val(data.Code);
-                    //sharing if private()
-                    $('#hdnDocshare').val(data.D_Share);
-                    $('#hdnhospShare').val(data.H_Share);
+            var emer_reffered = $("#hdn_emer_reffered").val();
+            if (emer_reffered != "") {
+                $('#txtfees').val("0");
+            }
+            else {
+                $.ajax({
+                    url: 'OPD.aspx/GetFees',
+                    type: 'POST',
+                    data: JSON.stringify({ Department_id: Department_id }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (resp) {
+                        debugger;
+                        var data = JSON.parse(resp.d);
+                        $('#txtfees').val(data.Code);
+                        //sharing if private()
+                        $('#hdnDocshare').val(data.D_Share);
+                        $('#hdnhospShare').val(data.H_Share);
 
-                },
-                error: function (response) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: response.responseText,
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.responseText,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
-                    console.error("AJAX Error: ", response);
-                }
-            });
+                        console.error("AJAX Error: ", response);
+                    }
+                });
+            }
+           
 
         }
     </script>
@@ -347,6 +367,7 @@
     <input type="text" id="hdn_opdId" style="display: none;" />
     <input type="text" id="hdnDocshare" style="display: none;" />
     <input type="text" id="hdnhospShare" style="display: none;" />
+    <input type="text" id="hdn_emer_reffered" style="display: none;" />
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
             <div class="col-lg-3 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
