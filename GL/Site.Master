@@ -10,7 +10,7 @@
     <title>Hospital Management System</title>
     <link rel="icon" type="image/x-icon" href="wwwroot/Tibbit_theme/images/HMIS_Icons/Icon.png" />
     <asp:PlaceHolder ID="PlaceHolder1" runat="server">
-     
+
         <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/wwwroot/Tibbit_theme/Styles/jquery.datetimepicker.css") %>" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
         <link href="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/js/bootstrap.min.js") %>" rel="stylesheet" type="text/css" />
@@ -151,44 +151,134 @@
 
         };--%>
 
-
-
-
-
-
-
-
-
     </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const allowedExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.png', '.jpg', '.jpeg'];
+
+            const allowedMimes = [
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'image/png',
+                'image/jpeg',
+                'image/jpg'
+            ];
+
+            const maxSize = 10 * 1024 * 1024; // 10 MB
+
+            // Use event delegation for dynamic or future file inputs
+            $(document).on('change', 'input[type="file"]', function () {
+                const file = this.files[0];
+                if (!file) return;
+
+                const fileName = file.name.toLowerCase();
+                const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+                const fileType = file.type;
+                const fileSize = file.size;
+
+                // Validate extension
+                if (!allowedExtensions.includes(fileExtension)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid File Type',
+                        text: 'Only PDF, Word, Excel, PNG, JPG, and JPEG files are allowed.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    this.value = '';
+                    return;
+                }
+
+                // Validate MIME type
+                if (!allowedMimes.includes(fileType)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Unsupported File',
+                        text: 'File type not allowed. Please upload a valid file.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    this.value = '';
+                    return;
+                }
+
+                // Validate file size
+                if (fileSize > maxSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File Too Large',
+                        text: 'Maximum file size is 10 MB.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    this.value = '';
+                    return;
+                }
+
+                // Success feedback (optional)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'File Accepted',
+                    text: `${file.name} is valid and ready to upload.`,
+                    confirmButtonText: 'Got it',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                console.log('Valid file selected:', file.name, 'Size:', fileSize, 'bytes');
+            });
+        });
+</script>
+
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
     <style type="text/css">
         @media screen and (max-width: 995px) {
-            .container-fluid{
-                padding-left:0px !important;
-                padding-right:0px !important;
-
+            .container-fluid {
+                padding-left: 0px !important;
+                padding-right: 0px !important;
             }
-            .hamburger-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
- 
-  width: 40px;
-}
 
-.hamburger-btn span {
-  display: block;
-  margin-top:2px;
-  height: 3px;
-  width: 100%;
-  background-color: #333;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
+            .hamburger-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 40px;
+            }
+
+                .hamburger-btn span {
+                    display: block;
+                    margin-top: 2px;
+                    height: 3px;
+                    width: 100%;
+                    background-color: #333;
+                    border-radius: 3px;
+                    transition: all 0.3s ease;
+                }
+
             #ctl00_sidebar.hide-force {
                 transform: translateX(-120%);
             }
@@ -203,7 +293,7 @@
 
             #ctl00_sidebar {
                 width: 180px !important;
-                height:100vh !important;
+                height: 100vh !important;
                 transition: transform 0.5s ease;
                 transform: translateX(0); /* visible */
             }
@@ -682,7 +772,7 @@
     <form runat="server" id="MasterPageForm1">
         <asp:ToolkitScriptManager ID="cmManager" runat="server" EnablePageMethods="true" />
         <div class="page">
-            <div class="loginDisplay" >
+            <div class="loginDisplay">
                 <div id="navbar" style="height: 60px !important" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
                     <div class="navbar-container ace-save-state row" id="navbar-container">
                         <!-- Left Side Logo + Company -->
@@ -909,7 +999,7 @@
                 <div class="main">
 
                     <div id="clear" style="clear: both; height: 10px;"></div>
-                    <div class="row hamburger-row" style="margin-left:-13% !important; display:none  " >
+                    <div class="row hamburger-row" style="margin-left: -13% !important; display: none">
                         <div class="col-2">
                             <button type="button" onclick="hideNavbar" id="hamburger" class="hamburger-btn" aria-label="Toggle navigation">
                                 <span></span>
