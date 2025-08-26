@@ -52,7 +52,7 @@ namespace PMS.Modules.Inventory
                 {
                     string userId = HttpContext.Current.Session["UserId"].ToString();
                     var query = from a in _dbContext.DoctorPackages
-                                where a.isCancelled == false
+                                where (a.isCancelled == false || a.isCancelled == null)
                                 select new
                                 {
                                     a.Doc_Packages_ID,
