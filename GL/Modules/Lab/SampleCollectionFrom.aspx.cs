@@ -102,6 +102,18 @@ namespace PMS
         }
 
         [WebMethod]
+        public static String GetSampleSequenceId()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var Y = DateTime.Now.Year;
+                var SampleNo = DBClass.getField("select isnull(max(Sample_ID),0) + 1 from Sample_Master where year(Sample_Collected_Date) = " + Y + "");
+
+                return (new JavaScriptSerializer()).Serialize(Convert.ToInt32(SampleNo));
+            }
+        }
+
+        [WebMethod]
         public static String GetSampleNo()
         {
             using (DataBaseDataContext db = new DataBaseDataContext())

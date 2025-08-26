@@ -50,6 +50,8 @@ namespace PMS.Modules.Dashboards
                          }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(query);
         } 
+
+
         [WebMethod]
         public static string getAppoitnmentInfo(int Patient_ID)
         {

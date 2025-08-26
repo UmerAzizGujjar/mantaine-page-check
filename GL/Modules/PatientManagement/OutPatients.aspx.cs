@@ -4733,18 +4733,34 @@ on p.Reg_PatId equals rp.pat_id
         [WebMethod]
         public static string GetLabTests()
         {
-
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var tests = from t in db.Lab_Tests
-                        where t.Main_Department == "001" && t.Active == true
-                        select new { t.Test_ID, Test_Name = t.Test_Name, t.Group_Category };
+
             List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
             int counter = 1;
-            foreach (var test in tests)
+            var groupTests = from t in db.Lab_Tests
+                             where t.Main_Department == "001" && t.Active == true && t.Group_Category != ""
+                             select new { t.Test_ID, t.Test_Name, t.Group_Category };
+
+            foreach (var test in groupTests)
             {
                 TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
                 obj.TestID = test.Test_ID.ToString();
-                obj.TestName = test.Test_Name.ToString() + (test.Group_Category != string.Empty ? " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") : string.Empty);
+                obj.TestName = test.Test_Name + " | " +
+                               DBClass.getField("select DataValue_Description from DataValues where DataValue_Name = '" + test.Group_Category + "' and ValueSet_ID = 70");
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+            var singleTests = from t in db.Lab_Tests
+                              where t.Main_Department == "001" && t.Active == true && (t.Group_Category == "" || t.Group_Category == null)
+                              select new { t.Test_ID, t.Test_Name };
+
+            foreach (var test in singleTests)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name;
                 obj.SerialNo = counter.ToString();
                 obj.IsGroupCategory = false;
                 listOfTest.Add(obj);
@@ -4759,8 +4775,8 @@ on p.Reg_PatId equals rp.pat_id
             foreach (var category in GroupCategories)
             {
                 TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
-                obj.TestID = category.DataValue_Name.ToString();
-                obj.TestName = category.DataValue_Description.ToString();
+                obj.TestID = category.DataValue_Name;
+                obj.TestName = category.DataValue_Description;
                 obj.SerialNo = counter.ToString();
                 obj.IsGroupCategory = true;
                 obj.CategoryID = category.DataValue_Name;

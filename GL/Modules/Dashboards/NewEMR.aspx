@@ -9,6 +9,9 @@
             const retractDiv = document.getElementById('retract');
             retractDiv.classList.toggle('minimized');
         }
+
+
+
         function navigateAction(element) {
 
             $('.menu-item').removeClass('selected');

@@ -36,6 +36,9 @@ namespace PMS.Modules.Dashboards
                          }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(query);
         }
+
+
+
         [WebMethod]
         public static string GetLastAppointmentVisit(int Patient_ID)
         {
