@@ -1111,6 +1111,38 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Patient_Type", PatType);
             }
+            else if (reportName == "Operator_Wise_Billing_Report")
+            {
+                string rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report.rpt";
+                //if (Convert.ToBoolean(Request.QueryString["Summary"].ToString()))
+                //    rptFileName = "TransactionalDetails/rptLabCashCollection _Summary.rpt";
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+                string endDate = Request.QueryString["eDate"].ToString();
+
+                string endTime = Request.QueryString["ETime"].ToString();
+  
+                string Operator = Request.QueryString["Operator"].ToString();
+                string PatType = Request.QueryString["Patient_Type"].ToString();
+    
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "Operator_Wise_Billing_Report");
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Patient_Type", PatType);
+            }
+
             else if (reportName == "HospitalServices")
             {
                 string rptFileName = "TransactionalDetails/rptHospital_Services_Detail.rpt";
@@ -2246,7 +2278,9 @@ namespace PMS
                 {
                     reportPath += "InPatient/rpt_In_Patient_ID_Nursing_Plan.rpt";
                     rd.Load(reportPath);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                     rd.SetParameterValue("@In_Patient_ID", Request.QueryString["In_Patient_ID"]);

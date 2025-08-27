@@ -2176,7 +2176,58 @@ namespace PMS
                     tr_Summary.Visible = false;
                     GetLabTests();
                 }
-                
+                else if (this.PageTitle == "Operator_Wise_Billing_Report")
+                {
+                    string x = "Lab Cash Collection";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    dpROw.Visible = true;
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMedical.Visible = false;
+                    ddlMedicalSubsidy.Visible = false;
+
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
+                    ddlPatientType.DataBind();
+                    optRw.Visible = true;
+                    lblDepartment.Text = "Department";
+
+                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+
+
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    ddlDepartments.DataBind();
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    ddlPatientType.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Summary.Visible = false;
+                    GetLabTests();
+                }
+
+
                 //else if (this.PageTitle == "Lab_Test_Detail")
                 //{
                 //    dpROw.Visible = false;
