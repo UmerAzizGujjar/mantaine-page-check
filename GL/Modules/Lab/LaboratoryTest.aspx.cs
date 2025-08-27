@@ -636,7 +636,12 @@ namespace PMS
              where (lbtM.Transaction_Type == "Front Desk" || lbtM.Transaction_Type == "OutPatient" || lbtM.Transaction_Type == "Emergency Patient" || lbtM.Transaction_Type == "InPatient") && lbtD.Recieved_ID == null && sd.Sample_Collected == true
 
                && (bill.Bill_Date >= startDate)
-             orderby bill.Bill_Date descending
+                                              let sortOrder =
+                                       lbtM.Transaction_Type == "Emergency Patient" ? 1 :
+                                       lbtM.Transaction_Type == "OutPatient" ? 2 :
+                                       lbtM.Transaction_Type == "InPatient" ? 3 :
+                                       lbtM.Transaction_Type == "Front Desk" ? 4 : 5
+                                       orderby sortOrder, bill.Bill_Date descending
 
 
              select new
