@@ -630,12 +630,18 @@ namespace PMS
             var testDetails_Billing_Sample = (from pat in db.Reg_patients
              join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
              join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
-             join lbtD in db.Lab_Test_Details on bill_details.ParentTrans_ID equals lbtD.Lab_Test_Detail_ID
+             join lbtD in db.Lab_Test_Details on bill_details.Bill_Details_ID equals lbtD.BillDetailID
              join lbtM in db.Laboratory_Tests on lbtD.Lab_Test_ID equals lbtM.Lab_Test_ID
              join sd in db.Sample_Details on bill_details.Bill_Details_ID equals sd.Bill_Detail_ID
-             where lbtM.Transaction_Type == "Front Desk" && lbtD.Recieved_ID == null && sd.Sample_Collected == true
+             where (lbtM.Transaction_Type == "Front Desk" || lbtM.Transaction_Type == "OutPatient" || lbtM.Transaction_Type == "Emergency Patient" || lbtM.Transaction_Type == "InPatient") && lbtD.Recieved_ID == null && sd.Sample_Collected == true
+
                && (bill.Bill_Date >= startDate)
-             orderby bill.Bill_Date descending
+                                              let sortOrder =
+                                       lbtM.Transaction_Type == "Emergency Patient" ? 1 :
+                                       lbtM.Transaction_Type == "OutPatient" ? 2 :
+                                       lbtM.Transaction_Type == "InPatient" ? 3 :
+                                       lbtM.Transaction_Type == "Front Desk" ? 4 : 5
+                                       orderby sortOrder, bill.Bill_Date descending
 
 
              select new

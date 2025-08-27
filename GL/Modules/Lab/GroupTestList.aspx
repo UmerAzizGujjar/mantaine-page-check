@@ -65,7 +65,7 @@
                                  var result;
                                  result = res + print;
                                  return result;
-                             }, "width": "5%", "orderable": false
+                             }, "width": "10%", "orderable": false
                          }
                      ],
                      "initComplete": function (settings, json) {
