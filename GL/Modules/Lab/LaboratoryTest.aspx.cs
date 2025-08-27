@@ -727,13 +727,13 @@ namespace PMS
         [WebMethod]
         public static string AllPendingLabTestDetail(string DeptID)
         {
-        
+
             DataBaseDataContext db = new DataBaseDataContext();
             JavaScriptSerializer serl = new JavaScriptSerializer();
             DateTime startDate = System.DateTime.Now.AddMonths(-2);
             var Month = startDate.Month;
             DateTime endData = System.DateTime.Now.Date;
-           
+
             serl.MaxJsonLength = 2147483647;
 
 
@@ -838,68 +838,95 @@ namespace PMS
               ).ToList();
             */
             #endregion
-            
 
 
-            var testDetails_Billing_Sample = (from pat in db.Reg_patients
-             join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
-             join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
-             join lbtD in db.Lab_Test_Details on bill_details.Bill_Details_ID equals lbtD.BillDetailID
-             join lbtM in db.Laboratory_Tests on lbtD.Lab_Test_ID equals lbtM.Lab_Test_ID
-             join sd in db.Sample_Details on bill_details.Bill_Details_ID equals sd.Bill_Detail_ID
-             where (lbtM.Transaction_Type == "Front Desk" || lbtM.Transaction_Type == "OutPatient" || lbtM.Transaction_Type == "Emergency Patient" || lbtM.Transaction_Type == "InPatient") && lbtD.Recieved_ID == null && sd.Sample_Collected == true
 
-               && (bill.Bill_Date >= startDate)
-                                              let sortOrder =
-                                       lbtM.Transaction_Type == "Emergency Patient" ? 1 :
-                                       lbtM.Transaction_Type == "OutPatient" ? 2 :
-                                       lbtM.Transaction_Type == "InPatient" ? 3 :
-                                       lbtM.Transaction_Type == "Front Desk" ? 4 : 5
-                                       orderby sortOrder, bill.Bill_Date descending
+            var testDetails_Billing_Sample = (
+    from pat in db.Reg_patients
+    join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+    join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+    from lbtD in db.Lab_Test_Details
+    where (
+        bill_details.Bill_Details_ID == lbtD.BillDetailID ||
+        bill_details.ParentTrans_ID == lbtD.Lab_Test_Detail_ID
+    )
 
+    join lbtM in db.Laboratory_Tests on lbtD.Lab_Test_ID equals lbtM.Lab_Test_ID
+    join sd in db.Sample_Details on bill_details.Bill_Details_ID equals sd.Bill_Detail_ID
 
-             select new
-                                              {
-                 bill.Bill_No,
-                                                  lbtD.IsBilled,
-                                                  lbtD.Lab_Test_Detail_ID,
-                                                  lbtD.Date,
-                                                  lbtD.Remark,
-                                                  lbtD.Catagory_ID,
-                                                  lbtM.Lab_Test_ID,
-                                                  lbtD.Test_ID,
-                                                  lbtD.Recieved_ID,
-                                                  lbtM.Parent_Transaction_Type,
-                                                  lbtM.Parent_Transaction_Type_ID,
-                 bill.Bill_ID,
-                                                  lbtM.Transaction_Type,
-                                                  Doctor_ID = 0,
-                 bill_details.Category_ID,
-                 bill_details.Item_Name,
+    where (
+        bill_details.ParentTrans_Name == "Front Desk" ||
+        bill_details.ParentTrans_Name == "OutPatient" ||
+        bill_details.ParentTrans_Name == "EmergencyPatient" ||
+        bill_details.ParentTrans_Name == "InPatient" ||
+        bill_details.ParentTrans_Name == ""
+    )
+    && lbtD.Recieved_ID == null
+    && sd.Sample_Collected == true
+    && bill.Bill_Date >= startDate
 
-                                                  chkPackages = "0",
-                 pat.Patient_No,
-                 pat.Created_time,
-               
-                 pat.pat_id,
-                 pat.Full_Name,
-                                                  sd.Remarks,
-                                                  Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
-                                                  Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select bill_details.Category_ID).FirstOrDefault(),
-                                                  DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                               Departments", t.Main_Department)).FirstOrDefault(),
-                                                  Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
-                                                  GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", bill_details.Category_ID)).FirstOrDefault(),
-                                                  Group_Name = db.GetDataValueName("Test Groups", bill_details.Category_ID),
-                                                  Rotation_ID = lbtD.Rotation_ID,
-                                                  Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                    Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
-                                                  lbtD.Special_Tests,
-                                                  lbtD.Area_Of_Interest,
-                                                  haveSample = (from s in db.Sample_Details where s.Bill_Detail_ID == bill_details.Bill_Details_ID select s).Count() == 0 ? false : true,
-                 bill_details.Bill_Details_ID
-                                              }
-               ).ToList();
+    let sortOrder =
+        bill_details.ParentTrans_Name == "EmergencyPatient" ? 1 :
+        bill_details.ParentTrans_Name == "OutPatient" ? 2 :
+        bill_details.ParentTrans_Name == "InPatient" ? 3 :
+        bill_details.ParentTrans_Name == "Front Desk" ? 4 : 5
+
+    orderby sortOrder, bill.Bill_Date descending
+
+    select new
+    {
+        bill.Bill_No,
+        lbtD.IsBilled,
+        lbtD.Lab_Test_Detail_ID,
+        lbtD.Date,
+        lbtD.Remark,
+        lbtD.Catagory_ID,
+        lbtM.Lab_Test_ID,
+        lbtD.Test_ID,
+        lbtD.Recieved_ID,
+        lbtM.Parent_Transaction_Type,
+        lbtM.Parent_Transaction_Type_ID,
+        bill.Bill_ID,
+        Transaction_Type = (bill_details.ParentTrans_Name == null || bill_details.ParentTrans_Name == "") ? "Front Desk" : bill_details.ParentTrans_Name,
+        bill_details.ParentTrans_Name,
+        Doctor_ID = 0,
+        bill_details.Category_ID,
+        bill_details.Item_Name,
+        chkPackages = "0",
+        pat.Patient_No,
+        pat.Created_time,
+        pat.pat_id,
+        pat.Full_Name,
+        sd.Remarks,
+        Test_Name = (from t in db.Lab_Tests
+                     where t.Test_ID == lbtD.Test_ID
+                     select t.Test_Name).FirstOrDefault(),
+        Group_Department = bill_details.Category_ID, // Simplified
+        DepartmentName = db.GetDataValueName("Main Test Departments",
+            (from t in db.Lab_Tests
+             where t.Test_ID == lbtD.Test_ID
+             select t.Main_Department).FirstOrDefault()),
+        Department_ID = (from t in db.Lab_Tests
+                         where t.Test_ID == lbtD.Test_ID
+                         select t.Main_Department).FirstOrDefault(),
+        GroupName = db.GetDataValueName("Test Groups", bill_details.Category_ID),
+        Group_Name = db.GetDataValueName("Test Groups", bill_details.Category_ID),
+        Rotation_ID = lbtD.Rotation_ID,
+        Rotation = (db.GetDataValueName("Main Test Departments",
+                   (from t in db.Lab_Tests
+                    where t.Test_ID == lbtD.Test_ID
+                    select t.Main_Department).FirstOrDefault()) == "X-Ray")
+            ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID)
+            : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+        lbtD.Special_Tests,
+        lbtD.Area_Of_Interest,
+        haveSample = db.Sample_Details.Any(s => s.Bill_Detail_ID == bill_details.Bill_Details_ID), // Cleaner
+        bill_details.Bill_Details_ID
+    }
+).ToList();
+
             List<PendingLabTestClass> list = new List<PendingLabTestClass>();
-           
+
 
             #region 'Comment Area of Loading IPD and OPD TEst don't Delete This Region'
             /*
@@ -1013,7 +1040,7 @@ namespace PMS
             }
             */
             #endregion
-         
+
             foreach (var item in testDetails_Billing_Sample)
             {
                 PendingLabTestClass obj = new PendingLabTestClass();
@@ -1054,11 +1081,11 @@ namespace PMS
                 if (obj.Department_ID == "001" || obj.Department_ID == null || obj.Department_ID == "005")
                     list.Add(obj);
             }
-          
+
             return serl.Serialize(list);
         }
 
-      
+
         public class PendingLabTestClass
         {
             public string chkPackages;
