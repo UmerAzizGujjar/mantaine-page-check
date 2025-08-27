@@ -5472,7 +5472,7 @@ namespace PMS
             foreach (string printer in PrinterSettings.InstalledPrinters)
             {
                 settings.PrinterName = printer;
-                if (settings.IsDefaultPrinter)
+                if (settings.IsDefaultPrinter) 
                     return printer;
             }
             return string.Empty;

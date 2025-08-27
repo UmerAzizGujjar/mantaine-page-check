@@ -2178,7 +2178,8 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Operator_Wise_Billing_Report")
                 {
-                    string x = "Lab Cash Collection";
+//                    string x = "Lab Cash Collection";
+                    string x = "Operator Wise Billing";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     dpROw.Visible = true;
