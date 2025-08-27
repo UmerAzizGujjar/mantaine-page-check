@@ -2,6 +2,26 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/AddNewLabTest.css" rel="stylesheet" />
+    <style>
+        
+.MyTable {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+    .MyTable th {
+        background-color: #ffffff !important;
+        color: #6a6969 !important;
+    }
+.vitalsTable {
+    border: 3px solid #cccccc;
+    border-radius: 6px;
+    padding: 12px 16px;
+    background-color: #fff;
+    margin-bottom: 15px;
+}
+    </style>
     <script type="text/javascript">
 
       
@@ -17,6 +37,155 @@
                 window.open('ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + tids);
             }
         }
+        function FillModePresentation() {
+            var options = '<option value="0">Vital Type</option>';
+
+            $.ajax({
+                url: 'LaboratoryTest.aspx/ModePresentation',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlmaindepartment').html(options);
+                    $('#ddlmaindepartment').select2();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+
+            return options;
+        }
+        function LoadVitalParameters() {
+            debugger;
+            var patid = $('#<%= txtPatient_ID.ClientID%>').val();
+            var category = $('#ddlmaindepartment').val();
+            //if (patid != null) {
+            //    alert("Select Mr No First");
+            //    return;
+            //}
+
+            $("#ipdvitals").hide();
+            $("#opdvitals").hide();
+            $("#emergencyVital").hide();
+            $("#tblVitalParametersHistory").hide();
+            $("#tblVitalParametersHistoryIPD").hide();
+            $("#tblVitalParametersHistoryEmergency").hide();
+
+            if (category == "01") {
+                $("#opdvitals").show();
+                $("#tblVitalParametersHistory").show();
+                $.ajax({
+                    type: "POST",
+                    url: "LaboratoryTest.aspx/LoadVitalParametersHistory",
+                    data: JSON.stringify({ patid: patid }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        debugger;
+                        var rows = '';
+                        $.each(JSON.parse(res.d), function (key, value) {
+                            var date = moment(value.Created_Time).format('DD-MM-YY');
+                            // console.log(value);
+                            $("#hdfoutPatID").val(value.Out_Patient_ID);
+                            rows += '<tr><td  value="' + value.Out_Patient_ID + '"> ' + date + ' </td><td>' + value.Status + '</td> <td> ' + value.Pulse_Min
+                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Height_Cm + ' </td><td> ' + value.L_M_P + ' </td><td> ' + value.SPO2 + ' </td><td> ' + value.BSR + ' </td><td> ' + value.BMI + ' </td><td> ' + value.BP_mm_Hg + ' </td> <td> ' + value.Respiration_Min + ' </td> <td> ' + value.Weight_Kg + ' </td></tr>';
+                        });
+
+                        $('#tblVitalParametersHistory tbody tr').remove();
+                        $('#tblVitalParametersHistory tbody').html(rows);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + status + ": " + error);
+                    }
+                });
+            }
+
+
+            if (category == "03") {
+                $("#ipdvitals").show();
+                $("#tblVitalParametersHistoryIPD").show();
+                $.ajax({
+                    type: "POST",
+                    url: "LaboratoryTest.aspx/LoadVitalParametersHistoryIPD",
+                    data: JSON.stringify({ patid: patid }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        var Data = JSON.parse(res.d);
+                        var rows = '';
+                        var gcs = "";
+
+                        $.each(Data, function (key, value) {
+
+                            if (value.RateBeats == "" && value.Emergency_Rhythm == null && value.Emergency_Volume == null &&
+                                (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.BP_mm_Hg == "___/___" &&
+                                value.O2_Saturation == "" && value.O2_Saturation_Oxygen1 == "" && value.O2_Saturation_Oxygen2 == "" &&
+                                (value.RN_Special_Instruction == "<li></li>" || value.RN_Special_Instruction == "") &&
+                                (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.Temp_C == "") {
+                                return;
+                            }
+                            gcs = value.GCS == null ? "" : value.GCS;
+
+
+                            if (value.Emergency_Rhythm == null) value.Emergency_Rhythm = "";
+                            if (value.Emergency_Volume == null) value.Emergency_Volume = "";
+
+                            var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
+                            var retdateRec = moment.unix(TrnsDateRec).format('MM/DD/YYYY hh:mm:ss A');
+                            rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.RateBeats + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td>< td > ' + value.BP_mm_Hg + ' </td ></tr > ';
+                        });
+
+                        $('#tblVitalParametersHistoryIPD tbody tr').remove();
+                        $('#tblVitalParametersHistoryIPD tbody').html(rows);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + status + ": " + error);
+                    }
+                });
+            }
+            if (category == "02") {
+                $("#emergencyVital").show();
+                $("#tblVitalParametersHistoryEmergency").show();
+                $.ajax({
+                    type: "POST",
+                    url: "LaboratoryTest.aspx/LoadVitalParametersHistoryemergency",
+                    data: JSON.stringify({ patid: patid }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        var Data = JSON.parse(res.d);
+                        var rows = '';
+                        var gcs = "";
+                        $.each(Data, function (key, value) {
+
+
+                            var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
+                            var retdateRec = moment.unix(TrnsDateRec).format('MM/DD/YYYY hh:mm:ss A');
+                            rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.Rate_Beats
+                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Rhythm + ' </td><td> ' + value.Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td></tr>';
+                        });
+                        $('#tblVitalParametersHistoryEmergency tbody tr').remove();
+                        $('#tblVitalParametersHistoryEmergency tbody').html(rows);
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + status + ": " + error);
+                    }
+                });
+            }
+
+            Appendtestintable();
+            fetchPatientDepOPD();
+            createChartOPD();
+        }
         function swipe() {
 
             var largeImage = document.getElementById('Image1');
@@ -30,7 +199,9 @@
 
         $(document).ready(function () {
 
-            
+            $("#ipdvitals").hide();
+            $("#emergencyVital").hide();
+            $("#opdvitals").hide();
             $("#tblPendingPatients").find('tr th:nth-child(7)').hide();
             $("#tblPendingPatients").find('tr th:nth-child(8)').hide();
             $("#testViewDetails").on('click', function () {
@@ -48,14 +219,17 @@
                 var s = $(anchor);
                 $(s).closest('tr').remove();
             });
-
+            FillModePresentation();
             bindControls();
             enabledisable();
             GetMainDepartments();
             FillLabTests();
             $('#txtSearchDate').datepicker();
-            if ($('#<%= txtPatient_ID.ClientID%>').val() != "")
+            if ($('#<%= txtPatient_ID.ClientID%>').val() != "") {
                 LoadTestsHistory();
+                LoadVitalParameters();
+            }
+               
             $('#main-departments').val(localStorage.DeptID);
             jQuery(window).on("load", function () {
                 debugger;
@@ -69,6 +243,7 @@
                 $('#ctl00_MainContent_txtLab_Test_ID').val("(New)");
                 $('#tbltest tr').remove();
                 LoadTestsHistory();
+                LoadVitalParameters();
             });
             $('#txtMRNOSearch').on('keyup', function (e) {
                 debugger;
@@ -796,6 +971,16 @@
             }
         }
 
+        function getTransactionColor(type) {
+            switch (type) {
+                case 'EmergencyPatient': return 'red';
+                case 'OutPatient': return 'green';
+                case 'InPatient': return '#FBB117';
+                case 'Front Desk': return '#FF6F61';
+                default: return 'black';
+            }
+        }
+
         function TestDetail() {
             debugger;
             var SelectedDepartment = $('#main-departments').find('option:selected')[0].value;
@@ -828,19 +1013,19 @@
 
                         if (value.Test_ID != 0) {
                             if (value.Recieved_ID != null) {
-                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO" id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="0"/>' + value.Test_Name + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this) style="color:red">Select</a> </td> </tr>';
+                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO" id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="0"/>' + value.Test_Name + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td><span style="color: ' + getTransactionColor(value.Transaction_Type) + ';">' + value.Transaction_Type + '</span></td>' + '<td> <a href="#" onclick=select3(this) style="color:red">Select</a> </td> </tr>';
                             }
                             else {
-                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO" id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="0"/>' + value.Test_Name + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
+                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO" id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="0"/>' + value.Test_Name + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td><span style="color: ' + getTransactionColor(value.Transaction_Type) + ';">' + value.Transaction_Type + '</span></td>' + '<td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
                             }
                         }
                         else {
                             if (value.Recieved_ID != null) {
-                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="OPD" value="' + value.Parent_Transaction_Type_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO"  id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="' + value.Catagory_ID + '"/>' + value.GroupName + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this) style="color:red">Select</a> </td> </tr>';
+                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="OPD" value="' + value.Parent_Transaction_Type_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO"  id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="' + value.Catagory_ID + '"/>' + value.GroupName + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td><span style="color: ' + getTransactionColor(value.Transaction_Type) + ';">' + value.Transaction_Type + '</span></td>' + '<td> <a href="#" onclick=select3(this) style="color:red">Select</a> </td> </tr>';
                             }
                             else {
 
-                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID"  value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO" id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="' + value.Catagory_ID + '"/>' + value.GroupName + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
+                                rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/><input type="hidden" name="RetDate" value="' + retdate + '"/>' + retdate + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID"  value="' + value.Patient_ID + '"/><input type="hidden" name="txtMRNO" id="txtMRNO' + key + '" value="' + value.Bill_No + '"/>' + value.Bill_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="' + value.Catagory_ID + '"/>' + value.GroupName + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td><span style="color: ' + getTransactionColor(value.Transaction_Type) + ';">' + value.Transaction_Type + '</span></td>' + '<td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
                             }
                         }
                     });
@@ -1384,7 +1569,88 @@
                             </div>
                         </div>
                     </div>
-                
+                  <div class="row" style="margin-bottom: 15px">
+      <div class="col-lg-2 col-md-3 col-sm-3">
+          <select id="ddlmaindepartment" onchange="LoadVitalParameters();"></select>
+      </div>
+  </div>
+  <div class="main-row ">
+      <div class="row vitalsTable" id="opdvitals" style="margin-left: -2px;">
+
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+              <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+              </h4>
+ 
+          </div>
+          <table class="MyTable " id="tblVitalParametersHistory">
+
+              <thead style="height: 35px;">
+                  <tr>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Pulse</th>
+                      <th>Temp</th>
+                      <th>Height</th>
+                      <th>L.M.P</th>
+                      <th>SPO2</th>
+                      <th>BSR</th>
+                      <th>BMI</th>
+                      <th>BP </th>
+                      <th>Respiration</th>
+                      <th>Weight</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+
+
+      </div>
+      <div class="roww vitalsTable" id="ipdvitals" style="margin-left: -2px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+              <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+              </h4>
+ 
+          </div>
+          <table class="MyTable" id="tblVitalParametersHistoryIPD">
+              <thead>
+                  <tr>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Rate Beats</th>
+                      <th>Temperature</th>
+                      <th>Rhythm</th>
+                      <th>Volume</th>
+                      <th>Blood Pressure</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
+      <div class="roww vitalsTable" id="emergencyVital" style="margin-left: -2px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+              <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+              </h4>
+ 
+          </div>
+          <table class="MyTable" id="tblVitalParametersHistoryEmergency">
+              <thead>
+                  <tr>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Rate Beats</th>
+                      <th>Temperature</th>
+                      <th>Rhythm</th>
+                      <th>Volume</th>
+                      <th>Blood Pressure</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
+  </div>
                 
                 <form id="item">
                     <div class="row">

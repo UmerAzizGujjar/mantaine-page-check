@@ -10,6 +10,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static PMS.Modules.Dashboards.EMR;
 
 namespace PMS
 {
@@ -29,6 +30,219 @@ namespace PMS
                 }
             }
         }
+        [WebMethod]
+        public static string ModePresentation()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Mode Of Registration"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string LoadVitalParametersHistory(int patid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var latestItem = (from op in db.Out_Patients
+                              where op.Reg_PatId == patid
+                              orderby op.Created_Time descending
+                              select new
+                              {
+                                  op.Out_Patient_ID,
+                                  op.pulse_Min,
+                                  op.BP_mm_Hg,
+                                  op.Weight_Kg,
+                                  op.Height_Cm,
+                                  op.Respiration_Min,
+                                  op.Temp_C,
+                                  op.L_M_P,
+                                  op.spo2,
+                                  op.BSR,
+                                  op.EDD,
+                                  op.BMI,
+                                  op.MUAC,
+                                  op.OFC,
+                                  op.Created_Time
+                              }).FirstOrDefault(); // Only the latest record
+
+            List<VitalParameterClass> list = new List<VitalParameterClass>();
+
+            if (latestItem != null)
+            {
+                VitalParameterClass obj = new VitalParameterClass();
+                obj.Pulse_Min = latestItem.pulse_Min;
+                obj.Out_Patient_ID = latestItem.Out_Patient_ID;
+                obj.BP_mm_Hg = latestItem.BP_mm_Hg;
+                obj.Weight_Kg = latestItem.Weight_Kg;
+                obj.Height_Cm = latestItem.Height_Cm;
+                obj.Respiration_Min = latestItem.Respiration_Min;
+                obj.Temp_C = latestItem.Temp_C;
+                obj.L_M_P = latestItem.L_M_P;
+                obj.SPO2 = latestItem.spo2;
+                obj.BMI = latestItem.BMI ?? "";
+                obj.MUAC = latestItem.MUAC;
+                obj.OFC = latestItem.OFC;
+                obj.Receiving_date = DateTime.Now;
+                obj.RN_Special_Instruction = "";
+                obj.RN_Patient_General_Condition = "";
+                obj.Created_Time = Convert.ToDateTime(latestItem.Created_Time);
+                obj.BSR = latestItem.BSR ?? "";
+                obj.EDD = latestItem.EDD ?? "";
+                obj.Status = "OutPatient";
+
+                list.Add(obj);
+            }
+            return (new JavaScriptSerializer()).Serialize(list);
+        }
+        [WebMethod]
+        public static string LoadVitalParametersHistoryemergency(int patid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+
+            var EmergencyPatientList = (from op in db.ReceivingNotes
+                                        join p in db.Reg_patients
+                                       on op.Patient_ID equals p.pat_id
+                                        where p.pat_id == patid
+                                           && op.Type_Nursing == "Receiving Note Emergency"
+                                        select new
+                                        {
+                                            op.RateBeats,
+                                            op.BloodPressure,
+                                            op.Emergency_Rhythm,
+                                            op.Emergency_Volume,
+                                            op.OthersRecieveNote,
+                                            op.RespirationRate,
+                                            op.Temperature,
+                                            op.Receiving_Date,
+                                            op.RN_Special_Instruction,
+                                            op.O2_Saturation,
+                                            op.O2_Saturation_Oxygen1,
+                                            op.O2_Saturation_Oxygen2,
+                                            user = db.aspnet_Users.Where(x => x.UserId == op.user_id).Select(x => x.UserName).FirstOrDefault(),
+                                        }).ToList();
+
+
+            List<VitalParameterClassEmer> list = new List<VitalParameterClassEmer>();
+            foreach (var item in EmergencyPatientList)
+            {
+                VitalParameterClassEmer obj = new VitalParameterClassEmer();
+                obj.Rhythm = db.GetDataValueName("Emergency Rhythm", item.Emergency_Rhythm);
+                obj.Volume = db.GetDataValueName("Emergency Volume", item.Emergency_Volume);
+                obj.BP_mm_Hg = item.BloodPressure;
+                obj.Rate_Beats = item.RateBeats;
+                obj.OthersRcvNote = item.OthersRecieveNote;
+                obj.O2_Saturation = item.O2_Saturation;
+                obj.O2_Saturation_Oxygen1 = item.O2_Saturation_Oxygen1;
+                obj.O2_Saturation_Oxygen2 = item.O2_Saturation_Oxygen2;
+                obj.Respiration_Min = item.RespirationRate;
+                obj.Temp_C = item.Temperature;
+                obj.Receiving_date = Convert.ToDateTime(item.Receiving_Date);
+                obj.RN_Special_Instruction = item.RN_Special_Instruction;
+                obj.Status = "Emergency Patient";
+                obj.user = item.user;
+                list.Add(obj);
+            }
+            return (new JavaScriptSerializer()).Serialize(list);
+        }
+        [WebMethod]
+        public static string LoadVitalParametersHistoryIPD(int patid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var IPD_PatientList = (from op in db.ReceivingNotes
+                                   join p in db.Reg_patients
+                                   on op.Patient_ID equals p.pat_id
+                                   join inpat in db.In_Patients
+                                   on p.pat_id equals inpat.Patient_ID
+                                   where p.pat_id == patid
+                                   && op.In_Patient_ID == inpat.In_Patient_ID
+                                   && op.Emergency_ID == null
+                                   orderby op.Receiving_Date descending
+                                   select new
+                                   {
+                                       op.RateBeats,
+                                       op.BloodPressure,
+                                       op.Emergency_Rhythm,
+                                       op.Emergency_Volume,
+                                       op.OthersRecieveNote,
+                                       op.RespirationRate,
+                                       op.Temperature,
+                                       op.Receiving_Date,
+                                       op.RN_Special_Instruction,
+                                       op.O2_Saturation,
+                                       op.O2_Saturation_Oxygen1,
+                                       op.O2_Saturation_Oxygen2,
+                                       user = db.aspnet_Users.Where(x => x.UserId == op.user_id).Select(x => x.UserName).FirstOrDefault(),
+
+
+                                   }).ToList();
+
+
+            List<VitalParameter> list = new List<VitalParameter>();
+
+
+            foreach (var item in IPD_PatientList)
+            {
+                VitalParameter obj = new VitalParameter();
+                obj.Emergency_Rhythm = db.GetDataValueName("Emergency Rhythm", item.Emergency_Rhythm);
+                obj.Emergency_Volume = db.GetDataValueName("Emergency Volume", item.Emergency_Volume);
+                obj.BP_mm_Hg = item.BloodPressure;
+                obj.RateBeats = item.RateBeats;
+                obj.OthersRecieveNote = item.OthersRecieveNote;
+                obj.O2_Saturation = item.O2_Saturation;
+                obj.O2_Saturation_Oxygen1 = item.O2_Saturation_Oxygen1;
+                obj.O2_Saturation_Oxygen2 = item.O2_Saturation_Oxygen2;
+                obj.Respiration_Min = item.RespirationRate;
+                obj.Temp_C = item.Temperature;
+                obj.Receiving_date = Convert.ToDateTime(item.Receiving_Date);
+                obj.RN_Special_Instruction = item.RN_Special_Instruction;
+                obj.Status = "IPD Discharge Patient";
+                obj.User_Name = item.user;
+
+                list.Add(obj);
+            }
+            return (new JavaScriptSerializer()).Serialize(list);
+        }
+        public class VitalParameter
+        {
+            public string Pulse_Min { get; set; }
+            public string BP_mm_Hg { get; set; }
+            public string Weight_Kg { get; set; }
+            public string Height_Cm { get; set; }
+            public DateTime Created_Time { get; set; }
+            public string Respiration_Min { get; set; }
+            public string Temp_C { get; set; }
+            public string L_M_P { get; set; }
+            public string Test_ID { get; set; }
+            public DateTime Receiving_date { get; set; }
+            public string RN_Special_Instruction { get; set; }
+            public string RN_Patient_General_Condition { get; set; }
+            public string Status { get; set; }
+            public string BMI { get; set; }
+            public string GCS { get; set; }
+            public string RateBeats { get; set; }
+            public string Emergency_Rhythm { get; set; }
+            public string Emergency_Volume { get; set; }
+            public string OthersRecieveNote { get; set; }
+            public string RespirationRate { get; set; }
+            public string O2_Saturation { get; set; }
+            public string O2_Saturation_Oxygen1 { get; set; }
+            public string O2_Saturation_Oxygen2 { get; set; }
+            public string User_Name { get; set; }
+        }
+
+
         [WebMethod]
         public static string checkRepeat(int RecievedID)
         {
@@ -513,13 +727,13 @@ namespace PMS
         [WebMethod]
         public static string AllPendingLabTestDetail(string DeptID)
         {
-        
+
             DataBaseDataContext db = new DataBaseDataContext();
             JavaScriptSerializer serl = new JavaScriptSerializer();
             DateTime startDate = System.DateTime.Now.AddMonths(-2);
             var Month = startDate.Month;
             DateTime endData = System.DateTime.Now.Date;
-           
+
             serl.MaxJsonLength = 2147483647;
 
 
@@ -624,68 +838,95 @@ namespace PMS
               ).ToList();
             */
             #endregion
-            
 
 
-            var testDetails_Billing_Sample = (from pat in db.Reg_patients
-             join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
-             join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
-             join lbtD in db.Lab_Test_Details on bill_details.Bill_Details_ID equals lbtD.BillDetailID
-             join lbtM in db.Laboratory_Tests on lbtD.Lab_Test_ID equals lbtM.Lab_Test_ID
-             join sd in db.Sample_Details on bill_details.Bill_Details_ID equals sd.Bill_Detail_ID
-             where (lbtM.Transaction_Type == "Front Desk" || lbtM.Transaction_Type == "OutPatient" || lbtM.Transaction_Type == "Emergency Patient" || lbtM.Transaction_Type == "InPatient") && lbtD.Recieved_ID == null && sd.Sample_Collected == true
 
-               && (bill.Bill_Date >= startDate)
-                                              let sortOrder =
-                                       lbtM.Transaction_Type == "Emergency Patient" ? 1 :
-                                       lbtM.Transaction_Type == "OutPatient" ? 2 :
-                                       lbtM.Transaction_Type == "InPatient" ? 3 :
-                                       lbtM.Transaction_Type == "Front Desk" ? 4 : 5
-                                       orderby sortOrder, bill.Bill_Date descending
+            var testDetails_Billing_Sample = (
+    from pat in db.Reg_patients
+    join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+    join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+    from lbtD in db.Lab_Test_Details
+    where (
+        bill_details.Bill_Details_ID == lbtD.BillDetailID ||
+        bill_details.ParentTrans_ID == lbtD.Lab_Test_Detail_ID
+    )
 
+    join lbtM in db.Laboratory_Tests on lbtD.Lab_Test_ID equals lbtM.Lab_Test_ID
+    join sd in db.Sample_Details on bill_details.Bill_Details_ID equals sd.Bill_Detail_ID
 
-             select new
-                                              {
-                 bill.Bill_No,
-                                                  lbtD.IsBilled,
-                                                  lbtD.Lab_Test_Detail_ID,
-                                                  lbtD.Date,
-                                                  lbtD.Remark,
-                                                  lbtD.Catagory_ID,
-                                                  lbtM.Lab_Test_ID,
-                                                  lbtD.Test_ID,
-                                                  lbtD.Recieved_ID,
-                                                  lbtM.Parent_Transaction_Type,
-                                                  lbtM.Parent_Transaction_Type_ID,
-                 bill.Bill_ID,
-                                                  lbtM.Transaction_Type,
-                                                  Doctor_ID = 0,
-                 bill_details.Category_ID,
-                 bill_details.Item_Name,
+    where (
+        bill_details.ParentTrans_Name == "Front Desk" ||
+        bill_details.ParentTrans_Name == "OutPatient" ||
+        bill_details.ParentTrans_Name == "EmergencyPatient" ||
+        bill_details.ParentTrans_Name == "InPatient" ||
+        bill_details.ParentTrans_Name == ""
+    )
+    && lbtD.Recieved_ID == null
+    && sd.Sample_Collected == true
+    && bill.Bill_Date >= startDate
 
-                                                  chkPackages = "0",
-                 pat.Patient_No,
-                 pat.Created_time,
-               
-                 pat.pat_id,
-                 pat.Full_Name,
-                                                  sd.Remarks,
-                                                  Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
-                                                  Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select bill_details.Category_ID).FirstOrDefault(),
-                                                  DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                               Departments", t.Main_Department)).FirstOrDefault(),
-                                                  Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
-                                                  GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", bill_details.Category_ID)).FirstOrDefault(),
-                                                  Group_Name = db.GetDataValueName("Test Groups", bill_details.Category_ID),
-                                                  Rotation_ID = lbtD.Rotation_ID,
-                                                  Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                    Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
-                                                  lbtD.Special_Tests,
-                                                  lbtD.Area_Of_Interest,
-                                                  haveSample = (from s in db.Sample_Details where s.Bill_Detail_ID == bill_details.Bill_Details_ID select s).Count() == 0 ? false : true,
-                 bill_details.Bill_Details_ID
-                                              }
-               ).ToList();
+    let sortOrder =
+        bill_details.ParentTrans_Name == "EmergencyPatient" ? 1 :
+        bill_details.ParentTrans_Name == "OutPatient" ? 2 :
+        bill_details.ParentTrans_Name == "InPatient" ? 3 :
+        bill_details.ParentTrans_Name == "Front Desk" ? 4 : 5
+
+    orderby sortOrder, bill.Bill_Date descending
+
+    select new
+    {
+        bill.Bill_No,
+        lbtD.IsBilled,
+        lbtD.Lab_Test_Detail_ID,
+        lbtD.Date,
+        lbtD.Remark,
+        lbtD.Catagory_ID,
+        lbtM.Lab_Test_ID,
+        lbtD.Test_ID,
+        lbtD.Recieved_ID,
+        lbtM.Parent_Transaction_Type,
+        lbtM.Parent_Transaction_Type_ID,
+        bill.Bill_ID,
+        Transaction_Type = (bill_details.ParentTrans_Name == null || bill_details.ParentTrans_Name == "") ? "Front Desk" : bill_details.ParentTrans_Name,
+        bill_details.ParentTrans_Name,
+        Doctor_ID = 0,
+        bill_details.Category_ID,
+        bill_details.Item_Name,
+        chkPackages = "0",
+        pat.Patient_No,
+        pat.Created_time,
+        pat.pat_id,
+        pat.Full_Name,
+        sd.Remarks,
+        Test_Name = (from t in db.Lab_Tests
+                     where t.Test_ID == lbtD.Test_ID
+                     select t.Test_Name).FirstOrDefault(),
+        Group_Department = bill_details.Category_ID, // Simplified
+        DepartmentName = db.GetDataValueName("Main Test Departments",
+            (from t in db.Lab_Tests
+             where t.Test_ID == lbtD.Test_ID
+             select t.Main_Department).FirstOrDefault()),
+        Department_ID = (from t in db.Lab_Tests
+                         where t.Test_ID == lbtD.Test_ID
+                         select t.Main_Department).FirstOrDefault(),
+        GroupName = db.GetDataValueName("Test Groups", bill_details.Category_ID),
+        Group_Name = db.GetDataValueName("Test Groups", bill_details.Category_ID),
+        Rotation_ID = lbtD.Rotation_ID,
+        Rotation = (db.GetDataValueName("Main Test Departments",
+                   (from t in db.Lab_Tests
+                    where t.Test_ID == lbtD.Test_ID
+                    select t.Main_Department).FirstOrDefault()) == "X-Ray")
+            ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID)
+            : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+        lbtD.Special_Tests,
+        lbtD.Area_Of_Interest,
+        haveSample = db.Sample_Details.Any(s => s.Bill_Detail_ID == bill_details.Bill_Details_ID), // Cleaner
+        bill_details.Bill_Details_ID
+    }
+).ToList();
+
             List<PendingLabTestClass> list = new List<PendingLabTestClass>();
-           
+
 
             #region 'Comment Area of Loading IPD and OPD TEst don't Delete This Region'
             /*
@@ -799,7 +1040,7 @@ namespace PMS
             }
             */
             #endregion
-         
+
             foreach (var item in testDetails_Billing_Sample)
             {
                 PendingLabTestClass obj = new PendingLabTestClass();
@@ -840,11 +1081,11 @@ namespace PMS
                 if (obj.Department_ID == "001" || obj.Department_ID == null || obj.Department_ID == "005")
                     list.Add(obj);
             }
-          
+
             return serl.Serialize(list);
         }
 
-      
+
         public class PendingLabTestClass
         {
             public string chkPackages;
