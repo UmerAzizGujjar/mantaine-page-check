@@ -10,6 +10,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static PMS.Modules.Dashboards.EMR;
 
 namespace PMS
 {
@@ -29,6 +30,219 @@ namespace PMS
                 }
             }
         }
+        [WebMethod]
+        public static string ModePresentation()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Mode Of Registration"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string LoadVitalParametersHistory(int patid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var latestItem = (from op in db.Out_Patients
+                              where op.Reg_PatId == patid
+                              orderby op.Created_Time descending
+                              select new
+                              {
+                                  op.Out_Patient_ID,
+                                  op.pulse_Min,
+                                  op.BP_mm_Hg,
+                                  op.Weight_Kg,
+                                  op.Height_Cm,
+                                  op.Respiration_Min,
+                                  op.Temp_C,
+                                  op.L_M_P,
+                                  op.spo2,
+                                  op.BSR,
+                                  op.EDD,
+                                  op.BMI,
+                                  op.MUAC,
+                                  op.OFC,
+                                  op.Created_Time
+                              }).FirstOrDefault(); // Only the latest record
+
+            List<VitalParameterClass> list = new List<VitalParameterClass>();
+
+            if (latestItem != null)
+            {
+                VitalParameterClass obj = new VitalParameterClass();
+                obj.Pulse_Min = latestItem.pulse_Min;
+                obj.Out_Patient_ID = latestItem.Out_Patient_ID;
+                obj.BP_mm_Hg = latestItem.BP_mm_Hg;
+                obj.Weight_Kg = latestItem.Weight_Kg;
+                obj.Height_Cm = latestItem.Height_Cm;
+                obj.Respiration_Min = latestItem.Respiration_Min;
+                obj.Temp_C = latestItem.Temp_C;
+                obj.L_M_P = latestItem.L_M_P;
+                obj.SPO2 = latestItem.spo2;
+                obj.BMI = latestItem.BMI ?? "";
+                obj.MUAC = latestItem.MUAC;
+                obj.OFC = latestItem.OFC;
+                obj.Receiving_date = DateTime.Now;
+                obj.RN_Special_Instruction = "";
+                obj.RN_Patient_General_Condition = "";
+                obj.Created_Time = Convert.ToDateTime(latestItem.Created_Time);
+                obj.BSR = latestItem.BSR ?? "";
+                obj.EDD = latestItem.EDD ?? "";
+                obj.Status = "OutPatient";
+
+                list.Add(obj);
+            }
+            return (new JavaScriptSerializer()).Serialize(list);
+        }
+        [WebMethod]
+        public static string LoadVitalParametersHistoryemergency(int patid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+
+            var EmergencyPatientList = (from op in db.ReceivingNotes
+                                        join p in db.Reg_patients
+                                       on op.Patient_ID equals p.pat_id
+                                        where p.pat_id == patid
+                                           && op.Type_Nursing == "Receiving Note Emergency"
+                                        select new
+                                        {
+                                            op.RateBeats,
+                                            op.BloodPressure,
+                                            op.Emergency_Rhythm,
+                                            op.Emergency_Volume,
+                                            op.OthersRecieveNote,
+                                            op.RespirationRate,
+                                            op.Temperature,
+                                            op.Receiving_Date,
+                                            op.RN_Special_Instruction,
+                                            op.O2_Saturation,
+                                            op.O2_Saturation_Oxygen1,
+                                            op.O2_Saturation_Oxygen2,
+                                            user = db.aspnet_Users.Where(x => x.UserId == op.user_id).Select(x => x.UserName).FirstOrDefault(),
+                                        }).ToList();
+
+
+            List<VitalParameterClassEmer> list = new List<VitalParameterClassEmer>();
+            foreach (var item in EmergencyPatientList)
+            {
+                VitalParameterClassEmer obj = new VitalParameterClassEmer();
+                obj.Rhythm = db.GetDataValueName("Emergency Rhythm", item.Emergency_Rhythm);
+                obj.Volume = db.GetDataValueName("Emergency Volume", item.Emergency_Volume);
+                obj.BP_mm_Hg = item.BloodPressure;
+                obj.Rate_Beats = item.RateBeats;
+                obj.OthersRcvNote = item.OthersRecieveNote;
+                obj.O2_Saturation = item.O2_Saturation;
+                obj.O2_Saturation_Oxygen1 = item.O2_Saturation_Oxygen1;
+                obj.O2_Saturation_Oxygen2 = item.O2_Saturation_Oxygen2;
+                obj.Respiration_Min = item.RespirationRate;
+                obj.Temp_C = item.Temperature;
+                obj.Receiving_date = Convert.ToDateTime(item.Receiving_Date);
+                obj.RN_Special_Instruction = item.RN_Special_Instruction;
+                obj.Status = "Emergency Patient";
+                obj.user = item.user;
+                list.Add(obj);
+            }
+            return (new JavaScriptSerializer()).Serialize(list);
+        }
+        [WebMethod]
+        public static string LoadVitalParametersHistoryIPD(int patid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var IPD_PatientList = (from op in db.ReceivingNotes
+                                   join p in db.Reg_patients
+                                   on op.Patient_ID equals p.pat_id
+                                   join inpat in db.In_Patients
+                                   on p.pat_id equals inpat.Patient_ID
+                                   where p.pat_id == patid
+                                   && op.In_Patient_ID == inpat.In_Patient_ID
+                                   && op.Emergency_ID == null
+                                   orderby op.Receiving_Date descending
+                                   select new
+                                   {
+                                       op.RateBeats,
+                                       op.BloodPressure,
+                                       op.Emergency_Rhythm,
+                                       op.Emergency_Volume,
+                                       op.OthersRecieveNote,
+                                       op.RespirationRate,
+                                       op.Temperature,
+                                       op.Receiving_Date,
+                                       op.RN_Special_Instruction,
+                                       op.O2_Saturation,
+                                       op.O2_Saturation_Oxygen1,
+                                       op.O2_Saturation_Oxygen2,
+                                       user = db.aspnet_Users.Where(x => x.UserId == op.user_id).Select(x => x.UserName).FirstOrDefault(),
+
+
+                                   }).ToList();
+
+
+            List<VitalParameter> list = new List<VitalParameter>();
+
+
+            foreach (var item in IPD_PatientList)
+            {
+                VitalParameter obj = new VitalParameter();
+                obj.Emergency_Rhythm = db.GetDataValueName("Emergency Rhythm", item.Emergency_Rhythm);
+                obj.Emergency_Volume = db.GetDataValueName("Emergency Volume", item.Emergency_Volume);
+                obj.BP_mm_Hg = item.BloodPressure;
+                obj.RateBeats = item.RateBeats;
+                obj.OthersRecieveNote = item.OthersRecieveNote;
+                obj.O2_Saturation = item.O2_Saturation;
+                obj.O2_Saturation_Oxygen1 = item.O2_Saturation_Oxygen1;
+                obj.O2_Saturation_Oxygen2 = item.O2_Saturation_Oxygen2;
+                obj.Respiration_Min = item.RespirationRate;
+                obj.Temp_C = item.Temperature;
+                obj.Receiving_date = Convert.ToDateTime(item.Receiving_Date);
+                obj.RN_Special_Instruction = item.RN_Special_Instruction;
+                obj.Status = "IPD Discharge Patient";
+                obj.User_Name = item.user;
+
+                list.Add(obj);
+            }
+            return (new JavaScriptSerializer()).Serialize(list);
+        }
+        public class VitalParameter
+        {
+            public string Pulse_Min { get; set; }
+            public string BP_mm_Hg { get; set; }
+            public string Weight_Kg { get; set; }
+            public string Height_Cm { get; set; }
+            public DateTime Created_Time { get; set; }
+            public string Respiration_Min { get; set; }
+            public string Temp_C { get; set; }
+            public string L_M_P { get; set; }
+            public string Test_ID { get; set; }
+            public DateTime Receiving_date { get; set; }
+            public string RN_Special_Instruction { get; set; }
+            public string RN_Patient_General_Condition { get; set; }
+            public string Status { get; set; }
+            public string BMI { get; set; }
+            public string GCS { get; set; }
+            public string RateBeats { get; set; }
+            public string Emergency_Rhythm { get; set; }
+            public string Emergency_Volume { get; set; }
+            public string OthersRecieveNote { get; set; }
+            public string RespirationRate { get; set; }
+            public string O2_Saturation { get; set; }
+            public string O2_Saturation_Oxygen1 { get; set; }
+            public string O2_Saturation_Oxygen2 { get; set; }
+            public string User_Name { get; set; }
+        }
+
+
         [WebMethod]
         public static string checkRepeat(int RecievedID)
         {
