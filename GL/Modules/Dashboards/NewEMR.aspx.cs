@@ -1,4 +1,5 @@
-﻿using PMS.Modules.PatientManagement;
+﻿using Newtonsoft.Json;
+using PMS.Modules.PatientManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -185,7 +186,7 @@ namespace PMS.Modules.Dashboards
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    // Get total count from Out_Patients where regid matches
+                    // Total count
                     var Total_pat = _dbContext.Out_Patients.Count(op => op.Reg_PatId == regID);
 
                     var query = from op in _dbContext.Out_Patients
@@ -196,16 +197,16 @@ namespace PMS.Modules.Dashboards
                                 select new
                                 {
                                     VisitNo = op.Out_Patient_ID,
-                                    VisitDate = op.Created_Time.HasValue ? op.Created_Time.Value.Date : (DateTime?)null,
+                                    VisitDate = op.Created_Time.HasValue ? op.Created_Time.Value : (DateTime?)null,
                                     Department = _dbContext.GetDataValueName("Patient Main Category", p.Patient_Main_Category) ?? "N/A",
                                     PatientType = _dbContext.GetDataValueName("Patient Type", p.Patient_Type) ?? "N/A",
                                     CheckedBy = emp != null ? emp.Emp_Name : "N/A",
                                     Remarks = op.Final_Rec ?? "",
-                                    DischargeDate = op.discharge_date.HasValue ? op.discharge_date.Value.Date : (DateTime?)null,
+                                    DischargeDate = op.discharge_date.HasValue ? op.discharge_date.Value : (DateTime?)null,
                                     Status = op.Discharge.HasValue ? (op.Discharge.Value ? "Consulted" : "Active") : "Active"
                                 };
 
-                    // Apply search filter if searchValue is provided
+                    // Apply search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
@@ -219,15 +220,15 @@ namespace PMS.Modules.Dashboards
                             x.Status.Contains(searchValue) ||
                             (x.Remarks != null && x.Remarks.Contains(searchValue)) ||
                             (isDateSearch && (
-                                (x.VisitDate.HasValue && x.VisitDate.Value.Date == searchDate.Date) ||
-                                (x.DischargeDate.HasValue && x.DischargeDate.Value.Date == searchDate.Date)
+                                (!x.VisitDate.HasValue || x.VisitDate.Value.Date == searchDate.Date) ||
+                                (!x.DischargeDate.HasValue || x.DischargeDate.Value.Date == searchDate.Date)
                             ))
                         );
                     }
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    // Sorting
                     if (!string.IsNullOrEmpty(sortColumn))
                     {
                         switch (sortColumn)
@@ -236,9 +237,9 @@ namespace PMS.Modules.Dashboards
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.VisitNo) : query.OrderByDescending(x => x.VisitNo);
                                 break;
                             case "VisitDate":
-                                query = sortColumnDirection == "asc" ?
-                                    query.OrderBy(x => x.VisitDate.HasValue ? x.VisitDate : DateTime.MaxValue) :
-                                    query.OrderByDescending(x => x.VisitDate.HasValue ? x.VisitDate : DateTime.MinValue);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.VisitDate ?? DateTime.MaxValue)
+                                    : query.OrderByDescending(x => x.VisitDate ?? DateTime.MinValue);
                                 break;
                             case "Department":
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Department) : query.OrderByDescending(x => x.Department);
@@ -253,69 +254,68 @@ namespace PMS.Modules.Dashboards
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Status) : query.OrderByDescending(x => x.Status);
                                 break;
                             case "DischargeDate":
-                                query = sortColumnDirection == "asc" ?
-                                    query.OrderBy(x => x.DischargeDate.HasValue ? x.DischargeDate : DateTime.MaxValue) :
-                                    query.OrderByDescending(x => x.DischargeDate.HasValue ? x.DischargeDate : DateTime.MinValue);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.DischargeDate ?? DateTime.MaxValue)
+                                    : query.OrderByDescending(x => x.DischargeDate ?? DateTime.MinValue);
                                 break;
                             default:
-                                query = query.OrderByDescending(x => x.VisitDate.HasValue ? x.VisitDate : DateTime.MinValue);
+                                query = query.OrderByDescending(x => x.VisitDate ?? DateTime.MinValue);
                                 break;
                         }
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.VisitDate.HasValue ? x.VisitDate : DateTime.MinValue);
+                        query = query.OrderByDescending(x => x.VisitDate ?? DateTime.MinValue);
                     }
 
-                    // Apply paging and format dates
+                    // Pagination
                     var data = query.Skip(start).Take(length).AsEnumerable()
                         .Select(x => new
                         {
                             VisitNo = x.VisitNo,
-                            VisitDate = x.VisitDate.HasValue ? x.VisitDate.Value.ToString("MM/dd/yyyy") : "",
-                            Department = x.Department ?? "N/A",
-                            PatientType = x.PatientType ?? "N/A",
-                            CheckedBy = x.CheckedBy ?? "N/A",
-                            Remarks = x.Remarks ?? "",
-                            DischargeDate = x.DischargeDate.HasValue ? x.DischargeDate.Value.ToString("MM/dd/yyyy") : "",
-                            Status = x.Status ?? "Active"
+                            VisitDate = x.VisitDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Department = x.Department,
+                            PatientType = x.PatientType,
+                            CheckedBy = x.CheckedBy,
+                            Remarks = x.Remarks,
+                            DischargeDate = x.DischargeDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Status = x.Status
                         }).ToList();
 
-                    // Return the proper DataTables structure
-                    var jsonData = new
+                    // Final result
+                    var result = new
                     {
                         draw = draw,
-                        recordsFiltered = FilteredCount,
                         recordsTotal = Total_pat,
+                        recordsFiltered = FilteredCount,
                         data = data
                     };
 
-                    return jsonData;
+                    // Serialize manually to avoid double-escaping
+                    var json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+                    return json;
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception and return empty result
-                // Consider logging: ex.Message, ex.StackTrace
-                return new
+                return Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     draw = draw,
-                    recordsFiltered = 0,
                     recordsTotal = 0,
+                    recordsFiltered = 0,
                     data = new List<object>(),
                     error = ex.Message
-                };
+                });
             }
         }
         [WebMethod]
         public static object IPDViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
-
             try
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    // Get total count from In_Patient where regid matches
+                    // Total count
                     var Total_pat = _dbContext.In_Patients.Count(ip => ip.Patient_ID == regID);
 
                     var query = from ip in _dbContext.In_Patients
@@ -324,24 +324,24 @@ namespace PMS.Modules.Dashboards
 
                                     // Join with Ward_Allocation to get current ward assignment
                                 join wa in _dbContext.Ward_Allocations on ip.In_Patient_ID.ToString() equals wa.InPatient_ID into wardAllocJoin
-                                from wa in wardAllocJoin.Where(x => (x.IsDischarge == false || x.IsDischarge == null) &&
-                                                                   (x.isCancelled == false || x.isCancelled == null))
-                                                            .Take(1)
-                                                            .DefaultIfEmpty()
+                                from wa in wardAllocJoin
+                                    .Where(x => !(x.IsDischarge ?? true) && !(x.isCancelled ?? true))
+                                    .Take(1)
+                                    .DefaultIfEmpty()
 
                                     // Join with Ward_Definition to get ward details
                                 join wd in _dbContext.Ward_Definitions on wa.Ward_ID equals wd.Ward_ID into wardDefJoin
                                 from wd in wardDefJoin.DefaultIfEmpty()
 
-                                    // Join with Room_Allocation to get current room assignment
+                                    // Join with Room_Allocation to get current room
                                 join ra in _dbContext.Room_Allocations on ip.In_Patient_ID equals ra.In_Patient_ID into roomAllocJoin
                                 from ra in roomAllocJoin.Take(1).DefaultIfEmpty()
 
-                                    // Join with Rooms to get room details
+                                    // Join with Rooms
                                 join r in _dbContext.Rooms on ra.Room_ID equals r.Room_ID into roomJoin
                                 from r in roomJoin.DefaultIfEmpty()
 
-                                    // Join with doctor for ward allocation
+                                    // Join for doctor assigned in ward
                                 join wardDoc in _dbContext.HR_Employees on wa.Doctor_Assigned equals wardDoc.Emp_ID into wardDocJoin
                                 from wardDoc in wardDocJoin.DefaultIfEmpty()
 
@@ -354,7 +354,6 @@ namespace PMS.Modules.Dashboards
                                     WardType = wd != null ? wd.Ward_Type : "N/A",
                                     WardNo = wd != null ? (wd.Ward_No.HasValue ? wd.Ward_No.Value.ToString() : "N/A") : "N/A",
                                     RoomNo = r != null ? r.Room_No : "N/A",
-                                    RoomName = r != null ? r.Name : "N/A",
                                     BedNo = wa != null ? (wa.Bed_No_Assigned.HasValue ? wa.Bed_No_Assigned.Value.ToString() : "N/A") : "N/A",
                                     AttendingDoctor = wardDoc != null ? wardDoc.Emp_Name : (emp != null ? emp.Emp_Name : "N/A"),
                                     ProvisionalDiagnosis = ip.Provisional_Diagnosis ?? "",
@@ -362,19 +361,12 @@ namespace PMS.Modules.Dashboards
                                     DischargeDate = ip.Discharge_On,
                                     AdmissionType = ip.AdmissionType ?? "Regular",
                                     Status = ip.Discharge.HasValue ?
-                                            (ip.Discharge.Value ? "Discharged" : "Admitted") :
-                                            (ip.Death_Certificate.HasValue && ip.Death_Certificate.Value ? "Deceased" : "Admitted"),
-
-                                    ReferringDoctor = ip.Referring_Doctor ?? "",
-
-                                    WardAllocationFrom = wa != null ? wa.From_TimeDate : null,
-                                    RoomType = ra != null ? ra.Room_Type : (r != null ? r.Room_Type : "N/A"),
-                                    Building = r != null ? r.Building_Type : "N/A",
-                                    Floor = r != null ? (r.Floor_No.HasValue ? r.Floor_No.Value.ToString() : "N/A") : "N/A",
-                                    Location = r != null ? r.Location : "N/A"
+                                        (ip.Discharge.Value ? "Discharged" : "Admitted") :
+                                        (ip.Death_Certificate.HasValue && ip.Death_Certificate.Value ? "Deceased" : "Admitted"),
+                                    ReferringDoctor = ip.Referring_Doctor ?? ""
                                 };
 
-                    // Apply search filter if searchValue is provided
+                    // Apply search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
@@ -392,16 +384,16 @@ namespace PMS.Modules.Dashboards
                             (x.ProvisionalDiagnosis != null && x.ProvisionalDiagnosis.Contains(searchValue)) ||
                             (x.ReferringDoctor != null && x.ReferringDoctor.Contains(searchValue)) ||
                             (isDateSearch && (
-                                (x.AdmissionDate.HasValue && x.AdmissionDate.Value.Date == searchDate.Date) ||
-                                (x.ExpectedDischargeDate.HasValue && x.ExpectedDischargeDate.Value.Date == searchDate.Date) ||
-                                (x.DischargeDate.HasValue && x.DischargeDate.Value.Date == searchDate.Date)
+                                (!x.AdmissionDate.HasValue || x.AdmissionDate.Value.Date == searchDate.Date) ||
+                                (!x.ExpectedDischargeDate.HasValue || x.ExpectedDischargeDate.Value.Date == searchDate.Date) ||
+                                (!x.DischargeDate.HasValue || x.DischargeDate.Value.Date == searchDate.Date)
                             ))
                         );
                     }
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    // Sorting
                     if (!string.IsNullOrEmpty(sortColumn))
                     {
                         switch (sortColumn)
@@ -410,9 +402,9 @@ namespace PMS.Modules.Dashboards
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.IPD_ID) : query.OrderByDescending(x => x.IPD_ID);
                                 break;
                             case "AdmissionDate":
-                                query = sortColumnDirection == "asc" ?
-                                    query.OrderBy(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MaxValue) :
-                                    query.OrderByDescending(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MinValue);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.AdmissionDate ?? DateTime.MaxValue)
+                                    : query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
                                 break;
                             case "Department":
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Department) : query.OrderByDescending(x => x.Department);
@@ -426,67 +418,67 @@ namespace PMS.Modules.Dashboards
                             case "Status":
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Status) : query.OrderByDescending(x => x.Status);
                                 break;
-                            case "DischargeDate":
-                                query = sortColumnDirection == "asc" ?
-                                    query.OrderBy(x => x.DischargeDate.HasValue ? x.DischargeDate : DateTime.MaxValue) :
-                                    query.OrderByDescending(x => x.DischargeDate.HasValue ? x.DischargeDate : DateTime.MinValue);
-                                break;
                             case "ExpectedDischargeDate":
-                                query = sortColumnDirection == "asc" ?
-                                    query.OrderBy(x => x.ExpectedDischargeDate.HasValue ? x.ExpectedDischargeDate : DateTime.MaxValue) :
-                                    query.OrderByDescending(x => x.ExpectedDischargeDate.HasValue ? x.ExpectedDischargeDate : DateTime.MinValue);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.ExpectedDischargeDate ?? DateTime.MaxValue)
+                                    : query.OrderByDescending(x => x.ExpectedDischargeDate ?? DateTime.MinValue);
+                                break;
+                            case "DischargeDate":
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.DischargeDate ?? DateTime.MaxValue)
+                                    : query.OrderByDescending(x => x.DischargeDate ?? DateTime.MinValue);
                                 break;
                             default:
-                                query = query.OrderByDescending(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MinValue);
+                                query = query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
                                 break;
                         }
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MinValue);
+                        query = query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
                     }
 
-                    // Apply paging and format dates
+                    // Apply paging and format dates as ISO strings
                     var data = query.Skip(start).Take(length).AsEnumerable()
                         .Select(x => new
                         {
                             IPD_ID = x.IPD_ID,
-                            AdmissionDate = x.AdmissionDate.HasValue ? x.AdmissionDate.Value.ToString("MM/dd/yyyy") : "",
-                            Department = x.Department ?? "N/A",
-                            WardName = x.WardType ?? "N/A",
-                            RoomNo = x.RoomNo ?? "N/A",
-                            BedNo = x.BedNo ?? "N/A",
-                            AttendingDoctor = x.AttendingDoctor ?? "N/A",
-                            ExpectedDischargeDate = x.ExpectedDischargeDate.HasValue ? x.ExpectedDischargeDate.Value.ToString("MM/dd/yyyy") : "",
-                            DischargeDate = x.DischargeDate.HasValue ? x.DischargeDate.Value.ToString("MM/dd/yyyy") : "",
-                            Status = x.Status ?? "Admitted",
-                            ReferringDoctor = x.ReferringDoctor ?? ""
+                            AdmissionDate = x.AdmissionDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Department = x.Department,
+                            WardName = x.WardType,
+                            RoomNo = x.RoomNo,
+                            BedNo = x.BedNo,
+                            AttendingDoctor = x.AttendingDoctor,
+                            ExpectedDischargeDate = x.ExpectedDischargeDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            DischargeDate = x.DischargeDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Status = x.Status,
+                            ReferringDoctor = x.ReferringDoctor
                         }).ToList();
 
-                    // Return the proper DataTables structure
-                    var jsonData = new
+                    // Final result
+                    var result = new
                     {
                         draw = draw,
-                        recordsFiltered = FilteredCount,
                         recordsTotal = Total_pat,
+                        recordsFiltered = FilteredCount,
                         data = data
                     };
 
-                    return jsonData;
+                    // 🔑 Serialize to string so frontend can JSON.parse(json.d)
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(result);
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception and return empty result
-                // Consider logging: ex.Message, ex.StackTrace
-                return new
+                var errorResult = new
                 {
                     draw = draw,
-                    recordsFiltered = 0,
                     recordsTotal = 0,
+                    recordsFiltered = 0,
                     data = new List<object>(),
                     error = ex.Message
                 };
+                return Newtonsoft.Json.JsonConvert.SerializeObject(errorResult);
             }
         }
 
@@ -497,42 +489,40 @@ namespace PMS.Modules.Dashboards
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    // Get total count from In_Patient where regid matches
-                    var Total_pat = _dbContext.Emergency_Patients.Count(ip => ip.Patient_ID == regID);
+                    // Total count
+                    var Total_pat = _dbContext.Emergency_Patients.Count(ep => ep.Patient_ID == regID);
 
-                    var query = from ip in _dbContext.Emergency_Patients
-                                join emp in _dbContext.HR_Employees on ip.Doctor equals emp.Emp_ID.ToString() into empJoin
+                    var query = from ep in _dbContext.Emergency_Patients
+                                join emp in _dbContext.HR_Employees on ep.Doctor equals emp.Emp_ID.ToString() into empJoin
                                 from emp in empJoin.DefaultIfEmpty()
 
-                                    // Join with Ward_Allocation to get current ward assignment
-                                join wa in _dbContext.Ward_Allocations on ip.Emergency_ID equals wa.EmergencyID into wardAllocJoin
-                                from wa in wardAllocJoin.Take(1)
-                                                          .DefaultIfEmpty()
+                                    // Join with Ward_Allocation
+                                join wa in _dbContext.Ward_Allocations on ep.Emergency_ID equals wa.EmergencyID into wardAllocJoin
+                                from wa in wardAllocJoin.Take(1).DefaultIfEmpty()
 
-                                    // Join with Ward_Definition to get ward details
+                                    // Join with Ward_Definition
                                 join wd in _dbContext.Ward_Definitions on wa.Ward_ID equals wd.Ward_ID into wardDefJoin
                                 from wd in wardDefJoin.DefaultIfEmpty()
 
-                                    // Join with doctor for ward allocation
+                                    // Join with assigned doctor
                                 join wardDoc in _dbContext.HR_Employees on wa.Doctor_Assigned equals wardDoc.Emp_ID into wardDocJoin
                                 from wardDoc in wardDocJoin.DefaultIfEmpty()
 
-                                where ip.Patient_ID == regID
+                                where ep.Patient_ID == regID
                                 select new
                                 {
-                                    EMERGENCY_ID = ip.Emergency_ID,
-                                    AdmissionDate = ip.Admission_Date,
+                                    EMERGENCY_ID = ep.Emergency_ID,
+                                    AdmissionDate = ep.Admission_Date,
                                     WardType = wd != null ? wd.Ward_Type : "N/A",
-                                    WardNo = wd != null ? (wd.Ward_No.HasValue ? wd.Ward_No.Value.ToString() : "N/A") : "N/A",
                                     BedNo = wa != null ? (wa.Bed_No_Assigned.HasValue ? wa.Bed_No_Assigned.Value.ToString() : "N/A") : "N/A",
                                     AttendingDoctor = wardDoc != null ? wardDoc.Emp_Name : (emp != null ? emp.Emp_Name : "N/A"),
-                                    DischargeDate = ip.Discharge_On,
-                                    Status = ip.Discharge.HasValue ?
-                                            (ip.Discharge.Value ? "Discharged" : "Admitted") :
-                                            (ip.Death_Certificate.HasValue && ip.Death_Certificate.Value ? "Deceased" : "Admitted"),
+                                    DischargeDate = ep.Discharge_On,
+                                    Status = ep.Discharge.HasValue ?
+                                        (ep.Discharge.Value ? "Discharged" : "Admitted") :
+                                        (ep.Death_Certificate.HasValue && ep.Death_Certificate.Value ? "Deceased" : "Admitted")
                                 };
 
-                    // Apply search filter if searchValue is provided
+                    // Apply search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
@@ -540,20 +530,20 @@ namespace PMS.Modules.Dashboards
 
                         query = query.Where(x =>
                             x.EMERGENCY_ID.ToString().Contains(searchValue) ||
-                             (x.WardType != null && x.WardType.Contains(searchValue)) ||
+                            (x.WardType != null && x.WardType.Contains(searchValue)) ||
                             (x.AttendingDoctor != null && x.AttendingDoctor.Contains(searchValue)) ||
-                             x.Status.Contains(searchValue) ||
+                            x.Status.Contains(searchValue) ||
                             x.BedNo.Contains(searchValue) ||
-                             (isDateSearch && (
-                                (x.AdmissionDate.HasValue && x.AdmissionDate.Value.Date == searchDate.Date) ||
-                                 (x.DischargeDate.HasValue && x.DischargeDate.Value.Date == searchDate.Date)
+                            (isDateSearch && (
+                                (!x.AdmissionDate.HasValue || x.AdmissionDate.Value.Date == searchDate.Date) ||
+                                (!x.DischargeDate.HasValue || x.DischargeDate.Value.Date == searchDate.Date)
                             ))
                         );
                     }
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    // Sorting
                     if (!string.IsNullOrEmpty(sortColumn))
                     {
                         switch (sortColumn)
@@ -562,32 +552,32 @@ namespace PMS.Modules.Dashboards
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.EMERGENCY_ID) : query.OrderByDescending(x => x.EMERGENCY_ID);
                                 break;
                             case "AdmissionDate":
-                                query = sortColumnDirection == "asc" ?
-                                    query.OrderBy(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MaxValue) :
-                                    query.OrderByDescending(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MinValue);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.AdmissionDate ?? DateTime.MaxValue)
+                                    : query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
                                 break;
-
                             case "WardName":
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.WardType) : query.OrderByDescending(x => x.WardType);
                                 break;
-
+                            case "AttendingDoctor":
+                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.AttendingDoctor) : query.OrderByDescending(x => x.AttendingDoctor);
+                                break;
                             case "Status":
                                 query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Status) : query.OrderByDescending(x => x.Status);
                                 break;
                             case "DischargeDate":
-                                query = sortColumnDirection == "asc" ?
-                                    query.OrderBy(x => x.DischargeDate.HasValue ? x.DischargeDate : DateTime.MaxValue) :
-                                    query.OrderByDescending(x => x.DischargeDate.HasValue ? x.DischargeDate : DateTime.MinValue);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.DischargeDate ?? DateTime.MaxValue)
+                                    : query.OrderByDescending(x => x.DischargeDate ?? DateTime.MinValue);
                                 break;
-
                             default:
-                                query = query.OrderByDescending(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MinValue);
+                                query = query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
                                 break;
                         }
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.AdmissionDate.HasValue ? x.AdmissionDate : DateTime.MinValue);
+                        query = query.OrderByDescending(x => x.AdmissionDate ?? DateTime.MinValue);
                     }
 
                     // Apply paging and format dates
@@ -595,37 +585,38 @@ namespace PMS.Modules.Dashboards
                         .Select(x => new
                         {
                             EMERGENCY_ID = x.EMERGENCY_ID,
-                            AdmissionDate = x.AdmissionDate.HasValue ? x.AdmissionDate.Value.ToString("MM/dd/yyyy") : "",
-                            WardName = x.WardType ?? "N/A",
-                            BedNo = x.BedNo ?? "N/A",
-                            AttendingDoctor = x.AttendingDoctor ?? "N/A",
-                            DischargeDate = x.DischargeDate.HasValue ? x.DischargeDate.Value.ToString("MM/dd/yyyy") : "",
-                            Status = x.Status ?? "Admitted",
+                            AdmissionDate = x.AdmissionDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            WardName = x.WardType,
+                            BedNo = x.BedNo,
+                            AttendingDoctor = x.AttendingDoctor,
+                            DischargeDate = x.DischargeDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Status = x.Status
                         }).ToList();
 
-                    // Return the proper DataTables structure
-                    var jsonData = new
+                    // Final result
+                    var result = new
                     {
                         draw = draw,
-                        recordsFiltered = FilteredCount,
                         recordsTotal = Total_pat,
+                        recordsFiltered = FilteredCount,
                         data = data
                     };
 
-                    return jsonData;
+                    // 🔑 Serialize to string
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(result);
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception and return empty result
-                return new
+                var errorResult = new
                 {
                     draw = draw,
-                    recordsFiltered = 0,
                     recordsTotal = 0,
+                    recordsFiltered = 0,
                     data = new List<object>(),
                     error = ex.Message
                 };
+                return Newtonsoft.Json.JsonConvert.SerializeObject(errorResult);
             }
         }
         [WebMethod]
@@ -635,20 +626,19 @@ namespace PMS.Modules.Dashboards
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-
-
+                    // Get all patient IDs associated with this registration
                     var patientIds = _dbContext.Out_Patients
-    .Where(op => op.Reg_PatId == regID)
-    .Select(op => op.Out_Patient_ID)
-    .Concat(_dbContext.In_Patients
-        .Where(ip => ip.Patient_ID == regID)
-        .Select(ip => ip.In_Patient_ID))
-    .Concat(_dbContext.Emergency_Patients
-        .Where(ep => ep.Patient_ID == regID)
-        .Select(ep => ep.Emergency_ID))
-    .ToList();
+                        .Where(op => op.Reg_PatId == regID)
+                        .Select(op => op.Out_Patient_ID)
+                        .Concat(_dbContext.In_Patients
+                            .Where(ip => ip.Patient_ID == regID)
+                            .Select(ip => ip.In_Patient_ID))
+                        .Concat(_dbContext.Emergency_Patients
+                            .Where(ep => ep.Patient_ID == regID)
+                            .Select(ep => ep.Emergency_ID))
+                        .ToList();
 
-                    // Step 2: Get all medicine records matching any of these IDs
+                    // Query medicines
                     var query = (from med in _dbContext.In_Patient_Medicines
                                  where patientIds.Contains((int)med.Patient_ID)
                                  select new
@@ -662,16 +652,18 @@ namespace PMS.Modules.Dashboards
                                      PrescriptionDate = med.Medicine_Date,
                                      Instructions = med.Other_Instruction
                                  });
-                    // Get total count of patients with this regID
+
+                    // Total count
                     var Total_pat = query.Count();
-                    // Apply search filter if searchValue is provided
+
+                    // Apply search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
                         bool isDateSearch = DateTime.TryParse(searchValue, out searchDate);
 
                         query = query.Where(x =>
-                             (x.MedicineName != null && x.MedicineName.Contains(searchValue)) ||
+                            (x.MedicineName != null && x.MedicineName.Contains(searchValue)) ||
                             (x.Dosage != null && x.Dosage.Contains(searchValue)) ||
                             (x.Form != null && x.Form.Contains(searchValue)) ||
                             (isDateSearch && x.PrescriptionDate == searchDate.Date)
@@ -680,34 +672,42 @@ namespace PMS.Modules.Dashboards
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    // Sorting
                     if (!string.IsNullOrEmpty(sortColumn))
                     {
                         switch (sortColumn)
                         {
                             case "MedicineName":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.MedicineName) : query.OrderByDescending(x => x.MedicineName);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.MedicineName)
+                                    : query.OrderByDescending(x => x.MedicineName);
                                 break;
                             case "PrescriptionDate":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.PrescriptionDate) : query.OrderByDescending(x => x.PrescriptionDate);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.PrescriptionDate ?? DateTime.MinValue)
+                                    : query.OrderByDescending(x => x.PrescriptionDate ?? DateTime.MinValue);
                                 break;
                             case "Dosage":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Dosage) : query.OrderByDescending(x => x.Dosage);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Dosage)
+                                    : query.OrderByDescending(x => x.Dosage);
                                 break;
                             case "Form":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Form) : query.OrderByDescending(x => x.Form);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Form)
+                                    : query.OrderByDescending(x => x.Form);
                                 break;
                             default:
-                                query = query.OrderByDescending(x => x.PrescriptionDate);
+                                query = query.OrderByDescending(x => x.PrescriptionDate ?? DateTime.MinValue);
                                 break;
                         }
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.PrescriptionDate);
+                        query = query.OrderByDescending(x => x.PrescriptionDate ?? DateTime.MinValue);
                     }
 
-                    // Apply paging and format dates
+                    // Apply paging and format dates as ISO strings
                     var data = query.Skip(start).Take(length).AsEnumerable()
                         .Select(x => new
                         {
@@ -717,35 +717,37 @@ namespace PMS.Modules.Dashboards
                             Route = x.Route ?? "N/A",
                             Duration = x.Duration ?? "N/A",
                             Frequency = x.Frequency ?? "N/A",
-                            PrescriptionDate = x.PrescriptionDate,
+                            PrescriptionDate = x.PrescriptionDate?.ToString("yyyy-MM-ddTHH:mm:ss"),
                             Instructions = x.Instructions ?? "N/A"
                         }).ToList();
 
-                    // Return the proper DataTables structure
-                    var jsonData = new
+                    // Final result
+                    var result = new
                     {
                         draw = draw,
-                        recordsFiltered = FilteredCount,
                         recordsTotal = Total_pat,
+                        recordsFiltered = FilteredCount,
                         data = data
                     };
 
-                    return jsonData;
+                    // 🔑 Serialize to string so frontend can parse it
+                    return JsonConvert.SerializeObject(result);
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception and return empty result
-                return new
+                var errorResult = new
                 {
                     draw = draw,
-                    recordsFiltered = 0,
                     recordsTotal = 0,
+                    recordsFiltered = 0,
                     data = new List<object>(),
                     error = ex.Message
                 };
+                return JsonConvert.SerializeObject(errorResult);
             }
         }
+
         [WebMethod]
         public static object InvestigationViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
@@ -753,40 +755,40 @@ namespace PMS.Modules.Dashboards
             {
                 using (var db = new DataBaseDataContext())
                 {
+                    // Get all patient IDs
                     var patientIds = db.Out_Patients
-    .Where(op => op.Reg_PatId == regID)
-    .Select(op => op.Out_Patient_ID)
-    .Concat(db.In_Patients
-        .Where(ip => ip.Patient_ID == regID)
-        .Select(ip => ip.In_Patient_ID))
-    .Concat(db.Emergency_Patients
-        .Where(ep => ep.Patient_ID == regID)
-        .Select(ep => ep.Emergency_ID))
-    .ToList();
+                        .Where(op => op.Reg_PatId == regID)
+                        .Select(op => op.Out_Patient_ID)
+                        .Concat(db.In_Patients
+                            .Where(ip => ip.Patient_ID == regID)
+                            .Select(ip => ip.In_Patient_ID))
+                        .Concat(db.Emergency_Patients
+                            .Where(ep => ep.Patient_ID == regID)
+                            .Select(ep => ep.Emergency_ID))
+                        .ToList();
+
+                    // Query investigation tests (Lab Dept: "001")
                     var query = (from lbtM in db.Laboratory_Tests
-                                 join lbtD in db.Lab_Test_Details
-                                 on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+                                 join lbtD in db.Lab_Test_Details on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                  join lab in db.Lab_Tests on lbtD.Test_ID equals lab.Test_ID
-                                 where (patientIds.Contains(lbtD.Patient_ID) ||
-                                                    lbtD.Patient_ID == regID)
-                                 && lbtD.Dept_ID == "001"
+                                 where (patientIds.Contains(lbtD.Patient_ID) || lbtD.Patient_ID == regID)
+                                       && lbtD.Dept_ID == "001"
                                  select new
                                  {
                                      Lab_Test_Detail_ID = lbtD.Lab_Test_Detail_ID,
-                                     lbtD.Date,
-                                     lbtD.Remark,
-                                     Test_Name = (from t in db.Lab_Tests
-                                                  where t.Test_ID == lbtD.Test_ID
-                                                  select t.Test_Name).FirstOrDefault(),
-
-                                     lbtD.Special_Tests,
-                                     lbtD.Area_Of_Interest,
+                                     Date = lbtD.Date,
+                                     Remark = lbtD.Remark,
+                                     Test_Name = db.Lab_Tests
+                                         .Where(t => t.Test_ID == lbtD.Test_ID)
+                                         .Select(t => t.Test_Name)
+                                         .FirstOrDefault(),
+                                     Special_Tests = lbtD.Special_Tests,
+                                     Area_Of_Interest = lbtD.Area_Of_Interest
                                  });
 
-                    // Get total count of records
                     var Total_pat = query.Count();
 
-                    // Apply search filter if searchValue is provided
+                    // Search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
@@ -794,7 +796,7 @@ namespace PMS.Modules.Dashboards
 
                         query = query.Where(x =>
                             (x.Test_Name != null && x.Test_Name.Contains(searchValue)) ||
-                             (x.Remark != null && x.Remark.Contains(searchValue)) ||
+                            (x.Remark != null && x.Remark.Contains(searchValue)) ||
                             (x.Special_Tests != null && x.Special_Tests.Contains(searchValue)) ||
                             (x.Area_Of_Interest != null && x.Area_Of_Interest.Contains(searchValue)) ||
                             (isDateSearch && x.Date == searchDate.Date)
@@ -803,71 +805,77 @@ namespace PMS.Modules.Dashboards
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    // Sorting
                     if (!string.IsNullOrEmpty(sortColumn))
                     {
                         switch (sortColumn)
                         {
                             case "Test_Name":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Test_Name) : query.OrderByDescending(x => x.Test_Name);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Test_Name)
+                                    : query.OrderByDescending(x => x.Test_Name);
                                 break;
                             case "Date":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Date) : query.OrderByDescending(x => x.Date);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Date ?? DateTime.MinValue)
+                                    : query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
                                 break;
-
                             case "Special_Tests":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Special_Tests) : query.OrderByDescending(x => x.Special_Tests);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Special_Tests)
+                                    : query.OrderByDescending(x => x.Special_Tests);
                                 break;
                             case "Area_Of_Interest":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Area_Of_Interest) : query.OrderByDescending(x => x.Area_Of_Interest);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Area_Of_Interest)
+                                    : query.OrderByDescending(x => x.Area_Of_Interest);
                                 break;
                             default:
-                                query = query.OrderByDescending(x => x.Date);
+                                query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
                                 break;
                         }
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.Date);
+                        query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
                     }
 
-                    // Apply paging and format data
+                    // Format data
                     var data = query.Skip(start).Take(length).AsEnumerable()
                         .Select(x => new
                         {
                             Lab_Test_Detail_ID = x.Lab_Test_Detail_ID,
-                            Date = x.Date,
+                            Date = x.Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
                             Remark = x.Remark ?? "N/A",
                             Test_Name = x.Test_Name ?? "N/A",
                             Special_Tests = x.Special_Tests ?? "N/A",
                             Area_Of_Interest = x.Area_Of_Interest ?? "N/A"
                         }).ToList();
 
-                    // Return the proper DataTables structure
-                    var jsonData = new
+                    var result = new
                     {
                         draw = draw,
-                        recordsFiltered = FilteredCount,
                         recordsTotal = Total_pat,
+                        recordsFiltered = FilteredCount,
                         data = data
                     };
 
-                    return jsonData;
+                    return JsonConvert.SerializeObject(result);
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception and return empty result
-                return new
+                return JsonConvert.SerializeObject(new
                 {
                     draw = draw,
-                    recordsFiltered = 0,
                     recordsTotal = 0,
+                    recordsFiltered = 0,
                     data = new List<object>(),
                     error = ex.Message
-                };
+                });
             }
         }
+
         [WebMethod]
         public static object DiagnosticsViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
@@ -875,45 +883,44 @@ namespace PMS.Modules.Dashboards
             {
                 using (var db = new DataBaseDataContext())
                 {
+                    // Get all patient IDs
                     var patientIds = db.Out_Patients
-    .Where(op => op.Reg_PatId == regID)
-    .Select(op => op.Out_Patient_ID)
-    .Concat(db.In_Patients
-        .Where(ip => ip.Patient_ID == regID)
-        .Select(ip => ip.In_Patient_ID))
-    .Concat(db.Emergency_Patients
-        .Where(ep => ep.Patient_ID == regID)
-        .Select(ep => ep.Emergency_ID))
-    .ToList();
+                        .Where(op => op.Reg_PatId == regID)
+                        .Select(op => op.Out_Patient_ID)
+                        .Concat(db.In_Patients
+                            .Where(ip => ip.Patient_ID == regID)
+                            .Select(ip => ip.In_Patient_ID))
+                        .Concat(db.Emergency_Patients
+                            .Where(ep => ep.Patient_ID == regID)
+                            .Select(ep => ep.Emergency_ID))
+                        .ToList();
+
+                    // Query diagnostic tests (Non-Lab Dept)
                     var query = (from lbtM in db.Laboratory_Tests
-                                 join lbtD in db.Lab_Test_Details
-                                 on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+                                 join lbtD in db.Lab_Test_Details on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                  join lab in db.Lab_Tests on lbtD.Test_ID equals lab.Test_ID
-                                 where (patientIds.Contains(lbtD.Patient_ID) ||
-                                                     lbtD.Patient_ID == regID)
-                                  && lbtD.Dept_ID != "001"
+                                 where (patientIds.Contains(lbtD.Patient_ID) || lbtD.Patient_ID == regID)
+                                       && lbtD.Dept_ID != "001"
                                  select new
                                  {
                                      Lab_Test_Detail_ID = lbtD.Lab_Test_Detail_ID,
-                                     Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray"
-                                              ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID)
-                                              : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
-
-
-                                     lbtD.Date,
-                                     lbtD.Remark,
+                                     Date = lbtD.Date,
+                                     Remark = lbtD.Remark,
                                      Department = db.GetDataValueName("Main Test Departments", lbtD.Dept_ID),
-                                     Test_Name = (from t in db.Lab_Tests
-                                                  where t.Test_ID == lbtD.Test_ID
-                                                  select t.Test_Name).FirstOrDefault(),
-                                     lbtD.Special_Tests,
-                                     lbtD.Area_Of_Interest,
+                                     Test_Name = db.Lab_Tests
+                                         .Where(t => t.Test_ID == lbtD.Test_ID)
+                                         .Select(t => t.Test_Name)
+                                         .FirstOrDefault(),
+                                     Special_Tests = lbtD.Special_Tests,
+                                     Area_Of_Interest = lbtD.Area_Of_Interest,
+                                     Rotation = (db.GetDataValueName("Main Test Departments", lbtD.Dept_ID) == "X-Ray")
+                                         ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID)
+                                         : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID)
                                  });
 
-                    // Get total count of records
                     var Total_pat = query.Count();
 
-                    // Apply search filter if searchValue is provided
+                    // Search
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         DateTime searchDate;
@@ -923,7 +930,7 @@ namespace PMS.Modules.Dashboards
                             (x.Test_Name != null && x.Test_Name.Contains(searchValue)) ||
                             (x.Department != null && x.Department.Contains(searchValue)) ||
                             (x.Rotation != null && x.Rotation.Contains(searchValue)) ||
-                             (x.Remark != null && x.Remark.Contains(searchValue)) ||
+                            (x.Remark != null && x.Remark.Contains(searchValue)) ||
                             (x.Special_Tests != null && x.Special_Tests.Contains(searchValue)) ||
                             (x.Area_Of_Interest != null && x.Area_Of_Interest.Contains(searchValue)) ||
                             (isDateSearch && x.Date == searchDate.Date)
@@ -932,70 +939,69 @@ namespace PMS.Modules.Dashboards
 
                     var FilteredCount = query.Count();
 
-                    // Apply sorting
+                    // Sorting
                     if (!string.IsNullOrEmpty(sortColumn))
                     {
                         switch (sortColumn)
                         {
-
                             case "Date":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Date) : query.OrderByDescending(x => x.Date);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Date ?? DateTime.MinValue)
+                                    : query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
                                 break;
-
                             case "Department":
-                                query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Department) : query.OrderByDescending(x => x.Department);
+                                query = sortColumnDirection == "asc"
+                                    ? query.OrderBy(x => x.Department)
+                                    : query.OrderByDescending(x => x.Department);
                                 break;
-
                             default:
-                                query = query.OrderByDescending(x => x.Date);
+                                query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
                                 break;
                         }
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.Date);
+                        query = query.OrderByDescending(x => x.Date ?? DateTime.MinValue);
                     }
 
-                    // Apply paging and format data
+                    // Format data
                     var data = query.Skip(start).Take(length).AsEnumerable()
                         .Select(x => new
                         {
                             Lab_Test_Detail_ID = x.Lab_Test_Detail_ID,
-                            Date = x.Date,
+                            Date = x.Date?.ToString("yyyy-MM-ddTHH:mm:ss"),
                             Remark = x.Remark ?? "N/A",
                             Test_Name = x.Test_Name ?? "N/A",
                             Special_Tests = x.Special_Tests ?? "N/A",
                             Area_Of_Interest = x.Area_Of_Interest ?? "N/A",
                             Department = x.Department ?? "N/A",
-                            Rotation = x.Rotation ?? "N/A",
+                            Rotation = x.Rotation ?? "N/A"
                         }).ToList();
 
-                    // Return the proper DataTables structure
-                    var jsonData = new
+                    var result = new
                     {
                         draw = draw,
-                        recordsFiltered = FilteredCount,
                         recordsTotal = Total_pat,
+                        recordsFiltered = FilteredCount,
                         data = data
                     };
 
-                    return jsonData;
+                    return JsonConvert.SerializeObject(result);
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception and return empty result
-                return new
+                return JsonConvert.SerializeObject(new
                 {
                     draw = draw,
-                    recordsFiltered = 0,
                     recordsTotal = 0,
+                    recordsFiltered = 0,
                     data = new List<object>(),
                     error = ex.Message
-                };
+                });
             }
         }
-        [WebMethod]
+            [WebMethod]
         public static object PatientServicesViewList(int regID, int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
             try

@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Appointment.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
-    
+    <script src="../../wwwroot/Tibbit_theme/CustomJs/Appointment.js"></script>
     
     <script type="text/javascript">
         $(document).ready(function () {
@@ -70,20 +70,37 @@
             $('#chk_status').select2();
             $('#ddlsubdepartment').select2();
             //
-            $('#btnSave').on('click', function () {
-                debugger;
-                verifydoctoravail(function (result) {
-                    debugger;
+            // Flag to prevent double-click or dual-button duplicate save
+            let isSaving = false;
 
-                    if (result === 'OnDay') {
-                        save = $('#btnSave').val();
-                        SaveAllRecord();
-                    } else if (result === 'OffDay') {
-                        return false;
+            function safeSaveAttempt() {
+                if (isSaving) {
+                    console.warn("Save already in progress. Ignoring duplicate trigger.");
+                    return;
+                }
+
+                isSaving = true;
+                $('#btnSave, #btnSaveMessage').prop('disabled', true).addClass('disabled');
+
+                verifydoctoravail(function (result) {
+                    try {
+                        if (result === 'OnDay') {
+                            save = $('#btnSave').val();
+                            SaveAllRecord();
+                        }
+                    } finally {
+                        // Re-enable buttons after a short delay
+                        setTimeout(() => {
+                            isSaving = false;
+                            $('#btnSave, #btnSaveMessage').prop('disabled', false).removeClass('disabled');
+                        }, 1000);
                     }
                 });
+            }
 
-            });
+            // Attach both buttons to the same safe handler
+            $('#btnSave').off('click').on('click', safeSaveAttempt);
+            $('#btnSaveMessage').off('click').on('click', safeSaveAttempt);
             debugger;
             $("#txtSearch").keypress(function (event) {
 
@@ -115,19 +132,7 @@
                 LoadPage();
             });
 
-            $('#btnSaveMessage').on('click', function () {
-                verifydoctoravail(function (result) {
-                    debugger;
-
-                    if (result === 'OnDay') {
-                        save = $('#btnSave').val();
-                        SaveAllRecord();
-                    } else if (result === 'OffDay') {
-                        return false;
-                    }
-                });
-
-            });
+       
 
 
             debugger;
@@ -934,17 +939,17 @@
                     dataType: "json",
                     success: function (response) {
                         Swal.fire({
-    icon: 'success',
-    title: 'Success!',
-    text: 'Appointment cancelled successfully',
-    showConfirmButton: false,
-    timer: 2500,
-    customClass: {
-        popup: 'swal-big-popup',
-        title: 'swal-big-title',
-        htmlContainer: 'swal-big-text'
-    }
-});
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Appointment cancelled successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
                         
 
