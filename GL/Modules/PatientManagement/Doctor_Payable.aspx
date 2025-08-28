@@ -61,7 +61,6 @@
                             startDate: $("#StartDate").val(), 
                             endDate: $("#EndDate").val(),    
                             packageType: Packagetype
-                           // packageName: $("#packageName").val() 
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -100,7 +99,7 @@
                     }
 
                 ],
-                "order": [[0, 'asc']], // Default order by Bill_No
+                "order": [[0, 'asc']],
                 "initComplete": function (settings, json) {
                     var lengthContainer = document.querySelector('#example_length');
                     var lengthDropdown = document.querySelector('#example_length select');
@@ -142,7 +141,7 @@
                     var data = JSON.parse(response.d);
                     console.log(data);
                     var tableBody = $("#example1 tbody");
-                    tableBody.empty(); // Clear old data
+                    tableBody.empty(); 
                     var expenseTotal = 0;
                     var netTotal = 0;
                     var totalBill = 0;
@@ -192,9 +191,6 @@
                         $("#txtTotalAmount").val(totalBill.toFixed(2));
                         $("#HosShare").val(HosShare.toFixed(2));
                         $("#DocShare").val(DocShare.toFixed(2));
-                        //$("#hdnDocId").val(item.Doctor_Id);
-                        //$("#hdnBillid").val(item.Bill_ID);
-                        //$("#hdnPatient_Id").val(item.Patient_ID);
                     } else {
                         tableBody.append('<tr><td colspan="10" class="text-center">No data available</td></tr>');
                     }
@@ -207,7 +203,6 @@
 
 
         function FillPackageType() {
-            //var options = ''
             PageMethods.GetPackageType(function (data) {
                 var options = '<option value="All" >Please Select</option>';
                 $.each(JSON.parse(data), function (key, value) {
@@ -216,50 +211,7 @@
                 $('#ddlPackageType').html(options);
             });
         }
-        //function SaveShare() {
-        //    debugger;
-        //    var PatientID = $('#hdnPatient_Id').val();
-        //    var Doctor_ID = $('#hdnDocId').val();
-        //    var Bill_Id = $('#hdnBillid').val();
-        //    var Total_Bill_Amount = $('#txtTotalAmount').val();
-        //    var Total_Expense = $('#txtexpense').val();
-        //    var Aftre_Expense_Amount = $('#txtNet').val();
-        //    var DoctorShare = $('#DocShare').val();
-        //    var HospitalShare = $('#HosShare').val();
-        //    var AssignAmount = $('#txtAssignAmount').val();
-
-        //    var data = JSON.stringify({
-        //        "PatientID": PatientID,
-        //        "Bill_Id": Bill_Id,
-        //        "Total_Bill_Amount": Total_Bill_Amount,
-        //        "Total_Expense": Total_Expense,
-        //        "Aftre_Expense_Amount": Aftre_Expense_Amount,
-        //        "DoctorShare": DoctorShare,
-        //        "HospitalShare": HospitalShare,
-        //        "AssignAmount": AssignAmount,
-
-        //    });
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "Doctor_Payable.aspx/SaveShare",
-        //        data: data,
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        success: function (data) {
-        //            debugger;
-        //            var Reg_Patient_ID = data.d;
-
-        //            alert('Your Record Save and Load Successfully');
-        //            $('#PatientModel').modal('hide');
-
-
-        //        },
-        //        error: function (response) {
-        //            alert("Error");
-        //        }
-        //    });
-        //}
-
+        
         function SaveShare() {
             debugger;
             var PatientID = $('#hdnPatient_Id').val();
@@ -274,7 +226,7 @@
 
             var data = JSON.stringify({
                 "PatientID": PatientID,
-                "Doctor_ID": Doctor_ID,                   // ✅ was missing before
+                "Doctor_ID": Doctor_ID,                   
                 "Bill_Id": Bill_Id,
                 "Total_Bill_Amount": Total_Bill_Amount,
                 "Total_Expense": Total_Expense,
@@ -292,12 +244,11 @@
                 dataType: "json",
                 success: function (response) {
                     debugger;
-                    var result = response.d;  // string returned from WebMethod
+                    var result = response.d;  
 
                     if (result.startsWith("success")) {
                         alert('Your record has been saved successfully');
                         $('#PatientModel').modal('hide');
-                        // here you can call a reload function if needed
                     } else {
                         alert('Error while saving: ' + result);
                     }
@@ -328,7 +279,6 @@
             <input type="text" id="EndDate" class="form-control"/>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-8">
-            <%--<input type="button" id="btnSearch" value="Search" class="form-control" onclick="SearchDate()"/>--%>
             <button type="button" id="btnSearch" class="btn btn-primry form-control" onclick="SearchDate()">Search</button>
         </div>
 

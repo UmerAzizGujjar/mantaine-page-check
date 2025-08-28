@@ -58,7 +58,6 @@ namespace PMS.Modules.PatientManagement
                     cmd.Parameters.Add(new System.Data.SqlClient.SqlParameter("@StartDate", string.IsNullOrEmpty(startDate) ? (object)DBNull.Value : DateTime.Parse(startDate)));
                     cmd.Parameters.Add(new System.Data.SqlClient.SqlParameter("@EndDate", string.IsNullOrEmpty(endDate) ? (object)DBNull.Value : DateTime.Parse(endDate)));
                     cmd.Parameters.Add(new System.Data.SqlClient.SqlParameter("@PackageType", string.IsNullOrEmpty(packageType) ? (object)DBNull.Value : packageType));
-                   // cmd.Parameters.Add(new System.Data.SqlClient.SqlParameter("@PackageName", string.IsNullOrEmpty(packageName) ? (object)DBNull.Value : packageName));
 
                     var BillList = new List<BillInfo>();
 
@@ -117,7 +116,6 @@ namespace PMS.Modules.PatientManagement
                         }
                     }
 
-                    // Pagination
                     var paginatedList = BillList.Skip(start).Take(length).ToList();
 
                     return new
@@ -176,7 +174,6 @@ namespace PMS.Modules.PatientManagement
                 string packageType = billInfo.Package_Type;
                 int packageName =Convert.ToInt32(billInfo.Package_Name);
 
-                // Result placeholder
                 object result = null;
 
                 if (packageType == "02") // Department Package
@@ -285,7 +282,6 @@ namespace PMS.Modules.PatientManagement
                 doc.Created_By = AppConfig.UserID;
                 doc.Created_Time = DateTime.Now;
 
-                // Save
                 db.Doctor_Payableds.InsertOnSubmit(doc);
                 db.SubmitChanges();
                 decimal DocShar = Convert.ToDecimal(DoctorShare);
