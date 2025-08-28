@@ -108,7 +108,7 @@
             $('#ctl00_lblMessage').hide();
 
         });
-       (function () {
+      <%-- (function () {
             var devtoolsOpen = false;
 
             // Function to check DevTools
@@ -149,16 +149,16 @@
                 return false;
             }
 
-        };
+        };--%>
 
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('select').select2({
-                placeholder: "Select...",
-                allowClear: true,
-                width: '100%'
-            });
+            //$('select').select2({
+            //    placeholder: "Select...",
+            //    allowClear: true,
+            //    width: '100%'
+            //});
 
             const allowedExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.png', '.jpg', '.jpeg'];
 

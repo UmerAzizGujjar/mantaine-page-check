@@ -182,9 +182,9 @@
                 });
             }
 
-            Appendtestintable();
-            fetchPatientDepOPD();
-            createChartOPD();
+            //Appendtestintable();
+            //fetchPatientDepOPD();
+            //createChartOPD();
         }
         function swipe() {
 
