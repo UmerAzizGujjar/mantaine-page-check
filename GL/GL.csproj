@@ -21622,7 +21622,7 @@
     <Content Include="DataBase.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>DataBase1.designer.cs</LastGenOutput>
+      <LastGenOutput>DataBase2.designer.cs</LastGenOutput>
     </Content>
     <Content Include="upload\FileUploadHandler.ashx" />
     <Content Include="upload\ImageUpload.ashx" />
