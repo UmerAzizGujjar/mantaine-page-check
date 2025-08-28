@@ -192,8 +192,8 @@
             if ($select.is(':visible') && $select.closest(':visible').length > 0) {
                 $select.select2({
                     placeholder: "Select...",
-                    allowClear: true,
-                    width: '100%'
+                    allowClear: true
+                    
                 });
             }
         }
