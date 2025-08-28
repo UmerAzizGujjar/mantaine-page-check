@@ -924,6 +924,34 @@ namespace PMS
                 {
                     newBill.Package_Type = data.PackageType;
                     newBill.Package_Name = data.PackageName;
+                    if (data.PackageType == "01")
+                    {
+                        var shareType = (from Dp in db.DoctorPackages
+                                         where Dp.Doc_Packages_ID == Convert.ToInt32(data.PackageName)
+                                         select Dp.Share_type).FirstOrDefault();
+
+                        newBill.Share_Type = shareType; 
+                    }
+                    else if (data.PackageType == "02")
+                    {
+                        var shareType = (from Dp in db.DepartmentPackages
+                                         where Dp.Dep_Packages_ID == Convert.ToInt32(data.PackageName)
+                                         select Dp.Share_type).FirstOrDefault();
+
+                        newBill.Share_Type = shareType;
+                    }
+                    else if (data.PackageType == "03")
+                    {
+                        var shareType = (from Dp in db.PanelPackages
+                                         where Dp.Pan_Packages_ID == Convert.ToInt32(data.PackageName)
+                                         select Dp.Share_type).FirstOrDefault();
+
+                        newBill.Share_Type = shareType;
+                    }
+                    else
+                    {
+                        newBill.Share_Type = null;
+                    }
                 }
 
 
@@ -1610,7 +1638,6 @@ namespace PMS
             //end
             return newBill.Bill_ID.ToString();
         }
-
         public class Billings
         {
             public int Bill_ID { get; set; }

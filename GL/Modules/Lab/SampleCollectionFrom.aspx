@@ -718,11 +718,12 @@
 
             }
         }
-        function PrintBarcode() {
+
+        debugger;
+        function Print() {
             debugger;
             var sampleID = $("#hdSample_ID").val();
-            window.open('ReportViewer.aspx?ReportName=LabBarcode&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
-
+            window.open('ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
         }
 
         function loadRangeType() {
@@ -738,6 +739,8 @@
 
             });
         }
+
+       
 
         function NewEntry() {
             window.location.href = "SampleCollectionFrom.aspx";
@@ -831,7 +834,6 @@
                                     });
 
                                     debugger;
-
                                     window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
                                 }
                                 else {
@@ -1063,8 +1065,8 @@
     <input type="hidden" id="hdSample_ID" />
     <input type="hidden" id="hdPatientID" />
     <input type="hidden" id="hdBillID" />
-    <label id="lblEmp_Name" style="margin-left: 20px; display: none">Employee Name*</label>
-    <select id="Emp_Name" style="height: 33px; margin-top: 11px; display: none">
+    <label id="lblEmp_Name" style="margin-left: 20px;display:none">Employee Name*</label>
+    <select id="Emp_Name" style="height: 33px; margin-top: 11px; display:none">
         <option></option>
     </select>
     <div class="panel panel-default">
@@ -1109,6 +1111,9 @@
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnPrintBarcode" class="btn btn-primry" type="button" value="Barcode" onclick="PrintBarcode()" />
                 </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4" style="display:none">
+                        <input id="btnPrint" class="btn btn-primry" type="button" value="Print" onclick="Print()"/>
+                            </div>
             </div>
         </div>
     </div>
