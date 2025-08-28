@@ -83,11 +83,11 @@
                     console.log("User Allowed Menus (Lab Section):", allowedMenus);
 
                     var shortcutToMenuMap = {
-                        "shortcut-Sample-Collection":   "mnuSampleCollection",
-                        "shortcut-Acknowledgment":      "mnuLabAcknowledgment",
+                        "shortcut-Sample-Collection":   "mnuAddNewSampleCollection",
+                        "shortcut-Acknowledgment":      "mnushAddLabTest",
                         "shortcut-Lab-Report":          "mnuLabReportPreview",
-                        "shortcut-Review-Approval":     "mnuTestReviewApproval",
-                        "shortcut-Approved-Tests":      "mnuApprovedTestsView"
+                        "shortcut-Review-Approval":     "mnushTestApproval",
+                        "shortcut-Approved-Tests":      "mnushTestApproval"
                     };
 
                     Object.keys(shortcutToMenuMap).forEach(function (shortcutId) {
