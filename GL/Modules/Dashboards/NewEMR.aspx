@@ -358,18 +358,13 @@
 
         function LoadOPDTable() {
             var ID = $("#hdfReg_ID").val();
-
-            // Destroy existing table if it exists
             if ($.fn.DataTable.isDataTable('#tblOPD')) {
                 $('#tblOPD').DataTable().destroy();
             }
 
-            $("#tblOPD").DataTable({
+            let tableOptions = {
                 "processing": true,
                 "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": {
                     "url": "NewEMR.aspx/OPDViewList",
@@ -388,139 +383,141 @@
                         });
                     },
                     "dataSrc": function (json) {
-                        console.log("Server response:", json); // Debug log
+                        console.log("Server Full Response:", json);
 
-                        if (json.d) {
-                            // Ensure all required properties exist
-                            var result = {
-                                draw: json.d.draw || 0,
-                                recordsTotal: json.d.recordsTotal || 0,
-                                recordsFiltered: json.d.recordsFiltered || 0,
-                                data: json.d.data || []
-                            };
-
-                            // Handle null values in the response
-                            result.data = result.data.map(function (item) {
-                                return {
+                        if (json && json.d) {
+                            try {
+                                const data = JSON.parse(json.d);
+                                console.log("Parsed Data:", data);
+                                data.data = data.data.map(item => ({
                                     VisitNo: item.VisitNo || '',
-                                    VisitDate: item.VisitDate || '',
+                                    VisitDate: item.VisitDate || null,
                                     Department: item.Department || 'N/A',
                                     PatientType: item.PatientType || 'N/A',
                                     CheckedBy: item.CheckedBy || 'N/A',
                                     Remarks: item.Remarks || '',
-                                    DischargeDate: item.DischargeDate || '',
+                                    DischargeDate: item.DischargeDate || null,
                                     Status: item.Status || 'Active'
-                                };
-                            });
+                                }));
 
-                            // Set the values for DataTables
-                            this.recordsTotal = result.recordsTotal;
-                            this.recordsFiltered = result.recordsFiltered;
-
-                            return result.data;
-                        } else if (json.error) {
-                            console.error("Server error:", json.error);
+                                return data.data;
+                            } catch (e) {
+                                console.error("JSON Parse Error:", e);
+                                return [];
+                            }
+                        } else {
+                            console.error("Invalid response format", json);
                             return [];
                         }
-                        return [];
                     },
                     "error": function (xhr, status, error) {
                         console.error("AJAX Error:", status, error);
                         console.error("Response:", xhr.responseText);
+                        Swal.fire('Error', 'Failed to load data.', 'error');
                     }
                 },
                 "columns": [
-                    {
-                        "data": "VisitNo",
-                        "name": "VisitNo",
-                        "width": "8%",
-                        "orderable": true
-                    },
+                    { "data": "VisitNo", "width": "8%", "orderable": true },
                     {
                         "data": "VisitDate",
-                        "name": "VisitDate",
-                        "render": function (data) {
-                            if (!data) return '';
-                            // Handle different date formats
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data; 
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
-                        "width": "10%",
-                        "orderable": true
+                        "width": "10%", "orderable": true
                     },
-                    {
-                        "data": "Department",
-                        "width": "15%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "PatientType",
-                        "width": "12%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "CheckedBy",
-                        "width": "12%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
+                    { "data": "Department", "width": "15%", "orderable": true },
+                    { "data": "PatientType", "width": "12%", "orderable": true },
+                    { "data": "CheckedBy", "width": "12%", "orderable": true },
                     {
                         "data": "Status",
-                        "width": "10%",
-                        "orderable": true,
-                        "defaultContent": "Active"
+                        "render": function (data) {
+                            return data || 'Active';
+                        },
+                        "width": "10%", "orderable": true
                     },
                     {
                         "data": "DischargeDate",
-                        "name": "DischargeDate",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
-                        "width": "10%",
-                        "orderable": true
+                        "width": "10%", "orderable": true
                     },
                     {
                         "data": "Remarks",
-                        "width": "15%",
-                        "orderable": false,
-                        "defaultContent": ""
+                        "render": function (data) {
+                            return data || '';
+                        },
+                        "width": "15%", "orderable": false
                     },
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + row.VisitNo + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            return print;
+                            return `
+                        <a class="printListBtn" 
+                           style="border-radius: 4px; margin-left: 4px; color: white; padding: 5px 8px; background-color: #007bff;" 
+                           href="#" 
+                           onclick="Print(${row.VisitNo}); return false;">
+                           <i class="fa fa-print"></i>
+                        </a>`;
                         },
-                        "width": "15%",
-                        "orderable": false
+                        "width": "15%", "orderable": false
                     }
                 ],
+                "dom": 'Bfrtip',
+                "buttons": ['copy', 'excel', 'pdf'],
+                "lengthChange": true,
                 "initComplete": function (settings, json) {
-                    var lengthContainer = document.querySelector('#tblOPD_length');
-                    var lengthDropdown = document.querySelector('#tblOPD_length select');
-                    var label = document.querySelector('#tblOPD_length label');
+                    const xhr = settings.jqXHR;
 
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
+                    if (xhr && xhr.responseJSON && xhr.responseJSON.d) {
+                        let parsedData;
+                        try {
+                            parsedData = typeof xhr.responseJSON.d === "string"
+                                ? JSON.parse(xhr.responseJSON.d)
+                                : xhr.responseJSON.d;
 
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
-                    } else {
-                        console.log("Length dropdown, label, or container not found");
+                            const total = parsedData.recordsFiltered || 0;
+                            const shouldHideControls = total <= 9;
+
+                            console.log("Records Filtered:", total, "Hide Controls:", shouldHideControls);
+
+                            const $container = $('#tblOPD').closest('.dataTables_wrapper');
+
+                            if (shouldHideControls) {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').hide();
+                            } else {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').show();
+                            }
+                            if (!shouldHideControls) {
+                                const $lengthLabel = $('#tblOPD_length label');
+                                const $lengthSelect = $('#tblOPD_length select');
+
+                                if ($lengthSelect.length && $lengthLabel.length && !$lengthLabel.data('customized')) {
+                                    $lengthLabel.empty()
+                                        .append('<span>Show entries </span>')
+                                        .append($lengthSelect)
+                                        .data('customized', true);
+
+                                    $lengthSelect.css('width', '60px');
+                                    $lengthLabel.css({
+                                        'display': 'inline-flex',
+                                        'alignItems': 'center',
+                                        'marginTop': '17px'
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Error in initComplete:", e);
+                        }
                     }
                 }
-            });
+            };
+
+            $("#tblOPD").DataTable(tableOptions);
         }
         function LoadIPDTable() {
             var ID = $("#hdfReg_ID").val();
@@ -530,13 +527,13 @@
                 $('#tblIPD').DataTable().destroy();
             }
 
-            $("#tblIPD").DataTable({
+            let tableOptions = {
                 "processing": true,
                 "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
                 "filter": true,
+                "dom": 'Bfrtip',
+                "buttons": ['copy', 'excel', 'pdf'],
+                "lengthChange": true,
                 "ajax": {
                     "url": "NewEMR.aspx/IPDViewList",
                     "type": "POST",
@@ -554,47 +551,39 @@
                         });
                     },
                     "dataSrc": function (json) {
-                        console.log("IPD Server response:", json); // Debug log
+                        console.log("IPD Server response:", json);
 
-                        if (json.d) {
-                            // Ensure all required properties exist
-                            var result = {
-                                draw: json.d.draw || 0,
-                                recordsTotal: json.d.recordsTotal || 0,
-                                recordsFiltered: json.d.recordsFiltered || 0,
-                                data: json.d.data || []
-                            };
+                        if (json && json.d) {
+                            try {
+                                const data = JSON.parse(json.d);
+                                console.log("Parsed IPD Data:", data);
 
-                            // Handle null values in the response
-                            result.data = result.data.map(function (item) {
-                                return {
+                                data.data = data.data.map(item => ({
                                     IPD_ID: item.IPD_ID || '',
-                                    AdmissionDate: item.AdmissionDate || '',
+                                    AdmissionDate: item.AdmissionDate || null,
                                     Department: item.Department || 'N/A',
                                     WardName: item.WardName || 'N/A',
                                     RoomNo: item.RoomNo || 'N/A',
                                     BedNo: item.BedNo || 'N/A',
                                     AttendingDoctor: item.AttendingDoctor || 'N/A',
                                     ProvisionalDiagnosis: item.ProvisionalDiagnosis || '',
-                                    ExpectedDischargeDate: item.ExpectedDischargeDate || '',
-                                    DischargeDate: item.DischargeDate || '',
+                                    ExpectedDischargeDate: item.ExpectedDischargeDate || null,
+                                    DischargeDate: item.DischargeDate || null,
                                     AdmissionType: item.AdmissionType || 'Regular',
                                     Status: item.Status || 'Admitted',
                                     TotalAmount: item.TotalAmount || '0',
                                     ReferringDoctor: item.ReferringDoctor || ''
-                                };
-                            });
+                                }));
 
-                            // Set the values for DataTables
-                            this.recordsTotal = result.recordsTotal;
-                            this.recordsFiltered = result.recordsFiltered;
-
-                            return result.data;
-                        } else if (json.error) {
-                            console.error("IPD Server error:", json.error);
+                                return data.data;
+                            } catch (e) {
+                                console.error("IPD JSON Parse Error:", e);
+                                return [];
+                            }
+                        } else {
+                            console.error("Invalid IPD response", json);
                             return [];
                         }
-                        return [];
                     },
                     "error": function (xhr, status, error) {
                         console.error("IPD AJAX Error:", status, error);
@@ -602,163 +591,119 @@
                     }
                 },
                 "columns": [
-                    {
-                        "data": "IPD_ID",
-                        "name": "IPD_ID",
-                        "title": "IPD ID",
-                        "width": "6%",
-                        "orderable": true
-                    },
+                    { "data": "IPD_ID", "width": "6%", "orderable": true },
                     {
                         "data": "AdmissionDate",
-                        "name": "AdmissionDate",
-                        "title": "Admission Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
-                        "width": "10%",
-                        "orderable": true
+                        "width": "10%", "orderable": true
                     },
-                    {
-                        "data": "Department",
-                        "name": "Department",
-                        "title": "Department",
-                        "width": "12%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "WardName",
-                        "name": "WardName",
-                        "title": "Ward",
-                        "width": "10%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "BedNo",
-                        "name": "BedNo",
-                        "title": "Bed",
-                        "width": "5%",
-                        "orderable": false,
-                        "defaultContent": "N/A"
-                    },
-
-                    {
-                        "data": "RoomNo",
-                        "name": "RoomNo",
-                        "title": "Room",
-                        "width": "6%",
-                        "orderable": false,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "AttendingDoctor",
-                        "name": "AttendingDoctor",
-                        "title": "Doctor",
-                        "width": "12%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-
+                    { "data": "Department", "width": "12%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "WardName", "width": "10%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "BedNo", "width": "5%", "orderable": false, "defaultContent": "N/A" },
+                    { "data": "RoomNo", "width": "6%", "orderable": false, "defaultContent": "N/A" },
+                    { "data": "AttendingDoctor", "width": "12%", "orderable": true, "defaultContent": "N/A" },
                     {
                         "data": "Status",
-                        "name": "Status",
-                        "title": "Status",
-                        "width": "8%",
-                        "orderable": true,
-                        "defaultContent": "Admitted",
                         "render": function (data, type, row) {
                             var statusClass = '';
                             switch (data) {
-                                case 'Admitted':
-                                    statusClass = 'label-success';
-                                    break;
-                                case 'Discharged':
-                                    statusClass = 'label-primary';
-                                    break;
-                                case 'Deceased':
-                                    statusClass = 'label-danger';
-                                    break;
-                                default:
-                                    statusClass = 'label-default';
+                                case 'Admitted': statusClass = 'label-success'; break;
+                                case 'Discharged': statusClass = 'label-primary'; break;
+                                case 'Deceased': statusClass = 'label-danger'; break;
+                                default: statusClass = 'label-default';
                             }
-                            return '<span class="label ' + statusClass + '">' + data + '</span>';
-                        }
+                            return '<span class="label ' + statusClass + '">' + (data || 'Admitted') + '</span>';
+                        },
+                        "width": "8%", "orderable": true
                     },
                     {
                         "data": "ExpectedDischargeDate",
-                        "name": "ExpectedDischargeDate",
-                        "title": "Expected Discharge",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
-                        "width": "10%",
-                        "orderable": false
+                        "width": "10%", "orderable": false
                     },
                     {
                         "data": "DischargeDate",
-                        "name": "DischargeDate",
-                        "title": "Discharge Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
-                        "width": "10%",
-                        "orderable": false
+                        "width": "10%", "orderable": false
                     },
                     {
                         "data": null,
-                        "title": "Actions",
                         "render": function (data, type, row) {
-                            var actions = '';
-
-                            // Print button
-                            actions += '<a class="btn btn-xs btn-primary" style="margin-right: 2px;" href="#" onclick="PrintIPD(' + row.IPD_ID + ')" title="Print">' +
-                                '<i class="fa fa-print"></i></a>';
-
-
-                            // Bill button
-                            actions += '<a class="btn btn-xs btn-success" href="#" onclick="ViewBill(' + row.IPD_ID + ')" title="View Bill">' +
-                                '<i class="fa fa-money"></i></a>';
-
-                            return actions;
+                            return `
+                        <a class="btn btn-xs btn-primary" style="margin-right:2px" href="#" onclick="PrintIPD(${row.IPD_ID});return false;" title="Print">
+                            <i class="fa fa-print"></i>
+                        </a>
+                        <a class="btn btn-xs btn-success" href="#" onclick="ViewBill(${row.IPD_ID});return false;" title="View Bill">
+                            <i class="fa fa-money"></i>
+                        </a>`;
                         },
-                        "width": "13%",
-                        "orderable": false
+                        "width": "13%", "orderable": false
                     }
                 ],
-                "order": [[0, "desc"]], // Default sort by admission date descending
+                "order": [[0, "desc"]],
                 "pageLength": 25,
                 "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
-
                 "initComplete": function (settings, json) {
-                    var lengthContainer = document.querySelector('#tblIPD_length');
-                    var lengthDropdown = document.querySelector('#tblIPD_length select');
-                    var label = document.querySelector('#tblIPD_length label');
+                    const xhr = settings.jqXHR;
+                    if (xhr && xhr.responseJSON && xhr.responseJSON.d) {
+                        let parsedData;
+                        try {
+                            parsedData = typeof xhr.responseJSON.d === "string"
+                                ? JSON.parse(xhr.responseJSON.d)
+                                : xhr.responseJSON.d;
 
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
+                            const total = parsedData.recordsFiltered || 0;
+                            const shouldHideControls = total <= 9;
 
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
+                            console.log("IPD Records Filtered:", total, "Hide Controls:", shouldHideControls);
+
+                            const $container = $('#tblIPD').closest('.dataTables_wrapper');
+
+                            if (shouldHideControls) {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').hide();
+                            } else {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').show();
+                            }
+
+                            // Customize length dropdown only if controls are shown
+                            if (!shouldHideControls) {
+                                const $label = $('#tblIPD_length label');
+                                const $select = $('#tblIPD_length select');
+
+                                if ($select.length && $label.length && !$label.data('customized')) {
+                                    $label.empty()
+                                        .append('<span>Show entries </span>')
+                                        .append($select)
+                                        .data('customized', true);
+
+                                    $select.css('width', '60px');
+                                    $label.css({
+                                        'display': 'inline-flex',
+                                        'alignItems': 'center',
+                                        'marginTop': '17px'
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Error in IPD initComplete:", e);
+                        }
                     }
-
-                    console.log("IPD DataTable initialized successfully");
                 }
-            });
+            };
+
+            $("#tblIPD").DataTable(tableOptions);
         }
         function LoadEMERGENCYTable() {
             var ID = $("#hdfReg_ID").val();
@@ -768,13 +713,13 @@
                 $('#tblEMERGENCY').DataTable().destroy();
             }
 
-            $("#tblEMERGENCY").DataTable({
+            let tableOptions = {
                 "processing": true,
                 "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
                 "filter": true,
+                "dom": 'Bfrtip',
+                "buttons": ['copy', 'excel', 'pdf'],
+                "lengthChange": true,
                 "ajax": {
                     "url": "NewEMR.aspx/EMERGENCYViewList",
                     "type": "POST",
@@ -792,40 +737,32 @@
                         });
                     },
                     "dataSrc": function (json) {
-                        console.log("EMERGENCY Server response:", json); // Debug log
+                        console.log("EMERGENCY Server response:", json);
 
-                        if (json.d) {
-                            // Ensure all required properties exist
-                            var result = {
-                                draw: json.d.draw || 0,
-                                recordsTotal: json.d.recordsTotal || 0,
-                                recordsFiltered: json.d.recordsFiltered || 0,
-                                data: json.d.data || []
-                            };
+                        if (json && json.d) {
+                            try {
+                                const data = JSON.parse(json.d);
+                                console.log("Parsed EMERGENCY Data:", data);
 
-                            // Handle null values in the response
-                            result.data = result.data.map(function (item) {
-                                return {
+                                data.data = data.data.map(item => ({
                                     EMERGENCY_ID: item.EMERGENCY_ID || '',
-                                    AdmissionDate: item.AdmissionDate || '',
+                                    AdmissionDate: item.AdmissionDate || null,
                                     WardName: item.WardName || 'N/A',
                                     BedNo: item.BedNo || 'N/A',
                                     AttendingDoctor: item.AttendingDoctor || 'N/A',
-                                    DischargeDate: item.DischargeDate || '',
-                                    Status: item.Status || 'Admitted',
-                                };
-                            });
+                                    DischargeDate: item.DischargeDate || null,
+                                    Status: item.Status || 'Admitted'
+                                }));
 
-                            // Set the values for DataTables
-                            this.recordsTotal = result.recordsTotal;
-                            this.recordsFiltered = result.recordsFiltered;
-
-                            return result.data;
-                        } else if (json.error) {
-                            console.error("EMERGENCY Server error:", json.error);
+                                return data.data;
+                            } catch (e) {
+                                console.error("EMERGENCY JSON Parse Error:", e);
+                                return [];
+                            }
+                        } else {
+                            console.error("Invalid EMERGENCY response", json);
                             return [];
                         }
-                        return [];
                     },
                     "error": function (xhr, status, error) {
                         console.error("EMERGENCY AJAX Error:", status, error);
@@ -833,148 +770,120 @@
                     }
                 },
                 "columns": [
-                    {
-                        "data": "EMERGENCY_ID",
-                        "name": "EMERGENCY_ID",
-                        "title": "EMERGENCY ID",
-                        "width": "6%",
-                        "orderable": true
-                    },
+                    { "data": "EMERGENCY_ID", "width": "6%", "orderable": true },
                     {
                         "data": "AdmissionDate",
-                        "name": "AdmissionDate",
-                        "title": "Admission Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
-                        "width": "10%",
-                        "orderable": true
+                        "width": "10%", "orderable": true
                     },
-                    {
-                        "data": "WardName",
-                        "name": "WardName",
-                        "title": "Ward",
-                        "width": "10%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "BedNo",
-                        "name": "BedNo",
-                        "title": "Bed",
-                        "width": "5%",
-                        "orderable": false,
-                        "defaultContent": "N/A"
-                    },
-
-                    {
-                        "data": "AttendingDoctor",
-                        "name": "AttendingDoctor",
-                        "title": "Doctor",
-                        "width": "12%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-
+                    { "data": "WardName", "width": "10%", "orderable": true, "defaultContent": "N/A" },
+                    { "data": "BedNo", "width": "5%", "orderable": false, "defaultContent": "N/A" },
+                    { "data": "AttendingDoctor", "width": "12%", "orderable": true, "defaultContent": "N/A" },
                     {
                         "data": "Status",
-                        "name": "Status",
-                        "title": "Status",
-                        "width": "8%",
-                        "orderable": true,
-                        "defaultContent": "Admitted",
                         "render": function (data, type, row) {
                             var statusClass = '';
                             switch (data) {
-                                case 'Admitted':
-                                    statusClass = 'label-success';
-                                    break;
-                                case 'Discharged':
-                                    statusClass = 'label-primary';
-                                    break;
-                                case 'Deceased':
-                                    statusClass = 'label-danger';
-                                    break;
-                                default:
-                                    statusClass = 'label-default';
+                                case 'Admitted': statusClass = 'label-success'; break;
+                                case 'Discharged': statusClass = 'label-primary'; break;
+                                case 'Deceased': statusClass = 'label-danger'; break;
+                                default: statusClass = 'label-default';
                             }
-                            return '<span class="label ' + statusClass + '">' + data + '</span>';
-                        }
+                            return '<span class="label ' + statusClass + '">' + (data || 'Admitted') + '</span>';
+                        },
+                        "width": "8%", "orderable": true
                     },
                     {
                         "data": "DischargeDate",
-                        "name": "DischargeDate",
-                        "title": "Discharge Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
-                        "width": "10%",
-                        "orderable": false
+                        "width": "10%", "orderable": false
                     },
                     {
                         "data": null,
-                        "title": "Actions",
                         "render": function (data, type, row) {
-                            var actions = '';
-
-                            // Print button
-                            actions += '<a class="btn btn-xs btn-primary" style="margin-right: 2px;" href="#" onclick="PrintEMERGENCY(' + row.EMERGENCY_ID + ')" title="Print">' +
-                                '<i class="fa fa-print"></i></a>';
-
-
-
-                            return actions;
+                            return `
+                        <a class="btn btn-xs btn-primary" style="margin-right:2px" href="#" onclick="PrintEMERGENCY(${row.EMERGENCY_ID});return false;" title="Print">
+                            <i class="fa fa-print"></i>
+                        </a>`;
                         },
-                        "width": "13%",
-                        "orderable": false
+                        "width": "13%", "orderable": false
                     }
                 ],
-                "order": [[0, "desc"]], // Default sort by admission date descending
+                "order": [[0, "desc"]],
                 "pageLength": 25,
                 "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
-
                 "initComplete": function (settings, json) {
-                    var lengthContainer = document.querySelector('#tblEMERGENCY_length');
-                    var lengthDropdown = document.querySelector('#tblEMERGENCY_length select');
-                    var label = document.querySelector('#tblEMERGENCY_length label');
+                    const xhr = settings.jqXHR;
+                    if (xhr && xhr.responseJSON && xhr.responseJSON.d) {
+                        let parsedData;
+                        try {
+                            parsedData = typeof xhr.responseJSON.d === "string"
+                                ? JSON.parse(xhr.responseJSON.d)
+                                : xhr.responseJSON.d;
 
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
+                            const total = parsedData.recordsFiltered || 0;
+                            const shouldHideControls = total <= 9;
 
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
+                            console.log("EMERGENCY Records Filtered:", total, "Hide Controls:", shouldHideControls);
+
+                            const $container = $('#tblEMERGENCY').closest('.dataTables_wrapper');
+
+                            if (shouldHideControls) {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').hide();
+                            } else {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').show();
+                            }
+
+                            // Customize length dropdown only if shown
+                            if (!shouldHideControls) {
+                                const $label = $('#tblEMERGENCY_length label');
+                                const $select = $('#tblEMERGENCY_length select');
+
+                                if ($select.length && $label.length && !$label.data('customized')) {
+                                    $label.empty()
+                                        .append('<span>Show entries </span>')
+                                        .append($select)
+                                        .data('customized', true);
+
+                                    $select.css('width', '60px');
+                                    $label.css({
+                                        'display': 'inline-flex',
+                                        'alignItems': 'center',
+                                        'marginTop': '17px'
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Error in EMERGENCY initComplete:", e);
+                        }
                     }
-
-                    console.log("EMERGENCY DataTable initialized successfully");
                 }
-            });
+            };
+
+            $("#tblEMERGENCY").DataTable(tableOptions);
         }
         function LoadMedicineTable() {
             var ID = $("#hdfReg_ID").val();
 
-            // Destroy existing table if it exists
             if ($.fn.DataTable.isDataTable('#tblMedicene')) {
                 $('#tblMedicene').DataTable().destroy();
             }
 
-            $("#tblMedicene").DataTable({
+            let tableOptions = {
                 "processing": true,
                 "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
                 "filter": true,
+                "dom": 'Bfrtip',
+                "buttons": ['copy', 'excel', 'pdf'],
+                "lengthChange": true,
                 "ajax": {
                     "url": "NewEMR.aspx/MedicineViewList",
                     "type": "POST",
@@ -992,20 +901,13 @@
                         });
                     },
                     "dataSrc": function (json) {
-                        console.log("Medicine Server response:", json); // Debug log
+                        console.log("Medicine Response:", json);
+                        if (json && json.d) {
+                            try {
+                                const data = JSON.parse(json.d);
+                                console.log("Parsed Medicine Data:", data);
 
-                        if (json.d) {
-                            // Ensure all required properties exist
-                            var result = {
-                                draw: json.d.draw || 0,
-                                recordsTotal: json.d.recordsTotal || 0,
-                                recordsFiltered: json.d.recordsFiltered || 0,
-                                data: json.d.data || []
-                            };
-
-                            // Handle null values in the response
-                            result.data = result.data.map(function (item) {
-                                return {
+                                data.data = data.data.map(item => ({
                                     MedicineID: item.MedicineID || '',
                                     MedicineName: item.MedicineName || 'N/A',
                                     Dosage: item.Dosage || 'N/A',
@@ -1013,128 +915,117 @@
                                     Route: item.Route || 'N/A',
                                     Duration: item.Duration || 'N/A',
                                     Frequency: item.Frequency || 'N/A',
-                                    PrescriptionDate: item.PrescriptionDate || '',
+                                    PrescriptionDate: item.PrescriptionDate || null,
                                     Instructions: item.Instructions || 'N/A'
-                                };
-                            });
+                                }));
 
-                            // Set the values for DataTables
-                            this.recordsTotal = result.recordsTotal;
-                            this.recordsFiltered = result.recordsFiltered;
-
-                            return result.data;
-                        } else if (json.error) {
-                            console.error("Medicine Server error:", json.error);
-                            return [];
+                                return data.data;
+                            } catch (e) {
+                                console.error("Medicine JSON Parse Error:", e);
+                                return [];
+                            }
                         }
                         return [];
                     },
                     "error": function (xhr, status, error) {
                         console.error("Medicine AJAX Error:", status, error);
-                        console.error("Response:", xhr.responseText);
                     }
                 },
                 "columns": [
                     {
                         "data": "MedicineName",
-                        "name": "MedicineName",
-                        "title": "Medicine Name",
                         "width": "15%",
                         "orderable": false
                     },
-
                     {
                         "data": "PrescriptionDate",
-                        "name": "PrescriptionDate",
-                        "title": "Prescription Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
                         "width": "12%",
                         "orderable": true
-                    }, {
+                    },
+                    {
                         "data": null,
-                        "name": "DosageForm",
-                        "title": "Dosage",
-                        "width": "12%",
-                        "orderable": false,
                         "render": function (data, type, row) {
                             return `${row.Dosage || 'N/A'} - ${row.Form || 'N/A'}`;
-                        }
-                    },
-                    {
-                        "data": "Route",
-                        "name": "Route",
-                        "title": "Route",
-                        "width": "8%",
+                        },
+                        "width": "12%",
                         "orderable": false
                     },
-                    {
-                        "data": "Duration",
-                        "name": "Duration",
-                        "title": "Duration",
-                        "width": "8%",
-                        "orderable": false
-                    },
-                    {
-                        "data": "Frequency",
-                        "name": "Frequency",
-                        "title": "Frequency",
-                        "width": "10%",
-                        "orderable": false
-                    },
-                    {
-                        "data": "Instructions",
-                        "name": "Instructions",
-                        "title": "Instructions",
-                        "width": "20%",
-                        "orderable": false
-                    }
+                    { "data": "Route", "width": "8%", "orderable": false },
+                    { "data": "Duration", "width": "8%", "orderable": false },
+                    { "data": "Frequency", "width": "10%", "orderable": false },
+                    { "data": "Instructions", "width": "20%", "orderable": false }
                 ],
-                "order": [[0, "desc"]], // Default sort by prescription date descending
+                "order": [[1, "desc"]],
                 "pageLength": 25,
                 "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
                 "initComplete": function (settings, json) {
-                    var lengthContainer = document.querySelector('#tblMedicene_length');
-                    var lengthDropdown = document.querySelector('#tblMedicene_length select');
-                    var label = document.querySelector('#tblMedicene_length label');
+                    const xhr = settings.jqXHR;
+                    if (xhr && xhr.responseJSON && xhr.responseJSON.d) {
+                        let parsedData;
+                        try {
+                            parsedData = typeof xhr.responseJSON.d === "string"
+                                ? JSON.parse(xhr.responseJSON.d)
+                                : xhr.responseJSON.d;
 
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
+                            const total = parsedData.recordsFiltered || 0;
+                            const shouldHideControls = total <= 9;
 
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
+                            console.log("Medicine Records:", total, "Hide Controls:", shouldHideControls);
+
+                            const $container = $('#tblMedicene').closest('.dataTables_wrapper');
+
+                            if (shouldHideControls) {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').hide();
+                            } else {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').show();
+                            }
+
+                            if (!shouldHideControls) {
+                                const $label = $('#tblMedicene_length label');
+                                const $select = $('#tblMedicene_length select');
+
+                                if ($select.length && $label.length && !$label.data('customized')) {
+                                    $label.empty()
+                                        .append('<span>Show entries </span>')
+                                        .append($select)
+                                        .data('customized', true);
+
+                                    $select.css('width', '60px');
+                                    $label.css({
+                                        'display': 'inline-flex',
+                                        'alignItems': 'center',
+                                        'marginTop': '17px'
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Error in Medicine initComplete:", e);
+                        }
                     }
-
-                    console.log("Medicene DataTable initialized successfully");
                 }
-            });
+            };
 
+            $("#tblMedicene").DataTable(tableOptions);
         }
         function LoadInvestigationTable() {
             var ID = $("#hdfReg_ID").val();
 
-            // Destroy existing table if it exists
             if ($.fn.DataTable.isDataTable('#tblInvestigation')) {
                 $('#tblInvestigation').DataTable().destroy();
             }
 
-            $("#tblInvestigation").DataTable({
+            let tableOptions = {
                 "processing": true,
                 "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf'],
                 "filter": true,
+                "dom": 'Bfrtip',
+                "buttons": ['copy', 'excel', 'pdf'],
+                "lengthChange": true,
                 "ajax": {
                     "url": "NewEMR.aspx/InvestigationViewList",
                     "type": "POST",
@@ -1152,142 +1043,117 @@
                         });
                     },
                     "dataSrc": function (json) {
-                        console.log("Investigation Server response:", json); // Debug log
+                        console.log("Investigation Response:", json);
+                        if (json && json.d) {
+                            try {
+                                const data = JSON.parse(json.d);
+                                console.log("Parsed Investigation Data:", data);
 
-                        if (json.d) {
-                            // Ensure all required properties exist
-                            var result = {
-                                draw: json.d.draw || 0,
-                                recordsTotal: json.d.recordsTotal || 0,
-                                recordsFiltered: json.d.recordsFiltered || 0,
-                                data: json.d.data || []
-                            };
-
-                            // Handle null values in the response
-                            result.data = result.data.map(function (item) {
-                                return {
+                                data.data = data.data.map(item => ({
                                     Lab_Test_Detail_ID: item.Lab_Test_Detail_ID || '',
-                                    Date: item.Date || '',
+                                    Date: item.Date || null,
                                     Test_Name: item.Test_Name || 'N/A',
                                     DoctorName: item.DoctorName || 'N/A',
                                     Special_Tests: item.Special_Tests || 'N/A',
                                     Area_Of_Interest: item.Area_Of_Interest || 'N/A',
                                     Remark: item.Remark || 'N/A'
-                                };
-                            });
+                                }));
 
-                            // Set the values for DataTables
-                            this.recordsTotal = result.recordsTotal;
-                            this.recordsFiltered = result.recordsFiltered;
-
-                            return result.data;
-                        } else if (json.error) {
-                            console.error("Investigation Server error:", json.error);
-                            return [];
+                                return data.data;
+                            } catch (e) {
+                                console.error("Investigation JSON Parse Error:", e);
+                                return [];
+                            }
                         }
                         return [];
                     },
                     "error": function (xhr, status, error) {
                         console.error("Investigation AJAX Error:", status, error);
-                        console.error("Response:", xhr.responseText);
                     }
                 },
                 "columns": [
-                    {
-                        "data": "Lab_Test_Detail_ID",
-                        "name": "Lab_Test_Detail_ID",
-                        "title": "Test ID",
-                        "width": "6%",
-                        "orderable": true
-                    },
-                    {
-                        "data": "Test_Name",
-                        "name": "Test_Name",
-                        "title": "Test Name",
-                        "width": "20%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-
+                    { "data": "Lab_Test_Detail_ID", "width": "6%", "orderable": true },
+                    { "data": "Test_Name", "width": "20%", "orderable": true },
                     {
                         "data": "Date",
-                        "name": "Date",
-                        "title": "Test Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
                         "width": "10%",
                         "orderable": true
                     },
-                    {
-                        "data": "Special_Tests",
-                        "name": "Special_Tests",
-                        "title": "Special Tests",
-                        "width": "15%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "Area_Of_Interest",
-                        "name": "Area_Of_Interest",
-                        "title": "Area of Interest",
-                        "width": "15%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "Remark",
-                        "name": "Remark",
-                        "title": "Remarks",
-                        "width": "15%",
-                        "orderable": false,
-                        "defaultContent": "N/A"
-                    }
+                    { "data": "Special_Tests", "width": "15%", "orderable": true },
+                    { "data": "Area_Of_Interest", "width": "15%", "orderable": true },
+                    { "data": "Remark", "width": "15%", "orderable": false }
                 ],
-                "order": [[0, "desc"]], // Default sort by test date descending
+                "order": [[2, "desc"]],
                 "pageLength": 25,
                 "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
-
                 "initComplete": function (settings, json) {
-                    var lengthContainer = document.querySelector('#tblInvestigation_length');
-                    var lengthDropdown = document.querySelector('#tblInvestigation_length select');
-                    var label = document.querySelector('#tblInvestigation_length label');
+                    const xhr = settings.jqXHR;
+                    if (xhr && xhr.responseJSON && xhr.responseJSON.d) {
+                        let parsedData;
+                        try {
+                            parsedData = typeof xhr.responseJSON.d === "string"
+                                ? JSON.parse(xhr.responseJSON.d)
+                                : xhr.responseJSON.d;
 
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
+                            const total = parsedData.recordsFiltered || 0;
+                            const shouldHideControls = total <= 9;
 
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
+                            console.log("Investigation Records:", total, "Hide Controls:", shouldHideControls);
+
+                            const $container = $('#tblInvestigation').closest('.dataTables_wrapper');
+
+                            if (shouldHideControls) {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').hide();
+                            } else {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').show();
+                            }
+
+                            if (!shouldHideControls) {
+                                const $label = $('#tblInvestigation_length label');
+                                const $select = $('#tblInvestigation_length select');
+
+                                if ($select.length && $label.length && !$label.data('customized')) {
+                                    $label.empty()
+                                        .append('<span>Show entries </span>')
+                                        .append($select)
+                                        .data('customized', true);
+
+                                    $select.css('width', '60px');
+                                    $label.css({
+                                        'display': 'inline-flex',
+                                        'alignItems': 'center',
+                                        'marginTop': '17px'
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Error in Investigation initComplete:", e);
+                        }
                     }
-
-                    console.log("Investigation DataTable initialized successfully");
                 }
-            });
+            };
+
+            $("#tblInvestigation").DataTable(tableOptions);
         }
         function LoadDiagnosticsTable() {
             var ID = $("#hdfReg_ID").val();
 
-            // Destroy existing table if it exists
             if ($.fn.DataTable.isDataTable('#tblDiagnostics')) {
                 $('#tblDiagnostics').DataTable().destroy();
             }
 
-            $("#tblDiagnostics").DataTable({
+            let tableOptions = {
                 "processing": true,
                 "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": ['copy', 'excel', 'pdf', 'print'],
                 "filter": true,
+                "dom": 'Bfrtip',
+                "buttons": ['copy', 'excel', 'pdf', 'print'],
+                "lengthChange": true,
                 "ajax": {
                     "url": "NewEMR.aspx/DiagnosticsViewList",
                     "type": "POST",
@@ -1305,21 +1171,15 @@
                         });
                     },
                     "dataSrc": function (json) {
-                        console.log("Diagnostics Server response:", json);
+                        console.log("Diagnostics Response:", json);
+                        if (json && json.d) {
+                            try {
+                                const data = JSON.parse(json.d);
+                                console.log("Parsed Diagnostics Data:", data);
 
-                        if (json.d) {
-                            var result = {
-                                draw: json.d.draw || 0,
-                                recordsTotal: json.d.recordsTotal || 0,
-                                recordsFiltered: json.d.recordsFiltered || 0,
-                                data: json.d.data || []
-                            };
-
-                            // Format data and handle null values
-                            result.data = result.data.map(function (item) {
-                                return {
+                                data.data = data.data.map(item => ({
                                     Lab_Test_Detail_ID: item.Lab_Test_Detail_ID || '',
-                                    Date: item.Date || '',
+                                    Date: item.Date || null,
                                     Test_Name: item.Test_Name || 'N/A',
                                     DoctorName: item.DoctorName || 'N/A',
                                     Special_Tests: item.Special_Tests || 'N/A',
@@ -1327,95 +1187,40 @@
                                     Department: item.Department || 'N/A',
                                     Rotation: item.Rotation || 'N/A',
                                     Remark: item.Remark || 'N/A'
-                                };
-                            });
+                                }));
 
-                            this.recordsTotal = result.recordsTotal;
-                            this.recordsFiltered = result.recordsFiltered;
-
-                            return result.data;
-                        } else if (json.error) {
-                            console.error("Diagnostics Server error:", json.error);
-                            return [];
+                                return data.data;
+                            } catch (e) {
+                                console.error("Diagnostics JSON Parse Error:", e);
+                                return [];
+                            }
                         }
                         return [];
                     },
                     "error": function (xhr, status, error) {
                         console.error("Diagnostics AJAX Error:", status, error);
-                        console.error("Response:", xhr.responseText);
                     }
                 },
                 "columns": [
-                    {
-                        "data": "Lab_Test_Detail_ID",
-                        "name": "Lab_Test_Detail_ID",
-                        "title": "Test ID",
-                        "width": "5%",
-                        "orderable": true
-                    },
-                    {
-                        "data": "Test_Name",
-                        "name": "Test_Name",
-                        "title": "Test Name",
-                        "width": "15%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "Department",
-                        "name": "Department",
-                        "title": "Department",
-                        "width": "12%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
+                    { "data": "Lab_Test_Detail_ID", "width": "5%", "orderable": true },
+                    { "data": "Test_Name", "width": "15%", "orderable": true },
+                    { "data": "Department", "width": "12%", "orderable": true },
                     {
                         "data": "Date",
-                        "name": "Date",
-                        "title": "Test Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = moment(data);
-                            return date.isValid() ? date.format('DD-MMM-YYYY') : data;
+                        "render": function (data, type) {
+                            if (!data || type !== 'display') return data;
+                            const m = moment(data);
+                            return m.isValid() ? m.format('DD-MMM-YYYY') : 'N/A';
                         },
                         "width": "8%",
                         "orderable": true
                     },
-
-                    {
-                        "data": "Special_Tests",
-                        "name": "Special_Tests",
-                        "title": "Special Tests",
-                        "width": "10%",
-                        "orderable": false,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "Area_Of_Interest",
-                        "name": "Area_Of_Interest",
-                        "title": "Area of Interest",
-                        "width": "10%",
-                        "orderable": false,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "Rotation",
-                        "name": "Rotation",
-                        "title": "Rotation/View",
-                        "width": "12%",
-                        "orderable": true,
-                        "defaultContent": "N/A"
-                    },
-                    {
-                        "data": "Remark",
-                        "name": "Remark",
-                        "title": "Remarks",
-                        "width": "10%",
-                        "orderable": false,
-                        "defaultContent": "N/A"
-                    }
+                    { "data": "Special_Tests", "width": "10%", "orderable": false },
+                    { "data": "Area_Of_Interest", "width": "10%", "orderable": false },
+                    { "data": "Rotation", "width": "12%", "orderable": true },
+                    { "data": "Remark", "width": "10%", "orderable": false }
                 ],
-                "order": [[0, "desc"]], // Default sort by test date descending
+                "order": [[3, "desc"]],
                 "pageLength": 25,
                 "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
                 "language": {
@@ -1423,28 +1228,53 @@
                     "zeroRecords": "No matching diagnostic tests found"
                 },
                 "initComplete": function (settings, json) {
-                    // Customize length menu display
-                    var lengthContainer = document.querySelector('#tblDiagnostics_length');
-                    var lengthDropdown = document.querySelector('#tblDiagnostics_length select');
-                    var label = document.querySelector('#tblDiagnostics_length label');
+                    const xhr = settings.jqXHR;
+                    if (xhr && xhr.responseJSON && xhr.responseJSON.d) {
+                        let parsedData;
+                        try {
+                            parsedData = typeof xhr.responseJSON.d === "string"
+                                ? JSON.parse(xhr.responseJSON.d)
+                                : xhr.responseJSON.d;
 
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
+                            const total = parsedData.recordsFiltered || 0;
+                            const shouldHideControls = total <= 9;
 
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
+                            console.log("Diagnostics Records:", total, "Hide Controls:", shouldHideControls);
+
+                            const $container = $('#tblDiagnostics').closest('.dataTables_wrapper');
+
+                            if (shouldHideControls) {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').hide();
+                            } else {
+                                $container.find('.dataTables_paginate, .dataTables_length, .dataTables_info, .dataTables_filter, .dt-buttons').show();
+                            }
+
+                            if (!shouldHideControls) {
+                                const $label = $('#tblDiagnostics_length label');
+                                const $select = $('#tblDiagnostics_length select');
+
+                                if ($select.length && $label.length && !$label.data('customized')) {
+                                    $label.empty()
+                                        .append('<span>Show entries </span>')
+                                        .append($select)
+                                        .data('customized', true);
+
+                                    $select.css('width', '60px');
+                                    $label.css({
+                                        'display': 'inline-flex',
+                                        'alignItems': 'center',
+                                        'marginTop': '17px'
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Error in Diagnostics initComplete:", e);
+                        }
                     }
-
-                    console.log("Diagnostics DataTable initialized successfully");
                 }
-            });
+            };
+
+            $("#tblDiagnostics").DataTable(tableOptions);
         }
         function LoadPatientServicesTable() {
             var ID = $("#hdfReg_ID").val();
