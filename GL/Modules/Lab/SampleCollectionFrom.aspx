@@ -40,6 +40,7 @@
              }
              else {
                  GetNextSampleNo();
+                 GetNextSampleSequence();
              }
              debugger;
              GetPendingList();
@@ -173,7 +174,7 @@
                         var PateintDep = "";
                         for (var i = 0; i < parse.length; i++) {
 
-                            rows += '<tr><td style="width:32px;"></td><td style="display:none;">' + parse[i].Item_ID + '</td><td style="display:none;">' + parse[i].Bill_Details_ID + '</td><td>' + parse[i].Item_Name + '</td><td>' + PateintDep + '</td><td>' + parse[i].Gener + '</td><td>' + parse[i].Qty + '</td><td><input type="checkbox" class="' + parse[i].Item_Name + '" value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '"style="margin-top:-20px; margin-left:12px;" onclick="checkBoxClicked(this)" /></td></tr>';
+                            rows += '<tr><td style="width:32px;"></td><td style="display:none;">' + parse[i].Item_ID + '</td><td style="display:none;">' + parse[i].Bill_Details_ID + '</td><td>' + parse[i].Item_Name + '</td><td>' + PateintDep + '</td><td>' + parse[i].Gener + '</td><td>' + parse[i].Qty + '</td><td><input type="checkbox" class="' + parse[i].Item_Name + '" value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '"style="margin-top:-20px;" onclick="checkBoxClicked(this)" /></td></tr>';
 
 
                         }
@@ -432,6 +433,29 @@
             });
         }
 
+        function GetNextSampleSequence() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "SampleCollectionFrom.aspx/GetSampleSequenceId",
+                data: '',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var maxno = response.d;
+                    var date = new Date().getFullYear().toString().substr(-2);
+                    SampleNoWithYear = (maxno + '-' + date);
+                    $("#txtSample_ID").val(SampleNoWithYear);
+                },
+                failure: function (response) {
+
+                    alert("error!");
+                }
+            });
+        }
+
+
         function checkBoxClicked(value) {
             debugger;
             var TempArray = [];
@@ -528,7 +552,7 @@
                             var rows = "";
                             for (var i = 0; i < parse.length; i++) {
                                 debugger;
-                                rows += '<tr><td style="width:32px;"></td><td style="display:none;">' + parse[i].Item_ID + '</td><td style="display:none;">' + parse[i].Bill_Details_ID + '</td><td>' + parse[i].Item_Name + '</td><td>' + PateintDep + '</td><td>' + parse[i].Gener + '</td><td>' + parse[i].Qty + '</td><td><input type="checkbox" class="' + parse[i].Item_Name + '" value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '"style="margin-top:-20px; margin-left:12px;" onclick="checkBoxClicked(this)"/></td></tr>';
+                                rows += '<tr><td style="width:32px;"></td><td style="display:none;">' + parse[i].Item_ID + '</td><td style="display:none;">' + parse[i].Bill_Details_ID + '</td><td>' + parse[i].Item_Name + '</td><td>' + PateintDep + '</td><td>' + parse[i].Gener + '</td><td>' + parse[i].Qty + '</td><td><input type="checkbox" class="' + parse[i].Item_Name + '" value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '"style="margin-top:-20px;" onclick="checkBoxClicked(this)"/></td></tr>';
                             }
                             $('#tblDetailModelTable tbody tr').remove();
                             $('#tblDetailModelTable tbody').append(rows);
@@ -694,11 +718,12 @@
 
             }
         }
-        function PrintBarcode() {
+
+        debugger;
+        function Print() {
             debugger;
             var sampleID = $("#hdSample_ID").val();
-            window.open('ReportViewer.aspx?ReportName=LabBarcode&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
-
+            window.open('ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
         }
 
         function loadRangeType() {
@@ -714,6 +739,8 @@
 
             });
         }
+
+       
 
         function NewEntry() {
             window.location.href = "SampleCollectionFrom.aspx";
@@ -807,7 +834,6 @@
                                     });
 
                                     debugger;
-
                                     window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
                                 }
                                 else {
@@ -861,6 +887,7 @@
                                     $('#CollectedSample tbody tr').remove();
                                     CheckedTest = [];
                                     GetNextSampleNo();
+                                    GetNextSampleSequence();
                                 }
                                 else {
                                     alert(response.d);
@@ -893,6 +920,14 @@
 
         function ListView() {
             window.open("TransactionView.aspx?Tag=SampleView");
+        }
+
+        function toggleAll(source) {
+            var checkboxes = $('#tblDetailModelTable tbody input[type="checkbox"]');
+            checkboxes.each(function () {
+                this.checked = source.checked; 
+                checkBoxClicked(this); 
+            });
         }
     </script>
 </asp:Content>
@@ -1002,9 +1037,14 @@
 
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-4">
+                <label>Sample ID</label>
+                <input type="text" id="txtSample_ID" readonly="readonly" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
                 <label for="SampleNo">Sample No:  </label>
                 <input type="text" id="txtSample_No" class="form-control" readonly="readonly" />
             </div>
+            
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <label id="sampleCode" style="display: inline-block;">Sample Code</label>
                 <input type="text" disabled="disabled" id="txtSampleCode" class="form-control" />
@@ -1025,8 +1065,8 @@
     <input type="hidden" id="hdSample_ID" />
     <input type="hidden" id="hdPatientID" />
     <input type="hidden" id="hdBillID" />
-    <label id="lblEmp_Name" style="margin-left: 20px; display: none">Employee Name*</label>
-    <select id="Emp_Name" style="height: 33px; margin-top: 11px; display: none">
+    <label id="lblEmp_Name" style="margin-left: 20px;display:none">Employee Name*</label>
+    <select id="Emp_Name" style="height: 33px; margin-top: 11px; display:none">
         <option></option>
     </select>
     <div class="panel panel-default">
@@ -1071,6 +1111,9 @@
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnPrintBarcode" class="btn btn-primry" type="button" value="Barcode" onclick="PrintBarcode()" />
                 </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4" style="display:none">
+                        <input id="btnPrint" class="btn btn-primry" type="button" value="Print" onclick="Print()"/>
+                            </div>
             </div>
         </div>
     </div>
@@ -1097,7 +1140,8 @@
                                     <th>Department</th>
                                     <th>Gener</th>
                                     <th>Quantity</th>
-                                    <th>CheckBox</th>
+                                    <th><input type="checkbox" id="chkAll"  onclick="toggleAll(this)" /></th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>

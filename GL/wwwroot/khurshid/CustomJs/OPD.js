@@ -255,22 +255,31 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 })
             ); loaddata();
 
-            $('#ddldoctor').html(
+            var $select = $('#ddldoctor');
+
+
+            $select.empty().append(
                 $('<option>', {
                     value: data.doctorId,
                     text: data.DoctorName
                 })
             );
-            $('#ddlDepartment').html(
-                $('<option>', {
-                    value: data.departmentid,
-                    text: data.department_Text
-                })
+
+
+            var $select = $('#ddldoctor');
+
+            $select.empty().append(
+                new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
             );
-            //$('#ddlDepartment').val(data.departmentid[0]).trigger('change');
-            //$('#ddlDepartment').attr('disabled', true);
-            //$('#ddldoctor').val(data.doctorId[0]).trigger('change');
-            //$('#ddldoctor').attr('disabled', true);
+
+            // Manually trigger select2:select with data
+            $select.trigger({
+                type: 'select2:select',
+                params: {
+                    data: { id: data.doctorId, text: data.DoctorName }
+                }
+            });
+
 
         },
         error: function (response) {

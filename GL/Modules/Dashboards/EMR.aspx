@@ -5,12 +5,13 @@
     <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
-    <%--<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>--%>
     <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
+
+
 
 
             loadtokenInputsByMrNo();

@@ -753,7 +753,7 @@
                                 if (max_Total_Dic_Amt_Xray != 0) {
                                 }
                                 else {
-                                    max_Total_Dic_Amt_Xray = data[0].Total_Disc_Amt; 
+                                    max_Total_Dic_Amt_Xray = data[0].Total_Disc_Amt;
                                 }
                             }
                             if (categ == "004") {
@@ -866,67 +866,67 @@
                 var CheckTest = $('#ddlTestList').val();
                 var patient_ID = $('#hdfPatient_ID').val();
                 var test_Name = $('#ddlTestList').find('option:selected').text();
-                 var matchingInputs = $('#tbltestModelTable input[name="hdnItemName"]').filter(function () {
+                var matchingInputs = $('#tbltestModelTable input[name="hdnItemName"]').filter(function () {
                     return $(this).val() === test_Name;
-                 });
+                });
                 var MatchingInputsDetailTable = $('#tblDetails input[name="hdnItemName"]').filter(function () {
                     return $(this).val() === test_Name;
                 });
 
-                if (matchingInputs.length > 0 || MatchingInputsDetailTable.length > 0 ) {
-                     alert('Found ' + matchingInputs.length + ' matching input(s) with value: ' + test_Name);
-                     return;
+                if (matchingInputs.length > 0 || MatchingInputsDetailTable.length > 0) {
+                    alert('Found ' + matchingInputs.length + ' matching input(s) with value: ' + test_Name);
+                    return;
                 } else {
-                     var patient_category_description = $('#lblPatientCategory').val();
-                     var inpatientCat = $('#lblPatientDiscountType').text();
-                     if (inpatientCat != "") {
-                         patient_category_description = inpatientCat;
-                     }
-                     if (patient_id_old != 0 || patient_id_old == null) {
-                         patient_ID = patient_id_old;
-                     }
-                     if (CheckTest != 0 || CheckTest != null) {
+                    var patient_category_description = $('#lblPatientCategory').val();
+                    var inpatientCat = $('#lblPatientDiscountType').text();
+                    if (inpatientCat != "") {
+                        patient_category_description = inpatientCat;
+                    }
+                    if (patient_id_old != 0 || patient_id_old == null) {
+                        patient_ID = patient_id_old;
+                    }
+                    if (CheckTest != 0 || CheckTest != null) {
 
-                         $.ajax({
-                             type: "post",
-                             url: "BillingProcess.aspx/GetTestRate",
-                             data: JSON.stringify({
-                                 "Patient_ID": patient_ID,
-                                 "Test_Name": test_Name,
-                                 "Patient_Category_Description": patient_category_description
-                             }),
-                             contentType: "application/json; charset=utf-8",
-                             dataType: "json",
-                             success: function (response) {
+                        $.ajax({
+                            type: "post",
+                            url: "BillingProcess.aspx/GetTestRate",
+                            data: JSON.stringify({
+                                "Patient_ID": patient_ID,
+                                "Test_Name": test_Name,
+                                "Patient_Category_Description": patient_category_description
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
 
-                                 if (response.d != 0) {
-                                     globalTestRate = response.d;
-                                 }
-                                 else {
-                                     globalTestRate = 0;
-                                 }
-                                 if (maindpt == "001") {
-                                     AddLabTest(maindpt);
-                                 }
-                                 else if (maindpt == "002") {
-                                     AddRadialogyTest(maindpt);
-                                 }
-                                 else if (maindpt == "003") {
-                                     AddRadialogyTest(maindpt);
-                                 }
-                                 else if (maindpt == "004") {
-                                     AddRadialogyTest(maindpt);
-                                 }
-                                 else {
-                                     AddLabTest(maindpt);
-                                 }
+                                if (response.d != 0) {
+                                    globalTestRate = response.d;
+                                }
+                                else {
+                                    globalTestRate = 0;
+                                }
+                                if (maindpt == "001") {
+                                    AddLabTest(maindpt);
+                                }
+                                else if (maindpt == "002") {
+                                    AddRadialogyTest(maindpt);
+                                }
+                                else if (maindpt == "003") {
+                                    AddRadialogyTest(maindpt);
+                                }
+                                else if (maindpt == "004") {
+                                    AddRadialogyTest(maindpt);
+                                }
+                                else {
+                                    AddLabTest(maindpt);
+                                }
 
-                             },
-                             failure: function (response) { }
-                         });
-                     }
+                            },
+                            failure: function (response) { }
+                        });
+                    }
                 }
-                
+
             }
             var category = "0";
             function LoadTestByDepartment() {
@@ -1083,9 +1083,8 @@
             }
             var IPDDiscount = "";
             debugger
-            function LoadBill(Bill_ID)
-            {
-                
+            function LoadBill(Bill_ID) {
+
                 PageMethods.LoadBillHeader(Bill_ID, function (resp) {
                     debugger
                     var data = JSON.parse(resp);
@@ -1130,11 +1129,10 @@
                     }, 1000)
                     setTimeout(function () {
                         $('#ddlReffered_By').val(data[0].Referred_By);
-                    },1000)
-                    
+                    }, 1000)
+
                     var Bill_ID = '<%= Request.QueryString["Bill_ID"]%>';
-                    if (Bill_ID != "")
-                    {
+                    if (Bill_ID != "") {
                         IPDDiscount = data[0].Patient_Discount_Type;
                         $('#lblPatientDiscountType').text(data[0].Patient_Discount_Type);
                     }
@@ -1143,9 +1141,9 @@
                     LoadDoctorShare(Bill_ID);
                     $('#ddlReffered_By').val(data[0].Referred_By).trigger('change');
                 },
-                function (error) {
-                    alert(error.get_message());
-                })
+                    function (error) {
+                        alert(error.get_message());
+                    })
             }
             debugger;
             function LoadBillDetails(Bill_ID) {
@@ -1158,7 +1156,7 @@
                     $.each(data, function (key, value) {
                         rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + key + '" name="Docshare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td></tr>'
                         debugger;
-                  
+
 
                         $('#tblDetails tbody').append(rows);
                         if (departmentpat == "Sehat Sahulat Card") {
@@ -1169,17 +1167,16 @@
                         }
                         updates();
                         $('input[name="DisAmount"]').attr('disabled', true);
-                       
+
                         rowIndex++;
                     });
                     $('#btnSave').val('Update');
                 },
-                function (error) {
-                    alert(error.get_message());
-                })
+                    function (error) {
+                        alert(error.get_message());
+                    })
             }
-            function getOptions()
-            {
+            function getOptions() {
             }
             function LoadDoctorShare(Bill_ID) {
                 PageMethods.LoadDocShare(Bill_ID, function (resp) {
@@ -1192,8 +1189,7 @@
                         $('#Doctor_Share_Table tbody').append(rows);
                         rowIndex++;
                     });
-                    for (var i = 0; i < data.length; i++)
-                    {
+                    for (var i = 0; i < data.length; i++) {
                         var doctorID = data[i].Emp_ID;
                         $('#ddlDoctorList' + i + '').val(doctorID);
                     }
@@ -1204,27 +1200,25 @@
                     calculateDoctorShare();
                     $('#btnSave').val('Update');
                 },
-                function (error) {
-                    alert(error.get_message());
-                })
+                    function (error) {
+                        alert(error.get_message());
+                    })
             }
             function LoadBillPackagesDetails(BillNo) {
                 PageMethods.LoadBillPackagesDetails(BillNo, function (resp) {
                 },
-                function (error) {
-                    alert(error.get_message());
-                })
+                    function (error) {
+                        alert(error.get_message());
+                    })
             }
             var ExcludedItem_List = [];
-            function validateSave()
-            {
+            function validateSave() {
                 var proceed = true;
                 var Totaldoctorshare = isNaN($('#txtTotalDoctorShare').val()) == true ? 0 : $('#txtTotalDoctorShare').val();
                 var Totaldoctordistribution = $('#txtDoctorTotalDistribution').val();
                 var policy = $('#ddlChargePolicy').val();
-               
-                if (policy == "0")
-                {
+
+                if (policy == "0") {
                     alert("Please Select Charge Policy");
                     proceed = false;
                 }
@@ -1239,7 +1233,7 @@
             var Consumed_Procedure = 0;
             var Consumed_Package = 0;
             debugger;
-           async function SaveRecord() {
+            async function SaveRecord() {
                 debugger;
                 if (validateSave()) {
                     var val = document.getElementById("hdnDuplicateCheck").value;
@@ -1275,7 +1269,7 @@
                         //}
 
                         //if (parseInt(Received_Amount) > 0 && parseInt(Balance_Amount) != 0) {
-                          
+
                         //    Swal.fire({
                         //        icon: 'error',
                         //        title: 'Error!',
@@ -1341,7 +1335,7 @@
                                     popup: 'swal-big-popup',
                                     title: 'swal-big-title',
                                     htmlContainer: 'swal-big-text'
-                                }                           
+                                }
                             })
                             if (!result.isConfirmed) {
                                 $("#btnSave").prop("disabled", false);
@@ -1430,7 +1424,7 @@
                             var Net_Amount = $(value).find('input[name="hdnNet_Amount"]').val();
 
                             Net_Amount = (Qty * Amount) - DisAmt;
-                            Details.push({ ParentTrans_ID: ParentTrans_ID, ParentTrans_Name: ParentTrans_Name, ParentTrans_Type: ParentTrans_Type, ItemID: ItemID, CategoryID: Category_ID, ItemName: ItemName, ItemType: ItemType, Amount: Amount, RecommendedByDoctor: RecommendedByDoctor, ExcludedFromPayment: ExcludedFromPayment, DisPer: DisPer, DisAmt: DisAmt, Net_Amount: Net_Amount, Qty: Qty, Remarks: Remarks,  MainDepartment: MainDepartment, Consumed_Lab: Consumed_Lab, Consumed_Ultra_Sound: Consumed_Ultra_Sound, Consumed_Xray: Consumed_Xray, Consumed_Scan: Consumed_Scan, Consumed_Blood: Consumed_Blood, Consumed_Item: Consumed_Item, Consumed_Procedure: Consumed_Procedure, Consumed_Package: Consumed_Package, DocShare: DocShare, HosShare: HosShare, Doctor_id: Doctor_id });
+                            Details.push({ ParentTrans_ID: ParentTrans_ID, ParentTrans_Name: ParentTrans_Name, ParentTrans_Type: ParentTrans_Type, ItemID: ItemID, CategoryID: Category_ID, ItemName: ItemName, ItemType: ItemType, Amount: Amount, RecommendedByDoctor: RecommendedByDoctor, ExcludedFromPayment: ExcludedFromPayment, DisPer: DisPer, DisAmt: DisAmt, Net_Amount: Net_Amount, Qty: Qty, Remarks: Remarks, MainDepartment: MainDepartment, Consumed_Lab: Consumed_Lab, Consumed_Ultra_Sound: Consumed_Ultra_Sound, Consumed_Xray: Consumed_Xray, Consumed_Scan: Consumed_Scan, Consumed_Blood: Consumed_Blood, Consumed_Item: Consumed_Item, Consumed_Procedure: Consumed_Procedure, Consumed_Package: Consumed_Package, DocShare: DocShare, HosShare: HosShare, Doctor_id: Doctor_id });
                         });
                         debugger;
                         if (isAmountZero == true) {
@@ -1446,7 +1440,7 @@
                             if (dataaaaaaaaaaaaaa == '') {
                                 PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
                                     debugger;
-                                
+
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success!',
@@ -1482,8 +1476,8 @@
                     }
                 }
             }
-            
-           
+
+
             function DeleteExcludedItems() {
                 for (var i = 0; i < ExcludedItem_List.length; i++) {
                     PageMethods.MarkTestAsExcludedFromPayment(ExcludedItem_List[i].ItemID, function () {
@@ -1552,7 +1546,7 @@
 
             }
             function CalculateDiscountPercentage() {
-                
+
                 AssignValue(txtDisPer, 0);
                 AssignValue(txtDisAmt, 0);
                 AssignValue(txtAmountReceived, 0);
@@ -1625,29 +1619,24 @@
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
 
-               
+
                 var category = $('#ddlMainTestDepartment').val();
-                $.each($('#tblDetails tbody tr'), function (key, value)
-                {
+                $.each($('#tblDetails tbody tr'), function (key, value) {
                     debugger;
-                   
-                    if (rowIndex == parseInt(key))
-                    {
-                        
-                       
+
+                    if (rowIndex == parseInt(key)) {
+
+
                         Qty = $(value).find('input[name="txtQty"]').val();
                         Amount = $($(value).find('td')[5]).text();
                         DisPer = $(value).find('input[name="DisPer"]').val();
                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
-                        DisAmt =(Qty * Amount) * DisPer / 100;
-                        if (localStorage.OnlyPercentage == 1)
-                        {
+                        DisAmt = (Qty * Amount) * DisPer / 100;
+                        if (localStorage.OnlyPercentage == 1) {
 
                         }
-                        else
-                        {
-                            if (localStorage.Disc_Zero == 1)
-                            {
+                        else {
+                            if (localStorage.Disc_Zero == 1) {
                                 DisAmt = parseFloat(Amount);
                             }
                             if (localStorage.IsZero_Amt == 1) {
@@ -1661,10 +1650,10 @@
                         $(value).find('input[name="DisAmount"]').val(DisAmt.toFixed(2));
                         var categ = $(value).find('input[name="hdnCategory_ID"]').val();
                         var MainDepart = $(value).find('input[name="Main_Department"]').val();
-                       
+
                         $(value).find('input[name="hdnDisAmount"]').val(DisAmt.toFixed(6));
 
-                        
+
                         NetAmount = (Qty * Amount) - DisAmt;
                         $($(value).find('td')[8]).text(NetAmount.toFixed(0));
                         var old = max_Total_Dic_Amt;
@@ -1672,26 +1661,21 @@
                         var type = $(value).find('input[name="hdnItemType"]').val();
                         var _Procedure = $(value).find('input[name="hdnProcedure"]').val();
                         var _Package = $(value).find('input[name="hdnParentTrans_Type"]').val();
-                        
-                        if (localStorage.OnlyPercentage == 1)
-                        {
-                           
-                            
+
+                        if (localStorage.OnlyPercentage == 1) {
+
+
 
                         }
-                        else
-                        {
-                           
-                            Special = 1;
-                           
-                            if ((type == "Item" || type == "Service") && _Package !="Package")
-                            {          //start
-                               
+                        else {
 
-                                if (_Procedure == "0" || _Procedure == "" || _Procedure == "null" || _Procedure == null)
-                                {                                                                     
-                                    if (localStorage.IsHospitalService == false)
-                                    {                                        
+                            Special = 1;
+
+                            if ((type == "Item" || type == "Service") && _Package != "Package") {          //start
+
+
+                                if (_Procedure == "0" || _Procedure == "" || _Procedure == "null" || _Procedure == null) {
+                                    if (localStorage.IsHospitalService == false) {
                                         $(value).find('input[name="DisAmount"]').val();
                                         $(value).find('input[name="hdnDisAmount"]').val();
                                         $(value).find('input[name="hdnDisPer"]').val();
@@ -1701,29 +1685,26 @@
                                         $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                         return false;
                                     }
-                                    else
-                                    {                                       
+                                    else {
                                         debugger;
                                         var item_Id = $(value).find('input[name="hdnItemID"]').val();
                                         if (item_Id == "883" || item_Id == "884" || item_Id == "75" || item_Id == "65" || item_Id == "4464") {
                                         }
-                                        else {                                          
+                                        else {
                                             Item += DisAmt;
                                             TotalDiscountAmount_ITem += DisAmt;
-                                            if (Item > max_Total_Dic_Amt_Item)
-                                            {                                             
+                                            if (Item > max_Total_Dic_Amt_Item) {
                                                 var sub1 = TotalDiscountAmount_ITem - DisAmt;
                                                 var sub2 = max_Total_Dic_Amt_Item - sub1;
-                                                if (isItemCompleted == true)
-                                                {                                                                                                       
+                                                if (isItemCompleted == true) {
                                                     $(value).find('input[name="DisAmount"]').val();
                                                     $(value).find('input[name="hdnDisAmount"]').val();
                                                     $(value).find('input[name="hdnDisPer"]').val();
                                                     $(value).find('input[name="DisPer"]').val();
-                                                        var Amount = $(value).find('td:eq(5)').text().trim();
+                                                    var Amount = $(value).find('td:eq(5)').text().trim();
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
-                                                        $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
-                                                        return false;                                                  
+                                                    $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
+                                                    return false;
                                                 }
                                                 debugger;
                                                 var amt = parseFloat(DisAmt);
@@ -1743,20 +1724,19 @@
                                             }
                                             else {
 
-                                                if (localStorage.IsZero_Amt == 1)
-                                                {                                                
+                                                if (localStorage.IsZero_Amt == 1) {
                                                     if (Item > max_Total_Dic_Amt_Item) {
                                                         var sub1 = TotalDiscountAmount_ITem - Amount;
                                                         var sub2 = max_Total_Dic_Amt_Item - sub1;
-                                                        if (isItemCompleted == true) {                                                         
+                                                        if (isItemCompleted == true) {
                                                             $(value).find('input[name="DisAmount"]').val();
                                                             $(value).find('input[name="hdnDisAmount"]').val();
                                                             $(value).find('input[name="hdnDisPer"]').val();
                                                             $(value).find('input[name="DisPer"]').val();
-                                                                var Amount = $(value).find('td:eq(5)').text().trim();
+                                                            var Amount = $(value).find('td:eq(5)').text().trim();
                                                             var Net_Amount = parseInt(Amount) - DisAmt;
-                                                                $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
-                                                                return false;                                                            
+                                                            $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
+                                                            return false;
                                                         }
                                                         var amt = parseFloat(DisAmt);
                                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
@@ -1776,29 +1756,28 @@
                                     }
                                 }
                                 else {
-                                  
+
                                     Special = 1;
-                                   
+
                                     Procedure += DisAmt;
                                     TotalDiscountAmount_Procedure += DisAmt;
-                                    if (Procedure > max_Total_Dic_Amt_Procedure)
-                                    {
+                                    if (Procedure > max_Total_Dic_Amt_Procedure) {
                                         debugger;
                                         var sub1 = TotalDiscountAmount_Procedure - DisAmt;
                                         var sub2 = max_Total_Dic_Amt_Procedure - sub1;
                                         if (isItemCompeted_Procedure == true) {
 
                                             debugger;
-                                           
+
                                             $(value).find('input[name="DisAmount"]').val();
                                             $(value).find('input[name="hdnDisAmount"]').val();
                                             $(value).find('input[name="hdnDisPer"]').val();
                                             $(value).find('input[name="DisPer"]').val();
-                                                var Amount = $(value).find('td:eq(5)').text().trim();
+                                            var Amount = $(value).find('td:eq(5)').text().trim();
                                             var Net_Amount = parseInt(Amount) - DisAmt;
-                                                $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
-                                                return false;
-                                            
+                                            $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
+                                            return false;
+
                                         }
                                         var amt = parseFloat(DisAmt);
                                         $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
@@ -1812,11 +1791,9 @@
                                         isItemCompeted_Procedure = true;
                                         TotalDiscountAmount_Procedure = TotalDiscountAmount_Procedure;
                                     }
-                                    else
-                                    {
+                                    else {
 
-                                        if (localStorage.IsZero_Procedure == 1)
-                                        {
+                                        if (localStorage.IsZero_Procedure == 1) {
                                             debugger;
                                             if (Procedure > TotalDiscountAmount_Procedure) {
                                                 debugger;
@@ -1824,16 +1801,16 @@
                                                 var sub2 = max_Total_Dic_Amt_Procedure - sub1;
                                                 if (isItemCompeted_Procedure == true) {
                                                     debugger;
-                                                  
-                                                        $(value).find('input[name="DisAmount"]').val();
-                                                        $(value).find('input[name="hdnDisAmount"]').val();
-                                                        $(value).find('input[name="hdnDisPer"]').val();
-                                                        $(value).find('input[name="DisPer"]').val();
-                                                        var Amount = $(value).find('td:eq(5)').text().trim();
+
+                                                    $(value).find('input[name="DisAmount"]').val();
+                                                    $(value).find('input[name="hdnDisAmount"]').val();
+                                                    $(value).find('input[name="hdnDisPer"]').val();
+                                                    $(value).find('input[name="DisPer"]').val();
+                                                    var Amount = $(value).find('td:eq(5)').text().trim();
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
-                                                        $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
-                                                        return false;
-                                                   
+                                                    $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
+                                                    return false;
+
                                                 }
                                                 var amt = parseFloat(DisAmt);
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
@@ -1921,12 +1898,10 @@
                                     }
                                 }
                             }
-                            else
-                            {  //start
-                                
+                            else {  //start
+
                                 Special = 1;
-                                if (categ == "001" || categ == "Lab Test" || MainDepart == "001")
-                                {
+                                if (categ == "001" || categ == "Lab Test" || MainDepart == "001") {
                                     debugger;
                                     Lab += DisAmt;
                                     TotalDiscountAmount += DisAmt;
@@ -1964,14 +1939,13 @@
                                     }
                                     else {
                                         debugger;
-                                        if (localStorage.Disc_Zero == 1)
-                                        {                                           
+                                        if (localStorage.Disc_Zero == 1) {
                                             if (Lab > max_Total_Dic_Amt) {
-                                                
+
                                                 var sub1 = TotalDiscountAmount - Amount;
                                                 var sub2 = max_Total_Dic_Amt - sub1;
                                                 if (isLabCompeted == true) {
-                                                    
+
                                                     $(value).find('input[name="DisAmount"]').val();
                                                     $(value).find('input[name="hdnDisAmount"]').val();
                                                     $(value).find('input[name="hdnDisPer"]').val();
@@ -1980,7 +1954,7 @@
                                                     var Net_Amount = parseInt(Amount) - DisAmt;
                                                     $(value).find('td:eq(8)').text(Net_Amount.toFixed(0));
                                                     return false;
-                                                }                                     
+                                                }
                                                 var amt = parseFloat(DisAmt);
                                                 $(value).find('input[name="DisAmount"]').val(amt.toFixed(2));
                                                 $(value).find('input[name="hdnDisAmount"]').val(amt.toFixed(2));
@@ -2000,9 +1974,9 @@
                                 else if (categ == "002" || categ == "Ultrasound") {
                                     UltraSound += DisAmt;
                                     TotalDiscountAmount_Ultra += DisAmt;
-                                    
+
                                     if (UltraSound > max_Total_Dic_Amt_Ultra) {
-                                        
+
                                         var sub1 = TotalDiscountAmount_Ultra - DisAmt;
                                         var sub2 = max_Total_Dic_Amt_Ultra - sub1;
                                         if (isUltraSoundCompleted == true) {
@@ -2029,7 +2003,7 @@
                                     }
                                     else {
                                         if (localStorage.Disc_Zero == 1) {
-                                            
+
                                             if (UltraSound > max_Total_Dic_Amt_Ultra) {
                                                 var sub1 = TotalDiscountAmount_Ultra - Amount;
                                                 var sub2 = max_Total_Dic_Amt_Ultra - sub1;
@@ -2059,12 +2033,12 @@
                                     }
                                 }
                                 else if (categ == "003" || categ == "X-Ray") {
-                                    
+
                                     Xray += DisAmt;
                                     TotalDiscountAmount_Xray += DisAmt;
-                                    
+
                                     if (Xray > max_Total_Dic_Amt_Xray) {
-                                        
+
                                         var sub1 = TotalDiscountAmount_Xray - DisAmt;
                                         var sub2 = max_Total_Dic_Amt_Xray - sub1;
                                         if (isXrayCompleted == true) {
@@ -2121,12 +2095,12 @@
                                     }
                                 }
                                 else if (categ == "004" || categ == "CT-Scan") {
-                                    
+
                                     CT_Scan += DisAmt;
                                     TotalDiscountAmount_CTScan += DisAmt;
-                                    
+
                                     if (CT_Scan > max_Total_Dic_Amt_ct_Scan) {
-                                        
+
                                         var sub1 = TotalDiscountAmount_CTScan - DisAmt;
                                         var sub2 = max_Total_Dic_Amt_ct_Scan - sub1;
                                         if (isCTScanCompleted == true) {
@@ -2153,7 +2127,7 @@
                                     }
                                     else {
                                         if (localStorage.Disc_Zero == 1) {
-                                            
+
                                             if (CT_Scan > max_Total_Dic_Amt_ct_Scan) {
                                                 var sub1 = TotalDiscountAmount_CTScan - Amount;
                                                 var sub2 = max_Total_Dic_Amt_ct_Scan - sub1;
@@ -2183,11 +2157,11 @@
                                     }
                                 }
                                 else if (categ == "005" || categ == "Blood Bank" || categ == "053" || categ == "054" || categ == "055" || MainDepart == "005") {
-                                    
+
                                     Blood += DisAmt;
                                     TotalDiscountAmount_Blood += DisAmt;
                                     if (Blood > max_Total_Dic_Amt_Blood) {
-                                        
+
                                         var sub1 = TotalDiscountAmount_Blood - DisAmt;
                                         var sub2 = max_Total_Dic_Amt_Blood - sub1;
                                         if (isBloodBankCompleted == true) {
@@ -2213,7 +2187,7 @@
                                         TotalDiscountAmount_Blood = max_Total_Dic_Amt_Blood;
                                     }
                                     else {
-                                        if (localStorage.Disc_Zero == 1) {                
+                                        if (localStorage.Disc_Zero == 1) {
                                             if (Blood > max_Total_Dic_Amt_Blood) {
                                                 var sub1 = TotalDiscountAmount_Blood - Amount;
                                                 var sub2 = max_Total_Dic_Amt_Blood - sub1;
@@ -2246,22 +2220,22 @@
                             }
                         }
                         //end
-                        
+
                     }
                     debugger;
                     c_Dis_Amt += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                     var di = Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                     Amount = $($(value).find('td')[5]).text();
                     Qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
-                    TotalAmount += parseFloat(Amount)*(Qty);
-                 
-                  
-                    NetAmount =  Amount - DisAmt;
-                  
-                   
+                    TotalAmount += parseFloat(Amount) * (Qty);
+
+
+                    NetAmount = Amount - DisAmt;
+
+
                     TotalNetAmount += NetAmount;
-                   
-                  
+
+
                 });
                 debugger;
                 var total_Disc = 0;
@@ -2269,20 +2243,18 @@
                 var total_amt = 0;
                 var qty = 0;
                 Temporary = Item;
-                if (Special == 1)
-                {
-                   
+                if (Special == 1) {
 
-                    $.each($('#tblDetails tbody tr'), function (key, value)
-                    {
-                       
-                        
+
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
+
+
                         total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                         var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
-                        
+
                         Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
-                      
-                       total_amt +=  Math.round(parseFloat($($(value).find('td')[8]).text()));
+
+                        total_amt += Math.round(parseFloat($($(value).find('td')[8]).text()));
 
                     });
                     var TotalAmount = Net_Amt;
@@ -2292,17 +2264,16 @@
                     var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
                     debugger;
                     $('#txtTotalAmount').val(Net_Amt);
-                    $('#txtTotalPayable').val(Net_Amt );
+                    $('#txtTotalPayable').val(Net_Amt);
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
                     $('#txtNetPayable').val(total_amt);
                     var AmtReceived = $('#txtAmountReceived').val();
                     var amt = parseFloat(AmtReceived) || 0;
-                    if ($('#txtTotalPayable').val() != '')
-                    {
+                    if ($('#txtTotalPayable').val() != '') {
                         if (AmtReceived != '') {
-                            $('#txtBalances').val(((net  +PreviousAmount) - (amt + AdvanceAmount + PreviousPaid) ).toFixed());
-                       
+                            $('#txtBalances').val(((net + PreviousAmount) - (amt + AdvanceAmount + PreviousPaid)).toFixed());
+
                         }
                         else
                             $('#txtBalances').val(net.toFixed());
@@ -2311,8 +2282,7 @@
                         $('#txtBalances').val(net.toFixed());
                     }
                 }
-                else
-                {
+                else {
                     if (isNaN(validate)) {
                         $.each($('#tblDetails tbody tr'), function (key, value) {
 
@@ -2333,8 +2303,7 @@
                     $('#txtDisAmt').val(parseFloat(total_Disc).toFixed(2));
                     $('#txtNetPayable').val(TotalAmount.toFixed());
                     var AmtReceived = $('#txtAmountReceived').val();
-                    if ($('#txtTotalPayable').val() != '')
-                    {
+                    if ($('#txtTotalPayable').val() != '') {
                         debugger;
                         if (AmtReceived != '') {
                             $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed());
@@ -2346,13 +2315,12 @@
                         $('#txtBalances').val(TotalNetAmount.toFixed());
                     }
                 }
-              
-                
+
+
             }
             var Temporary = 0;
             debugger;
-            function calculateDoctorShare()
-            {
+            function calculateDoctorShare() {
                 debugger;
                 var list = document.getElementById('tblDetails');
                 var doctorsList = document.getElementById('Doctor_Share_Table');
@@ -2382,20 +2350,20 @@
                 var TotalNetAmount = 0;
                 $.each($('#tblDetails tbody tr'), function (key, value) {
                     debugger;
-                        debugger;
-                        Amount = $($(value).find('td')[5]).text();
-                        Qty = $(value).find('input[name="txtQty"]').val();
-                        DisAmt = $(value).find('input[name="DisAmount"]').val();
-                        $(value).find('input[name="hdnDisAmount"]').val(DisAmt);
-                        DisPer = 100 / (Qty * Amount) * DisAmt ;
-                        $(value).find('input[name="DisPer"]').val(DisPer.toFixed(2));
-                        $(value).find('input[name="hdnDisPer"]').val(DisPer.toFixed(6));
-                        NetAmount = (Qty * Amount) - DisAmt;
-                        $($(value).find('td')[8]).text(NetAmount.toFixed());
-                        $(value).find('input[name="hdnNet_Amount"]').val(NetAmount.toFixed(6));
+                    debugger;
+                    Amount = $($(value).find('td')[5]).text();
+                    Qty = $(value).find('input[name="txtQty"]').val();
+                    DisAmt = $(value).find('input[name="DisAmount"]').val();
+                    $(value).find('input[name="hdnDisAmount"]').val(DisAmt);
+                    DisPer = 100 / (Qty * Amount) * DisAmt;
+                    $(value).find('input[name="DisPer"]').val(DisPer.toFixed(2));
+                    $(value).find('input[name="hdnDisPer"]').val(DisPer.toFixed(6));
+                    NetAmount = (Qty * Amount) - DisAmt;
+                    $($(value).find('td')[8]).text(NetAmount.toFixed());
+                    $(value).find('input[name="hdnNet_Amount"]').val(NetAmount.toFixed(6));
                     //}
                     Amount = $($(value).find('td')[5]).text();
-                    TotalAmount +=parseFloat(Qty) * parseFloat(Amount);
+                    TotalAmount += parseFloat(Qty) * parseFloat(Amount);
                     TotalDiscountAmount += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                     TotalNetAmount += parseFloat($($(value).find('td')[8]).text());
                 });
@@ -2420,8 +2388,8 @@
                 AssignValue(txtDisPer, 0);
                 AssignValue(txtDisAmt, 0);
                 AssignValue(txtAmountReceived, 0);
-                var PerDisable= $('#txtDisPer').val();
-                var amoutDisable=$('#txtDisAmt').val();
+                var PerDisable = $('#txtDisPer').val();
+                var amoutDisable = $('#txtDisAmt').val();
                 var doctorShare = 0;
                 var Amount = 0;
                 var DisPer = 0;
@@ -2432,10 +2400,8 @@
                 var TotalNetAmount = 0;
                 var TotalDiscountAmount_Entered = 0;
                 var Qty = 0;
-                if (AmtWise)
-                {
-                    $.each($('#tblDetails tbody tr'), function (key, value)
-                    {
+                if (AmtWise) {
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
                         if (amoutDisable != "0") {
                             $('#txtDisPer').attr("disabled", true);
                         }
@@ -2445,7 +2411,7 @@
                         Qty = $(value).find('input[name="txtQty"]').val();
                         TotalDiscountAmount_Entered = $('#txtDisAmt').val();
                         DisPer = 100 / parseFloat($('#txtTotalPayable').val()) * TotalDiscountAmount_Entered;
-                        DisPer =parseFloat (DisPer.toFixed(6));
+                        DisPer = parseFloat(DisPer.toFixed(6));
                         $(value).find('input[name="DisPer"]').val(DisPer.toFixed(2));
                         $(value).find('input[name="hdnDisPer"]').val(DisPer.toFixed(6));
                         Amount = $($(value).find('td')[5]).text();
@@ -2464,11 +2430,9 @@
                 }
                 else {
                     debugger;
-                    $.each($('#tblDetails tbody tr'), function (key, value)
-                    {
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
                         debugger;
-                        if (PerDisable != "0")
-                        {
+                        if (PerDisable != "0") {
                             $('#txtDisAmt').attr("disabled", true);
                         }
                         else {
@@ -2509,10 +2473,8 @@
             var isQty = 0;
             var Tmp_ITem = 0;
             var s = 0;
-            function CulculateAmonutWithQty(anchor, isHos, isPro)
-            {
-                if (IsDiscountAvaible == "False" || IsDiscountAvaible == "false")
-                {
+            function CulculateAmonutWithQty(anchor, isHos, isPro) {
+                if (IsDiscountAvaible == "False" || IsDiscountAvaible == "false") {
                     debugger;
                     var disTotal = $('#txtDisPer').val();
                     if (disTotal != "") {
@@ -2548,20 +2510,17 @@
                         $('#txtTotalPayable').val(Net_Amt);
                         $('#txtDisAmt').val(total_Disc);
                         var net = Net_Amt - total_Disc;
-                      
+
                         $('#txtNetPayable').val(total_amt);
                         var AmtReceived = $('#txtAmountReceived').val();
-                        if ($('#txtTotalPayable').val() != '')
-                        {
-                            if (AmtReceived != '')
-                            {
+                        if ($('#txtTotalPayable').val() != '') {
+                            if (AmtReceived != '') {
                                 $('#txtBalances').val((net - AmtReceived).toFixed());
                             }
                             else
                                 $('#txtBalances').val(net.toFixed());
                         }
-                        else
-                        {
+                        else {
 
                             $('#txtBalances').val(net.toFixed());
 
@@ -2569,18 +2528,17 @@
 
 
                     }
-                   
+
                     return false;
                 }
                 isQty = 1;
                 var row = $(anchor).parents('tr')[0];
-                
+
                 var row_length = $(row).index();
                 var Qty = $($(row).find('td input[name=txtQty]')[0]).val();
                 var Package = $($(row).find('td input[name=hdnParentTrans_Type]')[0]).val();
                 var Temp = Temporary;
-                if (Package == "Package")
-                {
+                if (Package == "Package") {
                     debugger;
                     var Amount = $(row).find('td:eq(5)').text();
 
@@ -2597,8 +2555,7 @@
                     $($(row).find('td input[name=hdnDisAmount]')[0]).val(DisAmt);
                     Package = 0;
                     TotalDiscountAmount_Package = 0;
-                    $.each($('#tblDetails tbody tr'), function (key, value)
-                    {
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
                         debugger;
                         var dis_amt = Math.round(parseFloat($(row).find('input[name="DisAmount"]').val()));
                         var isItem = Math.round(parseFloat($(row).find('input[name="DisAmount"]').val()));
@@ -2608,14 +2565,13 @@
                         var amt_dis = $(value).find('input[name="DisAmount"]').val();
                         Package += parseFloat(amt_dis);
                         TotalDiscountAmount_Package += parseFloat(amt_dis);
-                       
+
 
                     });
 
 
 
-                    if (Package > max_Package_Amt)
-                    {
+                    if (Package > max_Package_Amt) {
                         debugger;
 
                         var sub1 = TotalDiscountAmount_Package - DisAmt;
@@ -2673,8 +2629,7 @@
                     }
                 }
                 else {
-                    if (isHos == 1)
-                    {
+                    if (isHos == 1) {
                         debugger;
                         var Amount = $(row).find('td:eq(5)').text();
 
@@ -2682,8 +2637,7 @@
                         var qty = $($(row).find('td input[name=txtQty]')[0]).val();
                         var old_Dis_amt = parseInt(Amount) * parseInt(localStorage.Disc) / 100;
                         var DisAmt = (parseInt(Amount) * qty) * parseInt(localStorage.Disc) / 100;
-                        if (localStorage.Disc == "0.0000")
-                        {
+                        if (localStorage.Disc == "0.0000") {
                             debugger;
                             Qty = $(row).find('input[name="txtQty"]').val();
                             DisAmt = $(row).find('input[name="DisAmount"]').val();
@@ -2693,7 +2647,7 @@
                             $(row).find('input[name="hdnDisPer"]').val(DisPer.toFixed(6));
                         }
 
-                        
+
                         if (localStorage.Disc == "0.0000") {
                         }
                         var net_amt = (parseInt(Amount) * qty) - parseFloat(DisAmt);
@@ -2707,7 +2661,7 @@
                             debugger;
                             var dis_amt = Math.round(parseFloat($(row).find('input[name="DisAmount"]').val()));
                             var isItem = Math.round(parseFloat($(row).find('input[name="DisAmount"]').val()));
-                         
+
                             var isProcedure = $(value).find('input[name="hdnProcedure"]').val();
                             var ItemType = $(value).find('input[name="hdnItemType"]').val();
                             var Package = $(value).find('input[name="hdnParentTrans_Type"]').val();
@@ -2755,8 +2709,7 @@
                         else {
                             isItemCompleted = false;
                             TotalDiscountAmount_ITem = Item;
-                            if (localStorage.Disc == "0.0000")
-                            {
+                            if (localStorage.Disc == "0.0000") {
                             }
 
                         }
@@ -2766,8 +2719,7 @@
                         var total_amt = 0;
                         var qty = 0;
                         //After 
-                        $.each($('#tblDetails tbody tr'), function (key, value)
-                        {
+                        $.each($('#tblDetails tbody tr'), function (key, value) {
                             debugger;
 
                             total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
@@ -2784,16 +2736,14 @@
                         var net = Net_Amt - total_Disc;
                         $('#txtNetPayable').val(total_amt);
                         var AmtReceived = $('#txtAmountReceived').val();
-                        if ($('#txtTotalPayable').val() != '')
-                        {
+                        if ($('#txtTotalPayable').val() != '') {
                             if (AmtReceived != '') {
                                 $('#txtBalances').val((net - AmtReceived).toFixed());
                             }
                             else
                                 $('#txtBalances').val(net.toFixed());
                         }
-                        else
-                        {
+                        else {
                             $('#txtBalances').val(net.toFixed());
                         }
                         //  }
@@ -2906,9 +2856,9 @@
                     }
 
                 }
-             }
-              
-                  
+            }
+
+
 
             function SumTotalAmountrecived() {
                 debugger;
@@ -2926,8 +2876,7 @@
                 CountBalance()
             }
             debugger;
-            function CountBalance()
-            {
+            function CountBalance() {
                 debugger;
                 var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
@@ -2938,9 +2887,9 @@
                 if ($('#txtTotalPayable').val() != '') {
                     var Totalpayable = (Math.round(parseFloat($('#txtNetPayable').val()))).toFixed(0)
                     if (AmtReceived != '') {
-                        $('#txtBalances').val((parseFloat(Totalpayable)  +PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount +PreviousPaid));
+                        $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
 
-                        var prebln  =  parseFloat(Totalpayable) - parseFloat(AmtReceived)
+                        var prebln = parseFloat(Totalpayable) - parseFloat(AmtReceived)
                         $('#txtPreviousBlnc').val(prebln);
                     }
                     else
@@ -2969,15 +2918,14 @@
                 });
             }
             debugger;
-            function AddPackage()
-            {
+            function AddPackage() {
                 debugger;
                 var disc = "0.00";
                 var remarks = $('#Remarks').val();
-             
+
                 var PackType = $("#hdn_pkgtype").val();
                 var packname = $("#hdn_pkgname").val();
-               
+
                 $.ajax({
                     type: "POST",
                     url: "BillingProcess.aspx/GetPackageDetails",
@@ -2991,21 +2939,18 @@
                         debugger;
                         var rows = '';
                         var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
-                     
-                        
-                        $.each(JSON.parse(resp.d), function (key, value)
-                        {
+
+
+                        $.each(JSON.parse(resp.d), function (key, value) {
                             debugger;
                             disc = "0.00"
-                            if (value.Item_Name == null)
-                            {
+                            if (value.Item_Name == null) {
                                 var itemanme = value.GroupName;
                             }
-                            else
-                            {
+                            else {
                                 itemanme = value.Item_Name;
                             }
-                            rows = '<tr><td style="text-align:Center;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnItemID" value="' + value.Item_Code + '" /> <input type="hidden" name="hdnItemName" value="' + itemanme + '" /> <input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + itemanme + '<td></td>' + '' + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /><input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" /></td><td style="text-align:Right;"onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> 45 </td><td><input type="number" id="DocShare' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
+                            rows = '<tr><td style="text-align:Center;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnItemID" value="' + value.Item_Code + '" /> <input type="hidden" name="hdnItemName" value="' + itemanme + '" /> <input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + itemanme + '<td></td>' + '' + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /><input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" /></td><td style="text-align:Right;"onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> 45 </td><td><input type="number" id="DocShare' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
                             $('#tblDetails tbody').append(rows);
                             $('input[name="DisAmount"]').attr('disabled', true)
                             CalculateSummarieDiscountPerWise(rowIndex);
@@ -3031,85 +2976,72 @@
             debugger;
 
 
-            function  AddServiceOrItem()
-            {
+            function AddServiceOrItem() {
                 debugger;
                 notProcedurenotITem = false;
                 localStorage.IsPocedure = false;
-                if ($('#lblPatientDiscountType').text() == "Insurance Company")
-                {
+                if ($('#lblPatientDiscountType').text() == "Insurance Company") {
                     debugger;
                     var Type = '';
                     var Item_Id = $('#txtAddService').val();
-                    if (is_Patient_Temp == true)
-                    {
+                    if (is_Patient_Temp == true) {
                         Type = "IPD"
                     }
-                    else
-                    {
+                    else {
                         Type = "OPD";
                     }
                     debugger;
                     var panel_id = 0;
                     if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || typeof localStorage.OPD_Panel_ID === 'undefined') panel_id = localStorage.IPD_PAnel_ID;
                     if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || typeof localStorage.IPD_PAnel_ID === 'undefined')
-                    panel_id = localStorage.OPD_Panel_ID;
-                    if (localStorage.OPD_Panel_ID != "null" && localStorage.IPD_PAnel_ID != "null")
-                    {
+                        panel_id = localStorage.OPD_Panel_ID;
+                    if (localStorage.OPD_Panel_ID != "null" && localStorage.IPD_PAnel_ID != "null") {
                         panel_id = localStorage.IPD_PAnel_ID;
                     }
                     debugger;
-                    $.each(arr, function (index, value)
-                    {
-                        if (Item_Id == value.Item_ID && panel_id == value.Panel_ID)
-                        {
+                    $.each(arr, function (index, value) {
+                        if (Item_Id == value.Item_ID && panel_id == value.Panel_ID) {
                             debugger;
-                           
-                                localStorage.SelectedItemAmount = value.Rate;
-                                DiscountAMt = value.Discount;
-                           
+
+                            localStorage.SelectedItemAmount = value.Rate;
+                            DiscountAMt = value.Discount;
+
                         }
                     });
                 }
                 debugger;
-               
+
                 var isHospital = localStorage.IsHospitalServices;
                 var isMajorMinor = localStorage.Procedure_types;
                 var isservice = localStorage.isService;
                 var disc = "0.00";
-                if (isMajorMinor == 0 || isMajorMinor == null || isMajorMinor == "null")
-                {
+                if (isMajorMinor == 0 || isMajorMinor == null || isMajorMinor == "null") {
                     debugger;
-                    
-                    isMajorMinor = "";
-                    disc=localStorage.Disc ;
-                    
-                    if (isHospital == true || isHospital == 'true' || isservice == true || isservice=="true")
-                    {
 
-                        if (isItemCompeted == true)
-                        {
+                    isMajorMinor = "";
+                    disc = localStorage.Disc;
+
+                    if (isHospital == true || isHospital == 'true' || isservice == true || isservice == "true") {
+
+                        if (isItemCompeted == true) {
 
                             localStorage.Disc = "0.00";
                         }
                         if (max_Total_Dic_Amt_Item != 0) {
 
                         }
-                        else
-                        {
+                        else {
                             max_Total_Dic_Amt_Item = Math.abs(localStorage.Total_Disc_Amt); //1000
 
                         }
                     }
-                   
+
                 }
-                else
-                {
-                    
+                else {
+
                     disc = localStorage.Disc_Pro;
                     localStorage.IsPocedure = true;
-                    if (isItemCompeted_Procedure == true)
-                    {
+                    if (isItemCompeted_Procedure == true) {
                         localStorage.Disc = "0.00";
                     }
                     if (max_Total_Dic_Amt_Procedure != 0) {
@@ -3121,41 +3053,39 @@
 
 
                 }
-           
+
                 var remarks = $("#ctl00_MainContent_ddlpro_dis").val();
                 setTimeout(function () {
                     if ($('#txtAddService').val() == "")
                         return false;
                     var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
                     debugger;
-                    if (CheckInPatientObject == true)
-                    {
+                    if (CheckInPatientObject == true) {
                         if (isNaN(validate)) {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
+                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
 
 
                         }
                         else {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
+                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
                         }
                     }
-                    else
-                    {
+                    else {
 
                         if (isNaN(validate)) {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
+                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
 
 
                         }
                         else {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + ' </td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;"  onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
+                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + ' </td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;"  onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
                         }
                     }
-               
+
                     $('#tblDetails tbody').append(rows);
                     debugger;
                     if (departmentpat == "Sehat Sahulat Card") {
-                        $("#amnt"+rowIndex).attr('contenteditable', true);
+                        $("#amnt" + rowIndex).attr('contenteditable', true);
 
                     }
                     else {
@@ -3181,16 +3111,16 @@
                         $('#txtDisPer').prop('disabled', true);
                         $('#txtDisAmt').prop('disabled', true);
                     });
-                       
-                    
+
+
                     ////else
                     ////{
                     ////       // $('input[name="DisPer"]').attr('disabled', true);
                     ////        $('input[name="DisAmount"]').attr('disabled', true);
 
                     ////}
-                 
-                     
+
+
 
 
 
@@ -3204,38 +3134,33 @@
                     }
                     debugger;
                     CalculateSummarieDiscountPerWise(rowIndex);
-                    
+
                     debugger;
                     var ItemId = localStorage.SelectedItemID;
                     var pat_type = $("#lblPatientDiscountType").text();
                     var INP_Private = $("#lblPatientCategory").text();
-                    
-                    if (pat_type == "Private" || INP_Private == "Private")
-                    {
-                        if (ItemId == 12402 || ItemId == 12404 || ItemId == 12408 || ItemId == 14218 || ItemId == 12407 || ItemId == 18138 || ItemId == 12393 || ItemId == 13206 || ItemId == 13208 || ItemId == 18842)
-                            {
-                        $("#tblDetails tr").each(function ()
-                        {
-                            var item_id = $('#txtAddService').val();
-                            var row_item_id = $(this).find('input[name="hdnItemID"]').val();
-                            if (item_id == row_item_id) {
-                                $(this).find("td:eq(5)").attr('contenteditable', 'True');
-                            }
-                        });
+
+                    if (pat_type == "Private" || INP_Private == "Private") {
+                        if (ItemId == 12402 || ItemId == 12404 || ItemId == 12408 || ItemId == 14218 || ItemId == 12407 || ItemId == 18138 || ItemId == 12393 || ItemId == 13206 || ItemId == 13208 || ItemId == 18842) {
+                            $("#tblDetails tr").each(function () {
+                                var item_id = $('#txtAddService').val();
+                                var row_item_id = $(this).find('input[name="hdnItemID"]').val();
+                                if (item_id == row_item_id) {
+                                    $(this).find("td:eq(5)").attr('contenteditable', 'True');
+                                }
+                            });
                         }
                     }
-                    else if (pat_type == "Insurance Company" || INP_Private == "Insurance Company")
-                    {
-                       
+                    else if (pat_type == "Insurance Company" || INP_Private == "Insurance Company") {
+
                         debugger;
                         if (ItemId == 13206 || ItemId == 18842 || ItemId == 13208 || ItemId == 12393 || ItemId == 19192 || ItemId == 19068) {
                             $("#tblDetails tr").each(function () {
                                 debugger;
                                 var item_id = $('#txtAddService').val();
                                 var row_item_id = $(this).find('input[name="hdnItemID"]').val();
-                                if (item_id == row_item_id)
-                                {
-                                    
+                                if (item_id == row_item_id) {
+
                                     $(this).find("td:eq(5)").attr('contenteditable', 'True');
                                 }
                             });
@@ -3244,11 +3169,9 @@
 
                     var user_name = '<% =AppConfig.UserName %>';
                     // Ali.Tariq
-                    if (user_name == "Ali.Tariq" || user_name == "ali.tariq")
-                    {
+                    if (user_name == "Ali.Tariq" || user_name == "ali.tariq") {
                         debugger;
-                        if (typeof localStorage.Total_Disc_Amt === 'undefined')
-                        {
+                        if (typeof localStorage.Total_Disc_Amt === 'undefined') {
                             debugger;
                             $('input[name="DisPer"]').attr('disabled', false);
                             $('input[name="DisAmount"]').attr('disabled', false)
@@ -3260,43 +3183,37 @@
                     else {
                         $('input[name="DisAmount"]').attr('disabled', true)
                     }
-                },300);
-                setTimeout(function ()
-                {
-                $(arr).filter(function (i, n)
-                {
-                    var company_id = 0;
-                    if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || localStorage.OPD_Panel_ID == 0 || typeof localStorage.OPD_Panel_ID === 'undefined') company_id = localStorage.IPD_PAnel_ID;
-                    if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || localStorage.IPD_PAnel_ID==0 || typeof localStorage.IPD_PAnel_ID === 'undefined')
-                    company_id = localStorage.OPD_Panel_ID;
-                    var lblPatientCategory = $('#lblPatientCategory').text();
-                    var lblIn_Patient_Category = $('#lblPatientDiscountType').text();
-                    if ((lblPatientCategory == "Sehat Sahulat Card") || (lblIn_Patient_Category == "Sehat Sahulat Card"))
-                    {
-                        company_id = "39";
-                    }
-                    if (n.Panel_ID == company_id)
-                    {
-                        $('#txtDisPer').val(n.Discount);
-                        if (isNaN(validate))
-                        {
+                }, 300);
+                setTimeout(function () {
+                    $(arr).filter(function (i, n) {
+                        var company_id = 0;
+                        if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || localStorage.OPD_Panel_ID == 0 || typeof localStorage.OPD_Panel_ID === 'undefined') company_id = localStorage.IPD_PAnel_ID;
+                        if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || localStorage.IPD_PAnel_ID == 0 || typeof localStorage.IPD_PAnel_ID === 'undefined')
+                            company_id = localStorage.OPD_Panel_ID;
+                        var lblPatientCategory = $('#lblPatientCategory').text();
+                        var lblIn_Patient_Category = $('#lblPatientDiscountType').text();
+                        if ((lblPatientCategory == "Sehat Sahulat Card") || (lblIn_Patient_Category == "Sehat Sahulat Card")) {
+                            company_id = "39";
+                        }
+                        if (n.Panel_ID == company_id) {
+                            $('#txtDisPer').val(n.Discount);
+                            if (isNaN(validate)) {
 
+                            }
+                            var disTotal = $('#txtDisPer').val();
+                            if (disTotal != "") {
+                                CalculateSummariesMaster(false);
+                            }
+                            else {
+                                CalculateSummariesMaster(false);
+                            }
+                            return false;
                         }
-                        var disTotal=  $('#txtDisPer').val();
-                        if (disTotal != "")
-                        {
-                            CalculateSummariesMaster(false);
-                        }
-                        else {
-                            CalculateSummariesMaster(false);
-                        }
-                        return false;
-                    }
 
-                });
+                    });
                 }, 700);
-             
-              
+
+
             }
             var itemIds;
             function getitem_codeEmergency() {
@@ -3321,7 +3238,7 @@
                         debugger;
                         $.each(data, function (key, value) {
                             debugger;
-                            itemIds.push(value); 
+                            itemIds.push(value);
                         });
                     }
 
@@ -3333,7 +3250,7 @@
                 debugger;
 
                 var pat_id = $('#hdfPatient_ID').val();
-                itemIds = []; 
+                itemIds = [];
                 debugger;
                 $.ajax({
                     type: "post",
@@ -3350,7 +3267,7 @@
                         debugger;
                         $.each(data, function (key, value) {
                             debugger;
-                            itemIds.push(value); 
+                            itemIds.push(value);
                         });
                     }
 
@@ -3421,10 +3338,10 @@
                                 isMajorMinors = "";
                             }
                             var remarks = $("#ctl00_MainContent_ddlpro_dis").val();
-                           
+
 
                             debugger;
-                            servicerow = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="OPD" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + data[0].Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + data[0].Description + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinors + '" /> <input type="hidden" name="hdnDisPer" value=""/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + data[0].Sale_Rate + '/><input type="hidden" name="hdnItemType" value="' + itemtype + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + data[0].Description + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + data[0].Sale_Rate + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name="amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + data[0].Sale_Rate + '</td><td> <input type="text" name="DisPer" value="0" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + data[0].Sale_Rate + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
+                            servicerow = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="OPD" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + data[0].Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + data[0].Description + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinors + '" /> <input type="hidden" name="hdnDisPer" value=""/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + data[0].Sale_Rate + '/><input type="hidden" name="hdnItemType" value="' + itemtype + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + data[0].Description + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + data[0].Sale_Rate + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name="amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + data[0].Sale_Rate + '</td><td> <input type="text" name="DisPer" value="0" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + data[0].Sale_Rate + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
                         },
                     });
                     $('#tblDetails tbody').append(servicerow);
@@ -3433,28 +3350,27 @@
 
                     setTimeout(function () {
                         CalculateSummarieDiscountPerWise(rowIndex);
-                    },1500)
-              
+                    }, 1500)
+
                 });
             }
-            
+
             function ExcludeFromPayment(anchor) {
                 console.clear();
                 debugger;
-              
+
                 var row = $(anchor).parents('tr')[0];
                 var tableName = $(row).closest('table').attr('id');
-                if (tableName == "tbltestModelTable")
-                {
+                if (tableName == "tbltestModelTable") {
                     debugger;
                     var rowIndex = $(anchor).closest('tr').index();
                     $('.blank tr').filter(function () {
-                        return this.rowIndex-1 === rowIndex;
+                        return this.rowIndex - 1 === rowIndex;
                     }).remove();
                 }
                 var dis = $(row).find('input[name="DisAmount"]').val();
                 var main_department = $(row).find('input[name="Main_Department"]').val();
-             
+
                 row.remove();
                 var ItemID = $(row).find('input[name="hdnItemID"]').val();
                 var ParentTrans_Type = $(row).find('input[name="hdnParentTrans_Type"]').val();
@@ -3465,69 +3381,62 @@
             }
             var length_Lab = 0;
             function CalculateTotals() {
-                
+
                 var Amount = 0;
                 var DisAmt = 0;
                 var NetAmount = 0;
-              
-              
-                 Lab = 0;
-                 UltraSound = 0;
-                 Xray = 0;
-                 CT_Scan = 0;
-                 Blood = 0;
-                 Item = 0;
-                 Procedure = 0;
-                 Package = 0;
-                 TotalDiscountAmount = 0;
-                 TotalDiscountAmount_Ultra = 0;
-                 TotalDiscountAmount_Xray = 0;
-                 TotalDiscountAmount_CTScan = 0;
-                 TotalDiscountAmount_Blood = 0;
-                 TotalDiscountAmount_ITem = 0;
-                 TotalDiscountAmount_Procedure = 0;
-                 TotalDiscountAmount_Package = 0;
-                 $.each($('#tblDetails tbody tr'), function (key, value)
-                 {
-                   
+
+
+                Lab = 0;
+                UltraSound = 0;
+                Xray = 0;
+                CT_Scan = 0;
+                Blood = 0;
+                Item = 0;
+                Procedure = 0;
+                Package = 0;
+                TotalDiscountAmount = 0;
+                TotalDiscountAmount_Ultra = 0;
+                TotalDiscountAmount_Xray = 0;
+                TotalDiscountAmount_CTScan = 0;
+                TotalDiscountAmount_Blood = 0;
+                TotalDiscountAmount_ITem = 0;
+                TotalDiscountAmount_Procedure = 0;
+                TotalDiscountAmount_Package = 0;
+                $.each($('#tblDetails tbody tr'), function (key, value) {
+
                     Amount += parseFloat($(this).closest("tr").find("td:eq(5)").text());
                     DisAmt += parseFloat($(value).find('input[name="DisAmount"]').val());
                     NetAmount = Amount - DisAmt;
                     var main_department = $(value).find('input[name="Main_Department"]').val();
-                    
-                    if (main_department == "001")
-                    {
-                        
-                       
-                            var dis = $(value).find('input[name="DisAmount"]').val();
-                            TotalDiscountAmount = parseInt(TotalDiscountAmount) + parseInt(dis);
-                            Lab = parseInt(Lab) + parseInt(dis);
-                            if (TotalDiscountAmount < max_Total_Dic_Amt)
-                            {
-                                isLabCompeted = false;
-                            }
-                            
-                      
+
+                    if (main_department == "001") {
+
+
+                        var dis = $(value).find('input[name="DisAmount"]').val();
+                        TotalDiscountAmount = parseInt(TotalDiscountAmount) + parseInt(dis);
+                        Lab = parseInt(Lab) + parseInt(dis);
+                        if (TotalDiscountAmount < max_Total_Dic_Amt) {
+                            isLabCompeted = false;
+                        }
+
+
                     }
-                    if (main_department == "002")
-                    {
+                    if (main_department == "002") {
                         var dis = $(value).find('input[name="DisAmount"]').val();
                         TotalDiscountAmount_Ultra = parseInt(TotalDiscountAmount_Ultra) + parseInt(dis);
                         UltraSound = parseInt(UltraSound) + parseInt(dis);
 
-                        if (TotalDiscountAmount_Ultra < max_Total_Dic_Amt_Ultra)
-                        {
+                        if (TotalDiscountAmount_Ultra < max_Total_Dic_Amt_Ultra) {
                             isUltraSoundCompleted = false;
                         }
                     }
-                    if (main_department == "003")
-                    {
+                    if (main_department == "003") {
                         var dis = $(value).find('input[name="DisAmount"]').val();
                         TotalDiscountAmount_Xray = parseInt(TotalDiscountAmount_Xray) + parseInt(dis);
                         Xray = parseInt(Xray) + parseInt(dis);
 
-                        if (TotalDiscountAmount_Xray < max_Total_Dic_Amt_Xray)
-                        {
+                        if (TotalDiscountAmount_Xray < max_Total_Dic_Amt_Xray) {
                             isXrayCompleted = false;
                         }
                     }
@@ -3549,14 +3458,12 @@
                             isBloodBankCompleted = false;
                         }
                     }
-                    
+
                     var isProcedure = $(value).find('input[name="hdnProcedure"]').val();
-                
+
                     var ItemType = $(value).find('input[name="hdnItemType"]').val();
                     var PAckage = $(value).find('input[name="hdnParentTrans_Type"]').val();
-                    if (PAckage == "Package")
-
-                    {
+                    if (PAckage == "Package") {
                         var dis = $(value).find('input[name="DisAmount"]').val();
                         TotalDiscountAmount_Package = parseInt(TotalDiscountAmount_Package) + parseInt(dis);
                         Package = parseInt(Package) + parseInt(dis);
@@ -3620,9 +3527,7 @@
                     var isProcedure = $(value).find('input[name="hdnProcedure"]').val();
                     var ItemType = $(value).find('input[name="hdnItemType"]').val();
                     var PAckage = $(value).find('input[name="hdnParentTrans_Type"]').val();
-                    if (PAckage == "Package")
-
-                    {
+                    if (PAckage == "Package") {
                         if (Package == 0) {
                             TotalDiscountAmount_Package = 0;
                         }
@@ -3644,8 +3549,8 @@
 
                         }
                     }
-                   
-                 });
+
+                });
 
                 Math.round($('#txtTotalPayable').val(Amount), 2);
                 $('#txtDisAmt').val(parseInt(Math.round(DisAmt)));
@@ -3682,27 +3587,27 @@
                 PageMethods.FetchRecommendedDetails($('#hdfPatient_ID').val(), function (resp) {
                     debugger;
                     var rows = '';
-                   
+
                     var List = [];
                     var counter = 1;
                     $('#tblDetails tbody tr').remove();
                     var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
                     $.each(JSON.parse(resp), function (key, value) {
                         debugger;
-                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="OutPatient" /><input type="hidden" name="Main_Department" value="' + value.MainDepartment + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount"  value="0.00" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + '</td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td></tr>'
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="OutPatient" /><input type="hidden" name="Main_Department" value="' + value.MainDepartment + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount"  value="0.00" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + '</td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td></tr>'
                         debugger;
                         $('#tblDetails tbody').append(rows);
                         $('input[name="DisAmount"]').attr('disabled', true)
-                        if (rows !='')
+                        if (rows != '')
                             setTimeout(function () {
                                 CalculateSummarieDiscountPerWise(rowIndex);
                             }, 1500)
                         rowIndex++;
                     });
                     debugger;
-       
+
                     getitem_code();
-                    
+
                     FetchRecommendedInPatientDetails();
                 });
             }
@@ -3715,17 +3620,17 @@
                     var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
                     var List = [];
                     var counter = 1;
-                   
+
                     $.each(JSON.parse(resp), function (key, value) {
-                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + ' </td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
-                        
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + ' </td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
+
                         $('#tblDetails tbody').append(rows);
-                        
-                       $('input[name="DisAmount"]').attr('disabled', true)
+
+                        $('input[name="DisAmount"]').attr('disabled', true)
                         if (rows != '')
                             debugger;
-                        CheckItemsinPackages(value.ItemID);      
-                       CalculateSummarieDiscountPerWise(rowIndex);
+                        CheckItemsinPackages(value.ItemID);
+                        CalculateSummarieDiscountPerWise(rowIndex);
                         rowIndex++;
                     });
                     debugger;
@@ -3736,8 +3641,8 @@
             }
             function CheckItemsinPackages(itemid, itemname) {
                 debugger;
-                   var PackType = $("#hdn_pkgtype").val();
-                    var packname = $("#hdn_pkgname").val();
+                var PackType = $("#hdn_pkgtype").val();
+                var packname = $("#hdn_pkgname").val();
                 $.ajax({
                     type: "POST",
                     url: "BillingProcess.aspx/CheckItemsinPackages",
@@ -3750,7 +3655,7 @@
                     dataType: "json",
                     success: function (response) {
                         debugger;
-                        const result = JSON.parse(response.d); 
+                        const result = JSON.parse(response.d);
                         console.log(result)
                         if (result.ItemExists) {
                             alert(`Item "${result.ItemName}" exists in the package!`);
@@ -3762,12 +3667,12 @@
                     }
                 });
             }
-            
+
 
             function FetchRecommendedEmergencyPatDetails() {
                 debugger;
                 $('#hdfPatient_ID').val($('#txtMRNo').val());
-              
+
                 PageMethods.FetchRecommendedEmergencyDetails($('#hdfPatient_ID').val(), function (resp) {
                     debugger;
                     var rows = '';
@@ -3776,7 +3681,7 @@
                     var counter = 1;
 
                     $.each(JSON.parse(resp), function (key, value) {
-                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="EmergencyPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + ' </td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors +'</select></td> </tr>'
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="EmergencyPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + ' </td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
                         $('#tblDetails tbody').append(rows);
                         $('input[name="DisAmount"]').attr('disabled', true)
                         if (rows != '')
@@ -3784,7 +3689,7 @@
                         rowIndex++;
                     });
                     debugger;
-                    
+
                     checkRepeat();
                     getitem_codeEmergency();
                 });
@@ -3794,8 +3699,7 @@
             localStorage.IsBothAmtand = 0;
             localStorage.IsPackage = 0;
             localStorage.OnlyPackagePercentage = 0;
-            function LoadITemsForPackage(Package_id)
-            {
+            function LoadITemsForPackage(Package_id) {
                 var Patient_ID = $('#txtMRNo').val();
                 localStorage.IsPackage = 1;
                 $.ajax({
@@ -3804,9 +3708,8 @@
                     data: "{'PatientID':" + Patient_ID + ",'item_id':" + Package_id + "}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    async:false,
-                    success:function(data)
-                    {
+                    async: false,
+                    success: function (data) {
                         debugger;
                         var data = JSON.parse(data.d);
                         var RemainDiscAmt = data.Remaining_Amount;
@@ -3822,17 +3725,15 @@
                         else {
                             localStorage.OnlyPercentage = 0;
                         }
-                       
-                        if (data.Disc == "0.0000")
-                        {
+
+                        if (data.Disc == "0.0000") {
                             localStorage.IsZero_Amt = 1;
 
 
                         }
-                        
 
-                        if (data.Disc == "There is no row at position 0.")
-                        {
+
+                        if (data.Disc == "There is no row at position 0.") {
                             localStorage.Disc = "0.00";
                         }
                         else {
@@ -3841,7 +3742,7 @@
                             localStorage.Total_Disc_Amt = data.Total_Disc_Amt;
                             Item_Discount = data.Total_Disc_Amt;
 
-                    
+
 
                         }
                     },
@@ -3851,8 +3752,7 @@
                 });
             }
             var validate = null;
-            function LoadITemsForDiscount(item_id)
-            {
+            function LoadITemsForDiscount(item_id) {
                 validate = null;
                 localStorage.OnlyPercentage = 0;
                 localStorage.IsZero_Amt = 0;
@@ -3865,9 +3765,8 @@
                     data: "{'PatientID':" + Patient_ID + ",'item_id':" + item_id + "}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    async:false,
-                    success:function(data)
-                    {
+                    async: false,
+                    success: function (data) {
                         debugger;
                         var RemainDiscAmt = 0;
                         localStorage.OnlyPercentage = 0;
@@ -3876,65 +3775,58 @@
                         debugger;
                         var data = JSON.parse(data.d);
                         if (data != null) {
-                        localStorage.IsHospitalServices = data.Hospital_Services;
-                        var datas = data.Total_Disc_Amt;
-                        validate = datas;
-                        var data_pro = data.Total_Disc_Amt_Pro;
-                        RemainDiscAmt = data.Remaining_Amount;
-                      
-                        datas = datas - RemainDiscAmt;
-                        if (datas == "0.0000") {
+                            localStorage.IsHospitalServices = data.Hospital_Services;
+                            var datas = data.Total_Disc_Amt;
+                            validate = datas;
+                            var data_pro = data.Total_Disc_Amt_Pro;
+                            RemainDiscAmt = data.Remaining_Amount;
 
-                        
-                            localStorage.OnlyPercentage = 1;
-                            if (RemainDiscAmt != "0.0000")
-                            {
+                            datas = datas - RemainDiscAmt;
+                            if (datas == "0.0000") {
+
+
+                                localStorage.OnlyPercentage = 1;
+                                if (RemainDiscAmt != "0.0000") {
+                                    localStorage.OnlyPercentage = 0;
+                                }
+
+                            }
+
+                            else {
                                 localStorage.OnlyPercentage = 0;
                             }
-                          
-                        }
-                           
-                        else
-                        {
-                            localStorage.OnlyPercentage = 0;
-                        }
-                        if (data_pro == "0.0000")
-                        {
+                            if (data_pro == "0.0000") {
 
-                        }
-                    
-                        if (data.Disc == "0.0000")
-                        {
-                            localStorage.IsZero_Amt = 1;
-                          
+                            }
 
-                        }
-                        if (data.Disc_Pro == "0.0000")
-                        {
+                            if (data.Disc == "0.0000") {
+                                localStorage.IsZero_Amt = 1;
 
-                            localStorage.IsZero_Procedure = 1;
 
+                            }
+                            if (data.Disc_Pro == "0.0000") {
+
+                                localStorage.IsZero_Procedure = 1;
+
+                            }
+
+                            if (data.Disc == "There is no row at position 0." || data.Disc_Pro == "There is no row at position 0.") {
+                                localStorage.Disc = "0.00";
+                            }
+                            else {
+
+                                localStorage.Disc = data.Disc;
+                                localStorage.Total_Disc_Amt = data.Total_Disc_Amt;
+                                Item_Discount = data.Total_Disc_Amt;
+                                localStorage.Procedure_types = data.Procedure_types;
+                                if (data.Procedure_types == null && data.Hospital_Services == false) localStorage.Procedure_types = true;
+                                localStorage.Disc_Pro = data.Disc_Pro;
+                                localStorage.Total_Disc_Amt_pro = data.Total_Disc_Amt_Pro;
+                                localStorage.isService = data.Services;
+
+                            }
                         }
-                        
-                        if (data.Disc == "There is no row at position 0." || data.Disc_Pro == "There is no row at position 0.")
-                        {
-                            localStorage.Disc = "0.00";
-                        }
-                        else
-                        {
-                            
-                            localStorage.Disc = data.Disc;
-                            localStorage.Total_Disc_Amt = data.Total_Disc_Amt;
-                            Item_Discount = data.Total_Disc_Amt;
-                            localStorage.Procedure_types = data.Procedure_types;
-                            if (data.Procedure_types == null && data.Hospital_Services == false) localStorage.Procedure_types = true;
-                            localStorage.Disc_Pro = data.Disc_Pro;
-                            localStorage.Total_Disc_Amt_pro = data.Total_Disc_Amt_Pro;
-                            localStorage.isService = data.Services;
-                           
-                        }
-                        }
-                        
+
                     },
                     failure: function (response) {
                         alert(response.d);
@@ -3945,52 +3837,50 @@
             function tokenInputs(textboxID, tblName, OnAddFun) {
                 debugger;
                 $('#' + textboxID).tokenInput("../../json.aspx?Table=" + tblName,
-                 {
-                     tokenLimit: 1,                                          
-                     onAdd:
-                         function (item) {
-                             try {
-                                 debugger;
-                                 if (tblName == 'Patients') {
-                                     debugger;
-                                     $("#hdfPatient_ID").val(item.id);
-                                   
-                                     LoadPatientDetails();
+                    {
+                        tokenLimit: 1,
+                        onAdd:
+                            function (item) {
+                                try {
+                                    debugger;
+                                    if (tblName == 'Patients') {
+                                        debugger;
+                                        $("#hdfPatient_ID").val(item.id);
 
-                                     GetPatientIdfromOPd();
-                                 }
-                                 else if (tblName == 'INV_ItemsForBilling')
-                                 {
-                                     localStorage.SelectedItemID = item.id;
-                                     localStorage.SelectedItemType = item.Type;
-                                     localStorage.SelectedItemName = item.name;
-                                     localStorage.SelectedItemAmount = (item.Amount.length == 0 ? 0 : item.Amount);
-                                     LoadITemsForDiscount(item.id);
-                                     $('#txtAddPackage').tokenInput("clear");
-                                 }
-                                 else if (tblName == 'Inv_Items_Panel' || tblName.includes('Inv_Items_Panel')) {
-                                     localStorage.SelectedItemID = item.id;
-                                     localStorage.SelectedItemType = item.Type;
-                                     localStorage.SelectedItemName = item.name;
-                                     localStorage.SelectedItemAmount = (item.Amount.length == 0 ? 0 : item.Amount);
-                                     LoadITemsForDiscount(item.id);
-                                     $('#txtAddPackage').tokenInput("clear");
-                                 }
-                                 else if (tblName == 'PacakgesForBilling')
-                                 {
-                                     localStorage.SelectedPackageID = item.id;
-                                     localStorage.SelectedPackageType = item.Type;
-                                     localStorage.SelectedPackageName = item.name;
-                                     LoadITemsForPackage(item.id);
-                                     $('#txtAddService').tokenInput("clear");
-                                     
-                                 }
-                             }
-                             catch (err) {
-                                 alert(err.message);
-                             }
-                         }
-                 });
+                                        LoadPatientDetails();
+
+                                        GetPatientIdfromOPd();
+                                    }
+                                    else if (tblName == 'INV_ItemsForBilling') {
+                                        localStorage.SelectedItemID = item.id;
+                                        localStorage.SelectedItemType = item.Type;
+                                        localStorage.SelectedItemName = item.name;
+                                        localStorage.SelectedItemAmount = (item.Amount.length == 0 ? 0 : item.Amount);
+                                        LoadITemsForDiscount(item.id);
+                                        $('#txtAddPackage').tokenInput("clear");
+                                    }
+                                    else if (tblName == 'Inv_Items_Panel' || tblName.includes('Inv_Items_Panel')) {
+                                        localStorage.SelectedItemID = item.id;
+                                        localStorage.SelectedItemType = item.Type;
+                                        localStorage.SelectedItemName = item.name;
+                                        localStorage.SelectedItemAmount = (item.Amount.length == 0 ? 0 : item.Amount);
+                                        LoadITemsForDiscount(item.id);
+                                        $('#txtAddPackage').tokenInput("clear");
+                                    }
+                                    else if (tblName == 'PacakgesForBilling') {
+                                        localStorage.SelectedPackageID = item.id;
+                                        localStorage.SelectedPackageType = item.Type;
+                                        localStorage.SelectedPackageName = item.name;
+                                        LoadITemsForPackage(item.id);
+                                        $('#txtAddService').tokenInput("clear");
+
+                                    }
+                                }
+                                catch (err) {
+                                    alert(err.message);
+                                }
+                            }
+                    });
             }
             function httpGet(theUrl) {
                 var xmlHttp = null;
@@ -4035,7 +3925,7 @@
                         userupdate = data.d;
 
                         if (userupdate == false || userupdate == "False" || userupdate == 'False') {
-                           
+
                         }
                     },
                     failure: function () {
@@ -4044,7 +3934,7 @@
                     }
                 });
 
-       
+
             }
             debugger;
 
@@ -4052,8 +3942,8 @@
                 if (userupdate == false || userupdate == "False" || userupdate == 'False') {
                     $('a[name="btndelBill"]').hide();
                     debugger;
-          
-                     return true;
+
+                    return true;
                 }
             }
 
@@ -4066,7 +3956,7 @@
                 }
                 else {
                     var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientID);
-                    $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name,readonly:true });
+                    $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name, readonly: true });
                 }
             }
             debugger;
@@ -4078,7 +3968,7 @@
                 }
                 else {
                     var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientID);
-                    $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name,readonly:true });
+                    $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name, readonly: true });
                     LoadPatientDetails();
                 }
             } debugger;
@@ -4101,11 +3991,10 @@
             var IsDiscountAvaible = "";
             var departmentpat;
             var PatientID;
-            var pat_id; 
-            function OnSuccess(data)
-            {
+            var pat_id;
+            function OnSuccess(data) {
                 debugger;
-               
+
                 IsDiscountAvaible = "";
                 var roomward = "";
                 if (data.d != '') {
@@ -4117,9 +4006,9 @@
                         roomward = data.d.Room_Name + ',  ' + data.d.Room_No
                     }
                     else {
-                        $('#lblWardRoom').hide(); 
+                        $('#lblWardRoom').hide();
                     }
-                   
+
                     if (data.d.Patient_Discount_Type == null)
                         data.d.Patient_Discount_Type = "";
                     var mydate = new Date(Date.parse(data.d.Entry_Date));
@@ -4149,11 +4038,11 @@
                     var Packtypes = data.d.Package_Type
                     var Packnames = data.d.Package_Name
 
-                    if (Packtypes == "There is no row at position 0."){
+                    if (Packtypes == "There is no row at position 0.") {
                         Packtypes = ""
                     }
-                     if (Packnames == "There is no row at position 0."){
-                         Packnames = ""
+                    if (Packnames == "There is no row at position 0.") {
+                        Packnames = ""
                     }
 
                     $('#PackageType').val(Packtypes);
@@ -4182,10 +4071,10 @@
                     if (packname == "There is no row at position 0.") {
                         packname = "Null";
                     }
-                   
+
 
                     var id = '<%= Request.QueryString["Bill_ID"]%>';
-                    
+
                     if (data.d.Patient_Type == null) {
 
                         $('#lblPatientCategory').val('General');
@@ -4195,44 +4084,41 @@
                     }
                     debugger;
 
-                    if (id == '') { 
-                    if ((PackType != "Null") && (packname != "Null")) {
-                        debugger;        
+                    if (id == '') {
+                        if ((PackType != "Null") && (packname != "Null")) {
+                            debugger;
                             AddPackage();
-                  
-                       
-                    }
-                    else {
-                        if (id == '') { 
-                        FetchRecommendedDetails();
+
+
+                        }
+                        else {
+                            if (id == '') {
+                                FetchRecommendedDetails();
+                            }
                         }
                     }
-                   }
                     debugger;
                     var lblIn_Patient_Category = $('#lblPatientDiscountType').text();
-                    if ((lblPatientCategory == "Insurance Company") || (lblIn_Patient_Category == "Insurance Company") )
-                    {
-                        var opd_Panel_company=$('#lblOPDpnl').text();
-                        var ipd_Panel_company=$('#lblIPDpnl').text();
+                    if ((lblPatientCategory == "Insurance Company") || (lblIn_Patient_Category == "Insurance Company")) {
+                        var opd_Panel_company = $('#lblOPDpnl').text();
+                        var ipd_Panel_company = $('#lblIPDpnl').text();
                         var tokeinpt = $('#token-input-txtAddService').val();
-                        if (typeof tokeinpt === 'undefined')
-                        {
-                            if (opd_Panel_company == "Private Patient" || ipd_Panel_company == "Private Patient") {                         
+                        if (typeof tokeinpt === 'undefined') {
+                            if (opd_Panel_company == "Private Patient" || ipd_Panel_company == "Private Patient") {
                             }
-                            else if (opd_Panel_company != "Private Patient" && opd_Panel_company != "" && opd_Panel_company != "Sehat Sahulat Card" && (lblIn_Patient_Category != "General"))
-                            {
+                            else if (opd_Panel_company != "Private Patient" && opd_Panel_company != "" && opd_Panel_company != "Sehat Sahulat Card" && (lblIn_Patient_Category != "General")) {
                                 var company_id = 0;
                                 if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || typeof localStorage.OPD_Panel_ID === 'undefined') company_id = localStorage.IPD_PAnel_ID;
                                 if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || typeof localStorage.IPD_PAnel_ID === 'undefined')
-                                company_id = localStorage.OPD_Panel_ID;
+                                    company_id = localStorage.OPD_Panel_ID;
                                 if (localStorage.OPD_Panel_ID != "null" && localStorage.IPD_PAnel_ID != "null") company_id = localStorage.IPD_PAnel_ID;
-                                    tokenInputs('txtAddService', 'Inv_Items_Panel&q=' + company_id + '&Panel=' + company_id);
+                                tokenInputs('txtAddService', 'Inv_Items_Panel&q=' + company_id + '&Panel=' + company_id);
                             }
                             else if ((lblPatientCategory == "General") && (lblIn_Patient_Category == "Insurance Company")) {
                                 var company_id = 0;
                                 if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || typeof localStorage.OPD_Panel_ID === 'undefined') company_id = localStorage.IPD_PAnel_ID;
                                 if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || typeof localStorage.IPD_PAnel_ID === 'undefined')
-                                company_id = localStorage.OPD_Panel_ID;
+                                    company_id = localStorage.OPD_Panel_ID;
                                 if (localStorage.OPD_Panel_ID != "null" && localStorage.IPD_PAnel_ID != "null") company_id = localStorage.IPD_PAnel_ID;
                                 tokenInputs('txtAddService', 'Inv_Items_Panel&q=' + company_id + '&Panel=' + company_id);
                             }
@@ -4240,7 +4126,7 @@
                                 var company_id = 0;
                                 if (localStorage.OPD_Panel_ID == "null" || localStorage.OPD_Panel_ID == null || typeof localStorage.OPD_Panel_ID === 'undefined') company_id = localStorage.IPD_PAnel_ID;
                                 if (localStorage.IPD_PAnel_ID == "null" || localStorage.IPD_PAnel_ID == null || typeof localStorage.IPD_PAnel_ID === 'undefined')
-                                company_id = localStorage.OPD_Panel_ID;
+                                    company_id = localStorage.OPD_Panel_ID;
                                 if (localStorage.OPD_Panel_ID != "null" && localStorage.IPD_PAnel_ID != "null") company_id = localStorage.IPD_PAnel_ID;
                                 tokenInputs('txtAddService', 'Inv_Items_Panel&q=' + company_id + '&Panel=' + company_id);
                             }
@@ -4252,41 +4138,35 @@
                             }
                         }
                     }
-                    
-                    else if (((lblPatientCategory == "Private" || lblIn_Patient_Category == "Private")) && (lblIn_Patient_Category != "General"))
-                    {
+
+                    else if (((lblPatientCategory == "Private" || lblIn_Patient_Category == "Private")) && (lblIn_Patient_Category != "General")) {
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
                             tokenInputs('txtAddService', 'Inv_Items_Panel_Private');
                         }
                     }
-                    else if ((lblPatientCategory == "Private") && (lblIn_Patient_Category == "General"))
-                    {
+                    else if ((lblPatientCategory == "Private") && (lblIn_Patient_Category == "General")) {
                         var tokeinpt = $('#token-input-txtAddService').val();
                         if (typeof tokeinpt === 'undefined') {
                             tokenInputs('txtAddService', 'INV_ItemsForBilling');
                         }
                     }
-                   
-                    else if ((lblPatientCategory == "Sehat Sahulat Card") || (lblIn_Patient_Category == "Sehat Sahulat Card"))
-                    {
-                        if (lblIn_Patient_Category == "Sehat Sahulat Card")
-                        {
+
+                    else if ((lblPatientCategory == "Sehat Sahulat Card") || (lblIn_Patient_Category == "Sehat Sahulat Card")) {
+                        if (lblIn_Patient_Category == "Sehat Sahulat Card") {
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
                                 tokenInputs('txtAddService', 'Inv_Items_Panel_Sehat_Sahulat');
                             }
                         }
-                        else if (lblPatientCategory == "Sehat Sahulat Card" && lblIn_Patient_Category=="")
-                        {
+                        else if (lblPatientCategory == "Sehat Sahulat Card" && lblIn_Patient_Category == "") {
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
                                 tokenInputs('txtAddService', 'Inv_Items_Panel_Sehat_Sahulat');
                             }
                         }
-                        
-                        else
-                        {
+
+                        else {
                             var tokeinpt = $('#token-input-txtAddService').val();
                             if (typeof tokeinpt === 'undefined') {
                                 tokenInputs('txtAddService', 'INV_ItemsForBilling');
@@ -4299,19 +4179,17 @@
                             tokenInputs('txtAddService', 'INV_ItemsForBilling');
                         }
                     }
-                    
+
                     $('#lblWardRoom').text(roomward);
                     checkIsExistinOutPatient();
                 }
-                   var id = '<%= Request.QueryString["Bill_ID"]%>';
-                if (id != "")
-                {
+                var id = '<%= Request.QueryString["Bill_ID"]%>';
+                if (id != "") {
                     if (IPDDiscount != "") {
                         $('#lblPatientDiscountType').text(IPDDiscount);
                     }
-                    else
-                    {
-                       
+                    else {
+
                     }
                 }
 
@@ -4352,25 +4230,25 @@
                     var hidshow = '';
                     $.each(data, function (key, value) {
                         debugger;
-                       
 
-                            var Type = $("#lblPatientDiscountType").text();
-                            var ward = $('#lblsetWardType').text();
-                            var room = $('#lblserRoomNo').text();
-                            if (Type == "Private") {
-                                hidshow = "pointer-events:default;"
-                            }
-                            else {
 
-                                hidshow = "pointer-events:none;"
-                            }
+                        var Type = $("#lblPatientDiscountType").text();
+                        var ward = $('#lblsetWardType').text();
+                        var room = $('#lblserRoomNo').text();
+                        if (Type == "Private") {
+                            hidshow = "pointer-events:default;"
+                        }
+                        else {
 
-                        
+                            hidshow = "pointer-events:none;"
+                        }
+
+
 
                         debugger;
                         var username = '<%= AppConfig.UserName%>';
 
-         
+
 
                         if (typeof value.ParentTrans_Name === 'undefined') value.ParentTrans_Name = "";
                         var ServiceDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Service_Date.substring(6, 19))))
@@ -4512,13 +4390,13 @@
                                     }
                                 }
 
-                            });                           
+                            });
                             setTimeout(function () {
                                 if ($("#tblDetails tbody tr").length > 0 && $("#ctl00_MainContent_ddlUserDepartment").val() != "0") {
                                     $("#ctl00_MainContent_ddlBillType").attr("disabled", "true");
 
-                                        $("#ctl00_MainContent_ddlUserDepartment").attr("disabled", false);
-                                   
+                                    $("#ctl00_MainContent_ddlUserDepartment").attr("disabled", false);
+
                                 }
                             }, 300);
 
@@ -4597,7 +4475,7 @@
                 var Prefix_PatientName = $('#ddl_name').val();
                 var PatientName = $('#txt_name').val();
                 var PatientID = $('#hdfPatient_ID').val();
-                
+
 
                 var Full_Name = Prefix_PatientName + PatientName;
                 debugger;
@@ -4644,12 +4522,12 @@
                     dataType: "json",
                     success: function (data) {
                         debugger;
-                        var Reg_Patient_ID  = data.d;
+                        var Reg_Patient_ID = data.d;
 
                         alert('Your Record Save and Load Successfully');
                         $('#PatientModel').modal('hide');
 
-                       
+
                         AddPatientDetail(Reg_Patient_ID);
 
                     },
@@ -4677,7 +4555,7 @@
             debugger;
             function fillmrnos() {
                 debugger;
-                var data = {}; 
+                var data = {};
 
                 $.ajax({
                     type: "POST",
@@ -4710,7 +4588,7 @@
                 });
                 $("#ddl_name").focus();
                 MaskedInput({
-                    elm: document.getElementById('txt_cnic'), 
+                    elm: document.getElementById('txt_cnic'),
                     format: '_____-_______-_',
                     separator: '-'
 
@@ -4901,7 +4779,7 @@
 
                     }
                     $('#hdfPatient_ID').val(data.d.Reg_PatientID);
-                 
+
 
 
                 }
@@ -4916,8 +4794,7 @@
             }
 
             var patient_id_old = 0;
-            function ReplaceNullWith_Space(Data)
-            {
+            function ReplaceNullWith_Space(Data) {
                 if (Data == "null")
                     return " ";
                 else
@@ -4934,25 +4811,22 @@
                 });
             }
             var arr = [];
-            function GetPanelRateAndDiscountComplete()
-            {
-                
-                PageMethods.GetPanelRateAndDiscountComplete(function (data)
-                {
+            function GetPanelRateAndDiscountComplete() {
+
+                PageMethods.GetPanelRateAndDiscountComplete(function (data) {
                     var Parsed = JSON.parse(data);
-                    $.each(Parsed, function (key, value)
-                    {
+                    $.each(Parsed, function (key, value) {
                         arr.push
                             ({
-                            Item_ID: value.Item_ID,
-                            Rate: value.Rate,
-                            Discount: value.Discount,
-                            Panel_ID: value.Panel_ID,
-                        });
+                                Item_ID: value.Item_ID,
+                                Rate: value.Rate,
+                                Discount: value.Discount,
+                                Panel_ID: value.Panel_ID,
+                            });
                     });
                 });
             }
-                function fillCashInHand() {
+            function fillCashInHand() {
                 debugger;
                 var optionsBnk = '';
 
@@ -4995,7 +4869,7 @@
 
             //    return options;
             //}
-           
+
             $(document).ready(function () {
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
                 if (Bill_ID != "") {
@@ -5034,7 +4908,7 @@
                 });
                 fillmartial();
                 fillgender();
-                
+
 
                 jQuery(function ($) {
                     MaskedInput({
@@ -5048,20 +4922,20 @@
                     phoneInput.setSelectionRange(cursorPosition, cursorPosition);
 
 
-               
+
                 });
-             
-                
+
+
                 debugger;
 
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
                 if (id != "") {
                     Deletebillsupdate();
                 }
-               
-                localStorage.removeItem('Disc'); 
+
+                localStorage.removeItem('Disc');
                 localStorage.removeItem('Total_Disc_Amt');
-                localStorage.Disc_Pro ="0.00";
+                localStorage.Disc_Pro = "0.00";
 <%--                var user_name = '<% =AppConfig.UserName %>';
                 if (user_name == "Ali.Tariq" || user_name == "ali.tariq") {
                 $('#txtDisPer').attr('disabled', false);
@@ -5082,18 +4956,18 @@
                 //tokenInputs('txtAddService', 'INV_ItemsForBilling');
                 //FillLabTests();
                 FillDoctors();
-               
+
                 FillShareType();
                 OpenRecord();
                 debugger;
-               // FillProcedure();
+                // FillProcedure();
                 var Reg_ID = '<%= Request.QueryString["Reg_ID"]%>';
                 $('#hdfPatient_ID').val(Reg_ID);
                 if (Reg_ID != "") {
                     setTimeout(function () {
                         FillTokenInputForMRNo();
-                    },1000)
-                   
+                    }, 1000)
+
                 }
                 FillOtherTest();
                 FillMainTestDepartment();
@@ -5103,9 +4977,9 @@
                 $('#add-new-testDirect').click(function () {
                 });
                 $('#add-new-Othertest').click(function () {
-                 });
+                });
                 $('#add-new-Procedure').click(function () {
-                  });
+                });
                 $('#add-new-testList').click(function () {
                 });
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -5279,10 +5153,9 @@
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Discharge Date</label>
-                        <input type="text" id="txtdischargedate" disabled="disabled" class="form-control" />
+                        <input type="text" id="txtdischargedate" disab"hdfPatient_ID"class="form-control" />
                     </div>
-                </div>
-                <div class="row mb-3">
+                </"hndopdid"            <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Ward Type</label>
                         <input type="text" id="wardtype" disabled="disabled" class="form-control" />
@@ -5479,8 +5352,7 @@
             <div class="col-lg-6 col-md-8 col-sm-9"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Total Payable: </label>
-                </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
+                      <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="text" id="txtTotalPayable" style="height: 30px;text-align: right; font-size: 22px;"  disabled="disabled" />
                 </div>
         </div>
