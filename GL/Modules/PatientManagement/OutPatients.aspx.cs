@@ -1650,6 +1650,7 @@ namespace PMS
             chkNailBiting.Checked = qry.Psychiatry_Nail_Biting?.ToLower() == "true";
             chkTemperTantrums.Checked = qry.Psychiatry_Temper_Tantrums?.ToLower() == "true";
             chkBedWetting.Checked = qry.Psychiatry_Bed_Wetting?.ToLower() == "true";
+           
             txtAcademics.Text = qry.Psychiatry_Academics;
             txtPeerRelationship.Text = qry.Psychiatry_Peer_Relationship;
             txtBehaviour.Text = qry.Psychiatry_Behaviour;

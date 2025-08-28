@@ -108,7 +108,7 @@
             $('#ctl00_lblMessage').hide();
 
         });
-      <%-- (function () {
+  <%--     (function () {
             var devtoolsOpen = false;
 
             // Function to check DevTools
