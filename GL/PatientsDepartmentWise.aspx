@@ -550,7 +550,8 @@
                     }
                     else if (rptTitle == "Test_Result_Status") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=TestResultStatus&ReportTitle=Test Result Status from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&serviceID=' + ((typeof ($("#ctl00_MainContent_ddlTestResult").val()) != 'undefined') ? $("#ctl00_MainContent_ddlTestResult").val() : "0") + '&ExportPDF=' + exporttopdf; /*+ '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked*/
+                        var url = 'ReportViewer.aspx?ReportName=TestResultStatus&ReportTitle=
+                        Result Status from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&serviceID=' + ((typeof ($("#ctl00_MainContent_ddlTestResult").val()) != 'undefined') ? $("#ctl00_MainContent_ddlTestResult").val() : "0") + '&ExportPDF=' + exporttopdf; /*+ '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked*/
                         window.open(url, '_blanks');
                     }
 

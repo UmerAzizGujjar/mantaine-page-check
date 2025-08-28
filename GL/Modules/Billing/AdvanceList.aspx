@@ -15,6 +15,10 @@
             function PrintTest(id) {
                 window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
             }
+            function PrintReport(Advance_ID) {
+                debugger;
+                window.open('../../ReportViewer.aspx?ReportName=PrintAdvanceReport&ReportTitle= AdvancePrint&Adv_IDs=' + Advance_ID);
+            }
             function EditAdvance(advId) {
                 debugger;
                 window.open("AddNewAdvance.aspx?advID=" + advId);
@@ -41,11 +45,7 @@
             }
 
 
-            function PrintReport(row) {
-                debugger;
-                var Adv_ID = $(row).parents('tr:first').children('td:first').text();
-                window.open('ReportViewer.aspx?ReportName=PrintAdvanceReport&ReportTitle= AdvancePrint&Adv_IDs=' + Adv_ID);
-            }
+           
 
 
 
@@ -107,7 +107,7 @@
 
                                 var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" onclick="DeleteAdv(' + full.Advance_ID + ')"><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
-                                var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Advance_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
+                                var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(' + full.Advance_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
 
                                 var result;
                                 result = res + Del + print;
