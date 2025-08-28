@@ -5282,7 +5282,7 @@ namespace PMS
             else if (reportName == "TestDefination")
             {
 
-                reportPath += "rptTestDefination.rpt";
+                reportPath += "Billings/rptTestDefination.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Test_IDs", Request.QueryString["Test_IDs"]);
