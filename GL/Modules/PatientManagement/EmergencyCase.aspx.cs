@@ -1518,27 +1518,42 @@ namespace PMS
                            }).ToList();
             return ((new JavaScriptSerializer()).Serialize(PatCase));
         }
-
         [WebMethod]
         public static string CheckExistOutPatient(int Patient_ID)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var PatientExist = (from OPD in db.Out_Patients
-                                    where OPD.Patient_ID == Patient_ID
-                                    && OPD.Discharge == false
-                                    select new
-                                    {
-                                        OPD.Patient_ID,
-                                        OPD.Out_Patient_ID,
-                                    }).ToList();
+                var PatientExistOPD = (from OPD in db.Out_Patients
+                                       where OPD.Reg_PatId == Patient_ID
+                                       && OPD.Discharge == false
+                                       select new
+                                       {
+                                           OPD.Patient_ID,
+                                           OPD.Out_Patient_ID,
+                                       }).ToList();
 
-                if (PatientExist.Count != 0)
+                var PatientExistIPD = (from IPD in db.In_Patients
+                                       where IPD.Patient_ID == Patient_ID
+                                       && IPD.Discharge == false
+                                       select new
+                                       {
+                                           IPD.Patient_ID,
+                                           IPD.In_Patient_ID,
+                                       }).ToList();
+
+              
+                 if (PatientExistOPD.Count != 0)
                 {
-                    return (new JavaScriptSerializer().Serialize("Exist"));
+                    return (new JavaScriptSerializer().Serialize("OPD"));
+                }
+                else if (PatientExistIPD.Count != 0)
+                {
+                    return (new JavaScriptSerializer().Serialize("IPD"));
                 }
                 else
+                {
                     return (new JavaScriptSerializer().Serialize("Not Exist"));
+                }
             }
         }
 

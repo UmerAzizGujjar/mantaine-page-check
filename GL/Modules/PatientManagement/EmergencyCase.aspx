@@ -3262,9 +3262,13 @@
         success: function (response) {
             var data = JSON.parse(response.d);
 
-            if (data == "Exist") {
-                alert("First Discharge Mr# " + $('#ctl00_MainContent_txtPatient_ID').val() + " from OPD");
-            } else {
+            if (data == "OPD") {
+                alert("First Discharge Mr# " + patientMrNo + " from OPD");
+            }
+            else if (data == "IPD") {
+                alert("First Discharge Mr# " + patientMrNo + " from IPD");
+            }
+            else {
                 var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
                 var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
 
@@ -4831,6 +4835,7 @@
             var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
             var parsedData = JSON.parse(tokenData);
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
+            
 
             $('#<%= txtPatient_ID.ClientID%>').val(Patient_ID);
             $('#<%= hdfPatient_ID.ClientID%>').val(Patient_ID);
@@ -4839,6 +4844,12 @@
             $('#btnSave').val("Save");
             $('#ctl00_MainContent_txtIn_Patient_ID').val("(New)");
             LoadHistory();
+            checkpatient()
+        }
+        function checkpatient() {
+            var pat_id = $('#<%= txtPatient_ID.ClientID%>').val();
+
+            //kcd
         }
         function hideResults() {
             searchResults.classList.remove('active');

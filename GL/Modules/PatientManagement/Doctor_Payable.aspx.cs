@@ -114,7 +114,7 @@ namespace PMS.Modules.PatientManagement
                                 ? BillList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList()
                                 : BillList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList();
                         }
-                    }
+                    } 
 
                     var paginatedList = BillList.Skip(start).Take(length).ToList();
 

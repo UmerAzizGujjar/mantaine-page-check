@@ -2074,15 +2074,28 @@ namespace PMS
                 pt.Patient_Type_id = DBClass.getField("select Patient_Type from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc");
                 pt.IsDisountAvailable = DBClass.getField("select Discount_Assigned_Patient_Id from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
                 pt.DiscountPercFromMaster = DBClass.getField("select Discount_Percentage from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
-                pt.DiscountAmountFromMaster = DBClass.getField("select Discount_Amount from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
-                pt.pkg_name = DBClass.getField("select top 1 packagae_name from In_Patient where Patient_Id =" + PatientID + " and Discharge = 1 order by Created_Time desc");
-                pt.pkg_type = DBClass.getField("select top 1 packagae_type from In_Patient where Patient_Id =" + PatientID + " and Discharge = 1 order by Created_Time desc");
-                pt.pkg_namefordetails = DBClass.getField("select top 1 packagae_name from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
-                pt.pkg_typefordetails = DBClass.getField("select top 1 packagae_type from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
-                pt.In_Patient_Type = DBClass.getField("select top 1 Patient_Discount_Type from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
-                pt.Package_Type = DBClass.getField("select top 1 Package_type_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
-                pt.Package_Name = DBClass.getField("select top 1 Package_Name_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
-                pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Patient_Main_Category from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
+
+                pt.checkdischarge = DBClass.getField("select isnull(Discharge,0) from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
+
+
+                if(pt.checkdischarge == "false")
+                {
+                    pt.pkg_name = DBClass.getField("select top 1 packagae_name from In_Patient where Patient_Id =" + PatientID + " and Discharge = 1 order by Created_Time desc");
+                    pt.pkg_name = DBClass.getField("select top 1 packagae_name from In_Patient where Patient_Id =" + PatientID + " and Discharge = 1 order by Created_Time desc");
+                    pt.pkg_type = DBClass.getField("select top 1 packagae_type from In_Patient where Patient_Id =" + PatientID + " and Discharge = 1 order by Created_Time desc");
+                    pt.pkg_namefordetails = DBClass.getField("select top 1 packagae_name from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
+                    pt.pkg_typefordetails = DBClass.getField("select top 1 packagae_type from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
+                    pt.In_Patient_Type = DBClass.getField("select top 1 Patient_Discount_Type from In_Patient where Patient_Id =" + PatientID + "  order by Created_Time desc");
+                    pt.Package_Type = DBClass.getField("select top 1 Package_type_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
+                    pt.Package_Name = DBClass.getField("select top 1 Package_Name_id from In_Patient where Patient_Id =" + PatientID + "order by Created_Time desc");
+                    pt.MainDepartment = "03";
+                }
+                else
+                {
+
+                }
+
+                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Patient_Main_Category from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
                 if (pt.IsDisountAvailable.Contains("position")) pt.IsDisountAvailable = "false";
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
@@ -2105,7 +2118,8 @@ namespace PMS
                     pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_ids);
                     pt.MainDepartment = "03";
                 }
-                if (ipd_id != "There is no row at position 0.")
+               
+                else if (ipd_id != "There is no row at position 0." && pt.checkdischarge == "false")
                 {
                     pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
                     pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
@@ -2116,10 +2130,10 @@ namespace PMS
                     pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
                     pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
                     pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_id);
-                    pt.MainDepartment = "03";
+
                 }
 
-                if (Emergency_Id != "There is no row at position 0.")
+                else if (Emergency_Id != "There is no row at position 0.")
                 {
                     pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + Emergency_Id);
                     pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
@@ -2280,6 +2294,7 @@ namespace PMS
             public string DiscountPercFromMaster { get; set; }
 
             public string DiscountAmountFromMaster { get; set; }
+            public string checkdischarge { get; set; }
             public string pkg_type { get; set; }
             public string pkg_name { get; set; }
             public string pkg_typefordetails { get; set; }
