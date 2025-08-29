@@ -94,8 +94,19 @@
                         "name": "DoctorName",
                         "orderable": true,
                         "render": function (data, type, row) {
-                            return '<a href="#" onclick="showmodal(\'' + row.Bill_ID + '\', \'' + row.Doctorid + '\')"> Assign ' + data + '</a>';
+                            var res = '<a href="#" onclick="showAssignmodal(' + row.Bill_ID + ')"> ' + data + '</a>';
+                            var result;
+                            result = res 
+                            return result;
                         }
+                    },
+                    {
+                        "render": function (data, type, row) {
+                           
+                            var action = '<a href="#" onclick="showmodal(\'' + row.Bill_ID + '\', \'' + row.Doctorid + '\')"> <i class="fa fa-eye"></i></a>';
+
+                            return action;
+                        }, "orderable": false
                     }
 
                 ],
@@ -123,11 +134,53 @@
                 }
             });
         }
+
+        function GetBillDetails(billId) {
+            $.ajax({
+                type: "POST",
+                url: "Doctor_Payable.aspx/GetBillById",   // WebMethod name
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ billId: billId }), // send billId
+                success: function (response) {
+                    var bill = response.d; // WebMethod returns BillInfo object
+                    if (bill) {
+                        // Example: Fill UI controls with bill details
+
+                        $("#txtDoctor").val(bill.DoctorName);
+                        $("#txtPackage").val(bill.Package_Name);                        
+                        $("#txtBillAmount").val(bill.Bill_Net_Amount);
+                        $("#txtDoctorShare").val(bill.Doctor_Share);
+                        $("#txtHospitalShare").val(bill.Hospital_Share);
+                        $("#txtExpensed").val(bill.Total_Expense);
+                        $("#txtDiscount").val(bill.Discount_Amount);
+                        $("#txtNetAmount").val(bill.Net_Amount);
+                        $("#txtBillNo").val(bill.Bill_No);
+
+                        $("#hdnDocId").val(bill.Doctorid);
+                        $("#hdnBillid").val(bill.Bill_ID);
+                        $("#hdnPackageType").val(bill.Package_Type_Id);
+                        $("#hdnPatient_Id").val(bill.Patient_Id);
+                    } else {
+                        alert("No record found for Bill ID: " + billId);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching bill details:", error);
+                    alert("Error fetching bill details.");
+                }
+            });
+        }
+
+
         function showmodal(Bill_Id, Doctorid) {
             $("#DetailModel").modal('show');
             GetBillDetailsPackageWise(Bill_Id)
         }
-
+        function showAssignmodal(Bill_Id) {
+            $("#AssingModel").modal('show');
+            GetBillDetails(Bill_Id)
+        }
         function GetBillDetailsPackageWise(Bill_Id) {
             console.log(Bill_Id);
             $.ajax({
@@ -151,9 +204,7 @@
                     if (data && data.length > 0) {
                         $.each(data, function (index, item) {
                             if (index === 0) {
-                                $("#hdnDocId").val(item.Doctor_Id);
-                                $("#hdnBillid").val(item.Bill_ID);
-                                $("#hdnPatient_Id").val(item.Patient_ID);
+
                             }
                             if (item.is_expense) {
                                 expenseTotal += parseFloat(item.Net_Amount);
@@ -217,12 +268,14 @@
             var PatientID = $('#hdnPatient_Id').val();
             var Doctor_ID = $('#hdnDocId').val();
             var Bill_Id = $('#hdnBillid').val();
-            var Total_Bill_Amount = $('#txtTotalAmount').val();
-            var Total_Expense = $('#txtexpense').val();
-            var Aftre_Expense_Amount = $('#txtNet').val();
-            var DoctorShare = $('#DocShare').val();
-            var HospitalShare = $('#HosShare').val();
-            var AssignAmount = $('#txtAssignAmount').val();
+            var Package_Type = $('#hdnPackageType').val();
+            var Total_Bill_Amount = $('#txtBillAmount').val();
+            var Total_Expense = $('#txtExpensed').val();
+            var Aftre_Expense_Amount = $('#txtNetAmount').val();
+            var DoctorShare = $('#txtDoctorShare').val();
+            var HospitalShare = $('#txtHospitalShare').val();
+            var AssignAmount = $('#txtDoctorShare').val();
+            var PackageName = $('#txtPackage').val();
 
             var data = JSON.stringify({
                 "PatientID": PatientID,
@@ -233,7 +286,9 @@
                 "Aftre_Expense_Amount": Aftre_Expense_Amount,
                 "DoctorShare": DoctorShare,
                 "HospitalShare": HospitalShare,
-                "AssignAmount": AssignAmount
+                "AssignAmount": AssignAmount,
+                "PackageName": PackageName,
+                "Package_Type": Package_Type
             });
 
             $.ajax({
@@ -249,6 +304,9 @@
                     if (result.startsWith("success")) {
                         alert('Your record has been saved successfully');
                         $('#PatientModel').modal('hide');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 800); 
                     } else {
                         alert('Error while saving: ' + result);
                     }
@@ -299,7 +357,8 @@
                         <th>Doctor Share</th>
                         <th>Hospital Share</th>
                         <th>Services/Tests</th>
-                        <th>Doctor</th>                          
+                        <th>Assign To</th>                          
+                        <th>Action</th>                          
                     </tr>
                 </thead>
                 <tbody id="tblbody">
@@ -361,18 +420,82 @@
                                     <label>Hospital Share</label>
                                     <input type="text" id="HosShare" readonly="readonly"/>
                                 </div>
-                                <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <label>Assign Amount</label>
-                                    <input type="text" id="txtAssignAmount" />
-                                </div>
-                                                                <div class="col-lg-3 col-md-6 col-sm-6">
-
-                                    <input type="hidden" id="hdnDocId" />
-                                    <input type="hidden" id="hdnBillid" />
-                                    <input type="hidden" id="hdnPatient_Id" />
-                                </div>
+                                
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primry" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+
+       <div id="AssingModel" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign Doctor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="container-fluid">
+
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Bill No</label>
+                                <input type="text" id="txtBillNo" readonly="readonly" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Total Bill Amount</label>
+                                <input type="text" id="txtBillAmount" readonly="readonly" />
+                            </div>
+                                                        <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Hospital Share</label>
+                                <input type="text" id="txtPackage" readonly="readonly" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Total Expense</label>
+                                <input type="text" id="txtExpensed" readonly="readonly" />
+                            </div>
+
+                        </div>
+                        <div class="row">
+                             <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Net Amount</label>
+                                <input type="text" id="txtNetAmount" readonly="readonly" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Doctor Share</label>
+                                <input type="text" id="txtDoctorShare" readonly="readonly" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Hospital Share</label>
+                                <input type="text" id="txtHospitalShare" readonly="readonly" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <label>Doctor Name</label>
+                                <input type="text" id="txtDoctor" readonly="readonly" />
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 col-sm-6" style ="display : none;">
+                                <label>Assign Amount</label>
+                                <input type="text" id="txtAssignAmount" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+
+                                <input type="hidden" id="hdnDocId" />
+                                <input type="hidden" id="hdnBillid" />
+                                <input type="hidden" id="hdnPackageType" />
+                                <input type="hidden" id="hdnPatient_Id" />
+                            </div>
+                        </div>
+                       
                     </div>
                 </div>
             </div>
@@ -382,6 +505,8 @@
             </div>
         </div>
     </div>
+
+
 </asp:Content>
 
 

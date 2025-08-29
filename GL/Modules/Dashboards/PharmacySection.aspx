@@ -1,48 +1,36 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PharmacySection.aspx.cs" Inherits="PMS.Modules.Dashboards.PharmacySection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div id="loading">
-        <div id="loading-center">
-            <div id="loading-center-absolute">
-                <div class="object" id="object_one"></div>
-                <div class="object" id="object_two"></div>
-                <div class="object" id="object_three"></div>
-                <div class="object" id="object_four"></div>
-                <div class="object" id="object_five"></div>
-                <div class="object" id="object_six"></div>
-                <div class="object" id="object_seven"></div>
-                <div class="object" id="object_eight"></div>
-                <div class="object" id="object_big"></div>
-            </div>
-        </div>
-    </div>
-    <br />
-    <br />
+    <br /><br />
     <div class="container">
         <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Pharmacy-Sale">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pharmacy.png" alt="Sale" style="object-fit: contain;" />
                     <h5 class="cocotxt">Pharmacy Sale</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Issue-Medicine">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/diagnosis.png" alt="Medicnine" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Issue Medicnine</h5>
+                    <h5 class="cocotxt">Issue Medicine</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Pharmacy-User">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/Pharmacy_Users.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pharmacist.png" alt="User" style="object-fit: contain;" />
                     <h5 class="cocotxt">Pharmacy User</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sale-Return">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/sales.png" alt="Return" style="object-fit: contain;" />
                     <h5 class="cocotxt">Sale Return</h5>
@@ -51,17 +39,58 @@
         </div>
         <br />
         <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sale-Report">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Report.png" alt="Report" style="object-fit: contain;" />
                     <h5 class="cocotxt">Sale Report</h5>
                 </a>
             </div>
+        </div>
     </div>
 
-    <%--
-    <div class="col-sm-6 col-sm-offset-4" style="margin-top: 47px;">
-        <asp:Image ID="imgLogo" runat="server" ImageUrl="~../../../../wwwroot/images/HMIS_Icons/TibbITLogo_2.png"
-            Style="height: 245px; width: 408px; border-width: 0px; opacity: 0.5; position: relative; z-index: -1;" />
-    </div>--%>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadPharmacySectionPermissions();
+        });
+
+        function loadPharmacySectionPermissions() {
+            $.ajax({
+                type: "POST",
+                url: "PharmacySection.aspx/GetUserAllowedMenus",
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var allowedMenus = response.d;
+
+                    console.log("PharmacySection: Allowed Menus =", allowedMenus);
+
+                    // 🔁 Map shortcut ID to actual Menu_Name from DB
+                    var shortcutToMenuMap = {
+                        "shortcut-Pharmacy-Sale":       "mnuissuemdcn",
+                        "shortcut-Issue-Medicine":      "mnuissuemdcnList",
+                        "shortcut-Pharmacy-User":       "mnunewuserPharma",
+                        "shortcut-Sale-Return":         "mnuissuemdcn",
+                        "shortcut-Sale-Report":         "mnuissuemdcnList"
+                    };
+
+                    // Show/hide based on permissions
+                    Object.keys(shortcutToMenuMap).forEach(function (shortcutId) {
+                        var requiredMenu = shortcutToMenuMap[shortcutId];
+
+                        if (allowedMenus.includes(requiredMenu)) {
+                            $("#" + shortcutId).show();
+                        } else {
+                            $("#" + shortcutId).hide();
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load Pharmacy permissions:", error);
+                    // Optionally hide all on error
+                    Object.keys(shortcutToMenuMap).forEach(id => $("#" + id).hide());
+                }
+            });
+        }
+    </script>
 </asp:Content>

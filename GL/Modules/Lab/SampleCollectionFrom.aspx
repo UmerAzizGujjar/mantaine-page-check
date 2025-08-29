@@ -723,7 +723,7 @@
         function Print() {
             debugger;
             var sampleID = $("#hdSample_ID").val();
-            window.open('ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
+            window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + sampleID);
         }
 
         function loadRangeType() {
@@ -1111,7 +1111,7 @@
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnPrintBarcode" class="btn btn-primry" type="button" value="Barcode" onclick="PrintBarcode()" />
                 </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4" style="display:none">
+                        <div class="col-lg-2 col-md-3 col-sm-4" >
                         <input id="btnPrint" class="btn btn-primry" type="button" value="Print" onclick="Print()"/>
                             </div>
             </div>
