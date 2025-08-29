@@ -1,15 +1,17 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcess.aspx.cs" Inherits="PMS.BillingProcess" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+        <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Billing.css" rel="stylesheet" />
+    
     <style>
         div.token-input-dropdown {
     overflow: auto;
     max-height: 150px;
 }
+        /*k*/
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Billing.css" rel="stylesheet" />
     <div style="margin: 0px 0px 0px 0px;">
      
         <script type="text/javascript">
@@ -5153,9 +5155,9 @@
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Discharge Date</label>
-                        <input type="text" id="txtdischargedate" disab"hdfPatient_ID"class="form-control" />
+                        <input type="text" id="txtdischargedate" disable="disabled" class="form-control" />
                     </div>
-                </"hndopdid"            <div class="row mb-3">
+                <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
                         <label>Ward Type</label>
                         <input type="text" id="wardtype" disabled="disabled" class="form-control" />
@@ -5178,6 +5180,7 @@
             </div>
         </div>
     </div>
+        </div>
         </div>
 
     <!-- Eighth Row -->
@@ -5343,7 +5346,7 @@
             <div class="col-lg-6 col-md-8 col-sm-9"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Previous Balance</label>
-                </div>
+            </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="text" id="txt_balance" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
             </div>
@@ -5352,10 +5355,12 @@
             <div class="col-lg-6 col-md-8 col-sm-9"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Total Payable: </label>
-                      <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtTotalPayable" style="height: 30px;text-align: right; font-size: 22px;"  disabled="disabled" />
                 </div>
-        </div>
+
+              <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="text" id="txtTotalPayable" style="height: 30px;text-align: right; font-size: 22px;"  disabled="disabled" />
+             </div>
+       </div>
          <div class="row">
             <div class="col-lg-6 col-md-8 col-sm-9"></div>
              <div class="col-lg-2 col-md-4 col-sm-6">
