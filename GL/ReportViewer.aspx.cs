@@ -5326,13 +5326,16 @@ namespace PMS
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 reportPath += "LabRadiology/rptLabSlip.rpt";
                 rd.Load(reportPath);
+                var labtest = int.Parse(Request.QueryString["Lab_ID"]);
                 rd.SummaryInfo.ReportTitle = reportTitle;
-                rd.SetParameterValue("@Lab_ID", int.Parse(Request.QueryString["Lab_ID"]));
+                rd.SetParameterValue("@Lab_ID", labtest);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                 rd.SetParameterValue("Phone", DBClass.getField("select Company_Phone1 from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
             }
+
+
             else if (reportName == "EmergencyPrint")
             {
                
