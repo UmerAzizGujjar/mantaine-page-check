@@ -1884,17 +1884,19 @@
                         }
                         row = '<tr><td style="display:none;">'
                             + parsedData[key].Lab_Test_Detail_ID + '</td><td>'
-                            + parsedData[key].Test_Name + '</td><td style="width: 550px;" class=' + 'arrow-togglable '
-                            + parsedData[key].Result_Type_Fixed + '><textarea id="txtfixedTypeGroup'
-                            + key + '" name="txtfixedTypeGroup"></textarea></td><td data-text="sdasd" class=' + 'arrow-togglable '
-                            + parsedData[key].Result_Type_Value + '><div ' + editable + '>'
-                            + typeVal + '</div></td><td>' + TestRange + '</td><td class='
-                            + parsedData[key].Result_Type_List + '> <select id="ddlResultValue'
-                            + key + '">' + optionsList + '</select></td><td> <input  onchange="readIMG(this)" id="fileUploadMultiple'
+                            + parsedData[key].Test_Name + '</td><td style="width: 550px;" class="arrow-togglable '
+                            + parsedData[key].Result_Type_Fixed + '"><textarea id="txtfixedTypeGroup'
+                            + key + '" name="txtfixedTypeGroup"></textarea></td><td data-text="sdasd" class="arrow-togglable '
+                            + parsedData[key].Result_Type_Value + '"><div '
+                            + editable + ' class="editable-div" style=" height: 25px; padding: 3px; border: 1px solid gray;">' + typeVal
+                            + '</div> </td><td>'
+                            + TestRange + '</td><td class="'
+                            + parsedData[key].Result_Type_List + '"> <select id="ddlResultValue'
+                            + key + '">' + optionsList + '</select></td><td> <input onchange="readIMG(this)" id="fileUploadMultiple'
                             + parsedData[key].Lab_Test_Detail_ID + '" type="file" name="FileUpload" multiple="multiple" class="image"/><div id="container'
                             + parsedData[key].Lab_Test_Detail_ID + '" style="width:150px;"></div></td><td id="billdid" style="display:none;">'
                             + parsedData[key].Bill_Details_ID + '</td></tr>';
-                        onchange = "readIMG(this)"
+
 
                         Lab_Test_Detail_ID = parsedData[key].Lab_Test_Detail_ID;
 
