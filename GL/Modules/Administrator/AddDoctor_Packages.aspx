@@ -176,9 +176,7 @@
                      alert(error.get_message());
                  })
          }
-         function value_delete(row) {
-             $(row).closest('tr').remove();
-         }
+
 
 
          function PopulatePackageDetail(id) {
@@ -270,30 +268,37 @@
                  }
              });
          }
+         function value_delete(row) {
+    $(row).closest("tr").remove();
+    calculateTotals();
+}
          function calculateTotals() {
-             var tbody = document.getElementById('tblbodyPackage');
-             var rowLength = tbody.rows.length;
-             var totalExpense = 0.00;
-             var totalNet = 0.00;
+    var totalExpense = 0.00;
+    var totalNet = 0.00;
 
-             for (var i = 1; i <= rowLength; i++) {
-                 var amount = parseFloat($('#txAmount' + i).val());
-                 if (isNaN(amount)) continue;
+    $('#tblbodyPackage tr').each(function () {
+        var amountInput = $(this).find("input[id^='txAmount']");
+        var chkExpense = $(this).find("input[id^='chkExpense']");
 
-                 var isExpenseChecked = $('#chkExpense' + i).is(':checked');
-                 if (isExpenseChecked) {
-                     totalExpense += amount;
-                 } else {
-                     totalNet += amount;
-                 }
-             }
+        if (amountInput.length > 0) {
+            var amount = parseFloat(amountInput.val());
+            if (isNaN(amount)) amount = 0;
 
-             var grandTotal = totalExpense + totalNet;
+            if (chkExpense.is(':checked')) {
+                totalExpense += amount;
+            } else {
+                totalNet += amount;
+            }
+        }
+    });
 
-             $('#txtExpense').val(totalExpense.toFixed(2));
-             $('#txtnetAmount').val(totalNet.toFixed(2));
-             $('#txttotalAMount').val(grandTotal.toFixed(2));
-         }
+    var grandTotal = totalExpense + totalNet;
+
+    $('#txtExpense').val(totalExpense.toFixed(2));
+    $('#txtnetAmount').val(totalNet.toFixed(2));
+    $('#txttotalAMount').val(grandTotal.toFixed(2));
+}
+
 
          // ✅ Function to update row amount when Qty or Price changes
          function UpdateAmount(index) {
