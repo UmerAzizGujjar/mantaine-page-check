@@ -256,7 +256,7 @@ function Selectfunc() {
 
     var slct_value = $("#ddlProgram").val();
 
-    if (slct_value == 01) {
+    if (slct_value == 02) {
         var yearmbbs = currentYear + 5;
         $('#txtSession').val(currentYear + '-' + yearmbbs);
         $($('#ddlClass').find('option')[1]).show();
@@ -265,8 +265,8 @@ function Selectfunc() {
         $($('#ddlClass').find('option')[4]).show();
         $($('#ddlClass').find('option')[5]).show();
     }
-    else if (slct_value == 02) {
-        var yearhealth = currentYear + 1;
+    else if (slct_value == 01) {
+        var yearhealth = currentYear + 2;
         $('#txtSession').val(currentYear + '-' + yearhealth)
         $($('#ddlClass').find('option')[2]).hide();
         $($('#ddlClass').find('option')[3]).hide();
@@ -274,7 +274,7 @@ function Selectfunc() {
         $($('#ddlClass').find('option')[5]).hide();
     }
     else if (slct_value == 03) {
-        var yearBds = currentYear + 4;
+        var yearBds = currentYear + 1;
         $('#txtSession').val(currentYear + '-' + yearBds)
         $($('#ddlClass').find('option')[1]).show();
         $($('#ddlClass').find('option')[2]).show();
