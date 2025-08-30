@@ -3,11 +3,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+
     <script type="text/javascript">
-    $(document).ready(function () {
-        debugger;
-        FillPackageType();
-        var date = '<%= DateTime.Now%>';
+        $(document).ready(function () {
+            debugger;
+            FillPackageType();
+            var date = '<%= DateTime.Now%>';
         $("#StartDate").datepicker({
             dateFormat: 'MM d,yy',
 
@@ -22,7 +23,7 @@
         $("#StartDate").val(date);
         $("#EndDate").val(date);
 
-        
+
         $('#ctl00_lblMessage').hide();
         setTimeout(function () {
             LoadPage();
@@ -58,8 +59,8 @@
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
                             searchValue: data.search.value,
-                            startDate: $("#StartDate").val(), 
-                            endDate: $("#EndDate").val(),    
+                            startDate: $("#StartDate").val(),
+                            endDate: $("#EndDate").val(),
                             packageType: Packagetype
                         }),
                         contentType: "application/json; charset=utf-8",
@@ -96,13 +97,13 @@
                         "render": function (data, type, row) {
                             var res = '<a href="#" onclick="showAssignmodal(' + row.Bill_ID + ')"> ' + data + '</a>';
                             var result;
-                            result = res 
+                            result = res
                             return result;
                         }
                     },
                     {
                         "render": function (data, type, row) {
-                           
+
                             var action = '<a href="#" onclick="showmodal(\'' + row.Bill_ID + '\', \'' + row.Doctorid + '\')"> <i class="fa fa-eye"></i></a>';
 
                             return action;
@@ -148,7 +149,7 @@
                         // Example: Fill UI controls with bill details
 
                         $("#txtDoctor").val(bill.DoctorName);
-                        $("#txtPackage").val(bill.Package_Name);                        
+                        $("#txtPackage").val(bill.Package_Name);
                         $("#txtBillAmount").val(bill.Bill_Net_Amount);
                         $("#txtDoctorShare").val(bill.Doctor_Share);
                         $("#txtHospitalShare").val(bill.Hospital_Share);
@@ -194,7 +195,7 @@
                     var data = JSON.parse(response.d);
                     console.log(data);
                     var tableBody = $("#example1 tbody");
-                    tableBody.empty(); 
+                    tableBody.empty();
                     var expenseTotal = 0;
                     var netTotal = 0;
                     var totalBill = 0;
@@ -216,7 +217,7 @@
                                 HosShare += HosShares
                             }
                             totalBill += parseFloat(item.Net_Amount);
-                           
+
 
                             var row = `
                         <tr>
@@ -262,7 +263,7 @@
                 $('#ddlPackageType').html(options);
             });
         }
-        
+
         function SaveShare() {
             debugger;
             var PatientID = $('#hdnPatient_Id').val();
@@ -279,7 +280,7 @@
 
             var data = JSON.stringify({
                 "PatientID": PatientID,
-                "Doctor_ID": Doctor_ID,                   
+                "Doctor_ID": Doctor_ID,
                 "Bill_Id": Bill_Id,
                 "Total_Bill_Amount": Total_Bill_Amount,
                 "Total_Expense": Total_Expense,
@@ -299,14 +300,14 @@
                 dataType: "json",
                 success: function (response) {
                     debugger;
-                    var result = response.d;  
+                    var result = response.d;
 
                     if (result.startsWith("success")) {
                         alert('Your record has been saved successfully');
                         $('#PatientModel').modal('hide');
                         setTimeout(function () {
                             location.reload();
-                        }, 800); 
+                        }, 800);
                     } else {
                         alert('Error while saving: ' + result);
                     }
@@ -329,44 +330,45 @@
         </div>
         <div class="col-lg-2 col-md-4 col-sm-8">
             <label>From Date:</label>
-            <input type="text" id="StartDate" class="form-control"/>
+            <input type="text" id="StartDate" class="form-control" />
         </div>
 
         <div class="col-lg-2 col-md-4 col-sm-8">
             <label>To Date:</label>
-            <input type="text" id="EndDate" class="form-control"/>
+            <input type="text" id="EndDate" class="form-control" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-8">
+            <label></label>
             <button type="button" id="btnSearch" class="btn btn-primry form-control" onclick="SearchDate()">Search</button>
         </div>
 
     </div>
     <br />
-     <div class="table-container">
-            <table id="example" class="table table-hover table-bordered" style="width:100% !important">
-                <thead>
-                    <tr>
-                        <th>Bill No</th>
-                        <th>date</th>
-                        <th>MR_No</th>
-                        <th>Patient Name</th>                     
-                        <th>Package Name</th>
-                        <th>Total Bill Amount</th>
-                        <th>Total Expense</th>
-                        <th>Net Amount</th>
-                        <th>Doctor Share</th>
-                        <th>Hospital Share</th>
-                        <th>Services/Tests</th>
-                        <th>Assign To</th>                          
-                        <th>Action</th>                          
-                    </tr>
-                </thead>
-                <tbody id="tblbody">
-                </tbody>
-            </table>
+    <div class="table-container">
+        <table id="example" class="table table-hover table-bordered" style="width: 100% !important">
+            <thead>
+                <tr>
+                    <th>Bill No</th>
+                    <th>date</th>
+                    <th>MR_No</th>
+                    <th>Patient Name</th>
+                    <th>Package Name</th>
+                    <th>Total Bill Amount</th>
+                    <th>Total Expense</th>
+                    <th>Net Amount</th>
+                    <th>Doctor Share</th>
+                    <th>Hospital Share</th>
+                    <th>Services/Tests</th>
+                    <th>Assign To</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tblbody">
+            </tbody>
+        </table>
     </div>
 
-   <div id="DetailModel" class="modal fade" tabindex="-1" role="dialog">
+    <div id="DetailModel" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -406,7 +408,7 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <label>Total Expense</label>
-                                    <input type="text" id="txtexpense" readonly="readonly"/>
+                                    <input type="text" id="txtexpense" readonly="readonly" />
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <label>Net Amount</label>
@@ -414,25 +416,27 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <label>Doctor Share</label>
-                                    <input type="text" id="DocShare" readonly="readonly"/>
+                                    <input type="text" id="DocShare" readonly="readonly" />
                                 </div>
-                                <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <label>Hospital Share</label>
-                                    <input type="text" id="HosShare" readonly="readonly"/>
-                                </div>
-                                
+                              
+
+
                             </div>
+                              <div class="row" style="margin-top:10px">
+      <div class="col-lg-3 col-md-6 col-sm-6">
+          <label>Hospital Share</label>
+          <input type="text" id="HosShare" readonly="readonly" />
+      </div>
+  </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primry" data-dismiss="modal">Ok</button>
-            </div>
+
         </div>
     </div>
 
-       <div id="AssingModel" class="modal fade" tabindex="-1" role="dialog">
+    <div id="AssingModel" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -455,7 +459,7 @@
                                 <label>Total Bill Amount</label>
                                 <input type="text" id="txtBillAmount" readonly="readonly" />
                             </div>
-                                                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
                                 <label>Hospital Share</label>
                                 <input type="text" id="txtPackage" readonly="readonly" />
                             </div>
@@ -465,8 +469,8 @@
                             </div>
 
                         </div>
-                        <div class="row">
-                             <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="row" style="margin-top:15px">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
                                 <label>Net Amount</label>
                                 <input type="text" id="txtNetAmount" readonly="readonly" />
                             </div>
@@ -483,7 +487,7 @@
                                 <input type="text" id="txtDoctor" readonly="readonly" />
                             </div>
 
-                            <div class="col-lg-3 col-md-6 col-sm-6" style ="display : none;">
+                            <div class="col-lg-3 col-md-6 col-sm-6" style="display: none;">
                                 <label>Assign Amount</label>
                                 <input type="text" id="txtAssignAmount" />
                             </div>
@@ -495,7 +499,7 @@
                                 <input type="hidden" id="hdnPatient_Id" />
                             </div>
                         </div>
-                       
+
                     </div>
                 </div>
             </div>
