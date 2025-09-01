@@ -312,48 +312,82 @@
         }
         function getGeneralFee() {
             debugger;
+
             var Department_id = $('#ddlDepartment').val();
-
             var emer_reffered = $("#hdn_emer_reffered").val();
-            if (emer_reffered != "") {
+            if (emer_reffered !== "") {
                 $('#txtfees').val("0");
+                $('#hdnDocshare').val("0");
+                $('#hdnhospShare').val("0");
+                return;
             }
-            else {
-                $.ajax({
-                    url: 'OPD.aspx/GetFees',
-                    type: 'POST',
-                    data: JSON.stringify({ Department_id: Department_id }),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (resp) {
-                        debugger;
-                        var data = JSON.parse(resp.d);
-                        $('#txtfees').val(data.Code);
-                        //sharing if private()
-                        $('#hdnDocshare').val(data.D_Share);
-                        $('#hdnhospShare').val(data.H_Share);
+            if (!Department_id || Department_id === "") {
+                $('#txtfees').val("0");
+                $('#hdnDocshare').val("0");
+                $('#hdnhospShare').val("0");
+                return;
+            }
 
-                    },
-                    error: function (response) {
+            $.ajax({
+                url: 'OPD.aspx/GetFees',
+                type: 'POST',
+                data: JSON.stringify({ Department_id: Department_id }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (resp) {
+                    debugger;
+
+                    try {
+                  
+                        var data = JSON.parse(resp.d);
+                        var code = data && data.Code !== undefined ? data.Code : 0;
+                        var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
+                        var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
+                        $('#txtfees').val(code);
+                        $('#hdnDocshare').val(dShare);
+                        $('#hdnhospShare').val(hShare);
+
+                    } catch (e) {
+                        console.error("Error parsing fee data:", e);
+                        $('#txtfees').val("0");
+                        $('#hdnDocshare').val("0");
+                        $('#hdnhospShare').val("0");
+
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: response.responseText,
-                            showConfirmButton: false,
+                            icon: 'warning',
+                            title: 'Data Error',
+                            text: 'Invalid fee data received.',
                             timer: 2000,
+                            showConfirmButton: false,
                             customClass: {
                                 popup: 'swal-big-popup',
                                 title: 'swal-big-title',
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-
-                        console.error("AJAX Error: ", response);
                     }
-                });
-            }
-           
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error, xhr.responseText);
 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Request Failed',
+                        text: 'Could not retrieve fee information.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    $('#txtfees').val("0");
+                    $('#hdnDocshare').val("0");
+                    $('#hdnhospShare').val("0");
+                }
+            });
         }
     </script>
 

@@ -1996,155 +1996,145 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(PackagesDetails);
         }
         [System.Web.Services.WebMethod]
-
         public static PatientDetail GetPatientDetails(string PatientID)
         {
-            int pat_id = 0;
-            bool isExist_ipd = false;
+            if (string.IsNullOrEmpty(PatientID) || !int.TryParse(PatientID, out int patientId))
+                return new PatientDetail();
+
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var walkin = (from tbl in db.Reg_patients
-                          where tbl.pat_id == int.Parse(PatientID)
-                          orderby tbl.Created_time descending
-                          select tbl.walkin).FirstOrDefault();
-            var query = (from data in db.In_Patients.Where(x => x.Patient_ID == Convert.ToInt32(PatientID) && x.Discharge == false) select data.Patient_ID).ToList();
-            if (query.Count > 0 && walkin == false)
+
+            try
             {
-                pat_id = DBClass.GetPat_ID_By_PatientID_reg(Convert.ToInt32(PatientID));
-            }
-            else
-            {
-                pat_id = DBClass.GetPat_ID_By_PatientID_reg(Convert.ToInt32(PatientID));
-            }
+                PatientDetail pt = new PatientDetail();
+                Reg_patient regPatient = GetLatestRegPatient(db, patientId);
 
-            int Patien_No = DBClass.GetMRNOBy_PatientID_reg(Convert.ToInt32(PatientID));
-            PatientDetail pt = new PatientDetail();
+                if (regPatient == null)
+                    return pt;
 
-            Reg_patient pat = new Reg_patient();
+                // Set basic patient info
+                pt.Name = regPatient.Full_Name;
+                pt.Gender = db.GetDataValueName("Gender", regPatient.Gender);
+                pt.Age = regPatient.Age_years.ToString();
+                pt.Entry_Date = regPatient.Created_time?.ToString() ?? "";
+                pt.Mobile = regPatient.Mobile1;
+                pt.Address = regPatient.Permanent_Address;
 
-            pat = (from tbl in db.Reg_patients
-                   where tbl.Patient_No == Patien_No
-                   orderby tbl.Created_time descending
-                   select tbl).FirstOrDefault();
+                int patId = DBClass.GetPat_ID_By_PatientID_reg(patientId);
+                int mrNo = DBClass.GetMRNOBy_PatientID_reg(patientId);
 
-            var isPatient = (from tbl in db.In_Patients
-                             where tbl.Patient_ID == int.Parse(PatientID)
+                // Determine walk-in status
+                bool? isWalkIn = (from tbl in db.Reg_patients
+                                  where tbl.pat_id == patientId
+                                  orderby tbl.Created_time descending
+                                  select tbl.walkin).FirstOrDefault();
 
-                             orderby tbl.Created_Time descending
-                             select tbl).FirstOrDefault();
+                bool isNotWalkIn = isWalkIn.HasValue && !isWalkIn.Value;
 
+                // Check current inpatient status
+                var inPatientQuery = db.In_Patients
+                    .Where(x => x.Patient_ID == patientId && x.Discharge == false)
+                    .Select(x => x.Patient_ID)
+                    .ToList();
 
-            var OPD = (from tbl in db.Out_Patients
-                       where tbl.Patient_ID == pat_id
+                pt.pat_id = inPatientQuery.Count > 0 && isNotWalkIn
+                    ? DBClass.getField($"select Patient_ID from In_Patient where Patient_ID = {patId}")
+                    : DBClass.getField($"select Reg_PatId from Out_Patient where Reg_PatId = {patId}");
 
-                       orderby tbl.Created_Time descending
-                       select tbl).FirstOrDefault();
+                pt.opdid = DBClass.getField($"select Out_Patient_ID from Out_Patient where Reg_PatId = {patId}");
 
-            if (OPD != null)
-            {
+                // Patient Type
+                pt.Patient_Type_id = DBClass.getField($"select top 1 Patient_Type from Patients where Reg_PatId = {patientId} order by Created_Time desc");
+                pt.Patient_Type = db.GetDataValueName("Patient Type", pt.Patient_Type_id);
 
+                // Discount info
+                pt.IsDisountAvailable = DBClass.getField($"select Discount_Assigned_Patient_Id from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id = {patientId}");
+                pt.DiscountPercFromMaster = DBClass.getField($"select Discount_Percentage from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id = {patientId}");
 
-            }
+                // Discharge status
+                pt.checkdischarge = DBClass.getField($@"
+            select top 1 isnull(Discharge,0) 
+            from In_Patient 
+            where Patient_Id = {patientId} 
+            order by Created_Time desc");
 
+                // Discharge_On date
+                pt.Discharge_On = (DBClass.getField($@"
+            SELECT TOP 1 Discharge_On 
+            FROM In_Patient 
+            WHERE Patient_ID = {patientId} 
+            ORDER BY In_Patient_ID DESC")?.ToString() ?? "").Trim();
 
-            if (pat != null)
-            {
-                pt.Name = pat.Full_Name;
-                pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
-
-                if (pat.Created_time.HasValue)
-                {
-                    pt.Entry_Date = pat.Created_time.ToString();
-                }
-                else
-                {
-                    pt.Entry_Date = pat.Created_time.ToString();
-                }
-                pt.opdid = DBClass.getField("select Out_Patient_ID from Out_Patient where Reg_PatId =" + pat_id);
-                // pt.opd_id = DBClass.getField("Select Patient_ID from Patients where Reg_PatId = " + pat_id + "order by Created_Time desc" );
-                if (query.Count > 0 && walkin == false)
-                {
-                    pt.pat_id = DBClass.getField("select Patient_ID from In_Patient where Patient_ID =" + pat_id);
-                }
-                else
-                {
-                    pt.pat_id = DBClass.getField("select Reg_PatId from Out_Patient where Reg_PatId =" + pat_id);
-                }
-                pt.Patient_Type = db.GetDataValueName("Patient Type", DBClass.getField("select Patient_Type from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
-                pt.Patient_Type_id = DBClass.getField("select Patient_Type from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc");
-                pt.IsDisountAvailable = DBClass.getField("select Discount_Assigned_Patient_Id from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
-                pt.DiscountPercFromMaster = DBClass.getField("select Discount_Percentage from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
-
-
-                // Fetch active inpatient ID (not discharged)
-                var inpat_id = DBClass.getField(
-                    "select top 1 In_Patient_ID from In_Patient " +
-                    "where Patient_ID = " + PatientID +
-                    " and isNull(Discharge,0) = 0 " +
-                    "order by In_Patient_ID desc"
-                );
-
-                // Get latest discharge status
-                pt.checkdischarge = DBClass.getField(
-                    "select top 1 isnull(Discharge,0) from In_Patient " +
-                    "where Patient_Id = " + PatientID +
-                    " order by Created_Time desc"
-                );
-
-                // Get Admission_Date (format: 2025-08-30 17:37:41.000)
-                // Get Discharge_On from the most recent admission (latest In_Patient_ID)
-                pt.Discharge_On = DBClass.getField(
-                    "SELECT TOP 1 Discharge_On " +
-                    "FROM In_Patient " +
-                    "WHERE Patient_ID = " + PatientID + " " +
-                    "ORDER BY In_Patient_ID DESC"
-                )?.ToString() ?? "";
-
-                // Flag: was discharge done today?
-                bool isdischargetoday = false;
-
+                // Was discharge today?
+                bool isDischargeToday = false;
                 if (!string.IsNullOrEmpty(pt.Discharge_On))
                 {
-                    if (DateTime.TryParse(pt.Discharge_On, out DateTime dischargedate))
+                    if (DateTime.TryParse(pt.Discharge_On, out DateTime dischargeDate))
                     {
-                        if (dischargedate.Date == DateTime.Today)
-                        {
-                            isdischargetoday = true;
-                        }
+                        isDischargeToday = dischargeDate.Date == DateTime.Today;
                     }
                 }
 
-                // Main condition: if NOT discharged OR discharged TODAY → show package data
-                if (pt.checkdischarge == "false" || pt.checkdischarge == "0" || isdischargetoday)
+                // Determine if we show package data (still admitted OR discharged today)
+                bool showPackageData = pt.checkdischarge == "false" || pt.checkdischarge == "0" || isDischargeToday;
+
+                if (showPackageData)
                 {
-                    // Patient is either still admitted OR was discharged today
-                    pt.pkg_name = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.pkg_name = DBClass.getField($@"
+                SELECT TOP 1 packagae_name 
+                FROM In_Patient 
+                WHERE Patient_Id = {patientId} AND Discharge = 1 
+                ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.pkg_type = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.pkg_type = DBClass.getField($@"
+                SELECT TOP 1 packagae_type 
+                FROM In_Patient 
+                WHERE Patient_Id = {patientId} AND Discharge = 1 
+                ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.pkg_namefordetails = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.pkg_namefordetails = DBClass.getField($@"
+                SELECT TOP 1 packagae_name 
+                FROM In_Patient 
+                WHERE Patient_Id = {patientId} 
+                ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.pkg_typefordetails = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.pkg_typefordetails = DBClass.getField($@"
+                SELECT TOP 1 packagae_type 
+                FROM In_Patient 
+                WHERE Patient_Id = {patientId} 
+                ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.In_Patient_Type = DBClass.getField("SELECT TOP 1 Patient_Discount_Type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.In_Patient_Type = DBClass.getField($@"
+                SELECT TOP 1 Patient_Discount_Type 
+                FROM In_Patient 
+                WHERE Patient_Id = {patientId} 
+                ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.Package_Type = DBClass.getField("SELECT TOP 1 Package_type_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.Package_Type = DBClass.getField($@"
+                SELECT TOP 1 Package_type_id 
+                FROM In_Patient 
+                WHERE Patient_Id = {patientId} 
+                ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.Package_Name = DBClass.getField("SELECT TOP 1 Package_Name_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.Package_Name = DBClass.getField($@"
+                SELECT TOP 1 Package_Name_id 
+                FROM In_Patient 
+                WHERE Patient_Id = {patientId} 
+                ORDER BY Created_Time DESC")?.ToString() ?? "";
 
                     pt.MainDepartment = "03";
                 }
                 else
                 {
-                    // Patient was discharged on a previous day (not today)
                     pt.Department = db.GetDataValueName("Patient Main Category",
-                        DBClass.getField("SELECT TOP 1 Patient_Main_Category FROM Patients WHERE Reg_PatId = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "");
+                        DBClass.getField($@"
+                    SELECT TOP 1 Patient_Main_Category 
+                    FROM Patients 
+                    WHERE Reg_PatId = {patientId} 
+                    ORDER BY Created_Time DESC") ?? "");
 
                     if (pt.IsDisountAvailable.Contains("position"))
                         pt.IsDisountAvailable = "false";
 
-                    pt.Address = pat.Permanent_Address;
-                    pt.Mobile = pat.Mobile1;
                     pt.Admission_Date = "";
                     pt.Discharge_On = "";
                     pt.Ward_Name = "";
@@ -2153,58 +2143,94 @@ namespace PMS
                     pt.MainDepartment = "01";
                 }
 
+                // Fetch active admission details (IPD or Emergency)
+                string ipdIds = DBClass.getField($@"
+            select In_Patient_ID 
+            from In_Patient 
+            where Patient_ID = {patientId} and isNull(Discharge,0) = 0 
+            order by In_Patient_ID desc");
 
-
-                var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by Emergency_ID desc");
-                var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 1 order by In_Patient_ID desc");
-                var ipd_ids = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by In_Patient_ID desc");
-                if (ipd_ids != "There is no row at position 0.")
+                if (ipdIds != "There is no row at position 0.")
                 {
-                    pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_ids);
-                    pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_ids);
-                    pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_ids);
-                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_ids + "order by Created_Time desc"));
-                    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_ids);
+                    pt.Ward_Name = DBClass.getField($@"
+                Select Ward_Type from In_Patient ipd 
+                join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID 
+                where ipd.In_Patient_ID = {ipdIds}");
+
+                    pt.Admission_Date = DBClass.getField($@"Select Admission_Date from In_Patient where In_Patient_ID = {ipdIds}");
+                    pt.Bed_No = DBClass.getField($@"Select Bed_No from In_Patient where In_Patient_ID = {ipdIds}");
+                    pt.Department = db.GetDataValueName("Patient Main Category",
+                        DBClass.getField($@"select Department from In_Patient where In_Patient_ID = {ipdIds} order by Created_Time desc"));
+
+                    pt.advance_amount = DBClass.getField($@"select sum(Advance_Amount) from AR_Advances where In_Patient_ID = {ipdIds}");
                     pt.MainDepartment = "03";
                 }
-
-                else if (ipd_id != "There is no row at position 0." && pt.checkdischarge == "false")
+                else
                 {
-                    pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
-                    pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
-                    pt.Balance = DBClass.getField("select sum(Previous_Balance) from Ar_Billings where  In_Patient_ID =" + ipd_id);
-                    pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
-                    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_id);
+                    string ipdId = DBClass.getField($@"
+                select In_Patient_ID 
+                from In_Patient 
+                where Patient_ID = {patientId} and isNull(Discharge,0) = 1 
+                order by In_Patient_ID desc");
 
+                    if (ipdId != "There is no row at position 0." && pt.checkdischarge == "false")
+                    {
+                        pt.PreviousTotalAmount = DBClass.getField($@"select sum(Net_Amount) from Ar_Billings where Balance_Amount < 0 and In_Patient_ID = {ipdId}");
+                        pt.paid_amount = DBClass.getField($@"select sum(Received_Amount) from Ar_Billings where Balance_Amount < 0 and In_Patient_ID = {ipdId}");
+                        pt.Balance = DBClass.getField($@"select sum(Previous_Balance) from Ar_Billings where In_Patient_ID = {ipdId}");
+                        pt.Ward_Name = DBClass.getField($@"Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID = {ipdId}");
+                        pt.Admission_Date = DBClass.getField($@"Select Admission_Date from In_Patient where In_Patient_ID = {ipdId}");
+                        pt.Discharge_On = DBClass.getField($@"Select Discharge_On from In_Patient where In_Patient_ID = {ipdId}");
+                        pt.Bed_No = DBClass.getField($@"Select Bed_No from In_Patient where In_Patient_ID = {ipdId}");
+                        pt.Department = db.GetDataValueName("Patient Main Category",
+                            DBClass.getField($@"select Department from In_Patient where In_Patient_ID = {ipdId} order by Created_Time desc"));
+                        pt.advance_amount = DBClass.getField($@"select sum(Advance_Amount) from AR_Advances where In_Patient_ID = {ipdId}");
+                    }
+                    else
+                    {
+                        string emergencyId = DBClass.getField($@"
+                    select Emergency_ID 
+                    from Emergency_Patient 
+                    where Patient_ID = {patientId} and isNull(Discharge,0) = 0 
+                    order by Emergency_ID desc");
+
+                        if (emergencyId != "There is no row at position 0.")
+                        {
+                            pt.Ward_Name = DBClass.getField($@"
+                        Select Ward_Type from Emergency_Patient ep 
+                        join Ward_Definition wd on ep.Ward_ID = wd.Ward_ID 
+                        where ep.Emergency_ID = {emergencyId}");
+
+                            pt.Admission_Date = DBClass.getField($@"Select Admission_Date from Emergency_Patient where Emergency_ID = {emergencyId}");
+                            pt.Discharge_On = DBClass.getField($@"Select Discharge_On from Emergency_Patient where Emergency_ID = {emergencyId}");
+                            pt.Bed_No = DBClass.getField($@"Select Bed_No from Emergency_Patient where Emergency_ID = {emergencyId}");
+                            pt.MainDepartment = "02";
+                            pt.Department = "";
+                        }
+                    }
                 }
 
-                else if (Emergency_Id != "There is no row at position 0.")
-                {
-                    pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.In_Patient_ID =" + Emergency_Id);
-                    pt.Bed_No = DBClass.getField("Select Bed_No from Emergency_Patient ipd where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.MainDepartment = "02";
-                    pt.Department = "";
-                }
-
-
-
-                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
-                var Patientno = pat.Patient_No.ToString();
-                var count = (db.Patients.Where(v => v.Patient_No == Convert.ToInt32(Patientno)).ToList());
-                pt.Follow = count.Count.ToString();
-
-
+                // Follow-up count
+                var patientNo = regPatient.Patient_No.ToString();
+                var followCount = db.Patients.Count(p => p.Patient_No == Convert.ToInt32(patientNo));
+                pt.Follow = followCount.ToString();
 
                 return pt;
             }
-            else
-                return pt;
+            catch (Exception ex)
+            {
+                // Consider logging ex
+                return new PatientDetail(); // return empty object on error
+            }
+        }
+
+        // Helper: Get latest Reg_patient record
+        private static Reg_patient GetLatestRegPatient(DataBaseDataContext db, int patientId)
+        {
+            return (from tbl in db.Reg_patients
+                    where tbl.Patient_No == DBClass.GetMRNOBy_PatientID_reg(patientId)
+                    orderby tbl.Created_time descending
+                    select tbl).FirstOrDefault();
         }
 
         [WebMethod]
