@@ -45,7 +45,7 @@
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-OPD-Prescription">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/OutPatients.aspx" style="width: 60%;">
+                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/NewOutPatient.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medical-record.png" alt="Prescription" style="object-fit: contain;" />
                     <h5 class="cocotxt">OPD Prescription</h5>
                 </a>

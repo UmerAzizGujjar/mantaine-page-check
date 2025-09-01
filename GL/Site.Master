@@ -108,51 +108,8 @@
             $('#ctl00_lblMessage').hide();
 
         });
-  <%--     (function () {
-            var devtoolsOpen = false;
-
-            // Function to check DevTools
-            function checkDevTools() {
-                var threshold = 160; // DevTools width/height threshold
-                if (window.outerWidth - window.innerWidth > threshold ||
-                    window.outerHeight - window.innerHeight > threshold) {
-
-                    if (!devtoolsOpen) {
-                        devtoolsOpen = true;
-
-                        // Show alert
-                        alert("⚠️ Developer Tools detected! You will be logged out.");
-
-                        
-                        
-                        window.location.href = "<%= ResolveUrl("~/Login.aspx") %>";
-
-                      
-                    }
-                }
-            }
-
-            // Keep checking every 1 sec
-            setInterval(checkDevTools, 1000);
-        })();
-        document.oncontextmenu = function () {
-
-            return false;
-        }
-        document.onkeydown = function (e) {
-            // Disable F12
-            if (e.keyCode == 123) {
-                return false;
-            }
-            // Disable Ctrl+Shift+I
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
-                return false;
-            }
-
-        };--%>
-
     </script>
-    <script type="text/javascript">
+<%-- <script type="text/javascript">
         $(document).ready(function () {
             // Initialize Select2 only for visible <select> elements
             applySelect2ToVisible();
@@ -207,7 +164,9 @@
 
         // Export to global scope so you can call it manually if needed
         window.applySelect2ToVisible = applySelect2ToVisible;
-    </script>
+    </script>--%>
+
+
     <script type="text/javascript">
         $(document).ready(function () {
            
@@ -227,7 +186,7 @@
 
             const maxSize = 10 * 1024 * 1024; // 10 MB
 
-            // Use event delegation for dynamic or future file inputs
+          
             $(document).on('change', 'input[type="file"]', function () {
                 const file = this.files[0];
                 if (!file) return;
@@ -237,7 +196,7 @@
                 const fileType = file.type;
                 const fileSize = file.size;
 
-                // Validate extension
+     
                 if (!allowedExtensions.includes(fileExtension)) {
                     Swal.fire({
                         icon: 'error',
@@ -254,7 +213,7 @@
                     return;
                 }
 
-                // Validate MIME type
+                
                 if (!allowedMimes.includes(fileType)) {
                     Swal.fire({
                         icon: 'error',
@@ -271,7 +230,6 @@
                     return;
                 }
 
-                // Validate file size
                 if (fileSize > maxSize) {
                     Swal.fire({
                         icon: 'error',
@@ -288,7 +246,6 @@
                     return;
                 }
 
-                // Success feedback (optional)
                 Swal.fire({
                     icon: 'success',
                     title: 'File Accepted',
@@ -307,8 +264,64 @@
             });
         });
 </script>
+<%--<script type="text/javascript">
+  
+    (function () {
+        
+        if (typeof window.skipDevToolsCheck !== 'undefined' && window.skipDevToolsCheck === true) {
+            console.log("DevTools detection skipped on this page.");
+            return; 
+        }
 
+        var devtoolsOpen = false;
+
+        
+        var loginUrl = "../../../Login.aspx";
+
+        function checkDevTools() {
+      
+            var threshold = 160;
+            var widthDiff = window.outerWidth - window.innerWidth;
+            var heightDiff = window.outerHeight - window.innerHeight;
+
+            if (widthDiff > threshold || heightDiff > threshold) {
+                if (!devtoolsOpen) {
+                    devtoolsOpen = true;
+                    alert("⚠️ Developer Tools detected! You will be logged out.");
+                    window.location.href = loginUrl;
+                }
+            }
+        }
+
+     
+        setInterval(checkDevTools, 1000);
+
+     
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+        }, false);
+
+       
+        document.addEventListener("keydown", function (e) {
+         
+            if (e.keyCode === 123) {
+                e.preventDefault();
+            }
+           
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                e.preventDefault();
+            }
+          
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+            }
+        }, false);
+
+        console.log("DevTools protection is ACTIVE on this page.");
+    })();
+</script>--%>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+
     <style type="text/css">
         @media screen and (max-width: 995px) {
             .container-fluid {

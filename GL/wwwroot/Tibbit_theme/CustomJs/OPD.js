@@ -661,6 +661,7 @@ function loaddoctor() {
                 console.log("Error: " + error);
             }
         });
+        $("#hdn_dep_id").val(dpt);
     }
 }
 function getGeneralFee() {
@@ -933,6 +934,7 @@ function SaveData() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
+    var hdnDepartment = $("#hdn_dep_id").val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
     var employee_id = $('#Employe_id').val();
@@ -1072,6 +1074,7 @@ function SaveData() {
         Martial_Status: Martial_Status,
         Address: Address,
         Department: Department,
+        hdnDepartment: hdnDepartment,
         doctor: doctor,
         employee: employee,
         employee_id: employee_id,

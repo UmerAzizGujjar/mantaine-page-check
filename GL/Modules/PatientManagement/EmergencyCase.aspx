@@ -3253,83 +3253,85 @@
         function CheckExistInOutPatient() {
             var patient_Id = $("#<%= hdfPatient_ID.ClientID %>").val();
 
-    $.ajax({
-        type: "POST",
-        url: "EmergencyCase.aspx/CheckExistOutPatient",
-        data: JSON.stringify({ "Patient_ID": patient_Id }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            var data = JSON.parse(response.d);
+       $.ajax({
+           type: "POST",
+           url: "EmergencyCase.aspx/CheckExistOutPatient",
+           data: JSON.stringify({ "Patient_ID": patient_Id }),
+           contentType: "application/json; charset=utf-8",
+           dataType: "json",
+           success: function (response) {
+               debugger;
 
-            if (data == "OPD") {
-                alert("First Discharge Mr# " + patientMrNo + " from OPD");
-            }
-            else if (data == "IPD") {
-                alert("First Discharge Mr# " + patientMrNo + " from IPD");
-            }
-            else {
-                var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
-                var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
+               var data = response.d;  // e.g., "OPD", "IPD", or ""
 
-                if (Complain == "") {
-                    alert("Please Enter Health Complaint");
-                    return false;
-                }
+               if (data == "OPD") {
+                   alert("First Discharge Patient from OPD");
+               }
+               else if (data == "IPD") {
+                   alert("First Discharge from IPD");
+               }
+               else {
+                   var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
+                   var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
 
-                var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-                var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
-                var opd_pat = $('#ctl00_MainContent_ddlPatientCondition').val();
-                opd_pat = opd_pat ? opd_pat.trim() : "";
+                   if (Complain == "") {
+                       alert("Please Enter Health Complaint");
+                       return false;
+                   }
 
-                if (ddlIssuance_Of == "0") {
-                    alert("Please First Create Admission");
-                    return false;
-                }
+                   var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+                   var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
+                   var opd_pat = $('#ctl00_MainContent_ddlPatientCondition').val();
+                   opd_pat = opd_pat ? opd_pat.trim() : "";
 
-                if (ddlIssuance_Of == "001") {
-                    if (opd_pat == "006") {
-                        console.log("Skipping SaveWard for opd_pat = 006");
-                        saveAllRecord();
-                    } else {
-                        var bedNo = $('#ctl00_MainContent_txtBed_No').val();
-                        bedNo = bedNo ? bedNo.trim() : "";
+                   if (ddlIssuance_Of == "0") {
+                       alert("Please First Create Admission");
+                       return false;
+                   }
 
-                        if (bedNo == "") {
-                            alert("Please Select Bed No");
-                            return false;
-                        }
-                        SaveWard();
-                    }
-                }
-                else if (ddlIssuance_Of == "002") {
-                    var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
-                    if (roomNo == "0" || roomNo == "") {
-                        alert("Please Select Room No");
-                        return false;
-                    }
-                    SaveRoom(); // Make sure this is called only when valid
-                }
-                else {
-                    // Handle unexpected ddlIssuance_Of values
-                    return false;
-                }
+                   if (ddlIssuance_Of == "001") {
+                       if (opd_pat == "006") {
+                           console.log("Skipping SaveWard for opd_pat = 006");
+                           saveAllRecord();
+                       } else {
+                           var bedNo = $('#ctl00_MainContent_txtBed_No').val();
+                           bedNo = bedNo ? bedNo.trim() : "";
 
-                // Save to localStorage only if we passed validation
-                localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
-                localStorage.DoctorID = $("#ctl00_MainContent_ddlMo_Doctor_Name").val();
-                localStorage.DesignationID = $("#ctl00_MainContent_ddlMO_Doctor_Status").val();
-            }
-        },
-        failure: function (response) {
-            alert("Failure");
-        },
-        error: function (xhr, status, error) {
-            console.error("AJAX Error:", error);
-            alert("An error occurred while checking patient status.");
-        }
-    });
-}
+                           if (bedNo == "") {
+                               alert("Please Select Bed No");
+                               return false;
+                           }
+                           SaveWard();
+                       }
+                   }
+                   else if (ddlIssuance_Of == "002") {
+                       var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
+                       if (roomNo == "0" || roomNo == "") {
+                           alert("Please Select Room No");
+                           return false;
+                       }
+                       SaveRoom(); // Make sure this is called only when valid
+                   }
+                   else {
+                       // Handle unexpected ddlIssuance_Of values
+                       return false;
+                   }
+
+                   // Save to localStorage only if we passed validation
+                   localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
+                   localStorage.DoctorID = $("#ctl00_MainContent_ddlMo_Doctor_Name").val();
+                   localStorage.DesignationID = $("#ctl00_MainContent_ddlMO_Doctor_Status").val();
+               }
+           },
+           failure: function (response) {
+               alert("Failure");
+           },
+           error: function (xhr, status, error) {
+               console.error("AJAX Error:", error);
+               alert("An error occurred while checking patient status.");
+           }
+       });
+   }
         debugger;
         function PrintoutPatient() {
             debugger;

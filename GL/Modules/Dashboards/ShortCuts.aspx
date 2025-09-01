@@ -108,13 +108,13 @@
                  var shortcutToMenuMap = {
                      
                      "shortcut-Billing-Section": "mnuBilling",               // Must match Menu_Description
-                     "shortcut-Patient-Section": "mnurgPatient",
+                     "shortcut-Patient-Section": "mnushMaintenance",
                      "shortcut-Lab-Section": "mnuTransaction",
                      "shortcut-Pharmacy-Section": "ShmnuPharmacy",
                      "shortcut-Inventory-Section": "mnushInventory",
                      "shortcut-Purchase-Section": "mnutoaddPR",
                      "shortcut-Account-Section": "mnushAccounts",
-                     "shortcut-Admin-Section": "mnuAdministration"
+                     "shortcut-Admin-Section": "mnushAdministration"
                  };
                  debugger;
                  // Loop through each shortcut and show/hide based on permission

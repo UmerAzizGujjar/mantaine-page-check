@@ -1523,36 +1523,37 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var PatientExistOPD = (from OPD in db.Out_Patients
+                var patientExistOPD = (from OPD in db.Out_Patients
                                        where OPD.Reg_PatId == Patient_ID
-                                       && OPD.Discharge == false
+                                             && OPD.Discharge == false
+                                       orderby OPD.Out_Patient_ID descending
                                        select new
                                        {
                                            OPD.Patient_ID,
                                            OPD.Out_Patient_ID,
-                                       }).ToList();
+                                       }).FirstOrDefault();
 
-                var PatientExistIPD = (from IPD in db.In_Patients
+                var patientExistIPD = (from IPD in db.In_Patients
                                        where IPD.Patient_ID == Patient_ID
-                                       && IPD.Discharge == false
+                                             && IPD.Discharge == false
+                                       orderby IPD.In_Patient_ID descending
                                        select new
                                        {
                                            IPD.Patient_ID,
                                            IPD.In_Patient_ID,
-                                       }).ToList();
+                                       }).FirstOrDefault();
 
-              
-                 if (PatientExistOPD.Count != 0)
+                if (patientExistOPD != null)
                 {
-                    return (new JavaScriptSerializer().Serialize("OPD"));
+                    return "OPD"; // Already a string, no need to serialize
                 }
-                else if (PatientExistIPD.Count != 0)
+                else if (patientExistIPD != null)
                 {
-                    return (new JavaScriptSerializer().Serialize("IPD"));
+                    return "IPD";
                 }
                 else
                 {
-                    return (new JavaScriptSerializer().Serialize("Not Exist"));
+                    return "Not Exist";
                 }
             }
         }

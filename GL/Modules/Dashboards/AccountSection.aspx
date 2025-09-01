@@ -1,7 +1,9 @@
-﻿      <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountSection.aspx.cs" Inherits="PMS.Modules.Dashboards.AccountSection" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountSection.aspx.cs" Inherits="PMS.Modules.Dashboards.AccountSection" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div id="loading">
@@ -19,28 +21,29 @@
             </div>
         </div>
     </div>
+
     <br />
     <div class="container">
         <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Purchase-Invoice">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPurchaseInvoice.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/inv_pur.png" alt="Purchase" style="object-fit: contain;" />
                     <h5 class="cocotxt">Purchase Invoice</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Payment-Invoice">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPaymentInvoice.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pay_inv.png" alt="Payment" style="object-fit: contain;" />
                     <h5 class="cocotxt">Payment Invoice</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-CPV">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CPV" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CPV_V.png" alt="CPV" style="object-fit: contain;" />
                     <h5 class="cocotxt">CPV</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-BPV">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BPV" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/bpv_v.png" alt="BPV" style="object-fit: contain;" />
                     <h5 class="cocotxt">BPV</h5>
@@ -49,48 +52,93 @@
         </div>
         <br />
         <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-CRV">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CRV" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CRV_v.png" alt="CRV" style="object-fit: contain;" />
                     <h5 class="cocotxt">CRV</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-BRV">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BRV" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/bank-note.png" alt="BRV" style="object-fit: contain;" />
-                   <h5 class="cocotxt">BRV</h5>
+                    <h5 class="cocotxt">BRV</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Manual-Invoice">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddManualInvoice.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/manual_inv.png" alt="Manual" style="object-fit: contain;" />
                     <h5 class="cocotxt">Manual Invoice</h5>
                 </a>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Advance-Payment">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AdvancePayment.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/payment-method.png" alt="Advance" style="object-fit: contain;" />
                     <h5 class="cocotxt">Advance Payment</h5>
                 </a>
             </div>
         </div>
-                <br />
-         <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+        <br />
+        <div class="row text-center">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-JV">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=JV" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/jv_v.png" alt="JV" style="object-fit: contain;" />
                     <h5 class="cocotxt">JV</h5>
                 </a>
             </div>
-           
         </div>
     </div>
-     
-  
-    <%--
-    <div class="col-sm-6 col-sm-offset-4" style="margin-top: 47px;">
-        <asp:Image ID="imgLogo" runat="server" ImageUrl="~../../../../wwwroot/images/HMIS_Icons/TibbITLogo_2.png"
-            Style="height: 245px; width: 408px; border-width: 0px; opacity: 0.5; position: relative; z-index: -1;" />
-    </div>--%>
-</asp:Content>
 
+    <!-- jQuery and Script -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadAccountSectionPermissions();
+        });
+
+        function loadAccountSectionPermissions() {
+            $.ajax({
+                type: "POST",
+                url: "AccountSection.aspx/GetUserAllowedMenus",
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var allowedMenus = response.d;
+                    console.log("User Allowed Menus (Account):", allowedMenus);
+
+                    var shortcutToMenuMap = {
+                        "shortcut-Purchase-Invoice":     "mnushPurchase",
+                        "shortcut-Payment-Invoice":       "mnushaddPayment",
+                        "shortcut-CPV":                   "mnushVoucherCPV",
+                        "shortcut-BPV":                   "mnushVoucherBPV",
+                        "shortcut-CRV":                   "mnushVoucherCRV",
+                        "shortcut-BRV":                   "mnushVoucherBRV",
+                        "shortcut-Manual-Invoice":        "mnushManualInvoice",
+                        "shortcut-Advance-Payment":       "mnushAddadv",
+                        "shortcut-JV":                    "mnushVoucherJV"
+                    };
+
+                    Object.keys(shortcutToMenuMap).forEach(function (shortcutId) {
+                        var requiredMenu = shortcutToMenuMap[shortcutId];
+
+                        if (allowedMenus.includes(requiredMenu)) {
+                            $("#" + shortcutId).show();
+                        } else {
+                            $("#" + shortcutId).hide();
+                            console.log("HIDDEN:", shortcutId, "→ Needs:", requiredMenu);
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to load permissions for Account Section:", error);
+                    console.error("Response:", xhr.responseText);
+                    alert("Could not load permissions for Account Section.");
+
+                    Object.keys(shortcutToMenuMap).forEach(function (id) {
+                        $("#" + id).hide();
+                    });
+                }
+            });
+        }
+    </script>
+
+</asp:Content>

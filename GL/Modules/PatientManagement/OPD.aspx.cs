@@ -646,12 +646,13 @@ namespace PMS.Modules.PatientManagement
                 pat.Permanent_Address = data.Address;
                 pat.Marital_Status = data.Martial_Status;
                 pat.Patient_Main_Category = data.Department;
+                
                 pat.Doctor_ID = data.doctor;
                 pat.mr_no_sequence = data.patient_no;
                 pat.Patient_No = Convert.ToInt32(data.pat_no);
                 pat.Refference_No = data.reffer_no;
 
-
+                pat.Patient_Main_Category = data.hdnDepartment;
 
                 if (data.pat_category == "01" && data.discount == "")
                 {
@@ -1325,6 +1326,7 @@ namespace PMS.Modules.PatientManagement
             public string Address { get; set; }
             public string doctor { get; set; }
             public string Department { get; set; }
+            public string hdnDepartment { get; set; }
             public string employee { get; set; }
             public string panel { get; set; }
             public string reffer_no { get; set; }

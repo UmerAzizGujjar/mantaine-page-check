@@ -368,6 +368,7 @@
     <input type="text" id="hdnDocshare" style="display: none;" />
     <input type="text" id="hdnhospShare" style="display: none;" />
     <input type="text" id="hdn_emer_reffered" style="display: none;" />
+    <input type="text" id="hdn_dep_id" style="display: none;" />
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
             <div class="col-lg-3 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
