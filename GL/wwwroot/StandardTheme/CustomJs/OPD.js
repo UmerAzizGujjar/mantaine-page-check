@@ -625,6 +625,7 @@ function Calc_Discount() {
 
 function loaddoctor() {
     debugger;
+    var dept_gnl = $('#ddlDepartment').val();
     var appointmentid = $("#hdn_aptid").val();
     var opdid = $('#hdn_opdId').val();
 
@@ -661,7 +662,7 @@ function loaddoctor() {
                 console.log("Error: " + error);
             }
         });
-        $("#hdn_dep_id").val(dpt);
+        $("#hdn_dep_id").val(dept_gnl);
     }
 }
 function getGeneralFee() {

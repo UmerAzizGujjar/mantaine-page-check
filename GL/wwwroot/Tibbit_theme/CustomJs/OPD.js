@@ -78,22 +78,22 @@ $(document).ready(function () {
     ];
 
     dropdowns.forEach(item => {
-   
+
         const $element = $(item.id);
         $element.select2();
         $element.off('select2:open').on('select2:open', function () {
             fillDropdown($element, item.method);
         });
-  
+
         // special case: Patient_Type → call loaddata() on select
         if (item.id === '#ddlPatient_Type') {
-            $element.prop('disabled', false); 
+            $element.prop('disabled', false);
             $element.off('select2:select').on('select2:select', function () {
-                loaddata();   
-                $(this).prop('disabled', true); 
+                loaddata();
+                $(this).prop('disabled', true);
             });
         }
-      
+
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
             $element.off('select2:select').on('select2:select', function () {
@@ -102,13 +102,13 @@ $(document).ready(function () {
         }
 
         if (item.id === '#ddldoctor') {
-  
+
             $element.off('select2:select');
 
             $element.on('select2:select', function (e) {
                 var selectedVal = $(this).val();
                 if (selectedVal) {
-                    loadFee(); 
+                    loadFee();
                 }
             });
 
@@ -231,9 +231,9 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(reg_id);
             $('#hdn_aptid').val(apt_Id);
-          
+
             debugger;
-        
+
             $('#ddlmartialstatus').html(
                 $('<option>', {
                     value: data.MaritalStatus,
@@ -259,10 +259,10 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                     text: data.pat_type_text
                 })
             ); loaddata();
-            
+
             var $select = $('#ddldoctor');
 
-   
+
             $select.empty().append(
                 $('<option>', {
                     value: data.doctorId,
@@ -270,7 +270,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 })
             );
 
-         
+
             var $select = $('#ddldoctor');
 
             $select.empty().append(
@@ -284,8 +284,8 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                     data: { id: data.doctorId, text: data.DoctorName }
                 }
             });
-     
-       
+
+
         },
         error: function (response) {
             alert("Error: " + response.responseText);
@@ -326,9 +326,9 @@ function Get_Pat_Info(reg_id) {
                     text: data.Gender_text
                 })
             );
-              
-               
-  
+
+
+
 
         },
         error: function (response) {
@@ -625,6 +625,7 @@ function Calc_Discount() {
 
 function loaddoctor() {
     debugger;
+    var dept_gnl = $('#ddlDepartment').val();
     var appointmentid = $("#hdn_aptid").val();
     var opdid = $('#hdn_opdId').val();
 
@@ -661,7 +662,7 @@ function loaddoctor() {
                 console.log("Error: " + error);
             }
         });
-        $("#hdn_dep_id").val(dpt);
+        $("#hdn_dep_id").val(dept_gnl);
     }
 }
 function getGeneralFee() {
@@ -677,11 +678,10 @@ function getGeneralFee() {
             if (Category == "06") {
                 $('#txtfees').val("0")
             }
-        else
-            {
+            else {
                 $('#txtfees').val(data.Code);
             }
-            
+
 
         },
         error: function (response) {
@@ -1202,7 +1202,7 @@ function loadFee() {
 
         loadDepartment(Doc);
     }
-  
+
 }
 function loadDepartment(Doc) {
     var opdid = $('#hdn_opdId').val()
@@ -1330,12 +1330,12 @@ function loadPatientDetail(OPDID) {
             $('#txt_opd_no').val(data.Opd_No).attr('disabled', true);
             $('#txt_patname').val(data.Name).attr('disabled', true);
             $('#txt_F_Name').val(data.Father_Name).attr('disabled', true);
-             $('#ddlMode_Of_Registration').val(data.Mode_Of_Registration).attr('disabled', true);
+            $('#ddlMode_Of_Registration').val(data.Mode_Of_Registration).attr('disabled', true);
             $('#txtage').val(data.Age_years).attr('disabled', true);
-           
+
             $('#txtnic').val(data.NIC).attr('disabled', true);
             $('#txtmobile').val(data.Mobile1).attr('disabled', true);
-        
+
             $('#txtAdrress').val(data.Permanent_Address).attr('disabled', true);
             $('#chckcardissue').prop('checked', data.Card_Issued).attr('disabled', true);
             $('#chckfreecheck').prop('checked', data.free_check).attr('disabled', true);
@@ -1346,9 +1346,9 @@ function loadPatientDetail(OPDID) {
 
 
 
-           
-          
-          
+
+
+
 
             $('#ddlmartialstatus').html(
                 $('<option>', {
@@ -1409,7 +1409,7 @@ function loadPatientDetail(OPDID) {
                     text: data.PanelCompany_text
                 })
             ).attr('disabled', true);
-            
+
             $('#Employe_id').html(
                 $('<option>', {
                     value: data.employee_ID,
@@ -1421,9 +1421,9 @@ function loadPatientDetail(OPDID) {
             $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
             $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
 
-                
-                
-          
+
+
+
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
             debugger;
             if (stat != "Approved") {
@@ -1535,7 +1535,7 @@ function loaddata() {
     }
     else if (Category == "05") {
         $('#fees').hide();
-        $('#department').show(); 
+        $('#department').show();
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
@@ -1594,8 +1594,8 @@ function OnFilterEmergencyPatients(data) {
 
     ClearEmergencyPatientResults();
     for (var i = 0; i < data.length; i++) {
-        AddEmergencyPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].Father_Name,data[i].NIC,data[i].Mobile1);
-    }  
+        AddEmergencyPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].Father_Name, data[i].NIC, data[i].Mobile1);
+    }
 }
 
 
