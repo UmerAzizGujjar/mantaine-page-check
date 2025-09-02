@@ -629,6 +629,7 @@ namespace PMS.Modules.PatientManagement
                     pat.filter_clinic = data.FilterClinic;
                     pat.Service_id = data.Services;
                     pat.mr_no_sequence = data.patient_no;
+                    pat.Actual_amount = data.Actual_Fees;
                     pat.Updated_By = AppConfig.UserID;
                     pat.Updated_Time = DateTime.Now;
                     pat.Employee_Name = data.EmployeeName;
@@ -677,6 +678,7 @@ namespace PMS.Modules.PatientManagement
                 pat.Employee_Name = data.EmployeeName;
                 pat.Emp_Department = data.EmployeeDept;
                 pat.Patient_Main_Category = data.hdnDepartment;
+                pat.Actual_amount = data.Actual_Fees;
 
                 if (data.pat_category == "01" && data.discount == "")
                 {
@@ -1060,6 +1062,7 @@ namespace PMS.Modules.PatientManagement
                              Gender_text = db.GetDataValueName("Gender", p.Gender),
                              Permanent_Address = p.Permanent_Address,
                              Receipt_Amount = p.Receipt_Amount,
+                             Actual_amount = p.Actual_amount,
                              Patient_Main_Category = p.Patient_Main_Category,
                              Type_text = db.GetDataValueName("Patient Type", p.Patient_Type),
                              Category_text = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
@@ -1383,6 +1386,7 @@ namespace PMS.Modules.PatientManagement
             public Boolean IssueCard { get; set; }
             public Boolean FreeCheck { get; set; }
             public int Fees { get; set; }
+            public int Actual_Fees { get; set; }
 
         }
     }

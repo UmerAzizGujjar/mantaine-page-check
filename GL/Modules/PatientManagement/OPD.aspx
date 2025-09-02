@@ -318,17 +318,15 @@
             var type = $("#ddlPatient_Type").val();
             var type_text = $('#ddlPatient_Type option:selected').text().trim();
 
-            // If emergency referred, set all to 0 and return
             if (emer_reffered !== "") {
                 $('#txtfees').val("0");
                 $('#hdnDocshare').val("0");
                 $('#hdnhospShare').val("0");
-                $('#txtdiscount').val(""); // Clear discount if any
-                $('#txtdiscount').attr('disabled', false); // Reset disabled state if needed
+                $('#txtdiscount').val(""); 
+                $('#txtdiscount').attr('disabled', false); 
                 return;
             }
 
-            // If no department selected, reset values
             if (!Department_id || Department_id === "") {
                 $('#txtfees').val("0");
                 $('#hdnDocshare').val("0");
@@ -353,28 +351,31 @@
                         var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
                         var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
 
-                        // Handle special patient types: Employee, Student, Refer
+                        $('#txtactualfee').val(code);
+                        
+          
                         if (
                             (type === "04" && type_text === "Employee") ||
                             (type === "05" && type_text === "Student") ||
                             (type === "06" && type_text === "Refer")
-                        ) {
-                            $('#txtdiscount').val(100);  
-                            $('#txtdiscount').val(code);           // Show original fee as discount
-                            $('#txtdiscount').attr('disabled', true); // Disable discount input
-                            $('#txtfees').val(0);                  // Set actual fee to 0
-                            $('#hdnDocshare').val(dShare);
-                            $('#hdnhospShare').val(hShare);
-                        } else {
-                            // Normal case: show full fee
-                            $('#txtdiscount').val("");             // Clear discount
-                            $('#txtdiscount').attr('disabled', false); // Enable if needed
-                            $('#txtfees').val(code);
+                        )
+                        {
+                            $('#txtdiscount').val(100);
+                            $('#txtactualfee').val(code);
+                            $('#txtdiscount').attr('disabled', true); 
+                            $('#txtfees').val(0);                 
                             $('#hdnDocshare').val(dShare);
                             $('#hdnhospShare').val(hShare);
                         }
-
-                        // Show warning if policy/fee is not defined (code is 0)
+                        else {
+                           
+                            $('#txtdiscount').val("");           
+                            $('#txtdiscount').attr('disabled', false); 
+                            $('#txtfees').val(code);
+                            $('#txtactualfee').val(code);
+                            $('#hdnDocshare').val(dShare);
+                            $('#hdnhospShare').val(hShare);
+                        }
                         if (parseFloat(code) === 0) {
                             Swal.fire({
                                 icon: 'warning',
@@ -479,7 +480,60 @@
                 $("#hdn_dep_id").val(dept_gnl);
             }
         }
+        function loadFee() {
+            debugger;
 
+            var Doc = $('#ddldoctor').val();
+            var opdid = $('#hdn_opdId').val();
+            var emer_reffered = $("#hdn_emer_reffered").val();
+            if (emer_reffered != "") {
+                $('#txtfees').val("0");
+            }
+
+            else {
+                if (opdid != "" || opdid != "") {
+
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "OPD.aspx/loadRegistrationFees",
+                        data: JSON.stringify({ Doc: Doc }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            debugger;
+                            var res = JSON.parse(response.d);
+                            if (!res.success) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: res.message,
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            } else {
+
+                                $('#txtfees').val(res.fee);
+                                $('#txtactualfee').val(res.fee);
+                                $('#hdnhospShare').val(res.Hospital_Share);
+                                $('#hdnDocshare').val(res.Doctor_Share);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Error: " + error);
+                        }
+                    });
+                }
+
+                loadDepartment(Doc);
+            }
+
+        }
     </script>
 
 </asp:Content>
@@ -592,6 +646,7 @@
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Fee">
                         <label>Fee</label>
                         <input type="text" id="txtfees" readonly="readonly" class="form-control" />
+                        <input type="text" id="txtactualfee" style="display:none;"  class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
                         <label>Services</label>
