@@ -623,48 +623,6 @@ function Calc_Discount() {
 }
 
 
-function loaddoctor() {
-    debugger;
-    var dept_gnl = $('#ddlDepartment').val();
-    var appointmentid = $("#hdn_aptid").val();
-    var opdid = $('#hdn_opdId').val();
-
-    if (appointmentid != "" || opdid != "") {
-
-    }
-    else {
-        var dpt = $('#ddlDepartment').val();
-
-        $.ajax({
-            type: "POST",
-            url: "OPD.aspx/LoadDoctor",
-            data: JSON.stringify({ dpt: dpt }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                debugger;
-                var doctor = JSON.parse(response.d);
-                var options = '<option value=""> Please Select </option>';
-
-                $.each(doctor, function (key, value) {
-                    options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                });
-
-                $('#ddldoctor').html(options);
-                var type = $('#ddlPatient_Type').val();
-                if (type != "02") {
-
-                    getGeneralFee();
-                }
-
-            },
-            error: function (xhr, status, error) {
-                console.log("Error: " + error);
-            }
-        });
-        $("#hdn_dep_id").val(dept_gnl);
-    }
-}
 function getGeneralFee() {
     $.ajax({
         url: 'OPD.aspx/GetFees',

@@ -1,8 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DoctorPayableView.aspx.cs" Inherits="PMS.Modules.PatientManagement.DoctorPayableView" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DoctorPayableView.aspx.cs" Inherits="PMS.Modules.Administrator.DoctorPayableView" %>
  
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
        <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
-   <script>
+   <script type="text/javascript">
         
        function LoadPage() {
            var Packagetype = $("#ddlPackageType").val();

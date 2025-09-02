@@ -11,9 +11,9 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using static PMS.BillingProcess;
-using static PMS.Modules.PatientManagement.Doctor_Payable;
+using static PMS.Modules.Administrator.Doctor_Payable;
 
-namespace PMS.Modules.PatientManagement
+namespace PMS.Modules.Administrator
 {
     public partial class Doctor_Payable : System.Web.UI.Page
     {
@@ -214,114 +214,7 @@ namespace PMS.Modules.PatientManagement
             public decimal Hospital_Share { get; set; }
             public decimal Discount_Amount { get; set; }
         }
-        //[WebMethod]
-        //public static string GetPackageDetail(string Bill_Id)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var billInfo = (from b in db.Ar_Billings
-        //                    where b.Bill_ID == Convert.ToInt32(Bill_Id)
-        //                    select new
-        //                    {
-        //                        b.Package_Type,
-        //                        b.Package_Name,
-        //                        b.Bill_No,
-        //                        b.Bill_ID,
-        //                        b.In_Patient_ID
-        //                    }).FirstOrDefault();
-
-        //    if (billInfo == null)
-        //        return null;
-
-        //    string packageType = billInfo.Package_Type;
-        //    int packageName = Convert.ToInt32(billInfo.Package_Name);
-
-        //    decimal expenseTotal = 0;
-        //    decimal nonExpenseTotal = 0;
-        //    decimal doctorShare = 0;
-        //    decimal hospitalShare = 0;
-        //    string Package_Name = "";
-
-        //    if (packageType == "02") // Department Package
-        //    {
-        //        var query = from ab in db.Ar_Billings
-        //                    join abd in db.Ar_Billing_Details on ab.Bill_ID equals abd.Bill_ID
-        //                    join dp in db.DepartmentPackages on Convert.ToInt32(ab.Package_Name) equals dp.Dep_Packages_ID
-        //                    join dpr in db.Department_Packages_Detail_Rates on dp.Dep_Packages_ID equals dpr.Dep_Packages_ID
-        //                    where abd.Item_ID == dpr.Item_Code
-        //                          && abd.Item_Type == dpr.Item_Type
-        //                          && dp.Dep_Packages_ID == packageName
-        //                          && ab.Bill_ID == Convert.ToInt32(Bill_Id)
-        //                    select new { abd.Net_Amount, dpr.is_expense, dp.Doctor_Share, dp.Hospital_Share,dp.Package_Name };
-
-        //        expenseTotal = query.Where(x => x.is_expense == true).Sum(x => (decimal?)x.Net_Amount) ?? 0;
-        //        nonExpenseTotal = query.Where(x => x.is_expense == false).Sum(x => (decimal?)x.Net_Amount) ?? 0;
-
-        //        var shares = query.FirstOrDefault();
-        //        if (shares != null)
-        //        {
-        //            doctorShare = shares.Doctor_Share ?? 0;
-        //            hospitalShare = shares.Hospital_Share ?? 0;
-        //            Package_Name = shares.Package_Name;
-        //        }
-        //    }
-        //    else if (packageType == "01") // Doctor Package
-        //    {
-        //        var query = from ab in db.Ar_Billings
-        //                    join abd in db.Ar_Billing_Details on ab.Bill_ID equals abd.Bill_ID
-        //                    join dp in db.DoctorPackages on Convert.ToInt32(ab.Package_Name) equals dp.Doc_Packages_ID
-        //                    join dpr in db.Doctor_Packages_Detail_Rates on dp.Doc_Packages_ID equals dpr.Doc_Packages_ID
-        //                    where abd.Item_ID == dpr.Item_Code
-        //                          && abd.Item_Type == dpr.Item_Type
-        //                          && dp.Doc_Packages_ID == packageName
-        //                          && ab.Bill_ID == Convert.ToInt32(Bill_Id)
-        //                    select new { abd.Net_Amount, dpr.is_expense, dp.Doctor_Share, dp.Hospital_Share, dp.Package_Name };
-
-        //        expenseTotal = query.Where(x => x.is_expense == true).Sum(x => (decimal?)x.Net_Amount) ?? 0;
-        //        nonExpenseTotal = query.Where(x => x.is_expense == false).Sum(x => (decimal?)x.Net_Amount) ?? 0;
-
-        //        var shares = query.FirstOrDefault();
-        //        if (shares != null)
-        //        {
-        //            doctorShare = shares.Doctor_Share ?? 0;
-        //            hospitalShare = shares.Hospital_Share ?? 0;
-        //            Package_Name = shares.Package_Name;
-        //        }
-        //    }
-        //    else if (packageType == "03") // Panel Package
-        //    {
-        //        var query = from ab in db.Ar_Billings
-        //                    join abd in db.Ar_Billing_Details on ab.Bill_ID equals abd.Bill_ID
-        //                    join dp in db.PanelPackages on Convert.ToInt32(ab.Package_Name) equals dp.Pan_Packages_ID
-        //                    join dpr in db.Panel_Packages_Detail_Rates on dp.Pan_Packages_ID equals dpr.Pan_Packages_ID
-        //                    where abd.Item_ID == dpr.Item_Code
-        //                          && abd.Item_Type == dpr.Item_Type
-        //                          && dp.Pan_Packages_ID == packageName
-        //                          && ab.Bill_ID == Convert.ToInt32(Bill_Id)
-        //                    select new { abd.Net_Amount, dpr.is_expense, dp.Doctor_Share, dp.Hospital_Share, dp.Package_Name };
-
-        //        expenseTotal = query.Where(x => x.is_expense == true).Sum(x => (decimal?)x.Net_Amount) ?? 0;
-        //        nonExpenseTotal = query.Where(x => x.is_expense == false).Sum(x => (decimal?)x.Net_Amount) ?? 0;
-
-        //        var shares = query.FirstOrDefault();
-        //        if (shares != null)
-        //        {
-        //            doctorShare = shares.Doctor_Share ?? 0;
-        //            hospitalShare = shares.Hospital_Share ?? 0;
-        //            Package_Name = shares.Package_Name;
-        //        }
-        //    }
-
-        //    var finalResult = new
-        //    {
-        //        Bill_No = billInfo.Bill_No,
-        //        Doctor_Share = doctorShare,
-        //        Hospital_Share = hospitalShare,
-        //        ExpenseTotal = expenseTotal,
-        //        NonExpenseTotal = nonExpenseTotal
-        //    };
-
-        //    return Newtonsoft.Json.JsonConvert.SerializeObject(finalResult);
-        //}
+       
 
 
 
