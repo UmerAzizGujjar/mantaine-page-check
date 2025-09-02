@@ -315,16 +315,26 @@
 
             var Department_id = $('#ddlDepartment').val();
             var emer_reffered = $("#hdn_emer_reffered").val();
+            var type = $("#ddlPatient_Type").val();
+            var type_text = $('#ddlPatient_Type option:selected').text().trim();
+
+            // If emergency referred, set all to 0 and return
             if (emer_reffered !== "") {
                 $('#txtfees').val("0");
                 $('#hdnDocshare').val("0");
                 $('#hdnhospShare').val("0");
+                $('#txtdiscount').val(""); // Clear discount if any
+                $('#txtdiscount').attr('disabled', false); // Reset disabled state if needed
                 return;
             }
+
+            // If no department selected, reset values
             if (!Department_id || Department_id === "") {
                 $('#txtfees').val("0");
                 $('#hdnDocshare').val("0");
                 $('#hdnhospShare').val("0");
+                $('#txtdiscount').val("");
+                $('#txtdiscount').attr('disabled', false);
                 return;
             }
 
@@ -338,20 +348,55 @@
                     debugger;
 
                     try {
-                  
                         var data = JSON.parse(resp.d);
                         var code = data && data.Code !== undefined ? data.Code : 0;
                         var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
                         var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
-                        $('#txtfees').val(code);
-                        $('#hdnDocshare').val(dShare);
-                        $('#hdnhospShare').val(hShare);
+
+                        // Handle special patient types: Employee, Student, Refer
+                        if (
+                            (type === "04" && type_text === "Employee") ||
+                            (type === "05" && type_text === "Student") ||
+                            (type === "06" && type_text === "Refer")
+                        ) {
+                            $('#txtdiscount').val(100);  
+                            $('#txtdiscount').val(code);           // Show original fee as discount
+                            $('#txtdiscount').attr('disabled', true); // Disable discount input
+                            $('#txtfees').val(0);                  // Set actual fee to 0
+                            $('#hdnDocshare').val(dShare);
+                            $('#hdnhospShare').val(hShare);
+                        } else {
+                            // Normal case: show full fee
+                            $('#txtdiscount').val("");             // Clear discount
+                            $('#txtdiscount').attr('disabled', false); // Enable if needed
+                            $('#txtfees').val(code);
+                            $('#hdnDocshare').val(dShare);
+                            $('#hdnhospShare').val(hShare);
+                        }
+
+                        // Show warning if policy/fee is not defined (code is 0)
+                        if (parseFloat(code) === 0) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Policy Not Defined',
+                                text: 'Policy is not defined against this department.',
+                                timer: 2000,
+                                showConfirmButton: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
 
                     } catch (e) {
                         console.error("Error parsing fee data:", e);
                         $('#txtfees').val("0");
                         $('#hdnDocshare').val("0");
                         $('#hdnhospShare').val("0");
+                        $('#txtdiscount').val("");
+                        $('#txtdiscount').attr('disabled', false);
 
                         Swal.fire({
                             icon: 'warning',
@@ -374,8 +419,8 @@
                         icon: 'error',
                         title: 'Request Failed',
                         text: 'Could not retrieve fee information.',
-                        showConfirmButton: false,
                         timer: 2000,
+                        showConfirmButton: false,
                         customClass: {
                             popup: 'swal-big-popup',
                             title: 'swal-big-title',
@@ -383,9 +428,12 @@
                         }
                     });
 
+                    debugger;
                     $('#txtfees').val("0");
                     $('#hdnDocshare').val("0");
                     $('#hdnhospShare').val("0");
+                    $('#txtdiscount').val("");
+                    $('#txtdiscount').attr('disabled', false);
                 }
             });
         }
@@ -598,6 +646,14 @@
                     <label>Employee ID</label>
                     <input type="text" id="txtemployee" class="form-control" />
                 </div>
+                  <div class="col-lg-12 col-md-12 col-sm-12" id="EmployeeName">
+                    <label>Employee Name</label>
+                    <input type="text" id="empname" class="form-control" />
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" id="EmpDep">
+                    <label>Employee Department</label>
+                    <input type="text" id="EmpDept" class="form-control" />
+                </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="refference">
                     <label>Reference #</label>
                     <input type="text" id="txtreferenceno" class="form-control" />
@@ -605,6 +661,10 @@
                 <div class="col-lg-12 col-md-12 col-sm-12" id="discount">
                     <label>Discount %</label>
                     <input type="text" id="txtdiscount" onchange="Calc_Discount()" class="form-control" />
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" id="StdName">
+                    <label>Student Name</label>
+                    <input type="text" id="txtStdName" class="form-control" />
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="rollno">
                     <label>Roll No</label>

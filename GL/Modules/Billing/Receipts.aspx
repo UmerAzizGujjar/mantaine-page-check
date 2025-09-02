@@ -623,6 +623,7 @@
         var Bill_ID = '';
         var Discharge = false;
         var Discharge_ID = 0;
+        var AllTotalAmount = 0;
         function OpenBill(BillID) {
             window.open("BillingProcess.aspx?Bill_ID=" + BillID);
         }
@@ -658,6 +659,7 @@
 
                     if (DischargeAmount == 0)
                         $('#txtDischageCharges').val(DischargeAmount);
+                    AllTotalAmount = value.Amount;
                     $('#totalBill').val(value.Amount);
                     $('#txtNetReceivable').css('background-color', 'red');
                 });
@@ -665,7 +667,7 @@
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
                 if (id != "") { }
                 else {
-                    var Pending_Amount = parseInt(TotalBill_Amount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
+                    var Pending_Amount = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                     $('#txtNetBalance').val(Pending_Amount);
                     $('#txtNetReceivable').val(TotalBill_Amount);
                     $('#txtNetReceivable').css('background-color', 'red');
@@ -681,6 +683,7 @@
 
         }
         function LoadAdvance() {
+            debugger;
             PageMethods.LoadAdvances(Patient_ID, function (resp) {
 
                 $('#tblAdvance tbody tr').remove();
@@ -705,7 +708,7 @@
                     $('#txtNetReceivable').css('background-color', 'red');
                 });
                 var netBalance_Amt = $('#txtNetBalance').val();
-                var Total_amt = parseInt(TotalBill_Amount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
+                var Total_amt = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                 $('#totalAdvanceAmount').val(TotalAmount);
                 $('#txtNetBalance').val(Total_amt);
                 $('#txtNetReceivable').val(Total_amt);
@@ -746,7 +749,8 @@
 
                         TotalReceiptAmount += parseFloat(value.Amount);
                         $('#tblReceipts tbody').append(row);
-                        var Total_amt = parseInt(TotalBill_Amount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
+                       TotalReceipt_Amount = TotalReceiptAmount
+                        var Total_amt = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                         $('#txtNetBalance').val(Total_amt);
                     }
                 });
@@ -995,8 +999,11 @@
             }, function (error) {
                 alert(error.get_message());
             });
+
             LoadBills();
             LoadAdvance();
+           
+            
         }
         function ReplaceNullWith_Space(Data) {
             if (Data == "null")

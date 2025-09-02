@@ -30,10 +30,10 @@
 
               }
 
-             
-          
-             
+                       
           });
+
+          
           
           //Print
           debugger
@@ -62,11 +62,11 @@
         <div class="row">
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="txt_Mrno">MR No</label>
-                <input type="text" id="txt_Mrno" class="form-control" disabled />
+                <input type="text" id="txt_Mrno"  class="form-control" disabled />
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="ddl_name">Name<span style="color: red;">*</span></label>
-                <select id="ddl_name" class="form-control">
+                <select id="ddl_name" tabindex="1" class="form-control">
                     <option value="Mr.">Mr.</option>
                     <option value="Mrs.">Mrs.</option>
                     <option value="Ms.">Ms.</option>
@@ -75,12 +75,12 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-9">
                 <label></label>
-                <input name="dob" style="margin-top: 6px" type="text" id="txt_name" class="form-control" />
+                <input name="dob" style="margin-top: 6px" tabindex="2" type="text" id="txt_name" class="form-control" />
                 <span id="firstname-error" class="span_txt" style="display: none;">Please Enter First Name</span>
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
-                <select id="ddlRelation" class="form-control">
+                <select id="ddlRelation" tabindex="3" class="form-control">
                     <option value="S/O">S/O</option>
                     <option value="W/O">W/O</option>
                     <option value="D/O">D/O</option>
@@ -88,12 +88,12 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-9">
                 <label></label>
-                <input type="text" style="margin-top: 6px" id="txt_relation" class="form-control" />
+                <input type="text" style="margin-top: 6px" tabindex="4" id="txt_relation" class="form-control" />
                 <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="PrefixAge">Age/DOB<span style="color: red;">*</span></label>
-                <select id="PrefixAge" class="form-control">
+                <select id="PrefixAge" tabindex="5" class="form-control">
                     <option value="Year">Year</option>
                     <option value="Month">Month</option>
                     <option value="Day">Day</option>
@@ -101,18 +101,18 @@
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
-                <input type="text" style="margin-top: 7px" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
+                <input type="text" style="margin-top: 7px" tabindex="6" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
-                <input type="text" id="txtAge_yearss" style="margin-top: 7px" class="form-control" placeholder="dd mmyy" />
+                <input type="text" id="txtAge_yearss" tabindex="7" style="margin-top: 7px" class="form-control" placeholder="dd mmyy" />
                 <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
             </div>
         </div>
     <div class="row">
         <div class="col-lg-2 col-md-6 col-sm-9">
     <label for="ddl_Gender">Gender</label>
-    <select id="ddl_Gender" >
+    <select id="ddl_Gender" tabindex="8" >
         <option value="0">Select Gender</option>
     </select>
 </div>
@@ -120,28 +120,28 @@
 
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="ddl_status">Marital Status</label>
-            <select id="ddl_status" class="form-control">
+            <select id="ddl_status" tabindex="9" class="form-control">
                 <option value="0">Select Martial Status</option>
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
-            <input type="text" id="txt_mobile" class="form-control" />
+            <input type="text" id="txt_mobile" tabindex="10" class="form-control" />
             <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="ddl_bloodGroup">Blood Group</label>
-            <select id="ddl_bloodGroup" class="form-control">
+            <select id="ddl_bloodGroup" tabindex="11" class="form-control">
                 <option value="0">Select Blood Group</option>
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txt_cnic">CNIC</label>
-            <input type="text" id="txt_cnic" class="form-control" />
+            <input type="text" id="txt_cnic" tabindex="12" class="form-control" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label>Country</label>
-            <select id="ddlCountry" class="form-control">
+            <select id="ddlCountry" tabindex="13" class="form-control">
                  <option value="0">Select Country</option>
             </select>
         </div>
@@ -149,25 +149,25 @@
     <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="ddlstate">Province</label>
-            <select id="ddlstate" class="form-control">
+            <select id="ddlstate" tabindex="14" class="form-control">
                  <option value="0">Select Province</option>
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtcity">City</label>
-            <select id="txtcity" class="form-control">
+            <select id="txtcity"  tabindex="15" class="form-control">
                 <option value="0">Select City</option>
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtarea">Area</label>
-            <select id="txtarea" class="form-control">
+            <select id="txtarea" tabindex="16" class="form-control">
                 <option value="0">Select Area</option>
             </select>
         </div>
         <div class="col-lg-6 col-md-8 col-sm-10">
             <label for="txt_Address">Address<span style="color: red;">*</span></label>
-            <input type="text" id="txt_Address" class="form-control" />
+            <input type="text" tabindex="17" id="txt_Address" class="form-control" />
             <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
         </div>
     </div>
