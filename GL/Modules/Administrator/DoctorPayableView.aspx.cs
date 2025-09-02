@@ -6,7 +6,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace PMS.Modules.PatientManagement
+namespace PMS.Modules.Administrator
 {
     public partial class DoctorPayableView : System.Web.UI.Page
     {
