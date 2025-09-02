@@ -2891,14 +2891,14 @@
                     if (AmtReceived != '') {
                         $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
 
-                        var prebln = parseFloat(Totalpayable) - parseFloat(AmtReceived)
+                        var prebln = parseFloat(Totalpayable) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid )
                         $('#txtPreviousBlnc').val(prebln);
                     }
                     else
-                        $('#txtBalances').val(parseFloat($('#txtNetPayable').val()).toFixed(0));
+                        $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
                 }
                 else {
-                    $('#txtBalances').val(parseFloat($('#txtNetPayable').val()).toFixed(0));
+                    $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
                 }
             }
             function FillDoctors() {

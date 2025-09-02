@@ -1853,12 +1853,6 @@
         <elementListCompartment Id="13b78ec8-5414-4581-b4a9-4eb46dc1c999" absoluteBounds="31.39, 44.585, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="5d461292-2d67-44a9-92e6-cbc6b1c4f355" absoluteBounds="20.75, 55.75, 2, 98.8831201171875">
-      <DataClassMoniker Name="/DataBaseDataContext/In_Patient" />
-      <nestedChildShapes>
-        <elementListCompartment Id="444e43b9-1753-493f-a176-ce464d55f76b" absoluteBounds="20.765, 56.21, 1.9700000000000002, 98.3231201171875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="79b55dc9-864a-48bc-9a54-2eaf0a90ed05" absoluteBounds="0.75, 56.75, 2, 19.270327148437502">
       <DataClassMoniker Name="/DataBaseDataContext/INV_Item" />
       <nestedChildShapes>
