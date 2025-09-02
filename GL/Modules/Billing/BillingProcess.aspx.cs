@@ -2168,9 +2168,9 @@ namespace PMS
                     pt.MainDepartment = "03";
                 }
 
-                else if (ipd_id != "There is no row at position 0." && pt.checkdischarge == "false")
+                else if (ipd_id != "There is no row at position 0." )
                 {
-                    pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
+                    pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where  In_Patient_ID =" + ipd_id);
                     pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
                     pt.Balance = DBClass.getField("select sum(Previous_Balance) from Ar_Billings where  In_Patient_ID =" + ipd_id);
                     pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
