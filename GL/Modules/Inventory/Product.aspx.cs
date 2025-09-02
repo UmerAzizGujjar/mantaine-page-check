@@ -130,7 +130,7 @@ namespace PMS.Inventory
             return (new JavaScriptSerializer()).Serialize(details);
         }
         [WebMethod]
-        public static string AddItems(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService, List<BatchNum> batchList)
+        public static string AddItems(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService,string SehatSahulat,string SehatCardRate,List<BatchNum> batchList)
         {
             string result = string.Empty;
             string Id = "";
@@ -221,6 +221,9 @@ namespace PMS.Inventory
                 obj.InventoryOrg = Warehouse;
                 obj.Hospital_Services = Convert.ToBoolean(IsHospital);
                 obj.Services = Convert.ToBoolean(IsService);
+                obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
+                obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal rate) ? rate : 0;
+               // obj.sehatCard_Rate = SehatCardRate;
                 var Item = Item_Code;
 
                 DataTable dt = DBClass.getDataTable("select Item_Code from INV_Items where Item_Code='" + Item + "'");
@@ -275,6 +278,7 @@ namespace PMS.Inventory
                 obj.Book_ID = AppConfig.Book_ID;
                 obj.Financial_Integration = FianceIntegration;
                 obj.locatorAddress = locatorAddress;
+                obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal rate) ? rate : 0;
                 if (UomQty != "")
                 {
                     obj.UOM_Qty = Convert.ToDecimal(UomQty);
@@ -355,6 +359,7 @@ namespace PMS.Inventory
                 obj.Company_ID = AppConfig.Company_ID;
                 obj.Book_ID = AppConfig.Book_ID;
                 obj.Services = Convert.ToBoolean(IsService);
+                obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
                 var existingMeds = db.INV_Item_RateBatchWises.Where(m => m.Item_Id == Convert.ToInt32(ItemId)).ToList();
                 db.INV_Item_RateBatchWises.DeleteAllOnSubmit(existingMeds);
                 foreach (var bth in batchList)
@@ -453,6 +458,8 @@ namespace PMS.Inventory
                                      obj.DepartmentId,
                                      obj.Hospital_Services,
                                      obj.OTProcedure,
+                                     obj.issehatCard_item,
+                                     obj.sehatCard_Rate,
                                  }).FirstOrDefault();
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }

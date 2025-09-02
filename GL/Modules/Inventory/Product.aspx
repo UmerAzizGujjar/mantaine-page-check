@@ -14,6 +14,16 @@
             else {
                 GetitemNum();
             }
+
+            document.getElementById('chkSehatSahulat').addEventListener('change', function () {
+                const container = document.getElementById('sehatCardRateContainer');
+                if (this.checked) {
+                    container.style.display = 'block'; // Show the field
+                } else {
+                    container.style.display = 'none';  // Hide the field
+                }
+            });
+
         });
         $(function () {
             $("#tabs").tabs();
@@ -335,11 +345,32 @@
                 var billing = $('#chkBillingRequired').prop('checked');
                 var OTProcedure = $("#chkOTProcedure").prop("checked");
                 var IsService = $("#chkIsService").prop("checked");
+                var SehatSahulat = $("#chkSehatSahulat").prop("checked");
                 var btnValue = $('#btnValue').val();
                 var DepartmentId = $('#ddldepartment').val();
+                var SehatCardRate = $('#txtSehatCardRate').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
                 var Id = 0;
                 var batchList = [];
+
+                if (SehatSahulat) {
+                    var rate = $('#txtSehatCardRate').val().trim();
+                    if (rate === '' || isNaN(rate) || parseFloat(rate) <= 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Validation Error!',
+                            text: 'Sehat Card Rate must be greater than 0 when Sehat Sahulat is checked.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return; // Stop the save process
+                    }
+                }
 
                 if (id == "") {
                     Id = 0;
@@ -407,10 +438,12 @@
                         "Billing": billing,
                         "OTProcedure": OTProcedure,
                         "IsService": IsService,
+                        "SehatSahulat": SehatSahulat,
                         "btnValue": btnValue,
                         "ItemId": Id,
                         "DepartmentId": DepartmentId,
                         "IsHospital": isHospitalchk,
+                        "SehatCardRate": SehatCardRate,
                         "batchList": batchList,
                     }),
                     contentType: "application/json; charset=utf-8",
@@ -559,6 +592,17 @@
                     $('#ATC').val(parse.ATC);
                     $('#GenericName').val(parse.Generic_Name);
                     $('#Note').val(parse.Notes);
+                    if (parse.issehatCard_item == 1) {
+                        $("#chkSehatSahulat").prop('checked', true);
+                    }
+                    $('#txtSehatCardRate').val(parse.sehatCard_Rate || '');
+                    var shouldShow = ($('#chkSehatSahulat').is(':checked')) ||
+                        (parse.sehatCard_Rate && parseFloat(parse.sehatCard_Rate) > 0);
+                    if (shouldShow) {
+                        $('#sehatCardRateContainer').show();
+                    } else {
+                        $('#sehatCardRateContainer').hide();
+                    }
                     if (parse.Finished_Product == 1) {
                         $("#Finished_Product").prop('checked', true);
                     }
@@ -637,6 +681,10 @@
                         $("#chkIsService").prop('checked', true);
                     }
 
+                    if (parse.issehatCard_item == 1) {
+                        $("#chkSehatSahulat").prop('checked', true);
+                    }
+
                 },
                 failure: function (response) {
                     Swal.fire({
@@ -655,7 +703,7 @@
                 }
 
             });
-        }
+        }      
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -757,8 +805,12 @@
                 <label id="Lblheight">Height</label>
                 <input type="text" class="form-control" id="txtheight" name="txtheight" />
             </div> 
+              <div class="col-lg-1 col-md-6 col-sm-12" id="sehatCardRateContainer" style="display: none;">
+                <label id="LblsehatCardrate">Sehat Card Rate</label>
+                <input type="text" class="form-control" id="txtSehatCardRate" name="txtSehatCardRate" />
+            </div> 
            
-           <div class="col-lg-6 col-md-12 col-sm-12">
+           <div class="col-lg-5 col-md-12 col-sm-12">
              <label id="Lblremarks">Remarks</label>
               <input type="text" class="form-control" id="txtremarks" name="txtremarks" />           
            </div>
@@ -1002,7 +1054,13 @@
                     </td>
                     <td style="width: 84px;">
                          <label for="chkOTProcedure">Services Item</label> 
-                    </td>                   
+                    </td>   
+                    <td>
+                        <input type="checkbox" id="chkSehatSahulat" name="chkSehatSahulat" />
+                    </td>
+                    <td style="width: 84px;">
+                        <label for="chkSehatSahulat">Sehat Sahulat</label>
+                    </td>
                 </tr>
             </table>
         </div>
