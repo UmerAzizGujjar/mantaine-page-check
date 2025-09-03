@@ -616,7 +616,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 p.Patient_ID as Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence,rg.Full_Name,rg.Patient_No,op.Out_Patient_ID as opdid from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where rg.Patient_No = '" + Request.QueryString["q"].ToString() + "' order by op.Created_Time desc ";
+                        sqlQuery = "Select top 1 p.Patient_ID as Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence,rg.Full_Name,rg.Patient_No,op.Out_Patient_ID as opdid,rg.pat_id as Pat_id from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where rg.Patient_No = '" + Request.QueryString["q"].ToString() + "' order by op.Created_Time desc ";
                     else
                         sqlQuery = "Select  top 1 op.Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where  isnull(IsRevisit,'0')=0  order by op.Created_Time desc ";
                     string result = "";
@@ -624,7 +624,7 @@ namespace PMS
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Out_Patient_ID"].ToString() + @""",""name"": """ + dr["mr_no_sequence"].ToString() + " - " + dr["Full_Name"].ToString() + @""",""patno"": """ + dr["Patient_No"].ToString()+ @""",""Opd_id"": """ + dr["opdid"].ToString() + @"""}";
+                        result += @"{""id"":""" + dr["Out_Patient_ID"].ToString() + @""",""name"": """ + dr["mr_no_sequence"].ToString() + " - " + dr["Full_Name"].ToString() + @""",""patno"": """ + dr["Patient_No"].ToString()+ @""",""Pat_id"": """ + dr["Pat_id"].ToString() + @""",""Opd_id"": """ + dr["opdid"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
                 }

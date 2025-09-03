@@ -233,6 +233,7 @@
 
                     var Batch_Num = data.Batch_Num || [];
                     var Item_Sale_Rate = data.Item_Sale_Rate || [];
+                    var Sehat_card_rate_batch = data.Sehat_card_rate_batch || [];
                     var Uom_Qty = data.Uom_Qty || [];
                     // Append new rows for medicines
                     var rows = '';
@@ -243,6 +244,9 @@
                         '</td>' +
                         '<td>' +
                         '<input type="hidden" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="' + Item_Sale_Rate + '" />' + Item_Sale_Rate +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="hidden" name="txtsehatcardrate" id="txtsehatcardrate' + rowlength + '" value="' + Sehat_card_rate_batch + '" />' + Sehat_card_rate_batch +
                         '</td>' +
                         '<td>' +
                         '<input type="hidden" name="txtBatchRate" id="txtUom_Qty' + rowlength + '" value="' + Uom_Qty + '" />' + Uom_Qty +
@@ -283,6 +287,9 @@
                     '</td>' +
                     '<td>' +
                     '<input type="text" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="0" />' +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="text" name="txtsehatcardrate" id="txtsehatcardrate' + rowlength + '" value="0" />' +
                     '</td>' +
                     '<td>' +
                     '<input type="text" name="txtUom_Qty" id="txtUom_Qty' + rowlength + '" value="0" />' +
@@ -380,9 +387,10 @@
                 }
                 $('#BatchTable_body tr').each(function (key, value) {
                     var txtBatchRate = $(this).find('input[name="txtBatchRate"]').val();
+                    var txtSCRate = $(this).find('input[name="txtsehatcardrate"]').val();
                     var txtUom_Qty = $(this).find('input[name="txtUom_Qty"]').val();
                     var ddlBatch = $(this).find('input[name="ddlBatch"]').val();
-                    batchList.push({ txtBatchRate: txtBatchRate, ddlBatch: ddlBatch, txtUom_Qty: txtUom_Qty });
+                    batchList.push({ txtBatchRate: txtBatchRate, txtSCRate: txtSCRate, ddlBatch: ddlBatch, txtUom_Qty: txtUom_Qty });
                 });
                 $('#btnValue').attr('disabled', true);
                 $.ajax({
@@ -948,6 +956,7 @@
                 <tr id="row_sample">
                     <th style="width: 40%;">Batch Number</th>
                     <th style="width: 30%;">Rate</th>
+                    <th style="width: 30%;">Sehat Card Rate</th>
                     <th style="width: 20%;">Uom Qty</th>
                     <th style="text-align: center; width: 10%;">ACTIONS</th>
                 </tr>

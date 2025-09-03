@@ -73,7 +73,8 @@ namespace PMS.Inventory
                                  }).ToList();
                 foreach (var batchNum in grnResult)
                 {
-                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, "008", batchNum.BatchNum));
+                    var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
+                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, PharmacyCodes, batchNum.BatchNum));
                     if (stock > 0)
                     {
                         batchStockListgrn.Add(new BatchStock
@@ -123,6 +124,7 @@ namespace PMS.Inventory
                            {
                                m.Item_Rate_Id,
                                m.Item_Sale_Rate,
+                               m.Sehat_card_rate_batch,
                                m.Batch_Num,
                                m.Uom_Qty
                            }).ToList();
@@ -369,6 +371,7 @@ namespace PMS.Inventory
                         Item_Id = Convert.ToInt32(ItemId),
                         Batch_Num = bth.ddlBatch,
                         Item_Sale_Rate = bth.txtBatchRate,
+                         Sehat_card_rate_batch = bth.txtSCRate,
                         Uom_Qty = bth.txtUom_Qty,
 
                     };
@@ -500,6 +503,7 @@ namespace PMS.Inventory
             public string Item_Id { get; set; }
             public string ddlBatch { get; set; }
             public decimal txtBatchRate { get; set; }
+            public decimal txtSCRate { get; set; }
             public decimal txtUom_Qty { get; set; }
         }
     }
