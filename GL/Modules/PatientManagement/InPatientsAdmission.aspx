@@ -3131,25 +3131,25 @@
             var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
             var pkg = $('#ctl00_MainContent_ddlpacakagetype').val();
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-            if (PatientDiscountType == "10") {
-                if (PanelCompany == "0") {
+            //if (PatientDiscountType == "10") {
+            //    if (PanelCompany == "0") {
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please Select Panel Company',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                    return true;
-                }
+            //        Swal.fire({
+            //            icon: 'error',
+            //            title: 'Error!',
+            //            text: 'Please Select Panel Company',
+            //            showConfirmButton: false,
+            //            timer: 2000,
+            //            customClass: {
+            //                popup: 'swal-big-popup',
+            //                title: 'swal-big-title',
+            //                htmlContainer: 'swal-big-text'
+            //            }
+            //        });
+            //        return true;
+            //    }
 
-            }
+            //}
             //if (pkg == "0") {
 
             //    Swal.fire({

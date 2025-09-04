@@ -99,7 +99,7 @@
                 $('#ddlmanu').html(optionsManu);
                 $('#ddlpack_unit').html(optionPUnit);
                 $('#ddlitem_type').html(optionItemTyp);
-               /* $('#ddlitem_type').val('001');*/
+                /* $('#ddlitem_type').val('001');*/
                 $('#ddlProcedureTypes').html(optionProcType);
                 $('#ddlitem_Qty').html(optionItemCategory);
                 $('#ddlItemGroup').html(optionItemGroup);
@@ -146,7 +146,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                 proceed = false;
+                proceed = false;
             }
             if (locator && locatorAddress === "") {
                 Swal.fire({
@@ -161,7 +161,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                 proceed = false;
+                proceed = false;
             }
             if (PharmacyItem && (uomqty <= 0 || uomqty === "")) {
                 Swal.fire({
@@ -176,7 +176,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                 proceed = false;
+                proceed = false;
             }
             if (itemType == "0") {
                 Swal.fire({
@@ -191,7 +191,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                 proceed = false;
+                proceed = false;
             }
             if (!consumable && !Fixasset && !saleable) {
                 Swal.fire({
@@ -221,45 +221,130 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                 proceed = false;
+                proceed = false;
             }
             return proceed;
         }
+
         function LoadPatientTypeWiseRate(id) {
-            debugger;
-            PageMethods.LoadBatchsRate(id, function (resp) {
-                debugger;
-                var datas = JSON.parse(resp);
-                $.each(datas, function (key, data) {
+            // Make AJAX call to get rate category data
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/LoadRateCategory",
+                data: JSON.stringify({ id: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const data = JSON.parse(response.d);
 
-                    var Batch_Num = data.Batch_Num || [];
-                    var Item_Sale_Rate = data.Item_Sale_Rate || [];
-                    var Sehat_card_rate_batch = data.Sehat_card_rate_batch || [];
-                    var Uom_Qty = data.Uom_Qty || [];
-                    // Append new rows for medicines
-                    var rows = '';
-                    var rowlength = BatchTable.rows.length;
-                    rows = '<tr>' +
-                        '<td>' +
-                        '<input type="hidden" name="ddlmed" id="ddlmed' + rowlength + '" value="' + Batch_Num + '" />' + Batch_Num +
-                        '</td>' +
-                        '<td>' +
-                        '<input type="hidden" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="' + Item_Sale_Rate + '" />' + Item_Sale_Rate +
-                        '</td>' +
-                        '<td>' +
-                        '<input type="hidden" name="txtsehatcardrate" id="txtsehatcardrate' + rowlength + '" value="' + Sehat_card_rate_batch + '" />' + Sehat_card_rate_batch +
-                        '</td>' +
-                        '<td>' +
-                        '<input type="hidden" name="txtBatchRate" id="txtUom_Qty' + rowlength + '" value="' + Uom_Qty + '" />' + Uom_Qty +
-                        '</td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
-                        '</td>' +
-                        '</tr>'
-                    $('#BatchTable_body').append(rows);
+                    const tbody = document.getElementById('tbodypatientRateList');
+                    if (!tbody) {
+                        console.error("Error: #tbodypatientRateList not found in DOM.");
+                        return;
+                    }
 
-                });
+                    tbody.innerHTML = '';
+
+                    data.forEach(item => {
+                        addRateRow(item.Patient_Type, item.Patient_Type_text, item.Item_Sale_Rate, item.Item_Rate_Id);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading rate category:", error);
+                    alert("Error loading rate category data. Please try again.");
+                }
             });
         }
+
+        function addRateRow(selectedValue, selectedText, rate, itemRateId = null) {
+            const tbody = document.getElementById('tbodypatientRateList');
+            if (!tbody) {
+                console.error("Error: #tbodypatientRateList not found in DOM.");
+                return;
+            }
+
+            const tr = document.createElement('tr');
+            const rowId = itemRateId || new Date().getTime();
+
+            tr.innerHTML = `
+        <!-- Patient Type (Display) -->
+        <td style="padding: 10px; border-bottom: 1px solid #eee;">
+            <input type="text" id="patientType_${rowId}" name="patient_type" value="${selectedText}"
+                   style="width: 100%; padding: 6px; border: none; background: #f0f0f0; border-radius: 4px; cursor: default;" 
+                   disabled />
+        </td>
+
+        <!-- Rate -->
+        <td style="padding: 10px; border-bottom: 1px solid #eee;">
+            <input type="text" id="txtsalerate_${rowId}" name="txtsalerate" value="${rate}"
+                   style="width: 100%; padding: 6px; border: none; background: #f0f0f0; border-radius: 4px; cursor: default;" 
+                   disabled />
+        </td>
+
+        <!-- Hidden Input for Form Submission -->
+        <td style="display: none;">
+            <input type="hidden" name="patient_type_value" value="${selectedValue}" />
+            <input type="hidden" name="item_rate_id" value="${rowId}" />
+        </td>
+
+        <!-- Action: Edit and Delete Buttons -->
+        <td style="padding: 10px; text-align: center; white-space: nowrap;">
+         <a href="javascript:void(0)"
+   onclick="editRateRow(this, '${selectedValue}', '${selectedText}', '${rate}', '${rowId}')"
+   class="editListBtn" 
+   style="border-radius: 4px; padding: 5px 8px 5px 8px;">
+    <i class="fa fa-pencil"></i>
+</a>
+
+<a href="javascript:void(0)" 
+   onclick="removeRateEntry(this, '${selectedValue}', '${selectedText}', '${rate}')"
+   class="delListBtn"
+   style="border-radius: 4px; margin-left: 4px; color: white; padding: 5px 8px 5px 8px;">
+    <i class="fa fa-trash"></i>
+</a>
+
+
+        </td>
+    `;
+
+            tbody.appendChild(tr);
+        }
+
+        function editRateRow(button, selectedValue, selectedText, rate, rowId) {
+            // Remove the row from the table
+            const tr = button.closest('tr');
+            tr.remove();
+
+            // Add back to dropdown and rate input
+            const ddlPatientType = document.getElementById('ddlPatient_type');
+            const txtRate = document.getElementById('txtRate');
+
+            if (ddlPatientType && txtRate) {
+                // Create and add option to dropdown
+                const option = document.createElement('option');
+                option.value = selectedValue;
+                option.textContent = selectedText;
+                ddlPatientType.appendChild(option);
+
+                // Set the dropdown value
+                ddlPatientType.value = selectedValue;
+
+                // Set the rate value
+                txtRate.value = rate;
+            }
+        }
+
+        function removeRateEntry(button, selectedValue, selectedText, rate) {
+            if (confirm('Are you sure you want to remove this rate entry?')) {
+                // Remove the row from the table
+                const tr = button.closest('tr');
+                tr.remove();
+
+
+            }
+        }
+
+
         function LoadBatchData(id) {
             debugger;
             PageMethods.LoadBatchsRate(id, function (resp) {
@@ -346,7 +431,7 @@
                     optionsPatientType += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                 });
                 $('#ddlPatient_type').html(optionsPatientType);
-               /* $('#ddlPatient_type').select2();*/
+                /* $('#ddlPatient_type').select2();*/
             });
         }
         function Saveitem() {
@@ -425,7 +510,7 @@
                 $('#tbodypatientRateList tr').each(function (key, value) {
                     var pat_type = $(this).find('input[name="patient_type_value"]').val();
                     var SaleRate = $(this).find('input[name="txtsalerate"]').val();
-                    PatientTypeList.push({ pat_type: pat_type, SaleRate: SaleRate});
+                    PatientTypeList.push({ pat_type: pat_type, SaleRate: SaleRate });
                 });
                 $('#btnValue').attr('disabled', true);
                 $.ajax({
@@ -510,7 +595,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                             window.location.href = 'Product.aspx?ID=' + Split[1];
+                            window.location.href = 'Product.aspx?ID=' + Split[1];
                         }
                         if (Split[0] == "Update") {
                             debugger;
@@ -526,7 +611,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                             window.location.href = 'Product.aspx?ID=' + Split[1];
+                            window.location.href = 'Product.aspx?ID=' + Split[1];
                         }
                     },
                     failure: function (response) {
@@ -543,7 +628,7 @@
                             }
                         });
 
-                     }
+                    }
                 });
             }
         }
@@ -573,7 +658,7 @@
                         }
                     });
 
-                 }
+                }
             });
         }
         function LoadItemInventory(id) {
@@ -788,7 +873,7 @@
             entries.push({ type: selectedValue, description: selectedText, rate: rate });
             hiddenField.value = JSON.stringify(entries);
 
-          
+
             const tbody = document.getElementById('tbodypatientRateList');
             if (!tbody) {
                 console.error("Error: #patientRateList not found in DOM.");
@@ -827,7 +912,7 @@
         </td>
     `;
 
-          
+
             tbody.appendChild(tr);
 
             rateInput.value = '';
