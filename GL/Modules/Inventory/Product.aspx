@@ -7,6 +7,7 @@
             FillDepartments();
             GetDepartments();
             FillAccountCategory();
+            FillPatientType();
             if (id != "") {
                 LoadItemInventory(id);
                 $("#btnValue").val('Update');
@@ -224,6 +225,41 @@
             }
             return proceed;
         }
+        function LoadPatientTypeWiseRate(id) {
+            debugger;
+            PageMethods.LoadBatchsRate(id, function (resp) {
+                debugger;
+                var datas = JSON.parse(resp);
+                $.each(datas, function (key, data) {
+
+                    var Batch_Num = data.Batch_Num || [];
+                    var Item_Sale_Rate = data.Item_Sale_Rate || [];
+                    var Sehat_card_rate_batch = data.Sehat_card_rate_batch || [];
+                    var Uom_Qty = data.Uom_Qty || [];
+                    // Append new rows for medicines
+                    var rows = '';
+                    var rowlength = BatchTable.rows.length;
+                    rows = '<tr>' +
+                        '<td>' +
+                        '<input type="hidden" name="ddlmed" id="ddlmed' + rowlength + '" value="' + Batch_Num + '" />' + Batch_Num +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="hidden" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="' + Item_Sale_Rate + '" />' + Item_Sale_Rate +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="hidden" name="txtsehatcardrate" id="txtsehatcardrate' + rowlength + '" value="' + Sehat_card_rate_batch + '" />' + Sehat_card_rate_batch +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="hidden" name="txtBatchRate" id="txtUom_Qty' + rowlength + '" value="' + Uom_Qty + '" />' + Uom_Qty +
+                        '</td>' +
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
+                        '</td>' +
+                        '</tr>'
+                    $('#BatchTable_body').append(rows);
+
+                });
+            });
+        }
         function LoadBatchData(id) {
             debugger;
             PageMethods.LoadBatchsRate(id, function (resp) {
@@ -300,6 +336,19 @@
                 $('#BatchTable_body').append(rows);
             }
         }
+        function FillPatientType() {
+            debugger;
+            var optionsPatientType = '<option value="0">Please Select</option>';
+            PageMethods.GetPatientType(function (Tests) {
+                debugger
+                $.each(JSON.parse(Tests), function (key, value) {
+                    debugger;
+                    optionsPatientType += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlPatient_type').html(optionsPatientType);
+               /* $('#ddlPatient_type').select2();*/
+            });
+        }
         function Saveitem() {
             if (validateSave()) {
                 debugger;
@@ -359,26 +408,7 @@
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
                 var Id = 0;
                 var batchList = [];
-
-                if (SehatSahulat) {
-                    var rate = $('#txtSehatCardRate').val().trim();
-                    if (rate === '' || isNaN(rate) || parseFloat(rate) <= 0) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Validation Error!',
-                            text: 'Sehat Card Rate must be greater than 0 when Sehat Sahulat is checked.',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                        return; // Stop the save process
-                    }
-                }
-
+                var PatientTypeList = [];
                 if (id == "") {
                     Id = 0;
                 }
@@ -391,6 +421,11 @@
                     var txtUom_Qty = $(this).find('input[name="txtUom_Qty"]').val();
                     var ddlBatch = $(this).find('input[name="ddlBatch"]').val();
                     batchList.push({ txtBatchRate: txtBatchRate, txtSCRate: txtSCRate, ddlBatch: ddlBatch, txtUom_Qty: txtUom_Qty });
+                });
+                $('#tbodypatientRateList tr').each(function (key, value) {
+                    var pat_type = $(this).find('input[name="patient_type_value"]').val();
+                    var SaleRate = $(this).find('input[name="txtsalerate"]').val();
+                    PatientTypeList.push({ pat_type: pat_type, SaleRate: SaleRate});
                 });
                 $('#btnValue').attr('disabled', true);
                 $.ajax({
@@ -453,6 +488,7 @@
                         "IsHospital": isHospitalchk,
                         "SehatCardRate": SehatCardRate,
                         "batchList": batchList,
+                        "PatientTypeList": PatientTypeList,
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -692,6 +728,7 @@
                     if (parse.issehatCard_item == 1) {
                         $("#chkSehatSahulat").prop('checked', true);
                     }
+                    LoadPatientTypeWiseRate(id);
 
                 },
                 failure: function (response) {
@@ -711,7 +748,111 @@
                 }
 
             });
-        }      
+        }
+        function AddRateCategory() {
+            // Get elements
+            const $dropdown = $('#ddlPatient_type');
+            const selectedValue = $dropdown.val();
+            const selectedText = $dropdown.find('option:selected').text().trim();
+            const rateInput = document.getElementById('txtRate');
+            const rate = rateInput.value.trim();
+
+            // Validation
+            if (!selectedValue || selectedValue === "0") {
+                alert("Please select a valid Patient Type.");
+                return;
+            }
+            if (!rate || isNaN(rate) || rate <= 0) {
+                alert("Please enter a valid rate (positive number).");
+                return;
+            }
+
+            // Prevent duplicates
+            let entries = [];
+            const hiddenField = document.getElementById('patientRatesData');
+            if (hiddenField.value) {
+                try {
+                    entries = JSON.parse(hiddenField.value);
+                } catch (e) {
+                    console.error("Error parsing JSON:", e);
+                    entries = [];
+                }
+            }
+
+            if (entries.some(e => e.type === selectedValue)) {
+                alert(`${selectedText} is already added.`);
+                return;
+            }
+
+            // Add new entry
+            entries.push({ type: selectedValue, description: selectedText, rate: rate });
+            hiddenField.value = JSON.stringify(entries);
+
+          
+            const tbody = document.getElementById('tbodypatientRateList');
+            if (!tbody) {
+                console.error("Error: #patientRateList not found in DOM.");
+                return;
+            }
+
+
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `
+        <!-- Patient Type (Display) -->
+        <td style="padding: 10px; border-bottom: 1px solid #eee;">
+            <input type="text" id="patientType"  name="patient_type" value="${selectedText}"
+                   style="width: 100%; padding: 6px; border: none; background: #f0f0f0; border-radius: 4px; cursor: default;" 
+                   disabled />
+        </td>
+
+        <!-- Rate -->
+        <td style="padding: 10px; border-bottom: 1px solid #eee;">
+            <input type="text"  id="txtsalerate"  name="txtsalerate" value="${rate}"
+                   style="width: 100%; padding: 6px; border: none; background: #f0f0f0; border-radius: 4px; cursor: default;" 
+                   disabled />
+        </td>
+
+        <!-- Hidden Input for Form Submission -->
+        <td style="display: none;">
+            <input type="hidden" name="patient_type_value" value="${selectedValue}" />
+        </td>
+
+        <!-- Action: Delete Button -->
+        <td style="padding: 10px; text-align: center;">
+            <button type="button" onclick="removeRateEntry(this, '${selectedValue}')" 
+                    style="color: red; background: none; border: none; cursor: pointer; font-size: 18px;">
+                ✕
+            </button>
+        </td>
+    `;
+
+          
+            tbody.appendChild(tr);
+
+            rateInput.value = '';
+        }
+
+
+        function removeRateEntry(button, type) {
+            const tr = button.closest('tr');
+            const tbody = document.getElementById('tbodypatientRateList');
+            const hiddenField = document.getElementById('tbodypatientRateList');
+
+            tbody.removeChild(tr);
+
+            let entries = [];
+            if (hiddenField.value) {
+                try {
+                    entries = JSON.parse(hiddenField.value);
+                } catch (e) {
+                    entries = [];
+                }
+            }
+
+            entries = entries.filter(e => e.type !== type);
+            hiddenField.value = JSON.stringify(entries);
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -871,27 +1012,70 @@
                 </tr>
             </table>
         </div>        
-        <div id="Tab-3">      
-            <table style="padding: 20px; width: 318px;" class="table-responsive-lg table-responsive-md">
-                <span style="font-size: 15px;">Stock Level</span>
-                <tr>
-                    <td>Minimum Stock</td>
-                    <td>
-                        <input type="text" id="minimum_stock" name="minimum_stock" /></td>
-                </tr>
-                <tr>
-                    <td>Reorder Stock</td>
-                    <td>
-                        <input type="text" id="Reorder_Stock" name="Reorder_Stock" /></td>
-                </tr>
-                <tr>
-                    <td>Maximum Stock</td>
-                    <td>
-                        <input type="text" id="Maximum_Stock" name="Maximum_Stock" /></td>
-                </tr>
-            </table>
+   <div id="Tab-3" style="display: flex; gap: 40px; align-items: flex-start; padding: 20px;">
 
+    <!-- LEFT: Stock Level Section -->
+    <div style="flex: 1; border: 1px solid #ddd; padding: 15px; border-radius: 6px; background-color: #f9f9f9;">
+        <span style="font-size: 15px; font-weight: bold;">Stock Level</span>
+        <table class="table-responsive-lg table-responsive-md" style="width: 100%; margin-top: 10px;">
+            <tr>
+                <td style="width: 120px;">Minimum Stock</td>
+                <td><input type="text" id="minimum_stock" name="minimum_stock" style="width: 100%;" /></td>
+            </tr>
+            <tr>
+                <td>Reorder Stock</td>
+                <td><input type="text" id="Reorder_Stock" name="Reorder_Stock" style="width: 100%;" /></td>
+            </tr>
+            <tr>
+                <td>Maximum Stock</td>
+                <td><input type="text" id="Maximum_Stock" name="Maximum_Stock" style="width: 100%;" /></td>
+            </tr>
+        </table>
+    </div>
+
+   <div style="flex: 1; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: white;">
+    <!-- Input Row -->
+    <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center;">
+        <div style="flex: 1;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Patient_type</label>
+            <select id="ddlPatient_type" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+              
+            </select>
         </div>
+
+        <div style="flex: 1;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Rate</label>
+            <input type="number" id="txtRate" placeholder="Enter rate" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" />
+        </div>
+          <input type="button" style="width:25px !important" value="+" class="btn-primry" onclick="AddRateCategory()" />
+
+
+    </div>
+
+
+  
+
+    <!-- Table for Appended Entries -->
+    <div style="margin-top: 15px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden;">
+        <table class="table">
+            <thead style="background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+                <tr>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 14px;">Patient_type</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 14px;">Rate</th>
+                    <th style="padding: 12px; text-align: center; font-weight: 600; font-size: 14px;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="tbodypatientRateList">
+               
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Hidden field for form submission -->
+    <input type="hidden" id="patientRatesData" name="patientRatesData" value="" />
+</div>
+
+</div>
         <div id="Tab-4" class="table-container">
             
             <table style="padding: 20px;" class="table-responsive-lg table-responsive-md table-responsive-sm">
@@ -1064,10 +1248,10 @@
                     <td style="width: 84px;">
                          <label for="chkOTProcedure">Services Item</label> 
                     </td>   
-                    <td>
+                    <td style="display:none;">
                         <input type="checkbox" id="chkSehatSahulat" name="chkSehatSahulat" />
                     </td>
-                    <td style="width: 84px;">
+                    <td style="width: 84px;display:none;">
                         <label for="chkSehatSahulat">Sehat Sahulat</label>
                     </td>
                 </tr>
