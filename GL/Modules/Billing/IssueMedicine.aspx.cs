@@ -255,7 +255,7 @@ namespace PMS
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, batchNumber).ToList();
+                var query = db.spMedicinesDetails(itemId,"" ,batchNumber).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
