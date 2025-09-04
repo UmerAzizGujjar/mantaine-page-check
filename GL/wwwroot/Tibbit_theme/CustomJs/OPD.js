@@ -87,7 +87,7 @@ $(document).ready(function () {
             fillDropdown($element, item.method);
         });
 
-        // special case: Patient_Type → call loaddata() on select
+
         if (item.id === '#ddlPatient_Type') {
             $element.prop('disabled', false);
             $element.off('select2:select').on('select2:select', function () {
@@ -99,7 +99,7 @@ $(document).ready(function () {
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
             $element.off('select2:select').on('select2:select', function () {
-                loaddoctor(); // Load doctors when department changes
+                loaddoctor(); 
             });
         }
 
@@ -282,7 +282,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
             );
 
-            // Manually trigger select2:select with data
+           
             $select.trigger({
                 type: 'select2:select',
                 params: {
@@ -435,7 +435,7 @@ function AddPatientDetail(reg_id) {
     }
 
 }
-//Appoitnment modal work 
+
 
 
 function SearchPop_App() {
@@ -881,7 +881,6 @@ function SavePatient() {
 function SaveData() {
     debugger;
 
-    // Collect all field values
     var regid = $('#hdn_regid').val();
     var appid = $('#hdn_aptid').val();
     var opdid = $('#hdn_opdId').val();
@@ -907,8 +906,6 @@ function SaveData() {
     var EmployeeName = $('#empname').val();
     var EmployeeDept = $('#EmpDept').val();
     var StudentName = $('#txtStdName').val();
-
-    // ✅ FIX: Parse Fees as number, default to 0
     var Fees = parseFloat($('#txtfees').val()) || 0;
     var Actual_Fees = parseFloat($('#txtactualfee').val()) || 0;
 
@@ -925,8 +922,6 @@ function SaveData() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
-
-    // Validation: Patient No
     if (!patient_no || patient_no === "0") {
         Swal.fire({
             icon: 'error',
@@ -942,8 +937,6 @@ function SaveData() {
         });
         return;
     }
-
-    // Validation: Patient Category
     if (!pat_category || pat_category === "0") {
         Swal.fire({
             icon: 'error',
@@ -959,8 +952,6 @@ function SaveData() {
         });
         return;
     }
-
-    // Additional validations based on category (kept as-is)
     if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
         Swal.fire({
             icon: 'error',
@@ -1024,8 +1015,6 @@ function SaveData() {
         });
         return;
     }
-
-    // Final data object — all numeric fields are numbers
     var data = {
         regid: regid,
         appid: appid,
@@ -1097,7 +1086,7 @@ function SaveData() {
         },
         error: function (xhr, status, error) {
             console.error("Error: ", error);
-            console.log("Response Text: ", xhr.responseText); // Helps debug server error
+            console.log("Response Text: ", xhr.responseText); 
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -1209,7 +1198,7 @@ function getpanelRate() {
     $.ajax({
         type: "POST",
         url: "OPD.aspx/LoadPanelInfo",
-        data: JSON.stringify({ panelid: panelid }), // Properly stringify the data object
+        data: JSON.stringify({ panelid: panelid }), 
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
@@ -1307,12 +1296,12 @@ function loadPatientDetail(OPDID) {
                     text: data.Type_text
                 })
             ).attr('disabled', true);
-            // Re-attach change event
+           
             $('#ddlPatient_Type').off('change').on('change', function () {
                 loaddata();
             });
 
-            // Run once on load (because no change will happen if only one option exists)
+         
             loaddata();
             $('#ddlDepartment').html(
                 $('<option>', {
@@ -1392,7 +1381,7 @@ function loaddata() {
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
-        /*        $('#txtfees').val('');*/
+ 
         $('#discount').show();
         $('#empname').hide();
         $('#designation').hide();
@@ -1412,7 +1401,7 @@ function loaddata() {
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
-        /*       $('#txtfees').val('');*/
+        
         $('#discount').show();
         $('#empname').hide();
         $('#designation').hide();
@@ -1437,7 +1426,7 @@ function loaddata() {
         $('#designation').hide();
         $('#dependent').hide();
         $('#emp_id').hide();
-        /*$('#txtfees').val('');*/
+       
 
     }
     else if (Category == "04") {
@@ -1457,7 +1446,7 @@ function loaddata() {
         $('#class').hide();
         $('#section').hide();
         $('#EmpDep').show();
-        /*$('#txtfees').val('');*/
+      
 
     }
     else if (Category == "05") {
@@ -1473,7 +1462,7 @@ function loaddata() {
         $('#rollno').show();
         $('#class').hide();
         $('#section').hide();
-        /*  $('#txtfees').val('');*/
+       
         $('#emp_id').hide();
         $('#StdName').show();
     }
@@ -1484,7 +1473,7 @@ function loaddata() {
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
-        /*        $('#txtfees').val('');*/
+   
         $('#discount').show();
         $('#empname').hide();
         $('#designation').hide();
