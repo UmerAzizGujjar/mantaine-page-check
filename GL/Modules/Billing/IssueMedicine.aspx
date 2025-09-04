@@ -1427,6 +1427,9 @@
             let rows;
             var expdate = '';
             var itemExists = false;
+
+            var hdndiscountType = $('#hdndiscountType').val();
+
             $('#tblDetails tbody tr').each(function () {
                 var existingItemId = $(this).find('input[name="ItemID"]').val();
                 var existingBatchNo = $(this).find('input[name="BatchNo"]').val();
@@ -1457,6 +1460,7 @@
                 url: "IssueMedicine.aspx/MedicineDetail",
                 data: JSON.stringify({
                     "itemId": itemId,
+                    "hdndiscountType": hdndiscountType,
                     "Batch": Batch
                 }),
                 dataType: 'JSON',
@@ -1770,27 +1774,57 @@
                 }
             });
         }
+        //function getIPDID(pat_id) {
+        //    debugger;
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "IssueMedicine.aspx/CheckSehatCardPatient",
+        //        data: JSON.stringify({ patid: pat_id }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            debugger;
+        //            var result = response.d;
+        //            if (result === "10") {
+        //                $("#txtTransType").val('IPD Sehat Patient');
+
+
+        //            }
+
+        //            else {
+        //                $("#txtTransType").val('IPD Patient');
+
+        //            }
+        //        },
+        //        error: function (xhr, status, error) {
+        //            alert("Error: " + error);
+        //        }
+        //    });
+        //}
+
         function getIPDID(pat_id) {
             debugger;
 
             $.ajax({
                 type: "POST",
                 url: "IssueMedicine.aspx/CheckSehatCardPatient",
-                data: JSON.stringify({ patid: pat_id }), 
+                data: JSON.stringify({ patid: pat_id }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
                     debugger;
-                    var result = response.d; 
-                    if (result === "10") {
+                    var result = JSON.parse(response.d);
+                    var discountType = result.DiscountType;
+                    var typeName = result.TypeName;
+
+                    console.log("DiscountType: " + discountType);
+                    console.log("TypeName: " + typeName);
+                    if (discountType === "10" && typeName === "Sehat Sahulat Card") {
                         $("#txtTransType").val('IPD Sehat Patient');
-                       
-                    
-                    }
-                 
-                    else {
+                        $("#hdndiscountType").val(discountType);
+                    } else {
                         $("#txtTransType").val('IPD Patient');
-                      
                     }
                 },
                 error: function (xhr, status, error) {
@@ -1798,6 +1832,7 @@
                 }
             });
         }
+
 
         function GetPatientDetail() {
             debugger;
@@ -2044,6 +2079,7 @@
                 <div class="col-sm-12 col-md-4 col-lg-3">
                     <label>MR No:</label>
                     <input type="hidden" id="hdPatientID" />
+                    <input type="hidden" id="hdndiscountType" />
                     <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
                     <input type="text" id="txtTransType" style="display:none" tabindex="1" class="form-control" />
                 </div>
