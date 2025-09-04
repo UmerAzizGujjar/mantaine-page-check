@@ -165,13 +165,13 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string MedicineDetail(int itemId, string Batch)
+        public static string MedicineDetail(int itemId, string hdndiscountType, string Batch)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId,Batch).ToList();
+                var query = db.spMedicinesDetails(itemId, hdndiscountType, Batch).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -504,8 +504,19 @@ namespace PMS
                 orderby tbl.Created_Time descending
                 select tbl.Patient_Discount_Type
             ).FirstOrDefault();
+            var typeName = (from d in db.DataValues
+                            join v in db.ValueSets
+                           on d.ValueSet_ID equals v.ValueSet_ID
+                            where v.ValueSet_ID == 26 && d.DataValue_Name == discountType
+                            select d.DataValue_Description).FirstOrDefault();
 
-            return discountType?.ToString() ?? string.Empty;
+            var result = new
+            {
+                DiscountType = discountType ?? string.Empty,
+                TypeName = typeName ?? string.Empty
+            };
+
+            return new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(result);
         }
         [WebMethod]
         public static string CheckOPDPatient(string patid)
