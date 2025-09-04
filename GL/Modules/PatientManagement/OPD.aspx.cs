@@ -247,6 +247,26 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string GetRollNo()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from pnl in db.Reg_Students
+                              where pnl.Is_Active == false
+
+                              select new
+                              {
+                                  DataValue_Name = pnl.Student_Id,
+                                  DataValue_Description = pnl.Roll_No
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
         public static string GetGLAccounts()
         {
             string data = string.Empty;
@@ -609,8 +629,11 @@ namespace PMS.Modules.PatientManagement
                     pat.filter_clinic = data.FilterClinic;
                     pat.Service_id = data.Services;
                     pat.mr_no_sequence = data.patient_no;
+                    pat.Actual_amount = data.Actual_Fees;
                     pat.Updated_By = AppConfig.UserID;
                     pat.Updated_Time = DateTime.Now;
+                    pat.Employee_Name = data.EmployeeName;
+                    pat.Emp_Department = data.EmployeeDept;
                     db.SubmitChanges();
                 }
             }
@@ -632,7 +655,8 @@ namespace PMS.Modules.PatientManagement
                 //              select tbl.Code).FirstOrDefault(); from system params 
 
                 var opdfee = data.Fees;
-               pat.Full_Name = data.Full_Name;
+                pat.Full_Name = data.Full_Name;
+                pat.Student_Name = data.StudentName;
                 pat.Age_years = data.Age;
                 pat.Mode_Of_Registration = data.modeof_presentation;
                 pat.Patient_Type = data.pat_category;
@@ -651,8 +675,10 @@ namespace PMS.Modules.PatientManagement
                 pat.mr_no_sequence = data.patient_no;
                 pat.Patient_No = Convert.ToInt32(data.pat_no);
                 pat.Refference_No = data.reffer_no;
-
+                pat.Employee_Name = data.EmployeeName;
+                pat.Emp_Department = data.EmployeeDept;
                 pat.Patient_Main_Category = data.hdnDepartment;
+                pat.Actual_amount = data.Actual_Fees;
 
                 if (data.pat_category == "01" && data.discount == "")
                 {
@@ -692,7 +718,7 @@ namespace PMS.Modules.PatientManagement
                                   && p.Doctor_ID == data.doctor).Count() + 1;
                 }
 
-                pat.Employee_Name = data.employee;
+                //pat.Employee_Name = data.employee;
                 pat.PanelCompany = Convert.ToInt32(data.panel);
                 pat.employee_ID = Convert.ToString(data.employee_id);
                 pat.Designation = Convert.ToInt32(data.designation);
@@ -718,31 +744,38 @@ namespace PMS.Modules.PatientManagement
                 {
                     DBClass.executeNonQueryWithoutBegin("update Appointment_Form set Status='Visited' where Appointment_ID=" + data.appid);
                 }
-                decimal disc;
-                var opdfees = data.Fees;
-                var hospital_share = data.Hosp_share;
-                var Doctor_share = data.Doc_Share;
-                if (string.IsNullOrEmpty(data.discount))
-                {
-                    disc = 0;
-                }
-                else
-                {
-                    disc = Convert.ToDecimal(data.discount); 
-                }
-                if (data.pat_category == "02" || data.pat_category == "01")
-                {
-                    decimal DiscountAmount = opdfees * (disc / 100);
-                    if (DiscountAmount > opdfees)
-                        DiscountAmount = opdfees;
 
-                    decimal Net_Amount = opdfees - DiscountAmount;
-                    decimal Hospital_Amount = Math.Round((Net_Amount * hospital_share) / 100, 2);
-                    decimal Doctor_Amount = Math.Round((Net_Amount * Doctor_share) / 100, 2);
-                    pat.doc_share = Doctor_Amount.ToString("F2");
-                    pat.Hospital_share = Hospital_Amount;
+
+                decimal opdfees = data.Fees; // This is already discounted final fee (receipt amount)
+
+                // Percentages from DB
+                decimal hospital_share = data.Hosp_share;   // e.g. 60
+                decimal doctor_share = data.Doc_Share;      // e.g. 40
+
+                // No need to calculate discount again, just use opdfees directly
+                decimal Net_Amount = opdfees;
+
+                // Save discount % just for reference
+                decimal disc = 0;
+                if (!string.IsNullOrEmpty(data.discount))
+                {
+                    disc = Convert.ToDecimal(data.discount);
                 }
-                if(data.pat_category == "02")
+                pat.discount_amt = disc;
+
+                // Calculate shares
+                decimal Hospital_Amount = Math.Round((Net_Amount * hospital_share) / 100, 2);
+                decimal Doctor_Amount = Math.Round((Net_Amount * doctor_share) / 100, 2);
+
+                // Assign
+                pat.Hospital_share = Hospital_Amount;
+                pat.doc_share = Doctor_Amount.ToString("F2");
+
+
+
+
+
+                if (data.pat_category == "02")
                 {
                     pat.Share_Transfered = true;
                 }
@@ -1016,6 +1049,7 @@ namespace PMS.Modules.PatientManagement
                              mr_no_sequence = p.mr_no_sequence,
                              Opd_No = p.Opd_No,
                              Name = p.Full_Name,
+                             StudentName = p.Student_Name,
                              Father_Name = p.Father_Name,
                              Mode_Of_Registration = p.Mode_Of_Registration,
                              Patient_Type = p.Patient_Type,
@@ -1028,6 +1062,7 @@ namespace PMS.Modules.PatientManagement
                              Gender_text = db.GetDataValueName("Gender", p.Gender),
                              Permanent_Address = p.Permanent_Address,
                              Receipt_Amount = p.Receipt_Amount,
+                             Actual_amount = p.Actual_amount,
                              Patient_Main_Category = p.Patient_Main_Category,
                              Type_text = db.GetDataValueName("Patient Type", p.Patient_Type),
                              Category_text = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
@@ -1051,6 +1086,7 @@ namespace PMS.Modules.PatientManagement
                              status = p.Status,
                              account_id = p.AccountID,
                              FilterClinic = p.filter_clinic,
+                             EmployeeDept = p.Emp_Department,
                              Clinic_text = db.GetDataValueName("Filter Clinic", p.filter_clinic),
                              Service_id = p.Service_id,
                              Service_text = (from a in db.INV_Items where a.Item_ID == p.Service_id select a.Description)
@@ -1313,6 +1349,7 @@ namespace PMS.Modules.PatientManagement
             public int employee_id { get; set; }
             public string appid { get; set; }
             public string Full_Name { get; set; }
+            public string StudentName { get; set; }
             public string patient_no { get; set; }
             public string pat_no { get; set; }
             public string modeof_presentation { get; set; }
@@ -1343,10 +1380,13 @@ namespace PMS.Modules.PatientManagement
             public decimal Hosp_share { get; set; }
             public string accountid { get; set; }
             public string FilterClinic { get; set; }
+            public string EmployeeName { get; set; }
+            public string EmployeeDept { get; set; }
 
             public Boolean IssueCard { get; set; }
             public Boolean FreeCheck { get; set; }
             public int Fees { get; set; }
+            public int Actual_Fees { get; set; }
 
         }
     }

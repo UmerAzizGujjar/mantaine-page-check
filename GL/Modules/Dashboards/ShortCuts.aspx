@@ -334,60 +334,60 @@
 
 
 
-        function loadShortcutPermissions() {
-            $.ajax({
-                type: "POST",
-                url: "ShortCuts.aspx/GetUserAllowedMenus",
-                data: "{}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    showLoading();
-                    var allowedMenus = response.d; // e.g., ["Patient Management", "Billing", "Lab"]
-                    debugger;
-                    console.log("User has access to menus:", allowedMenus);
-                    debugger;
-                    // 🔁 Map each shortcut to the ACTUAL menu name used in role permissions
-                    var shortcutToMenuMap = {
+     function loadShortcutPermissions() {
+         $.ajax({
+             type: "POST",
+             url: "ShortCuts.aspx/GetUserAllowedMenus",
+             data: "{}",
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             success: function (response) {
+                 showLoading();
+                 var allowedMenus = response.d; 
+                 debugger;
+                 console.log("User has access to menus:", allowedMenus);
+                 debugger;
+               
+                 var shortcutToMenuMap = {
+                     
+                     "shortcut-Billing-Section": "mnushBilling",
+                     "shortcut-Patient-Section": "mnushMaintenance",
+                     "shortcut-Lab-Section": "mnuTransaction",
+                     "shortcut-Pharmacy-Section": "ShmnuPharmacy",
+                     "shortcut-Inventory-Section": "mnushInventory",
+                     "shortcut-Purchase-Section": "mnutoaddPR",
+                     "shortcut-Account-Section": "mnushAccounts",
+                     "shortcut-Admin-Section": "mnushAdministration"
+                 };
+                 debugger;
+       
+                 Object.keys(shortcutToMenuMap).forEach(function (shortcutId) {
+                     debugger;
+                     var requiredMenuName = shortcutToMenuMap[shortcutId];
 
-                        "shortcut-Billing-Section": "mnuBilling",               // Must match Menu_Description
-                        "shortcut-Patient-Section": "mnushMaintenance",
-                        "shortcut-Lab-Section": "mnuTransaction",
-                        "shortcut-Pharmacy-Section": "ShmnuPharmacy",
-                        "shortcut-Inventory-Section": "mnushInventory",
-                        "shortcut-Purchase-Section": "mnutoaddPR",
-                        "shortcut-Account-Section": "mnushAccounts",
-                        "shortcut-Admin-Section": "mnushAdministration"
-                    };
-                    debugger;
-                    // Loop through each shortcut and show/hide based on permission
-                    Object.keys(shortcutToMenuMap).forEach(function (shortcutId) {
-                        debugger;
-                        var requiredMenuName = shortcutToMenuMap[shortcutId];
-
-                        if (allowedMenus.includes(requiredMenuName)) {
-                            debugger;
-                            $("#" + shortcutId).show();
-                        } else {
-                            debugger;
-                            $("#" + shortcutId).hide();
-                            console.log("Hiding:", shortcutId, "→ Needs:", requiredMenuName);
-                        }
-                    });
-                    hideLoading();
-                },
-                error: function (xhr, status, error) {
-                    console.error("Failed to load permissions:", error);
-                    console.error("Response:", xhr.responseText);
-                    alert("Could not load permissions. Contact admin.");
-                    // Hide all shortcuts on error
-                    Object.keys({
-                        "shortcut-Billing-Section": "",
-                        "shortcut-Patient-Section": "",
-                        // ... all others
-                    }).forEach(id => $("#" + id).hide());
-                }
-            });
-        }
-    </script>
+                     if (allowedMenus.includes(requiredMenuName)) {
+                         debugger;
+                         $("#" + shortcutId).show();
+                     } else {
+                         debugger;
+                         $("#" + shortcutId).hide();
+                         console.log("Hiding:", shortcutId, "→ Needs:", requiredMenuName);
+                     }
+                 });
+                 hideLoading();
+             },
+             error: function (xhr, status, error) {
+                 console.error("Failed to load permissions:", error);
+                 console.error("Response:", xhr.responseText);
+                 alert("Could not load permissions. Contact admin.");
+                 // Hide all shortcuts on error
+                 Object.keys({
+                     "shortcut-Billing-Section": "",
+                     "shortcut-Patient-Section": "",
+                     // ... all others
+                 }).forEach(id => $("#" + id).hide());
+             }
+         });
+     }
+ </script>
 </asp:Content>

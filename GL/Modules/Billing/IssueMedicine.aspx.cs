@@ -116,27 +116,27 @@ namespace PMS
             }
             return data;
         }
-        [WebMethod]
-        public static string loadPrescrpition(int Opd_ID)
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
+        //[WebMethod]
+        //public static string loadPrescrpition(int opdId)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
 
-            var itemCodes = (from rg in db.Reg_patients
-                             join p in db.Patients
-                             on rg.pat_id equals p.Reg_PatId
-                             join opd in db.Out_Patients
-                             on p.Patient_ID equals opd.Patient_ID
-                             where rg.Patient_No == Opd_ID
-                             orderby opd.Created_Time descending
-                             select new
-                             {
-                                 opd.Out_Patient_ID,
-                                 p.Opd_No
-                             }
-                             ).Take(3).ToList();
+        //    var itemCodes = (from rg in db.Reg_patients
+        //                     join p in db.Patients
+        //                     on rg.pat_id equals p.Reg_PatId
+        //                     join opd in db.Out_Patients
+        //                     on p.Patient_ID equals opd.Patient_ID
+        //                     where rg.Patient_No == opdId
+        //                     orderby opd.Created_Time descending
+        //                     select new
+        //                     {
+        //                         opd.Out_Patient_ID,
+        //                         p.Opd_No
+        //                     }
+        //                     ).Take(3).ToList();
 
-            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
-        }
+        //    return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+        //}
         [WebMethod]
         public static string Preview(string search)
         {
@@ -265,6 +265,7 @@ namespace PMS
             public int Bill_ID { get; set; }
             public string Patient_ID { get; set; }
             public string CustomerName { get; set; }
+            public string TransType { get; set; }
             public string ReferBy { get; set; }
             public string Dept { get; set; }
             public decimal totalPayable { get; set; }
@@ -342,6 +343,7 @@ namespace PMS
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsPharmacy = true;
+            newBill.Pharma_trans_Type = data.TransType;
             var Inpat = "";
             if (data.Patient_ID != "")
             {
@@ -486,6 +488,44 @@ namespace PMS
             }
             else
                 return pt;
+        }
+        [WebMethod]
+        public static string CheckSehatCardPatient(string patid)
+        {
+            if (!int.TryParse(patid, out int patientId))
+                return string.Empty;
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            var discountType = (
+                from tbl in db.In_Patients
+                where tbl.Patient_ID == patientId
+                      && tbl.Discharge == false
+                orderby tbl.Created_Time descending
+                select tbl.Patient_Discount_Type
+            ).FirstOrDefault();
+
+            return discountType?.ToString() ?? string.Empty;
+        }
+        [WebMethod]
+        public static string CheckOPDPatient(string patid)
+        {
+            // Validate input
+            if (!int.TryParse(patid, out int regPatId))
+                return string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var opdId = (
+                    from op in db.Out_Patients
+                    where op.Reg_PatId == regPatId
+                          && op.Discharge == false  
+            orderby op.Created_Time descending
+                    select op.Out_Patient_ID
+                ).FirstOrDefault();
+
+                return opdId > 0 ? opdId.ToString() : string.Empty;
+            }
         }
 
         [WebMethod]

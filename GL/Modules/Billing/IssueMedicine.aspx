@@ -422,111 +422,7 @@
             $('#txtSaleReturnTotal').val(net.toFixed());
             debugger;
         }
-        //function AddSaleReturnInvoiceDetails(invNo) {
-        //    debugger
-        //    var BillId = invNo;
-        //    if (BillId) {
-        //        $('#saleReturnTableBody').empty();
-        //        $.ajax({
-        //            type: "post",
-        //            url: "IssueMedicine.aspx/SaleReturnInvoiceDetail",
-        //            data: JSON.stringify({ "BillId": BillId }),
-        //            dataType: 'JSON',
-        //            contentType: "application/json; charset=utf-8",
-        //            async: false,
-        //            success: function (msg) {
-        //                var data = JSON.parse(msg.d);
-        //                data.forEach(function (item, index) {
-        //                    var rowIndex = index + 1;
-        //                    var row = '<tr>' +
-        //                        '<td><input type="hidden" value="' + item.Item_ID + '" name="txtRItemID" id="txtRItemID">' + rowIndex + '</td>' +
-        //                        '<td style="display:none"><input type="text" value="' + item.Bill_Details_ID + '" name="txtRBill_Details_ID" id="txtRBill_Details_ID"></td>' +
-        //                        '<td><input type="hidden" value="' + item.Description + '" name="txtRItemDescription" id="txtRItemDescription">' + item.Description + '</td>' +
-        //                        '<td style="display:none"><input type="text" name="txtRCheckQty" id="txtRCheckQty"  value="' + item.Qty + '" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
-        //                        '<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"></td>' +
-        //                        '<td><input type="text" name="txtRStock" value="' + item.Total_Stock + '" style="width: 100% !important; height: 22px; text-align: center;" readonly></td>' +
-        //                        '<td><input type="text" name="txtRSalerate" value="' + item.Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-        //                        '<td><input type="text" name="txtRDisPer" value="' + item.Discount_Percentage + '" style="width: 100% !important; height: 22px; text-align: right;" readonly autocomplete="off"></td>' +
-        //                        '<td><input type="text" name="txtRDisAmount" value="' + item.Discount_Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-        //                        '<td><input type="text" name="txtRnet" value="' + item.Net_Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-        //                        '<td style="display:none"><input type="text" name="txtRBatch_No" value="' + item.Batch_No + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-        //                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
-        //                        '</tr>';
-        //                    $('#saleReturnTableBody').append(row);
-        //                });
-        //                $('#saleReturnTableBody').on('change keyup', 'input[name="txtRQty"], input[name="txtRSalerate"], input[name="txtRDisPer"]', function () {
-        //                    var $row = $(this).closest('tr');
-        //                    calculateNetAmount($row);
-        //                    $('#txtSaleReturnFlatDisc').val(0)
-
-        //                });
-        //                setTimeout(function () {
-        //                    $('#ddlSaleReturnItems').select2('close');
-        //                    $('input[name="txtRQty"]').focus().select();
-        //                }, 5);
-        //            },
-        //        });
-        //    }
-        //}
-        //// Function to load Simple Sale Return Items Data
-        //function AddSaleReturnMedicineDetail() {
-        //    var itemId = $('#ddlSaleReturnItems').val();
-        //    if (itemId) {
-        //        var rowIndex = $('#saleReturnTable tbody tr').length;
-        //        var rows;
-        //        var exists = false;
-        //        $('#saleReturnTable tr').each(function () {
-        //            var existingItemId = $(this).find('input[name="txtRItemID"]').val();
-        //            if (existingItemId == itemId) {
-        //                exists = true;
-        //                return false;
-        //            }
-        //        });
-        //        if (exists) {
-        //            swal("Item already exists");
-        //            $("#ddlSaleReturnItems").val(0);
-        //            return;
-        //        } else {
-        //            $.ajax({
-        //                type: "post",
-        //                url: "IssueMedicine.aspx/SaleReturnMedicineDetail",
-        //                data: JSON.stringify({ "itemId": itemId }),
-        //                dataType: 'JSON',
-        //                contentType: "application/json; charset=utf-8",
-        //                async: false,
-        //                success: function (msg) {
-        //                    var data = JSON.parse(msg.d);
-        //                    rows = '<tr>' +
-        //                        '<td><input type="hidden" value="' + data[0].Item_ID + '" name="txtRItemID" id="txtRItemID">' + (rowIndex + 1) + '</td>' +
-        //                        '<td style="display:none"><input type="text" value="0" name="txtRBill_Details_ID" id="txtRBill_Details_ID"></td>' +
-        //                        '<td><input type="hidden" value="' + data[0].Description + '" name="txtRItemDescription" id="txtRItemDescription">' + data[0].Description + '</td>' +
-        //                        '<td style="display:none"><input type="text" name="txtRCheckQty" id="txtRCheckQty" value="0" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
-        //                        '<td><input type="text" name="txtRQty" value="0" style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off" ></td>' +
-        //                        '<td><input type="text" name="txtRStock" value="' + data[0].Total_Stock + '" style="width: 100% !important; height: 22px; text-align: center;" readonly></td>' +
-        //                        '<td><input type="text" name="txtRSalerate" value="' + data[0].Sale_Rate + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-        //                        '<td><input type="text" name="txtRDisPer" value="0" style="width: 100% !important; height: 22px; text-align: right;"  autocomplete="off"></td>' +
-        //                        '<td><input type="text" name="txtRDisAmount" style="width: 100% !important; height: 22px; text-align: right;"></td>' +
-        //                        '<td><input type="text" name="txtRnet" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-        //                        '<td style="display:none"><input type="text" name="txtRBatch_No" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
-        //                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
-        //                        '</tr>';
-        //                },
-        //            });
-        //            $('#saleReturnTableBody').append(rows);
-        //            $('#ddlInvoiceNumber').val(0);
-        //            $('#ddlInvoiceNumber').prop('disabled', true);
-        //            $("#txtSaleReturnDisPer").prop('readonly', false);
-        //            $('#saleReturnTableBody').on('change keyup', 'input[name="txtRQty"], input[name="txtRSalerate"], input[name="txtRDisPer"]', function () {
-        //                var $row = $(this).closest('tr');
-        //                calculateNetAmount($row);
-        //            });
-        //            setTimeout(function () {
-        //                $('#ddlSaleReturnItems').select2('close');
-        //                $('input[name="txtRQty"]').focus().select();
-        //            }, 5);
-        //        }
-        //    }
-        //}
+       
         function AddSaleReturnInvoiceDetails(invNo) {
             debugger
             var BillId = invNo;
@@ -1105,29 +1001,29 @@
                 window.open('IssueMedicine.aspx');
             }
         }
-        function LoadPriscription() {
-            debugger;
-            PageMethods.loadPrescrpition(Opd_ID, function (data) {
-                var options = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(data), function (key, value) {
-                    debugger;
-                    options += '<option value="' + value.Out_Patient_ID + '">' + value.Opd_No + '</option>';
-                });
-                $('#Load_OPD_Prescritiop').html(options);
-                $('#Load_OPD_Prescritiop').select2();
-                debugger;
-                $('#Load_OPD_Prescritiop').change(function () {
-                    debugger;
-                    var selectedValue = $(this).val();
-                    if (selectedValue != '0') {
-                        Print_Prescription(selectedValue)
-                    }
-                });
-            },
-                function (error) {
-                    alert(error.get_message());
-                });
-        }
+        //function LoadPriscription() {
+        //    debugger;
+        //    PageMethods.loadPrescrpition(opdId, function (data) {
+        //        var options = '<option value="0">Please Select</option>';
+        //        $.each(JSON.parse(data), function (key, value) {
+        //            debugger;
+        //            options += '<option value="' + value.Out_Patient_ID + '">' + value.Opd_No + '</option>';
+        //        });
+        //        $('#Load_OPD_Prescritiop').html(options);
+        //        $('#Load_OPD_Prescritiop').select2();
+        //        debugger;
+        //        $('#Load_OPD_Prescritiop').change(function () {
+        //            debugger;
+        //            var selectedValue = $(this).val();
+        //            if (selectedValue != '0') {
+        //                Print_Prescription(selectedValue)
+        //            }
+        //        });
+        //    },
+        //        function (error) {
+        //            alert(error.get_message());
+        //        });
+        //}
         var counts = 0;
         var NegQty = false;
         function CulculateAmonutWithQty(anchor) {
@@ -1688,6 +1584,7 @@
                         Patient_ID = "";
                     }
                     var CustomerName = $('#CustomerName').val();
+                    var TransType = $("#txtTransType").val();
                     var ReferBy = $('#ddlDoctor').val();
                     var Dept = $('#ddlDepartment').val();
                     var totalPayable = $('#txtTotalPayable').val();
@@ -1759,6 +1656,7 @@
                         "Bill_ID": Bill_ID,
                         "Patient_ID": Patient_ID,
                         "CustomerName": CustomerName,
+                        "TransType": TransType,
                         "ReferBy": ReferBy,
                         "Dept": Dept,
                         "totalPayable": totalPayable,
@@ -1820,24 +1718,85 @@
         var MrNo;
         var ItemCode;
         var Opd_ID;
+        var pat_id;
         function LoadTokenInputsDefaultMRNo() {
             debugger;
-            $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsPharmacy",
-                {
-                    tokenLimit: 1,
-                    onAdd: function (item) {
-                        debugger;
-                        try {
-                            out_Patient_Id = item.id;
-                            Opd_ID = item.patno;
-                            opdid = item.Opd_id;
-                            getitem_code(opdid);
-                            LoadPriscription();
-                        } catch (err) {
-                            alert(err.message);
-                        }
+
+            $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
+                tokenLimit: 1,
+                onAdd: function (item) {
+                    debugger;
+                    try {
+                        pat_id = item.id;
+                      /*  LoadPriscription();*/
+                        getOPDID(pat_id);
+                        getIPDID(pat_id);
+                      
+                    } catch (err) {
+                        alert(err.message);
                     }
-                });
+                }
+            });
+        }
+        var opdId;
+        function getOPDID(pat_id) {
+            debugger;
+
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/CheckOPDPatient",
+                data: JSON.stringify({ patid: pat_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var opdId = response.d; 
+
+                    if (opdId && opdId !== "") {
+                       
+                        getitem_code(opdId);
+                        $("#txtTransType").val('OPD Patient');
+                      
+                    }
+                    else {
+                        console.log("❌ No active OPD visit for Pat_id:", pat_id);
+
+                        
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    alert("Failed to check OPD status.");
+                }
+            });
+        }
+        function getIPDID(pat_id) {
+            debugger;
+
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/CheckSehatCardPatient",
+                data: JSON.stringify({ patid: pat_id }), 
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var result = response.d; 
+                    if (result === "10") {
+                        $("#txtTransType").val('IPD Sehat Patient');
+                       
+                    
+                    }
+                 
+                    else {
+                        $("#txtTransType").val('IPD Patient');
+                      
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Error: " + error);
+                }
+            });
         }
 
         function GetPatientDetail() {
@@ -1873,9 +1832,9 @@
         }
         debugger;
         var itemIds;
-        function getitem_code(opdid) {
+        function getitem_code(opdId) {
             debugger;
-            var out_Patient_Id = opdid
+            var out_Patient_Id = opdId
             itemIds = [];
             $.ajax({
                 type: "post",
@@ -1965,7 +1924,7 @@
 
                         $('#tblDetails #tblbody').append(rows);      
                         debugger;
-                        PageMethods.GetBatchNumbers(item_id, function (data) {
+                        PageMethods.GetBatchNumbers(itemId, function (data) {
                             debugger;
                             var parsedData = JSON.parse(data);
                             var options = '<option value="0" >Please Select</option>';
@@ -2007,7 +1966,7 @@
             } else {
                 var counter = null;
             }
-            var itemId = $(row).find('td:eq(2)').text().trim();
+            var itemId = $(row).find('td:eq(0)').text().trim();
             var batchNumber = $(anchors).find('option:selected').text().trim();
             $.ajax({
                 type: "post",
@@ -2086,6 +2045,7 @@
                     <label>MR No:</label>
                     <input type="hidden" id="hdPatientID" />
                     <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
+                    <input type="text" id="txtTransType" style="display:none" tabindex="1" class="form-control" />
                 </div>
                 <div class="col-sm-12 col-md-4 col-lg-3">
                     <label id="LblCustomerName">Walk-in Customer:</label>

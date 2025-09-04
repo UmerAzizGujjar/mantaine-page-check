@@ -4816,9 +4816,10 @@ namespace PMS
                     {
                         In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine();
 
+                        var itemid = db.INV_Items.Where(p => p.Item_Code == oIn_Patient_Medicine.ItemCode).Select(p => p.Item_ID).FirstOrDefault();
 
                         oIn_Patient_Medicine1.Patient_ID = Convert.ToInt32(MedicineDetail.PatientID);
-                        oIn_Patient_Medicine1.Item_Code = oIn_Patient_Medicine.ItemCode;
+                        oIn_Patient_Medicine1.Item_Code =Convert.ToString(itemid);
                         oIn_Patient_Medicine1.Medicine_Name = oIn_Patient_Medicine.Medicine_Name;
                         oIn_Patient_Medicine1.Transaction_Type = "InPatient";
                         oIn_Patient_Medicine1.Medicine_Date = oIn_Patient_Medicine.Medicine_Date;

@@ -2113,7 +2113,12 @@ namespace PMS
                         }
                     }
                 }
+                pt.Package_Type = DBClass.getField("SELECT TOP 1 Package_type_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
 
+                pt.Package_Name = DBClass.getField("SELECT TOP 1 Package_Name_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+                pt.pkg_namefordetails = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+
+                pt.pkg_typefordetails = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
                 // Main condition: if NOT discharged OR discharged TODAY → show package data
                 if (pt.checkdischarge == "false" || pt.checkdischarge == "0" || isdischargetoday)
                 {
@@ -2122,15 +2127,11 @@ namespace PMS
 
                     pt.pkg_type = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.pkg_namefordetails = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.pkg_typefordetails = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
 
                     pt.In_Patient_Type = DBClass.getField("SELECT TOP 1 Patient_Discount_Type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.Package_Type = DBClass.getField("SELECT TOP 1 Package_type_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
 
-                    pt.Package_Name = DBClass.getField("SELECT TOP 1 Package_Name_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
 
                     pt.MainDepartment = "03";
                 }
@@ -2168,10 +2169,10 @@ namespace PMS
                     pt.MainDepartment = "03";
                 }
 
-                else if (ipd_id != "There is no row at position 0." && pt.checkdischarge == "false")
+                else if (ipd_id != "There is no row at position 0." )
                 {
-                    pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
-                    pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where Balance_Amount <0 and In_Patient_ID =" + ipd_id);
+                    pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where  In_Patient_ID =" + ipd_id);
+                    pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + ipd_id);
                     pt.Balance = DBClass.getField("select sum(Previous_Balance) from Ar_Billings where  In_Patient_ID =" + ipd_id);
                     pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
                     pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
@@ -2427,6 +2428,7 @@ namespace PMS
                                     GroupName = (from dt in db.DataValues where dt.DataValue_Name == d.Category_ID && dt.ValueSet_ID == 70 select dt.DataValue_Description).FirstOrDefault(),
                                     d.Item_Type,
                                     d.Amount,
+                                    m.Share_type
                                 }).ToList();
                 return (new JavaScriptSerializer()).Serialize(doc_pack);
             }
@@ -2453,6 +2455,7 @@ namespace PMS
                                     GroupName = (from dt in db.DataValues where dt.DataValue_Name == d.Category_ID && dt.ValueSet_ID == 70 select dt.DataValue_Description).FirstOrDefault(),
                                     d.Item_Type,
                                     d.Amount,
+                                    m.Share_type
                                 }).ToList();
                 return (new JavaScriptSerializer()).Serialize(Dep_pack);
             }
@@ -2479,6 +2482,7 @@ namespace PMS
                                       GroupName = (from dt in db.DataValues where dt.DataValue_Name == d.Category_ID && dt.ValueSet_ID == 70 select dt.DataValue_Description).FirstOrDefault(),
                                       d.Item_Type,
                                       d.Amount,
+                                      m.Share_type
                                   }).ToList();
                 return (new JavaScriptSerializer()).Serialize(Panel_pack);
             }

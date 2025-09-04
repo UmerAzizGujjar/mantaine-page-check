@@ -65,9 +65,11 @@ $(document).ready(function () {
         { id: '#ddlMode_Of_Registration', method: 'ModePresentation' },
         { id: '#ddlPatient_Type', method: 'PatientType' },
         { id: '#ddl_Gender', method: 'GetGender' },
+        { id: '#ddlrollno', method: 'GetRollNo' },
         { id: '#ddl_status', method: 'GetMartailStatus' },
         { id: '#ddlCountry', method: 'GetCountry' },
         { id: '#ddl_Province', method: 'GetProvince' },
+        { id: '#txtarea', method: 'GetArea' },
         { id: '#txtcity', method: 'GetCity' },
         { id: '#ddlFilterClnic', method: 'GetClinics' },
         { id: '#ddlServices', method: 'GetServices' },
@@ -190,6 +192,9 @@ function showhide() {
     $('#section').hide();
     $('#dependent').hide();
     $('#emp_id').hide();
+    $('#EmployeeName').hide();
+    $('#EmpDep').hide();
+    $('#StdName').hide();
 }
 function FillPatientsList() {
     debugger;
@@ -606,6 +611,7 @@ function Calc_Discount() {
 
     var disc_perc = $('#txtdiscount').val();
     var currentFee = $('#txtfees').val();
+    var actualfees = $('#txtactualfee').val(currentFee);
 
     if (!originalFee) {
         originalFee = Number(currentFee);
@@ -898,9 +904,13 @@ function SaveData() {
     var employee_id = $('#Employe_id').val();
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
+    var EmployeeName = $('#empname').val();
+    var EmployeeDept = $('#EmpDept').val();
+    var StudentName = $('#txtStdName').val();
 
     // ✅ FIX: Parse Fees as number, default to 0
     var Fees = parseFloat($('#txtfees').val()) || 0;
+    var Actual_Fees = parseFloat($('#txtactualfee').val()) || 0;
 
     var discount = parseFloat($('#txtdiscount').val()) || 0;
     var Doc_Share = parseFloat($('#hdnDocshare').val()) || 0;
@@ -967,7 +977,7 @@ function SaveData() {
         return;
     }
 
-    if (["02", "03", "04", "05"].includes(pat_category) && (!doctor || doctor === "0")) {
+    if (["02", "03"].includes(pat_category) && (!doctor || doctor === "0")) {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1038,8 +1048,9 @@ function SaveData() {
         employee_id: employee_id,
         panel: panel,
         reffer_no: reffer_no,
-        Fees: Fees,           // ✅ Now guaranteed to be a number
-        discount: discount,   // Same
+        Fees: Fees,           
+        Actual_Fees: Actual_Fees,          
+        discount: discount,  
         Doc_Share: Doc_Share,
         Hosp_share: Hosp_share,
         dependent: dependent,
@@ -1051,7 +1062,10 @@ function SaveData() {
         Cashier: Cashier,
         accountid: accountid,
         IssueCard: IssueCard,
-        FreeCheck: FreeCheck
+        FreeCheck: FreeCheck,
+        EmployeeName: EmployeeName,
+        EmployeeDept: EmployeeDept,
+        StudentName : StudentName
     };
 
     console.log("Data being sent:", data);
@@ -1110,58 +1124,7 @@ function get_pat_initial_info(ini_patientID) {
     }
 
 }
-function loadFee() {
-    debugger;
 
-    var Doc = $('#ddldoctor').val();
-    var opdid = $('#hdn_opdId').val();
-    var emer_reffered = $("#hdn_emer_reffered").val();
-    if (emer_reffered != "") {
-        $('#txtfees').val("0");
-    }
-    else {
-        if (opdid != "" || opdid != "") {
-
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "OPD.aspx/loadRegistrationFees",
-                data: JSON.stringify({ Doc: Doc }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    debugger;
-                    var res = JSON.parse(response.d);
-                    if (!res.success) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: res.message,
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                    } else {
-
-                        $('#txtfees').val(res.fee);
-                        $('#hdnhospShare').val(res.Hospital_Share);
-                        $('#hdnDocshare').val(res.Doctor_Share);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error: " + error);
-                }
-            });
-        }
-
-        loadDepartment(Doc);
-    }
-
-}
 function loadDepartment(Doc) {
     var opdid = $('#hdn_opdId').val()
     if (opdid != "" || opdid != "") {
@@ -1292,7 +1255,9 @@ function loadPatientDetail(OPDID) {
             $('#txtage').val(data.Age_years).attr('disabled', true);
 
             $('#txtnic').val(data.NIC).attr('disabled', true);
+            $('#EmpDept').val(data.EmployeeDept).attr('disabled', true);
             $('#txtmobile').val(data.Mobile1).attr('disabled', true);
+            $('#txtStdName').val(data.StudentName).attr('disabled', true);
 
             $('#txtAdrress').val(data.Permanent_Address).attr('disabled', true);
             $('#chckcardissue').prop('checked', data.Card_Issued).attr('disabled', true);
@@ -1383,6 +1348,7 @@ function loadPatientDetail(OPDID) {
 
 
             $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
+            $('#txtactualfee').val(data.Actual_amount);
             debugger;
             if (stat != "Approved") {
                 $('#divapprove').show();
@@ -1409,6 +1375,7 @@ function loaddata() {
         $('#employee').hide();
         $('#refference').hide();
         $('#txtfees').val('');
+        $('#txtactualfee').val('');
         $('#discount').hide();
         $('#empname').hide();
         $('#rollno').hide();
@@ -1476,18 +1443,20 @@ function loaddata() {
     else if (Category == "04") {
         $('#fees').show();
         $('#department').show();
-        $('#doctor').show();
+        $('#doctor').hide();
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
         $('#discount').show();
         $('#empname').show();
+        $('#EmployeeName').show();
         $('#emp_id').hide();
         $('#designation').show();
         $('#dependent').show();
         $('#rollno').hide();
         $('#class').hide();
         $('#section').hide();
+        $('#EmpDep').show();
         /*$('#txtfees').val('');*/
 
     }
@@ -1506,6 +1475,7 @@ function loaddata() {
         $('#section').hide();
         /*  $('#txtfees').val('');*/
         $('#emp_id').hide();
+        $('#StdName').show();
     }
     else if (Category == "06") {
         $('#fees').show();
@@ -1524,6 +1494,7 @@ function loaddata() {
         $('#dependent').hide();
 
         $('#emp_id').hide();
+
 
     }
 }

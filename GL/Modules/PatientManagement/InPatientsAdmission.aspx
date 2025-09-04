@@ -1290,25 +1290,25 @@
             var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
             var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-            if (PatientDiscountType == "10") {
-                if (PanelCompany == "0") {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please Select Panel Company',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
+            //if (PatientDiscountType == "10") {
+            //    if (PanelCompany == "0") {
+            //        Swal.fire({
+            //            icon: 'error',
+            //            title: 'Error!',
+            //            text: 'Please Select Panel Company',
+            //            showConfirmButton: false,
+            //            timer: 2000,
+            //            customClass: {
+            //                popup: 'swal-big-popup',
+            //                title: 'swal-big-title',
+            //                htmlContainer: 'swal-big-text'
+            //            }
+            //        });
 
-                    return true;
-                }
+            //        return true;
+            //    }
 
-            }
+            //}
             var patienttype = $("#ctl00_MainContent_vLbl_Patient_Type").text();
 
             var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
@@ -3150,22 +3150,22 @@
                 }
 
             }
-            if (pkg == "0") {
+            //if (pkg == "0") {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'You Have not Selected Package',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'You Have not Selected Package',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
 
-            }
+            //}
 
 
             PageMethods.SaveAllRecord(Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number, ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date, ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type, PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId, CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder, main_department, packagetype, packagename, packagetypename, packagenamess, ipdProcedures, proc_name, panelcompanys, CardNo, Cardholdername, CompanyName, Approvelimit, Roomlimit, Cardlimit, ApproveDays, Privatecharges, /*DischargeDate, Time_Out, DaysOccupied,*/
