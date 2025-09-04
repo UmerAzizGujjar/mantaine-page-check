@@ -2293,21 +2293,6 @@
       <Column Name="COMPANY_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.INV_ITEM_COMPANIES" Member="INV_ITEM_COMPANies">
-    <Type Name="INV_ITEM_COMPANy">
-      <Column Name="ITEM_COMP_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ITEM_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="COMPANY_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CUR_RATE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="CUR_QTY" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="CUR_VALUE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="CREATED_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="UPDATE_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="PROJECT" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.User_Branch_Master" Member="User_Branch_Masters">
     <Type Name="User_Branch_Master">
       <Column Name="User_Branch_Master_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6817,6 +6802,14 @@
       <Column Name="Sehat_card_rate_batch" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.INV_Item_PatientWise" Member="INV_Item_PatientWises">
+    <Type Name="INV_Item_PatientWise">
+      <Column Name="Item_Rate_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_Type" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Item_Sale_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Ar_Billings" Member="Ar_Billings">
     <Type Name="Ar_Billing">
       <Column Name="Bill_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6880,15 +6873,24 @@
       <Column Name="checked_by" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IsAssign_Doctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Pharma_trans_Type" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>
-  <Table Name="dbo.INV_Item_PatientWise" Member="INV_Item_PatientWises">
-    <Type Name="INV_Item_PatientWise">
-      <Column Name="Item_Rate_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_Type" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="Item_Sale_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+  <Table Name="dbo.INV_ITEM_COMPANIES" Member="INV_ITEM_COMPANies">
+    <Type Name="INV_ITEM_COMPANy">
+      <Column Name="ITEM_COMP_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ITEM_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="COMPANY_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CUR_RATE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CUR_QTY" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CUR_VALUE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CREATED_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UPDATE_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PROJECT" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="warehouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -10496,6 +10498,49 @@
       <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApprovePharmacy" Method="SpApprovePharmacy">
+    <Parameter Name="BillId" Parameter="billId" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApprovePharmacyResult">
+      <Column Name="ITEM_COMP_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ITEM_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="COMPANY_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CUR_RATE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CUR_QTY" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CUR_VALUE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CREATED_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UPDATE_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PROJECT" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="warehouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spCstinvoicepharma" Method="spCstinvoicepharma">
+    <Parameter Name="InvoiceId" Parameter="invoiceId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="company_id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="warehouse" Type="System.String" DbType="VarChar(100)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.spCstinvoiceGL_Financial" Method="spCstinvoiceGL_Financial">
+    <Parameter Name="InvoiceId" Parameter="invoiceId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="company_id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="warehouse" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="spCstinvoiceGL_FinancialResult">
+      <Column Name="ITEM_COMP_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ITEM_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="COMPANY_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CUR_RATE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CUR_QTY" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CUR_VALUE" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="CREATED_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UPDATE_BY" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PROJECT" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="warehouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

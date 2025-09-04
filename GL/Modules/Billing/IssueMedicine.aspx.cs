@@ -423,11 +423,21 @@ namespace PMS
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);
 
                 ListOfDetails.Add(newBillDetails);
+
                 db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
             }
 
             db.SubmitChanges();
+            ApprovePhramcy(newBill.Bill_ID.ToString());
             return newBill.Bill_ID.ToString();
+        }
+        [WebMethod]
+        public static string ApprovePhramcy(string billid)
+        {
+            var userid = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var details = db.SpApprovePharmacy(Convert.ToInt32(billid), userid);
+            return (new JavaScriptSerializer()).Serialize(details);
         }
         [WebMethod]
         public static string GetDepartment()
