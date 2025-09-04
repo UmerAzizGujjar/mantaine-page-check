@@ -1290,25 +1290,25 @@
             var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
             var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-            if (PatientDiscountType == "10") {
-                if (PanelCompany == "0") {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please Select Panel Company',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
+            //if (PatientDiscountType == "10") {
+            //    if (PanelCompany == "0") {
+            //        Swal.fire({
+            //            icon: 'error',
+            //            title: 'Error!',
+            //            text: 'Please Select Panel Company',
+            //            showConfirmButton: false,
+            //            timer: 2000,
+            //            customClass: {
+            //                popup: 'swal-big-popup',
+            //                title: 'swal-big-title',
+            //                htmlContainer: 'swal-big-text'
+            //            }
+            //        });
 
-                    return true;
-                }
+            //        return true;
+            //    }
 
-            }
+            //}
             var patienttype = $("#ctl00_MainContent_vLbl_Patient_Type").text();
 
             var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();

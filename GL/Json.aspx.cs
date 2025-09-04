@@ -611,12 +611,28 @@ namespace PMS
                     }
                     Response.Write("[" + result + "]");
                 }
+                else if (Request.QueryString["Table"] == "PatientsForPharmacy")
+                {
+                    string sqlQuery;
+                    if (Request.QueryString["q"] != null)
+                        sqlQuery = "Select top 1 pat_id as Pat_id, Patient_No from Reg_patient Where Patient_No = '" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                    else
+                        sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";
 
+                    string result = "";
+                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        result += (result == "") ? "" : ",";
+                        result += @"{""id"":""" + dr["Pat_id"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + @"""}";
+                    }
+                    Response.Write("[" + result + "]");
+                }
                 else if (Request.QueryString["Table"] == "PatientsPharmacy")
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 p.Patient_ID as Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence,rg.Full_Name,rg.Patient_No,op.Out_Patient_ID as opdid from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where rg.Patient_No = '" + Request.QueryString["q"].ToString() + "' order by op.Created_Time desc ";
+                        sqlQuery = "Select top 1 p.Patient_ID as Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence,rg.Full_Name,rg.Patient_No,op.Out_Patient_ID as opdid,rg.pat_id as Pat_id from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where rg.Patient_No = '" + Request.QueryString["q"].ToString() + "' order by op.Created_Time desc ";
                     else
                         sqlQuery = "Select  top 1 op.Out_Patient_ID,ipm.Item_Code,rg.mr_no_sequence from Reg_patient rg inner join  Patients p on rg.pat_id = p.Reg_PatId inner join Out_Patient op on p.Patient_ID = op.Patient_ID inner join In_Patient_Medicines ipm on op.Out_Patient_ID = ipm.Patient_ID Where  isnull(IsRevisit,'0')=0  order by op.Created_Time desc ";
                     string result = "";
@@ -624,7 +640,7 @@ namespace PMS
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Out_Patient_ID"].ToString() + @""",""name"": """ + dr["mr_no_sequence"].ToString() + " - " + dr["Full_Name"].ToString() + @""",""patno"": """ + dr["Patient_No"].ToString()+ @""",""Opd_id"": """ + dr["opdid"].ToString() + @"""}";
+                        result += @"{""id"":""" + dr["Out_Patient_ID"].ToString() + @""",""name"": """ + dr["mr_no_sequence"].ToString() + " - " + dr["Full_Name"].ToString() + @""",""patno"": """ + dr["Patient_No"].ToString()+ @""",""Pat_id"": """ + dr["Pat_id"].ToString() + @""",""Opd_id"": """ + dr["opdid"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
                 }

@@ -73,7 +73,8 @@ namespace PMS.Inventory
                                  }).ToList();
                 foreach (var batchNum in grnResult)
                 {
-                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, "008", batchNum.BatchNum));
+                    var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
+                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, PharmacyCodes, batchNum.BatchNum));
                     if (stock > 0)
                     {
                         batchStockListgrn.Add(new BatchStock
@@ -123,6 +124,7 @@ namespace PMS.Inventory
                            {
                                m.Item_Rate_Id,
                                m.Item_Sale_Rate,
+                               m.Sehat_card_rate_batch,
                                m.Batch_Num,
                                m.Uom_Qty
                            }).ToList();
@@ -130,264 +132,213 @@ namespace PMS.Inventory
             return (new JavaScriptSerializer()).Serialize(details);
         }
         [WebMethod]
-        public static string AddItems(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService,string SehatSahulat,string SehatCardRate,List<BatchNum> batchList)
+        public static string AddItems(
+    string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
+    string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate,
+    string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable,
+    string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock,
+    string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
+    string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
+    string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue,
+    string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate,
+    List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
         {
-            string result = string.Empty;
             string Id = "";
-            var item_codes = "";
             DataBaseDataContext db = new DataBaseDataContext();
-            INV_Item obj = new INV_Item();
-            if (btnValue == "Save")
+            INV_Item obj = null;
+
+            try
             {
-                obj.Item_Code = Item_Code;
-                obj.Description = Desc;
-                obj.Active = Convert.ToBoolean(Active);
-                obj.Unit = PackUnit;
-                obj.Manufacture_Company = Menu;
-                obj.Item_Type = ItemType;
-                obj.Item_Category = ItemCategory;
-                obj.Financial_Integration = FianceIntegration;
-                if (UomQty != "")
+                if (btnValue == "Save")
                 {
-                    obj.UOM_Qty = Convert.ToDecimal(UomQty);
-                }
-                obj.Item_Account_category = int.Parse(FianceIntegration);
-                if (Lenght != "")
-                {
-                    obj.Length = Convert.ToDecimal(Lenght);
-                }
-                if (Width != "")
-                {
-                    obj.Width = Convert.ToDecimal(Width);
-                }
-                if (Heigth != "")
-                {
-                    obj.Height = Convert.ToDecimal(Heigth);
-                }
-                if (SalesRate != "")
-                {
-                    obj.Sale_Rate = Convert.ToDecimal(SalesRate);
-                }
-                if (PurchRate != "")
-                {
-                    obj.Purchase_Rate = Convert.ToDecimal(PurchRate);
-                }
-                obj.Remarks = Remarks;
-                obj.locatorAddress = locatorAddress;
-                obj.Locator = Convert.ToBoolean(Locator);
-                obj.IsBatch = Convert.ToBoolean(Batch);
-                obj.Finished_Product = Convert.ToBoolean(FinshProduct);
-                obj.Consumable = Convert.ToBoolean(Consumable);
-                obj.Saleable = Convert.ToBoolean(Saleable);
-                obj.Purchaseable = Convert.ToBoolean(Purchaseable);
-                obj.IsNonStockItem = Convert.ToBoolean(NonStockItem);
-                obj.Isfixasset = Convert.ToBoolean(Fixasset);
-                if (MinimumStock == "")
-                {
-                    MinimumStock = null;
+         
+                    obj = new INV_Item();
+
+                    obj.Item_Code = Item_Code;
+                    obj.Description = Desc;
+                    obj.Active = Convert.ToBoolean(Active);
+                    obj.Unit = PackUnit;
+                    obj.Manufacture_Company = Menu;
+                    obj.Item_Type = ItemType;
+                    obj.Item_Category = ItemCategory;
+                    obj.Financial_Integration = FianceIntegration;
+                    obj.Item_Account_category = int.TryParse(FianceIntegration, out int finCat) ? finCat : 0;
+                    obj.UOM_Qty = decimal.TryParse(UomQty, out decimal uomQty) ? uomQty : 0;
+                    obj.Length = decimal.TryParse(Lenght, out decimal length) ? length : 0;
+                    obj.Width = decimal.TryParse(Width, out decimal width) ? width : 0;
+                    obj.Height = decimal.TryParse(Heigth, out decimal height) ? height : 0;
+                    obj.Sale_Rate = decimal.TryParse(SalesRate, out decimal saleRate) ? saleRate : 0;
+                    obj.Purchase_Rate = decimal.TryParse(PurchRate, out decimal purchRate) ? purchRate : 0;
+                    obj.Remarks = Remarks;
+                    obj.locatorAddress = locatorAddress;
+                    obj.Locator = Convert.ToBoolean(Locator);
+                    obj.IsBatch = Convert.ToBoolean(Batch);
+                    obj.Finished_Product = Convert.ToBoolean(FinshProduct);
+                    obj.Consumable = Convert.ToBoolean(Consumable);
+                    obj.Saleable = Convert.ToBoolean(Saleable);
+                    obj.Purchaseable = Convert.ToBoolean(Purchaseable);
+                    obj.IsNonStockItem = Convert.ToBoolean(NonStockItem);
+                    obj.Isfixasset = Convert.ToBoolean(Fixasset);
+                    obj.Mini_Stock = MinimumStock;
+                    obj.Reorder_Stock = ReorderStock;
+                    obj.Max_Stock = MaximumStock;
+                    obj.ATC = ATC;
+                    obj.Generic_Name = GenericName;
+                    obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
+                    obj.Narcotics = Convert.ToBoolean(Narcotics);
+                    obj.Refregrator = Convert.ToBoolean(Refregrator);
+                    obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
+                    obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
+                    obj.Procedure_Type = ProcedureTypes;
+                    obj.Notes = Notes;
+                    obj.LabOR_RadiologyCharges = Convert.ToBoolean(RadioCharges);
+                    obj.Dental_Item = Convert.ToBoolean(DentalItem);
+                    obj.Procedure_Required = Convert.ToBoolean(Procedure);
+                    obj.Lense_Required = Convert.ToBoolean(LensRequired);
+                    obj.Bed_Services = Convert.ToBoolean(BedServices);
+                    obj.Fitness_Certificate = Convert.ToBoolean(FitnessCertificate);
+                    obj.Lab_Required = Convert.ToBoolean(LabRequired);
+                    obj.Pat_History_Required = Convert.ToBoolean(PattHistoryRequired);
+                    obj.Other_Services = Convert.ToBoolean(OtherServices);
+                    obj.Billing_Required = Convert.ToBoolean(Billing);
+                    obj.OTProcedure = Convert.ToBoolean(OTProcedure);
+                    obj.Book_ID = AppConfig.Book_ID;
+                    obj.Company_ID = AppConfig.Company_ID;
+                    obj.DepartmentId = DepartmentId;
+                    obj.ItemGroupId = ItemGroup;
+                    obj.InventoryOrg = Warehouse;
+                    obj.Hospital_Services = Convert.ToBoolean(IsHospital);
+                    obj.Services = Convert.ToBoolean(IsService);
+                    obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
+                    obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal sehatRate) ? sehatRate : 0;
+
+                    bool itemExists = db.INV_Items.Any(x => x.Item_Code == obj.Item_Code);
+                    if (itemExists)
+                    {
+               
+                        var maxCode = DBClass.getField(@"
+                    SELECT ISNULL(MAX(CONVERT(INT, 
+                        SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
+                    FROM INV_Items");
+                        obj.Item_Code = maxCode;
+                    }
+
+                    db.INV_Items.InsertOnSubmit(obj);
+                    db.SubmitChanges();
+                    Id = obj.Item_ID.ToString();
                 }
                 else
                 {
-
+    
+                    int itemId = Convert.ToInt32(ItemId);
+                    obj = db.INV_Items.FirstOrDefault(x => x.Item_ID == itemId);
+                    if (obj == null)
+                        return "Error";
+                    obj.Description = Desc;
+                    obj.Active = Convert.ToBoolean(Active);
+                    obj.Unit = PackUnit;
+                    obj.Manufacture_Company = Menu;
+                    obj.Item_Type = ItemType;
+                    obj.Item_Category = ItemCategory;
+                    obj.Financial_Integration = FianceIntegration;
+                    obj.Item_Account_category = int.TryParse(FianceIntegration, out int finCat) ? finCat : 0;
+                    obj.UOM_Qty = decimal.TryParse(UomQty, out decimal uomQty) ? uomQty : 0;
+                    obj.Length = decimal.TryParse(Lenght, out decimal length) ? length : 0;
+                    obj.Width = decimal.TryParse(Width, out decimal width) ? width : 0;
+                    obj.Height = decimal.TryParse(Heigth, out decimal height) ? height : 0;
+                    obj.Sale_Rate = decimal.TryParse(SalesRate, out decimal saleRate) ? saleRate : 0;
+                    obj.Purchase_Rate = decimal.TryParse(PurchRate, out decimal purchRate) ? purchRate : 0;
+                    obj.Remarks = Remarks;
+                    obj.locatorAddress = locatorAddress;
+                    obj.Locator = Convert.ToBoolean(Locator);
+                    obj.IsBatch = Convert.ToBoolean(Batch);
+                    obj.Finished_Product = Convert.ToBoolean(FinshProduct);
+                    obj.Consumable = Convert.ToBoolean(Consumable);
+                    obj.Saleable = Convert.ToBoolean(Saleable);
+                    obj.Purchaseable = Convert.ToBoolean(Purchaseable);
+                    obj.IsNonStockItem = Convert.ToBoolean(NonStockItem);
+                    obj.Isfixasset = Convert.ToBoolean(Fixasset);
                     obj.Mini_Stock = MinimumStock;
-                }
-
-                obj.Reorder_Stock = ReorderStock;
-                obj.Max_Stock = MaximumStock;
-                obj.ATC = ATC;
-                obj.Generic_Name = GenericName;
-                obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
-                obj.Narcotics = Convert.ToBoolean(Narcotics);
-                obj.Refregrator = Convert.ToBoolean(Refregrator);
-                obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
-                obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
-                obj.Procedure_Type = ProcedureTypes;
-                obj.Notes = Notes;
-                obj.LabOR_RadiologyCharges = Convert.ToBoolean(RadioCharges);
-                obj.Dental_Item = Convert.ToBoolean(DentalItem);
-                obj.Procedure_Required = Convert.ToBoolean(Procedure);
-                obj.Lense_Required = Convert.ToBoolean(LensRequired);
-                obj.Bed_Services = Convert.ToBoolean(BedServices);
-                obj.Fitness_Certificate = Convert.ToBoolean(FitnessCertificate);
-                obj.Lab_Required = Convert.ToBoolean(LabRequired);
-                obj.Pat_History_Required = Convert.ToBoolean(PattHistoryRequired);
-                obj.Other_Services = Convert.ToBoolean(OtherServices);
-                obj.Billing_Required = Convert.ToBoolean(Billing);
-                obj.OTProcedure = Convert.ToBoolean(OTProcedure);
-                obj.Book_ID = AppConfig.Book_ID;
-                obj.Company_ID = AppConfig.Company_ID;
-                obj.DepartmentId = DepartmentId;
-                obj.ItemGroupId = ItemGroup;
-                obj.InventoryOrg = Warehouse;
-                obj.Hospital_Services = Convert.ToBoolean(IsHospital);
-                obj.Services = Convert.ToBoolean(IsService);
-                obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
-                obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal rate) ? rate : 0;
-               // obj.sehatCard_Rate = SehatCardRate;
-                var Item = Item_Code;
-
-                DataTable dt = DBClass.getDataTable("select Item_Code from INV_Items where Item_Code='" + Item + "'");
-             
-
-                if (dt.Rows.Count == 0) // Item does not exist
-                {
-                    string newItemCode = DBClass.getField(@"
-                    SELECT 
-                        ISNULL(MAX(CONVERT(INT, 
-                            SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
-                    FROM INV_Items
-                ");
-
-                    obj.Item_Code = newItemCode;
-                }
-              
-
-                db.INV_Items.InsertOnSubmit(obj);
-                try
-                {
-                    db.SubmitChanges();
-                    Id = Convert.ToString(obj.Item_ID);
-                }
-                catch (Exception)
-                {
-                    return "Error";
-                }
-                try
-                {
-                    db.SubmitChanges();
-                }
-                catch (Exception)
-                {
-                    return "Error";
-                }
-            }
-            else
-            {
-                int id = Convert.ToInt32(ItemId);
-                obj = db.INV_Items.Where(x => x.Item_ID == id).FirstOrDefault();
-                Packages_Detail pkg = new Packages_Detail();
-                pkg = db.Packages_Details.Where(y => y.Item_Code == obj.Item_ID).FirstOrDefault();
-                obj.Description = Desc;
-                obj.Active = Convert.ToBoolean(Active);
-                obj.Unit = PackUnit;
-                obj.Manufacture_Company = Menu;
-                obj.Item_Type = ItemType;
-                obj.Item_Category = ItemCategory;
-                if (FianceIntegration == null) FianceIntegration = "0";
-                obj.Item_Account_category = int.Parse(FianceIntegration);
-                obj.Book_ID = AppConfig.Book_ID;
-                obj.Financial_Integration = FianceIntegration;
-                obj.locatorAddress = locatorAddress;
-                obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal rate) ? rate : 0;
-                if (UomQty != "")
-                {
-                    obj.UOM_Qty = Convert.ToDecimal(UomQty);
-                }
-                if (Lenght != "")
-                {
-                    obj.Length = Convert.ToDecimal(Lenght);
-                }
-                if (Width != "")
-                {
-                    obj.Width = Convert.ToDecimal(Width);
-                }
-                if (Heigth != "")
-                {
-                    obj.Height = Convert.ToDecimal(Heigth);
-                }
-                if (SalesRate != "")
-                {
-                    obj.Sale_Rate = Convert.ToDecimal(SalesRate);
-                    if (pkg != null)
+                    obj.Reorder_Stock = ReorderStock;
+                    obj.Max_Stock = MaximumStock;
+                    obj.ATC = ATC;
+                    obj.Generic_Name = GenericName;
+                    obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
+                    obj.Narcotics = Convert.ToBoolean(Narcotics);
+                    obj.Refregrator = Convert.ToBoolean(Refregrator);
+                    obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
+                    obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
+                    obj.Procedure_Type = ProcedureTypes;
+                    obj.Notes = Notes;
+                    obj.LabOR_RadiologyCharges = Convert.ToBoolean(RadioCharges);
+                    obj.Dental_Item = Convert.ToBoolean(DentalItem);
+                    obj.Procedure_Required = Convert.ToBoolean(Procedure);
+                    obj.Lense_Required = Convert.ToBoolean(LensRequired);
+                    obj.Bed_Services = Convert.ToBoolean(BedServices);
+                    obj.Fitness_Certificate = Convert.ToBoolean(FitnessCertificate);
+                    obj.Lab_Required = Convert.ToBoolean(LabRequired);
+                    obj.Pat_History_Required = Convert.ToBoolean(PattHistoryRequired);
+                    obj.Other_Services = Convert.ToBoolean(OtherServices);
+                    obj.Billing_Required = Convert.ToBoolean(Billing);
+                    obj.OTProcedure = Convert.ToBoolean(OTProcedure);
+                    obj.DepartmentId = DepartmentId;
+                    obj.InventoryOrg = Warehouse;
+                    obj.Hospital_Services = Convert.ToBoolean(IsHospital);
+                    obj.Services = Convert.ToBoolean(IsService);
+                    obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
+                    obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal sehatRate) ? sehatRate : 0;
+                    var pkg = db.Packages_Details.FirstOrDefault(y => y.Item_Code == obj.Item_ID);
+                    if (pkg != null && !string.IsNullOrEmpty(SalesRate))
                     {
                         pkg.Price = Convert.ToDecimal(SalesRate);
                         pkg.Amount = Convert.ToDecimal(SalesRate);
                     }
-                }
-                if (PurchRate != "")
-                {
-                    obj.Purchase_Rate = Convert.ToDecimal(PurchRate);
-                }
-                obj.ItemGroupId = ItemGroup;
-                obj.InventoryOrg = Warehouse;
-                obj.Remarks = Remarks;
-                obj.Finished_Product = Convert.ToBoolean(FinshProduct);
-                obj.Locator = Convert.ToBoolean(Locator);
-                obj.IsBatch = Convert.ToBoolean(Batch);
-                obj.Consumable = Convert.ToBoolean(Consumable);
-                obj.Saleable = Convert.ToBoolean(Saleable);
-                obj.Purchaseable = Convert.ToBoolean(Purchaseable);
-                obj.IsNonStockItem = Convert.ToBoolean(NonStockItem);
-                obj.Isfixasset = Convert.ToBoolean(Fixasset);
-
-                if (MinimumStock == "")
-                {
-                    MinimumStock = null;
-                }
-                else
-                {
-
-                    obj.Mini_Stock = MinimumStock;
-                }
-
-
-                obj.Reorder_Stock = ReorderStock;
-                obj.Max_Stock = MaximumStock;
-                obj.ATC = ATC;
-                obj.Generic_Name = GenericName;
-                obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
-                obj.Narcotics = Convert.ToBoolean(Narcotics);
-                obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
-                obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
-                obj.Refregrator = Convert.ToBoolean(Refregrator);
-                obj.Procedure_Type = ProcedureTypes;
-                obj.Notes = Notes;
-                obj.LabOR_RadiologyCharges = Convert.ToBoolean(RadioCharges);
-                obj.Dental_Item = Convert.ToBoolean(DentalItem);
-                obj.Procedure_Required = Convert.ToBoolean(Procedure);
-                obj.Lense_Required = Convert.ToBoolean(LensRequired);
-                obj.Bed_Services = Convert.ToBoolean(BedServices);
-                obj.Fitness_Certificate = Convert.ToBoolean(FitnessCertificate);
-                obj.Lab_Required = Convert.ToBoolean(LabRequired);
-                obj.Pat_History_Required = Convert.ToBoolean(PattHistoryRequired);
-                obj.Other_Services = Convert.ToBoolean(OtherServices);
-                obj.Billing_Required = Convert.ToBoolean(Billing);
-                obj.OTProcedure = Convert.ToBoolean(OTProcedure);
-                obj.DepartmentId = DepartmentId;
-                obj.InventoryOrg = Warehouse;
-                obj.Hospital_Services = Convert.ToBoolean(IsHospital);
-                obj.Company_ID = AppConfig.Company_ID;
-                obj.Book_ID = AppConfig.Book_ID;
-                obj.Services = Convert.ToBoolean(IsService);
-                obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
-                var existingMeds = db.INV_Item_RateBatchWises.Where(m => m.Item_Id == Convert.ToInt32(ItemId)).ToList();
-                db.INV_Item_RateBatchWises.DeleteAllOnSubmit(existingMeds);
-                foreach (var bth in batchList)
-                {
-                    INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                    if (batchList != null)
                     {
-                        Item_Id = Convert.ToInt32(ItemId),
-                        Batch_Num = bth.ddlBatch,
-                        Item_Sale_Rate = bth.txtBatchRate,
-                        Uom_Qty = bth.txtUom_Qty,
+                        foreach (var bth in batchList)
+                        {
+                            if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
 
-                    };
-                    db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
-                }
+                            INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                            {
+                                Item_Id = Convert.ToInt32(ItemId),
+                                Batch_Num = bth.ddlBatch,
+                                Item_Sale_Rate = bth.txtBatchRate,
+                                Sehat_card_rate_batch = bth.txtSCRate,
+                                Uom_Qty = bth.txtUom_Qty,
+                            };
+                            db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
+                        }
+                    }
+                    if (PatientTypeList != null)
+                    {
+                        foreach (var ptr in PatientTypeList)
+                        {
+                            if (string.IsNullOrEmpty(ptr.pat_type)) continue;
 
-                try
-                {
+                            INV_Item_PatientWise ratewise = new INV_Item_PatientWise
+                            {
+                                Item_Id = Convert.ToInt32(ItemId),
+                                Patient_Type = ptr.pat_type,
+                                Item_Sale_Rate = ptr.SaleRate,
+                              
+                            };
+                            db.INV_Item_PatientWises.InsertOnSubmit(ratewise);
+                        }
+                    }
+
                     db.SubmitChanges();
-                    Id = Convert.ToString(obj.Item_ID);
+                    Id = obj.Item_ID.ToString();
                     return "Update-" + Id;
                 }
-                catch (Exception)
-                {
-                    return "Error";
 
-                }
+                return "Success-" + Id;
             }
-            return "Success-" + Id;
+            catch (Exception ex)
+            {
+        
+                return "Error";
+            }
         }
         [WebMethod]
         public static string LoadItemInventory(int ID)
@@ -477,6 +428,26 @@ namespace PMS.Inventory
                                        p.CategoryName
                                    }).ToList();
             return (new JavaScriptSerializer()).Serialize(accountcategory);
+        } 
+        [WebMethod]
+        public static string GetPatientType()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
         }
         [WebMethod]
         public static string GetDepartments()
@@ -500,7 +471,15 @@ namespace PMS.Inventory
             public string Item_Id { get; set; }
             public string ddlBatch { get; set; }
             public decimal txtBatchRate { get; set; }
+            public decimal txtSCRate { get; set; }
             public decimal txtUom_Qty { get; set; }
+        }
+        public class PatientTypeList
+        {
+            public string Item_Id { get; set; }
+            public string pat_type { get; set; }
+            public decimal SaleRate { get; set; }
+
         }
     }
 }
