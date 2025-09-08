@@ -59,6 +59,7 @@ namespace PMS
             }
         }
 
+
         private void BindingDropDown()
         {
            
@@ -5093,6 +5094,48 @@ namespace PMS
             public string CNIC { get; set; }
             public string Reg_PatientID { get; set; }
         }
+
+        [WebMethod]
+        public static string CheckPatientDischarge(int patientId)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var latestOutPatientDischarge = (
+                    from op in db.Out_Patients
+                    where op.Reg_PatId == patientId
+                    orderby op.Created_Time descending
+                    select op.Discharge
+                ).FirstOrDefault();
+
+                var latestEmergencyDischarge = (
+                    from ep in db.Emergency_Patients
+                    where ep.Patient_ID == patientId
+                    orderby ep.Admission_Date descending
+                    select ep.Discharge
+                ).FirstOrDefault();
+
+                bool blockedOpd = latestOutPatientDischarge == false;
+                bool blockedEmerg = latestEmergencyDischarge == false;
+
+                if (blockedOpd && blockedEmerg)
+                {
+                    return "{\"Status\":\"BLOCK\",\"Reason\":\"OPD_AND_EMERGENCY\"}";
+                }
+                if (blockedOpd)
+                {
+                    return "{\"Status\":\"BLOCK\",\"Reason\":\"OPD\"}";
+                }
+                if (blockedEmerg)
+                {
+                    return "{\"Status\":\"BLOCK\",\"Reason\":\"EMERGENCY\"}";
+                }
+
+                return "{\"Status\":\"ALLOW\",\"Reason\":\"NONE\"}";
+            }
+        }
+
+
+
         [WebMethod]
         public static PatientDetail_Reg GetEditPatientDetails(string Reg_Patient_ID)
         {
