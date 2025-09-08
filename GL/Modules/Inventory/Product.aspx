@@ -99,7 +99,7 @@
                 $('#ddlmanu').html(optionsManu);
                 $('#ddlpack_unit').html(optionPUnit);
                 $('#ddlitem_type').html(optionItemTyp);
-                /* $('#ddlitem_type').val('001');*/
+              
                 $('#ddlProcedureTypes').html(optionProcType);
                 $('#ddlitem_Qty').html(optionItemCategory);
                 $('#ddlItemGroup').html(optionItemGroup);

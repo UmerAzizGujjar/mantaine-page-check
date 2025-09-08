@@ -66,7 +66,7 @@ namespace PMS.Inventory
 
                     var Total_Items = _dbContext.INV_Items.Count();
                     var inv_Items = from I in _dbContext.INV_Items
-                                    where I.Item_Type != null && I.Services != true
+                                    where I.Item_Type != null && I.Services != true && I.Pharmacy_Item != true
                                     &&
                                        ((I.Item_Code.ToString().Contains(searchValue) || I.Description.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Ware House", I.InventoryOrg).Contains(searchValue)))
                                            select new

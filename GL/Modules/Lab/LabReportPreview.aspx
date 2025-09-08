@@ -342,7 +342,7 @@
                 });
             });
             $('#btnApprove').click(function () {
-
+                debugger;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
 

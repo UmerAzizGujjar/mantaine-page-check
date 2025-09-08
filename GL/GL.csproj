@@ -238,6 +238,7 @@
     <Content Include="Modules\Dashboards\PharmacySection.aspx" />
     <Content Include="Modules\Dashboards\PurchaseSection.aspx" />
     <Content Include="Modules\Dashboards\ShortCuts.aspx" />
+    <Content Include="Modules\Inventory\PharmacyView.aspx" />
     <Content Include="Modules\Inventory\Service.aspx" />
     <Content Include="Modules\Inventory\ServiceView.aspx" />
     <Content Include="Modules\Lab\SampleView.aspx" />
@@ -22326,6 +22327,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\ShortCuts.aspx.designer.cs">
       <DependentUpon>ShortCuts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\PharmacyView.aspx.cs">
+      <DependentUpon>PharmacyView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\PharmacyView.aspx.designer.cs">
+      <DependentUpon>PharmacyView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Inventory\Service.aspx.cs">
       <DependentUpon>Service.aspx</DependentUpon>
