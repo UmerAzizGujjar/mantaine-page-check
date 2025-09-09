@@ -790,6 +790,47 @@ input[type="checkbox"] {
       </style>
     <script id="ScriptmanageSymptomsModal">
         $(document).ready(function () {
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtCNIC'),
+                format: '_____-_______-_',
+                separator: '-'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtMobileNo'),
+                format: '____-_______',
+                separator: '-'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtBP'),
+                format: '___/___',
+                separator: '-'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtBPDischarge'),
+                format: '___/___',
+                separator: '-'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_ctl00_MainContent_txtEOR'),
+                format: '_/4',
+                separator: '/'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtMR'),
+                format: '_/5',
+                separator: '/'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtVR'),
+                format: '_/6',
+                separator: '/'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtAcc'),
+                format: '_/15',
+                separator: '/'
+            });
+
             loadDepartments();
             GetSymptomsByDepartment();
             $('#departments').change(function () {
@@ -876,10 +917,29 @@ input[type="checkbox"] {
             $(document).on('input', '.history-row textarea, .history-row input[type="text"]', function () {
                 updateHistoryTable();
             });
+            document.getElementById('filterMedicalExaminations').addEventListener('change', function () {
+                var selectedValue = this.value;
 
+                // Hide all subtabs
+                var subtabs = document.querySelectorAll('.subtabs');
+                subtabs.forEach(function (tab) {
+                    tab.style.display = 'none';
+                });
+
+                // Show selected subtab
+                var selectedTab = document.getElementById('subTab' + selectedValue);
+                if (selectedTab) {
+                    selectedTab.style.display = 'block';
+                }
+            });
 
         });
-      
+     
+
+        // Initialize - show first tab
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('subTabCVS').style.display = 'block';
+        });
         function fillSymptomsInModal(selectedValue, searchTerm) {
             var options = '';
 
@@ -1373,6 +1433,34 @@ input[type="checkbox"] {
             } else {
                 historyContainer.slideUp();
             }
+        }
+
+
+        function SelectBed(WardID, BedNo) {
+            $('#ctl00_MainContent_txtBed_No').val("");
+            $('#ctl00_MainContent_txtBed_No').val(BedNo);
+        }
+
+        function SelectBedRefer(WardID, BedNo) {
+            $('#ctl00_MainContent_txtBedno').val("");
+            $('#ctl00_MainContent_txtBedno').val(BedNo);
+        }
+        function FillWardBeds() {
+
+            PageMethods.FillWardBeds($('#ctl00_MainContent_ddlWard_No').find('option:selected')[0].value, function (res) {
+                var WardBeds = JSON.parse(res);
+                var rows = '';
+                $.each(WardBeds, function (key, value) {
+                    if (value.PatientNo == 0) {
+                        rows += '<tr> <td> ' + value.PatientNo + ' </td><td> <a href="#" onclick="SelectBed(' + value.WardID + ',' + value.BedNo + ')" style="color:Green"> ' + value.BedNo + ' </a> </td></tr>';
+                    }
+                    else {
+                        rows += '<tr> <td> ' + value.PatientNo + ' </td><td ><font color="red"> ' + value.BedNo + '</font></td></tr>';
+                    }
+                });
+                $('#tblWards tbody tr').remove();
+                $('#tblWards tbody').html(rows);
+            });
         }
     </script>
     <script id="DocumentReady">
@@ -4868,124 +4956,144 @@ input[type="checkbox"] {
                                         <div id="allSymptoms"></div>
                                     </div>
                                     <div class="tabs" id="tab02" style="display: none">
-                                        <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="btn btn-primry" value="Add Vitals" onclick="AddVitals()" />
-                                        </div>
-                                        <div class="vitals-container">
-    <!-- Plus Rate (Beats per Min) -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="lblRateBeats" runat="server" Text="Plus Rate (Beats per Min)"></asp:Label>
-            <asp:TextBox ID="txtRateBeats" runat="server" TabIndex="1" CssClass="form-control"></asp:TextBox>
-        </div>
+    <div style="display: flex; justify-content: flex-end;">
+        <input type="button" class="btn btn-primry" value="Add Vitals" onclick="AddVitals()" />
     </div>
-
-    <!-- Blood Pressure (120/80) -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="LblBP" runat="server" Text="Blood Pressure (120/80)"></asp:Label>
-            <asp:TextBox ID="txtBP" runat="server" TabIndex="2" CssClass="form-control"></asp:TextBox>
+    <div class="vitals-container" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+        <!-- Row 1 -->
+        <div style="display: flex; width: 100%;">
+            <!-- Plus Rate (Beats per Min) -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="lblRateBeats" runat="server" Text="Plus Rate (Beats per Min)"></asp:Label>
+                    <asp:TextBox ID="txtRateBeats" runat="server" TabIndex="1" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
+            
+            <!-- Blood Pressure (120/80) -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="LblBP" runat="server" Text="Blood Pressure (120/80)"></asp:Label>
+                    <asp:TextBox ID="txtBP" runat="server" TabIndex="2" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Rhythm -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="lblRhythm" runat="server" Text="Rhythm"></asp:Label>
-            <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlRhythm" CssClass="form-control"></asp:DropDownList>
+        
+        <!-- Row 2 -->
+        <div style="display: flex; width: 100%;">
+            <!-- Rhythm -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="lblRhythm" runat="server" Text="Rhythm"></asp:Label>
+                    <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlRhythm" CssClass="form-control"></asp:DropDownList>
+                </div>
+            </div>
+            
+            <!-- Temperature (°F) -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="LblTemp" runat="server" Text="Temperature (°F)"></asp:Label>
+                    <asp:TextBox ID="txtTemp" runat="server" TabIndex="3" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Temperature (°F) -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="LblTemp" runat="server" Text="Temperature (°F)"></asp:Label>
-            <asp:TextBox ID="txtTemp" runat="server" TabIndex="3" CssClass="form-control"></asp:TextBox>
+        
+        <!-- Row 3 -->
+        <div style="display: flex; width: 100%;">
+            <!-- Volume -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="lblVolume" runat="server" Text="Volume"></asp:Label>
+                    <asp:DropDownList runat="server" ID="ddlVolume" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+                </div>
+            </div>
+            
+            <!-- Respiration Rate (/min) -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="LblRespiration" runat="server" Text="Respiration Rate (/min)"></asp:Label>
+                    <asp:TextBox ID="txtRespiration" runat="server" TabIndex="4" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Volume -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="lblVolume" runat="server" Text="Volume"></asp:Label>
-            <asp:DropDownList runat="server" ID="ddlVolume" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+        
+        <!-- Row 4 -->
+        <div style="display: flex; width: 100%;">
+            <!-- O2 Saturation -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="lblSaturation" runat="server" Text="O2 Saturation"></asp:Label>
+                    <asp:TextBox ID="txtSaturation_Oxygen2" runat="server" TabIndex="5" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
+            
+            <!-- Others -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="lblOthersReceiveNote" runat="server" Text="Others"></asp:Label>
+                    <asp:TextBox ID="txtOthersRcvNote" runat="server" TabIndex="6" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Respiration Rate (/min) -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="LblRespiration" runat="server" Text="Respiration Rate (/min)"></asp:Label>
-            <asp:TextBox ID="txtRespiration" runat="server" TabIndex="4" CssClass="form-control"></asp:TextBox>
+        
+        <!-- Row 5 -->
+        <div style="display: flex; width: 100%;">
+            <!-- Percentage -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="Label12" runat="server" Text="Percentage"></asp:Label>
+                    <asp:TextBox ID="txtSaturation" runat="server" TabIndex="7" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
+            
+            <!-- Liters Per Minutes -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="Label23" runat="server" Text="Liters Per Minutes"></asp:Label>
+                    <asp:TextBox ID="txtSaturation_Oxygen1" runat="server" TabIndex="8" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- O2 Saturation -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="lblSaturation" runat="server" Text="O2 Saturation"></asp:Label>
-            <asp:TextBox ID="txtSaturation_Oxygen2" runat="server" TabIndex="5" CssClass="form-control"></asp:TextBox>
+        
+        <!-- Row 6 -->
+        <div style="display: flex; width: 100%;">
+            <!-- Room Air -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="Label24" runat="server" Text="Room Air"></asp:Label>
+                    <asp:CheckBox runat="server" Class="CHKK" ID="chk_OnRoomAir" />
+                </div>
+            </div>
+            
+            <!-- With O2 -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="Label25" runat="server" Text="With O2"></asp:Label>
+                    <asp:CheckBox runat="server" Class="CHKK" ID="chk_WithOxygen" />
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Others -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="lblOthersReceiveNote" runat="server" Text="Others"></asp:Label>
-            <asp:TextBox ID="txtOthersRcvNote" runat="server" TabIndex="6" CssClass="form-control"></asp:TextBox>
-        </div>
-    </div>
-
-    <!-- Percentage -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="Label12" runat="server" Text="Percentage"></asp:Label>
-            <asp:TextBox ID="txtSaturation" runat="server" TabIndex="7" CssClass="form-control"></asp:TextBox>
-        </div>
-    </div>
-
-    <!-- Liters Per Minutes -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="Label23" runat="server" Text="Liters Per Minutes"></asp:Label>
-            <asp:TextBox ID="txtSaturation_Oxygen1" runat="server" TabIndex="8" CssClass="form-control"></asp:TextBox>
-        </div>
-    </div>
-
-    <!-- Room Air -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="Label24" runat="server" Text="Room Air"></asp:Label>
-            <asp:CheckBox runat="server" Class="CHKK" ID="chk_OnRoomAir" />
-        </div>
-    </div>
-
-    <!-- With O2 -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="Label25" runat="server" Text="With O2"></asp:Label>
-            <asp:CheckBox runat="server" Class="CHKK" ID="chk_WithOxygen" />
-        </div>
-    </div>
-
-    <!-- Receiving Date & Time -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="lblRecieving_Time" runat="server" Text="Receiving Date & Time"></asp:Label>
-            <asp:TextBox ID="txtReceiving_Date" runat="server" ReadOnly="true" CssClass="form-control"></asp:TextBox>
-        </div>
-    </div>
-
-    <!-- Special Instruction -->
-    <div class="vital-row" style="display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <asp:Label Style="width: 200px;" ID="lblRN_Special_Instruction" runat="server" Text="Special Instruction"></asp:Label>
-            <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" CssClass="form-control" onchange="FillInstruction()"></asp:TextBox>
+        
+        <!-- Row 7 -->
+        <div style="display: flex; width: 100%;">
+            <!-- Receiving Date & Time -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="lblRecieving_Time" runat="server" Text="Receiving Date & Time"></asp:Label>
+                    <asp:TextBox ID="txtReceiving_Date" runat="server" ReadOnly="true" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
+            
+            <!-- Special Instruction -->
+            <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <asp:Label Style="width: 200px;" ID="lblRN_Special_Instruction" runat="server" Text="Special Instruction"></asp:Label>
+                    <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" CssClass="form-control" onchange="FillInstruction()"></asp:TextBox>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-                                    </div>
                                     <div class="tabs" id="tab03" style="display: none">
 
                                         <!-- History Section -->
@@ -5106,243 +5214,398 @@ input[type="checkbox"] {
 </div>
                                     </div>
                                     <div class="tabs" id="tab04" style="display: none">
-                                        <div class="row">
-                                            <div class="col-md-5 col-sm-12">
-                                                <select id="filterExaminations">
-                                                    <option value="001">General Physical</option>
-                                                    <option value="002">Systematic</option>
-                                                    <option value="003">Special</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div id="subTab001" class="general-exam-container subtabs">
-                                            <!-- Row 1 -->
-                                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                                <!-- Pallor -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkPallor').click()">
-                                                    <asp:CheckBox ID="chkPallor" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Pallor') : Remove_GeneralExamRow('Pallor')" />
-                                                    <label for="ctl00_MainContent_chkPallor" style="margin-left: 8px; cursor: pointer;">Pallor</label>
-                                                </div>
+    <div class="row">
+        <div class="col-md-5 col-sm-12">
+            <select id="filterMedicalExaminations">
+                <option value="CVS">CVS</option>
+                <option value="GCS">GCS</option>
+                <option value="GPE">General Physical Examination</option>
+                <option value="RESP">RESP</option>
+                <option value="GIT">GIT</option>
+                <option value="CNS">CNS</option>
+            </select>
+        </div>
+    </div>
 
-                                                <!-- JVP -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkJVP').click()">
-                                                    <asp:CheckBox ID="chkJVP" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('JVP') : Remove_GeneralExamRow('JVP')" />
-                                                    <label for="ctl00_MainContent_chkJVP" style="margin-left: 8px; cursor: pointer;">JVP</label>
-                                                </div>
-                                            </div>
+    <!-- CVS Tab -->
+    <div id="subTabCVS" class="cvs-exam-container subtabs">
+        <h4 style="margin-bottom: 20px; color: #333;">CVS Examination</h4>
+        
+        <!-- Row 1 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Heart Sound -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+               onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Pallor') : Remove_GeneralExamRow('Pallor')">
+                <input type="checkbox" id="HeartSound1" runat="server" name="HeartSound" 
+                    onclick="event.stopPropagation();" />
+                <label for="HeartSound1" style="margin-left: 8px; cursor: pointer;">Heart Sound</label> 
+            </div>
 
-                                            <!-- Row 2 -->
-                                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                                <!-- Cyanosis -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkCyanosis').click()">
-                                                    <asp:CheckBox ID="chkCyanosis" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Cyanosis') : Remove_GeneralExamRow('Cyanosis')" />
-                                                    <label for="ctl00_MainContent_chkCyanosis" style="margin-left: 8px; cursor: pointer;">Cyanosis</label>
-                                                </div>
+            <!-- Arrhythmias -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Arrhythmias1').click()">
+                <input type="checkbox" id="Arrhythmias1" runat="server" name="Arrhythmias" 
+                    onclick="event.stopPropagation();" />
+                <label for="Arrhythmias1" style="margin-left: 8px; cursor: pointer;">Arrhythmias</label>
+            </div>
+        </div>
 
-                                                <!-- Disoriented -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkDisoriented').click()">
-                                                    <asp:CheckBox ID="chkDisoriented" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Disoriented') : Remove_GeneralExamRow('Disoriented')" />
-                                                    <label for="ctl00_MainContent_chkDisoriented" style="margin-left: 8px; cursor: pointer;">Disoriented</label>
-                                                </div>
-                                            </div>
+        <!-- Row 2 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Murmur -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Murmur1').click()">
+                <input type="checkbox" id="Murmur1" runat="server" name="Murmur" 
+                    onclick="event.stopPropagation();" />
+                <label for="Murmur1" style="margin-left: 8px; cursor: pointer;">Murmur</label>
+            </div>
 
-                                            <!-- Row 3 -->
-                                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                                <!-- Jaundice -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkJaundice').click()">
-                                                    <asp:CheckBox ID="chkJaundice" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Jaundice') : Remove_GeneralExamRow('Jaundice')" />
-                                                    <label for="ctl00_MainContent_chkJaundice" style="margin-left: 8px; cursor: pointer;">Jaundice</label>
-                                                </div>
+            <!-- Any Other Added Sound -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('AnyOtherAddedSound1').click()">
+                <input type="checkbox" id="AnyOtherAddedSound1" runat="server" name="AnyOtherAddedSound" 
+                    onclick="event.stopPropagation();" />
+                <label for="AnyOtherAddedSound1" style="margin-left: 8px; cursor: pointer;">Any Other Added Sound</label>
+            </div>
+        </div>
 
-                                                <!-- Dehydration -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkDehydration').click()">
-                                                    <asp:CheckBox ID="chkDehydration" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Dehydration') : Remove_GeneralExamRow('Dehydration')" />
-                                                    <label for="ctl00_MainContent_chkDehydration" style="margin-left: 8px; cursor: pointer;">Dehydration</label>
-                                                </div>
-                                            </div>
+        <!-- Row 3 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Any Other Findings -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('AnyOtherFindings1').click()">
+                <input type="checkbox" id="AnyOtherFindings1" runat="server" name="AnyOtherFindings" 
+                    onclick="event.stopPropagation();" />
+                <label for="AnyOtherFindings1" style="margin-left: 8px; cursor: pointer;">Any Other Findings</label>
+            </div>
+        </div>
 
-                                            <!-- Row 4 -->
-                                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                                <!-- Edema -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkEdema').click()">
-                                                    <asp:CheckBox ID="chkEdema" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Edema') : Remove_GeneralExamRow('Edema')" />
-                                                    <label for="ctl00_MainContent_chkEdema" style="margin-left: 8px; cursor: pointer;">Edema</label>
-                                                </div>
+        <!-- CVS Text Area -->
+        <div style="margin-bottom: 20px;">
+            <asp:TextBox ID="TextBoxCvs" Style="height:146px; width: 100%;" runat="server" 
+                TextMode="MultiLine" class="form-control" placeholder="Enter CVS details..."></asp:TextBox>
+        </div>
+    </div>
 
-                                                <!-- Lymphadenopathy -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkLymphadenopathy').click()">
-                                                    <asp:CheckBox ID="chkLymphadenopathy" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Lymphadenopathy') : Remove_GeneralExamRow('Lymphadenopathy')" />
-                                                    <label for="ctl00_MainContent_chkLymphadenopathy" style="margin-left: 8px; cursor: pointer;">Lymphadenopathy</label>
-                                                </div>
-                                            </div>
+    <!-- GCS Tab -->
+    <div id="subTabGCS" class="gcs-exam-container subtabs" style="display: none;">
+        <h4 style="margin-bottom: 20px; color: #333;">GCS Examination</h4>
+        
+        <!-- GCS Input Fields -->
+        <div style="margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 15px;">
+                <asp:Label Style="width: 30%; font-weight: bold;" ID="Label4" runat="server" 
+                    Text="Eye Opening Response"></asp:Label>
+                <asp:TextBox ID="ctl00_MainContent_txtEOR" runat="server" TabIndex="1" 
+                    onchange="ROPFunction()" Style="width: 70%; margin-left: 10px;" class="form-control"></asp:TextBox>
+            </div>
 
-                                            <!-- Row 5 -->
-                                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                                <!-- Clubbing -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkClubbing').click()">
-                                                    <asp:CheckBox ID="chkClubbing" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Clubbing') : Remove_GeneralExamRow('Clubbing')" />
-                                                    <label for="ctl00_MainContent_chkClubbing" style="margin-left: 8px; cursor: pointer;">Clubbing</label>
-                                                </div>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 15px;">
+                <asp:Label Style="width: 30%; font-weight: bold;" ID="Label6" runat="server" 
+                    Text="Motor Response"></asp:Label>
+                <asp:TextBox ID="txtMR" runat="server" TabIndex="2" onchange="MRFunction()" 
+                    Style="width: 70%; margin-left: 10px;" class="form-control"></asp:TextBox>
+            </div>
 
-                                                <!-- Dyspnoea -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkDyspnoea').click()">
-                                                    <asp:CheckBox ID="chkDyspnoea" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('Dyspnoea') : Remove_GeneralExamRow('Dyspnoea')" />
-                                                    <label for="ctl00_MainContent_chkDyspnoea" style="margin-left: 8px; cursor: pointer;">Dyspnoea</label>
-                                                </div>
-                                            </div>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 15px;">
+                <asp:Label Style="width: 30%; font-weight: bold;" ID="Label10" runat="server" 
+                    Text="Verbal Response"></asp:Label>
+                <asp:TextBox ID="txtVR" runat="server" TabIndex="3" onchange="VRFunction()" 
+                    Style="width: 70%; margin-left: 10px;" class="form-control"></asp:TextBox>
+            </div>
 
-                                            <!-- Row 6 -->
-                                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                                <!-- Neck Swelling -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkNeckSwelling').click()">
-                                                    <asp:CheckBox ID="chkNeckSwelling" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('NeckSwelling') : Remove_GeneralExamRow('NeckSwelling')" />
-                                                    <label for="ctl00_MainContent_chkNeckSwelling" style="margin-left: 8px; cursor: pointer;">Neck Swelling</label>
-                                                </div>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 15px;">
+                <asp:Label Style="width: 30%; font-weight: bold;" ID="Label89" runat="server" 
+                    Text="Accumulated"></asp:Label>
+                <asp:TextBox ID="txtAcc" runat="server" TabIndex="4" disabled="disabled" 
+                    Style="width: 70%; margin-left: 10px;" class="form-control"></asp:TextBox>
+            </div>
+        </div>
 
-                                                <!-- Skin Lesions -->
-                                                <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
-                                                    onclick="document.getElementById('ctl00_MainContent_chkSkinLesions').click()">
-                                                    <asp:CheckBox ID="chkSkinLesions" runat="server"
-                                                        onclick="event.stopPropagation(); this.checked ? Add_GeneralExamRow('SkinLesions') : Remove_GeneralExamRow('SkinLesions')" />
-                                                    <label for="ctl00_MainContent_chkSkinLesions" style="margin-left: 8px; cursor: pointer;">Skin Lesions</label>
-                                                </div>
-                                            </div>
+        <!-- Checkboxes Row -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Cranial Nerves -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('CranialNerves1').click()">
+                <input type="checkbox" id="CranialNerves1" runat="server" name="CranialNerves" 
+                    onclick="event.stopPropagation();" />
+                <label for="CranialNerves1" style="margin-left: 8px; cursor: pointer;">Cranial Nerves</label>
+            </div>
 
-                                            <!-- Row 7 -->
-                                            <div style="margin-bottom: 10px;">
-                                                <div class="exam-text-row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label4" runat="server" Text="Other"></asp:Label>
-                                                        <asp:TextBox ID="txtInputBox1" runat="server" TextMode="MultiLine" Rows="3" Width="100%" TabIndex="11"></asp:TextBox>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="subTab002" class="subtabs" style="display: none">
-                                            <div class="exam-container" style="width: 100%;">
+            <!-- Signs Of Meningism -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('SignsOfMeningism1').click()">
+                <input type="checkbox" id="SignsOfMeningism1" runat="server" name="SignsOfMeningism" 
+                    onclick="event.stopPropagation();" />
+                <label for="SignsOfMeningism1" style="margin-left: 8px; cursor: pointer;">Signs Of Meningism</label>
+            </div>
+        </div>
 
-                                                <!-- DRE Checkbox Row -->
-                                                <div class="Systematic-Exam-Row" style="display: flex; align-items: center; width: 100%; margin-bottom: 15px; display: none !important">
-                                                    <asp:Label Style="width: 75%;" ID="LabelDRE" runat="server" Text="DRE"></asp:Label>
-                                                    <div style="width: 100%;">
-                                                        <asp:CheckBox ID="chkDRE" runat="server" CssClass="systematic-checkbox" />
-                                                    </div>
-                                                </div>
+        <!-- GCS Text Area -->
+        <div style="margin-bottom: 20px;">
+            <asp:TextBox runat="server" ID="txtFurtherExplanation" TextMode="MultiLine" 
+                Style="width: 100%; height: 60px;" class="form-control" placeholder="Enter further explanation..."></asp:TextBox>
+        </div>
+    </div>
 
-                                                <!-- Proctoscopy Checkbox Row -->
-                                                <div class="Systematic-Exam-Row" style="display: flex; align-items: center; width: 100%; margin-bottom: 15px; display: none !important">
-                                                    <asp:Label Style="width: 75%; padding-right: 15px;" ID="LabelProctoscopy" runat="server" Text="Proctoscopy"></asp:Label>
-                                                    <div style="width: 100%;">
-                                                        <asp:CheckBox ID="chkProctoscopy" runat="server" CssClass="systematic-checkbox" />
-                                                    </div>
-                                                </div>
+    <!-- General Physical Examination Tab -->
+    <div id="subTabGPE" class="gpe-exam-container subtabs" style="display: none;">
+        <h4 style="margin-bottom: 20px; color: #333;">General Physical Examination</h4>
+        
+        <!-- Row 1 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Jaundice -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Jondus1').click()">
+                <input type="checkbox" id="Jondus1" runat="server" name="Jondus" 
+                    onclick="event.stopPropagation();" />
+                <label for="Jondus1" style="margin-left: 8px; cursor: pointer;">Jaundice</label>
+            </div>
 
-                                                <!-- CNS Examination -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label6" runat="server" Text="CNS Examination"></asp:Label>
-                                                        <asp:TextBox ID="txtCNS" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+            <!-- Pallor -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Pallor1').click()">
+                <input type="checkbox" id="Pallor1" runat="server" name="Pallor" 
+                    onclick="event.stopPropagation();" />
+                <label for="Pallor1" style="margin-left: 8px; cursor: pointer;">Pallor</label>
+            </div>
+        </div>
 
-                                                <!-- CVS Examination -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label10" runat="server" Text="CVS Examination"></asp:Label>
-                                                        <asp:TextBox ID="txtCVS" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+        <!-- Row 2 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Dehydration -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Dehydration1').click()">
+                <input type="checkbox" id="Dehydration1" runat="server" name="Dehydration" 
+                    onclick="event.stopPropagation();" />
+                <label for="Dehydration1" style="margin-left: 8px; cursor: pointer;">Dehydration</label>
+            </div>
 
-                                                <!-- Respiration Examination -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label13" runat="server" Text="Respiration Examination"></asp:Label>
-                                                        <asp:TextBox ID="txtRESP" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+            <!-- GCS Oriented -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('GCSOrientation1').click()">
+                <input type="checkbox" id="GCSOrientation1" runat="server" name="GCSOrientation" 
+                    onclick="event.stopPropagation();" />
+                <label for="GCSOrientation1" style="margin-left: 8px; cursor: pointer;">GCS Oriented</label>
+            </div>
+        </div>
 
-                                                <!-- GI Examination -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label50" runat="server" Text="GI Examination"></asp:Label>
-                                                        <asp:TextBox ID="txtGIT" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+        <!-- Row 3 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Conscious / Oriented -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('ConsciousOrientely1').click()">
+                <input type="checkbox" id="ConsciousOrientely1" runat="server" name="ConsciousOrientely" 
+                    onclick="event.stopPropagation();" />
+                <label for="ConsciousOrientely1" style="margin-left: 8px; cursor: pointer;">Conscious / Oriented</label>
+            </div>
+        </div>
 
-                                                <!-- Abdomin -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="lblAbdomin" runat="server" Text="Abdomin"></asp:Label>
-                                                        <asp:TextBox ID="txtAbdomin" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+        <!-- GPE Text Area -->
+        <div style="margin-bottom: 20px;">
+            <asp:TextBox ID="TextBoxGpe" runat="server" TextMode="MultiLine" Style="height:144px; width: 100%;" 
+                class="form-control" placeholder="Enter GPE Details"></asp:TextBox>
+        </div>
+    </div>
 
-                                                <!-- Urogenital System -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label51" runat="server" Text="Urogenital System"></asp:Label>
-                                                        <asp:TextBox ID="txtUGS" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+    <!-- RESP Tab -->
+    <div id="subTabRESP" class="resp-exam-container subtabs" style="display: none;">
+        <h4 style="margin-bottom: 20px; color: #333;">RESP Examination</h4>
+        
+        <!-- Row 1 - NVB -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- NVB Right -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('NVB_Right1').click()">
+                <input type="checkbox" id="NVB_Right1" runat="server" name="NVB_Right" 
+                    onclick="event.stopPropagation();" />
+                <label for="NVB_Right1" style="margin-left: 8px; cursor: pointer;">NVB Right</label>
+            </div>
 
-                                                <!-- Musculoskeletal System -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label52" runat="server" Text="Musculoskeletal System"></asp:Label>
-                                                        <asp:TextBox ID="txtMucculor" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+            <!-- NVB Left -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('NVB_Left1').click()">
+                <input type="checkbox" id="NVB_Left1" runat="server" name="NVB_Left" 
+                    onclick="event.stopPropagation();" />
+                <label for="NVB_Left1" style="margin-left: 8px; cursor: pointer;">NVB Left</label>
+            </div>
+        </div>
 
-                                                <!-- Local/Special Examination -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label53" runat="server" Text="Local/Special Examination"></asp:Label>
-                                                        <asp:TextBox ID="txtLocal" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+        <!-- Row 2 - Crepitation -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Crepitation Right -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Crepitation_Right1').click()">
+                <input type="checkbox" id="Crepitation_Right1" runat="server" name="Crepitation_Right" 
+                    onclick="event.stopPropagation();" />
+                <label for="Crepitation_Right1" style="margin-left: 8px; cursor: pointer;">Crepitation Right</label>
+            </div>
 
-                                                <!-- Provisional Diagnosis -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label54" runat="server" Text="Provisional Diagnosis"></asp:Label>
-                                                        <asp:TextBox ID="txtProvisionalDiagnosis" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
+            <!-- Crepitation Left -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Crepitation_Left1').click()">
+                <input type="checkbox" id="Crepitation_Left1" runat="server" name="Crepitation_Left" 
+                    onclick="event.stopPropagation();" />
+                <label for="Crepitation_Left1" style="margin-left: 8px; cursor: pointer;">Crepitation Left</label>
+            </div>
+        </div>
 
-                                                <!-- Remarks -->
-                                                <div class="Systematic-Exam-Row">
-                                                    <div style="display: flex; align-items: center; width: 100%">
-                                                        <asp:Label Style="width: 75%;" ID="Label55" runat="server" Text="Remarks"></asp:Label>
-                                                        <asp:TextBox ID="txtRemarksHistory" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systddlPatient_Main_Categoryematic-textbox"></asp:TextBox>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="subTab003" class="subtabs">
-                                        </div>
-                                    </div>
+        <!-- Row 3 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Wheeze -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Wheeze1').click()">
+                <input type="checkbox" id="Wheeze1" runat="server" name="Wheeze" 
+                    onclick="event.stopPropagation();" />
+                <label for="Wheeze1" style="margin-left: 8px; cursor: pointer;">Wheeze</label>
+            </div>
+
+            <!-- Ranchi -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Ranchi1').click()">
+                <input type="checkbox" id="Ranchi1" runat="server" name="Ranchi" 
+                    onclick="event.stopPropagation();" />
+                <label for="Ranchi1" style="margin-left: 8px; cursor: pointer;">Ranchi</label>
+            </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Any Other Sound -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('AnyOtherSound1').click()">
+                <input type="checkbox" id="AnyOtherSound1" runat="server" name="AnyOtherSound" 
+                    onclick="event.stopPropagation();" />
+                <label for="AnyOtherSound1" style="margin-left: 8px; cursor: pointer;">Any Other Sound</label>
+            </div>
+        </div>
+
+        <!-- RESP Text Area -->
+        <div style="margin-bottom: 20px;">
+            <asp:TextBox ID="TextBoxResp" Style="height:140px; width: 100%;" runat="server" 
+                TextMode="MultiLine" class="form-control" placeholder="Enter RESP details..."></asp:TextBox>
+        </div>
+    </div>
+
+    <!-- GIT Tab -->
+    <div id="subTabGIT" class="git-exam-container subtabs" style="display: none;">
+        <h4 style="margin-bottom: 20px; color: #333;">GIT Examination</h4>
+        
+        <!-- Row 1 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Abdomen Soft -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('AbdomenSoft1').click()">
+                <input type="checkbox" id="AbdomenSoft1" runat="server" name="AbdomenSoft" 
+                    onclick="event.stopPropagation();" />
+                <label for="AbdomenSoft1" style="margin-left: 8px; cursor: pointer;">Abdomen Soft</label>
+            </div>
+
+            <!-- Tenderness -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Tenderness1').click()">
+                <input type="checkbox" id="Tenderness1" runat="server" name="Tenderness" 
+                    onclick="event.stopPropagation();" />
+                <label for="Tenderness1" style="margin-left: 8px; cursor: pointer;">Tenderness</label>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Guarding -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Guarding1').click()">
+                <input type="checkbox" id="Guarding1" runat="server" name="Guarding" 
+                    onclick="event.stopPropagation();" />
+                <label for="Guarding1" style="margin-left: 8px; cursor: pointer;">Guarding</label>
+            </div>
+
+            <!-- Bowel Sound -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('BowelSound1').click()">
+                <input type="checkbox" id="BowelSound1" runat="server" name="BowelSound" 
+                    onclick="event.stopPropagation();" />
+                <label for="BowelSound1" style="margin-left: 8px; cursor: pointer;">Bowel Sound</label>
+            </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Distention -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('Distention1').click()">
+                <input type="checkbox" id="Distention1" runat="server" name="Distention" 
+                    onclick="event.stopPropagation();" />
+                <label for="Distention1" style="margin-left: 8px; cursor: pointer;">Distention</label>
+            </div>
+
+            <!-- Fluid Thrill -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('FluidThrill1').click()">
+                <input type="checkbox" id="FluidThrill1" runat="server" name="FluidThrill" 
+                    onclick="event.stopPropagation();" />
+                <label for="FluidThrill1" style="margin-left: 8px; cursor: pointer;">Fluid Thrill</label>
+            </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Shifting Dullness -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('ShiftingDullness1').click()">
+                <input type="checkbox" id="ShiftingDullness1" runat="server" name="ShiftingDullness" 
+                    onclick="event.stopPropagation();" />
+                <label for="ShiftingDullness1" style="margin-left: 8px; cursor: pointer;">Shifting Dullness</label>
+            </div>
+
+            <!-- Epigastria Discomfort -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('EpigastriaDiscomfort1').click()">
+                <input type="checkbox" id="EpigastriaDiscomfort1" runat="server" name="EpigastriaDiscomfort" 
+                    onclick="event.stopPropagation();" />
+                <label for="EpigastriaDiscomfort1" style="margin-left: 8px; cursor: pointer;">Epigastria Discomfort</label>
+            </div>
+        </div>
+
+        <!-- Row 5 -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- Retrosternal Burning -->
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 10px; cursor: pointer;"
+                onclick="document.getElementById('RetrosternalBurning1').click()">
+                <input type="checkbox" id="RetrosternalBurning1" runat="server" name="RetrosternalBurning" 
+                    onclick="event.stopPropagation();" />
+                <label for="RetrosternalBurning1" style="margin-left: 8px; cursor: pointer;">Retrosternal Burning</label>
+            </div>
+        </div>
+
+        <!-- GIT Text Area -->
+        <div style="margin-bottom: 20px;">
+            <asp:TextBox ID="TextBoxGit" runat="server" TextMode="MultiLine" Style="height:140px; width: 100%;" 
+                class="form-control" placeholder="Enter GIT details..."></asp:TextBox>
+        </div>
+    </div>
+
+    <!-- CNS Tab -->
+    <div id="subTabCNS" class="cns-exam-container subtabs" style="display: none;">
+        <h4 style="margin-bottom: 20px; color: #333;">CNS Examination</h4>
+        
+        <!-- HMF Intact -->
+        <div style="display: flex; justify-content: flex-start; margin-bottom: 15px;">
+            <div class="exam-row" style="display: flex; align-items: center; width: 48%; cursor: pointer;"
+                onclick="document.getElementById('HMFIntact1').click()">
+                <input type="checkbox" id="HMFIntact1" runat="server" name="HMFIntact" 
+                    onclick="event.stopPropagation();" />
+                <label for="HMFIntact1" style="margin-left: 8px; cursor: pointer;">HMF Intact</label>
+            </div>
+        </div>
+
+        <!-- CNS Text Area -->
+        <div style="margin-bottom: 20px;">
+            <asp:TextBox ID="TextBoxCns" runat="server" TextMode="MultiLine" Style="height:140px; width: 100%;" 
+                class="form-control" placeholder="Enter CNS details..."></asp:TextBox>
+        </div>
+    </div>
+</div>
                                     <div class="tabs" id="tab05" style="display: none">
                                         <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
                                             <div style="display: flex; align-items: center; width: 100%">
@@ -5364,104 +5627,121 @@ input[type="checkbox"] {
                                         </div>
                                     </div>
                                     <div class="tabs" id="tab06">
-                                          <!-- Triage Area -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" ID="lblPatientCondition" runat="server" Text="Triage Area"></asp:Label>
-                <asp:UpdatePanel ID="UpdatePanel1" TabIndex="6" runat="server">
+    <!-- Row 1: Triage Area & Treatment Time -->
+    <div class="form-row row">
+        <div class="col-md-6 mb-3">
+            <asp:Label CssClass="form-label" ID="lblPatientCondition" runat="server" Text="Triage Area"></asp:Label>
+            <asp:UpdatePanel ID="UpdatePanel1" TabIndex="6" runat="server">
+                <ContentTemplate>
+                    <asp:DropDownList ID="ddlPatientCondition" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" onchange="checkPatientCondition(this)"></asp:DropDownList>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+        <div class="col-md-6 mb-3">
+            <asp:Label CssClass="form-label" runat="server" ID="lblTreatmentTime" Text="Treatment Time"></asp:Label>
+            <asp:TextBox runat="server" CssClass="form-control-custom readonly" ID="txtTreatmentTime" ReadOnly="true"></asp:TextBox>
+        </div>
+    </div>
+
+    <!-- Row 2: Admission Date & Current Room/Ward -->
+    <div class="form-row row">
+        <div class="col-md-6 mb-3">
+            <asp:Label CssClass="form-label" ID="LblAdmission_Date" runat="server" Text="Admission Date"></asp:Label>
+            <asp:TextBox ID="txtAdmission_Date" CssClass="form-control-custom readonly" runat="server" ReadOnly="true"></asp:TextBox>
+        </div>
+        <div class="col-md-6 mb-3">
+                    <asp:Label CssClass="form-label" ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
+<asp:TextBox ID="txtadmissionfee" CssClass="form-control-custom readonly" ReadOnly="true" TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
+            </div>
+        <div class="col-md-6 mb-3" style="display:none">
+            <asp:Label CssClass="form-label" runat="server" Text="Current Room/Ward"></asp:Label>
+            <div class="d-flex align-items-center">
+                <asp:UpdatePanel ID="UpdatePanel8" runat="server" UpdateMode="Always">
                     <ContentTemplate>
-                        <asp:DropDownList ID="ddlPatientCondition" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" onchange="checkPatientCondition(this)"></asp:DropDownList>
+                        <asp:Label ID="vlblCurrent_Allocated_Room_Ward" runat="server" />
+                        <span class="status-indicator status-available"></span>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+                <asp:UpdatePanel ID="UpdatePanel7" runat="server">
+                    <ContentTemplate>
+                        <asp:Button ID="btnAllocatedRoomWardChkTriggerBtn" CssClass="btn btn-sm btn-outline-secondary ms-2" Text="Check Availability" runat="server" OnClick="btnAllocatedRoomWardChkTriggerBtn_Click" CausesValidation="false" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
+        </div>
+        
+    </div>
 
-            <!-- Treatment Time -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" runat="server" ID="lblTreatmentTime" Text="Treatment Time"></asp:Label>
-                <asp:TextBox runat="server" CssClass="form-control-custom readonly" ID="txtTreatmentTime" ReadOnly="true"></asp:TextBox>
-            </div>
-
-            <!-- Admission Date -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" ID="LblAdmission_Date" runat="server" Text="Admission Date"></asp:Label>
-                <asp:TextBox ID="txtAdmission_Date" CssClass="form-control-custom readonly" runat="server" ReadOnly="true"></asp:TextBox>
-            </div>
-
-            <!-- Current Allocated Room/Ward -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" runat="server" Text="Current Room/Ward"></asp:Label>
-                <div style="width: 80%; display: flex; align-items: center;">
-                    <asp:UpdatePanel ID="UpdatePanel8" runat="server" UpdateMode="Always">
-                        <ContentTemplate>
-                            <asp:Label ID="vlblCurrent_Allocated_Room_Ward" runat="server" />
-                            <span class="status-indicator status-available"></span>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                    <asp:UpdatePanel ID="UpdatePanel7" runat="server">
-                        <ContentTemplate>
-                            <asp:Button ID="btnAllocatedRoomWardChkTriggerBtn" CssClass="btn btn-sm btn-outline-secondary ms-2" Text="Check Availability" runat="server" OnClick="btnAllocatedRoomWardChkTriggerBtn_Click" CausesValidation="false" />
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-
-            <!-- Department -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" ID="LblDepartment" runat="server" Text="Department"></asp:Label>
-                <div style="width: 80%;">
-                    <asp:DropDownList ID="ddlDepartment" CssClass="form-control-custom" TabIndex="1" runat="server" AppendDataBoundItems="true" onchange="" Enabled="false"></asp:DropDownList>
-                    <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Always">
-                        <ContentTemplate>
-                            <asp:Button ID="btnGet_Doctor" CssClass="btn btn-sm btn-outline-primary mt-2" Text="Get Doctors" runat="server" OnClick="btnGet_Doctor_Click" CausesValidation="false" />
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-
-            <!-- Doctor -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" ID="Label26" runat="server" Text="Doctor"></asp:Label>
-                <asp:UpdatePanel runat="server" TabIndex="2" ID="UpdatePanel13">
-                    <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
-                    </Triggers>
+    <!-- Row 3: Department & Doctor -->
+    <div class="form-row row">
+        <div class="col-md-6 mb-3">
+            <asp:Label CssClass="form-label" ID="LblDepartment" runat="server" Text="Department"></asp:Label>
+            <div>
+                <asp:DropDownList ID="ddlDepartment" CssClass="form-control-custom" TabIndex="1" runat="server" AppendDataBoundItems="true" onchange="" Enabled="false"></asp:DropDownList>
+                <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Always" Style="display:none">
                     <ContentTemplate>
-                        <asp:DropDownList ID="ddlDoctor" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                        <asp:Button ID="btnGet_Doctor" CssClass="btn btn-sm btn-outline-primary mt-2" Text="Get Doctors" runat="server" OnClick="btnGet_Doctor_Click" CausesValidation="false" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <asp:Label CssClass="form-label" ID="Label26" runat="server" Text="Doctor"></asp:Label>
+            <asp:UpdatePanel runat="server" TabIndex="2" ID="UpdatePanel13">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
+                </Triggers>
+                <ContentTemplate>
+                    <asp:DropDownList ID="ddlDoctor" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+    </div>
 
-            <!-- Admit To -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label required" ID="lblIssuance_Of" runat="server" Text="Admit To"></asp:Label>
-                <asp:UpdatePanel ID="UpdatePanel9" TabIndex="6" runat="server">
-                    <ContentTemplate>
-                        <asp:DropDownList ID="DropDownList2" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" onChange="chkIssuance_Of_Select()" Enabled="false"></asp:DropDownList>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-            </div>
+    <!-- Row 4: Admit To & Bed No -->
+    <div class="form-row row">
+        <div class="col-md-6 mb-3">
+             <asp:Label ID="lblIssuance_Of" runat="server" Text="Admit To"></asp:Label>&nbsp;&nbsp;<span class="text-danger">*</span>
+ <asp:UpdatePanel ID="UpdatePanel9" TabIndex="6" runat="server">
+     <ContentTemplate>
+         <asp:DropDownList ID="ddlIssuance_Of" runat="server" AppendDataBoundItems="true" onChange="chkIssuance_Of_Select()" Enabled="false"></asp:DropDownList>
+     </ContentTemplate>
+ </asp:UpdatePanel>
+ <asp:RequiredFieldValidator ID="rfvIssuance_Of" ControlToValidate="ddlIssuance_Of" InitialValue="0" runat="server" ErrorMessage="Select Admit To" Text="*"></asp:RequiredFieldValidator>
+        </div>
+        <div class="col-md-6 mb-3">
+            <asp:Label CssClass="form-label" ID="LblBed_No" runat="server" Text="Bed No"></asp:Label>
+            <asp:TextBox ID="txtBed_No" CssClass="form-control-custom" TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
+        </div>
+    </div>
 
-            <!-- Bed No -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" ID="LblBed_No" runat="server" Text="Bed No"></asp:Label>
-                <asp:TextBox ID="txtBed_No" CssClass="form-control-custom" TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
-            </div>
-
-            <!-- Ward -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label required" ID="lblWard_No" runat="server" Text="Ward"></asp:Label>
-                <asp:UpdatePanel ID="UpdatePanel11" TabIndex="7" runat="server" UpdateMode="Always">
-                    <ContentTemplate>
-                        <asp:DropDownList ID="ddlWard_No" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()"></asp:DropDownList>
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-            </div>
-
-            <!-- Admission Fee -->
-            <div class="form-row">
-                <asp:Label CssClass="form-label" ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
-                <asp:TextBox ID="txtadmissionfee" CssClass="form-control-custom readonly" ReadOnly="true" TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
-            </div>
-                                    </div>
+    <!-- Row 5: Ward & Admission Fee -->
+    <div class="form-row row">
+        <div class="col-md-6 mb-3">
+            <asp:Label CssClass="form-label required" ID="lblWard_No" runat="server" Text="Ward"></asp:Label>
+            <asp:UpdatePanel ID="UpdatePanel11" TabIndex="7" runat="server" UpdateMode="Always">
+                <ContentTemplate>
+                    <asp:DropDownList ID="ddlWard_No" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()"></asp:DropDownList>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+        <div class="col-md-6 mb-3">
+           
+        </div>
+    </div>
+                                           <div style="overflow-y: scroll; max-height: 150px;">
+    <table id="tblWards" class="table table-responsive" style="float: right;">
+             <thead>
+                 <tr>
+                     <th>MR No</th>
+                     <th>Bed No</th>
+                 </tr>
+             </thead>
+             <tbody>
+             </tbody>
+         </table>
+     </div> 
+</div>
                                     <div class="tabs" id="tab07" style="display: none">
                                         <div style="display: flex; justify-content: flex-end;">
                                             <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
@@ -5584,15 +5864,7 @@ input[type="checkbox"] {
                                                 </asp:TextBox>
                                             </div>
 
-                                            <!-- Admission -->
-                                            <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
-                                                <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblAdmission" runat="server" Text="Admission"></asp:Label>
-                                                <asp:DropDownList ID="ddlIssuance_Of" runat="server"
-                                                    Style="height: 32px;"
-                                                    CssClass="form-control"
-                                                    AppendDataBoundItems="true">
-                                                </asp:DropDownList>
-                                            </div>
+                                        
 
                                             <!-- Follow Up -->
                                             <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">

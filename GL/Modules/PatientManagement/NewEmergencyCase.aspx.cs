@@ -18,15 +18,192 @@ namespace PMS.Modules.PatientManagement
         {
             if (!IsPostBack)
             {
-                
-                BindingDropDown();
- 
+                var id = Request.Url.PathAndQuery;
+                var s = Request.QueryString;
 
-                
+                db = new DataBaseDataContext(DBClass.ConnectionString());
+                txtadmissionfee.Text = Convert.ToString(
+                         (from tbl in db.sys_Parms
+                          where tbl.Name == "Emergency Fee"
+                          select tbl.Code).FirstOrDefault());
+                txtAdmission_Date.Text = DateTime.Now.ToString();
+                txtReceiving_Date.Text = DateTime.Now.ToString();
+                //smth here
+                 BindingDropDown();
+                LoadAllDoctors();
+                BlankForm();
+
+
             }
             else
             {
             }
+        }
+        private void LoadAllDoctors()
+        {
+            db = new DataBaseDataContext(DBClass.ConnectionString());
+            List<HR_Employee> EmpList = new List<HR_Employee>();
+            List<HR_Employee> EmpList2 = new List<HR_Employee>();
+            EmpList = (from tbl in db.HR_Employees
+                       where tbl.IsDoctor == true
+                       select tbl).ToList();
+            EmpList2 = (from tbl in db.HR_Employees
+                        where tbl.IsDoctor == true
+                        select tbl).ToList();
+            ddlDoctor.Items.Clear();
+            ddlDoctor.DataSource = EmpList;
+            ddlDoctor.DataTextField = "Emp_Name";
+            ddlDoctor.DataValueField = "Emp_ID";
+            ddlDoctor.Items.Add(new ListItem("Please Select", "0"));
+            ddlDoctor.DataBind();
+
+             
+
+            ddlDischarge_By.Items.Clear();
+            ddlDischarge_By.DataSource = EmpList2;
+            ddlDischarge_By.DataTextField = "Emp_Name";
+            ddlDischarge_By.DataValueField = "Emp_ID";
+            ddlDischarge_By.Items.Add(new ListItem("Please Select", "0"));
+            ddlDischarge_By.DataBind();
+
+        }
+        public void BlankForm()
+        {
+            ddlIssuance_Of.SelectedIndex = 0; 
+
+            ddlWard_No.SelectedIndex = 0;
+            txtBed_No.Text = "";
+            ddlDepartment.SelectedIndex = 0;
+            ddlDoctor.SelectedIndex = 0; 
+
+            txtAdmission_Date.Text = DateTime.Now.ToString();
+            txtReceiving_Date.Text = DateTime.Now.ToString(); 
+
+            txtRN_Special_Instruction.Text = "";
+
+            txtBP.Text = "";
+            txtTemp.Text = "";
+            txtRespiration.Text = "";
+
+            ddlDepartment.SelectedIndex = 0;
+            ddlDoctor.SelectedIndex = 0;
+ 
+
+        }
+        private void BindingDropDown()
+        {
+
+            object valueset;
+
+            valueset = DBClass.GetValueSet("Laundary From To");
+            ddlIssuance_Of.DataSource = valueset;
+            ddlIssuance_Of.DataTextField = "DataValue_Description";
+            ddlIssuance_Of.DataValueField = "DataValue_Name";
+            ddlIssuance_Of.DataBind();
+
+
+
+            db = new DataBaseDataContext(DBClass.ConnectionString());
+            var qry = from d in db.DataValues
+                      where d.ValueSet_ID == 20 && d.DataValue_Name == "02"
+                      select new { d.DataValue_Name, d.DataValue_Description };
+
+            ddlDepartment.DataSource = qry;
+            ddlDepartment.DataTextField = "DataValue_Description";
+            ddlDepartment.DataValueField = "DataValue_Name";
+            ddlDepartment.DataBind();
+            valueset = DBClass.GetValueSet("Doctor Status");
+
+
+
+
+            var ss = AppConfig.UserID;
+
+            var EmpCode = (from tbl in db.aspnet_Users
+                           where tbl.UserId == AppConfig.UserID
+                           select tbl.Emp_Code).FirstOrDefault();
+            if (EmpCode != null)
+            {
+                List<HR_Employee> loginEmpName = new List<HR_Employee>();
+                loginEmpName = (from tbl in db.HR_Employees
+                                where tbl.IsDoctor == true && tbl.Emp_No == EmpCode
+                                select tbl).ToList();
+                if (loginEmpName != null)
+                {
+
+                }
+
+                var Empstatus = (from tbl in db.HR_Employees
+                                 where tbl.IsDoctor == true && tbl.Emp_No == EmpCode
+                                 select tbl.Designation).FirstOrDefault();
+
+            }
+
+            List<HR_Employee> EmpList = new List<HR_Employee>();
+            EmpList = (from tbl in db.HR_Employees
+                       where tbl.IsDoctor == true
+                       select tbl).ToList();
+            List<Service_Definition> SrvcList = new List<Service_Definition>();
+            SrvcList = (from tbl in db.Service_Definitions
+                        join tbl2 in db.DataValues on tbl.Service_Type equals tbl2.DataValue_Name
+                        join tbl3 in db.ValueSets on tbl2.ValueSet_ID equals tbl3.ValueSet_ID
+                        where tbl2.DataValue_Description == "In-Patient"
+                        select tbl).ToList();
+
+            valueset = DBClass.GetValueSet("Room Type");
+
+            valueset = DBClass.GetValueSet("Ortho Examination");
+
+
+
+
+            var wards = (from tbl2 in db.Ward_Definitions
+                         select tbl2).ToList();
+
+            ddlWard_No.DataSource = wards;
+            ddlWard_No.DataTextField = "Ward_Type";
+            ddlWard_No.DataValueField = "Ward_ID";
+            ddlWard_No.Items.Add(new ListItem("Please Select", "0"));
+            ddlWard_No.DataBind();
+
+
+            valueset = DBClass.GetValueSet("Emergency Rhythm");
+            ddlRhythm.DataSource = valueset;
+            ddlRhythm.DataTextField = "DataValue_Description";
+            ddlRhythm.DataValueField = "DataValue_Name";
+            ddlRhythm.Items.Add(new ListItem("Please Select", "0"));
+            ddlRhythm.DataBind();
+
+            valueset = DBClass.GetValueSet("Emergency Volume");
+            ddlVolume.DataSource = valueset;
+            ddlVolume.DataTextField = "DataValue_Description";
+            ddlVolume.DataValueField = "DataValue_Name";
+            ddlVolume.Items.Add(new ListItem("Please Select", "0"));
+            ddlVolume.DataBind();
+
+
+
+            var PatientConditionData = (from vs in db.ValueSets
+                                        join dv in db.DataValues on vs.ValueSet_ID equals dv.ValueSet_ID
+                                        where vs.ValueSet_Name.Contains("Patient Condition")
+                                        select new
+                                        {
+                                            dv.DataValue_Name,
+                                            dv.DataValue_Description,
+                                            dv.Segment1
+                                        }).ToList();
+            ddlPatientCondition.DataSource = PatientConditionData;
+            ddlPatientCondition.DataTextField = "DataValue_Description";
+            ddlPatientCondition.DataValueField = "DataValue_Name";
+            ddlPatientCondition.Items.Add(new ListItem("Please Select", "0"));
+            ddlPatientCondition.DataBind();
+            int i = 1;
+            foreach (var item in PatientConditionData)
+            {
+                ddlPatientCondition.Items[i].Attributes.Add("name", item.Segment1);
+                i++;
+            }
+
         }
         protected void btnGet_Doctor_Click(object sender, EventArgs e)
         {
@@ -119,86 +296,53 @@ namespace PMS.Modules.PatientManagement
                 vlblCurrent_Allocated_Room_Ward.CssClass = "Error";
             }
         }
-        private void BindingDropDown()
+        public class Beds
         {
-
-            object valueset;
-
-            valueset = DBClass.GetValueSet("Laundary From To");
-            ddlIssuance_Of.DataSource = valueset;
-            ddlIssuance_Of.DataTextField = "DataValue_Description";
-            ddlIssuance_Of.DataValueField = "DataValue_Name";
-            ddlIssuance_Of.DataBind();
-
-
-
-            db = new DataBaseDataContext(DBClass.ConnectionString());
-            var qry = from d in db.DataValues
-                      where d.ValueSet_ID == 20 && d.DataValue_Name == "02"
-                      select new { d.DataValue_Name, d.DataValue_Description };
-
-             
-
-
-            var ss = AppConfig.UserID;
-
-            var EmpCode = (from tbl in db.aspnet_Users
-                           where tbl.UserId == AppConfig.UserID
-                           select tbl.Emp_Code).FirstOrDefault();
-            if (EmpCode != null)
-            {
-                List<HR_Employee> loginEmpName = new List<HR_Employee>();
-                loginEmpName = (from tbl in db.HR_Employees
-                                where tbl.IsDoctor == true && tbl.Emp_No == EmpCode
-                                select tbl).ToList();
-                if (loginEmpName != null)
-                {
-
-                }
-
-                var Empstatus = (from tbl in db.HR_Employees
-                                 where tbl.IsDoctor == true && tbl.Emp_No == EmpCode
-                                 select tbl.Designation).FirstOrDefault();
-
-            }
-
-            List<HR_Employee> EmpList = new List<HR_Employee>();
-            EmpList = (from tbl in db.HR_Employees
-                       where tbl.IsDoctor == true
-                       select tbl).ToList();
-            List<Service_Definition> SrvcList = new List<Service_Definition>();
-            SrvcList = (from tbl in db.Service_Definitions
-                        join tbl2 in db.DataValues on tbl.Service_Type equals tbl2.DataValue_Name
-                        join tbl3 in db.ValueSets on tbl2.ValueSet_ID equals tbl3.ValueSet_ID
-                        where tbl2.DataValue_Description == "In-Patient"
-                        select tbl).ToList();    
-            valueset = DBClass.GetValueSet("Emergency Rhythm");
-            ddlRhythm.DataSource = valueset;
-            ddlRhythm.DataTextField = "DataValue_Description";
-            ddlRhythm.DataValueField = "DataValue_Name";
-            ddlRhythm.Items.Add(new ListItem("Please Select", "0"));
-            ddlRhythm.DataBind();
-           
-            valueset = DBClass.GetValueSet("Emergency Volume");
-            ddlVolume.DataSource = valueset;
-            ddlVolume.DataTextField = "DataValue_Description";
-            ddlVolume.DataValueField = "DataValue_Name";
-            ddlVolume.Items.Add(new ListItem("Please Select", "0"));
-            ddlVolume.DataBind();
-           
-            var PatientConditionData = (from vs in db.ValueSets
-                                        join dv in db.DataValues on vs.ValueSet_ID equals dv.ValueSet_ID
-                                        where vs.ValueSet_Name.Contains("Patient Condition")
-                                        select new
-                                        {
-                                            dv.DataValue_Name,
-                                            dv.DataValue_Description,
-                                            dv.Segment1
-                                        }).ToList();
-             
-
+            public int WardID { get; set; }
+            public int PatientNo { get; set; }
+            public int BedNo { get; set; }
         }
+        [WebMethod]
+        public static string FillWardBeds(int WardID)
+        {
+            List<Beds> bdsList = new List<Beds>();
+            if (WardID > 0)
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                int Beds = (int)(from bds in db.Ward_Definitions
+                                 where bds.Ward_ID == WardID
+                                 select bds.No_Of_Beds
+                            ).SingleOrDefault();
+                List<Ward_Allocation> Ward_AllocationList = db.Ward_Allocations.Where(w => w.Ward_ID == WardID).ToList();
+                for (int i = 1; i <= Beds; i++)
+                {
+                    var patID = (from p in db.Ward_Allocations
+                                 where p.Bed_No_Assigned == (int)(i) && p.Ward_ID == WardID && p.IsDischarge == false
+                                 select p.Patient_ID).FirstOrDefault();
+                    if (patID == null)
+                    {
+                        patID = 0;
+                    }
+                    else
+                    {
+                        patID = (from p in db.Reg_patients
+                                 where p.pat_id == patID
+                                 select p.Patient_No).FirstOrDefault();
+                    }
+                    if (patID == null)
+                    {
+                        patID = 0;
+                    }
 
+                    Beds b = new Beds();
+                    b.BedNo = i;
+                    b.PatientNo = (int)patID;
+                    b.WardID = WardID;
+                    bdsList.Add(b);
+                }
+            }
+            return (new JavaScriptSerializer().Serialize(bdsList));
+        }
 
 
 

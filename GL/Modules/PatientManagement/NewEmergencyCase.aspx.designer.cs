@@ -672,112 +672,58 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.TextBox TextBox1;
 
         /// <summary>
-        /// chkPallor control.
+        /// HeartSound1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkPallor;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox HeartSound1;
 
         /// <summary>
-        /// chkJVP control.
+        /// Arrhythmias1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkJVP;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Arrhythmias1;
 
         /// <summary>
-        /// chkCyanosis control.
+        /// Murmur1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkCyanosis;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Murmur1;
 
         /// <summary>
-        /// chkDisoriented control.
+        /// AnyOtherAddedSound1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkDisoriented;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox AnyOtherAddedSound1;
 
         /// <summary>
-        /// chkJaundice control.
+        /// AnyOtherFindings1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkJaundice;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox AnyOtherFindings1;
 
         /// <summary>
-        /// chkDehydration control.
+        /// TextBoxCvs control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkDehydration;
-
-        /// <summary>
-        /// chkEdema control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkEdema;
-
-        /// <summary>
-        /// chkLymphadenopathy control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkLymphadenopathy;
-
-        /// <summary>
-        /// chkClubbing control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkClubbing;
-
-        /// <summary>
-        /// chkDyspnoea control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkDyspnoea;
-
-        /// <summary>
-        /// chkNeckSwelling control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkNeckSwelling;
-
-        /// <summary>
-        /// chkSkinLesions control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkSkinLesions;
+        protected global::System.Web.UI.WebControls.TextBox TextBoxCvs;
 
         /// <summary>
         /// Label4 control.
@@ -789,49 +735,13 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label Label4;
 
         /// <summary>
-        /// txtInputBox1 control.
+        /// ctl00_MainContent_txtEOR control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtInputBox1;
-
-        /// <summary>
-        /// LabelDRE control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelDRE;
-
-        /// <summary>
-        /// chkDRE control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkDRE;
-
-        /// <summary>
-        /// LabelProctoscopy control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelProctoscopy;
-
-        /// <summary>
-        /// chkProctoscopy control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkProctoscopy;
+        protected global::System.Web.UI.WebControls.TextBox ctl00_MainContent_txtEOR;
 
         /// <summary>
         /// Label6 control.
@@ -843,13 +753,13 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label Label6;
 
         /// <summary>
-        /// txtCNS control.
+        /// txtMR control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCNS;
+        protected global::System.Web.UI.WebControls.TextBox txtMR;
 
         /// <summary>
         /// Label10 control.
@@ -861,157 +771,292 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label Label10;
 
         /// <summary>
-        /// txtCVS control.
+        /// txtVR control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCVS;
+        protected global::System.Web.UI.WebControls.TextBox txtVR;
 
         /// <summary>
-        /// Label13 control.
+        /// Label89 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label13;
+        protected global::System.Web.UI.WebControls.Label Label89;
 
         /// <summary>
-        /// txtRESP control.
+        /// txtAcc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRESP;
+        protected global::System.Web.UI.WebControls.TextBox txtAcc;
 
         /// <summary>
-        /// Label50 control.
+        /// CranialNerves1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label50;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox CranialNerves1;
 
         /// <summary>
-        /// txtGIT control.
+        /// SignsOfMeningism1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGIT;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox SignsOfMeningism1;
 
         /// <summary>
-        /// lblAbdomin control.
+        /// txtFurtherExplanation control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAbdomin;
+        protected global::System.Web.UI.WebControls.TextBox txtFurtherExplanation;
 
         /// <summary>
-        /// txtAbdomin control.
+        /// Jondus1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAbdomin;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Jondus1;
 
         /// <summary>
-        /// Label51 control.
+        /// Pallor1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label51;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Pallor1;
 
         /// <summary>
-        /// txtUGS control.
+        /// Dehydration1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtUGS;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Dehydration1;
 
         /// <summary>
-        /// Label52 control.
+        /// GCSOrientation1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label52;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox GCSOrientation1;
 
         /// <summary>
-        /// txtMucculor control.
+        /// ConsciousOrientely1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMucculor;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox ConsciousOrientely1;
 
         /// <summary>
-        /// Label53 control.
+        /// TextBoxGpe control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label53;
+        protected global::System.Web.UI.WebControls.TextBox TextBoxGpe;
 
         /// <summary>
-        /// txtLocal control.
+        /// NVB_Right1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLocal;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox NVB_Right1;
 
         /// <summary>
-        /// Label54 control.
+        /// NVB_Left1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label54;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox NVB_Left1;
 
         /// <summary>
-        /// txtProvisionalDiagnosis control.
+        /// Crepitation_Right1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtProvisionalDiagnosis;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Crepitation_Right1;
 
         /// <summary>
-        /// Label55 control.
+        /// Crepitation_Left1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label55;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Crepitation_Left1;
 
         /// <summary>
-        /// txtRemarksHistory control.
+        /// Wheeze1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRemarksHistory;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Wheeze1;
+
+        /// <summary>
+        /// Ranchi1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Ranchi1;
+
+        /// <summary>
+        /// AnyOtherSound1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox AnyOtherSound1;
+
+        /// <summary>
+        /// TextBoxResp control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBoxResp;
+
+        /// <summary>
+        /// AbdomenSoft1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox AbdomenSoft1;
+
+        /// <summary>
+        /// Tenderness1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Tenderness1;
+
+        /// <summary>
+        /// Guarding1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Guarding1;
+
+        /// <summary>
+        /// BowelSound1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox BowelSound1;
+
+        /// <summary>
+        /// Distention1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox Distention1;
+
+        /// <summary>
+        /// FluidThrill1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox FluidThrill1;
+
+        /// <summary>
+        /// ShiftingDullness1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox ShiftingDullness1;
+
+        /// <summary>
+        /// EpigastriaDiscomfort1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox EpigastriaDiscomfort1;
+
+        /// <summary>
+        /// RetrosternalBurning1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox RetrosternalBurning1;
+
+        /// <summary>
+        /// TextBoxGit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBoxGit;
+
+        /// <summary>
+        /// HMFIntact1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox HMFIntact1;
+
+        /// <summary>
+        /// TextBoxCns control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBoxCns;
 
         /// <summary>
         /// Label14 control.
@@ -1131,6 +1176,24 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.TextBox txtAdmission_Date;
 
         /// <summary>
+        /// lblfee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblfee;
+
+        /// <summary>
+        /// txtadmissionfee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtadmissionfee;
+
+        /// <summary>
         /// UpdatePanel8 control.
         /// </summary>
         /// <remarks>
@@ -1248,13 +1311,22 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.UpdatePanel UpdatePanel9;
 
         /// <summary>
-        /// DropDownList2 control.
+        /// ddlIssuance_Of control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList2;
+        protected global::System.Web.UI.WebControls.DropDownList ddlIssuance_Of;
+
+        /// <summary>
+        /// rfvIssuance_Of control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvIssuance_Of;
 
         /// <summary>
         /// LblBed_No control.
@@ -1302,24 +1374,6 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.DropDownList ddlWard_No;
 
         /// <summary>
-        /// lblfee control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblfee;
-
-        /// <summary>
-        /// txtadmissionfee control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtadmissionfee;
-
-        /// <summary>
         /// LblDoctorName control.
         /// </summary>
         /// <remarks>
@@ -1354,24 +1408,6 @@ namespace PMS.Modules.PatientManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDesignation;
-
-        /// <summary>
-        /// LblAdmission control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblAdmission;
-
-        /// <summary>
-        /// ddlIssuance_Of control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlIssuance_Of;
 
         /// <summary>
         /// LblFollowUp control.
