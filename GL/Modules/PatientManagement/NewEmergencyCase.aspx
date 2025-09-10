@@ -932,14 +932,280 @@ input[type="checkbox"] {
                     selectedTab.style.display = 'block';
                 }
             });
+            $("[id$='ddlPatientCondition']").on('change', AddAdmission);
+            $("[id$='ddlDoctor']").on('change', AddAdmission);
+            $("[id$='ddlWard_No']").on('change', AddAdmission);
+            $("[id$='txtBed_No']").on('blur', AddAdmission);
+            $("[id$='txtRateBeats']").on('blur', AddVitals);
+            $("[id$='txtBP']").on('blur', AddVitals);
+            $("[id$='txtTemp']").on('blur', AddVitals);
+            $("[id$='txtRespiration']").on('blur', AddVitals);
+            $("[id$='ddlRhythm']").on('change', AddVitals);
+            $("[id$='ddlVolume']").on('change', AddVitals);
+            $("[id$='txtSaturation_Oxygen2']").on('blur', AddVitals);
+            $("[id$='txtSaturation']").on('blur', AddVitals);
+            $("[id$='txtSaturation_Oxygen1']").on('blur', AddVitals);
+            $("[id$='chk_OnRoomAir']").on('change', AddVitals);
+            $("[id$='chk_WithOxygen']").on('change', AddVitals);
+            $("[id$='txtOthersRcvNote']").on('blur', AddVitals);
+            $("[id$='txtReceiving_Date']").on('blur', AddVitals);
+            $("[id$='txtRN_Special_Instruction']").on('change', AddVitals);
+            var selectors = [
+                'txtHistoryOfPeresentIllness',
+                'txtHistoryOfPastIllness',
+                'txtHistoryOfFamily',
+                'txtSocioEconomicHistory',
+                'txtBirthHistory',
+                'txtDrugHistory',
+                'txtObstetricHistory',
+                'txtAllergiesHistory',
+                'txtTreatmentHistory',
+                'txtPersonalHistory',
+                'txtVaccinationHistory',
+                'txtAnyOtherHistory'
+            ].map(function (s) { return "[id$='" + s + "']"; }).join(',');
 
+          
+            // update on change/blur - works for both user typing and selects (change)
+            $(selectors).on('change blur', AddHistory);
+            // checkbox change inside entire tab
+          
         });
-     
+        document.addEventListener('DOMContentLoaded', function () {
+            // delegate checkbox change inside #tab04
+            var tab = document.getElementById('tab04');
+            if (tab) {
+                tab.addEventListener('change', function (e) {
+                    var t = e.target;
+                    if (t && t.tagName === 'INPUT' && t.type === 'checkbox') handleCheckboxChange(t);
+                });
+            }
 
+            // delegate remove button clicks (simple)
+            document.addEventListener('click', function (e) {
+                var btn = e.target;
+                if (btn && btn.classList && btn.classList.contains('remove-find-simple')) {
+                    var key = btn.getAttribute('data-key');
+                    removeRowSimple(key);
+                }
+            });
+
+            // wire description textareas by ends-with selectors (minimal)
+            var descSelectors = [
+                "[id$='TextBoxCvs']",
+                "[id$='TextBoxGpe']",
+                "[id$='TextBoxResp']",
+                "[id$='TextBoxGit']",
+                "[id$='TextBoxCns']",
+                "[id$='txtFurtherExplanation']"
+            ].join(',');
+            var descs = document.querySelectorAll(descSelectors);
+            descs.forEach(function (d) {
+                d.addEventListener('input', function () { handleDescriptionChange(d); });
+                // initial populate if already has value
+                if ((d.value || '').trim()) handleDescriptionChange(d);
+            });
+
+            // initial sync for pre-checked boxes (minimal)
+            var chks = tab ? tab.querySelectorAll("input[type='checkbox']") : [];
+            chks.forEach(function (c) {
+                if (c.checked) handleCheckboxChange(c);
+            });
+        });
+        function addRowSimple(tableId, key, text) {
+            if (!tableId) return;
+            var tbody = document.querySelector('#' + tableId + ' tbody');
+            if (!tbody) return;
+            if (tbody.querySelector("tr[data-key='" + key + "']")) return; // already exists
+            var tr = document.createElement('tr');
+            tr.setAttribute('data-key', key);
+            var tdText = document.createElement('td');
+            tdText.textContent = text || '-';
+            var tdAction = document.createElement('td');
+            tdAction.style.width = '48px';
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'remove-find-simple';
+            btn.setAttribute('data-key', key);
+            btn.setAttribute('aria-label', 'Remove');
+            btn.textContent = '×';
+            tdAction.appendChild(btn);
+            tr.appendChild(tdText);
+            tr.appendChild(tdAction);
+            tbody.appendChild(tr);
+            // show parent container
+            var container = document.getElementById(tableId).closest ? document.getElementById(tableId).closest('[id^="divtbl"]') : null;
+            if (!container) {
+                // fallback using DOM walk
+                var el = document.getElementById(tableId);
+                while (el && el.id && el.id.indexOf('divtbl') === -1) el = el.parentElement;
+                container = el;
+            }
+            if (container) container.style.display = ''; // show (no animation, minimal)
+        }
+
+        // remove row by key, and if possible uncheck or clear original control
+        function removeRowSimple(key) {
+            if (!key) return;
+            // remove any tr with data-key
+            var rows = document.querySelectorAll("tr[data-key='" + key + "']");
+            rows.forEach(function (r) { r.parentElement && r.parentElement.removeChild(r); });
+            // try uncheck checkbox by id then by ends-with
+            var chk = document.getElementById(key);
+            if (!chk) {
+                // minimal ends-with fallback:
+                var inputs = document.querySelectorAll("input[id$='" + key + "']");
+                if (inputs.length) chk = inputs[0];
+            }
+            if (chk && chk.type === 'checkbox') chk.checked = false;
+            // try clear textarea/input if exists with that id
+            var txt = document.getElementById(key);
+            if (txt && (txt.tagName === 'TEXTAREA' || (txt.tagName === 'INPUT' && txt.type === 'text'))) txt.value = '';
+
+            // hide empty containers (minimal)
+            ['divtblCVS', 'divtblGCS', 'divtblGPE', 'divtblRESP', 'divtblGIT', 'divtblCNS'].forEach(function (did) {
+                var d = document.getElementById(did);
+                if (!d) return;
+                var has = d.querySelector('tbody tr');
+                if (!has) d.style.display = 'none';
+            });
+        }
+
+        // find table id for an element by locating nearest .subtabs parent id and simple string replace
+        function tableIdFromElement(el) {
+            var node = el;
+            while (node && !node.classList.contains('subtabs')) node = node.parentElement;
+            if (!node) return null;
+            var sid = node.id || '';
+            // sid expected like "subTabCVS" -> return "tblCVS"
+            if (sid.indexOf('subTab') === 0) return 'tbl' + sid.replace('subTab', '');
+            return null;
+        }
+
+        // get label for checkbox (label[for=id]) or fallback to id
+        function labelForCheckbox(el) {
+            var id = el.id || '';
+            var lab = document.querySelector("label[for='" + id + "']");
+            if (lab) return lab.textContent.trim() || id;
+            return id;
+        }
+
+        /* ====== handlers bound to events (minimal) ====== */
+
+        // checkbox change handler
+        function handleCheckboxChange(el) {
+            var checked = el.checked;
+            var key = el.id || '';
+            var tbl = tableIdFromElement(el);
+            var label = labelForCheckbox(el);
+            if (checked) addRowSimple(tbl, key, label);
+            else removeRowSimple(key);
+        }
+
+        // textarea/input change handler for descriptions
+        function handleDescriptionChange(el) {
+            var val = (el.value || '').trim();
+            var key = el.id || '';
+            var tbl = tableIdFromElement(el);
+            // build label like "CVS Details: <text>"
+            var prefix = '';
+            var node = el;
+            while (node && !node.classList.contains('subtabs')) node = node.parentElement;
+            if (node && node.id) prefix = node.id.replace('subTab', '') + ' Details';
+            var text = prefix + ': ' + val;
+            if (val.length) addRowSimple(tbl, key, text);
+            else removeRowSimple(key);
+        }
+
+        function AddHistory() {
+            // mapping of input suffix => display label
+            var fields = [
+                { id: 'txtHistoryOfPeresentIllness', label: 'History Of Present Illness' },
+                { id: 'txtHistoryOfPastIllness', label: 'Past Medical/Surgical History' },
+                { id: 'txtHistoryOfFamily', label: 'Family History' },
+                { id: 'txtSocioEconomicHistory', label: 'SocioEconomic History' },
+                { id: 'txtBirthHistory', label: 'Birth History' },
+                { id: 'txtDrugHistory', label: 'Drug History' },
+                { id: 'txtObstetricHistory', label: 'Obstetric History' },
+                { id: 'txtAllergiesHistory', label: 'Allergies History' },
+                { id: 'txtTreatmentHistory', label: 'Treatment History' },
+                { id: 'txtPersonalHistory', label: 'Personal History' },
+                { id: 'txtVaccinationHistory', label: 'Vaccination History' },
+                { id: 'txtAnyOtherHistory', label: 'Any Other History' }
+            ];
+
+            var tbody = $('#tblHistory tbody');
+            tbody.empty();
+
+            // collect non-empty entries
+            var any = false;
+            fields.forEach(function (f) {
+                var $el = $("[id$='" + f.id + "']");
+                if ($el.length) {
+                    var val = ($el.val() || '').toString().trim();
+                    if (val.length) {
+                        any = true;
+                        // create single-cell row like: "History Of Present Illness: text here"
+                        var row = $('<tr>').html('<td>' + f.label + ': ' + escapeHtml(val) + '</td>');
+                        tbody.append(row);
+                    }
+                }
+            });
+
+            var container = $('#divtblHistory');
+            if (any) {
+                if (container.is(':hidden')) container.slideDown();
+            } else {
+                // no data -> hide and remove any rows (already cleared)
+                if (container.is(':visible')) container.slideUp();
+            }
+        }
+
+        // simple HTML-escape to avoid accidental markup injection from textarea values
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
         // Initialize - show first tab
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('subTabCVS').style.display = 'block';
         });
+        function AddAdmission() {
+            // Read values (use ends-with selectors so this works with ASP.NET generated ids)
+            var triage = $("[id$='ddlPatientCondition'] option:selected").text() || '-';
+            var doctor = $("[id$='ddlDoctor'] option:selected").text() || '-';
+            var ward = $("[id$='ddlWard_No'] option:selected").text() || '-';
+            var bedNo = $("[id$='txtBed_No']").val() || '-';
+            var fee = $("[id$='txtadmissionfee']").val() || '-';
+            var admissionDate = $("[id$='txtAdmission_Date']").val() || '-';
+
+            // Table body and container
+            var tbody = $('#tblAdmissions tbody');
+            var tableContainer = $('#divtblAdmissions');
+
+            // Clear existing rows and add a single updated row
+            tbody.empty();
+
+            var newRow = $('<tr>').html(
+                '<td>' + triage + '</td>' +
+                '<td>' + doctor + '</td>' +
+                '<td>' + ward + '</td>' +
+                '<td>' + bedNo + '</td>' +
+                '<td>' + fee + '</td>' +
+                '<td>' + admissionDate + '</td>'
+            );
+
+            tbody.append(newRow);
+
+            // Reveal the container (keeps same behavior as your demo)
+            tableContainer.slideDown();
+        }
+
+
         function fillSymptomsInModal(selectedValue, searchTerm) {
             var options = '';
 
@@ -1439,6 +1705,7 @@ input[type="checkbox"] {
         function SelectBed(WardID, BedNo) {
             $('#ctl00_MainContent_txtBed_No').val("");
             $('#ctl00_MainContent_txtBed_No').val(BedNo);
+            AddAdmission();
         }
 
         function SelectBedRefer(WardID, BedNo) {
@@ -1553,13 +1820,8 @@ input[type="checkbox"] {
             $('#ctl00_MainContent_ddlPatientDepartment').on("change", function () {
                 $('#ctl00_MainContent_ddlPatientDepartment').find('option:selected')[0].value;
                 fillPendingPatientsList();
-            })
-            $('#<%= ddlDoctorName.ClientID %>, #<%= ddlIssuance_Of.ClientID %>, #<%= ddlFOllowUp.ClientID %>').change(function () {
-                updateFollowUpTable();
-            });
-            $('#<%= FollowNoDate.ClientID %>').on('change blur', function () {
-                updateFollowUpTable();
-            }); 
+            }) 
+           
             $(document).on('input', '.Disposal-row textarea, .Disposal-row input[type="text"]', function () {
                 updateDisposalTable();
             });
@@ -2213,34 +2475,56 @@ input[type="checkbox"] {
     
 
 
+        // Simple AddVitals function matching your style. Load after jQuery and after ASP.NET controls render.
+
         function AddVitals() {
-            // Get all the input values using jQuery
-            const pulse = $('#ctl00_MainContent_txtPuls').val();
-            const bp = $('#ctl00_MainContent_txtBP').val();
-            const temp = $('#ctl00_MainContent_txtTemp').val();
-            const resp = $('#ctl00_MainContent_txtRespiration').val();
-            const height = $('#ctl00_MainContent_txtHeight').val();
-            const weight = $('#ctl00_MainContent_txtWeight').val();
+            // read values (ends-with selectors for ASP.NET rendered ids)
+            var pulse = $("[id$='txtRateBeats']").val() || '-';
+            var bp = $("[id$='txtBP']").val() || '-';
+            var temp = $("[id$='txtTemp']").val() || '-';
+            var resp = $("[id$='txtRespiration']").val() || '-';
+            var rhythm = $("[id$='ddlRhythm'] option:selected").text() || '-';
+            var volume = $("[id$='ddlVolume'] option:selected").text() || '-';
+            var o2sat = $("[id$='txtSaturation_Oxygen2']").val() || '-';
+            var percentage = $("[id$='txtSaturation']").val() || '-';
+            var liters = $("[id$='txtSaturation_Oxygen1']").val() || '-';
 
-            // Get the table body and container div
-            const tbody = $('#tblVitals tbody');
-            const tableContainer = $('#divtblVitals');
+            var roomAir = $("[id$='chk_OnRoomAir']").length ? ($("[id$='chk_OnRoomAir']").is(':checked') ? 'Yes' : 'No') : '-';
+            var withO2 = $("[id$='chk_WithOxygen']").length ? ($("[id$='chk_WithOxygen']").is(':checked') ? 'Yes' : 'No') : '-';
 
-            // Clear existing rows
+            var others = $("[id$='txtOthersRcvNote']").val() || '-';
+            var received = $("[id$='txtReceiving_Date']").val() || '-';
+            var instruction = $("[id$='txtRN_Special_Instruction']").val() || '-';
+
+            var tbody = $('#tblVitals tbody');
+            var tableContainer = $('#divtblVitals');
+
+            // clear existing rows and insert one row (same behaviour as your demo)
             tbody.empty();
 
-            // Create new row with the vitals data
-            const newRow = $('<tr>').html(`
-        <td>${pulse || '-'}</td>
-        <td>${bp || '-'}</td>
-        <td>${temp || '-'}</td>
-        <td>${resp || '-'}</td>
-        <td>${height || '-'}</td>
-        <td>${weight || '-'}</td>
-    `);
+            var newRow = $('<tr>').html(
+                '<td>' + pulse + '</td>' +
+                '<td>' + bp + '</td>' +
+                '<td>' + temp + '</td>' +
+                '<td>' + resp + '</td>' +
+                '<td>' + rhythm + '</td>' +
+                '<td>' + volume + '</td>' +
+                '<td>' + o2sat + '</td>' +
+                '<td>' + percentage + '</td>' +
+                '<td>' + liters + '</td>' +
+                '<td>' + roomAir + '</td>' +
+                '<td>' + withO2 + '</td>' +
+                '<td>' + others + '</td>' +
+                '<td>' + received + '</td>' +
+                '<td>' + instruction + '</td>'
+            );
+
             tbody.append(newRow);
             tableContainer.slideDown();
         }
+
+       
+        
 
   
 
@@ -3703,60 +3987,7 @@ input[type="checkbox"] {
                 $('#dvtblMedicines').slideDown();
             })
         }
-
-        function updateFollowUpTable() {
-            // Get values from form inputs
-            var doctorName = $('#<%= ddlDoctorName.ClientID %> option:selected').text();
-            var doctorId = $('#<%= ddlDoctorName.ClientID %>').val();
-            var designation = $('#<%= txtDesignation.ClientID %>').val();
-            var admission = $('#<%= ddlIssuance_Of.ClientID %> option:selected').text();
-            var admissionId = $('#<%= ddlIssuance_Of.ClientID %>').val();
-            var followUp = $('#<%= ddlFOllowUp.ClientID %> option:selected').text();
-            var followUpId = $('#<%= ddlFOllowUp.ClientID %>').val();
-            var followUpDate = $('#<%= FollowNoDate.ClientID %>').val();
-
-            // Only proceed if at least one field has a value
-            if (!doctorId && !followUpId && !followUpDate) {
-                return false;
-            }
-
-            var table = $('#tblFollowUp tbody');
-            var existingRow = table.find('tr').first();
-
-            if (existingRow.length > 0) {
-                // Update existing row
-                if (doctorId) {
-                    existingRow.find('td:eq(0)').text(doctorName).attr('data-id', doctorId);
-                    existingRow.find('td:eq(1)').text(designation);
-                }
-                if (admissionId) {
-                    existingRow.find('td:eq(2)').text(admission).attr('data-id', admissionId);
-                }
-                if (followUpId) {
-                    existingRow.find('td:eq(3)').text(followUp).attr('data-id', followUpId);
-                }
-                if (followUpDate) {
-                    existingRow.find('td:eq(4)').text(followUpDate);
-                }
-            } else {
-                // Create new row only if at least one required field is filled
-                if (doctorId || followUpId || followUpDate) {
-                    var newRow = $('<tr>').append(
-                        $('<td>').text(doctorName || '').attr('data-id', doctorId || ''),
-                        $('<td>').text(designation || ''),
-                        $('<td>').text(admission || '').attr('data-id', admissionId || ''),
-                        $('<td>').text(followUp || '').attr('data-id', followUpId || ''),
-                        $('<td>').text(followUpDate || '')
-                    );
-
-                    // Append to table
-                    table.append(newRow);
-                    $('#divtblFollowUp').slideDown();
-                }
-            }
-
-            return true;
-        }
+         
 
         function updateDisposalTable() {
             const DisposalTable = $('#tblDisposal tbody');
@@ -5606,26 +5837,70 @@ input[type="checkbox"] {
         </div>
     </div>
 </div>
-                                    <div class="tabs" id="tab05" style="display: none">
-                                        <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                            <div style="display: flex; align-items: center; width: 100%">
-                                                <asp:Label Style="width: 200px;" ID="Label14" runat="server" Text="Refered To"></asp:Label>
-                                                <asp:DropDownList ID="ddlPatient_Main_Category" onchange="loaddoctor_byDep()" Width="80%" runat="server" AppendDataBoundItems="true" TabIndex="21"></asp:DropDownList>
-                                            </div>
-                                        </div>
-                                        <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                            <div style="display: flex; align-items: center; width: 100%">
-                                                <asp:Label Style="width: 200px;" ID="Label18" runat="server" Text="Doctor"></asp:Label>
-                                                <asp:DropDownList Style="width: 80%" ID="ddldoctors" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
-                                            </div>
-                                        </div>
-                                        <div class="refer-row" style="display: flex; align-items: center; justify-content: space-between;">
-                                            <div style="display: flex; align-items: center; width: 100%">
-                                                <asp:Label Style="width: 200px;" ID="Label19" runat="server" Text="Referral Note"></asp:Label>
-                                                <asp:TextBox ID="txtRefferNote" TextMode="SingleLine" Width="80%" CssClass="refer-textbox" runat="server" TabIndex="22"></asp:TextBox>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <div class="tabs" id="tab05" style="display: none;">
+  <div style="display:flex; flex-direction:column; gap:12px; padding:8px; box-sizing:border-box; max-width:100%;">
+    <!-- Department Row -->
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px;">
+      <div style="flex: 0 0 200px;">
+        <asp:Label ID="lbl_Department" runat="server" Text="Department"></asp:Label>
+      </div>
+      <div style="flex:1 1 300px; min-width:180px;">
+        <asp:UpdatePanel runat="server" TabIndex="2" ID="UpdatePanel10" style="outline: none;">
+          <ContentTemplate>
+            <asp:DropDownList ID="ddl_Department" runat="server"  onchange="Get_Doctor_Info();" AppendDataBoundItems="true"></asp:DropDownList>
+          </ContentTemplate>
+        </asp:UpdatePanel>
+      </div>
+    </div>
+
+    <!-- Select Doctor Row -->
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px;">
+      <div style="flex:0 0 200px;">
+        <asp:Label runat="server" ID="lblCallToDoctor" Text="Select Doctor To Call"></asp:Label>
+      </div>
+      <div style="flex:1 1 300px; min-width:180px;">
+        <asp:UpdatePanel runat="server" TabIndex="2" ID="UpdatePanel4" style="outline: none;">
+          <Triggers>
+          </Triggers>
+          <ContentTemplate>
+            <asp:DropDownList ID="ddlCallToDoctor" runat="server" onchange="Get_Doctor_MobileInfo();" AppendDataBoundItems="true"></asp:DropDownList>
+          </ContentTemplate>
+        </asp:UpdatePanel>
+      </div>
+    </div>
+
+    <!-- Mobile No Row -->
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px;">
+      <div style="flex:0 0 200px;">
+        <asp:Label runat="server" ID="lblMobileNo" Text="Mobile No"></asp:Label>
+      </div>
+      <div style="flex:1 1 300px; min-width:180px;">
+        <asp:TextBox runat="server" ID="txtMobileNo"></asp:TextBox>
+      </div>
+    </div>
+
+    <!-- SMS / Buttons Row (kept original buttons, no new buttons added) -->
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px;">
+      <div style="flex:0 0 200px;">
+        <asp:Label ID="lblSmsToDoctor" runat="server" Text="SMS To Doctor"></asp:Label>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <div>
+          <input type="button" value="Send" class="btn btn-primry" id="btnPrintAdmisionDetail" onclick="" />
+        </div>
+        <div>
+          <input type="button" class="btn-gray" onclick="DotcorCallUnit()" value="Print" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Doctor Notes -->
+    <div style="display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
+      <h2 style="margin:0; text-align:left;">Doctor Notes</h2>
+      <asp:TextBox TextMode="MultiLine" runat="server" id="txtCallToDoctor" style="width:100%; min-height:139px; font-size:18px; font-weight:Bold;"></asp:TextBox>
+    </div>
+  </div>
+</div>
                                     <div class="tabs" id="tab06">
     <!-- Row 1: Triage Area & Treatment Time -->
     <div class="form-row row">
@@ -5743,47 +6018,231 @@ input[type="checkbox"] {
      </div> 
 </div>
                                     <div class="tabs" id="tab07" style="display: none">
-                                        <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewPrimaryDiagnosis()" />
-                                        </div>
-                                        <div style="display: none" id="divAddNewPrimaryDiagnosis">
-                                            <div style="display: flex; justify-content: center;">
-                                                <input type="text" id="NewPrimaryDiagnosis" />
-                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewPrimaryDiagnosis" onclick="savePrimaryDiagnosis()" class="btn btn-primry" value="Save" />
-                                            </div>
-                                        </div>
+  <div style="display: flex; justify-content: flex-end;">
+    <input type="button" class="btn btn-primry" value="Add Vitals" onclick="AddVitals()" />
+  </div>
+  <div class="vitals-container" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <!-- Row 1 -->
+    <div style="display: flex; width: 100%;">
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label90" runat="server" Text="Plus Rate (Beats per Min)"></asp:Label>
+          <asp:TextBox ID="txtPulseRate" runat="server" TabIndex="1" Style="width: 100%; box-sizing: border-box;"></asp:TextBox>
+        </div>
+      </div>
 
-                                        <div class="row">
-                                            <div class="col-md-7 col-sm-12">
-                                                <input type="text" class="form-control mb-2" id="tab07Search" placeholder="Search..." />
-                                            </div>
-                                            <div class="col-md-5 col-sm-12">
-                                            </div>
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label91" runat="server" Text="Blood Pressure (120/80)"></asp:Label>
+          <asp:TextBox ID="txtBPDischarge" runat="server" TabIndex="2" Style="width: 100%; box-sizing: border-box;"></asp:TextBox>
+        </div>
+      </div>
+    </div>
 
-                                        </div>
-                                        <div id="allPrimaryDiagnosis"></div>
-                                    </div>
-                                    <div class="tabs" id="tab08" style="display: none">
-                                        <div style="display: flex; justify-content: flex-end;">
-                                            <input type="button" class="btn btn-primry" value="Add New" onclick="AddNewFinalDiagnosis()" />
-                                        </div>
-                                        <div style="display: none" id="divAddNewFinalDiagnosis">
-                                            <div style="display: flex; justify-content: center;">
-                                                <input type="text" id="NewFinalDiagnosis" />
-                                                <input style="width: 50% !important; margin-left: 10px;" type="button" id="btnSaveNewFinalDiagnosis" onclick="saveFinalDiagnosis()" class="btn btn-primry" value="Save" />
-                                            </div>
-                                        </div>
+    <!-- Row 2 -->
+    <div style="display: flex; width: 100%;">
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label92" runat="server" Text="Rhythm"></asp:Label>
+          <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlRhythmdischarge" Style="width: 100%; box-sizing: border-box;"></asp:DropDownList>
+        </div>
+      </div>
 
-                                        <div class="row">
-                                            <div class="col-md-7 col-sm-12">
-                                                <input type="text" class="form-control mb-2" id="tab08Search" placeholder="Search..." />
-                                            </div>
-                                            <div class="col-md-5 col-sm-12">
-                                            </div>
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label93" runat="server" Text="Temperature (°F)"></asp:Label>
+          <asp:TextBox ID="txtTempdisch" runat="server" TabIndex="3" Style="width: 100%; box-sizing: border-box;"></asp:TextBox>
+        </div>
+      </div>
+    </div>
 
-                                        </div>
-                                        <div id="allFinalDiagnosis"></div>
-                                    </div>
+    <!-- Row 3 -->
+    <div style="display: flex; width: 100%;">
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:label ID="Label94" runat="server" Text="Volume"></asp:label>
+          <asp:DropDownList runat="server" ID="ddlvolumedisc" AppendDataBoundItems="true" Style="width: 100%;"></asp:DropDownList>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label95" runat="server" Text="Respiration Rate (/min)"></asp:Label>
+          <asp:TextBox ID="txtRespRateDesc" runat="server" TabIndex="4" Style="width: 100%;"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div style="display: flex; width: 100%;">
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label96" runat="server" Text="O2 Saturation"></asp:Label>
+          <asp:TextBox ID="txtSaturation_Oxygen2_desc" runat="server" TabIndex="2" Style="width: 100%;"></asp:TextBox>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label97" runat="server" Text="Others"></asp:Label>
+          <asp:TextBox ID="txtotherecdesc" runat="server" TabIndex="2" Style="width: 100%;"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 5 -->
+    <div style="display: flex; width: 100%;">
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label98" runat="server" Text="Receiving Date & Time"></asp:Label>
+          <asp:TextBox ID="txttxtReceiving_DateDesc" runat="server" ReadOnly="true" Style="width: 100%;"></asp:TextBox>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:Label ID="Label99" runat="server" Text="Special Instruction"></asp:Label>
+          <asp:TextBox ID="txtRN_Special_Instruction_Desc" runat="server" TabIndex="9" TextMode="MultiLine" Style="width: 100%; height: 35px;"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 6 -->
+    <div style="display: flex; width: 100%;">
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:TextBox ID="txtsaturationDis" runat="server" TabIndex="2" Style="width: 137px !important;  margin-left:12px;"></asp:TextBox>
+          <asp:CheckBox runat="server" style="margin-top: 9px;width: 58px !important;" ID="chk_OnRoomAirDesc" Text="" />
+          <label for="chk_OnRoomAirDesc">On Room Air</label>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; width: 100%;">
+          <asp:TextBox ID="txtOxygen1" runat="server" TabIndex="2" Style="width: 137px !important; margin-left:12px;"></asp:TextBox>
+          <asp:CheckBox runat="server" style="margin-top: 9px;width: 58px !important;" ID="chk_WithOxygenDesc" Text="" />
+          <label for="chk_WithOxygenDesc">With Oxygen</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+                                    <div class="tabs" id="tab08" style="display: none;">
+  <div class="vitals-container" style="display:flex; flex-direction:column; gap:12px; width:100%; box-sizing:border-box; padding:8px;">
+    <!-- Header -->
+    <div style="padding:10px 0;">
+      <h2 style="margin:0;">Discharge Details :</h2>
+    </div>
+
+    <!-- Row 1 -->
+    <div style="display:flex; flex-wrap:wrap; gap:12px; width:100%;">
+      <div class="vital-row" style="display:flex; align-items:flex-start; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblDischarge_By" runat="server" Text="Advise By"></asp:Label>
+        <asp:UpdatePanel runat="server" ID="UpdatePanel2">
+          <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
+          </Triggers>
+          <ContentTemplate>
+            <asp:DropDownList ID="DropDownList2" runat="server" Width="167px" AppendDataBoundItems="true" TabIndex="1"></asp:DropDownList>
+          </ContentTemplate>
+        </asp:UpdatePanel>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblDischarge_On" runat="server" Text="Discharged Date "></asp:Label>
+        <asp:TextBox ID="txtDischarge_On" runat="server" disabled="disabled"></asp:TextBox>
+      </div>
+
+      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label runat="server" ID="lblDiagnosis" Text="Diagnosis"></asp:Label>
+        <asp:TextBox runat="server" style="width: 100% !important;height: 35px !important;" ID="txtDiagnosis" TextMode="MultiLine"></asp:TextBox>
+      </div>
+
+      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblPrevention_Precaution" runat="server" Text="Advice "></asp:Label>
+        <asp:TextBox ID="txtPrevention_Precaution"  style="width: 100% !important;height: 35px !important;" runat="server" TextMode="MultiLine"  TabIndex="2"></asp:TextBox>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="Label13" runat="server" Text="Follow Up"></asp:Label>
+        <asp:TextBox ID="txtNext_Visit" runat="server" TabIndex="5"></asp:TextBox>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div style="display:flex; flex-wrap:wrap; gap:12px; width:100%;">
+      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblTreatmentAtDischarge" runat="server" Text="Treatment At Discharge"></asp:Label>
+        <asp:TextBox ID="txtTreatmentAtDischarge" runat="server" style="width: 100% !important;height: 35px !important;"  TextMode="MultiLine"  TabIndex="4"></asp:TextBox>
+      </div>
+
+      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblFollowUpPlanInstructions" runat="server" Text="Follow Up Plan & Instructions"></asp:Label>
+        <asp:TextBox  ID="txtFollowUpPlanInstructions" style="width: 100% !important;height: 35px !important;"  runat="server" TextMode="MultiLine"></asp:TextBox>
+      </div>
+
+      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblProcRecommended" runat="server" Text="Procedure Recommended"></asp:Label>
+        <asp:TextBox ID="txtProcedureRecommended" style="width: 100% !important;height: 35px !important;"  runat="server" TextMode="MultiLine"  TabIndex="4"></asp:TextBox>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblDischargeStatus" runat="server" Text="Discharge Status"></asp:Label>
+        <asp:DropDownList runat="server" ID="ddlDischargeStatus" AppendDataBoundItems="true"></asp:DropDownList>
+      </div>
+
+      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label runat="server" ID="lblCauseOfReferral" Text="Cause Of Referral"></asp:Label>
+        <asp:TextBox  runat="server" style="width: 100% !important;height: 35px !important;" ID="txtCauseOfReferral" TextMode="MultiLine"></asp:TextBox>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div style="display:flex; flex-wrap:wrap; gap:12px; width:100%;">
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblReferredTo" runat="server" Text="Referred To"></asp:Label>
+        <asp:DropDownList runat="server" ID="ddlReferredTo" AppendDataBoundItems="true"></asp:DropDownList>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="Label14" runat="server" Text="Discharge Slip" ></asp:Label>
+        <asp:CheckBox ID="cbDicharg_Slip" style="margin-top: 9px;width: 58px !important;" runat="server"  ></asp:CheckBox>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lbldeath" runat="server" Text="Death" ></asp:Label>
+        <input type="checkbox" style="margin-top: 9px;width: 58px !important;" ID="cb_death"  runat="server" onchange="showdeathtab();" />
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+        <label class="form-check-label" for="ReferOPD" style="margin-bottom: -21px;">Refer To OPD</label>
+        <asp:CheckBox runat="server" style="margin-top: 9px;width: 58px !important;" ID="ReferToOPD" ClientIDMode="Static" />
+      </div>
+    </div>
+
+    <!-- Row 4 (Death certificate controls hidden by style as original) -->
+    <div style="display:none; flex-wrap:wrap; gap:12px; width:100%;">
+      <div class="vital-row" style="width:48%; padding:5px; box-sizing:border-box;">
+        <asp:Label ID="lblDeath_Certificate" runat="server" Text="Death Certificate" style="display:none"></asp:Label>
+      </div>
+      <div class="vital-row" style="width:48%; padding:5px; box-sizing:border-box;">
+        <asp:CheckBox ID="cbDeath_Certificate" runat="server" style="display:none"></asp:CheckBox>
+      </div>
+    </div>
+
+    <!-- Row 5: Action Buttons -->
+    <div style="display:flex; flex-wrap:wrap; gap:12px; width:100%; margin-top:5px;">
+     
+      <div style="width:48%; padding:5px; box-sizing:border-box;">
+        <input type="button" id="btnDischargeSummary" class="btn-gray" value="Print" name="name" onclick="DischargeSummary();" style="width:55% !important"  disabled="disabled" />
+      </div>
+      <div style="width:48%; padding:5px; box-sizing:border-box;">
+        <input type="button" id="btnDischargePrint"  value="Discharge Print" name="name" onclick="PrintInpatientReceipt();" style="width: 120px;display:none;" />
+      </div>
+    </div>
+
+  </div>
+</div>
                                     <div class="tabs" id="tab09" style="display: none">
 
                                         <div class="row">
@@ -5840,52 +6299,132 @@ input[type="checkbox"] {
                                         </div>
 
                                     </div>
-                                    <div class="tabs" id="tab12" style="display: none">
+                                    <div class="tabs" id="tab12" style="display: none;">
+  <div class="vitals-container" style="display:flex; flex-direction:column; gap:12px; width:100%; box-sizing:border-box; padding:8px;">
 
-                                        <div class="row" style="width: 100%;">
-                                            <!-- Doctor Name -->
-                                            <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
-                                                <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblDoctorName" runat="server" Text="Doctor Name <span class='RedStar'>*</span>"></asp:Label>
-                                                <asp:DropDownList ID="ddlDoctorName" runat="server"
-                                                    Style="height: 32px;"
-                                                    CssClass="form-control"
-                                                    AppendDataBoundItems="true"
-                                                    onchange="LoadDesignation();">
-                                                </asp:DropDownList>
-                                            </div>
+    <!-- Row 1 -->
+    <div style="display:flex; width:100%; flex-wrap:wrap;">
+      <div class="vital-row" style="display:flex; align-items:flex-start; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:flex-start; width:100%;">
+          <asp:label runat="server" ID="lblIdentificationMarks" Text="Identification Marks"></asp:label>
+          <asp:TextBox runat="server" ID="txtIdentificationMarks" TextMode="MultiLine"></asp:TextBox>
+        </div>
+      </div>
 
-                                            <!-- Designation -->
-                                            <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
-                                                <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblDesignation" runat="server" Text="Designation"></asp:Label>
-                                                <asp:TextBox ID="txtDesignation" runat="server"
-                                                    Style="width: 250px; height: 32px;"
-                                                    CssClass="form-control"
-                                                    ReadOnly="true">
-                                                </asp:TextBox>
-                                            </div>
+      <div class="vital-row" style="display:flex; align-items:flex-start; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lblDeathCertifiedBy1" Text="">Death Certified By &nbsp;&nbsp;&nbsp;&nbsp;  1 -</asp:Label>
+          <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlDeathCertifiedbyDr1"></asp:DropDownList>
+        </div>
+      </div>
+    </div>
 
-                                        
+    <!-- Row 2 -->
+    <div style="display:flex; width:100%; flex-wrap:wrap;">
+      <div style="width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;"></div>
+      <div style="width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lblDeathCertifiedBy2" Text=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 -
+          </asp:Label>
+          <asp:DropDownList runat="server" ID="ddlDeathCertifiedbyDr2" AppendDataBoundItems="true"></asp:DropDownList>
+        </div>
+      </div>
+    </div>
 
-                                            <!-- Follow Up -->
-                                            <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
-                                                <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUp" runat="server" Text="Follow Up <span class='RedStar'>*</span>"></asp:Label>
-                                                <asp:DropDownList ID="ddlFOllowUp" runat="server"
-                                                    Style="height: 32px;"
-                                                    CssClass="form-control"
-                                                    AppendDataBoundItems="true">
-                                                </asp:DropDownList>
-                                            </div>
+    <!-- Row 3 -->
+    <div style="display:flex; width:100%; flex-wrap:wrap;">
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:label runat="server" ID="lblDateofDeath" Text="Date Of Death"></asp:label>
+          <asp:TextBox runat="server" ID="txtDateofDeath"></asp:TextBox>
+        </div>
+      </div>
 
-                                            <!-- FollowUp Date -->
-                                            <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
-                                                <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUpDate" runat="server" Text="FollowUp Date <span class='RedStar'>*</span>"></asp:Label>
-                                                <asp:TextBox ID="FollowNoDate" runat="server"
-                                                    Style="height: 32px;"
-                                                    CssClass="form-control">
-                                                </asp:TextBox>
-                                            </div>
-                                        </div>
-                                    </div>
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lblBodyHandedOverTo" Text="Body Handed Over To"></asp:Label>
+          <asp:TextBox runat="server" ID="txtBodyHandedOverTo"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div style="display:flex; width:100%; flex-wrap:wrap;">
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:label runat="server" ID="lblTimeOfDeath" Text="Time Of Death"></asp:label>
+          <asp:TextBox runat="server" ID="txtTimeOfDeath"></asp:TextBox>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lblFamilyPersonName" Text="Family Person (Name)"></asp:Label>
+          <asp:TextBox runat="server" ID="txtFamilyPersonName"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 5 -->
+    <div style="display:flex; width:100%; flex-wrap:wrap;">
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:label runat="server" ID="lblPlaceOfDeath" Text="Place Of Death"></asp:label>
+          <asp:DropDownList ID="ddlPlaceOfDeath" AppendDataBoundItems="true" runat="server"></asp:DropDownList>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lbl_CNIC" Text="CNIC"></asp:Label>
+          <asp:TextBox runat="server" ID="txtCNIC"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 6 -->
+    <div style="display:flex; width:100%; flex-wrap:wrap;">
+      <div class="vital-row" style="display:flex; align-items:flex-start; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:label runat="server" ID="lblCauseOfDeath" Text="Cause Of Death"></asp:label>
+          <asp:TextBox ID="txtCause_Of_Death" runat="server" Style=""></asp:TextBox>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lblRelationWithDeceased" Text="Relation with Deceased"></asp:Label>
+          <asp:TextBox runat="server" ID="txtRelationWithDeceased"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 7 -->
+    <div style="display:flex; width:100%; flex-wrap:wrap;">
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lblIssuingOfficerName" Text="Issuing Officer Name"></asp:Label>
+          <asp:TextBox runat="server" ID="txtIssuingOfficerName"></asp:TextBox>
+        </div>
+      </div>
+
+      <div class="vital-row" style="display:flex; align-items:center; width:48%; margin-bottom:15px; padding:5px; box-sizing:border-box;">
+        <div style="display:flex; align-items:center; width:100%;">
+          <asp:Label runat="server" ID="lblCMO_Police" Text="C.M.O / Police"></asp:Label>
+          <asp:TextBox runat="server" ID="txtCMO_Police"></asp:TextBox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Row -->
+    <div style="display:flex; width:100%; flex-wrap:wrap; gap:12px; margin-top:5px;">
+      <div style="width:48%; padding:5px; box-sizing:border-box;">
+        <input type="button" style="width:50% !important" id="btnPrint" class="btn-gray" value="Print" onclick="prints();" />
+      </div>
+    </div>
+
+  </div>
+</div>
                                     <div class="tabs" id="tab13" style="display: none">
                                         <!-- Disposal Section -->
                                         <div class="Disposal-container">
@@ -5933,7 +6472,102 @@ input[type="checkbox"] {
                     <div id="PreviewPane" class="medical-dashboard" style="height: 85vh; overflow-y: auto;">
                         <div class="dashboard-container">
                             <div class="row g-3">
+                                <!-- Six separate tables - one per section. Keep structure/classes same as your Vitals/History panels. -->
+<div class="col-lg-9" id="divtblCVS" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header"><h4><i class="fa fa-stethoscope"></i> CVS Findings</h4></div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblCVS">
+                <thead><tr><th>Finding</th><th style="width:48px">Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
+<div class="col-lg-9" id="divtblGCS" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header"><h4><i class="fa fa-brain"></i> GCS Findings</h4></div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblGCS">
+                <thead><tr><th>Finding</th><th style="width:48px">Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-9" id="divtblGPE" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header"><h4><i class="fa fa-user-md"></i> GPE Findings</h4></div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblGPE">
+                <thead><tr><th>Finding</th><th style="width:48px">Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-9" id="divtblRESP" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header"><h4><i class="fa fa-lungs"></i> RESP Findings</h4></div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblRESP">
+                <thead><tr><th>Finding</th><th style="width:48px">Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-9" id="divtblGIT" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header"><h4><i class="fa fa-stomach"></i> GIT Findings</h4></div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblGIT">
+                <thead><tr><th>Finding</th><th style="width:48px">Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-9" id="divtblCNS" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header"><h4><i class="fa fa-brain"></i> CNS Findings</h4></div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblCNS">
+                <thead><tr><th>Finding</th><th style="width:48px">Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+                                <div class="col-lg-9" id="divtblAdmissions">
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h4><i class="fa fa-procedures"></i> Admission Info</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblAdmissions">
+                <thead>
+                    <tr>
+                        <th>Triage</th>
+                        <th>Doctor</th>
+                        <th>Ward</th>
+                        <th>Bed No</th>
+                        <th>Admission Fee</th>
+                        <th>Admission Date</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
                                 <!-- Lab Tests Panel -->
                                 <div class="col-lg-12" id="dvtblLabtest" style="display: none">
                                     <div class="dashboard-card">
@@ -6038,28 +6672,36 @@ input[type="checkbox"] {
                                     </div>
                                 </div>
                                 <!-- Vitals Panel -->
-                                <div class="col-lg-9" id="divtblVitals" style="display: none">
-                                    <div class="dashboard-card">
-                                        <div class="card-header">
-                                            <h4><i class="fa fa-heartbeat"></i>Vitals</h4>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table modern-table" id="tblVitals">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Pulse</th>
-                                                        <th>B.P.</th>
-                                                        <th>Temp</th>
-                                                        <th>Resp.</th>
-                                                        <th>Height</th>
-                                                        <th>Weight</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="col-lg-12" id="divtblVitals" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h4><i class="fa fa-heartbeat"></i> Vitals</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblVitals">
+                <thead>
+                    <tr>
+                        <th>Pulse</th>
+                        <th>B.P.</th>
+                        <th>Temp</th>
+                        <th>Resp.</th>
+                        <th>Rhythm</th>
+                        <th>Volume</th>
+                        <th>O2 Sat</th>
+                        <th>Percentage</th>
+                        <th>Liters/Min</th>
+                        <th>Room Air</th>
+                        <th>With O2</th>
+                        <th>Others</th>
+                        <th>Receiving Date & Time</th>
+                        <th>Special Instruction</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
                                 <!-- Symptoms Panel -->
                                 <div class="col-lg-3" id="dvtblSymtomps">
                                     <div class="dashboard-card">
@@ -6230,15 +6872,17 @@ input[type="checkbox"] {
                                         </div>
                                     </div>
                                 </div>
+
                                                                 <!-- History Panel -->
-<div class="col-lg-6" id="divtblHistory" style="display: none">
+
+<div class="col-lg-9" id="divtblHistory" style="display: none">
     <div class="dashboard-card">
         <div class="card-header">
-            <h4><i class="fa fa-history"></i>History</h4>
+            <h4><i class="fa fa-file-alt"></i> History</h4>
         </div>
         <div class="table-responsive">
             <table class="table modern-table" id="tblHistory">
-                <thead class="hidden">
+                <thead>
                     <tr>
                         <th>History</th>
                     </tr>

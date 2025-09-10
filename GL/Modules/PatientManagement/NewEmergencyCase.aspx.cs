@@ -57,7 +57,21 @@ namespace PMS.Modules.PatientManagement
             ddlDoctor.Items.Add(new ListItem("Please Select", "0"));
             ddlDoctor.DataBind();
 
-             
+
+            ddlDeathCertifiedbyDr1.Items.Clear();
+            ddlDeathCertifiedbyDr1.DataSource = EmpList2;
+            ddlDeathCertifiedbyDr1.DataTextField = "Emp_Name";
+            ddlDeathCertifiedbyDr1.DataValueField = "Emp_ID";
+            ddlDeathCertifiedbyDr1.Items.Add(new ListItem("Please Select", "0"));
+            ddlDeathCertifiedbyDr1.DataBind();
+
+            ddlDeathCertifiedbyDr2.Items.Clear();
+            ddlDeathCertifiedbyDr2.DataSource = EmpList2;
+            ddlDeathCertifiedbyDr2.DataTextField = "Emp_Name";
+            ddlDeathCertifiedbyDr2.DataValueField = "Emp_ID";
+            ddlDeathCertifiedbyDr2.Items.Add(new ListItem("Please Select", "0"));
+            ddlDeathCertifiedbyDr2.DataBind();
+
 
             ddlDischarge_By.Items.Clear();
             ddlDischarge_By.DataSource = EmpList2;
@@ -69,15 +83,19 @@ namespace PMS.Modules.PatientManagement
         }
         public void BlankForm()
         {
-            ddlIssuance_Of.SelectedIndex = 0; 
+            ddlIssuance_Of.SelectedIndex = 0;
+            ddlPlaceOfDeath.SelectedIndex = 0;
 
             ddlWard_No.SelectedIndex = 0;
             txtBed_No.Text = "";
             ddlDepartment.SelectedIndex = 0;
-            ddlDoctor.SelectedIndex = 0; 
+            ddlDoctor.SelectedIndex = 0;
+            ddlCallToDoctor.SelectedIndex = 0;
+            ddlReferredTo.SelectedIndex = 0;
 
             txtAdmission_Date.Text = DateTime.Now.ToString();
-            txtReceiving_Date.Text = DateTime.Now.ToString(); 
+            txtReceiving_Date.Text = DateTime.Now.ToString();
+            txttxtReceiving_DateDesc.Text = DateTime.Now.ToString();
 
             txtRN_Special_Instruction.Text = "";
 
@@ -87,7 +105,22 @@ namespace PMS.Modules.PatientManagement
 
             ddlDepartment.SelectedIndex = 0;
             ddlDoctor.SelectedIndex = 0;
- 
+
+       
+
+            ddlDischarge_By.SelectedIndex = 0;
+            txtPrevention_Precaution.Text = "";
+            txtNext_Visit.Text = "";
+            cbDeath_Certificate.Checked = false;
+
+            ddlPatientCondition.SelectedIndex = 0;
+            ddlRhythm.SelectedIndex = 0;
+            ddlVolume.SelectedIndex = 0;
+            ddlRhythmdischarge.SelectedIndex = 0;
+            ddlvolumedisc.SelectedIndex = 0;
+            ddlDischargeStatus.SelectedIndex = 0;
+            ddlDeathCertifiedbyDr1.SelectedIndex = 0;
+            ddlDeathCertifiedbyDr2.SelectedIndex = 0;
 
         }
         private void BindingDropDown()
@@ -112,6 +145,14 @@ namespace PMS.Modules.PatientManagement
             ddlDepartment.DataTextField = "DataValue_Description";
             ddlDepartment.DataValueField = "DataValue_Name";
             ddlDepartment.DataBind();
+
+            valueset = DBClass.GetValueSet("Patient Main Category");
+            ddl_Department.DataSource = valueset;
+            ddl_Department.DataTextField = "DataValue_Description";
+            ddl_Department.DataValueField = "DataValue_Name";
+            ddl_Department.Items.Add(new ListItem("Please Select", "0"));
+            ddl_Department.DataBind();
+ 
             valueset = DBClass.GetValueSet("Doctor Status");
 
 
@@ -149,11 +190,7 @@ namespace PMS.Modules.PatientManagement
                         join tbl3 in db.ValueSets on tbl2.ValueSet_ID equals tbl3.ValueSet_ID
                         where tbl2.DataValue_Description == "In-Patient"
                         select tbl).ToList();
-
-            valueset = DBClass.GetValueSet("Room Type");
-
-            valueset = DBClass.GetValueSet("Ortho Examination");
-
+           
 
 
 
@@ -173,6 +210,12 @@ namespace PMS.Modules.PatientManagement
             ddlRhythm.DataValueField = "DataValue_Name";
             ddlRhythm.Items.Add(new ListItem("Please Select", "0"));
             ddlRhythm.DataBind();
+            ddlRhythmdischarge.DataSource = valueset;
+            ddlRhythmdischarge.DataTextField = "DataValue_Description";
+            ddlRhythmdischarge.DataValueField = "DataValue_Name";
+            ddlRhythmdischarge.Items.Add(new ListItem("Please Select", "0"));
+            ddlRhythmdischarge.DataBind();
+
 
             valueset = DBClass.GetValueSet("Emergency Volume");
             ddlVolume.DataSource = valueset;
@@ -180,6 +223,33 @@ namespace PMS.Modules.PatientManagement
             ddlVolume.DataValueField = "DataValue_Name";
             ddlVolume.Items.Add(new ListItem("Please Select", "0"));
             ddlVolume.DataBind();
+            ddlvolumedisc.DataSource = valueset;
+            ddlvolumedisc.DataTextField = "DataValue_Description";
+            ddlvolumedisc.DataValueField = "DataValue_Name";
+            ddlvolumedisc.Items.Add(new ListItem("Please Select", "0"));
+            ddlvolumedisc.DataBind();
+
+
+            valueset = DBClass.GetValueSet("Discharge Status");
+            ddlDischargeStatus.DataSource = valueset;
+            ddlDischargeStatus.DataTextField = "DataValue_Description";
+            ddlDischargeStatus.DataValueField = "DataValue_Name";
+            ddlDischargeStatus.Items.Add(new ListItem("Please Select", "0"));
+            ddlDischargeStatus.DataBind();
+
+            valueset = DBClass.GetValueSet("Place Of Death");
+            ddlPlaceOfDeath.DataSource = valueset;
+            ddlPlaceOfDeath.DataTextField = "DataValue_Description";
+            ddlPlaceOfDeath.DataValueField = "DataValue_Name";
+            ddlPlaceOfDeath.Items.Add(new ListItem("Please Select", "0"));
+            ddlPlaceOfDeath.DataBind();
+
+            valueset = DBClass.GetValueSet("Referred To");
+            ddlReferredTo.DataSource = valueset;
+            ddlReferredTo.DataTextField = "DataValue_Description";
+            ddlReferredTo.DataValueField = "DataValue_Name";
+            ddlReferredTo.Items.Add(new ListItem("Please Select", "0"));
+            ddlReferredTo.DataBind();
 
 
 
