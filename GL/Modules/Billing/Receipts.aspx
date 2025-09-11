@@ -1891,7 +1891,7 @@
     </div>
     <div id="DischargeModel" class="modal fade" role="dialog">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 1089px; margin-left: -219px; margin-top: 200px;">
+            <div class="modal-content" style="width: 1120px; margin-left: -219px; margin-top: 100px;">
                 <div class="modal-header">
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add Discharge</h4>
@@ -1908,7 +1908,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="button" id="btnAddDischarge" value="Add Service" onclick="AddServices()"/>
+                                    <input type="button" id="btnAddDischarge" class="btn btn-primry" value="Add Service" onclick="AddServices()"/>
                                 </td>
                             </tr>
                         </table>
@@ -1928,7 +1928,7 @@
                         </table>
                             </div>
                         <div id="dvDischargeSummary">
-                            <table style="width: 449px; margin-left: 222px; margin-top: 31px;">
+                            <table style="width: 449px;margin-top: 28px;">
                                 <tr>
                                     <td>Total Amount:
                                     </td>
@@ -1970,32 +1970,30 @@
                                 </tbody>
                             </table>                            
                         </div>
-                        <div style="    margin-left: 668px;
-    width: 420px !important;
-    margin-top: 28px;">
-                                <table style="    width: inherit;">
-                                    <tr>
-                                        <td>Investigation Available Limit:
-                                        </td>
-                                        <td>
-                                            <input type="text" id="txtInvestigationAvailableLimit" value="0" disabled="disabled" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Investigation Amount:
-                                        </td>
-                                        <td>
-                                            <input type="text" id="txtInvestigationAmount" value="0" disabled="disabled" />
-                                        </td>
-                                    </tr>
+                        <div style="margin-left: 668px; width: 420px !important; margin-top: 66px;">
+                            <table style="width: inherit;">
+                                <tr>
+                                    <td>Investigation Available Limit:
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtInvestigationAvailableLimit" value="0" disabled="disabled" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Investigation Amount:
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtInvestigationAmount" value="0" disabled="disabled" />
+                                    </td>
+                                </tr>
 
-                                </table>
-                            </div>
+                            </table>
+                        </div>
                     </fieldset>
                     <input type="hidden" name="uurowid" value="" />
                 </div>
                 <div class="modal-footer">
-                    <input type="button" value="Save Discharge Details" style="width: 177px;" onclick="GetDischargeAmount()" data-dismiss="modal"/>
+                    <input type="button" value="Save Discharge Details" class="btn btn-primry" style="width: 185px !important;" onclick="GetDischargeAmount()" data-dismiss="modal"/>
                 </div>
             </div>
         </div>

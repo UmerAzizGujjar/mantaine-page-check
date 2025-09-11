@@ -342,10 +342,16 @@
                 });
             });
             $('#btnApprove').click(function () {
-
+                debugger;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
 
+                $.each(tbl, function (key, val) {
+                    var testDetailId = $(val).find('td:eq(0)').text().trim();
+                    if (testDetailId != null && testDetailId !== "" && testDetailId > 0) {
+                        test_list.push({ 'TestDID': testDetailId });
+                    }
+                });
                 //$.each(tbl, function (key, val) {
 
                 //    var name = $(val).find('input[name="testDepartment"]').attr('name');

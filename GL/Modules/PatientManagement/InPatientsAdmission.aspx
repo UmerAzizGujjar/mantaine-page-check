@@ -3131,25 +3131,25 @@
             var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
             var pkg = $('#ctl00_MainContent_ddlpacakagetype').val();
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-            if (PatientDiscountType == "10") {
-                if (PanelCompany == "0") {
+            //if (PatientDiscountType == "10") {
+            //    if (PanelCompany == "0") {
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please Select Panel Company',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                    return true;
-                }
+            //        Swal.fire({
+            //            icon: 'error',
+            //            title: 'Error!',
+            //            text: 'Please Select Panel Company',
+            //            showConfirmButton: false,
+            //            timer: 2000,
+            //            customClass: {
+            //                popup: 'swal-big-popup',
+            //                title: 'swal-big-title',
+            //                htmlContainer: 'swal-big-text'
+            //            }
+            //        });
+            //        return true;
+            //    }
 
-            }
+            //}
             //if (pkg == "0") {
 
             //    Swal.fire({
@@ -5391,25 +5391,87 @@
             }
 
         }
+        //function loadtokenInputsDefault() {
+
+        //    $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
+        //        {
+        //            tokenLimit: 1,
+        //            onAdd: function (item) {
+        //                try {
+        //                    $("#hdfPatient_ID").val(item.id);
+
+        //                    loadAjax();
+        //                    loadReferenceInformation();
+        //                }
+        //                catch (err) {
+        //                    alert(err.message);
+        //                }
+
+        //            }
+        //        });
+        //}
+
         function loadtokenInputsDefault() {
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients", {
+                tokenLimit: 1,
+                onAdd: function (item) {
+                    const patientId = item.id;
 
-            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
-                {
-                    tokenLimit: 1,
-                    onAdd: function (item) {
-                        try {
-                            $("#hdfPatient_ID").val(item.id);
+                    $.ajax({
+                        type: "POST",
+                        url: "InPatientsAdmission.aspx/CheckPatientDischarge",
+                        data: JSON.stringify({ patientId: patientId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            const result = JSON.parse(response.d);
 
-                            loadAjax();
-                            loadReferenceInformation();
+                            if (result.Status === "ALLOW") {
+                                $("#hdfPatient_ID").val(patientId);
+                                loadAjax();
+                                loadReferenceInformation();
+                            }
+                            else if (result.Status === "BLOCK") {
+                                const text = {
+                                    "OPD": "Please first discharge patient from OPD.",
+                                    "EMERGENCY": "Please first discharge patient from Emergency.",
+                                    "OPD_AND_EMERGENCY": "Please discharge patient from OPD and Emergency."
+                                }[result.Reason] || "Patient cannot be admitted. Resolve pending discharge.";
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Admission Blocked',
+                                    text: text,
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                }).then(() => {
+                                    $('#ctl00_MainContent_txtPatient_ID').tokenInput("clear");
+                                    $("#hdfPatient_ID").val("");
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Request Failed',
+                                text: 'Could not verify discharge status.',
+                                showConfirmButton: false,
+                                timer: 2500
+                            });
+                            $('#ctl00_MainContent_txtPatient_ID').tokenInput("clear");
+                            $("#hdfPatient_ID").val("");
                         }
-                        catch (err) {
-                            alert(err.message);
-                        }
-
-                    }
-                });
+                    });
+                }
+            });
         }
+
+        
         function loadReferenceInformation() {
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
             $.ajax({

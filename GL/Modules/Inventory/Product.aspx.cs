@@ -131,6 +131,24 @@ namespace PMS.Inventory
 
             return (new JavaScriptSerializer()).Serialize(details);
         }
+
+        [WebMethod]
+        public static string LoadRateCategory(int id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var details = (from m in db.INV_Item_PatientWises
+                           where m.Item_Id == id
+                           select new
+                           {
+                               m.Item_Rate_Id,
+                               m.Patient_Type,
+                               Patient_Type_text = db.GetDataValueName("Patient Type", m.Patient_Type),
+                               m.Item_Sale_Rate,
+                           }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(details);
+        }
         [WebMethod]
         public static string AddItems(
     string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
