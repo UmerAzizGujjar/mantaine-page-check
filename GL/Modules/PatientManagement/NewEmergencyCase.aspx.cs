@@ -275,6 +275,393 @@ namespace PMS.Modules.PatientManagement
             }
 
         }
+        [WebMethod]
+        public static string GetRotationsCategoryWise(string testCategory)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dep = from dv in db.DataValues
+                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                      where vs.ValueSet_Name == testCategory
+                      select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            return (new JavaScriptSerializer()).Serialize(dep);
+        }
+        [WebMethod]
+        public static string FillTestsByCategory(string CategoryID, string searchTerm)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var tests = from t in db.Lab_Tests
+                        where t.Main_Department == CategoryID && t.Active == true
+                        select new { t.Test_ID, t.Test_Name };
+
+            // Apply search filter if searchTerm is not empty
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                tests = tests.Where(t => t.Test_Name.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            return (new JavaScriptSerializer()).Serialize(tests);
+        }
+
+        [WebMethod]
+        public static string GetTemplateMedicine(int Templateid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var dpt = (from dt in db.Doctor_Template_Masters
+                       join dtm in db.Doctor_Template_Medicines
+                       on dt.Template_Id equals dtm.Template_Id
+                       join mt in db.Medicines_Templates
+                       on dtm.Medicine_id equals mt.Item_Code
+                       where dt.Template_Id == Templateid
+                       select new
+                       {
+                           mt.Medicine_Date,
+                           mt.Medicine_Name,
+                           mt.Dosage_From,
+                           mt.Dosage_Qty,
+                           mt.AttendingParamedical_Staff,
+                           mt.Item_Code,
+                           mt.Other_Instruction,
+                           mt.Frequency,
+                           mt.Injections,
+                           mt.Oral,
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string GetTemplate(string searchString)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var dpt = (from d in db.Doctor_Template_Masters
+                       join hr in db.HR_Employees
+on d.Doctor_Id equals hr.Emp_ID
+                       where hr.userid == Convert.ToString(AppConfig.UserID) && d.isActive == true
+                       select new
+                       {
+                           d.Template_Id,
+                           d.Template_Name
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string FillRoutesDropDown()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Routes"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             d.DataValue_Description
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string FillFrequencyDropDown()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Frequency"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             d.DataValue_Description,
+                             d.Segment1
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string FillDosageDropDown()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Dosage Form"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             d.DataValue_Description,
+
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string FillDosageQty()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Dosage Quantity"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             d.DataValue_Description,
+
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string FillOtherInstruction()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Other Instruction"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             DataValue_Description = d.Segment1,
+
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string getpharmacyitems(string searchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                IQueryable<INV_Item> query = db.INV_Items.Where(d => d.IsPharmacyItem == true);
+
+                // Only apply the search filter if searchString is not empty
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    query = query.Where(d => d.Description.Contains(searchString));
+                }
+
+                var pharmacyItems = query.OrderByDescending(d => d.Item_ID)
+                                       .Select(d => new
+                                       {
+                                           d.Item_Code,
+                                           Description = d.Description
+                                       }).Take(10)
+                                       .ToList();
+
+                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+            }
+        }
+        [WebMethod]
+        public static string FillTestMainDepartment()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Main Test Departments"
+                       && d.DataValue_Name != "001"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+        [WebMethod]
+        public static string GetLabTestDDLDetails(string SerialNo, string maindpt)
+        {
+            string groupCategory = string.Empty;
+            string testName = SerialNo;
+
+            string[] testFullName = SerialNo.Split('|');
+            if (testFullName.Length > 1)
+            {
+                testName = testFullName[0];
+                groupCategory = DBClass.getField("select Datavalue_Name from Datavalues where valueset_ID = 70 and Datavalue_Description = '" + testFullName[1].Trim() + "'").ToString();
+            }
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var test = (from t in db.Lab_Tests
+                        where t.Main_Department == maindpt && t.Test_Name == testName && t.Group_Category == groupCategory
+                        select new
+                        {
+                            t.Test_ID,
+                            t.Rate, /*= DBClass.getField(""),t.Test_Name*/
+                            Test_Name = SerialNo,
+                            t.Group_Category,
+                            TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
+                            GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),
+
+
+                        }).ToList();
+            var count = test.Count;
+
+            if (count != 0)
+            {
+
+                return (new JavaScriptSerializer()).Serialize(test);
+
+            }
+            else
+            {
+                var GroupCategories = (from dv in db.DataValues
+                                       join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                       where vs.ValueSet_Name == "Test Groups" && dv.DataValue_Description == SerialNo
+                                       select new
+                                       {
+                                           Test_ID = 0,
+                                           Group_Category = dv.DataValue_Name,
+                                           Test_Name = dv.DataValue_Description,
+                                           TestMainDepartmentName = "Lab Test",
+                                           Main_Department = "001",
+                                           Rate = dv.Segment1,
+
+
+                                       }).ToList();
+                return (new JavaScriptSerializer()).Serialize(GroupCategories);
+
+            }
+        }
+        [WebMethod]
+        public static string GetLabTests(string searchValue)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            // Get tests with optional search filter
+            var testsQuery = from t in db.Lab_Tests
+                             where t.Main_Department == "001"
+                             && t.Active == true
+                             select t;
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                testsQuery = testsQuery.Where(t => t.Test_Name.Contains(searchValue));
+            }
+
+            var tests = testsQuery.Select(t => new {
+                t.Test_ID,
+                Test_Name = t.Test_Name,
+                t.Group_Category
+            });
+
+            List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
+            int counter = 1;
+
+            // Process tests (same as original)
+            foreach (var test in tests)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name.ToString() +
+                              (test.Group_Category != string.Empty ?
+                               " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") :
+                               string.Empty);
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            // Only add categories if no search value (maintain original behavior)
+            if (string.IsNullOrEmpty(searchValue))
+            {
+                var GroupCategories = from dv in db.DataValues
+                                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                      where vs.ValueSet_Name == "Test Groups" && dv.Division == "001"
+                                      select new { dv.DataValue_Name, dv.DataValue_Description };
+
+                foreach (var category in GroupCategories)
+                {
+                    TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                    obj.TestID = category.DataValue_Name.ToString();
+                    obj.TestName = category.DataValue_Description.ToString();
+                    obj.SerialNo = counter.ToString();
+                    obj.IsGroupCategory = true;
+                    obj.CategoryID = category.DataValue_Name;
+                    listOfTest.Add(obj);
+                    counter++;
+                }
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTest);
+        }
+        public class TestIDsAndGroupCategory
+        {
+            public string TestID { get; set; }
+            public string TestName { get; set; }
+            public string SerialNo { get; set; }
+            public string CategoryID { get; set; }
+            public bool IsGroupCategory { get; set; }
+            public string GroupName { get; set; }
+            public string MainDepartmentName { get; set; }
+        }
+
+        public class Medicine
+        {
+            public int Pat { get; set; }
+            public int PatientID { get; set; }
+            public List<MedicineDetails> MedicineList { get; set; }
+        }
+        public class MedicineDetails
+        {
+            public DateTime Medicine_Date { get; set; }
+            public string Medicine_Name { get; set; }
+            public string Recomended_Dosage { get; set; }
+            public string Dosage_From { get; set; }
+            public string Oral { get; set; }
+            public string Injection { get; set; }
+            public string AttendingParamedical_Staff { set; get; }
+            public string Frequency { set; get; }
+            public string ItemCode { get; set; }
+            public string Dosage_Qty;
+            public string Other_Instruction;
+        }
+
+        public class TestValue
+        {
+            public string Date { get; set; }
+            public string TestID { get; set; }
+            public string RotationID { get; set; }
+            public string L_R_Rotation_ID { get; set; }
+            public string Catagory_ID { get; set; }
+            public string Dept_ID { get; set; }
+            public string Special_Tests { get; set; }
+            public string Area_Of_Interest { get; set; }
+            public string rotation { get; set; }
+            public bool showTestDescription { get; set; }
+        }
+        public class LabTest
+        {
+            public string PatientID { get; set; }
+            public string PatID { get; set; }
+            public List<TestValue> TestList { get; set; }
+        }
+
+        [WebMethod]
+        public static string Get_Doctor(string department_Id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            List<HR_Employee> EmpList = new List<HR_Employee>();
+            EmpList = (from tbl in db.HR_Employees
+                       where (tbl.IsDoctor == true
+                       && tbl.Department == department_Id)
+                       select tbl).ToList();
+            return (new JavaScriptSerializer().Serialize(EmpList));
+        }
+        [WebMethod]
+        public static string Get_Doctor_Mobile(string DoctorId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            string Number = (from tbl in db.HR_Employees
+                             where (tbl.IsDoctor == true
+                             && tbl.Emp_ID == Convert.ToInt32(DoctorId))
+                             select tbl.Mobile).FirstOrDefault();
+
+            return Number;
+        }
         protected void btnGet_Doctor_Click(object sender, EventArgs e)
         {
             db = new DataBaseDataContext(DBClass.ConnectionString());

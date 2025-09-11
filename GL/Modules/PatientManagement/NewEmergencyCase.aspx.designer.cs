@@ -1644,13 +1644,13 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.UpdatePanel UpdatePanel2;
 
         /// <summary>
-        /// DropDownList2 control.
+        /// ddlDischarge_By control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList2;
+        protected global::System.Web.UI.WebControls.DropDownList ddlDischarge_By;
 
         /// <summary>
         /// lblDischarge_On control.
@@ -2263,14 +2263,5 @@ namespace PMS.Modules.PatientManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HiddenField1;
-
-        /// <summary>
-        /// ddlDischarge_By control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlDischarge_By;
     }
 }

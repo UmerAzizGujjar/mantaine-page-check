@@ -790,6 +790,7 @@ input[type="checkbox"] {
       </style>
     <script id="ScriptmanageSymptomsModal">
         $(document).ready(function () {
+            bindDate();
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
@@ -950,6 +951,35 @@ input[type="checkbox"] {
             $("[id$='txtOthersRcvNote']").on('blur', AddVitals);
             $("[id$='txtReceiving_Date']").on('blur', AddVitals);
             $("[id$='txtRN_Special_Instruction']").on('change', AddVitals);
+            $("[id$='txtPulseRate']").on('blur', AddDischargeVitals);
+            $("[id$='txtBPDischarge']").on('blur', AddDischargeVitals);
+            $("[id$='txtTempdisch']").on('blur', AddDischargeVitals);
+            $("[id$='txtRespRateDesc']").on('blur', AddDischargeVitals);
+            $("[id$='ddlRhythmdischarge']").on('change', AddDischargeVitals);
+            $("[id$='ddlvolumedisc']").on('change', AddDischargeVitals);
+            $("[id$='txtSaturation_Oxygen2_desc']").on('blur', AddDischargeVitals);
+            $("[id$='txtsaturationDis']").on('blur', AddDischargeVitals);
+            $("[id$='txtOxygen1']").on('blur', AddDischargeVitals);
+            $("[id$='chk_OnRoomAirDesc']").on('change', AddDischargeVitals);
+            $("[id$='chk_WithOxygenDesc']").on('change', AddDischargeVitals);
+            $("[id$='txtotherecdesc']").on('blur', AddDischargeVitals);
+            $("[id$='txttxtReceiving_DateDesc']").on('blur', AddDischargeVitals);
+            $("[id$='txtRN_Special_Instruction_Desc']").on('change', AddDischargeVitals);
+            $("[id$='ddlDischarge_By']").on('change', AddDischargeDetails);
+            $("[id$='txtDischarge_On']").on('blur change', AddDischargeDetails);
+            $("[id$='txtDiagnosis']").on('blur change input', AddDischargeDetails);
+            $("[id$='txtPrevention_Precaution']").on('blur change input', AddDischargeDetails);
+            $("[id$='txtNext_Visit']").on('blur change input', AddDischargeDetails);
+            $("[id$='txtTreatmentAtDischarge']").on('blur change input', AddDischargeDetails);
+            $("[id$='txtFollowUpPlanInstructions']").on('blur change input', AddDischargeDetails);
+            $("[id$='txtProcedureRecommended']").on('blur change input', AddDischargeDetails);
+            $("[id$='ddlDischargeStatus']").on('change', AddDischargeDetails);
+            $("[id$='txtCauseOfReferral']").on('blur change input', AddDischargeDetails);
+            $("[id$='ddlReferredTo']").on('change', AddDischargeDetails);
+            $("[id$='cbDicharg_Slip']").on('change', AddDischargeDetails);
+            $("[id$='cb_death']").on('change', AddDischargeDetails);
+            $("[id$='ReferToOPD']").on('change', AddDischargeDetails);
+
             var selectors = [
                 'txtHistoryOfPeresentIllness',
                 'txtHistoryOfPastIllness',
@@ -969,10 +999,226 @@ input[type="checkbox"] {
             // update on change/blur - works for both user typing and selects (change)
             $(selectors).on('change blur', AddHistory);
             // checkbox change inside entire tab
+            $("[id$='ddl_Department']").on('change', AddDoctorCall);
+            $("[id$='ddlCallToDoctor']").on('change', AddDoctorCall);
+            $("[id$='txtMobileNo']").on('blur', AddDoctorCall);
+            $("[id$='txtCallToDoctor']").on('blur', AddDoctorCall);
+
+
+
+
+
+            
+            $('#06').click();
           
+            FillMainTestDepartment();
+            FillLabTests('');
+     
+            fillPrimaryDiagnosis("");
+            fillFinalDiagnosis("");
+            FillMedicene("");
+          
+            loadDepartments();
+            GetSymptomsByDepartment();
+            fillSymptoms("000", "");
+             
+            $('#dvtblSymtomps').slideUp();
+            $('#filterExaminations').change(filterExaminations);
+
+           
+          
+        
+            $('#tab09Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                FillLabTests(searchTerm);
+            });
+            $('#tab10Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                LoadTestByDepartment(searchTerm);
+            });
+            $('#tab11_01Search').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                FillMedicene(searchTerm);
+            });
+            $('#filterMainDepartments').on('change', function () {
+                const searchTerm = $('#tab10Search').val().trim();
+                LoadTestByDepartment(searchTerm);
+            });
+            
+            
+
+            FillTestsByCategory('002', "");
+           
         });
+        function AddDischargeDetails() {
+            // helpers
+            function textOrDash(val) { return (val || '').toString().trim() ? val.toString().trim() : '-'; }
+            function shouldShowText(val) { return (val || '').toString().trim().length > 0; }
+            function selTextIfValid(sel) {
+                var $s = $(sel);
+                if (!$s.length) return null;
+                var val = $s.val();
+                if (val === null || typeof val === 'undefined') return null;
+                // treat '0' as the "no selection" sentinel and exclude
+                if (val.toString() === '0') return null;
+                var txt = $s.find('option:selected').text() || '';
+                return txt.toString().trim() ? txt.toString().trim() : null;
+            }
+            function checkboxYesNo(sel) {
+                var $c = $(sel);
+                if (!$c.length) return null;
+                return $c.is(':checked') ? 'Yes' : 'No';
+            }
+            // read values (use ends-with selectors for ASP.NET ids)
+            var dischargeByText = selTextIfValid("[id$='ddlDischarge_By']");
+            var dischargeOnVal = $("[id$='txtDischarge_On']").val(); // do not exclude discharge date even if blank
+            var diagnosis = $("[id$='txtDiagnosis']").val();
+            var advice = $("[id$='txtPrevention_Precaution']").val();
+            var followUp = $("[id$='txtNext_Visit']").val();
+            var treatment = $("[id$='txtTreatmentAtDischarge']").val();
+            var followUpPlan = $("[id$='txtFollowUpPlanInstructions']").val();
+            var procedureRec = $("[id$='txtProcedureRecommended']").val();
+            var dischargeStatusText = selTextIfValid("[id$='ddlDischargeStatus']");
+            var causeOfReferral = $("[id$='txtCauseOfReferral']").val();
+            var referredToText = selTextIfValid("[id$='ddlReferredTo']");
+            var dischargeSlip = checkboxYesNo("[id$='cbDicharg_Slip']");
+            var death = checkboxYesNo("[id$='cb_death']");
+            // ReferToOPD has ClientIDMode=Static so it's safe to query by id; try label fallback too
+            var referToOPD = checkboxYesNo("[id$='ReferToOPD']");
+
+            // Build a list of rows to render. Each item: { field: 'Label', value: '...' }
+            var rows = [];
+
+            // Discharge By (select) - show only if selected value != '0'
+            if (dischargeByText) rows.push({ field: $("[id$='lblDischarge_By']").text() || 'Advise By', value: dischargeByText });
+
+            // Discharged Date - show always (even if empty)
+            rows.push({ field: $("[id$='lblDischarge_On']").text() || 'Discharged Date', value: textOrDash(dischargeOnVal) });
+
+            if (shouldShowText(diagnosis)) rows.push({ field: $("[id$='lblDiagnosis']").text() || 'Diagnosis', value: diagnosis.trim() });
+            if (shouldShowText(advice)) rows.push({ field: $("[id$='lblPrevention_Precaution']").text() || 'Advice', value: advice.trim() });
+            if (shouldShowText(followUp)) rows.push({ field: $("[id$='Label13']").text() || 'Follow Up', value: followUp.trim() });
+
+            if (shouldShowText(treatment)) rows.push({ field: $("[id$='lblTreatmentAtDischarge']").text() || 'Treatment At Discharge', value: treatment.trim() });
+            if (shouldShowText(followUpPlan)) rows.push({ field: $("[id$='lblFollowUpPlanInstructions']").text() || 'Follow Up Plan & Instructions', value: followUpPlan.trim() });
+            if (shouldShowText(procedureRec)) rows.push({ field: $("[id$='lblProcRecommended']").text() || 'Procedure Recommended', value: procedureRec.trim() });
+
+            if (dischargeStatusText) rows.push({ field: $("[id$='lblDischargeStatus']").text() || 'Discharge Status', value: dischargeStatusText });
+            if (shouldShowText(causeOfReferral)) rows.push({ field: $("[id$='lblCauseOfReferral']").text() || 'Cause Of Referral', value: causeOfReferral.trim() });
+            if (referredToText) rows.push({ field: $("[id$='lblReferredTo']").text() || 'Referred To', value: referredToText });
+
+            // Checkboxes: show label and Yes/No. If the checkbox control exists, show row.
+            if ($("[id$='cbDicharg_Slip']").length) {
+                var labelText = $("[id$='Label14']").text() || 'Discharge Slip';
+                rows.push({ field: labelText, value: dischargeSlip || 'No' });
+            }
+            if ($("[id$='cb_death']").length) {
+                var labelDeath = $("[id$='lbldeath']").text() || 'Death';
+                rows.push({ field: labelDeath, value: death || 'No' });
+            }
+            if ($("[id$='ReferToOPD']").length) {
+                // try to find an associated label; fallback to text
+                var lbl = $("label[for='ReferToOPD']").text() || $("label[for='ReferOPD']").text() || 'Refer To OPD';
+                rows.push({ field: lbl, value: referToOPD || 'No' });
+            }
+
+            // Render into table (single row per field). If none (except discharge date), table will still show discharge date.
+            var $tbody = $('#tblDischargeDetails tbody');
+            var $container = $('#divtblDischargeDetails');
+            $tbody.empty();
+
+            rows.forEach(function (r) {
+                var $tr = $('<tr>');
+                $tr.append($('<td>').text(r.field));
+                $tr.append($('<td>').text(r.value));
+                $tbody.append($tr);
+            });
+
+            // show/hide container based on presence of any rows (we always have Discharge Date row at least)
+            if (rows.length) $container.slideDown(); else $container.slideUp();
+        }
+
+        function bindDate() {
+            $("#ctl00_MainContent_txtExpected_Discharge_Date").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtNext_Visit").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtDischarge_On").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtMo_Time").datetimepicker({ datepicker: false, format: 'H:i:s' });
+            $("#ctl00_MainContent_txtMo_Operation_Date").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtMo_Next_Visit").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtLMP").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtDateofDeath").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtTimeOfDeath").datetimepicker({ datepicker: false, format: 'H:i:s' });
+
+        }
+        function AddDoctorCall() {
+            var dept = $("[id$='ddl_Department'] option:selected").text() || '-';
+            var doctor = $("[id$='ddlCallToDoctor'] option:selected").text() || '-';
+            var mobile = $("[id$='txtMobileNo']").val() || '-';
+            var notes = $("[id$='txtCallToDoctor']").val() || '-';
+
+            var tbody = $('#tblDoctorCalls tbody');
+            var container = $('#divtblDoctorCalls');
+
+            // single-row behaviour: clear and show current values
+            tbody.empty();
+
+            var row = $('<tr>');
+            row.append($('<td>').attr('data-label', 'Department').text(dept));
+            row.append($('<td>').attr('data-label', 'Doctor').text(doctor));
+            row.append($('<td>').attr('data-label', 'Mobile No').text(mobile));
+            row.append($('<td>').attr('data-label', 'Doctor Notes').text(notes));
+
+            tbody.append(row);
+            container.slideDown();
+        }
+
+        function AddDischargeVitals() {
+            var pulse = $("[id$='txtPulseRate']").val() || '-';
+            var bp = $("[id$='txtBPDischarge']").val() || '-';
+            var rhythm = $("[id$='ddlRhythmdischarge'] option:selected").text() || '-';
+            var temp = $("[id$='txtTempdisch']").val() || '-';
+            var volume = $("[id$='ddlvolumedisc'] option:selected").text() || '-';
+            var resp = $("[id$='txtRespRateDesc']").val() || '-';
+            var o2sat = $("[id$='txtSaturation_Oxygen2_desc']").val() || '-';
+            var percentage = $("[id$='txtsaturationDis']").val() || '-';
+            var liters = $("[id$='txtOxygen1']").val() || '-';
+
+            var roomAir = $("[id$='chk_OnRoomAirDesc']").length ? ($("[id$='chk_OnRoomAirDesc']").is(':checked') ? 'Yes' : 'No') : '-';
+            var withO2 = $("[id$='chk_WithOxygenDesc']").length ? ($("[id$='chk_WithOxygenDesc']").is(':checked') ? 'Yes' : 'No') : '-';
+
+            var others = $("[id$='txtotherecdesc']").val() || '-';
+            var received = $("[id$='txttxtReceiving_DateDesc']").val() || '-';
+            var instruction = $("[id$='txtRN_Special_Instruction_Desc']").val() || '-';
+
+            var tbody = $('#tblDischargeVitals tbody');
+            var tableContainer = $('#divtblDischargeVitals');
+
+            // single-row behaviour (clear existing and add current)
+            tbody.empty();
+
+            var newRow = $('<tr>');
+            newRow.append($('<td>').text(pulse));
+            newRow.append($('<td>').text(bp));
+            newRow.append($('<td>').text(rhythm));
+            newRow.append($('<td>').text(temp));
+            newRow.append($('<td>').text(volume));
+            newRow.append($('<td>').text(resp));
+            newRow.append($('<td>').text(o2sat));
+            newRow.append($('<td>').text(percentage));
+            newRow.append($('<td>').text(liters));
+            newRow.append($('<td>').text(roomAir));
+            newRow.append($('<td>').text(withO2));
+            newRow.append($('<td>').text(others));
+            newRow.append($('<td>').text(received));
+            newRow.append($('<td>').text(instruction));
+
+            tbody.append(newRow);
+            tableContainer.slideDown();
+        }
         document.addEventListener('DOMContentLoaded', function () {
-            // delegate checkbox change inside #tab04
+            // delegates and initial wiring kept minimal and simple
+
+            // checkbox changes inside #tab04
             var tab = document.getElementById('tab04');
             if (tab) {
                 tab.addEventListener('change', function (e) {
@@ -981,7 +1227,7 @@ input[type="checkbox"] {
                 });
             }
 
-            // delegate remove button clicks (simple)
+            // simple remove button delegation
             document.addEventListener('click', function (e) {
                 var btn = e.target;
                 if (btn && btn.classList && btn.classList.contains('remove-find-simple')) {
@@ -990,7 +1236,7 @@ input[type="checkbox"] {
                 }
             });
 
-            // wire description textareas by ends-with selectors (minimal)
+            // description textareas (ends-with selectors)
             var descSelectors = [
                 "[id$='TextBoxCvs']",
                 "[id$='TextBoxGpe']",
@@ -1002,67 +1248,198 @@ input[type="checkbox"] {
             var descs = document.querySelectorAll(descSelectors);
             descs.forEach(function (d) {
                 d.addEventListener('input', function () { handleDescriptionChange(d); });
-                // initial populate if already has value
+                // initial populate if has value
                 if ((d.value || '').trim()) handleDescriptionChange(d);
             });
 
-            // initial sync for pre-checked boxes (minimal)
+            // initial sync for pre-checked boxes
             var chks = tab ? tab.querySelectorAll("input[type='checkbox']") : [];
             chks.forEach(function (c) {
                 if (c.checked) handleCheckboxChange(c);
             });
+
+            // try common id suffixes for GCS bits
+            var eor = byEndsWith('txtEOR') || byEndsWith('ctl00_MainContent_txtEOR');
+            var mr = byEndsWith('txtMR') || byEndsWith('ctl00_MainContent_txtMR');
+            var vr = byEndsWith('txtVR') || byEndsWith('ctl00_MainContent_txtVR');
+            var acc = byEndsWith('txtAcc') || byEndsWith('ctl00_MainContent_txtAcc') || byEndsWith('txtAcc');
+
+            if (eor) {
+                wireField(eor, 'Eye Opening Response', 'tblGCS');
+            }
+            if (mr) {
+                wireField(mr, 'Motor Response', 'tblGCS');
+            }
+            if (vr) {
+                wireField(vr, 'Verbal Response', 'tblGCS');
+            }
+            if (acc) {
+                // accumulated may be updated programmatically; monitor it
+                monitorField(acc, 'Accumulated', 'tblGCS');
+            }
         });
+        function Get_Doctor_Info() {
+
+            var Doctor_Val = document.getElementById('<%= ddl_Department.ClientID%>').value;
+              if (Doctor_Val == 0) {
+                  $('#ctl00_MainContent_ddlCallToDoctor').val('');
+              }
+              else {
+                  var department_Id = $('#ctl00_MainContent_ddl_Department').val();
+                  $.ajax({
+                      type: "POST",
+                      url: "NewEmergencyCase.aspx/Get_Doctor",
+                      data: JSON.stringify({
+                          "department_Id": department_Id
+                      }),
+                      contentType: "application/json; charset=utf-8",
+                      dataType: "json",
+                      success: function (response) {
+
+                          var options = '<option value="0">Please Select </option>';
+                          var Parsed_Data = JSON.parse(response.d);
+                          $.each(Parsed_Data, function (key, value) {
+
+                              options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                          });
+                          $('#ctl00_MainContent_ddlCallToDoctor').html(options);
+                          $("#ctl00_MainContent_ddlCallToDoctor").select2();
+
+                      },
+                      failure: function (response) {
+                          alert(response.d);
+                      }
+                  });
+              }
+        }
+
+        function Get_Doctor_MobileInfo() {
+
+            var doctor = document.getElementById('<%= ddlCallToDoctor.ClientID%>').value;
+            var EmployeeId = $('#ctl00_MainContent_ddlCallToDoctor').val();
+            $.ajax({
+                type: "POST",
+                url: "NewEmergencyCase.aspx/Get_Doctor_Mobile",
+                data: JSON.stringify({
+                    "DoctorId": EmployeeId
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.d == "") {
+                        alert("Mobile no. of Selected Doctor is not Available !");
+                        $("#ctl00_MainContent_txtMobileNo").val("____-_______");
+                    }
+                    else {
+                        $("#ctl00_MainContent_txtMobileNo").val(response.d);
+                    }
+
+                },
+                failure: function (response) {
+                    alert(response.d);
+                    console.log(response.responseJSON.Message);
+                }
+            });
+        }
+        /* ====== small helpers (single responsibility) ====== */
+
+        function byEndsWith(suffix) {
+            return document.querySelector("[id$='" + suffix + "']");
+        }
+
+        function labelForCheckbox(el) {
+            var id = el.id || '';
+            var shortId = id.split('_').pop();
+            var lab = document.querySelector("label[for='" + id + "']") || document.querySelector("label[for='" + shortId + "']");
+            if (lab) return (lab.textContent || id).trim();
+            return id;
+        }
+
+        function tableIdFromElement(el) {
+            var node = el;
+            while (node && !node.classList.contains('subtabs')) node = node.parentElement;
+            if (!node) return null;
+            var sid = node.id || '';
+            if (sid.indexOf('subTab') === 0) return 'tbl' + sid.replace('subTab', '');
+            return null;
+        }
+
+        /* ====== row operations (create / update / remove) ====== */
+
+        // add a row or update existing row text if it already exists
         function addRowSimple(tableId, key, text) {
             if (!tableId) return;
             var tbody = document.querySelector('#' + tableId + ' tbody');
             if (!tbody) return;
-            if (tbody.querySelector("tr[data-key='" + key + "']")) return; // already exists
+
+            var existing = tbody.querySelector("tr[data-key='" + key + "']");
+            if (existing) {
+                // update text cell
+                updateRowSimple(key, text);
+                return;
+            }
+
             var tr = document.createElement('tr');
             tr.setAttribute('data-key', key);
+
             var tdText = document.createElement('td');
             tdText.textContent = text || '-';
+
             var tdAction = document.createElement('td');
             tdAction.style.width = '48px';
+
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'remove-find-simple';
             btn.setAttribute('data-key', key);
             btn.setAttribute('aria-label', 'Remove');
             btn.textContent = '×';
+
             tdAction.appendChild(btn);
             tr.appendChild(tdText);
             tr.appendChild(tdAction);
             tbody.appendChild(tr);
-            // show parent container
-            var container = document.getElementById(tableId).closest ? document.getElementById(tableId).closest('[id^="divtbl"]') : null;
+
+            // show parent container if hidden (simple walk)
+            var el = document.getElementById(tableId);
+            var container = null;
+            if (el && el.closest) container = el.closest('[id^="divtbl"]');
             if (!container) {
-                // fallback using DOM walk
-                var el = document.getElementById(tableId);
                 while (el && el.id && el.id.indexOf('divtbl') === -1) el = el.parentElement;
                 container = el;
             }
-            if (container) container.style.display = ''; // show (no animation, minimal)
+            if (container) container.style.display = '';
         }
 
-        // remove row by key, and if possible uncheck or clear original control
+        // only updates the first td of the matching row
+        function updateRowSimple(key, text) {
+            if (!key) return;
+            var row = document.querySelector("tr[data-key='" + key + "']");
+            if (!row) return;
+            var td = row.querySelector('td');
+            if (td) td.textContent = text || '-';
+        }
+
+        // remove row and try to clear/uncheck original control
         function removeRowSimple(key) {
             if (!key) return;
-            // remove any tr with data-key
             var rows = document.querySelectorAll("tr[data-key='" + key + "']");
             rows.forEach(function (r) { r.parentElement && r.parentElement.removeChild(r); });
-            // try uncheck checkbox by id then by ends-with
+
+            // try to uncheck checkbox by id or ends-with
             var chk = document.getElementById(key);
             if (!chk) {
-                // minimal ends-with fallback:
                 var inputs = document.querySelectorAll("input[id$='" + key + "']");
                 if (inputs.length) chk = inputs[0];
             }
             if (chk && chk.type === 'checkbox') chk.checked = false;
-            // try clear textarea/input if exists with that id
+
+            // try clear input/textarea
             var txt = document.getElementById(key);
             if (txt && (txt.tagName === 'TEXTAREA' || (txt.tagName === 'INPUT' && txt.type === 'text'))) txt.value = '';
 
-            // hide empty containers (minimal)
+            // hide empty containers simple
             ['divtblCVS', 'divtblGCS', 'divtblGPE', 'divtblRESP', 'divtblGIT', 'divtblCNS'].forEach(function (did) {
                 var d = document.getElementById(did);
                 if (!d) return;
@@ -1071,28 +1448,67 @@ input[type="checkbox"] {
             });
         }
 
-        // find table id for an element by locating nearest .subtabs parent id and simple string replace
-        function tableIdFromElement(el) {
-            var node = el;
-            while (node && !node.classList.contains('subtabs')) node = node.parentElement;
-            if (!node) return null;
-            var sid = node.id || '';
-            // sid expected like "subTabCVS" -> return "tblCVS"
-            if (sid.indexOf('subTab') === 0) return 'tbl' + sid.replace('subTab', '');
-            return null;
+        /* ====== validation and field handlers ====== */
+
+        // validation: allow single-digit numeric GCS parts (e.g., "4"), allow "3/15" etc.
+        // keep very permissive for free text but require at least one alphanumeric character
+        function isValidGCSValue(val) {
+            if (!val) return false;
+            val = (val + '').trim();
+            if (!val) return false;
+            // If contains slash, require digits / digits
+            if (val.indexOf('/') !== -1) {
+                return /^\s*\d+\s*\/\s*\d+\s*$/.test(val);
+            }
+            // allow single digits or any value containing an alphanumeric char
+            return /[A-Za-z0-9]/.test(val);
         }
 
-        // get label for checkbox (label[for=id]) or fallback to id
-        function labelForCheckbox(el) {
-            var id = el.id || '';
-            var lab = document.querySelector("label[for='" + id + "']");
-            if (lab) return lab.textContent.trim() || id;
-            return id;
+        // wire a simple text field to update its row on input/change/blur
+        function wireField(el, label, tableId) {
+            if (!el) return;
+            var handler = function () { handleGCSField(el, label, tableId); };
+            el.addEventListener('input', handler);
+            el.addEventListener('change', handler);
+            el.addEventListener('blur', handler);
+            if ((el.value || '').toString().trim()) handler();
         }
 
-        /* ====== handlers bound to events (minimal) ====== */
+        // monitor programmatic updates on a field via polling (idempotent)
+        function monitorField(el, label, tableId) {
+            if (!el) return;
+            if (el._gcsMonitor) return; // already monitoring
+            el._gcsMonitor = true;
+            var last = (el.value || '').toString();
+            if (last.trim()) handleGCSField(el, label, tableId);
+            setInterval(function () {
+                var cur = (el.value || '').toString();
+                if (cur !== last) {
+                    last = cur;
+                    handleGCSField(el, label, tableId);
+                }
+            }, 300);
+        }
 
-        // checkbox change handler
+        // main handler for GCS-style fields (keeps logic simple)
+        function handleGCSField(el, label, tableId) {
+            if (!el) return;
+            var raw = (el.value || '').toString();
+            var key = el.id || '';
+            var text = label + ': ' + raw;
+
+            if (isValidGCSValue(raw)) {
+                // if row exists update it, otherwise add it
+                var exists = !!document.querySelector("tr[data-key='" + key + "']");
+                if (exists) updateRowSimple(key, text);
+                else addRowSimple(tableId, key, text);
+            } else {
+                removeRowSimple(key);
+            }
+        }
+
+        /* ====== checkbox / description handlers (simple) ====== */
+
         function handleCheckboxChange(el) {
             var checked = el.checked;
             var key = el.id || '';
@@ -1102,12 +1518,10 @@ input[type="checkbox"] {
             else removeRowSimple(key);
         }
 
-        // textarea/input change handler for descriptions
         function handleDescriptionChange(el) {
             var val = (el.value || '').trim();
             var key = el.id || '';
             var tbl = tableIdFromElement(el);
-            // build label like "CVS Details: <text>"
             var prefix = '';
             var node = el;
             while (node && !node.classList.contains('subtabs')) node = node.parentElement;
@@ -1116,7 +1530,61 @@ input[type="checkbox"] {
             if (val.length) addRowSimple(tbl, key, text);
             else removeRowSimple(key);
         }
+        function ROPFunction() {
+            if ($("#ctl00_MainContent_ctl00_MainContent_txtEOR").val().split('/')[0] > 0 && $("#ctl00_MainContent_ctl00_MainContent_txtEOR").val().split('/')[0] <= 4) {
+                var first_integer = $("#ctl00_MainContent_ctl00_MainContent_txtEOR").val().split('/')[0];
+                var Second_integer = $("#ctl00_MainContent_txtMR").val().split('/')[0];
+                var Third_integer = $("#ctl00_MainContent_txtVR").val().split('/')[0];
+                if (first_integer == "_") first_integer = 0;
+                if (Second_integer == "_") Second_integer = 0;
+                if (Third_integer == "_") Third_integer = 0;
+                var sum = parseInt(first_integer) + parseInt(Second_integer) + parseInt(Third_integer);
+                $("#ctl00_MainContent_txtAcc").val('' + sum + '/15');
 
+                return true;
+            }
+            else {
+                alert('Please input a number between 1 and 4:');
+                return $("#ctl00_MainContent_ctl00_MainContent_txtEOR").val('_/4');
+
+            }
+        }
+        function MRFunction() {
+            if ($("#ctl00_MainContent_txtMR").val().split('/')[0] > 0 && $("#ctl00_MainContent_txtMR").val().split('/')[0] <= 5) {
+                var first_integer = $("#ctl00_MainContent_ctl00_MainContent_txtEOR").val().split('/')[0];
+                var Second_integer = $("#ctl00_MainContent_txtMR").val().split('/')[0];
+                var Third_integer = $("#ctl00_MainContent_txtVR").val().split('/')[0];
+                if (first_integer == "_") first_integer = 0;
+                if (Second_integer == "_") Second_integer = 0;
+                if (Third_integer == "_") Third_integer = 0;
+                var sum = parseInt(first_integer) + parseInt(Second_integer) + parseInt(Third_integer);
+                $("#ctl00_MainContent_txtAcc").val('' + sum + '/15');
+                return true;
+            }
+            else {
+                alert('Please input a number between 1 and 5:');
+                return $("#ctl00_MainContent_txtMR").val('_/5');
+            }
+        }
+        function VRFunction() {
+
+            if ($("#ctl00_MainContent_txtVR").val().split('/')[0] > 0 && $("#ctl00_MainContent_txtVR").val().split('/')[0] <= 6) {
+                var first_integer = $("#ctl00_MainContent_ctl00_MainContent_txtEOR").val().split('/')[0];
+                var Second_integer = $("#ctl00_MainContent_txtMR").val().split('/')[0];
+                var Third_integer = $("#ctl00_MainContent_txtVR").val().split('/')[0];
+                if (first_integer == "_") first_integer = 0;
+                if (Second_integer == "_") Second_integer = 0;
+                if (Third_integer == "_") Third_integer = 0;
+                var sum = parseInt(first_integer) + parseInt(Second_integer) + parseInt(Third_integer);
+                $("#ctl00_MainContent_txtAcc").val('' + sum + '/15');
+                return true;
+            }
+            else {
+
+                alert('Please input a number between 1 and 6:');
+                return $("#ctl00_MainContent_txtVR").val('_/6');
+            }
+        }
         function AddHistory() {
             // mapping of input suffix => display label
             var fields = [
@@ -1729,1352 +2197,6 @@ input[type="checkbox"] {
                 $('#tblWards tbody').html(rows);
             });
         }
-    </script>
-    <script id="DocumentReady">
-        $(document).ready(function () {
-
-            
-            loaddoctor_byDep();
-            var id = '<%=Request.QueryString["ID"]%>';
-            if (id != "") {
-                $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
-                loadPatientFormData(id);
-                $('#btnSave').val("Update");
-                AppendSymtompsHistory();
-                Appendtestintable();
-                LoadMedicines();
-                AppendPrimaryDiagnosisHistory();
-                AppendFinalDiagnosisHistory();
-                AppendComplaintsHistory();
-                updateHistoryTable();
-
-                $('.exam-row input[type="checkbox"]').each(function () {
-                    var param = this.id.split('_chk').pop();
-                    if (this.checked) {
-                        Add_GeneralExamRow(param);
-                    }
-                });
- 
-            }
-            else {
-                openQueue();
-                $('#ctl00_MainContent_txtOut_Patient_ID').val("(New)");
-                $('#<%= txtOut_Patient_ID.ClientID%>').val("(New)");
-
-            }
-            $("#ctl00_MainContent_txtLMP").datepicker();
-            $('.labtest_checkbox').hide();
-            $('#06').click();
-            fillDepartment();
-            filldoc();
-            loaddoctor();
-            FillMainTestDepartment();
-            FillLabTests('');
-            fillComplaints("");
-            fillPrimaryDiagnosis("");
-            fillFinalDiagnosis("");
-            FillMedicene("");
-            updateHistoryTable();
-            updateDisposalTable();
-            updateSystematicExamTable();
-            loadDepartments();
-            GetSymptomsByDepartment();
-            fillSymptoms("000", "");
-            $("#ctl00_MainContent_FollowNoDate").datepicker();
-            $('#dvtblSymtomps').slideUp();
-            $('#filterExaminations').change(filterExaminations);
-
-            $('#tab01Search').on('input', function () {
-                const searchTerm = $(this).val().trim();
-                const selectedValue = $('#filterDepartments').val();
-                fillSymptoms(selectedValue, searchTerm);
-            });
-            $('#tab06Search').on('input', function () {
-                const searchTerm = $(this).val().trim();
-                fillComplaints(searchTerm);
-            });
-            $('#tab07Search').on('input', function () {
-                const searchTerm = $(this).val().trim();
-                fillPrimaryDiagnosis(searchTerm);
-            });
-            $('#tab08Search').on('input', function () {
-                const searchTerm = $(this).val().trim();
-                fillFinalDiagnosis(searchTerm);
-            });
-            $('#tab09Search').on('input', function () {
-                const searchTerm = $(this).val().trim();
-                FillLabTests(searchTerm);
-            });
-            $('#tab10Search').on('input', function () {
-                const searchTerm = $(this).val().trim();
-                LoadTestByDepartment(searchTerm);
-            });
-            $('#tab11_01Search').on('input', function () {
-                const searchTerm = $(this).val().trim();
-                FillMedicene(searchTerm);
-            });
-            $('#filterMainDepartments').on('change', function () {
-                const searchTerm = $('#tab10Search').val().trim();
-                LoadTestByDepartment(searchTerm);
-            });
-            $('#ctl00_MainContent_ddlPatientDepartment').on("change", function () {
-                $('#ctl00_MainContent_ddlPatientDepartment').find('option:selected')[0].value;
-                fillPendingPatientsList();
-            }) 
-           
-            $(document).on('input', '.Disposal-row textarea, .Disposal-row input[type="text"]', function () {
-                updateDisposalTable();
-            });
-
-            $(document).on('input', '.Systematic-Exam-Row textarea, .Systematic-Exam-Row input[type="text"]', function () {
-                updateSystematicExamTable();
-            });
-          
-            $('#ctl00_MainContent_txtInputBox1').on('input', function () {
-                const inputVal = $(this).val().trim();
-                const examName = 'CustomInput';
-                const $existingRow = $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`);
-
-                if (inputVal === '') {
-                    // If input is empty, remove the row
-                    if ($existingRow.length > 0) {
-                        $existingRow.remove();
-                    }
-
-                    // Hide table if it's empty
-                    if ($('#tblGeneralExam tbody tr').length === 0) {
-                        $('#divtblGeneralExam').slideUp();
-                    }
-
-                    return;
-                }
-
-                if ($existingRow.length > 0) {
-                    // Update existing row
-                    $existingRow.find('td:first').text(inputVal);
-                } else {
-                    // Add new row
-                    const $row = $(`
-          <tr data-exam="${examName}">
-              <td>${inputVal}</td>
-              <td>
-                  <a href="javascript:void(0)" onclick="Remove_CustomInputRow()" class="remove-input">
-                      <i class="fa fa-times"></i>
-                  </a>
-              </td>
-          </tr>
-      `);
-                    $('#tblGeneralExam tbody').append($row);
-                }
-
-                // Show table
-                $('#divtblGeneralExam').slideDown();
-            });
-
-            FillTestsByCategory('002', "");
-            //refer Tab working
-            const $patientCategory = $('#ctl00_MainContent_ddlPatient_Main_Category');
-            const $doctorsDropdown = $('#ctl00_MainContent_ddldoctors');
-            const $referTextbox = $('.refer-textbox');
-            const $referTable = $('#tblRefer tbody');
-            const $divRefer = $('#divtblRefer');
-            const ROW_DEPARTMENT = 0;
-            const ROW_DOCTOR = 1;
-            const ROW_NOTE = 2;
-            function initializeTable() {
-
-                while ($referTable.find('tr').length < 3) {
-                    $referTable.append('<tr style="display:none"><td></td></tr>');
-                }
-            }
-            function updateTableVisibility() {
-                const hasContent = $referTable.find('td').text().trim() !== '';
-
-                if (hasContent) {
-                    if ($divRefer.is(':hidden')) {
-                        $divRefer.slideDown(300);
-                    }
-                } else {
-                    if ($divRefer.is(':visible')) {
-                        $divRefer.slideUp(300);
-                    }
-                }
-            }
-            $patientCategory.on('change', function () {
-                const selectedValue = $(this).val();
-                const selectedText = $(this).find('option:selected').text();
-
-                initializeTable();
-                const $deptRow = $referTable.find(`tr:eq(${ROW_DEPARTMENT})`);
-
-                if (selectedValue && selectedValue !== "0") {
-                    $deptRow.find('td').text("Department: " + selectedText);
-                    $deptRow.slideDown();
-                } else {
-                    $referTextbox.empty();
-                    $referTable.empty();
-                    $divRefer.slideUp();
-                    return;
-                }
-
-                updateTableVisibility();
-            });
-            $doctorsDropdown.on('change', function () {
-                if ($patientCategory.val() === "0") return;
-
-                initializeTable();
-                var $doctorRow = $referTable.find(`tr:eq(${ROW_DOCTOR})`);
-                var selectedValue = $(this).val();
-                var selectedText = $(this).find('option:selected').text();
-
-                if (selectedValue && selectedValue !== "0") {
-                    // Update doctor row
-                    $doctorRow.find('td').text("Doctor: " + selectedText);
-                    $doctorRow.slideDown();
-                } else {
-                    // Remove doctor row
-
-                    $doctorRow.find('td').empty();
-                    $doctorRow.slideUp();
-                }
-
-                updateTableVisibility();
-            });
-            $referTextbox.on('input', function () {
-                if ($patientCategory.val() === "0") return;
-
-                initializeTable();
-                const $noteRow = $referTable.find(`tr:eq(${ROW_NOTE})`);
-                const inputValue = $(this).val().trim();
-
-                if (inputValue) {
-                    $noteRow.find('td').text("Note: " + inputValue);
-                    $noteRow.slideDown();
-                } else {
-                    $noteRow.find('td').empty();
-                    $noteRow.slideUp();
-                }
-
-                updateTableVisibility();
-            });
-            $('.modern-table').each(function () {
-                const observer = new MutationObserver(function (mutations) {
-                    mutations.forEach(function (mutation) {
-                        if (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0) {
-                            const $table = $(mutation.target).closest('table');
-                            $table.attr('tabindex', '-1')
-                                .get(0)
-                                .scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                         }
-                    });
-                });
-
-                observer.observe(this, {
-                    childList: true,
-                    subtree: true
-                });
-            });
-        });
-    </script>
-    <script id="functions" type="text/javascript">
-        function loadPatientFormData(patientId) {
-            // Show loading indicator
-            showLoading();
-
-            $.ajax({
-                type: "POST",
-                url: "NewOutPatient.aspx/GetPatientFormData",
-                data: JSON.stringify({ PatientID: patientId }),
-                contentType: "application/json; charset=utf-8",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                   
-                    hideLoading();
-
-                    var result = JSON.parse(response.d);
-
-                    if (result.success) {
-                        populatePatientForm(result.data);
-                        if (result.data.Discharge == "true") {
-
-                            $('#btnSave').hide();
-                            $('.mybutton2-wrapper').hide();
-                        }
-                    } else {
-                        alert("Error: " + result.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    hideLoading();
-                    console.error("AJAX Error: ", error);
-                    alert("Failed to load patient data. Please try again.");
-                }
-            });
-        }
-
-        function populatePatientForm(data) {
-            try {
-                // Helper function to set value safely
-                function setValue(controlId, value) {
-                    var element = document.getElementById(controlId);
-                    if (!element) return;  // Exit if element not found
-
-                    if (element.type === 'checkbox') {
-                        element.checked = value === 'true' || value === true;
-                    }
-                    else if (element.tagName.toLowerCase() === 'span') {  // Check tag name instead of type
-                        element.textContent = value || '';  // Fixed assignment and used textContent
-                    }
-                    else if (element.value !== undefined) {  // For other input elements
-                        element.value = value || '';
-                    }
-                    else {  // Fallback for other elements
-                        element.textContent = value || '';
-                    }
-                }
-
-                // Helper function to set dropdown value
-                function setDropdownValue(controlId, value) {
-                    var element = document.getElementById(controlId);
-                    if (element && value) {
-                        element.value = value;
-                        // Trigger change event if needed
-                        $(element).trigger('change');
-                    }
-                }
-
-                // Basic Patient Information
-                setValue('ctl00_MainContent_vlblPatients_Name', data.PatientName);
-                setValue('ctl00_MainContent_vLbl_Age', data.Age);
-                setValue('ctl00_MainContent_vLbl_Contact', data.Contact);
-                setValue('ctl00_MainContent_vLbl_Adress', data.Address);
-                setValue('ctl00_MainContent_txtOut_Patient_ID', data.OutPatientId);
-                setValue('ctl00_MainContent_hdfPatient_ID', data.PatientId);
-                setValue('ctl00_MainContent_hdfReg_ID', data.RegId);
-
-                // Doctor Selection
-                setDropdownValue('ctl00_MainContent_ddlDoctorName', data.DoctorId);
-
-                // Vital Signs
-                setValue('ctl00_MainContent_txtPuls', data.Pulse);
-                setValue('ctl00_MainContent_txtBP', data.BP);
-                setValue('ctl00_MainContent_txtTemp', data.Temperature);
-                setValue('ctl00_MainContent_txtRespiration', data.Respiration);
-                setValue('ctl00_MainContent_txtHeight', data.Height);
-                setValue('ctl00_MainContent_txtWeight', data.Weight);
-                setValue('ctl00_MainContent_txtspo2', data.SPO2);
-                setValue('ctl00_MainContent_txtBMI', data.BMI);
-                setValue('ctl00_MainContent_TxtBSR', data.BSR);
-                setValue('ctl00_MainContent_txtMUAC', data.MUAC);
-                setValue('ctl00_MainContent_txtOFC', data.OFC);
-
-                // Medical History
-                setValue('ctl00_MainContent_txtLMP', data.LMP);
-                setValue('ctl00_MainContent_txtedd', data.EDD);
-                setValue('ctl00_MainContent_txtDevelopmentHistory', data.DevelopmentHistory);
-                setValue('ctl00_MainContent_txtVaccinationHistory', data.VaccinationHistory);
-                setValue('ctl00_MainContent_txtNutritionHistory', data.NutritionHistory);
-                setValue('ctl00_MainContent_txtHistoryOfPeresentIllness', data.HistoryOfPresentIllness);
-                setValue('ctl00_MainContent_txtHistoryOfFamily', data.HistoryOfFamily);
-                setValue('ctl00_MainContent_txtHistoryOfPastIllness', data.HistoryOfPastIllness);
-                setValue('ctl00_MainContent_txtSocioEconomicHistory', data.SocioEconomicHistory);
-                setValue('ctl00_MainContent_txtObstetricHistory', data.ObstetricHistory);
-                setValue('ctl00_MainContent_txtAllergiesHistory', data.AllergiesHistory);
-                setValue('ctl00_MainContent_txtTreatmentHistory', data.TreatmentHistory);
-                setValue('ctl00_MainContent_txtDrugHistory', data.DrugHistory);
-                setValue('ctl00_MainContent_txtPersonalHistory', data.PersonalHistory);
-                setValue('ctl00_MainContent_txtBirthHistory', data.BirthHistory);
-
-                // Physical Examination
-                setValue('ctl00_MainContent_txtCVS', data.CVS);
-                setValue('ctl00_MainContent_txtGIT', data.GIT);
-                setValue('ctl00_MainContent_txtRESP', data.RESP);
-                setValue('ctl00_MainContent_txtCNS', data.CNS);
-                setValue('ctl00_MainContent_txtGYNAE', data.GYNAE);
-                setValue('ctl00_MainContent_txtUGS', data.UGS);
-                setValue('ctl00_MainContent_txtLocal', data.Local);
-                setValue('ctl00_MainContent_txtMucculor', data.Muscular);
-                setValue('ctl00_MainContent_txtAbdomin', data.Abdominal);
-
-                // General Examination Checkboxes
-                setValue('ctl00_MainContent_chkPallor', data.Pallor);
-                setValue('ctl00_MainContent_chkJVP', data.JVP);
-                setValue('ctl00_MainContent_chkCyanosis', data.Cyanosis);
-                setValue('ctl00_MainContent_chkDisoriented', data.Disoriented);
-                setValue('ctl00_MainContent_chkJaundice', data.Jaundice);
-                setValue('ctl00_MainContent_chkDehydration', data.Dehydration);
-                setValue('ctl00_MainContent_chkEdema', data.Edema);
-                setValue('ctl00_MainContent_chkLymphadenopathy', data.Lymphadenopathy);
-                setValue('ctl00_MainContent_chkClubbing', data.Clubbing);
-                setValue('ctl00_MainContent_chkDyspnoea', data.Dyspnoea);
-                setValue('ctl00_MainContent_chkNeckSwelling', data.NeckSwelling);
-                setValue('ctl00_MainContent_chkSkinLesions', data.SkinLesions);
-
-                // Special Checkboxes
-                setValue('ctl00_MainContent_chkDRE', data.DRE);
-                setValue('ctl00_MainContent_chkProctoscopy', data.Proctoscopy);
-
-                // Diagnosis and Treatment
-                setValue('ctl00_MainContent_txtProvisionalDiagnosis', data.ProvisionalDiagnosis);
-                setValue('ctl00_MainContent_txtFinalDiagnosis', data.FinalDiagnosis);
-                setValue('ctl00_MainContent_Final_Rec', data.FinalRecommendation);
-                setValue('ctl00_MainContent_txtAdvice', data.Advice);
-                setValue('ctl00_MainContent_txtRefer_To_Hospital', data.ReferToHospital);
-                setValue('ctl00_MainContent_txtDesignation', data.Designation);
-
-                // Dropdowns
-                setDropdownValue('ctl00_MainContent_ddlIssuance_Of', data.IssuanceOf);
-                setDropdownValue('ctl00_MainContent_ddlFOllowUp', data.FollowUp);
-
-                setDropdownValue('ctl00_MainContent_ddlPatient_Main_Category', data.PatientMainCategory);
-                setValue('ctl00_MainContent_txtRefferNote', data.ReferNote);
-
-
-
-                // Dates
-                setValue('ctl00_MainContent_FollowNoDate', data.FollowDate);
-
-                // Additional Fields
-                setValue('ctl00_MainContent_txtInputBox1', data.InputBox1);
-
-                setValue('ctl00_MainContent_txtRemarksHistory', data.RemarksHistory);
-
-                // Hidden Fields
-                setValue('ctl00_MainContent_hdfdhischarge', data.Discharge);
-                Load_Proto();
-                updateDisposalTable();
-                updateHistoryTable();
-                // Show success message
-                 AddVitals();
-                setDropdownValue('ctl00_MainContent_ddldoctors', data.referDoc);
-                
-            } catch (error) {
-                console.error("Error populating form: ", error);
-                alert("Error populating form data. Please check console for details.");
-            }
-        }
-
-        // Helper functions for loading indicators and messages
-        function showLoading() {
-            // Add your loading indicator here
-            $('body').append(`
-            <div class="modern-loading-overlay">
-                <div class="loading-content">
-                    <div class="loading-spinner">
-                        <div class="spinner-ring"></div>
-                        <div class="spinner-ring"></div>
-                        <div class="spinner-ring"></div>
-                    </div>
-                    <div class="loading-text">Loading</div>
-                    <div class="loading-subtext">Please wait while we prepare your content...</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                </div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-            </div>
-        `);        }
-
-        function hideLoading() {
-            const overlay = document.querySelector('.modern-loading-overlay');
-            if (overlay) {
-                overlay.classList.add('fade-out');
-                setTimeout(() => {
-                    if (overlay && overlay.parentNode) {
-                        overlay.parentNode.removeChild(overlay);
-                    }
-                }, 500); // Match this duration with your CSS transition time
-            }
-        }
-         
-
-        // Example usage:
-        // Call this function with a patient ID to load the form
-        // loadPatientFormData(123);
-        function calculateBMI() {
-            var height_in_cm = parseFloat($('#ctl00_MainContent_txtHeight').val());
-            var weight_kg = parseFloat($('#ctl00_MainContent_txtWeight').val());
-
-
-            if (isNaN(height_in_cm) || isNaN(weight_kg)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter valid height and weight.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-
-            var height_m = height_in_cm / 100;
-            var calcBMI = weight_kg / (height_m * height_m);
-
-            $('#ctl00_MainContent_txtBMI').val(calcBMI.toFixed(2));
-        }
-        function ResetForm() {
-            window.location.href = "NewOutPatient.aspx";
-        }
-        function ShowHistory() {
-            var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
-
-            if (reg_ID) {
-                var url = "/Modules/Dashboards/NewEMR.aspx?RegID=" + encodeURIComponent(reg_ID);
-                window.open(url, "_blank"); // open in new tab
-            } else {
-                alert("No RegID found!");
-            }
-        }
-
-
-        function openQueue() {
-            fillPendingPatientsList();
-            $('#queueModal').modal('show');
-        }
-        function loadPatient(PatientID, opdNo, regPatID) {
-            $.ajax({
-                type: "POST",
-                url: "NewOutPatient.aspx/GetDetail",
-                data: "{'PatientID':" + PatientID + "}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var data = response.d;
-                    if (data != '') {
-                        var mydate = new Date(Date.parse(data.Entry_Date));
-                        var dateR = mydate.toLocaleDateString();
-                        var name = ReplaceNullWith_Space(data.Name);
-                        var gender = ReplaceNullWith_Space(data.Gender);
-                        var age = ReplaceNullWith_Space(data.Age);
-                        var mobile = ReplaceNullWith_Space(data.Mobile);
-                        var address = ReplaceNullWith_Space(data.Address);
-                        var follow = ReplaceNullWith_Space(data.Follow);
-                        var outID = data.OutPatientID || "0"; // Use logical OR to provide default
-
-                        console.log("OutPatientID:", outID);
-
-                        if (outID && outID !== "0") {
-                            window.location = "NewOutPatient.aspx?ID=" + outID;
-                            return; // Exit if redirecting
-                        }
-
-                        $('#<%= vlblPatients_Name.ClientID %>').text(name);
-                        $('#<%= vLbl_Age.ClientID %>').text(gender + "-" + age + "yrs"); // Combine Gender and Age
-                        $('#<%= vLbl_Adress.ClientID %>').text(address);
-                        $('#<%= vLbl_Contact.ClientID %>').text(mobile);
-                        $('#<%= lblFollow.ClientID %>').text(follow);
-                        $('#<%= Label1.ClientID %>').text(opdNo);
-                        $("#<%= hdfPatient_ID.ClientID %>").val(PatientID);
-                        $("#<%= hdfReg_ID.ClientID %>").val(regPatID);
-
-                        $('#queueModal').modal('hide');
-                    }
-                },
-                failure: function (response) {
-
-                }
-            });
-
-
-
-
-        }
-        function loaddoctor_byDep() {
-            var depart = $('#ctl00_MainContent_ddlPatient_Main_Category').val();
-            if (depart == 0) {
-                depart = "";
-            }
-
-            PageMethods.LoadDoctor_bydep(depart, function (res) {
-                var doctor = JSON.parse(res);
-                var options = '<option value="0" >Please Select </option>';
-                var rowsText = '';
-
-                $.each(doctor, function (key, value) {
-                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
-                });
-
-                $('#ctl00_MainContent_ddldoctors').html(options)
-                $('#ctl00_MainContent_ddldoctors').attr('disabled', false);
-            });
-        }
-        function loadDepartments() {
-            var User_ID = '<%= Session["UserId"] != null ? Session["UserId"].ToString() : "" %>';
-
-            $.ajax({
-                url: 'NewEmergencyCase.aspx/GetDepartment',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({}),
-                success: function (res) {
-                    var doctor = JSON.parse(res.d); // Parse the JSON string
-
-                    var options =
-                        '<option value="000">Default Symptoms</option>' +
-                        '<option value="' + User_ID + '">Your Favourites</option>';
-
-                    // ✅ Loop through 'doctor' not 'data'
-                    $.each(doctor, function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-                    });
-
-                    $('#departments').html(options);
-                    $('#departments').select2();
-                    $('#filterDepartments').html(options);
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error loading departments:', error);
-                }
-            });
-        }
-        function FillMainTestDepartment() {
-
-            var options = '';
-
-            PageMethods.FillTestMainDepartment(function (Tests) {
-                $.each(JSON.parse(Tests), function (key, value) {
-                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                });
-                $('#filterMainDepartments').html(options);
-                $('#filterMainDepartments').select2();
-
-            });
-        }
-        function LoadDesignation() {
-            debugger;
-            var DocID = $('#ctl00_MainContent_ddlDoctorName').val();
-            PageMethods.LoadDesignation(DocID, function (res) {
-                var doctor = JSON.parse(res);
-                var rowsText = '';
-                debugger;
-                $('#ctl00_MainContent_txtDesignation').val(doctor.Emp_designatin);
-                updateFollowUpTable();
-            });
-            ConfigureAvailableDates(DocID);
-
-        }
-        function ConfigureAvailableDates(DocID) {
-            $.ajax({
-                type: "POST",
-                url: "NewOutPatient.aspx/GetAvailableDates",
-                data: JSON.stringify({ DocID: DocID }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var availableDates = JSON.parse(response.d);
-
-                    $("#ctl00_MainContent_FollowNoDate").datepicker("destroy"); // Remove any previous config
-
-                    $("#ctl00_MainContent_FollowNoDate").datepicker({
-                        dateFormat: "yy-mm-dd", // format to match your returned data
-                        beforeShowDay: function (date) {
-                            var dmy = $.datepicker.formatDate("yy-mm-dd", date);
-                            if (availableDates.indexOf(dmy) !== -1) {
-                                return [true, "available-date", "Doctor Available"];
-                            } else {
-                                return [false, "", "Doctor Not Available"];
-                            }
-                        }
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error fetching available dates:", error);
-                }
-            });
-        }
-        function loaddoctor() {
-            PageMethods.LoadDoctor(function (res) {
-                var doctor = JSON.parse(res);
-                var options = '<option value="0" >Please Select </option>';
-                var rowsText = '';
-
-                $.each(doctor, function (key, value) {
-
-                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
-                });
-
-                $('#ctl00_MainContent_ddlDoctorName').html(options)
-            });
-        }
-        function fillPendingPatientsList() {
-
-            var filterDepartment = $('#ctl00_MainContent_ddlPatientDepartment').val();
-            var doc_name = $('#ctl00_MainContent_ddldocname').val();
-            if (doc_name == "0") {
-                doc_name = "";
-            }
-            if (filterDepartment == "0") {
-                filterDepartment = "";
-            }
-
-            PageMethods.PendingPatients(filterDepartment, doc_name, function (data) {
-                debugger;
-                var parsedData = JSON.parse(data);
-                var rows = '';
-                $.each(parsedData, function (key, value) {
-                    debugger;
-                    var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
-                    var status = '';
-                    if (value.Checked == null) {
-                        status = 'Un Checked';
-                    }
-                    if (value.Checked != null) {
-                        var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
-                    }
-
-                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=loadPatient(' + value.Patient_ID + ',' + value.Patient_No + ',' + value.Reg_PatId + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
-                });
-                debugger;
-                $('#tblPendingPatients tbody').html(rows);
-
-
-                $(".se-pre-con").fadeOut("slow");
-
-            }, function (exec) { })
-        }
-
-        function fillDepartment() {
-            var options;
-            PageMethods.GetAllDeparmtent(function (data) {
-                debugger;
-                var options = '<option value="0" >Filter By Department</option>';
-                $.each(JSON.parse(data), function (key, value) {
-                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                });
-                $("#ctl00_MainContent_ddlPatientDepartment").html(options);
-                $("#ctl00_MainContent_ddlPatientDepartment").select2();
-            });
-            return options;
-        }
-        function filldoc() {
-            var options;
-            PageMethods.Getdoctors(function (data) {
-                debugger;
-                var options = '<option value="0" >Filter By Doctor</option>';
-                $.each(JSON.parse(data), function (key, value) {
-                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
-                });
-                $("#ctl00_MainContent_ddldocname").html(options);
-                $("#ctl00_MainContent_ddldocname").select2();
-            });
-            return options;
-        }
-
-    
-
-
-        // Simple AddVitals function matching your style. Load after jQuery and after ASP.NET controls render.
-
-        function AddVitals() {
-            // read values (ends-with selectors for ASP.NET rendered ids)
-            var pulse = $("[id$='txtRateBeats']").val() || '-';
-            var bp = $("[id$='txtBP']").val() || '-';
-            var temp = $("[id$='txtTemp']").val() || '-';
-            var resp = $("[id$='txtRespiration']").val() || '-';
-            var rhythm = $("[id$='ddlRhythm'] option:selected").text() || '-';
-            var volume = $("[id$='ddlVolume'] option:selected").text() || '-';
-            var o2sat = $("[id$='txtSaturation_Oxygen2']").val() || '-';
-            var percentage = $("[id$='txtSaturation']").val() || '-';
-            var liters = $("[id$='txtSaturation_Oxygen1']").val() || '-';
-
-            var roomAir = $("[id$='chk_OnRoomAir']").length ? ($("[id$='chk_OnRoomAir']").is(':checked') ? 'Yes' : 'No') : '-';
-            var withO2 = $("[id$='chk_WithOxygen']").length ? ($("[id$='chk_WithOxygen']").is(':checked') ? 'Yes' : 'No') : '-';
-
-            var others = $("[id$='txtOthersRcvNote']").val() || '-';
-            var received = $("[id$='txtReceiving_Date']").val() || '-';
-            var instruction = $("[id$='txtRN_Special_Instruction']").val() || '-';
-
-            var tbody = $('#tblVitals tbody');
-            var tableContainer = $('#divtblVitals');
-
-            // clear existing rows and insert one row (same behaviour as your demo)
-            tbody.empty();
-
-            var newRow = $('<tr>').html(
-                '<td>' + pulse + '</td>' +
-                '<td>' + bp + '</td>' +
-                '<td>' + temp + '</td>' +
-                '<td>' + resp + '</td>' +
-                '<td>' + rhythm + '</td>' +
-                '<td>' + volume + '</td>' +
-                '<td>' + o2sat + '</td>' +
-                '<td>' + percentage + '</td>' +
-                '<td>' + liters + '</td>' +
-                '<td>' + roomAir + '</td>' +
-                '<td>' + withO2 + '</td>' +
-                '<td>' + others + '</td>' +
-                '<td>' + received + '</td>' +
-                '<td>' + instruction + '</td>'
-            );
-
-            tbody.append(newRow);
-            tableContainer.slideDown();
-        }
-
-       
-        
-
-  
-
-        function updateSystematicExamTable() {
-            const SystematicExamTable = $('#SystematicExam tbody');
-            const SystematicExam = $('#divtblSystematicExam');
-            let hasData = false;
-
-            // Clear existing rows (no animation here)
-            SystematicExamTable.empty();
-
-            // Process each examination field (original logic)
-            $('.Systematic-Exam-Row').each(function () {
-                const labelSpan = $(this).find('span[id*="_Label"]');
-                const label = labelSpan.length ? labelSpan.text().trim() : '';
-
-                const textbox = $(this).find('textarea, input[type="text"]');
-                const value = textbox.length ? textbox.val().trim() : '';
-
-                if (value) {
-                    SystematicExamTable.append(`
-                <tr>
-                    <td><strong>${label}:</strong> ${value}</td>
-                </tr>
-            `);
-                    hasData = true;
-                }
-            });
-
-            // Only use slide effects for showing/hiding the container
-            if (hasData) {
-                if (SystematicExam.is(':hidden')) {
-                    SystematicExam.slideDown(300); // Slide down to show
-                }
-                // If already visible, just leave it visible (no animation)
-            } else {
-                if (SystematicExam.is(':visible')) {
-                    SystematicExam.slideUp(300); // Slide up to hide
-                }
-                // If already hidden, just leave it hidden
-            }
-        }
-
-        function Add_GeneralExamRow(examName) {
-            const $tableBody = $('#tblGeneralExam tbody');
-
-            if ($tableBody.find(`tr[data-exam="${examName}"]`).length > 0) return;
-
-            const $row = $(`
-            <tr data-exam="${examName}">
-                <td>${examName}</td>
-                <td>
-                    <a onclick="Remove_GeneralExamRow('${examName}')" class="remove-exam" data-exam="${examName}"><i class="fa fa-times"></i></a>
-                </td>
-            </tr>
-        `);
-
-            // Append to table
-            $tableBody.append($row);
-
-            // Show table container
-            $('#divtblGeneralExam').slideDown();
-        }
-        function Remove_GeneralExamRow(examName) {
-            // Remove the row
-            $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`).remove();
-
-            // Uncheck the corresponding checkbox
-            $(`input[type="checkbox"][onclick*="'${examName}'"]`).prop('checked', false);
-
-            // Hide the table container if no rows
-            if ($('#tblGeneralExam tbody tr').length === 0) {
-                $('#divtblGeneralExam').slideUp();
-            }
-        }
-
-        function AddNewComplaint() {
-            const $divComplaint = $('#divAddNewComplaint');
-
-            if ($divComplaint.is(':visible')) {
-                // Hide with slide up animation
-                $divComplaint.slideUp(300, function () {
-                    $('#NewComplaint').val(''); // Clear input after hiding
-                });
-            } else {
-                // Show with slide down animation
-                $divComplaint.slideDown(300, function () {
-                    $('#NewComplaint').focus(); // Focus input after showing
-                });
-            }
-        }
-        function saveComplaint() {
-            const complaintText = $('#NewComplaint').val().trim();
-
-            if (complaintText === '') {
-                alert('Please enter a complaint before saving.');
-                return;
-            }
-            else {
-                $.ajax({
-                    type: "POST",
-                    url: "NewOutPatient.aspx/SaveNewComplaint",
-                    data: JSON.stringify({ complaintText: complaintText }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.d == "0") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Complaint already exists!',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-                        }
-                        else {
-                            fillComplaints("");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error searching symptoms:", error);
-                    }
-                });
-            }
-            // Hide the form with slide up animation after saving
-            $('#divAddNewComplaint').slideUp(300, function () {
-                $('#NewComplaint').val(''); // Clear input after hiding
-            });
-        }
-        function Add_ComplaintRow(id, name) {
-            var checkComplaintadded = false;
-            $(".complainclass").each(function () {
-                var complainid = $(this).val();
-                if (complainid == id) {
-                    checkComplaintadded = true;
-                }
-            });
-
-            if (checkComplaintadded === false) {
-
-
-
-
-                var html = '<tr> <td style="display:none;"> <input type="hidden" class="complainclass" value="' + id + '" />' + id + ' </td>' +
-                    '<td> ' + name + ' </td>' +
-                    '<td  > <a href="#" onclick="Remove_ComplaintRow(\'' + id + '\')"><i class="fa fa-times"></i></a></td></tr>';
-
-
-                $('#tblComplaints tbody').append(html);
-                $('#dvtblComplaints').slideDown();
-
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Symptom already added',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-            }
-        }
-        function Remove_ComplaintRow(id) {
-            // Only uncheck the checkbox for the given id
-            $('#chk_complaint_' + id).prop('checked', false);
-
-            // Loop through rows to find and remove the matching one
-            $('#tblComplaints tbody tr').each(function () {
-                var row = $(this);
-                var hiddenInput = row.find('input.complainclass');
-                if (hiddenInput.val() === id) {
-                    row.remove();
-                    return false; // exit the loop early after removing
-                }
-            });
-
-            // Hide the table if there are no more rows
-            if ($('#tblComplaints tbody tr').length === 0) {
-                $('#dvtblComplaints').slideUp();
-            }
-        }
-        function fillComplaints(searchValue) {
-            var options = '';
-            $.ajax({
-                url: 'NewOutPatient.aspx/GetComplaints',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({
-                    searchValue: searchValue || ""
-                }),
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-
-                        options += '<div class="complaint-row" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" ' +
-                            'onclick="document.getElementById(\'chk_complaint_' + value.ComplaintId + '\').click()">' +
-                            '<div style="display: flex; align-items: center;">' +
-                            '<input type="checkbox" id="chk_complaint_' + value.ComplaintId + '" ' +
-                            'value="' + value.ComplaintId + '" ' +
-                            'class="complaint_checkbox" ' +
-                            'onclick="event.stopPropagation(); this.checked ? Add_ComplaintRow(\'' + value.ComplaintId + '\', \'' + value.ComplaintName + '\') : Remove_ComplaintRow(\'' + value.ComplaintId + '\')" />' +
-                            '<label for="chk_complaint_' + value.ComplaintId + '" style="margin-left: 8px; cursor: pointer;">' + value.ComplaintName + '</label>' +
-                            '</div>' +
-                            '</div>';
-                    });
-
-                    $('#allComplaints').html(options);
-
-
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-
-            return options;
-        }
-
-        function AddNewPrimaryDiagnosis() {
-            const $divComplaint = $('#divAddNewPrimaryDiagnosis');
-
-            if ($divComplaint.is(':visible')) {
-                // Hide with slide up animation
-                $divComplaint.slideUp(300, function () {
-                    $('#NewPrimaryDiagnosis').val(''); // Clear input after hiding
-                });
-            } else {
-                // Show with slide down animation
-                $divComplaint.slideDown(300, function () {
-                    $('#NewPrimaryDiagnosis').focus(); // Focus input after showing
-                });
-            }
-        }
-        function savePrimaryDiagnosis() {
-            const Text = $('#NewPrimaryDiagnosis').val().trim();
-
-            if (Text === '') {
-                alert('Please enter a Diagnosis before saving.');
-                return;
-            }
-            else {
-                $.ajax({
-                    type: "POST",
-                    url: "NewOutPatient.aspx/SaveNewDiagnosis",
-                    data: JSON.stringify({ Text: Text }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.d == "0") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Diagnosis already exists!',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-                        }
-                        else {
-                            fillPrimaryDiagnosis("");
-                            fillFinalDiagnosis("");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error searching symptoms:", error);
-                    }
-                });
-            }
-            // Hide the form with slide up animation after saving
-            $('#divAddNewPrimaryDiagnosis').slideUp(300, function () {
-                $('#NewPrimaryDiagnosis').val(''); // Clear input after hiding
-            });
-        }
-        function fillPrimaryDiagnosis(searchValue) {
-            var options = '';
-            $.ajax({
-                url: 'NewOutPatient.aspx/GetDiagnosis',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({
-                    searchValue: searchValue || ""
-                }),
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<div class="Primary-Diagnosis-row" style="display: flex; align-items: center; justify-content: space-between;">' +
-                            '<div style="display: flex; align-items: center; width: 100%">' +
-                            '<input type="checkbox" id="chk_Primary_Diagnosis_' + value.DiagnosisId + '" ' +
-                            'value="' + value.DiagnosisId + '" ' +
-                            'class="Primary_Diagnosis_checkbox" ' +
-                            'onclick="var textarea = document.getElementById(\'txtPrimaryDiagnosis_' + value.DiagnosisId + '\'); ' +
-                            'this.checked ? handlePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\', \'' + (value.DiagnosisName || '').replace(/'/g, "\\'") + '\') ' +
-                            ': removePrimaryDiagnosisRow(\'' + value.DiagnosisId + '\')" />' +
-                            '<label for="chk_Primary_Diagnosis_' + value.DiagnosisId + '" style="margin-left: 8px; width: 25%;">' + (value.DiagnosisName || '') + '</label>' +
-                            '<textarea class="primaryDiagnosisTextbox" id="txtPrimaryDiagnosis_' + value.DiagnosisId + '" style="width: 70%; margin-left: 10px;" rows="3"></textarea>' +
-                            '</div>' +
-                            '</div>';
-                    });
-
-                    $('#allPrimaryDiagnosis').html(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-        }
-        function handlePrimaryDiagnosisRow(diagnosisId, diagnosisName) {
-            debugger;
-            // Get the textarea value
-            const remarks = $('#txtPrimaryDiagnosis_' + diagnosisId).val().trim();
-
-            // Check if row already exists
-            const existingRow = $('#PrimarydiagnosisRow_' + diagnosisId);
-            debugger;
-            if (existingRow.length) {
-                // Update existing row
-                existingRow.find('td:eq(2)').text(remarks);
-            }
-            else {
-                // Create new row
-                const newRow = `
-    <tr id="PrimarydiagnosisRow_${diagnosisId}">
-        <td style="display:none">${diagnosisId}</td>
-        <td>${diagnosisName}</td>
-        <td>${remarks}</td>
-        <td>
-            <a href="#" onclick="removePrimaryDiagnosisRow('${diagnosisId}')">
-                <i class="fa fa-times"></i>
-            </a>
-        </td>
-    </tr>
-`;
-                console.log(newRow);
-                $("#tblPrimaryDiagnosis tbody").append(newRow);
-            }
-
-            // Show table if hidden
-            $('#dvtblPrimaryDiagnosis').slideDown();
-        }
-        $(document).on('change', '.Primary_Diagnosis_checkbox', function () {
-            const diagnosisId = $(this).val();
-            const diagnosisName = $(this).next('label').text();
-
-            if ($(this).is(':checked')) {
-                handlePrimaryDiagnosisRow(diagnosisId, diagnosisName);
-            } else {
-                removePrimaryDiagnosisRow(diagnosisId);
-            }
-        });
-        $(document).on('input', '.primaryDiagnosisTextbox', function () {
-            const diagnosisId = $(this).attr('id').replace('txtPrimaryDiagnosis_', '');
-            const diagnosisName = $(this).prevAll('label').text();
-            const checkbox = $('#chk_Primary_Diagnosis_' + diagnosisId);
-
-            // Check the checkbox if not already checked
-            if (!checkbox.is(':checked')) {
-                checkbox.prop('checked', true);
-            }
-
-            handlePrimaryDiagnosisRow(diagnosisId, diagnosisName);
-        });
-
-        function saveFinalDiagnosis() {
-            const Text = $('#NewFinalDiagnosis').val().trim();
-
-            if (Text === '') {
-                alert('Please enter a Diagnosis before saving.');
-                return;
-            }
-            else {
-                $.ajax({
-                    type: "POST",
-                    url: "NewOutPatient.aspx/SaveNewDiagnosis",
-                    data: JSON.stringify({ Text: Text }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.d == "0") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Diagnosis already exists!',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-                        }
-                        else {
-                            fillFinalDiagnosis("");
-                            fillPrimaryDiagnosis("");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error searching symptoms:", error);
-                    }
-                });
-            }
-            // Hide the form with slide up animation after saving
-            $('#divAddNewFinalDiagnosis').slideUp(300, function () {
-                $('#NewFinalDiagnosis').val(''); // Clear input after hiding
-            });
-        }
-        function AddNewFinalDiagnosis() {
-            const $divComplaint = $('#divAddNewFinalDiagnosis');
-
-            if ($divComplaint.is(':visible')) {
-                // Hide with slide up animation
-                $divComplaint.slideUp(300, function () {
-                    $('#NewFinalDiagnosis').val(''); // Clear input after hiding
-                });
-            } else {
-                // Show with slide down animation
-                $divComplaint.slideDown(300, function () {
-                    $('#NewFinalDiagnosis').focus(); // Focus input after showing
-                });
-            }
-        }
-        function fillFinalDiagnosis(searchValue) {
-            var options = '';
-            $.ajax({
-                url: 'NewOutPatient.aspx/GetDiagnosis',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({
-                    searchValue: searchValue || ""
-                }),
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<div class="Final-Diagnosis-row" style="display: flex; align-items: center; justify-content: space-between;">' +
-                            '<div style="display: flex; align-items: center; width: 100%">' +
-                            '<input type="checkbox" id="chk_Final_Diagnosis_' + value.DiagnosisId + '" ' +
-                            'value="' + value.DiagnosisId + '" ' +
-                            'class="Final_Diagnosis_checkbox" ' +
-                            'onclick="var textarea = document.getElementById(\'txtFinalDiagnosis_' + value.DiagnosisId + '\'); ' +
-                            'this.checked ? handleFinalDiagnosisRow(\'' + value.DiagnosisId + '\', \'' + (value.DiagnosisName || '').replace(/'/g, "\\'") + '\') ' +
-                            ': removeFinalDiagnosisRow(\'' + value.DiagnosisId + '\')" />' +
-                            '<label for="chk_Final_Diagnosis_' + value.DiagnosisId + '" style="margin-left: 8px; width: 25%;">' + (value.DiagnosisName || '') + '</label>' +
-                            '<textarea class="finalDiagnosisTextbox" id="txtFinalDiagnosis_' + value.DiagnosisId + '" style="width: 70%; margin-left: 10px;" rows="3"></textarea>' +
-                            '</div>' +
-                            '</div>';
-                    });
-
-                    $('#allFinalDiagnosis').html(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-        }
-        function removePrimaryDiagnosisRow(diagnosisId) {
-            // Remove the row
-            $('#PrimarydiagnosisRow_' + diagnosisId).remove();
-
-            // Uncheck checkbox and clear textarea
-            $('#chk_Primary_Diagnosis_' + diagnosisId).prop('checked', false);
-            $('#txtPrimaryDiagnosis_' + diagnosisId).val('');
-
-            // Hide table if no rows left
-            if ($('#tblPrimaryDiagnosis tbody tr').length === 0) {
-                $('#dvtblPrimaryDiagnosis').slideUp();
-            }
-        }
-        function handleFinalDiagnosisRow(diagnosisId, diagnosisName) {
-            // Get the textarea value
-            const remarks = $('#txtFinalDiagnosis_' + diagnosisId).val().trim();
-
-            // Check if row already exists
-            const existingRow = $('#FinaldiagnosisRow_' + diagnosisId);
-
-            if (existingRow.length) {
-                // Update existing row
-                existingRow.find('td:eq(2)').text(remarks);
-            } else {
-                // Create new row
-                const newRow = `
-            <tr id="FinaldiagnosisRow_${diagnosisId}">
-                <td style="display:none">${diagnosisId}</td>
-                <td>${diagnosisName}</td>
-                <td>${remarks}</td>
-                <td>
-                    <a href="#" onclick="removeFinalDiagnosisRow('${diagnosisId}')">
-                        <i class="fa fa-times"></i>
-                    </a>
-                </td>
-            </tr>
-        `;
-
-                $('#tblFinalDiagnosis tbody').append(newRow);
-            }
-
-            // Show table if hidden
-            $('#dvtblFinalDiagnosis').slideDown();
-        }
-        function removeFinalDiagnosisRow(diagnosisId) {
-            // Remove the row
-            $('#FinaldiagnosisRow_' + diagnosisId).remove();
-
-            // Uncheck checkbox and clear textarea
-            $('#chk_Final_Diagnosis_' + diagnosisId).prop('checked', false);
-            $('#txtFinalDiagnosis_' + diagnosisId).val('');
-
-            // Hide table if no rows left
-            if ($('#tblFinalDiagnosis tbody tr').length === 0) {
-                $('#dvtblFinalDiagnosis').slideUp();
-            }
-        }
-        $(document).on('change', '.Final_Diagnosis_checkbox', function () {
-            const diagnosisId = $(this).val();
-            const diagnosisName = $(this).next('label').text();
-
-            if ($(this).is(':checked')) {
-                handleFinalDiagnosisRow(diagnosisId, diagnosisName);
-            } else {
-                removeFinalDiagnosisRow(diagnosisId);
-            }
-        });
-        $(document).on('input', '.finalDiagnosisTextbox', function () {
-            const diagnosisId = $(this).attr('id').replace('txtFinalDiagnosis_', '');
-            const diagnosisName = $(this).prevAll('label').text();
-            const checkbox = $('#chk_Final_Diagnosis_' + diagnosisId);
-
-            // Check the checkbox if not already checked
-            if (!checkbox.is(':checked')) {
-                checkbox.prop('checked', true);
-            }
-
-            handleFinalDiagnosisRow(diagnosisId, diagnosisName);
-        });
 
         function FillLabTests(searchValue) {
             debugger;
@@ -3566,7 +2688,7 @@ input[type="checkbox"] {
         function FillMedicene(searchValue) {
             var html = '';
             $.ajax({
-                url: 'NewOutPatient.aspx/getpharmacyitems',
+                url: 'NewEmergencyCase.aspx/getpharmacyitems',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ searchString: searchValue || '' }), // Send empty string if searchValue is falsy
@@ -3919,7 +3041,7 @@ input[type="checkbox"] {
         function FillMediceneTemplates(searchValue) {
             var html = '';
             $.ajax({
-                url: 'NewOutPatient.aspx/GetTemplate',
+                url: 'NewEmergencyCase.aspx/GetTemplate',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ searchString: searchValue || '' }), // Send empty string if searchValue is falsy
@@ -3987,117 +3109,154 @@ input[type="checkbox"] {
                 $('#dvtblMedicines').slideDown();
             })
         }
-         
+    </script>
+    <script id="DocumentReady">
+        $(document).ready(function () {
 
-        function updateDisposalTable() {
-            const DisposalTable = $('#tblDisposal tbody');
-            const DisposalContainer = $('#divtblDisposal');
-            let hasData = false;
+            
+            loaddoctor_byDep();
+            var id = '<%=Request.QueryString["ID"]%>';
+            if (id != "") {
+                $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
+                loadPatientFormData(id);
+                $('#btnSave').val("Update");
+                AppendSymtompsHistory();
+                Appendtestintable();
+                LoadMedicines();
+                AppendPrimaryDiagnosisHistory();
+                AppendFinalDiagnosisHistory();
+                AppendComplaintsHistory();
+                updateHistoryTable();
 
-            // Clear existing rows
-            DisposalTable.empty();
+                $('.exam-row input[type="checkbox"]').each(function () {
+                    var param = this.id.split('_chk').pop();
+                    if (this.checked) {
+                        Add_GeneralExamRow(param);
+                    }
+                });
+ 
+            }
+            else {
+                openQueue();
+                $('#ctl00_MainContent_txtOut_Patient_ID').val("(New)");
+                $('#<%= txtOut_Patient_ID.ClientID%>').val("(New)");
 
-            // Process each Disposal field
-            $('.Disposal-row').each(function () {
-                const label = $(this).find('span').text().trim();
-                const textbox = $(this).find('textarea, input[type="text"]');
-                const value = textbox.val().trim();
+            }
+           
+        });
+    </script>
+    <script id="functions" type="text/javascript">
+      
+        function ResetForm() {
+            window.location.href = "NewOutPatient.aspx";
+        }
+     
+        function loadPatient(PatientID, opdNo, regPatID) {
+            $.ajax({
+                type: "POST",
+                url: "NewOutPatient.aspx/GetDetail",
+                data: "{'PatientID':" + PatientID + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = response.d;
+                    if (data != '') {
+                        var mydate = new Date(Date.parse(data.Entry_Date));
+                        var dateR = mydate.toLocaleDateString();
+                        var name = ReplaceNullWith_Space(data.Name);
+                        var gender = ReplaceNullWith_Space(data.Gender);
+                        var age = ReplaceNullWith_Space(data.Age);
+                        var mobile = ReplaceNullWith_Space(data.Mobile);
+                        var address = ReplaceNullWith_Space(data.Address);
+                        var follow = ReplaceNullWith_Space(data.Follow);
+                        var outID = data.OutPatientID || "0"; // Use logical OR to provide default
 
-                if (value) {
-                    // Append new row with formatted text
-                    DisposalTable.append(`
-        <tr>
-            <td><strong>${label}:</strong> ${value}</td>
-        </tr>
-    `);
-                    hasData = true;
+                        console.log("OutPatientID:", outID);
+
+                        if (outID && outID !== "0") {
+                            window.location = "NewOutPatient.aspx?ID=" + outID;
+                            return; // Exit if redirecting
+                        }
+
+                        $('#<%= vlblPatients_Name.ClientID %>').text(name);
+                        $('#<%= vLbl_Age.ClientID %>').text(gender + "-" + age + "yrs"); // Combine Gender and Age
+                        $('#<%= vLbl_Adress.ClientID %>').text(address);
+                        $('#<%= vLbl_Contact.ClientID %>').text(mobile);
+                        $('#<%= lblFollow.ClientID %>').text(follow);
+                        $('#<%= Label1.ClientID %>').text(opdNo);
+                        $("#<%= hdfPatient_ID.ClientID %>").val(PatientID);
+                        $("#<%= hdfReg_ID.ClientID %>").val(regPatID);
+
+                        $('#queueModal').modal('hide');
+                    }
+                },
+                failure: function (response) {
+
                 }
             });
 
-            // Show/hide container based on whether there's data
-            if (hasData) {
-                DisposalContainer.slideDown();
-            } else {
-                DisposalContainer.slideUp();
-            }
+
+
+
+        }
+      
+        // Simple AddVitals function matching your style. Load after jQuery and after ASP.NET controls render.
+
+        function AddVitals() {
+            // read values (ends-with selectors for ASP.NET rendered ids)
+            var pulse = $("[id$='txtRateBeats']").val() || '-';
+            var bp = $("[id$='txtBP']").val() || '-';
+            var temp = $("[id$='txtTemp']").val() || '-';
+            var resp = $("[id$='txtRespiration']").val() || '-';
+            var rhythm = $("[id$='ddlRhythm'] option:selected").text() || '-';
+            var volume = $("[id$='ddlVolume'] option:selected").text() || '-';
+            var o2sat = $("[id$='txtSaturation_Oxygen2']").val() || '-';
+            var percentage = $("[id$='txtSaturation']").val() || '-';
+            var liters = $("[id$='txtSaturation_Oxygen1']").val() || '-';
+
+            var roomAir = $("[id$='chk_OnRoomAir']").length ? ($("[id$='chk_OnRoomAir']").is(':checked') ? 'Yes' : 'No') : '-';
+            var withO2 = $("[id$='chk_WithOxygen']").length ? ($("[id$='chk_WithOxygen']").is(':checked') ? 'Yes' : 'No') : '-';
+
+            var others = $("[id$='txtOthersRcvNote']").val() || '-';
+            var received = $("[id$='txtReceiving_Date']").val() || '-';
+            var instruction = $("[id$='txtRN_Special_Instruction']").val() || '-';
+
+            var tbody = $('#tblVitals tbody');
+            var tableContainer = $('#divtblVitals');
+
+            // clear existing rows and insert one row (same behaviour as your demo)
+            tbody.empty();
+
+            var newRow = $('<tr>').html(
+                '<td>' + pulse + '</td>' +
+                '<td>' + bp + '</td>' +
+                '<td>' + temp + '</td>' +
+                '<td>' + resp + '</td>' +
+                '<td>' + rhythm + '</td>' +
+                '<td>' + volume + '</td>' +
+                '<td>' + o2sat + '</td>' +
+                '<td>' + percentage + '</td>' +
+                '<td>' + liters + '</td>' +
+                '<td>' + roomAir + '</td>' +
+                '<td>' + withO2 + '</td>' +
+                '<td>' + others + '</td>' +
+                '<td>' + received + '</td>' +
+                '<td>' + instruction + '</td>'
+            );
+
+            tbody.append(newRow);
+            tableContainer.slideDown();
         }
 
-        function AddProto() {
-            debugger;
-            var protoval = $('#ctl00_MainContent_ddlProto').val();
-            var prototext = $('#ctl00_MainContent_ddlProto option:selected').text();
+       
 
-            var rows = '<tr><td ><input type="hidden" name="ProtoId" value="' + protoval + '" />' + prototext + '</td> <td style="text-align: left;"> <a  href="#" onclick="DeleteRow(this)"><i class="fa fa-times"></i></a> </td> </tr>';
-            $("#tblProto").append(rows);
-            $("#dvtblProto").slideDown();
-        }
-
-        function toggleDischarge(checkbox) {
-            const label = checkbox.closest('label');
-            const textSpan = document.getElementById('DischargeButtonText');
-
-            if (checkbox.checked) {
-                label.classList.add('checked');
-                textSpan.textContent = 'Discharged';
-            } else {
-                label.classList.remove('checked');
-                textSpan.textContent = 'Discharge';
-            }
-        }
-        function DeleteRow(anchor) {
-            var row = $(anchor).parents('tr')[0];
-            row.remove();
-            // Check if there are no more rows left in the tbody
-            if ($("#tblProto tbody tr").length === 0) {
-                $("#dvtblProto").slideUp();
-            }
-        }
+      
         function toggleRetract() {
             const retractDiv = document.getElementById('retract');
             retractDiv.classList.toggle('minimized');
         }
-        function ReplaceNullWith_Space(value) {
-            return value == null ? '' : value;
-        }
-        function Remove_CustomInputRow() {
-            const examName = 'CustomInput';
-
-            $(`#tblGeneralExam tbody tr[data-exam="${examName}"]`).remove();
-
-            $('#ctl00_MainContent_txtInputBox1').val('');
-            if ($('#tblGeneralExam tbody tr').length === 0) {
-                $('#divtblGeneralExam').slideUp();
-            }
-        }
-        function filterExaminations() {
-
-            const selectedValue = $('#filterExaminations').val();
-
-            $('.subtabs').slideUp();
-
-            if (selectedValue === '001') {
-                $('#subTab001').slideDown();
-            }
-
-            else if (selectedValue === '002') {
-                $('#subTab002').slideDown();
-            }
-            else {
-                $('#subTab003').slideDown();
-            }
-        }
-        function uuid() {
-            var uuid = "", i, random;
-            for (i = 0; i < 32; i++) {
-                random = Math.random() * 16 | 0;
-
-                if (i == 8 || i == 12 || i == 16 || i == 20) {
-                    uuid += "-"
-                }
-                uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
-            }
-            return uuid;
-        }
+      
+     
         function toggleMenu(element) {
             element.classList.toggle('active');
         }
@@ -4135,67 +3294,36 @@ input[type="checkbox"] {
 
     </script>
     <script id="saveLogic">
-        function SaveComplaintsTab() {
+        function SaveHistoryTab() {
 
-            var ComplaintsList = [];
-            var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0")
-                OutPatientID = 0;
-            $.each($('#tblComplaints tbody tr'), function (key, value) {
-                ComplaintsList.push({
-                    'OutPatientID': OutPatientID,
-                    'ComplaintID': $(value).find('.complainclass').val(), // Get the value from the hidden input
-                    'ComplaintText': $($(value).find('td')[1]).text().trim(), // Get text from second td
+            var SymtomsList = [];
+
+            $.each($('#tblSymtoms tbody tr'), function (key, value) {
+                debugger;
+                var dayYearMonthText = $($(value).find('td')[4]).text();
+                dayYearMonthText = dayYearMonthText.replace(/\s/g, "");
+
+                var dayYearMonthID = $('#ddlDaysMonthsYears').find('option:contains(' + dayYearMonthText + ')').val() || '';
+
+                SymtomsList.push({
+                    'SymtomID': $($(value).find('td')[1]).text(),
+                    'Duration': $($(value).find('td')[3]).text(),
+                    'DayYearMonth': dayYearMonthID,
+                    'Remarks': $($(value).find('td')[5]).text()
                 });
             });
 
-
-            PageMethods.SaveComplaintsOfPatient(JSON.stringify(ComplaintsList), function (response) {
-            });
-
-        }
-        function SavePrimaryDiagnosisTab() {
-
-            var PrimaryDiagnosisList = [];
-            var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0") {
-                OutPatientID = 0;
+            var SymtomsList = {
+                OutPatientID: ($('#ctl00_MainContent_txtOut_Patient_ID').val() != "(New)" || $('#ctl00_MainContent_txtOut_Patient_ID').val() != "0") ? $('#ctl00_MainContent_txtOut_Patient_ID').val() : "0",
+                SymtomsList: SymtomsList
             }
-            $.each($('#tblPrimaryDiagnosis tbody tr'), function (key, value) {
-                PrimaryDiagnosisList.push({
-                    'OutPatientID': OutPatientID,
-                    'DiagnosisID': $($(value).find('td')[0]).text().trim(), // Get the value from the hidden input
-                    'Remarks': $($(value).find('td')[2]).text().trim(), // Get text from second td
-                });
-            });
-
-
-            PageMethods.SavePrimaryDiagnosisOfPatient(JSON.stringify(PrimaryDiagnosisList), function (response) {
+            console.log(SymtomsList);
+            PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), function (response) {
+                 saveAllRecord();
             });
 
         }
-        function SaveFinalDiagnosisTab() {
-
-            var FinalDiagnosisList = [];
-            var OutPatientID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
-            if (OutPatientID == '(New)' || OutPatientID == '' || OutPatientID == "0") {
-                OutPatientID = 0;
-            }
-            $.each($('#tblFinalDiagnosis tbody tr'), function (key, value) {
-                FinalDiagnosisList.push({
-                    'OutPatientID': OutPatientID,
-                    'DiagnosisID': $($(value).find('td')[0]).text().trim(), // Get the value from the hidden input
-                    'Remarks': $($(value).find('td')[2]).text().trim(), // Get text from second td
-                });
-            });
-
-
-            PageMethods.SaveFinalDiagnosisOfPatient(JSON.stringify(FinalDiagnosisList), function (response) {
-            });
-
-        }
-        function SaveMedicines() {
-            SaveComplaintsTab(); SavePrimaryDiagnosisTab(); SaveFinalDiagnosisTab();
+        function SaveMedicines() { 
             debugger;
             var table = $('#tblMedicines');
             var MedicinesList = [];
@@ -4261,58 +3389,8 @@ input[type="checkbox"] {
                 SaveHistoryTab();
             });
         }
-        function SaveHistoryTab() {
-
-            var SymtomsList = [];
-
-            $.each($('#tblSymtoms tbody tr'), function (key, value) {
-                debugger;
-                var dayYearMonthText = $($(value).find('td')[4]).text();
-                dayYearMonthText = dayYearMonthText.replace(/\s/g, "");
-
-                var dayYearMonthID = $('#ddlDaysMonthsYears').find('option:contains(' + dayYearMonthText + ')').val() || '';
-
-                SymtomsList.push({
-                    'SymtomID': $($(value).find('td')[1]).text(),
-                    'Duration': $($(value).find('td')[3]).text(),
-                    'DayYearMonth': dayYearMonthID,
-                    'Remarks': $($(value).find('td')[5]).text()
-                });
-            });
-
-            var SymtomsList = {
-                OutPatientID: ($('#ctl00_MainContent_txtOut_Patient_ID').val() != "(New)" || $('#ctl00_MainContent_txtOut_Patient_ID').val() != "0") ? $('#ctl00_MainContent_txtOut_Patient_ID').val() : "0",
-                SymtomsList: SymtomsList
-            }
-            console.log(SymtomsList);
-            PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), function (response) {
-                SaveProtos();
-                saveAllRecord();
-            });
-
-        }
-        function SaveProtos() {
-            debugger;
-            var table = $("#tblProto");
-            var ProcedureList = [];
-            var btnSave = $('#btnSave').val();
-            table.find("tbody tr").each(function (key, value) {
-                ProcedureList.push({
-                    'Proto_Description': $($(value).find("td")[0]).text(),
-                    'ProtoId': $($(value).find("td")[0]).find("input[name=ProtoId]").val(),
-                });
-            });
-            var patID = $('#<%= hdfPatient_ID.ClientID%>').val();
-
-            var opdid = $('#<%= txtOut_Patient_ID.ClientID %>').val();
-            if (opdid == "(New)" || opdid == "0")
-                opdid = 0;
-            var ProtoDetails = { PatId: patID, opdid: opdid, ProtoList: ProcedureList };
-            console.log(ProtoDetails);
-            PageMethods.SaveProto(btnSave, JSON.stringify(ProtoDetails), function (response) {
-
-            });
-        }
+       
+     
         function saveAllRecord() {
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
@@ -6019,7 +5097,7 @@ input[type="checkbox"] {
 </div>
                                     <div class="tabs" id="tab07" style="display: none">
   <div style="display: flex; justify-content: flex-end;">
-    <input type="button" class="btn btn-primry" value="Add Vitals" onclick="AddVitals()" />
+    <input type="button" class="btn btn-primry" value="Add Vitals" onclick="AddDischargeVitals]()" />
   </div>
   <div class="vitals-container" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
     <!-- Row 1 -->
@@ -6136,34 +5214,34 @@ input[type="checkbox"] {
 
     <!-- Row 1 -->
     <div style="display:flex; flex-wrap:wrap; gap:12px; width:100%;">
-      <div class="vital-row" style="display:flex; align-items:flex-start; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:flex-start; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblDischarge_By" runat="server" Text="Advise By"></asp:Label>
         <asp:UpdatePanel runat="server" ID="UpdatePanel2">
           <Triggers>
             <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
           </Triggers>
           <ContentTemplate>
-            <asp:DropDownList ID="DropDownList2" runat="server" Width="167px" AppendDataBoundItems="true" TabIndex="1"></asp:DropDownList>
+            <asp:DropDownList ID="ddlDischarge_By" runat="server" Width="167px" AppendDataBoundItems="true" TabIndex="1"></asp:DropDownList>
           </ContentTemplate>
         </asp:UpdatePanel>
       </div>
 
-      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblDischarge_On" runat="server" Text="Discharged Date "></asp:Label>
         <asp:TextBox ID="txtDischarge_On" runat="server" disabled="disabled"></asp:TextBox>
       </div>
 
-      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label runat="server" ID="lblDiagnosis" Text="Diagnosis"></asp:Label>
         <asp:TextBox runat="server" style="width: 100% !important;height: 35px !important;" ID="txtDiagnosis" TextMode="MultiLine"></asp:TextBox>
       </div>
 
-      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblPrevention_Precaution" runat="server" Text="Advice "></asp:Label>
         <asp:TextBox ID="txtPrevention_Precaution"  style="width: 100% !important;height: 35px !important;" runat="server" TextMode="MultiLine"  TabIndex="2"></asp:TextBox>
       </div>
 
-      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="Label13" runat="server" Text="Follow Up"></asp:Label>
         <asp:TextBox ID="txtNext_Visit" runat="server" TabIndex="5"></asp:TextBox>
       </div>
@@ -6171,27 +5249,27 @@ input[type="checkbox"] {
 
     <!-- Row 2 -->
     <div style="display:flex; flex-wrap:wrap; gap:12px; width:100%;">
-      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblTreatmentAtDischarge" runat="server" Text="Treatment At Discharge"></asp:Label>
         <asp:TextBox ID="txtTreatmentAtDischarge" runat="server" style="width: 100% !important;height: 35px !important;"  TextMode="MultiLine"  TabIndex="4"></asp:TextBox>
       </div>
 
-      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblFollowUpPlanInstructions" runat="server" Text="Follow Up Plan & Instructions"></asp:Label>
         <asp:TextBox  ID="txtFollowUpPlanInstructions" style="width: 100% !important;height: 35px !important;"  runat="server" TextMode="MultiLine"></asp:TextBox>
       </div>
 
-      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblProcRecommended" runat="server" Text="Procedure Recommended"></asp:Label>
         <asp:TextBox ID="txtProcedureRecommended" style="width: 100% !important;height: 35px !important;"  runat="server" TextMode="MultiLine"  TabIndex="4"></asp:TextBox>
       </div>
 
-      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblDischargeStatus" runat="server" Text="Discharge Status"></asp:Label>
         <asp:DropDownList runat="server" ID="ddlDischargeStatus" AppendDataBoundItems="true"></asp:DropDownList>
       </div>
 
-      <div class="vital-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; flex-direction:column; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label runat="server" ID="lblCauseOfReferral" Text="Cause Of Referral"></asp:Label>
         <asp:TextBox  runat="server" style="width: 100% !important;height: 35px !important;" ID="txtCauseOfReferral" TextMode="MultiLine"></asp:TextBox>
       </div>
@@ -6199,22 +5277,22 @@ input[type="checkbox"] {
 
     <!-- Row 3 -->
     <div style="display:flex; flex-wrap:wrap; gap:12px; width:100%;">
-      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblReferredTo" runat="server" Text="Referred To"></asp:Label>
         <asp:DropDownList runat="server" ID="ddlReferredTo" AppendDataBoundItems="true"></asp:DropDownList>
       </div>
 
-      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="Label14" runat="server" Text="Discharge Slip" ></asp:Label>
         <asp:CheckBox ID="cbDicharg_Slip" style="margin-top: 9px;width: 58px !important;" runat="server"  ></asp:CheckBox>
       </div>
 
-      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lbldeath" runat="server" Text="Death" ></asp:Label>
         <input type="checkbox" style="margin-top: 9px;width: 58px !important;" ID="cb_death"  runat="server" onchange="showdeathtab();" />
       </div>
 
-      <div class="vital-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="display:flex; align-items:center; width:48%; padding:5px; box-sizing:border-box;">
         <label class="form-check-label" for="ReferOPD" style="margin-bottom: -21px;">Refer To OPD</label>
         <asp:CheckBox runat="server" style="margin-top: 9px;width: 58px !important;" ID="ReferToOPD" ClientIDMode="Static" />
       </div>
@@ -6222,10 +5300,10 @@ input[type="checkbox"] {
 
     <!-- Row 4 (Death certificate controls hidden by style as original) -->
     <div style="display:none; flex-wrap:wrap; gap:12px; width:100%;">
-      <div class="vital-row" style="width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="width:48%; padding:5px; box-sizing:border-box;">
         <asp:Label ID="lblDeath_Certificate" runat="server" Text="Death Certificate" style="display:none"></asp:Label>
       </div>
-      <div class="vital-row" style="width:48%; padding:5px; box-sizing:border-box;">
+      <div class="history-row" style="width:48%; padding:5px; box-sizing:border-box;">
         <asp:CheckBox ID="cbDeath_Certificate" runat="server" style="display:none"></asp:CheckBox>
       </div>
     </div>
@@ -6472,6 +5550,82 @@ input[type="checkbox"] {
                     <div id="PreviewPane" class="medical-dashboard" style="height: 85vh; overflow-y: auto;">
                         <div class="dashboard-container">
                             <div class="row g-3">
+                                <div class="col-lg-12" id="divtblDischargeDetails" style="display: none; margin-top:12px;">
+  <div class="dashboard-card">
+    <div class="card-header">
+      <h4><i class="fa fa-file-medical-alt"></i> Discharge Details</h4>
+    </div>
+    <div class="table-responsive" style="overflow:hidden;">
+      <table id="tblDischargeDetails" class="table modern-table" style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="width:35%;">Field</th>
+            <th style="width:65%;">Value</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+                                <div class="col-lg-12" id="divtblDoctorCalls" style="display: none;">
+  <div class="dashboard-card">
+    <div class="card-header">
+      <h4><i class="fa fa-user-md"></i> Doctor Calls</h4>
+    </div>
+    <div class="table-responsive" style="overflow:hidden;">
+      <table class="table modern-table" id="tblDoctorCalls" style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Doctor</th>
+            <th>Mobile No</th>
+            <th>Doctor Notes</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+                                <div class="col-lg-12" id="divtblDischargeVitals" style="display: none;">
+  <div class="dashboard-card">
+    <div class="card-header">
+      <h4><i class="fa fa-heartbeat"></i> Discharge Vitals</h4>
+    </div>
+    <div class="table-responsive">
+      <table class="table modern-table" id="tblDischargeVitals" style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th>Pulse</th>
+            <th>B.P.</th>
+            <th>Rhythm</th>
+            <th>Temp</th>
+            <th>Volume</th>
+            <th>Resp.</th>
+            <th>O2 Sat</th>
+            <th>Percentage</th>
+            <th>Liters/Min</th>
+            <th>Room Air</th>
+            <th>With O2</th>
+            <th>Others</th>
+            <th>Receiving Date & Time</th>
+            <th>Special Instruction</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
                                 <!-- Six separate tables - one per section. Keep structure/classes same as your Vitals/History panels. -->
 <div class="col-lg-9" id="divtblCVS" style="display: none">
     <div class="dashboard-card">
@@ -6935,7 +6089,5 @@ input[type="checkbox"] {
     <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
 <asp:HiddenField ID="HiddenField1" runat="server" Value="(New)" ClientIDMode="Static" />
 
-    <ContentTemplate>
-    <asp:DropDownList ID="ddlDischarge_By" runat="server" Width="167px" AppendDataBoundItems="true" TabIndex="1"></asp:DropDownList>
-</ContentTemplate>
+    
 </asp:Content>
