@@ -30,7 +30,7 @@
             }
             else {
 
-                $('#ddl_Gender').select2();
+               
                 $('#ddlGender').select2();
                 $('#ddlpanel').select2();
                 $('#ddlemployee').select2();
