@@ -2126,6 +2126,53 @@ namespace PMS
                     ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "Pending", Value = "1" });
                     ddlMedicalSubsidy.DataBind();
                 }
+
+                else if (this.PageTitle == "Lab_Test_Investigation_Delay")
+                {
+                    string x = "Lab Test Investigation Delay";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    dpROw.Visible = true;
+                    optRw.Visible = false;
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMedical.Visible = false;
+                    ddlMedicalSubsidy.Visible = false;
+                    ddlPatientType.Visible = false;
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
+                    ddlPatientType.DataBind();
+                  
+                    lblDepartment.Text ="Department";
+
+                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+
+
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };               
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;                  
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    tr_Summary.Visible = false;
+                    GetLabTests();
+                }
                 else if (this.PageTitle == "Lab_Cash_Collection")
                 {
                     string x = "Lab Cash Collection";

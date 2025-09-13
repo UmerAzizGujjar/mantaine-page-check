@@ -492,6 +492,12 @@
                         var url = 'ReportViewer.aspx?ReportName=Patient_Transaction_Detail_Type&ReportTitle=Insurance Patient Invoice&MRNo=' + $('#ctl00_MainContent_txtMR_No').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
+                    else if (rptTitle == "Lab_Test_Investigation_Delay") {
+                        //<%-- var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;--%>
+                        var url = 'ReportViewer.aspx?ReportName=Lab_Test_Investigation_Delay&ReportTitle=Lab Test Investigation Delay from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0"); //+ '&Summary=' + summary ;
+                        window.open(url, '_blanks');
+                    }
+
                     else if (rptTitle == "Lab_Cash_Collection") {
                        //<%-- var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;--%>
                         var url = 'ReportViewer.aspx?ReportName=LabCashCollection&ReportTitle=LabCashCollection from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0"); //+ '&Summary=' + summary ;
@@ -550,8 +556,7 @@
                     }
                     else if (rptTitle == "Test_Result_Status") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=TestResultStatus&ReportTitle=
-                        Result Status from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&serviceID=' + ((typeof ($("#ctl00_MainContent_ddlTestResult").val()) != 'undefined') ? $("#ctl00_MainContent_ddlTestResult").val() : "0") + '&ExportPDF=' + exporttopdf; /*+ '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked*/
+                        var url = 'ReportViewer.aspx?ReportName=TestResultStatus&ReportTitle=Test Result Status from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&serviceID=' + ((typeof ($("#ctl00_MainContent_ddlTestResult").val()) != 'undefined') ? $("#ctl00_MainContent_ddlTestResult").val() : "0") + '&ExportPDF=' + exporttopdf; /*+ '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked*/
                         window.open(url, '_blanks');
                     }
 
