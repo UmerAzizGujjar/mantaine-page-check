@@ -835,6 +835,7 @@
 
                                     debugger;
                                     window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+                                    TestDetail(id)
                                 }
                                 else {
                                     alert(response.d);
@@ -917,7 +918,204 @@
 
             }
         }
+        function TestDetail(id) {
+            debugger;
+            var SelectedDepartment = "001";
+            //PageMethods.PendingLabTest(SelectedDepartment, function (data) {
+            PageMethods.AllPendingLabTestDetail(SelectedDepartment, id, function (data) {
+                debugger;
+                var parsedData = JSON.parse(data);
+                var rows = '';
+                $.each(parsedData, function (key, value) {
+                    if (value.DoctorName == null || value.DoctorName == "0")
+                        value.DoctorName = "";
+                    if (value.Rotation == null)
+                        value.Rotation = "";
+                    if (value.Rotation == 0)
+                        value.Rotation = "";
+                    if (value.L_R_Rotation_ID == 0)
+                        value.L_R_Rotation_ID = "";
+                    if (value.L_R_Rotation_ID == null)
+                        value.L_R_Rotation_ID = "";
+                    var retdate = moment(value.Created_Time).format('LLLL');
+                    if (value.Lab_Test_Detail_ID == null) {
+                        value.Recieved_ID == "0";
+                        value.Lab_Test_Detail_ID = "0";
+                    }
+                    if (value.chkPackages == null)
+                        value.chkPackages = "0";
 
+                    var mydate = new Date(Date.parse(value.Date));
+                    var retdate = mydate.toLocaleDateString();
+
+                    debugger;
+                    if (value.Test_ID != 0) {
+                        if (value.Recieved_ID != 0) {
+                            rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="Sample_Date" value="' + value.Sample_Date + '"/><input type="hidden" name="Sample_User" value="' + value.Sample_User + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/>' + retdate + '</td>' + ' <td>' + value.Sample_No + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden"  id="txtMRNO' + key + '" value="' + value.Patient_No + '"/>' + value.Patient_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="0"/>' + value.Test_Name + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this) style="color:red">Select</a> </td> </tr>';
+
+                        }
+                        else {
+                            rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/>' + retdate + '</td>' + ' <td>' + value.Sample_No + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden"" id="txtMRNO' + key + '" value="' + value.Patient_No + '"/>' + value.Patient_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="0"/>' + value.Test_Name + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
+                        }
+                    }
+                    else {
+                        if (value.Recieved_ID != 0) {
+                            rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="OPD" value="' + value.Parent_Transaction_Type_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/>' + retdate + '</td>' + ' <td>' + value.Sample_No + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID" value="' + value.Patient_ID + '"/><input type="hidden"  id="txtMRNO' + key + '" value="' + value.Patient_No + '"/>' + value.Patient_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="' + value.Catagory_ID + '"/>' + value.GroupName + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this) style="color:red">Select</a> </td> </tr>';
+                        }
+                        else {
+
+                            rows += '<tr id="row' + key + '"><td><input type="hidden" name="chkPackages" value="' + value.chkPackages + '"/><input type="hidden" name="OPD" value="' + value.Out_Patient_ID + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><input type="hidden" name="RecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="Paymentcheck" value="' + value.IsBilled + '"/><input type="hidden" name="Detail" value="' + value.Lab_Test_Detail_ID + '"/><input type="hidden" name="LabTestID" value="' + value.Lab_Test_ID + '"/>' + retdate + '</td>' + ' <td>' + value.Sample_No + '</td>' + ' <td><input type="hidden" name="txtAreaofInterest" value="' + value.Area_Of_Interest + '"/><input type="hidden" name="Patient_ID"  value="' + value.Patient_ID + '"/><input type="hidden"  id="txtMRNO' + key + '" value="' + value.Patient_No + '"/>' + value.Patient_No + '</td> ' + '<td>' + value.Name + '</td> ' + '<td style="display:none">' + value.Test_ID + '</td>' + '<td><input type="hidden" id="txtID" value="' + value.Test_ID + '"/><input type="hidden" name="testCatID" value="' + value.Catagory_ID + '"/>' + value.GroupName + '</input></td> ' + '<td>' + value.Remarks + '</td> ' + '<td>' + value.Transaction_Type + '</td>' + '<td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
+                        }
+                    }
+                });
+                $('#tblPendingPatients tbody').html(rows);
+                $('#tblPendingPatients tbody tr').each(function (key, value) {
+                    debugger;
+                    select3(value, id);
+
+                });
+                $("#tblPendingPatients").find('tr th:nth-child(7)').hide();
+                $("#tblPendingPatients").find('tr th:nth-child(8)').hide();
+            }, function (exec) { alert(exec.getmessage()); })
+
+
+        }
+        //select code
+
+        function select3(value, id) {
+            debugger;
+
+            var row = value;
+            var RecievedID = $($(row).find('td input[name=RecievedID]')[0]).val();
+            var Patient_ID = $($(row).find('td input[name=Patient_ID]')[0]).val();
+            //update
+            var Bill_Details_ID = $($(row).find('td input[name=Bill_Details_ID]')[0]).val();
+
+            var TransactionType = $($(row).find('td')[6]).text();
+            var trnsid = $($(row).find('td input[name=OPD]')[0]).val();
+            if (RecievedID != "0") {
+                PageMethods.checkRepeat(RecievedID, function (data) {
+                    $.each(JSON.parse(data), function (key, value) {
+                        window.location = "LaboratoryTest.aspx?ID=" + value.Lab_Test_ID;
+                        $('#ctl00_MainContent_saveLabTest').val("Update");
+
+
+
+                    });
+                }, function (error) { })
+            }
+
+            var SelectedDepartment = "001";
+
+            var OPD = $($(row).find('td')[0]).val();
+            // alert(OPD)
+
+            var chkPackages = $($(row).find('td input[name=chkPackages]')[0]).val();
+            var Patient_ID = $($(row).find('td input[name=Patient_ID]')[0]).val();
+            var trnsid = $($(row).find('td input[name=OPD]')[0]).val();
+            var Paymentcheck = $($(row).find('td input[name=Paymentcheck]')[0]).val();
+            var Sample_Date = $($(row).find('td input[name=Sample_Date]')[0]).val();
+            var Sample_User = $($(row).find('td input[name=Sample_User]')[0]).val();
+            //if (Paymentcheck != 'true') {
+            //    alert('Payment Not Done');
+            //    return false;
+            //}
+            var LTestid = $($(row).find('td input[name=Detail]')[0]).val();
+            var LabTestID = $($(row).find('td input[name=LabTestID]')[0]).val();
+            var PatID = $($(row).find('td input[name=Patient_ID]')[0]).val();
+            var type = $($(row).find('td')[6]).text();
+            var Area = $($(row).find('td input[name=txtAreaofInterest]')[0]).val();
+            var testCatID = $($(row).find('td input[name=testCatID]')[0]).val();
+
+            var txtRotation = $($(row).find('td input[name=txtRotation]')[0]).val();
+            var txtddlXRayLF_Name = $($(row).find('td input[name=txtddlXRayLF_Name]')[0]).val();
+            var testID = $($(row).find('td')[4]).text();
+            var name = $($(row).find('td')[5]).text();
+            var existingID = $("#hdPatientID").val();
+
+            var userName = '<%= AppConfig.UserName %>';
+             var date = '<%= DateTime.Now %>';
+             var datetime = '<%= DateTime.Now.Date.ToString(AppConfig.DateFormat) %>';
+             if (testCatID != "0" && testID == "0") {
+                 var rowid = '';
+                 var df = tbltest.rows.length + 1;
+                 if (Paymentcheck == 'true') {
+
+                     rowid += '<tr><td><input type="hidden" name="testDate" value="' + trnsid + '"><input type="hidden" name="LabTestDetali" value="' + LTestid + '"><input type="hidden" name="ParrentLabTestDetali" value="' + LTestid + '"><input type="hidden" name="Bill_Details_ID" value="' + Bill_Details_ID + '"><input type="hidden" name="GroupCatID" value="' + testCatID + '"/><input type="hidden" name="LabTestID" value="' + LabTestID + '"/><input type="hidden" name="ParentLabTestID" value="' + LabTestID + '"/>' + date + '</td><td><input type="hidden" name="testID" value="' + testID + '" /><input type="hidden" name="txtRotation" value="0"> <input type="hidden" name="txtddlXRayLF_Name" value="0">' + name + '</td><td><input type="hidden" name="txtArea" value=""  /></td><td><input type="checkbox" disabled id="Payment' + df + '" name="payment" ' + (Paymentcheck ? 'checked' : '') + '  style="width: 92px;height: 17px;"/><input name="Type" value="' + type + '" style="display:none"/></td><td> <input type="text"  value="" id="txtCollectionDate' + df + '" name="txtCollectionDate" disabled="disabled" style="width:123px  !important;" /></td><td>  <input type="text" id="txtReadyBy' + df + '" name="txtReadyBy" style="width:106px   !important;" /></td><td> <input type="text"  id="txtCollectionBy" name="txtCollectionBy" style="width:94px !important;"value="' + userName + '"/></td><td><input type="text"  id="txtPerformedBy" name="txtPerformedBy" style="width:94px !important;" value="' + userName + '"/></td><td><input type="checkbox"  id="Emergancy' + df + '" onclick="EnableRemarks(this)" name="Emergancy"  style="width: 92px;height: 17px;"></input></td><td><input  type="text" name="txtRemarks" style="width: 104px !important;"></input></td></tr>';
+
+                     $('#tbltestDetail').append(rowid);
+
+                 }
+                 else {
+
+                     rowid += '<tr><td><input type="hidden" name="testDate" value="' + trnsid + '"><input type="hidden" name="LabTestDetali" value="' + LTestid + '"><input type="hidden" name="ParrentLabTestDetali" value="' + LTestid + '"><input type="hidden" name="Bill_Details_ID" value="' + Bill_Details_ID + '"><input type="hidden" name="GroupCatID" value="' + testCatID + '"/><input type="hidden" name="LabTestID" value="' + LabTestID + '"/><input type="hidden" name="ParentLabTestID" value="' + LabTestID + '"/>' + date + '</td><td><input type="hidden" name="testID" value="' + testID + '" /><input type="hidden" name="txtRotation" value="0"> <input type="hidden" name="txtddlXRayLF_Name" value="0">' + name + '</td><td><input type="hidden" name="txtArea" value="" /></td><td><input type="checkbox" disabled name="payment" id="Payment' + df + '"  style="width: 92px;height: 17px;"/><input name="Type" value="' + type + '" style="display:none"/></td><td> <input type="text"  value="" id="txtCollectionDate' + df + '" disabled="disabled"  name="txtCollectionDate" style="width:123px  !important;" /></td><td>  <input type="text" id="txtReadyBy' + df + '" name="txtReadyBy" style="width:106px  !important;" /></td><td> <input type="text" id="txtCollectionBy" name="txtCollectionBy" style="width:94px !important;"value="' + userName + '"/></td><td> <input type="text"  id="txtPerformedBy" name="txtPerformedBy" style="width:94px !important;" value="' + userName + '"/></td><td><input type="checkbox"  id="Emergancy' + df + '" name="Emergancy" onclick="EnableRemarks(this)"  style="width: 92px;height: 17px;"/></td><td><input type="text" name="txtRemarks"  style="width: 104px !important;"></input></td></tr>';
+                     $('#tbltest').append(rowid);
+                 }
+                 //        }
+                 //    });
+
+                 $('#txtReadyBy' + df).datetimepicker({ format: 'm-d-y h:i:s A' });
+                 //$('#txtReadyBy' + df).datetimepicker({ format: 'm-d-y h:i' });
+                 $('#txtCollectionDate' + df).datepicker();
+                 $('#txtReadyBy' + df).val(date);
+                 $('#txtCollectionDate' + df).val(date);
+                 //    var count = tbltest.rows.length;
+                 //    for (i = 0; i < count; i++) {
+                 //        $('#txtReadyBy' + i).datetimepicker({ format: 'm-d-y h:i:s A' });
+                 //        $('#txtReadyBy' + i).val(date);
+                 //        $('input:text[name=txtCollectionDate]').val(date);
+                 //    }
+                 //}, function (error) { })
+                 // }
+             }
+             else {
+
+
+
+                 if (Paymentcheck == "true") {
+                     var df = tbltest.rows.length + 1;
+
+                     var row = '<tr><td><input type="hidden" name="testDate" value="' + trnsid + '"><input type="hidden" name="LabTestDetali" value="' + LTestid + '"><input type="hidden" name="ParrentLabTestDetali" value="0"><input type="hidden" name="Bill_Details_ID" value="' + Bill_Details_ID + '"><input type="hidden" name="GroupCatID" value="' + testCatID + '"/><input type="hidden" name="LabTestID" value="' + LabTestID + '"/><input type="hidden" name="ParentLabTestID" value="0"/>' + date + '</td><td><input type="hidden" name="testID" value="' + testID + '" /><input type="hidden" name="txtRotation" value="' + txtRotation + '"> <input type="hidden" name="txtddlXRayLF_Name" value="' + txtddlXRayLF_Name + '">' + name + '</td><td><input type="hidden" name="txtArea" value="' + Area + '" />' + Area + '</td><td><input type="checkbox" disabled id="Payment' + df + '" name="payment" ' + (Paymentcheck ? 'checked' : '') + ' style="width: 92px;height: 17px;"/><input name="Type" value="' + type + '" style="display:none"/></td><td> <input type="text"  value="" disabled="disabled"  id="txtCollectionDate' + df + '" name="txtCollectionDate" style="width:123px  !important;" /></td><td>  <input type="text" id="txtReadyBy' + df + '" name="txtReadyBy" style="width:106px  !important;" /></td><td> <input type="text" id="txtCollectionBy" name="txtCollectionBy" style="width:94px !important;"value="' + userName + '"/></td><td> <input type="text"  id="txtPerformedBy" name="txtPerformedBy" style="width:94px !important;" value="' + userName + '"/></td><td><input type="checkbox"  id="Emergancy' + df + '" name="Emergancy" onclick="EnableRemarks(this)"  style="width: 92px;height: 17px;"/></td><td><input type="text" name="txtRemarks"  style="width: 104px !important;"></input></td></tr>';
+                     $('#tbltestDetail').append(row);
+
+                 }
+                 else {
+                     var df = tbltest.rows.length + 1;
+
+                     var row = '<tr><td><input type="hidden" name="testDate" value="' + trnsid + '"><input type="hidden" name="LabTestDetali" value="' + LTestid + '"><input type="hidden" name="ParrentLabTestDetali" value="0"><input type="hidden" name="Bill_Details_ID" value="' + Bill_Details_ID + '"><input type="hidden" name="GroupCatID" value="' + testCatID + '"/><input type="hidden" name="LabTestID" value="' + LabTestID + '"/><input type="hidden" name="ParentLabTestID" value="0"/>' + date + '</td><td><input type="hidden" name="testID" value="' + testID + '" /><input type="hidden" name="txtRotation" value="' + txtRotation + '"> <input type="hidden" name="txtddlXRayLF_Name" value="' + txtddlXRayLF_Name + '">' + name + '</td><td><input type="hidden" name="txtArea" value="' + Area + '" />' + Area + '</td><td><input type="checkbox" disabled id="Payment' + df + '" name="payment"  style="width: 92px;height: 17px;"/><input name="Type" value="' + type + '" style="display:none"/></td><td> <input type="text"  value="" id="txtCollectionDate' + df + '" disabled="disabled"  name="txtCollectionDate" style="width:123px   !important;" /></td><td>  <input type="text" id="txtReadyBy' + df + '" name="txtReadyBy" style="width:106px  !important;" /></td><td> <input type="text" id="txtCollectionBy" name="txtCollectionBy" style="width:94px !important;"value="' + userName + '"/></td><td> <input type="text"  id="txtPerformedBy" name="txtPerformedBy" style="width:94px !important;" value="' + userName + '"/></td><td><input type="checkbox"  id="Emergancy' + df + '" name="Emergancy" onclick="EnableRemarks(this)"  style="width: 92px;height: 17px;"/></td><td><input type="text" name="txtRemarks"  style="width: 104px !important;display:none"></input></td>></tr>';
+                     $('#tbltestDetail').append(row);
+                 }
+
+                 $('#txtReadyBy' + df).datetimepicker({ format: 'm-d-y h:i:s A' });
+                 $('#txtCollectionDate' + df).datepicker();
+                 $('#txtReadyBy' + df).val(date);
+                 $('#txtCollectionDate' + df).val(date);
+             }
+             SavelabTest(id)
+         }
+        function SavelabTest(id) {
+            debugger;
+            var btnSave = "Save";
+            var table = $('#tbltest');
+            var test_list = [];
+            var transType = $("input[name='Type']").val();
+            var transID = $("input[name='testDate']").val();
+            //                <input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/>
+            var Bill_Details_ID = $("input[name='Bill_Details_ID']").val();
+            if (transID == "null") {
+                transID = 0;
+            }
+            var LabTestID = 0;
+
+            table.find('tr').each(function (key, value) {
+                test_list.push({ 'TestID': $(value).find('td input[name=testID]').val(), 'TestDID': $(value).find('td input[name=LabTestDetali]').val(), 'ParrentLabTestDetali': $(value).find('td input[name=ParrentLabTestDetali]').val(), 'ParentLabTestID': $(value).find('td input[name=ParentLabTestID]').val(), 'Bill_Details_ID': $(value).find('td input[name=Bill_Details_ID]').val(), 'GroupCatID': $(value).find('td input[name=GroupCatID]').val(), 'Area': $(value).find('td input[name=txtArea]').val(), 'Payment': $(value).find('td input[name=payment]')[0].checked, 'RotationID': $(value).find('td input[name=txtRotation]').val(), 'L_R_Rotation_ID': $(value).find('td input[name=txtddlXRayLF_Name]').val(), 'TestCollectedOn': $(value).find('td input[name=txtCollectionDate]').val(), 'TestReadyOn': $(value).find('td input[name=txtReadyBy]').val(), 'TestCollectedBy': $(value).find('td input[name=txtCollectionBy]').val(), 'TestPerformedBy': $(value).find('td input[name=txtPerformedBy]').val(), 'Emergancy': $(value).find('td input[name=Emergancy]')[0].checked, 'Remarks': $(value).find('td input[name=txtRemarks]').val() });
+            });
+            var patientID = $("#hdPatientID").val();
+            var labTest = { 'PatientID': patientID, 'TestList': test_list };
+            PageMethods.SaveLabTestList(LabTestID, btnSave, transType, transID, JSON.stringify(labTest), function (res) {
+                window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+            });
+        }
         function ListView() {
             window.open("TransactionView.aspx?Tag=SampleView");
         }
@@ -1185,6 +1383,45 @@
                 </tbody>
             </table>
         </div>
+                       <div class="col-md-12" style="display:none">
+                   <div style="overflow-y:scroll;height:300px;overflow-x:scroll;width:1294px;">
+                       <table id="tbltestDetail" class="table" style="width:1267px;">
+                                        <thead>
+                                            <tr>
+                                                <th >Bill Date</th>
+                                                <th >Test Name</th>
+                                                <th >Area Of Interest</th>
+                                                <th>Payment</th>
+                                                <th >Test Collected On</th>
+                                                <th >Test Ready On</th>
+                                                <th >Test Collected By</th>
+                                                <th >Performed By</th>
+                                                 <th>Urgent</th>
+                                                <th >Remarks</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbltest"></tbody>
+                                    </table>
+                   </div>
+               </div>
+         <table class="table"  id="tblPendingPatients" style="display:none">
+                                             <thead>
+                                                 <tr>
+                                                     <th>Bill Date</th>
+                                                     <th>Sample No</th>
+                                                     <th>MR No</th>
+                                                     <th>Name</th>
+                                                     <th>Test Name</th>
+                                                     <th>Remarks</th>
+                                                     <th>Dpt</th>
+                                                     <th>CNIC</th>
+                                                       <th>Mobile</th>
+                                                     <th>Action</th>
+                                                 </tr>
+                                             </thead>
+                                             <tbody></tbody>
+                                         </table>
     </div>
 
 </asp:Content>
