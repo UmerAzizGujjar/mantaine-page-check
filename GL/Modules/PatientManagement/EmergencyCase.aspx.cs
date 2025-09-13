@@ -4174,7 +4174,7 @@ namespace PMS
             return "";
         }
         [WebMethod]
-        public static string SaveDischargeMedicines(string MedicineDetails)
+        public static string SaveDischargeMedicines    (string MedicineDetails)
         {
             try
             {
