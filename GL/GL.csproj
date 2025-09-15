@@ -24744,6 +24744,7 @@
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Reports\Billings\" />
     <Folder Include="Reports\InventoryModules\" />
+    <Folder Include="SQL_Scripts\" />
     <Folder Include="upload\UploadAdvancePaymentFilesImages\" />
     <Folder Include="upload\UploadCA\" />
     <Folder Include="upload\UploadCSFilesImages\" />
