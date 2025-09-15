@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Hmis_Standard" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -1359,20 +1359,6 @@
       <Column Name="Posterior_Left" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Sample_Detail" Member="Sample_Details">
-    <Type Name="Sample_Detail">
-      <Column Name="Sample_Detail_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Bill_Detail_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Dept" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="Sample_Collected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Genre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Association Name="Sample_Master_Sample_Detail" Member="Sample_Master" ThisKey="Sample_ID" OtherKey="Sample_ID" Type="Sample_Master" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Packages_Detail" Member="Packages_Details">
     <Type Name="Packages_Detail">
       <Column Name="Package_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -2075,22 +2061,6 @@
       <Column Name="onDutyDoctor" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Sample_Master" Member="Sample_Masters">
-    <Type Name="Sample_Master">
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Sample_Collected_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Expected_Result_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="patient_type_range" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Association Name="Sample_Master_Sample_Detail" Member="Sample_Details" ThisKey="Sample_ID" OtherKey="Sample_ID" Type="Sample_Detail" />
-    </Type>
-  </Table>
   <Table Name="dbo.Discount_Assigned_Patient" Member="Discount_Assigned_Patients">
     <Type Name="Discount_Assigned_Patient">
       <Column Name="Discount_Assigned_Patient_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -2311,28 +2281,6 @@
       <Column Name="User_Branch_Master_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="ware_house_id" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="isprivate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.GL_Voucher_Accounts" Member="GL_Voucher_Accounts">
-    <Type Name="GL_Voucher_Account">
-      <Column Name="Voucher_account_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Serial_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Account_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Narration" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Cheque_No" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Cheque_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="DR" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="CR" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Realization_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Segment_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="SubSegment_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DepartmentId" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.CS_Vendor" Member="CS_Vendors">
@@ -6892,6 +6840,60 @@
       <Column Name="warehouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Sample_Detail" Member="Sample_Details">
+    <Type Name="Sample_Detail">
+      <Column Name="Sample_Detail_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_Detail_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Dept" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Sample_Collected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Genre" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="OutSource" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="Sample_Master_Sample_Detail" Member="Sample_Master" ThisKey="Sample_ID" OtherKey="Sample_ID" Type="Sample_Master" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Sample_Master" Member="Sample_Masters">
+    <Type Name="Sample_Master">
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Sample_Collected_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Expected_Result_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="patient_type_range" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Sample_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="Sample_Master_Sample_Detail" Member="Sample_Details" ThisKey="Sample_ID" OtherKey="Sample_ID" Type="Sample_Detail" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GL_Voucher_Accounts" Member="GL_Voucher_Accounts">
+    <Type Name="GL_Voucher_Account">
+      <Column Name="Voucher_account_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Cost_Center" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Serial_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Narration" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Cheque_No" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Cheque_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DR" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="CR" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Realization_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Segment_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SubSegment_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DepartmentId" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -6947,16 +6949,6 @@
       <Column Name="Lab_Test_Detail_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Dispatch_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
       <Column Name="Received_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_Sample_Header_Load" Method="sp_Sample_Header_Load">
-    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_Sample_Header_LoadResult">
-      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.getSampleIdentity" Method="getSampleIdentity" IsComposable="true">
@@ -7075,20 +7067,6 @@
       <Column Name="Info_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Right_Eye" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Left_Eye" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_Sample_Detail_Load" Method="sp_Sample_Detail_Load">
-    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_Sample_Detail_LoadResult">
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Dept" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="Sample_Collected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Test_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Gener" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Qty" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_OutSourceTestList" Method="sp_OutSourceTestList">
@@ -10541,6 +10519,31 @@
       <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Sample_Detail_Load" Method="sp_Sample_Detail_Load">
+    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_Sample_Detail_LoadResult">
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Dept" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Sample_Collected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Test_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Gener" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Qty" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="OutSource" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Sample_Header_Load" Method="sp_Sample_Header_Load">
+    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_Sample_Header_LoadResult">
+      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Sample_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

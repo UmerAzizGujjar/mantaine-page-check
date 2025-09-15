@@ -76,48 +76,66 @@ $(document).ready(function () {
         { id: '#ddlDepartment', method: 'GetDepartment' },
         { id: '#ddldoctor', method: 'GetDoctor' },
         { id: '#ddlpanel', method: 'GetPanel' }
+    ];
 
+    const skipSelect2 = [
+        '#ddlCountry',
+        '#ddl_Gender',
+        '#ddl_status',
+        '#ddl_Province',
+        '#txtcity',
+        '#txtarea'
     ];
 
     dropdowns.forEach(item => {
-
         const $element = $(item.id);
-        $element.select2();
-        $element.off('select2:open').on('select2:open', function () {
-            fillDropdown($element, item.method);
-        });
-
-
-        if (item.id === '#ddlPatient_Type') {
-            $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
-                loaddata();
-                $(this).prop('disabled', true);
+        if (skipSelect2.includes(item.id)) {
+            if ($element.data('select2')) {
+                $element.select2('destroy');
+            }
+            $element.off('change mousedown focus');
+            $element.on('change', function () {
+                fillDropdown($element, item.method);
             });
-        }
-
-        if (item.id === '#ddlDepartment') {
-            $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
-                loaddoctor();
-            });
-        }
-
-        if (item.id === '#ddldoctor') {
-
-            $element.off('select2:select');
-
-            $element.on('select2:select', function (e) {
-                var selectedVal = $(this).val();
-                if (selectedVal) {
-                    loadFee();
+            $element.on('mousedown focus', function () {
+                if ($(this).find('option').length <= 1) {
+                    fillDropdown($element, item.method);
                 }
             });
 
-            $element.off('select2:open');
+        } else {
+
+            $element.select2({
+                placeholder: "Please Select",
+                width: 'resolve'
+            });
+            $element.off('select2:open').on('select2:open', function () {
+                fillDropdown($element, item.method);
+            });
+            if (item.id === '#ddlPatient_Type') {
+                $element.prop('disabled', false);
+                $element.off('select2:select').on('select2:select', function () {
+                    loaddata();
+                    $(this).prop('disabled', true);
+                });
+            }
+
+            if (item.id === '#ddlDepartment') {
+                $element.prop('disabled', false);
+                $element.off('select2:select').on('select2:select', function () {
+                    loaddoctor();
+                });
+            }
+
+            if (item.id === '#ddldoctor') {
+                $element.off('select2:select').on('select2:select', function (e) {
+                    var selectedVal = $(this).val();
+                    if (selectedVal) {
+                        loadFee();
+                    }
+                });
+            }
         }
-
-
     });
 
     showhide();
@@ -127,10 +145,9 @@ $(document).ready(function () {
 
 });
 function fillDropdown($dropdown, methodName) {
-    if ($dropdown.data('filled')) return;
-
-    $dropdown.data('filled', false);
-
+    if ($dropdown.data('filled')) {
+        return;
+    }
     $.ajax({
         type: "POST",
         url: "OPD.aspx/" + methodName,
@@ -148,20 +165,18 @@ function fillDropdown($dropdown, methodName) {
                                 </option>`;
                 });
 
-                $dropdown.html(options)
-                    .data('filled', true)
-                    .trigger('change');
+                $dropdown.html(options);
+                $dropdown.data('filled', true);
+                $dropdown.trigger('change');
                 if ($dropdown.hasClass('select2-hidden-accessible')) {
                     $dropdown.select2('close').select2('open');
                 }
             } catch (e) {
                 console.error(`Error parsing data from ${methodName}:`, e);
-                $dropdown.data('filled', false);
             }
         },
         error: function (xhr, status, error) {
             console.error(`Error fetching ${methodName}:`, error);
-            $dropdown.data('filled', false);
         }
     });
 }
