@@ -264,7 +264,7 @@
             });
         });
 </script>
-<%--<script type="text/javascript">
+<script type="text/javascript">
   
     (function () {
         
@@ -319,7 +319,7 @@
 
         console.log("DevTools protection is ACTIVE on this page.");
     })();
-</script>--%>
+</script>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
 
     <style type="text/css">
