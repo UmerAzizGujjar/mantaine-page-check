@@ -47,6 +47,8 @@ namespace PMS
                                             a.Total_Debit,
                                             a.Creation_Time,
                                             a.Pay_To_Name,
+                                            Created_By = (from u in _dbContext.aspnet_Users where u.UserId == a.Created_By select u.UserName).FirstOrDefault(),
+                                            Approved_By = (from u in _dbContext.aspnet_Users where u.UserId == a.Approved_By select u.UserName).FirstOrDefault(),
                                             TotalDebtAmt = _dbContext.GL_Voucher_Accounts.Where(g => g.Voucher_ID == a.Voucher_ID).Sum(g => g.DR)
                                         };
 
