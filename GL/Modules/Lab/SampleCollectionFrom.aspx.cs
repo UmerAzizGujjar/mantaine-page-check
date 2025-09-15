@@ -152,7 +152,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static String SaveTest(DateTime CollectedDate,string ddlPat_type, /*DateTime ResultDate,*/ int PatientID, string[][] SaveCheckedTest, int EmployeeID, string[][] rem)
+        public static String SaveTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type, /*DateTime ResultDate,*/ int PatientID, string[][] SaveCheckedTest, int EmployeeID, string[][] rem)
         {
             
             var sampleid = string.Empty;
@@ -170,6 +170,7 @@ namespace PMS
                     patient_type_range = ddlPat_type,
                     Sample_Collected_Date = CollectedDate,
                     Patient_ID = PatientID,
+                    Sample_Status = sampleStatus,
                     Collected_Emp_ID = EmployeeID,
                     Created_By = AppConfig.UserID,
                     Created_Time = DateTime.Now
@@ -228,6 +229,7 @@ namespace PMS
                         Qty = SaveCheckedTest[i][5],
 
                         Remarks = rem[i][0].ToString(),
+                        OutSource = rem[i][2].ToString(),
                         Sample_Collected = System.Convert.ToBoolean(rem[i][1]),
 
                     };
@@ -275,7 +277,7 @@ namespace PMS
 
         }
         [WebMethod]
-        public static String UpdateTest(DateTime CollectedDate,string ddlPat_type, string[][] SaveCheckedTest, int EmployeeID, int SampleID, string[][] rem)
+        public static String UpdateTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type, string[][] SaveCheckedTest, int EmployeeID, int SampleID, string[][] rem)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
@@ -286,6 +288,7 @@ namespace PMS
                 SampleMaster.Sample_Collected_Date = CollectedDate;
                 SampleMaster.Collected_Emp_ID = EmployeeID;
                 SampleMaster.patient_type_range = ddlPat_type;
+                SampleMaster.Sample_Status = sampleStatus;
                 SampleMaster.Updated_By = AppConfig.UserID;
                 SampleMaster.Updated_Time = DateTime.Now;
 
@@ -318,6 +321,7 @@ namespace PMS
                             Qty = SaveCheckedTest[i][5],
 
                             Remarks = rem[i][0].ToString(),
+                            OutSource = rem[i][2].ToString(),
                             Sample_Collected = System.Convert.ToBoolean(rem[i][1]),
                         };
 
@@ -433,167 +437,16 @@ namespace PMS
                                                   lbtD.Special_Tests,
                                                   lbtD.Area_Of_Interest,
                                                   haveSample = (from s in db.Sample_Details where s.Bill_Detail_ID == lbTDdef.Bill_Details_ID select s).Count() == 0 ? false : true,
-
+                                                  sm.Sample_Status,
+                                                  sd.OutSource,
                                                   lbTDdef.Bill_Details_ID,
                                                   sampleDate = (from sp in db.Sample_Masters where sp.Sample_ID == sd.Sample_ID select sp.Sample_Collected_Date).FirstOrDefault(),
                                                   sampleuser = (from sp in db.Sample_Masters where sp.Sample_ID == sd.Sample_ID select sp.Created_By).FirstOrDefault()
                                               }
                ).ToList();
             List<PendingLabTestClass> list = new List<PendingLabTestClass>();
-            //****** OutPatients************
-
-            #region 'Comment Area of Loading IPD and OPD TEst don't Delete This Region'
-            /*
-            foreach (var item in testDetails_OPD)
-            {
-                PendingLabTestClass obj = new PendingLabTestClass();
-                if (item.IsBilled != null)
-                    obj.IsBilled = (bool)item.IsBilled;
-                obj.Out_Patient_ID = item.Out_Patient_ID.ToString();
-                obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
-                obj.Date = Convert.ToDateTime(item.Date).ToString();
-                obj.Catagory_ID = item.Catagory_ID;
-                obj.Test_ID = item.Test_ID;
-                obj.Lab_Test_ID = Convert.ToInt32(item.Lab_Test_ID).ToString();
-                obj.Recieved_ID = item.Recieved_ID;
-                obj.Parent_Transaction_Type = item.Parent_Transaction_Type;
-                obj.Parent_Transaction_Type_ID = item.Parent_Transaction_Type_ID.ToString();
-                obj.Transaction_Type = item.Transaction_Type;
-                obj.DoctorName = item.Doctor_ID;
-                obj.Patient_No = (Int32)item.Patient_No;
-                obj.Patient_ID = item.Patient_ID.ToString();
-                obj.Name = item.Full_Name;
-                obj.chkPackages = "0"; ;
-                if (item.Test_Name != null)
-                    obj.Test_Name = item.Test_Name;
-                else
-                    obj.Test_Name = "";
-                obj.Group_Department = "";
-                if (item.Group_Category != null)
-                    obj.Group_Category = item.Group_Category;
-                else
-                    obj.Group_Category = "0";
-                if (item.Entry_Date != null)
-                {
-                    obj.Entry_Date = item.Entry_Date.ToString();
-                }
-                else
-                {
-                    obj.Entry_Date = item.Created_Time.ToString();
-                }
-                obj.DepartmentName = "";
-                obj.Department_ID = "";
-                if (item.GroupName != null)
-                    obj.GroupName = item.GroupName;
-                else
-                    obj.GroupName = "";
-                if (item.Recieved_ID != null)
-                    obj.Recieved_ID = item.Recieved_ID;
-                else
-                    obj.Recieved_ID = "0";
-                obj.Rotation_ID = "";
-                obj.Rotation = "";
-                obj.Special_Tests = item.Special_Tests;
-                obj.Area_Of_Interest = item.Area_Of_Interest;
-                list.Add(obj);
-            }
-            //****** InPatients************
-
-            foreach (var item in testDetails_INP)
-            {
-                PendingLabTestClass obj = new PendingLabTestClass();
-                if (item.IsBilled != null)
-                    obj.IsBilled = (bool)item.IsBilled;
-                obj.Out_Patient_ID = item.In_Patient_ID.ToString();
-                obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
-                obj.Date = Convert.ToDateTime(item.Date).ToString();
-                obj.Catagory_ID = item.Catagory_ID;
-                obj.Test_ID = item.Test_ID;
-                obj.chkPackages = item.chkPackages;
-                obj.Lab_Test_ID = Convert.ToInt32(item.Lab_Test_ID).ToString();
-                obj.Recieved_ID = item.Recieved_ID;
-                obj.Parent_Transaction_Type = item.Parent_Transaction_Type;
-                obj.Parent_Transaction_Type_ID = item.Parent_Transaction_Type_ID.ToString();
-                // obj.Bill_ID=item.Bill_ID;
-                obj.Transaction_Type = item.Transaction_Type;
-                //obj.Doctor_ID = item.Doctor_ID;
-                obj.Doctor_ID = item.Doctor;
-                obj.DoctorName = item.DoctorName;
-                obj.Patient_No = (Int32)item.Patient_No;
-                obj.Patient_ID = item.Patient_ID.ToString();
-                obj.Name = item.Full_Name;
-                if (item.Test_Name != null)
-                    obj.Test_Name = item.Test_Name;
-                else
-                    obj.Test_Name = "";
-                obj.Group_Department = "";
-                if (item.Group_Category != null)
-                    obj.Group_Category = item.Group_Category;
-                else
-                    obj.Group_Category = "0";
-                obj.DepartmentName = "";
-                obj.Department_ID = "";
-                if (item.GroupName != null)
-                    obj.GroupName = item.GroupName;
-                else
-                    obj.GroupName = "";
-                if (item.Recieved_ID != null)
-                    obj.Recieved_ID = item.Recieved_ID;
-                else
-                    obj.Recieved_ID = "0";
-
-               
-                    obj.Entry_Date = item.Created_Time.ToString();
-            
-                
-                obj.Rotation_ID = "";
-                obj.Rotation = "";
-                obj.Special_Tests = item.Special_Tests;
-                obj.Area_Of_Interest = item.Area_Of_Interest;
-                list.Add(obj);
-            }
-            */
-            #endregion
-            //****** Front Desk with out sample************
-            //foreach (var item in testDetails_Billing_Without_Sample)
-            //{
-            //    PendingLabTestClass obj = new PendingLabTestClass();
-            //    if (item.IsBilled != null)
-            //        obj.IsBilled = (bool)item.IsBilled;
-            //    obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
-            //    obj.Date = Convert.ToDateTime(item.Date).ToString();
-            //    obj.Catagory_ID = item.Catagory_ID;
-            //    obj.Test_ID = item.Test_ID;
-            //    obj.Lab_Test_ID = Convert.ToInt32(item.Lab_Test_ID).ToString();
-            //    obj.Recieved_ID = item.Recieved_ID;
-            //    obj.Parent_Transaction_Type = item.Parent_Transaction_Type;
-            //    obj.Parent_Transaction_Type_ID = item.Parent_Transaction_Type_ID.ToString();
-            //    obj.Bill_ID = item.Bill_ID.ToString();
-            //    obj.Transaction_Type = item.Transaction_Type;
-            //    obj.Doctor_ID = "0";
-            //    obj.Patient_No = (Int32)item.Patient_No;
-            //    obj.Patient_ID = item.Patient_ID.ToString();
-            //    obj.Name = item.Full_Name;
-            //    obj.chkPackages = "0";
-            //    obj.Test_Name = item.Test_Name;
-            //    obj.Group_Department = item.Group_Department;
-            //    obj.Group_Category = item.Category_ID;
-            //    obj.Bill_Details_ID = item.Bill_Details_ID;
-            //    obj.DepartmentName = item.DepartmentName;
-            //    obj.Department_ID = item.Department_ID;
-            //    obj.GroupName = item.Item_Name;
-            //    obj.Entry_Date = item.Created_Time.ToString();
-            //    if (item.Recieved_ID != null)
-            //        obj.Recieved_ID = item.Recieved_ID;
-            //    else
-            //        obj.Recieved_ID = "0";
-            //    obj.Rotation = "";
-            //    obj.Special_Tests = "";
-            //    obj.Area_Of_Interest = "";
-            //    if (obj.Department_ID == "001" || obj.Department_ID == null)
-            //        list.Add(obj);
-            //}
-            //****** Front Desk with sample************
+           
+    
             foreach (var item in testDetails_Billing_Sample)
             {
                 PendingLabTestClass obj = new PendingLabTestClass();
@@ -624,6 +477,8 @@ namespace PMS
                 obj.Department_ID = item.Department_ID;
                 obj.Remarks = item.Remarks;
                 obj.GroupName = item.Item_Name;
+                obj.Sample_Status = item.Sample_Status;
+                obj.Outsource = item.OutSource;
                 //obj.Entry_Date = item.Created_Time.ToString();
                 obj.Sample_Date = item.sampleDate.ToString();
                 obj.Sample_User = item.sampleuser.ToString();
@@ -637,57 +492,7 @@ namespace PMS
                 if (obj.Department_ID == "001" || obj.Department_ID == null)
                     list.Add(obj);
             }
-            //List<PendingLabTestClass> AlltestListRefined = new List<PendingLabTestClass>();
-            //AlltestListRefined = list;
-            ////// Getting All Investigation Tests Group Categories
-            //var NoOfTestsCateWise = (from lbtsts in db.Lab_Tests
-            //                         where lbtsts.Group_Category != "" && lbtsts.Group_Category != null
-            //                         group lbtsts by lbtsts.Group_Category into g
-            //                         select new
-            //                         {
-            //                          CategoryID = g.Key,
-            //                          Category = db.GetDataValueName("Test Groups", g.Key),
-            //                          testsCount = g.Count(),
-            //                           MainDepartment = (from tbl in db.Lab_Tests
-            //                                             where tbl.Group_Category == g.Key
-            //                                             select new { DepartmentName = (db.GetDataValueName("Main Test Departments", tbl.Main_Department)                                                                 == null ? "" : db.GetDataValueName("Main Test Departments", tbl.Main_Department)) }
-            //                                               ).FirstOrDefault().DepartmentName.ToString()
-            //                         }
-            //                         ).ToList();
-            // foreach (var item in NoOfTestsCateWise)
-            // {
-            //     var Patient_ID = testDetails_Billing.Where(t => t.Group_Category == item.CategoryID).Select(t => t.Patient_ID).Distinct().ToList();
-            //      foreach (var itemyy in Patient_ID)
-            // {
-            //     var Bill_ID = testDetails_Billing.Where(t => t.Group_Category == item.CategoryID && t.Patient_ID == itemyy).Select(t => t.Bill_ID).Distinct                ().ToList();
-            //     foreach (var bill in Bill_ID)
-            // {
-            //int CatewisetestsCount = testDetails_Billing.Where(t => t.Group_Category == item.CategoryID && t.Patient_ID ==itemyy && t.Bill_ID==bill).Count();
-            //     if (CatewisetestsCount == item.testsCount)
-            //     {
-            //         var Receive = (testDetails_Billing.Where(t => t.Group_Category == item.CategoryID && t.Patient_ID == itemyy && t.Bill_ID == bill).Select                                 (t => t.Recieved_ID).FirstOrDefault());
-            //         if (Receive == null)
-            //             Receive = "0";
-            //         AlltestListRefined.RemoveAll(t => t.Group_Category == item.CategoryID && t.Patient_ID == itemyy.ToString());
-            //         AlltestListRefined.Add(new PendingLabTestClass()
-            //         {
-            //             GroupName = item.Category,
-            //             Test_ID = 0,
-            //             Catagory_ID = item.CategoryID,
-            //             Transaction_Type = "Front Desk",
-            //             IsBilled = true,
-            //             Patient_No = (int)(from i in db.Patients where i.Patient_ID == itemyy select i.Patient_No).FirstOrDefault(),
-            //             Patient_ID = itemyy.ToString(),
-            //             Name = (from i in db.Patients where i.Patient_ID == itemyy select i.Full_Name).FirstOrDefault(),
-            //             Lab_Test_ID = (testDetails_Billing.Where(r => r.Group_Category == item.CategoryID && r.Patient_ID == itemyy && r.Bill_ID==bill ).Select(r                        => r.Lab_Test_ID).FirstOrDefault()).ToString(),
-            //             Recieved_ID = Receive,
-            //             Doctor_ID = "",
-            //             chkPackages="0",
-            //         });
-            //     }
-            // }
-            // }
-            // }
+           
             return serl.Serialize(list);
         }
         public class PendingLabTestClass
@@ -724,9 +529,6 @@ namespace PMS
             public string DoctorName;
             public string Created_Time;
             public string Entry_Date;
-
-
-            //public string Test_Performed_By;
             public DateTime Test_Ready_On;
             public DateTime Test_Collected_On;
             public string Test_Collected_By;
@@ -738,6 +540,8 @@ namespace PMS
             public int Bill_Details_ID;
             public string Sample_Date;
             public string Sample_User;
+            public string Sample_Status;
+            public string Outsource;
             public string Bill_No
             {
                 get;
@@ -756,6 +560,40 @@ namespace PMS
             public string Remarks { get; set; }
         }
         //end 
+        [WebMethod]
+        public static string FillOutSource()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Out Source Labs"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+        [WebMethod]
+        public static string GetSampleStatus()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Sample Status"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
         [WebMethod]
         public static int SaveLabTestList(string LabTestID, string btnSave, string transType, string transID, string tlist)
         {
