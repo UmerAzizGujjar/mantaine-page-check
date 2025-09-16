@@ -19,29 +19,163 @@ namespace PMS.Inventory
         }
         private class ddlListItems
         {
-            public string DataValueName;
-            public string DataValueDescription;
+            public string DataValue_Name;
+            public string DataValue_Description;
             public string Type;
+        }
+       
+        [WebMethod]
+        public static string GetManufacturers()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Manufacture Company"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
         }
 
         [WebMethod]
-        public static string getDDLlist()
+        public static string GetPackUnits()
         {
-            DataBaseDataContext db = new DataBaseDataContext();
-            List<ddlListItems> listItems = new List<ddlListItems>();
-            string data = string.Empty;
-            listItems = (from p in db.DataValues
-                         join v in db.ValueSets on p.ValueSet_ID equals v.ValueSet_ID
-                         where v.ValueSet_Description == "Manufacture Company" || v.ValueSet_Description == "UOM" || v.ValueSet_Description == "Item Type" || v.ValueSet_Description == "Procedure Types" || v.ValueSet_Description == "A-Constant" || v.ValueSet_Description == "Surgery" || v.ValueSet_Description == "item Category" || v.ValueSet_Description == "Item Group" || v.ValueSet_Description == "Ware House"
-                         select new ddlListItems
-                         {
-                             DataValueName = p.DataValue_Name,
-                             DataValueDescription = p.DataValue_Description,
-                             Type = v.ValueSet_Description == "item Category" ? "item Category" : v.ValueSet_Description == "Manufacture Company" ? "Manu" : v.ValueSet_Description == "UOM" ? "PUnit" : v.ValueSet_Description == "Item Type" ? "ItemTyp" : v.ValueSet_Description == "Procedure Types" ? "ProcType" : v.ValueSet_Description == "A - Constant" ? "Aconst" : v.ValueSet_Description == "Item Group" ? "ItmGrp" : v.ValueSet_Description == "Ware House" ? "Warehouse" : "surg",
-                         }).ToList();
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "UOM"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
 
-            return (new JavaScriptSerializer()).Serialize(listItems);
+                return new JavaScriptSerializer().Serialize(result);
+            }
         }
+
+        [WebMethod]
+        public static string GetItemTypes()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Item Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetProcedureTypes()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Procedure Types"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetAConstant()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "A-Constant"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetCategories()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "item Category"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetItemGroups()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Item Group"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetWarehouses()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Ware House"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
 
 
         [WebMethod]
@@ -374,11 +508,18 @@ namespace PMS.Inventory
                                      obj.Description,
                                      obj.Active,
                                      obj.Unit,
+                                     Unit_Text = db.GetDataValueName("UOM", obj.Unit),
                                      obj.UOM_Qty,
+                                     Manufacture_Text = db.GetDataValueName("Manufacture Company", obj.Manufacture_Company),
                                      obj.Manufacture_Company,
                                      obj.Item_Type,
+                                     Itemtype_Text = db.GetDataValueName("Item Type", obj.Item_Type),
                                      obj.Item_Category,
+                                     Item_Category_Text = db.GetDataValueName("item Category", obj.Item_Category),
                                      obj.Item_Account_category,
+                                     AccountCategory_Text = (from a in db.Account_Categories
+                                                             where a.Account_Category_Id == obj.Item_Account_category
+                                                             select a.CategoryName).FirstOrDefault(),
                                      obj.Financial_Integration,
                                      obj.locatorAddress,
                                      obj.Length,
@@ -407,6 +548,7 @@ namespace PMS.Inventory
                                      obj.Refregrator,
                                      obj.IsPharmacyItem,
                                      obj.Procedure_Type,
+                                     Procedure_Type_Text = db.GetDataValueName("Procedure Types", obj.Procedure_Type),
                                      obj.Notes,
                                      obj.Services,
                                      obj.Liability_Item,
@@ -423,13 +565,18 @@ namespace PMS.Inventory
                                      obj.Other_Services,
                                      obj.Billing_Required,
                                      obj.ItemGroupId,
+                                     ItemGroup_Text = db.GetDataValueName("Item Group", obj.ItemGroupId),
                                      obj.InventoryOrg,
+                                     InventoryOrg_Text = db.GetDataValueName("Ware House", obj.InventoryOrg),
                                      obj.DepartmentId,
+                                     DepartmentId_Text = db.GetDataValueName("Patient Main Category", obj.DepartmentId),
                                      obj.Hospital_Services,
                                      obj.OTProcedure,
                                      obj.issehatCard_item,
                                      obj.sehatCard_Rate,
                                  }).FirstOrDefault();
+
+
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
             }
@@ -442,8 +589,8 @@ namespace PMS.Inventory
             var accountcategory = (from p in db.Account_Categories
                                    select new
                                    {
-                                       p.Account_Category_Id,
-                                       p.CategoryName
+                                       DataValue_Name = p.Account_Category_Id,
+                                       DataValue_Description =  p.CategoryName
                                    }).ToList();
             return (new JavaScriptSerializer()).Serialize(accountcategory);
         } 
@@ -478,8 +625,8 @@ namespace PMS.Inventory
                          where v.ValueSet_Description == "Patient Main Category"
                          select new ddlListItems
                          {
-                             DataValueName = p.DataValue_Name,
-                             DataValueDescription = p.DataValue_Description,
+                             DataValue_Name = p.DataValue_Name,
+                             DataValue_Description = p.DataValue_Description,
                              Type = v.ValueSet_Description == "Patient Main Category" ? "Dept" : "Fed"
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(listItems);

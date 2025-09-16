@@ -99,7 +99,7 @@ $(document).ready(function () {
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
             $element.off('select2:select').on('select2:select', function () {
-                loaddoctor(); 
+                loaddoctor();
             });
         }
 
@@ -282,7 +282,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
             );
 
-           
+
             $select.trigger({
                 type: 'select2:select',
                 params: {
@@ -1037,9 +1037,9 @@ function SaveData() {
         employee_id: employee_id,
         panel: panel,
         reffer_no: reffer_no,
-        Fees: Fees,           
-        Actual_Fees: Actual_Fees,          
-        discount: discount,  
+        Fees: Fees,
+        Actual_Fees: Actual_Fees,
+        discount: discount,
         Doc_Share: Doc_Share,
         Hosp_share: Hosp_share,
         dependent: dependent,
@@ -1054,7 +1054,7 @@ function SaveData() {
         FreeCheck: FreeCheck,
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
-        StudentName : StudentName
+        StudentName: StudentName
     };
 
     console.log("Data being sent:", data);
@@ -1086,7 +1086,7 @@ function SaveData() {
         },
         error: function (xhr, status, error) {
             console.error("Error: ", error);
-            console.log("Response Text: ", xhr.responseText); 
+            console.log("Response Text: ", xhr.responseText);
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -1198,7 +1198,7 @@ function getpanelRate() {
     $.ajax({
         type: "POST",
         url: "OPD.aspx/LoadPanelInfo",
-        data: JSON.stringify({ panelid: panelid }), 
+        data: JSON.stringify({ panelid: panelid }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
@@ -1296,12 +1296,12 @@ function loadPatientDetail(OPDID) {
                     text: data.Type_text
                 })
             ).attr('disabled', true);
-           
+
             $('#ddlPatient_Type').off('change').on('change', function () {
                 loaddata();
             });
 
-         
+
             loaddata();
             $('#ddlDepartment').html(
                 $('<option>', {
@@ -1381,7 +1381,7 @@ function loaddata() {
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
- 
+
         $('#discount').show();
         $('#empname').hide();
         $('#designation').hide();
@@ -1401,7 +1401,7 @@ function loaddata() {
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
-        
+
         $('#discount').show();
         $('#empname').hide();
         $('#designation').hide();
@@ -1426,7 +1426,7 @@ function loaddata() {
         $('#designation').hide();
         $('#dependent').hide();
         $('#emp_id').hide();
-       
+
 
     }
     else if (Category == "04") {
@@ -1446,7 +1446,7 @@ function loaddata() {
         $('#class').hide();
         $('#section').hide();
         $('#EmpDep').show();
-      
+
 
     }
     else if (Category == "05") {
@@ -1462,7 +1462,7 @@ function loaddata() {
         $('#rollno').show();
         $('#class').hide();
         $('#section').hide();
-       
+
         $('#emp_id').hide();
         $('#StdName').show();
     }
@@ -1473,7 +1473,7 @@ function loaddata() {
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
-   
+
         $('#discount').show();
         $('#empname').hide();
         $('#designation').hide();

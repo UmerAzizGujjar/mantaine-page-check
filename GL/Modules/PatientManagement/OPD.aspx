@@ -30,7 +30,7 @@
             }
             else {
 
-                $('#ddl_Gender').select2();
+               
                 $('#ddlGender').select2();
                 $('#ddlpanel').select2();
                 $('#ddlemployee').select2();
@@ -881,26 +881,36 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
-                            <select id="ddl_status" class="form-control"></select>
+                            <select id="ddl_status" class="form-control">
+                                  <option value="0">Select Marial</option>
+                            </select>
                         </div>
                         <div class="col-lg-2 colmd-4 col-sm-6">
                             <label>Country</label>
-                            <select id="ddlCountry" class="form-control"></select>
+                            <select id="ddlCountry" class="form-control">
+                                  <option value="0">Select Country</option>
+                            </select>
                         </div>
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label>Province</label>
-                            <select id="ddl_Province" class="form-control"></select>
+                            <select id="ddl_Province" class="form-control">
+                                  <option value="0">Select Province</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
-                            <select id="txtcity" class="form-control"></select>
+                            <select id="txtcity" class="form-control">
+                                  <option value="0">Select City</option>
+                            </select>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txtarea">Area</label>
-                            <select id="txtarea" class="form-control"></select>
+                            <select id="txtarea" class="form-control">
+                                 <option value="0">Select Area</option>
+                            </select>
                         </div>
                         <div class="col-lg-5 col-md-4 col-sm-6">
                             <label for="txt_house">Address</label>

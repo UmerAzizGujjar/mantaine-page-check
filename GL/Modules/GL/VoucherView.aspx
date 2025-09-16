@@ -123,6 +123,8 @@
                     { "data": "Remarks", width: "25%" },
                     { "data": "TotalDebtAmt", width: "13%" },
                     { "data": "Voucher_Status", width: "10%" },
+                    { "data": "Created_By", width: "10%" },
+                    { "data": "Approved_By", width: "10%" },
                     {
                         "render": function (data, type, full) {
                             var actionButtons = `
@@ -238,6 +240,8 @@
                     <th id="th-descptn">Description</th>
                     <th>Amount</th>
                     <th>Status</th>
+                    <th>Created By</th>
+                    <th>Approved By</th>
                     <th>Action</th>
                 </tr>
             </thead>

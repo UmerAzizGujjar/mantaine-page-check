@@ -4,16 +4,38 @@
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
-            FillDepartments();
-            GetDepartments();
-            FillAccountCategory();
-            FillPatientType();
+            
+            var dropdowns = [
+                { id: '#ddlmanu', method: 'GetManufacturers' },
+                { id: '#ddlpack_unit', method: 'GetPackUnits' },
+                { id: '#ddlitem_type', method: 'GetItemTypes' },
+                { id: '#ddlProcedureTypes', method: 'GetProcedureTypes' },
+                { id: '#ddlAconst', method: 'GetAConstant' },
+                { id: '#ddlitem_Qty', method: 'GetCategories' },
+                { id: '#ddlItemGroup', method: 'GetItemGroups' },
+                { id: '#ddlwareHouse', method: 'GetWarehouses' },
+                { id: '#ddlPatient_type', method: 'GetPatientType' },
+                { id: '#ddlfiance_integration', method: 'getAccountCategory' },
+                { id: '#ddldepartment', method: 'GetDepartments' },
+
+            ];
+
+            dropdowns.forEach(item => {
+                const $element = $(item.id);
+                $element.select2();
+                $element.off('select2:open').on('select2:open', function () {
+                    fillDropdown($element, item.method);
+                });
+            });
+        
             if (id != "") {
-                LoadItemInventory(id);
+            LoadItemInventory(id);
+
                 $("#btnValue").val('Update');
             }
             else {
                 GetitemNum();
+                  
             }
 
             document.getElementById('chkSehatSahulat').addEventListener('change', function () {
@@ -24,6 +46,8 @@
                     container.style.display = 'none';  // Hide the field
                 }
             });
+
+       
 
         });
         $(function () {
@@ -36,88 +60,59 @@
         function ListView() {
             window.location = "ProductsView.aspx";
         }
-        function GetDepartments() {
-            debugger;
-            var optionsDepth = '';
+        
+      
+        function fillDropdown($dropdown, methodName) {
+            if ($dropdown.data('filled')) return;
 
-            PageMethods.GetDepartments(function (Tests) {
-                debugger
-                optionsDepth = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
-                    if (value.Type == "Dept") {
-                        optionsDepth += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+            var currentValue = $dropdown.val();
+            var currentText = $dropdown.find('option:selected').text();
+
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/" + methodName,
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        const data = JSON.parse(response.d);
+                        var options = '<option value="0">Please Select</option>';
+                        var valueFound = false;
+
+                        $.each(data, function (key, value) {
+                            var isSelected = (value.DataValue_Name == currentValue);
+                            if (isSelected) valueFound = true;
+
+                            options += `<option value="${value.DataValue_Name}" ${isSelected ? 'selected="selected"' : ''}>
+                            ${value.DataValue_Description}
+                        </option>`;
+                        });
+
+                        $dropdown.html(options)
+                            .data('filled', true)
+                            .trigger('change');
+
+                        if (currentValue && currentValue !== "0" && !valueFound) {
+                            $dropdown.prepend(`<option value="${currentValue}" selected="selected">
+                            ${currentText}
+                        </option>`);
+                            $dropdown.trigger('change');
+                        }
+
+                        if ($dropdown.hasClass('select2-hidden-accessible')) {
+                            $dropdown.select2('close').select2('open');
+                        }
+                    } catch (e) {
+                        $dropdown.data('filled', false);
                     }
-                });
-                $('#ddldepartment').html(optionsDepth);
+                },
+                error: function (xhr, status, error) {
+                    $dropdown.data('filled', false);
+                }
             });
         }
-        function FillDepartments() {
-            debugger;
-            var optionsManu = '<option value="0">Please Select</option>';
-            var optionPUnit = '<option value="0">Select</option>';
-            var optionItemTyp = '<option value="0">Please Select</option>';
-            var optionProcType = '<option value="0">Please Select</option>';
-            var optionItemTyp = '<option value="0">Please Select</option>';
-            var optionAconst = '<option value="0">Please Select</option>';
-            var optionItemsurg = '<option value="0">Please Select</option>';
-            var optionItemCategory = '<option value="0">Please Select</option>';
-            var optionItemGroup = '<option value="0">Please Select</option>';
-            var optionInvOrg = '<option value="0">Please Select</option>';
-            PageMethods.getDDLlist(function (Tests) {
-                debugger
-                $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
-                    if (value.Type == "Manu") {
-                        optionsManu += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else if (value.Type == "PUnit") {
-                        optionPUnit += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else if (value.Type == "ItemTyp") {
-                        optionItemTyp += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else if (value.Type == "ProcType") {
-                        optionProcType += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else if (value.Type == "Aconst") {
-                        optionAconst += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else if (value.Type == "item Category") {
-                        optionItemCategory += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else if (value.Type == "ItmGrp") {
-                        optionItemGroup += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else if (value.Type == "Warehouse") {
-                        optionInvOrg += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                    else {
-                        optionItemsurg += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    }
-                });
-                $('#ddlmanu').html(optionsManu);
-                $('#ddlpack_unit').html(optionPUnit);
-                $('#ddlitem_type').html(optionItemTyp);
-              
-                $('#ddlProcedureTypes').html(optionProcType);
-                $('#ddlitem_Qty').html(optionItemCategory);
-                $('#ddlItemGroup').html(optionItemGroup);
-                $('#ddlwareHouse').html(optionInvOrg);
-            });
-        }
-        function FillAccountCategory() {
-            debugger;
-            var optionsAccCategory = '<option value="0">Please Select</option>';
-            PageMethods.getAccountCategory(function (Tests) {
-                debugger
-                $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
-                    optionsAccCategory += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';
-                });
-                $('#ddlfiance_integration').html(optionsAccCategory);
-            });
-        }
+        
         function validateSave() {
             debugger;
             var proceed = true;
@@ -227,7 +222,6 @@
         }
 
         function LoadPatientTypeWiseRate(id) {
-            // Make AJAX call to get rate category data
             $.ajax({
                 type: "POST",
                 url: "Product.aspx/LoadRateCategory",
@@ -311,32 +305,23 @@
         }
 
         function editRateRow(button, selectedValue, selectedText, rate, rowId) {
-            // Remove the row from the table
             const tr = button.closest('tr');
             tr.remove();
-
-            // Add back to dropdown and rate input
             const ddlPatientType = document.getElementById('ddlPatient_type');
             const txtRate = document.getElementById('txtRate');
 
             if (ddlPatientType && txtRate) {
-                // Create and add option to dropdown
                 const option = document.createElement('option');
                 option.value = selectedValue;
                 option.textContent = selectedText;
                 ddlPatientType.appendChild(option);
-
-                // Set the dropdown value
                 ddlPatientType.value = selectedValue;
-
-                // Set the rate value
                 txtRate.value = rate;
             }
         }
 
         function removeRateEntry(button, selectedValue, selectedText, rate) {
             if (confirm('Are you sure you want to remove this rate entry?')) {
-                // Remove the row from the table
                 const tr = button.closest('tr');
                 tr.remove();
 
@@ -356,7 +341,6 @@
                     var Item_Sale_Rate = data.Item_Sale_Rate || [];
                     var Sehat_card_rate_batch = data.Sehat_card_rate_batch || [];
                     var Uom_Qty = data.Uom_Qty || [];
-                    // Append new rows for medicines
                     var rows = '';
                     var rowlength = BatchTable.rows.length;
                     rows = '<tr>' +
@@ -421,19 +405,7 @@
                 $('#BatchTable_body').append(rows);
             }
         }
-        function FillPatientType() {
-            debugger;
-            var optionsPatientType = '<option value="0">Please Select</option>';
-            PageMethods.GetPatientType(function (Tests) {
-                debugger
-                $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
-                    optionsPatientType += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                });
-                $('#ddlPatient_type').html(optionsPatientType);
-                /* $('#ddlPatient_type').select2();*/
-            });
-        }
+        
         function Saveitem() {
             if (validateSave()) {
                 debugger;
@@ -678,35 +650,72 @@
                     $('#txtDescription').val(parse.Description);
                     if (parse.Active == 1) {
                         $("#Active").prop('checked', true);
-                    }
-                    setTimeout(function () {
-                        $('#ddlpack_unit').val(parse.Unit).trigger('change');
-                    }, 1000);
-                    setTimeout(function () {
-                        $('#ddlmanu').val(parse.Manufacture_Company).trigger('change');
-                    }, 1000);
-                    setTimeout(function () {
-                        $('#ddlitem_type').val(parse.Item_Type).trigger('change');
-                    }, 1000);
-                    setTimeout(function () {
-                        $('#ddlitem_Qty').val(parse.Item_Category).trigger('change');
-                    }, 1000);
-                    setTimeout(function () {
-                        $('#ddlfiance_integration').val(parse.Item_Account_category).trigger('change');
-                    }, 1000);
-                    setTimeout(function () {
-                        $('#ddlProcedureTypes').val(parse.Procedure_Type).trigger('change');
-                    }, 1000);
-                    setTimeout(function () {
-                        $('#ddlItemGroup').val(parse.ItemGroupId).trigger('change');
-                    }, 1000);
-                    setTimeout(function () {
-                        debugger;
-                        $('#ddlwareHouse').val(parse.InventoryOrg).trigger('change');
-                    }, 2000);
-                    setTimeout(function () {
-                        $('#ddldepartment').val(parse.DepartmentId).trigger('change');
-                    }, 4000);
+                    }   
+
+                    $('#ddlpack_unit').html(
+                        $('<option>', {
+                            value: parse.Unit,
+                            text: parse.Unit_Text
+                        })
+                    );
+
+                    $('#ddlmanu').html(
+                        $('<option>', {
+                            value: parse.Manufacture_Company,
+                            text: parse.Manufacture_Text
+                        })
+                    );
+
+                    $('#ddlitem_type').html(
+                        $('<option>', {
+                            value: parse.Item_Type,
+                            text: parse.Itemtype_Text
+                        })
+                    );
+
+                    $('#ddlItemGroup').html(
+                        $('<option>', {
+                            value: parse.ItemGroupId,
+                            text: parse.ItemGroup_Text
+                        })
+                    );
+
+                    $('#ddlfiance_integration').html(
+                        $('<option>', {
+                            value: parse.Item_Account_category,
+                            text: parse.AccountCategory_Text
+                        })
+                    );
+
+                    $('#ddlwareHouse').html(
+                        $('<option>', {
+                            value: parse.InventoryOrg,
+                            text: parse.InventoryOrg_Text
+                        })
+                    );
+
+                    $('#ddlitem_Qty').html(
+                        $('<option>', {
+                            value: parse.Item_Category,
+                            text: parse.Item_Category_Text
+                        })
+                    );
+
+                    $('#ddlProcedureTypes').html(
+                        $('<option>', {
+                            value: parse.Procedure_Type,
+                            text: parse.Procedure_Type_Text
+                        })
+                    );
+
+                    $('#ddldepartment').html(
+                        $('<option>', {
+                            value: parse.DepartmentId,
+                            text: parse.DepartmentId_Text
+                        })
+                    );
+
+                   
                     $('#txtlocatorAddress').val(parse.locatorAddress);
                     $('#txtLength').val(parse.Length);
                     $('#txtwidth').val(parse.Width);
@@ -835,14 +844,12 @@
             });
         }
         function AddRateCategory() {
-            // Get elements
             const $dropdown = $('#ddlPatient_type');
             const selectedValue = $dropdown.val();
             const selectedText = $dropdown.find('option:selected').text().trim();
             const rateInput = document.getElementById('txtRate');
             const rate = rateInput.value.trim();
 
-            // Validation
             if (!selectedValue || selectedValue === "0") {
                 alert("Please select a valid Patient Type.");
                 return;
@@ -852,7 +859,6 @@
                 return;
             }
 
-            // Prevent duplicates
             let entries = [];
             const hiddenField = document.getElementById('patientRatesData');
             if (hiddenField.value) {
@@ -869,7 +875,6 @@
                 return;
             }
 
-            // Add new entry
             entries.push({ type: selectedValue, description: selectedText, rate: rate });
             hiddenField.value = JSON.stringify(entries);
 
@@ -970,6 +975,7 @@
                  <div class="form-group">
                   <label id="LblItemGroup">Item Group </label>
                  <select id="ddlItemGroup" name="ddlItemGroup" class="form-control">
+                      <option value="0">Please Select</option>
                 </select>
                      </div>
                </div>
@@ -979,7 +985,7 @@
                   <div class="col-lg-2 col-md-6 col-sm-12">
                     <label id="Lblpack_unit">UOM</label>
                     <select id="ddlpack_unit">
-                       <option>Select</option>
+                       <option>Please Select</option>
                    </select>    
                  </div>    
                
@@ -1000,7 +1006,9 @@
          <div class="col-lg-3 col-md-6 col-sm-12">
                    <div class="form-group">
               <label id="LblwareHouse" style="width: 146px">WareHouse</label>
-                <select id="ddlwareHouse"  class="form-control"></select>
+                <select id="ddlwareHouse"  class="form-control">
+                     <option value="0">Please Select</option>
+                </select>
                 </div>       
              </div> 
          <div class="col-lg-3 col-md-6 col-sm-12 p-5" style="margin-top: 25px;">
@@ -1076,6 +1084,7 @@
                                     </td>
                                     <td class="col-lg-3 col-md-3 col-sm-2">
                                         <select id="ddlProcedureTypes">
+                                            <option value="0">Please Select</option>
                                         </select>
                                     </td>
                                     <td class="col-lg-1 col-md-1 col-sm-2">
@@ -1088,7 +1097,9 @@
                                         <label id="lblddldepartment">Department</label>
                                     </td>
                                     <td class="col-lg-3 col-md-3 col-sm-2">
-                                        <select id="ddldepartment" ></select>          
+                                        <select id="ddldepartment" >
+                                            <option value="0">Please Select</option>
+                                        </select>          
                                     </td>
                                 </tr>
                             </table>
@@ -1124,7 +1135,7 @@
         <div style="flex: 1;">
             <label style="font-weight: bold; display: block; margin-bottom: 5px;">Patient_type</label>
             <select id="ddlPatient_type" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-              
+              <option value="0">Please Select</option>
             </select>
         </div>
 
@@ -1201,7 +1212,9 @@
 
                     <td  style="width: 170px !important;min-width:170px !important;">
                         
-                        <select id="ddlitem_Qty" style="height: 33px !important" name="ddlitem_Qty"></select>
+                        <select id="ddlitem_Qty" style="height: 33px !important" name="ddlitem_Qty">
+                             <option>Please Select</option>
+                        </select>
                     </td>
                 </tr>
             </table>
