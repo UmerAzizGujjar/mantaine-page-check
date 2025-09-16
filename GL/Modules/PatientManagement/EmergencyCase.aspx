@@ -1372,7 +1372,7 @@
 
             var txtSourceOfReferral = $('#ctl00_MainContent_txtSourceOfReferral').val();
             var chkNeckHolding = document.getElementById("ctl00_MainContent_chkNeckHolding").checked;
-            var chkWalking = document.getElementById('ctl00_MainContent_chkWalking').checked;
+               var chkWalking = document.getElementById('ctl00_MainContent_chkWalking').checked;
             var chkTalking = document.getElementById('ctl00_MainContent_chkTalking').checked;
             var chkOthers = document.getElementById('ctl00_MainContent_chkOthers').checked;
             var txtMenarche = $('#ctl00_MainContent_txtMenarche').val();

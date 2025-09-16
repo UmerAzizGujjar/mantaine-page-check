@@ -3,131 +3,131 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <style>
-        
-.search-container {
-    position: relative;
-    width: 100%;
-}
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
 
-.search-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
 
-.search-input {
-    width: 100% !important;
-    padding: 16px 50px 16px 20px !important;
-    border: 2px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 25px !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-    color: white !important;
-    font-size: 16px !important;
-    outline: none !important;
-    transition: all 0.3s ease !important;
-    placeholder-color: rgba(255, 255, 255, 0.7) !important;
-}
+        .search-input {
+            width: 100% !important;
+            padding: 16px 50px 16px 20px !important;
+            border: 2px solid rgba(255, 255, 255, 0.3) !important;
+            border-radius: 25px !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            color: white !important;
+            font-size: 16px !important;
+            outline: none !important;
+            transition: all 0.3s ease !important;
+            placeholder-color: rgba(255, 255, 255, 0.7) !important;
+        }
 
-    .search-input::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-    }
+            .search-input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
 
-    .search-input:focus {
-        border-color: rgba(255, 255, 255, 0.6);
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
+            .search-input:focus {
+                border-color: rgba(255, 255, 255, 0.6);
+                background: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            }
 
-.search-icon {
-    position: absolute;
-    right: 17px;
-    margin-bottom: 5px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 18px;
-    pointer-events: none;
-    transition: color 0.3s ease;
-}
+        .search-icon {
+            position: absolute;
+            right: 17px;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
 
-.search-input:focus + .search-icon {
-    color: rgba(255, 255, 255, 0.9);
-}
+        .search-input:focus + .search-icon {
+            color: rgba(255, 255, 255, 0.9);
+        }
 
-.search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    margin-top: 8px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            margin-top: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
 
-    .search-results.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
+            .search-results.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
 
-.result-item {
-    padding: 12px 20px;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    font-size: 15px;
-    display: block;
-    line-height: 1.4;
-    font-weight: normal
-}
-
+        .result-item {
+            padding: 12px 20px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 15px;
+            display: block;
+            line-height: 1.4;
+            font-weight: normal
+        }
 
 
-    .result-item.highlighted {
-        background: #e2e8f0; /* light gray */
-        cursor: pointer;
-    }
+
+            .result-item.highlighted {
+                background: #e2e8f0; /* light gray */
+                cursor: pointer;
+            }
 
 
-    .result-item:last-child {
-        border-bottom: none;
-        border-radius: 0 0 15px 15px;
-    }
+            .result-item:last-child {
+                border-bottom: none;
+                border-radius: 0 0 15px 15px;
+            }
 
-    .result-item:first-child {
-        border-radius: 15px 15px 0 0;
-    }
+            .result-item:first-child {
+                border-radius: 15px 15px 0 0;
+            }
 
-    .result-item:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
+            .result-item:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
 
-.result-title {
-    font-weight: 600;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
 
-.result-description {
-    font-size: 12px;
-    opacity: 0.8;
-    line-height: 1.4;
-}
+        .result-description {
+            font-size: 12px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
 
-.no-results {
-    padding: 20px;
-    text-align: center;
-    color: black;
-    font-style: italic;
-}
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: black;
+            font-style: italic;
+        }
+
         .modern-loading-overlay {
             position: fixed;
             top: 0;
@@ -916,6 +916,15 @@
     </style>
     <script id="ScriptmanageSymptomsModal">
         $(document).ready(function () {
+            var id = '<%=Request.QueryString["ID"]%>';
+            if (id != "") {
+                $('#<%= txtEmergency_Patient_ID.ClientID%>').val(id);
+                $('#btnSave').val("Update");
+                AppendSymtompsHistory();
+                Appendtestintable();
+                LoadMedicines();
+                LoadDischargeMedicines();
+            }
             bindDate();
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
@@ -1354,24 +1363,24 @@
                         }
 
                         $('#<%= vlblPatients_Name.ClientID %>').text(name);
-                $('#<%= vLbl_Age.ClientID %>').text(gender + "-" + age + "yrs");
-                $('#<%= vLbl_Adress.ClientID %>').text(address);
-                $('#<%= vLbl_Contact.ClientID %>').text(mobile);
-                $("#<%= hdfReg_ID.ClientID %>").val(EmerID);
-                $("#<%= hdfReg_ID.ClientID %>").val(PatientID);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.log("Error: " + error);
-            console.log(xhr.responseText);
+                        $('#<%= vLbl_Age.ClientID %>').text(gender + "-" + age + "yrs");
+                        $('#<%= vLbl_Adress.ClientID %>').text(address);
+                        $('#<%= vLbl_Contact.ClientID %>').text(mobile);
+                        $("#<%= hdfReg_ID.ClientID %>").val(EmerID);
+                        $("#<%= hdfReg_ID.ClientID %>").val(PatientID);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                    console.log(xhr.responseText);
+                }
+            });
         }
-    });
-        }
 
 
 
 
- 
+
         function uuid() {
             var uuid = "", i, random;
             for (i = 0; i < 32; i++) {
@@ -3356,7 +3365,7 @@
 
             // Get current datetime
             var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
-    var datetimeValue = '<%= DateTime.Now%>';
+            var datetimeValue = '<%= DateTime.Now%>';
 
             // Validation
             if (!dose) {
@@ -3799,7 +3808,7 @@
 
             // Get current datetime
             var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
-    var datetimeValue = '<%= DateTime.Now%>';
+            var datetimeValue = '<%= DateTime.Now%>';
 
             // Validation
             if (!dose) {
@@ -3975,45 +3984,14 @@
             })
         }
     </script>
-    <script id="DocumentReady">
-        $(document).ready(function () {
-            var id = '<%=Request.QueryString["ID"]%>';
-            if (id != "") {
-                $('#<%= txtEmergency_Patient_ID.ClientID%>').val(id);
-                loadPatientFormData(id);
-                $('#btnSave').val("Update");
-                AppendSymtompsHistory();
-                Appendtestintable();
-                LoadMedicines();
-                AppendPrimaryDiagnosisHistory();
-                AppendFinalDiagnosisHistory();
-                AppendComplaintsHistory();
-                updateHistoryTable();
 
-                $('.exam-row input[type="checkbox"]').each(function () {
-                    var param = this.id.split('_chk').pop();
-                    if (this.checked) {
-                        Add_GeneralExamRow(param);
-                    }
-                });
-
-            }
-            else {
-              
-                $('#ctl00_MainContent_txtEmergency_Patient_ID').val("(New)");
-                $('#<%= txtEmergency_Patient_ID.ClientID%>').val("(New)");
-
-            }
-
-        });
-    </script>
     <script id="functions" type="text/javascript">
 
         function ResetForm() {
             window.location.href = "NewOutPatient.aspx";
         }
 
-       
+
 
         // Simple AddVitals function matching your style. Load after jQuery and after ASP.NET controls render.
 
@@ -4109,23 +4087,23 @@
 
     </script>
     <script id="saveLogic">
-      
+
         function SaveMedicines() {
- 
+
             debugger;
             var table = $('#tblMedicines');
             var MedicinesList = [];
             table.find('tbody tr').each(function (key, value) {
                 var date = '<%= DateTime.Now%>'
-            MedicinesList.push({
-                'Medicine_Date': $(value).find('td input[name=testDate]').val(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
-                'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
+                MedicinesList.push({
+                    'Medicine_Date': $(value).find('td input[name=testDate]').val(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
+                    'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
+                });
+
             });
 
-        });
-            
-        var PatID = $('#<%= hdfReg_ID.ClientID%>').val();
-        var EmergencyPatID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
+            var PatID = $('#<%= hdfReg_ID.ClientID%>').val();
+            var EmergencyPatID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
             if (EmergencyPatID == '(New)' || EmergencyPatID == '' || EmergencyPatID == "0")
                 EmergencyPatID = 0;
             var MedicineDetails = { Pat: PatID, PatientID: EmergencyPatID, MedicineList: MedicinesList }
@@ -4142,24 +4120,24 @@
             var MedicinesList = [];
             table.find('tbody tr').each(function (key, value) {
                 var date = '<%= DateTime.Now%>'
-          MedicinesList.push({
-              'Medicine_Date': $(value).find('td input[name=testDate]').val(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
-              'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
-          });
+                MedicinesList.push({
+                    'Medicine_Date': $(value).find('td input[name=testDate]').val(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
+                    'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
+                });
 
-      });
+            });
 
-              var PatID = $('#<%= hdfReg_ID.ClientID%>').val();
-              var EmergencyPatID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
-              if (EmergencyPatID == '(New)' || EmergencyPatID == '' || EmergencyPatID == "0")
-                  EmergencyPatID = 0;
-              var MedicineDetails = { Pat: PatID, PatientID: EmergencyPatID, MedicineList: MedicinesList }
-              console.log(MedicineDetails);
+            var PatID = $('#<%= hdfReg_ID.ClientID%>').val();
+            var EmergencyPatID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
+            if (EmergencyPatID == '(New)' || EmergencyPatID == '' || EmergencyPatID == "0")
+                EmergencyPatID = 0;
+            var MedicineDetails = { Pat: PatID, PatientID: EmergencyPatID, MedicineList: MedicinesList }
+            console.log(MedicineDetails);
             PageMethods.SaveDischargeMedicines(JSON.stringify(MedicineDetails), function (response) {
                 saveTests();
-              });
+            });
 
-          }
+        }
         function saveTests() {
             var test_list = [];
             function extractTestData(table) {
@@ -4193,7 +4171,7 @@
             console.log(test_list);
 
             var PatID = $('#<%= hdfReg_ID.ClientID%>').val();
-        var patientID = $('#<%= txtEmergency_Patient_ID.ClientID %>').val();
+            var patientID = $('#<%= txtEmergency_Patient_ID.ClientID %>').val();
             if (patientID == '(New)' || patientID == '' || patientID == "0")
                 patientID = 0;
             var labTest = { 'PatientID': PatID, 'TestList': test_list, 'PatID': PatID };
@@ -4226,299 +4204,353 @@
             }
             console.log(SymtomsList);
             PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), function (response) {
-                 saveAllRecord();
+                saveAllRecord();
             });
 
         }
         function saveAllRecord() {
-            debugger;
-
-            var btnsave = $('#btnSave').val();
-            var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
-              var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
-              var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
-              var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
-              var ddlCallToDoctor = $('#ctl00_MainContent_ddlCallToDoctor').val();
-
-              var ReferToOPD = $('#<%= ReferToOPD.ClientID %>').is(':checked');
-
-              /*var ReferToOPD = $('#ReferToOPD').is(':checked');*/
-              var txtHealth_Complaints = "";
-              var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-              var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
-
-              var patienttype = $("#ctl00_MainContent_vLbl_Patient_Type").text();
-
-              var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
-
-              var BP_mm_Hg = $('#ctl00_MainContent_txtBP').val();
-              var Temp_C = $('#ctl00_MainContent_txtTemp').val();
-              var Respiration_Min = $('#ctl00_MainContent_txtRespiration').val();
-
-              var txtRN_Special_Instruction = $('#ctl00_MainContent_txtRN_Special_Instruction').val();
-
-              var txtReceiving_Date = $('#ctl00_MainContent_txtReceiving_Date').val();
-
-              var Provisional_Diagnosis = $('#ctl00_MainContent_txtProvisionalDiagnosis').val();
-              var Refer_To_Hospital = $('#ctl00_MainContent_txtRefer_To_Hospital').val();
-              var Reffer_To = $('#ctl00_MainContent_ddlPatient_Main_Category').val();
-              if (Reffer_To == 0)
-                  Reffer_To = "";
-
-              var HistoryOfPeresentIllness = $('#ctl00_MainContent_txtHistoryOfPeresentIllness').val();
-              var HistoryOfFamily = $('#ctl00_MainContent_txtHistoryOfFamily').val();
-              var HistoryOfPastIllness = $('#ctl00_MainContent_txtHistoryOfPastIllness').val();
-
-              var SocioEconomicHistory = $('#ctl00_MainContent_txtSocioEconomicHistory').val();
-
-
-
-              var Birth_History = $('#ctl00_MainContent_txtBirthHistory').val();
-
-              var Reffer_No = $('#ctl00_MainContent_txtRefferNote').val();
-              var Drug_History = $('#ctl00_MainContent_txtDrugHistory').val();
-              var Personal_History = $('#ctl00_MainContent_txtPersonalHistory').val();
-
-              var ObstetricHistory = $('#ctl00_MainContent_txtObstetricHistory').val();
-              var AllergiesHistory = $('#ctl00_MainContent_txtAllergiesHistory').val();
-              var TreatmentHistory = $('#ctl00_MainContent_txtTreatmentHistory').val();
-              var VaccinationHistory = $('#ctl00_MainContent_txtVaccinationHistory').val();
-              var AnyOtherHistory = $('#ctl00_MainContent_txtAnyOtherHistory').val();
-
-           
-
-              var txtSourceOfReferral = $('#ctl00_MainContent_txtSourceOfReferral').val();
-           
-
-              var ddlDischarge_By = $('#ctl00_MainContent_ddlDischarge_By').val();
-              var txtDischarge_On = $('#ctl00_MainContent_txtDischarge_On').val();
-              var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
-              var ddlPatientCondition = $("#ctl00_MainContent_ddlPatientCondition").val();
-              if (ddlPatientCondition == "0" || ddlPatientCondition == 'undefined' || ddlPatientCondition == " " || ddlPatientCondition == null) {
-                  ddlPatientCondition = "01";
-              }
-
-
-              if (txtNext_Visit == "")
-                  txtNext_Visit = null;
-              var txtAdvice = $('#ctl00_MainContent_txtPrevention_Precaution').val();
-              var chkdischarge = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-              var RateBeats = $("#ctl00_MainContent_txtRateBeats").val();
-              var Saturation = $("#ctl00_MainContent_txtSaturation").val();
-              var OthersRN = $("#ctl00_MainContent_txtOthersRcvNote").val();
-              var DischargeStatus = $("#ctl00_MainContent_ddlDischargeStatus").val();
-              var ddlEmrgRhythm = $('#ctl00_MainContent_ddlRhythm').val();
-              var ddlEmrgVolume = $('#ctl00_MainContent_ddlVolume').val();
-              var Procedure_Recommended = $("#ctl00_MainContent_txtProcedureRecommended").val();
-              var IdentificationMarks = $("#ctl00_MainContent_txtIdentificationMarks").val();
-              var Diagnosis = $("#ctl00_MainContent_txtDiagnosis").val();
-              var DateOfDeath = $("#ctl00_MainContent_txtDateofDeath").val();
-              var TimeOfDeath = $("#ctl00_MainContent_txtTimeOfDeath").val();
-              var PlaceOfDeath = $("#ctl00_MainContent_ddlPlaceOfDeath").val();
-              var CauseOfDeath = $("#ctl00_MainContent_txtCause_Of_Death").val();
-              var IssuingOfficerName = $("#ctl00_MainContent_txtIssuingOfficerName").val();
-              var DeathCertifiedby1 = $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").val();
-              var DeathCertifiedby2 = $("#ctl00_MainContent_ddlDeathCertifiedbyDr2").val();
-              var BodyHandedOverTo = $("#ctl00_MainContent_txtBodyHandedOverTo").val();
-              var FamilyPersonName = $("#ctl00_MainContent_txtFamilyPersonName").val();
-              var CNIC = $("#ctl00_MainContent_txtCNIC").val();
-              var RelationWithDeceased = $("#ctl00_MainContent_txtRelationWithDeceased").val();
-              var CMO_Police = $("#ctl00_MainContent_txtCMO_Police").val();
-
-              var TreatmentGiven = $("#ctl00_MainContent_txtTreatmentGiven").val();
-              var PhysicalFinding = $("#ctl00_MainContent_txtPhysicalFinding").val();
-              var GeneralPhysicalExamination = $("#ctl00_MainContent_txtGeneralPhysicalExamination").val();
-              var ClinicalSummary = $("#ctl00_MainContent_txtClinicalSummary").val();
-              var TreatmentAtDischarge = $("#ctl00_MainContent_txtTreatmentAtDischarge").val();
-              var FollowUpPlanInstructions = $("#ctl00_MainContent_txtFollowUpPlanInstructions").val();
-              var CauseOfReferral = $("#ctl00_MainContent_txtCauseOfReferral").val();
-              var ReferredTo = $("#ctl00_MainContent_ddlReferredTo").val();
-              var TreatmentTime = $("#ctl00_MainContent_txtTreatmentTime").val();
-
-              var CallingDoctorDepartment = $("#ctl00_MainContent_ddl_Department").val();
-              var CallingDoctorMobile = $("#ctl00_MainContent_txtMobileNo").val();
-              var O2_Saturation_Oxygen1 = $("#ctl00_MainContent_txtSaturation_Oxygen1").val();
-              var O2_Saturation_Oxygen2 = $("#ctl00_MainContent_txtSaturation_Oxygen2").val();
-
-
-              var HMFIntact = $("input[name='ctl00$MainContent$HMFIntact']:checked").val();
-              if (typeof HMFIntact === 'undefined')
-                  HMFIntact = null;
-              else HMFIntact = (JSON.parse(HMFIntact.toLowerCase()));
-
-
-              var CranialNerves = $("input[name='ctl00$MainContent$CranialNerves']:checked").val();
-              if (typeof CranialNerves === 'undefined') CranialNerves = null;
-              else CranialNerves = (JSON.parse(CranialNerves.toLowerCase()));
-
-              var SignsOfMeningism = $("input[name='ctl00$MainContent$SignsOfMeningism']:checked").val();
-              if (typeof SignsOfMeningism === 'undefined') SignsOfMeningism = null;
-              else SignsOfMeningism = (JSON.parse(SignsOfMeningism.toLowerCase()));
-
-              var HeartSound = $("input[name='ctl00$MainContent$HeartSound']:checked").val();
-              if (typeof HeartSound === 'undefined') HeartSound = null;
-              else HeartSound = (JSON.parse(HeartSound.toLowerCase()));
-
-              var Arrhythmias = $("input[name='ctl00$MainContent$Arrhythmias']:checked").val();
-              if (typeof Arrhythmias === 'undefined') Arrhythmias = null;
-              else Arrhythmias = (JSON.parse(Arrhythmias.toLowerCase()));
-
-              var AnyOtherAddedSound = $("input[name='ctl00$MainContent$AnyOtherAddedSound']:checked").val();
-              if (typeof AnyOtherAddedSound === 'undefined') AnyOtherAddedSound = null;
-              else AnyOtherAddedSound = (JSON.parse(AnyOtherAddedSound.toLowerCase()));
-
-              var AnyOtherFindings = $("input[name='ctl00$MainContent$AnyOtherFindings']:checked").val();
-              if (typeof AnyOtherFindings === 'undefined') AnyOtherFindings = null;
-              else AnyOtherFindings = (JSON.parse(AnyOtherFindings.toLowerCase()));
-
-              var NVB_Right = $("input[name='ctl00$MainContent$NVB_Right']:checked").val();
-              if (typeof NVB_Right === 'undefined') NVB_Right = null;
-              else NVB_Right = (JSON.parse(NVB_Right.toLowerCase()));
-
-              var NVB_Left = $("input[name='ctl00$MainContent$NVB_Left']:checked").val();
-              if (typeof NVB_Left === 'undefined') NVB_Left = null;
-              else NVB_Left = (JSON.parse(NVB_Left.toLowerCase()));
-
-              var Crepitation_Right = $("input[name='ctl00$MainContent$Crepitation_Right']:checked").val();
-              if (typeof Crepitation_Right === 'undefined') Crepitation_Right = null;
-              else Crepitation_Right = (JSON.parse(Crepitation_Right.toLowerCase()));
-
-              var Crepitation_Left = $("input[name='ctl00$MainContent$Crepitation_Left']:checked").val();
-              if (typeof Crepitation_Left === 'undefined') Crepitation_Left = null;
-              else Crepitation_Left = (JSON.parse(Crepitation_Left.toLowerCase()));
-
-              var Wheeze = $("input[name='ctl00$MainContent$Wheeze']:checked").val();
-              if (typeof Wheeze === 'undefined') Wheeze = null;
-              else Wheeze = (JSON.parse(Wheeze.toLowerCase()));
-
-              var Ranchi = $("input[name='ctl00$MainContent$Ranchi']:checked").val();
-              if (typeof Ranchi === 'undefined') Ranchi = null;
-              else Ranchi = (JSON.parse(Ranchi.toLowerCase()));
-
-              var AnyOtherSound = $("input[name='ctl00$MainContent$AnyOtherSound']:checked").val();
-              if (typeof AnyOtherSound === 'undefined') AnyOtherSound = null;
-              else AnyOtherSound = (JSON.parse(AnyOtherSound.toLowerCase()));
-
-              var AbdomenSoft = $("input[name='ctl00$MainContent$AbdomenSoft']:checked").val();
-              if (typeof AbdomenSoft === 'undefined') AbdomenSoft = null;
-              else AbdomenSoft = (JSON.parse(AbdomenSoft.toLowerCase()));
-
-              var Tenderness = $("input[name='ctl00$MainContent$Tenderness']:checked").val();
-              if (typeof Tenderness === 'undefined') Tenderness = null;
-              else Tenderness = (JSON.parse(Tenderness.toLowerCase()));
-
-              var Guarding = $("input[name='ctl00$MainContent$Guarding']:checked").val();
-              if (typeof Guarding === 'undefined') Guarding = null;
-              else Guarding = (JSON.parse(Guarding.toLowerCase()));
-
-              var BowelSound = $("input[name='ctl00$MainContent$BowelSound']:checked").val();
-              if (typeof BowelSound === 'undefined') BowelSound = null;
-              else BowelSound = (JSON.parse(BowelSound.toLowerCase()));
-
-              var Distention = $("input[name='ctl00$MainContent$Distention']:checked").val();
-              if (typeof Distention === 'undefined') Distention = null;
-              else Distention = (JSON.parse(Distention.toLowerCase()));
-
-              var FluidThrill = $("input[name='ctl00$MainContent$FluidThrill']:checked").val();
-              if (typeof FluidThrill === 'undefined') FluidThrill = null;
-              else FluidThrill = (JSON.parse(FluidThrill.toLowerCase()));
-
-              var ShiftingDullness = $("input[name='ctl00$MainContent$ShiftingDullness']:checked").val();
-              if (typeof ShiftingDullness === 'undefined') ShiftingDullness = null;
-              else ShiftingDullness = (JSON.parse(ShiftingDullness.toLowerCase()));
-              debugger;
-              var EpigastriaDiscomfort = $("input[name='ctl00$MainContent$EpigastriaDiscomfort']:checked").val();
-              if (typeof EpigastriaDiscomfort === 'undefined') EpigastriaDiscomfort = null;
-              else EpigastriaDiscomfort = (JSON.parse(EpigastriaDiscomfort.toLowerCase()));
-
-              var RetrosternalBurning = $("input[name='ctl00$MainContent$RetrosternalBurning']:checked").val();
-              if (typeof RetrosternalBurning === 'undefined') RetrosternalBurning = null;
-              else RetrosternalBurning = (JSON.parse(RetrosternalBurning.toLowerCase()));
-
-              var Jondus = $("input[name='ctl00$MainContent$Jondus']:checked").val();
-              if (typeof Jondus === 'undefined') Jondus = null;
-              else Jondus = (JSON.parse(Jondus.toLowerCase()));
-
-              var Pallor = $("input[name='ctl00$MainContent$Pallor']:checked").val();
-              if (typeof Pallor === 'undefined') Pallor = null;
-              else Pallor = (JSON.parse(Pallor.toLowerCase()));
-
-              var Dehydration = $("input[name='ctl00$MainContent$Dehydration']:checked").val();
-              if (typeof Dehydration === 'undefined') Dehydration = null;
-              else Dehydration = (JSON.parse(Dehydration.toLowerCase()));
-
-              var GCSOrientation = $("input[name='ctl00$MainContent$GCSOrientation']:checked").val();
-              if (typeof GCSOrientation === 'undefined') GCSOrientation = null;
-              else GCSOrientation = (JSON.parse(GCSOrientation.toLowerCase()));
-
-              var ConsciousOrientely = $("input[name='ctl00$MainContent$ConsciousOrientely']:checked").val();
-              if (typeof ConsciousOrientely === 'undefined') ConsciousOrientely = null;
-              else ConsciousOrientely = (JSON.parse(ConsciousOrientely.toLowerCase()));
-
-              var Murmur = $("input[name='ctl00$MainContent$Murmur']:checked").val();
-              if (typeof Murmur === 'undefined') Murmur = null;
-              else Murmur = JSON.parse(Murmur.toLowerCase());
-
-              var FurtherExplanation = $("#ctl00_MainContent_txtFurtherExplanation").val();
-              var TextBoxCns = $("#ctl00_MainContent_TextBoxCns").val();
-              var TextBoxCvs = $("#ctl00_MainContent_TextBoxCvs").val();
-              var TextBoxResp = $("#ctl00_MainContent_TextBoxResp").val();
-              var TextBoxGit = $("#ctl00_MainContent_TextBoxGit").val();
-              var TextBoxGpe = $("#ctl00_MainContent_TextBoxGpe").val();
-
-       
-
-              var PulseRate = $('#ctl00_MainContent_txtPulseRate').val();
-              var BPDischarge = $('#ctl00_MainContent_txtBPDischarge').val();
-              var Rhythmdischarge = $('#ctl00_MainContent_ddlRhythmdischarge').val();
-              var Tempdisch = $('#ctl00_MainContent_txtTempdisch').val();
-              var volumedisc = $('#ctl00_MainContent_ddlvolumedisc').val();
-              var RespRateDesc = $('#ctl00_MainContent_txtRespRateDesc').val();
-              var Oxygen2_desc = $('#ctl00_MainContent_txtSaturation_Oxygen2_desc').val();
-              var saturationDis = $('#ctl00_MainContent_txtsaturationDis').val();
-              var Oxygen1 = $('#ctl00_MainContent_txtOxygen1').val();
-              var otherecdesc = $('#ctl00_MainContent_txtotherecdesc').val();
-              var Special_Instruction_Desc = $('#ctl00_MainContent_txtRN_Special_Instruction_Desc').val();
-              var Receiving_DateDesc = $('#ctl00_MainContent_txttxtReceiving_DateDesc').val();
-              var remrks_call_to_doc = $('#ctl00_MainContent_txtCallToDoctor').val();
-              debugger;
-
-              var ID = '<%= Request.QueryString["ID"]%>';
-              PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, ddlCallToDoctor, txtHealth_Complaints, ddlIssuance_Of, ddlWard_No, txtBed_No, RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
-                  txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
-                  DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane,
-                  DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, ddlPatientCondition, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, TreatmentTime, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD,
-                  function (response) {
-
-
-                      var btn = btnVal;
-
-                      if (btn == 'btnSave') {
-
-
-                          alert('Data Successfully Save');
-
-                          window.location = "EmergencyCase.aspx?ID=" + response;
-                          //window.open('../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + response);
-                          $('#btnSave').val("Update");
-                      }
-                      else if (btn == 'btnsaveprint') {
-
-
-                          PrintAdmisionDetails(response);
-                          $('#btnSave').val("Update");
-
-                      }
-                  });
-          }
+            // Helper function to safely get values
+            function safeGetValue(selector) {
+                var el = $(selector);
+                return el.length > 0 ? (el.val() || "") : "";
+            }
+
+            // Helper function to safely get text content
+            function safeGetText(selector) {
+                var el = $(selector);
+                return el.length > 0 ? (el.text() || "") : "";
+            }
+
+            // Helper function to safely get checkbox value
+            function safeGetCheckbox(selector) {
+                var element = $(selector);
+                return element.length > 0 ? element.is(':checked') : false;
+            }
+
+            // Helper function to safely get radio button value with boolean conversion
+            function safeGetCheckboxByName(name) {
+                var element = $("input[name='" + name + "']");
+                return element.length > 0 ? element.prop("checked") : false;
+            }
+
+
+
+            // Get all the values using safe helpers
+            var btnsave = safeGetValue('#btnSave');
+
+
+            var Emergency_ID = safeGetValue("#<%= txtEmergency_Patient_ID.ClientID %>");
+            if (Emergency_ID == "(New)") {
+                Emergency_ID = 0;
+            }
+            var Patient_ID = safeGetValue("#<%= hdfReg_ID.ClientID %>");
+            var txtAdmission_Date = safeGetValue('#ctl00_MainContent_txtAdmission_Date');
+            var ddlDepartment = safeGetValue('#ctl00_MainContent_ddlDepartment');
+            var ddlDoctor = safeGetValue('#ctl00_MainContent_ddlDoctor');
+            var ddlCallToDoctor = safeGetValue('#ctl00_MainContent_ddlCallToDoctor');
+            var ReferToOPD = safeGetCheckbox('#<%= ReferToOPD.ClientID %>');
+            var txtHealth_Complaints = safeGetValue('#ctl00_MainContent_txtHealth_Complaints') || "";
+            var ddlIssuance_Of = safeGetValue('#ctl00_MainContent_ddlIssuance_Of');
+            var ddlWard_No = safeGetValue('#ctl00_MainContent_ddlWard_No');
+            var patienttype = safeGetText("#ctl00_MainContent_vLbl_Patient_Type");
+            var txtBed_No = safeGetValue('#ctl00_MainContent_txtBed_No');
+            var BP_mm_Hg = safeGetValue('#ctl00_MainContent_txtBP');
+            var Temp_C = safeGetValue('#ctl00_MainContent_txtTemp');
+            var Respiration_Min = safeGetValue('#ctl00_MainContent_txtRespiration');
+            var txtRN_Special_Instruction = safeGetValue('#ctl00_MainContent_txtRN_Special_Instruction');
+            var txtReceiving_Date = safeGetValue('#ctl00_MainContent_txtReceiving_Date');
+            var Provisional_Diagnosis = safeGetValue('#ctl00_MainContent_txtProvisionalDiagnosis');
+            var Refer_To_Hospital = safeGetValue('#ctl00_MainContent_txtRefer_To_Hospital');
+            var Reffer_To = safeGetValue('#ctl00_MainContent_ddlPatient_Main_Category');
+            if (Reffer_To == "0") Reffer_To = "";
+            var HistoryOfPeresentIllness = safeGetValue('#ctl00_MainContent_txtHistoryOfPeresentIllness');
+            var HistoryOfFamily = safeGetValue('#ctl00_MainContent_txtHistoryOfFamily');
+            var HistoryOfPastIllness = safeGetValue('#ctl00_MainContent_txtHistoryOfPastIllness');
+            var SocioEconomicHistory = safeGetValue('#ctl00_MainContent_txtSocioEconomicHistory');
+            var Birth_History = safeGetValue('#ctl00_MainContent_txtBirthHistory');
+            var Reffer_No = safeGetValue('#ctl00_MainContent_txtRefferNote');
+            var Drug_History = safeGetValue('#ctl00_MainContent_txtDrugHistory');
+            var Personal_History = safeGetValue('#ctl00_MainContent_txtPersonalHistory');
+            var ObstetricHistory = safeGetValue('#ctl00_MainContent_txtObstetricHistory');
+            var AllergiesHistory = safeGetValue('#ctl00_MainContent_txtAllergiesHistory');
+            var TreatmentHistory = safeGetValue('#ctl00_MainContent_txtTreatmentHistory');
+            var VaccinationHistory = safeGetValue('#ctl00_MainContent_txtVaccinationHistory');
+            var AnyOtherHistory = safeGetValue('#ctl00_MainContent_txtAnyOtherHistory');
+            var txtSourceOfReferral = safeGetValue('#ctl00_MainContent_txtSourceOfReferral');
+            var ddlDischarge_By = safeGetValue('#ctl00_MainContent_ddlDischarge_By');
+            var txtDischarge_On = safeGetValue('#ctl00_MainContent_txtDischarge_On');
+            var txtNext_Visit = safeGetValue('#ctl00_MainContent_txtNext_Visit');
+            var ddlPatientCondition = safeGetValue("#ctl00_MainContent_ddlPatientCondition");
+            if (ddlPatientCondition == "0" || ddlPatientCondition == 'undefined' || ddlPatientCondition == " " || ddlPatientCondition == null) {
+                ddlPatientCondition = "01";
+            }
+            if (txtNext_Visit === "") txtNext_Visit = null;
+            var txtAdvice = safeGetValue('#ctl00_MainContent_txtPrevention_Precaution');
+            var chkdischarge = safeGetCheckbox('#ctl00_MainContent_cbDicharg_Slip');
+            var RateBeats = safeGetValue("#ctl00_MainContent_txtRateBeats");
+            var Saturation = safeGetValue("#ctl00_MainContent_txtSaturation");
+            var OthersRN = safeGetValue("#ctl00_MainContent_txtOthersRcvNote");
+            var DischargeStatus = safeGetValue("#ctl00_MainContent_ddlDischargeStatus");
+            var ddlEmrgRhythm = safeGetValue('#ctl00_MainContent_ddlRhythm');
+            var ddlEmrgVolume = safeGetValue('#ctl00_MainContent_ddlVolume');
+            var Procedure_Recommended = safeGetValue("#ctl00_MainContent_txtProcedureRecommended");
+            var IdentificationMarks = safeGetValue("#ctl00_MainContent_txtIdentificationMarks");
+            var Diagnosis = safeGetValue("#ctl00_MainContent_txtDiagnosis");
+            var DateOfDeath = safeGetValue("#ctl00_MainContent_txtDateofDeath");
+            var TimeOfDeath = safeGetValue("#ctl00_MainContent_txtTimeOfDeath");
+            var PlaceOfDeath = safeGetValue("#ctl00_MainContent_ddlPlaceOfDeath");
+            var CauseOfDeath = safeGetValue("#ctl00_MainContent_txtCause_Of_Death");
+            var IssuingOfficerName = safeGetValue("#ctl00_MainContent_txtIssuingOfficerName");
+            var DeathCertifiedby1 = safeGetValue("#ctl00_MainContent_ddlDeathCertifiedbyDr1");
+            var DeathCertifiedby2 = safeGetValue("#ctl00_MainContent_ddlDeathCertifiedbyDr2");
+            var BodyHandedOverTo = safeGetValue("#ctl00_MainContent_txtBodyHandedOverTo");
+            var FamilyPersonName = safeGetValue("#ctl00_MainContent_txtFamilyPersonName");
+            var CNIC = safeGetValue("#ctl00_MainContent_txtCNIC");
+            var RelationWithDeceased = safeGetValue("#ctl00_MainContent_txtRelationWithDeceased");
+            var CMO_Police = safeGetValue("#ctl00_MainContent_txtCMO_Police");
+            var TreatmentGiven = safeGetValue("#ctl00_MainContent_txtTreatmentGiven");
+            var PhysicalFinding = safeGetValue("#ctl00_MainContent_txtPhysicalFinding");
+            var GeneralPhysicalExamination = safeGetValue("#ctl00_MainContent_txtGeneralPhysicalExamination");
+            var ClinicalSummary = safeGetValue("#ctl00_MainContent_txtClinicalSummary");
+            var TreatmentAtDischarge = safeGetValue("#ctl00_MainContent_txtTreatmentAtDischarge");
+            var FollowUpPlanInstructions = safeGetValue("#ctl00_MainContent_txtFollowUpPlanInstructions");
+            var CauseOfReferral = safeGetValue("#ctl00_MainContent_txtCauseOfReferral");
+            var ReferredTo = safeGetValue("#ctl00_MainContent_ddlReferredTo");
+            var TreatmentTime = safeGetValue("#ctl00_MainContent_txtTreatmentTime");
+            var CallingDoctorDepartment = safeGetValue("#ctl00_MainContent_ddl_Department");
+            var CallingDoctorMobile = safeGetValue("#ctl00_MainContent_txtMobileNo");
+            var O2_Saturation_Oxygen1 = safeGetValue("#ctl00_MainContent_txtSaturation_Oxygen1");
+            var O2_Saturation_Oxygen2 = safeGetValue("#ctl00_MainContent_txtSaturation_Oxygen2");
+            var HMFIntact = document.getElementById('ctl00_MainContent_HMFIntact1').checked;
+            var CranialNerves = document.getElementById('ctl00_MainContent_CranialNerves1').checked;
+            var SignsOfMeningism = document.getElementById('ctl00_MainContent_SignsOfMeningism1').checked;
+            var HeartSound = document.getElementById('ctl00_MainContent_HeartSound1').checked;
+            var Arrhythmias = document.getElementById('ctl00_MainContent_Arrhythmias1').checked;
+            var AnyOtherAddedSound = document.getElementById('ctl00_MainContent_AnyOtherAddedSound1').checked;
+            var AnyOtherFindings = document.getElementById('ctl00_MainContent_AnyOtherFindings1').checked;
+            var NVB_Right = document.getElementById('ctl00_MainContent_NVB_Right1').checked;
+            var NVB_Left = document.getElementById('ctl00_MainContent_NVB_Left1').checked;
+            var Crepitation_Right = document.getElementById('ctl00_MainContent_Crepitation_Right1').checked;
+            var Crepitation_Left = document.getElementById('ctl00_MainContent_Crepitation_Left1').checked;
+            var Wheeze = document.getElementById('ctl00_MainContent_Wheeze1').checked;
+            var Ranchi = document.getElementById('ctl00_MainContent_Ranchi1').checked;
+            var AnyOtherSound = document.getElementById('ctl00_MainContent_AnyOtherSound1').checked;
+            var AbdomenSoft = document.getElementById('ctl00_MainContent_AbdomenSoft1').checked;
+            var Tenderness = document.getElementById('ctl00_MainContent_Tenderness1').checked;
+            var Guarding = document.getElementById('ctl00_MainContent_Guarding1').checked;
+            var BowelSound = document.getElementById('ctl00_MainContent_BowelSound1').checked;
+            var Distention = document.getElementById('ctl00_MainContent_Distention1').checked;
+            var FluidThrill = document.getElementById('ctl00_MainContent_FluidThrill1').checked;
+            var ShiftingDullness = document.getElementById('ctl00_MainContent_ShiftingDullness1').checked;
+            var EpigastriaDiscomfort = document.getElementById('ctl00_MainContent_EpigastriaDiscomfort1').checked;
+            var RetrosternalBurning = document.getElementById('ctl00_MainContent_RetrosternalBurning1').checked;
+            var Jondus = document.getElementById('ctl00_MainContent_Jondus1').checked;
+            var Pallor = document.getElementById('ctl00_MainContent_Pallor1').checked;
+            var Dehydration = document.getElementById('ctl00_MainContent_Dehydration1').checked;
+            var GCSOrientation = document.getElementById('ctl00_MainContent_GCSOrientation1').checked;
+            var ConsciousOrientely = document.getElementById('ctl00_MainContent_ConsciousOrientely1').checked;
+            var Murmur = document.getElementById('ctl00_MainContent_Murmur1').checked;
+            var FurtherExplanation = safeGetValue("#ctl00_MainContent_txtFurtherExplanation");
+            var TextBoxCns = safeGetValue("#ctl00_MainContent_TextBoxCns");
+            var TextBoxCvs = safeGetValue("#ctl00_MainContent_TextBoxCvs");
+            var TextBoxResp = safeGetValue("#ctl00_MainContent_TextBoxResp");
+            var TextBoxGit = safeGetValue("#ctl00_MainContent_TextBoxGit");
+            var TextBoxGpe = safeGetValue("#ctl00_MainContent_TextBoxGpe");
+            var PulseRate = safeGetValue('#ctl00_MainContent_txtPulseRate');
+            var BPDischarge = safeGetValue('#ctl00_MainContent_txtBPDischarge');
+            var Rhythmdischarge = safeGetValue('#ctl00_MainContent_ddlRhythmdischarge');
+            var Tempdisch = safeGetValue('#ctl00_MainContent_txtTempdisch');
+            var volumedisc = safeGetValue('#ctl00_MainContent_ddlvolumedisc');
+            var RespRateDesc = safeGetValue('#ctl00_MainContent_txtRespRateDesc');
+            var Oxygen2_desc = safeGetValue('#ctl00_MainContent_txtSaturation_Oxygen2_desc');
+            var saturationDis = safeGetValue('#ctl00_MainContent_txtsaturationDis');
+            var Oxygen1 = safeGetValue('#ctl00_MainContent_txtOxygen1');
+            var otherecdesc = safeGetValue('#ctl00_MainContent_txtotherecdesc');
+            var Special_Instruction_Desc = safeGetValue('#ctl00_MainContent_txtRN_Special_Instruction_Desc');
+            var Receiving_DateDesc = safeGetValue('#ctl00_MainContent_txttxtReceiving_DateDesc');
+            var remrks_call_to_doc = safeGetValue('#ctl00_MainContent_txtCallToDoctor');
+            // Create data object with all parameters
+            var data = {
+                Emergency_ID: Emergency_ID,
+                Patient_ID: Patient_ID,
+                btnsave: btnsave,
+                txtAdmission_Date: txtAdmission_Date,
+                ddlDepartment: ddlDepartment,
+                ddlDoctor: ddlDoctor,
+                ddlCallToDoctor: ddlCallToDoctor,
+                ReferToOPD: ReferToOPD,
+                txtHealth_Complaints: txtHealth_Complaints,
+                ddlIssuance_Of: ddlIssuance_Of,
+                ddlWard_No: ddlWard_No,
+                patienttype: patienttype,
+                txtBed_No: txtBed_No,
+                BP_mm_Hg: BP_mm_Hg,
+                Temp_C: Temp_C,
+                Respiration_Min: Respiration_Min,
+                txtRN_Special_Instruction: txtRN_Special_Instruction,
+                txtReceiving_Date: txtReceiving_Date,
+                Provisional_Diagnosis: Provisional_Diagnosis,
+                Refer_To_Hospital: Refer_To_Hospital,
+                Reffer_To: Reffer_To,
+                HistoryOfPeresentIllness: HistoryOfPeresentIllness,
+                HistoryOfFamily: HistoryOfFamily,
+                HistoryOfPastIllness: HistoryOfPastIllness,
+                SocioEconomicHistory: SocioEconomicHistory,
+                Birth_History: Birth_History,
+                Reffer_No: Reffer_No,
+                Drug_History: Drug_History,
+                Personal_History: Personal_History,
+                ObstetricHistory: ObstetricHistory,
+                AllergiesHistory: AllergiesHistory,
+                TreatmentHistory: TreatmentHistory,
+                VaccinationHistory: VaccinationHistory,
+                AnyOtherHistory: AnyOtherHistory,
+                txtSourceOfReferral: txtSourceOfReferral,
+                ddlDischarge_By: ddlDischarge_By,
+                txtDischarge_On: txtDischarge_On,
+                txtNext_Visit: txtNext_Visit,
+                ddlPatientCondition: ddlPatientCondition,
+                txtAdvice: txtAdvice,
+                chkdischarge: chkdischarge,
+                RateBeats: RateBeats,
+                Saturation: Saturation,
+                OthersRN: OthersRN,
+                DischargeStatus: DischargeStatus,
+                ddlEmrgRhythm: ddlEmrgRhythm,
+                ddlEmrgVolume: ddlEmrgVolume,
+                Procedure_Recommended: Procedure_Recommended,
+                IdentificationMarks: IdentificationMarks,
+                Diagnosis: Diagnosis,
+                DateOfDeath: DateOfDeath,
+                TimeOfDeath: TimeOfDeath,
+                PlaceOfDeath: PlaceOfDeath,
+                CauseOfDeath: CauseOfDeath,
+                IssuingOfficerName: IssuingOfficerName,
+                DeathCertifiedby1: DeathCertifiedby1,
+                DeathCertifiedby2: DeathCertifiedby2,
+                BodyHandedOverTo: BodyHandedOverTo,
+                FamilyPersonName: FamilyPersonName,
+                CNIC: CNIC,
+                RelationWithDeceased: RelationWithDeceased,
+                CMO_Police: CMO_Police,
+                TreatmentGiven: TreatmentGiven,
+                PhysicalFinding: PhysicalFinding,
+                GeneralPhysicalExamination: GeneralPhysicalExamination,
+                ClinicalSummary: ClinicalSummary,
+                TreatmentAtDischarge: TreatmentAtDischarge,
+                FollowUpPlanInstructions: FollowUpPlanInstructions,
+                CauseOfReferral: CauseOfReferral,
+                ReferredTo: ReferredTo,
+                TreatmentTime: TreatmentTime,
+                CallingDoctorDepartment: CallingDoctorDepartment,
+                CallingDoctorMobile: CallingDoctorMobile,
+                O2_Saturation_Oxygen1: O2_Saturation_Oxygen1,
+                O2_Saturation_Oxygen2: O2_Saturation_Oxygen2,
+                HMFIntact: HMFIntact,
+                CranialNerves: CranialNerves,
+                SignsOfMeningism: SignsOfMeningism,
+                HeartSound: HeartSound,
+                Arrhythmias: Arrhythmias,
+                AnyOtherAddedSound: AnyOtherAddedSound,
+                AnyOtherFindings: AnyOtherFindings,
+                NVB_Right: NVB_Right,
+                NVB_Left: NVB_Left,
+                Crepitation_Right: Crepitation_Right,
+                Crepitation_Left: Crepitation_Left,
+                Wheeze: Wheeze,
+                Ranchi: Ranchi,
+                AnyOtherSound: AnyOtherSound,
+                AbdomenSoft: AbdomenSoft,
+                Tenderness: Tenderness,
+                Guarding: Guarding,
+                BowelSound: BowelSound,
+                Distention: Distention,
+                FluidThrill: FluidThrill,
+                ShiftingDullness: ShiftingDullness,
+                EpigastriaDiscomfort: EpigastriaDiscomfort,
+                RetrosternalBurning: RetrosternalBurning,
+                Jondus: Jondus,
+                Pallor: Pallor,
+                Dehydration: Dehydration,
+                GCSOrientation: GCSOrientation,
+                ConsciousOrientely: ConsciousOrientely,
+                Murmur: Murmur,
+                FurtherExplanation: FurtherExplanation,
+                TextBoxCns: TextBoxCns,
+                TextBoxCvs: TextBoxCvs,
+                TextBoxResp: TextBoxResp,
+                TextBoxGit: TextBoxGit,
+                TextBoxGpe: TextBoxGpe,
+                PulseRate: PulseRate,
+                BPDischarge: BPDischarge,
+                Rhythmdischarge: Rhythmdischarge,
+                Tempdisch: Tempdisch,
+                volumedisc: volumedisc,
+                RespRateDesc: RespRateDesc,
+                Oxygen2_desc: Oxygen2_desc,
+                saturationDis: saturationDis,
+                Oxygen1: Oxygen1,
+                otherecdesc: otherecdesc,
+                Special_Instruction_Desc: Special_Instruction_Desc,
+                Receiving_DateDesc: Receiving_DateDesc,
+                remrks_call_to_doc: remrks_call_to_doc
+            };
+
+            console.log("Data being sent:", data);
+
+            $.ajax({
+                type: "POST",
+                url: "NewEmergencyCase.aspx/SaveRecord", // Replace with your actual page name
+                data: JSON.stringify({ data: data }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Response:", response);
+
+                    if (response.d && response.d.startsWith("Error:")) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d,
+                            showConfirmButton: true
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Record has been saved successfully.',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        window.location = "YourPageName.aspx?ID=" + response.d;
+                        $('#btnSave').val("Update");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        responseText: xhr.responseText,
+                        error: error
+                    });
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while saving the record. Please check the console for details.',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        }
     </script>
 
     <script id="updateLogic" type="text/javascript">
 
         function AppendSymtompsHistory() {
-            var OutPatientID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
+            var EmergencyID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
 
-            PageMethods.LoadSymtompsHistory(OutPatientID, function (res) {
+            PageMethods.LoadSymtompsHistory(EmergencyID, function (res) {
                 var Symptoms = JSON.parse(res);
                 var rows = '';
 
@@ -4545,7 +4577,7 @@
             });
         }
         function Appendtestintable() {
-            var patientID = $('#<%= txtEmergency_Patient_ID.ClientID %>').val();
+            var patientID = $('#<%= hdfReg_ID.ClientID %>').val();
             if (patientID != '(New)') {
                 PageMethods.GetTestList(patientID, function (res) {
                     var test = JSON.parse(res);
@@ -4715,108 +4747,63 @@
                 alert('Failed to load medicines. Please check your connection and try again.');
             });
         }
-        function AppendComplaintsHistory() {
-            var OutPatientID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
-            PageMethods.LoadComplaints(OutPatientID, function (res) {
-                var Complaints = JSON.parse(res);
-                var rows = '';
-
-                // First uncheck all complaint checkboxes
-                $('[id^="chk_complaint_"]').prop('checked', false);
-
-                $.each(Complaints, function (key, value) {
-                    rows += '<tr> <td style="display:none;"> <input type="hidden" class="complainclass" value="' + value.ComplaintID + '" />' + value.ComplaintID + ' </td>' +
-                        '<td> ' + value.ComplaintName + ' </td>' +
-                        '<td> <a href="#" onclick="Remove_ComplaintRow(\'' + value.ComplaintID + '\')"><i class="fa fa-times"></i></a></td></tr>';
-
-                    // Check the corresponding checkbox
-                    $('#chk_complaint_' + value.ComplaintID).prop('checked', true);
-
-                    if (value.ComplaintID && value.ComplaintID.toString().length > 0)
-                        $('#dvtblComplaints').slideDown();
-                    else
-                        $('#dvtblComplaints').slideUp();
-                });
-                $('#tblComplaints tbody').html(rows);
-            });
-        }
-
-        function AppendFinalDiagnosisHistory() {
-            var OutPatientID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
-
-            PageMethods.LoadFinalDiagnosis(OutPatientID, function (res) {
-                var FinalDiagnosis = JSON.parse(res);
-                var rows = '';
-
-                // Clear previous selections
-                $('[id^="chk_Final_Diagnosis_"]').prop('checked', false);
-                $('[id^="txtFinalDiagnosis_"]').val('');
-
-                $.each(FinalDiagnosis, function (key, value) {
-                    rows += '<tr id="FinaldiagnosisRow_' + value.FinalDiagnosisID + '">' +
-                        '<td style="display:none;"><input type="hidden" class="finaldiagnosisclass" value="' + value.FinalDiagnosisID + '" />' +
-                        value.FinalDiagnosisID + '</td>' +
-                        '<td>' + value.DiagnosisName + '</td>' +
-                        '<td>' + (value.Remarks || '') + '</td>' +
-                        '<td><a href="#" onclick="removeFinalDiagnosisRow(\'' + value.FinalDiagnosisID + '\'); return false;"><i class="fa fa-times"></i></a></td>' +
-                        '</tr>';
-
-                    // Check the corresponding checkbox and fill remarks
-                    $('#chk_Final_Diagnosis_' + value.FinalDiagnosisID).prop('checked', true);
-                    $('#txtFinalDiagnosis_' + value.FinalDiagnosisID).val(value.Remarks || '');
-                });
-
-                $('#tblFinalDiagnosis tbody').html(rows);
-                $('#dvtblFinalDiagnosis').toggle(FinalDiagnosis.length > 0);
-            });
-        }
-
-        function AppendPrimaryDiagnosisHistory() {
-            var OutPatientID = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
-
-            PageMethods.LoadPrimaryDiagnosis(OutPatientID, function (res) {
-                var PrimaryDiagnosis = JSON.parse(res);
-                var rows = '';
-
-                // Clear previous selections
-                $('[id^="chk_Primary_Diagnosis_"]').prop('checked', false);
-                $('[id^="txtPrimaryDiagnosis_"]').val('');
-
-                $.each(PrimaryDiagnosis, function (key, value) {
-                    rows += '<tr id="PrimarydiagnosisRow_' + value.PrimaryDiagnosisID + '">' +
-                        '<td style="display:none;"><input type="hidden" class="primarydiagnosisclass" value="' + value.PrimaryDiagnosisID + '" />' +
-                        value.PrimaryDiagnosisID + '</td>' +
-                        '<td>' + value.DiagnosisName + '</td>' +
-                        '<td>' + (value.Remarks || '') + '</td>' +
-                        '<td><a href="#" onclick="removePrimaryDiagnosisRow(\'' + value.PrimaryDiagnosisID + '\'); return false;"><i class="fa fa-times"></i></a></td>' +
-                        '</tr>';
-
-                    // Check the corresponding checkbox and fill remarks
-                    $('#chk_Primary_Diagnosis_' + value.PrimaryDiagnosisID).prop('checked', true);
-                    $('#txtPrimaryDiagnosis_' + value.PrimaryDiagnosisID).val(value.Remarks || '');
-                });
-
-                $('#tblPrimaryDiagnosis tbody').html(rows);
-                $('#dvtblPrimaryDiagnosis').toggle(PrimaryDiagnosis.length > 0);
-            });
-        }
-        function Load_Proto() {
+        function LoadDischargeMedicines() {
             debugger;
-            if ($("#<%= hdfReg_ID.ClientID%>").val() !== "(New)") {
-                var patients_id = $('#<%= txtEmergency_Patient_ID.ClientID %>').val();
-                PageMethods.LoadProtoDetails(patients_id, function (response) {
-                    var Proto = JSON.parse(response);
-                    var rows = "";
+            var patientId = $('#<%= txtEmergency_Patient_ID.ClientID%>').val();
 
-                    $.each(Proto, function (key, value) {
-                        rows += '<tr><td><input type="hidden" name="ProtoId" value="' + value.ProtoId + '" />' + value.Proto_Description + '</td><td style="text-align: left;"><a href="#" onclick="DeleteRow(this)"><i class="fa fa-times"></i></a></td></tr>';
-                    });
-                    $('#tblProto tbody').append(rows);
-                    $('#dvtblProto').toggle(Proto.length > 0);
-                });
+            if (patientId === '(New)' || patientId === '0') {
+                return; // Exit if new patient
             }
 
+            PageMethods.LoadDischargeMedicines(patientId, function (res) {
+                try {
+                    var Medicines = JSON.parse(res);
+                    var rows = '';
+
+                    $.each(Medicines, function (key, value) {
+                        // Format date using moment.js
+                        var formattedDate = '';
+                        if (value.Medicine_Date) {
+                            var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
+                            formattedDate = moment.unix(timeStamp).format('MM/DD/YYYY hh:mm A');
+                        }
+
+                        // Clean up select values
+                        var oral = (value.Oral && value.Oral.trim() === "Select Routes") ? '' : value.Oral;
+                        var dosageQty = (value.Dosage_Qty && value.Dosage_Qty.trim() === "Select") ? '' : value.Dosage_Qty;
+                        var dosageFrom = (value.Dosage_From && value.Dosage_From.trim() === "Select") ? '' : value.Dosage_From;
+                        var otherInstruction = (value.Other_Instruction && value.Other_Instruction.trim() === "Select") ? '' : value.Other_Instruction;
+
+                        // Build row using template literals for better readability
+                        rows += '<tr>' +
+                            '<td style="display:none"><input type="hidden" name="testDate" value="' + formattedDate + '">' + formattedDate + '</td>' +
+                            '<td><input type="hidden" name="hdnItemCode" value="' + (value.Item_Code || '') + '">' + (value.Medicine_Name || '') + '</td>' +
+                            '<td>' + (value.Frequency || '') + '<input type="hidden" class="field-value" value="' + (value.Frequency || '') + '"></td>' +
+                            '<td>' + (oral || '') + '<input type="hidden" class="field-value" value="' + (oral || '') + '"></td>' +
+                            '<td>' + (value.Injections || '') + '</td>' +
+                            '<td>' + (value.AttendingParamedical_Staff || '') + '</td>' +
+                            '<td>' + (dosageFrom || '') + '<input type="hidden" class="field-value" value="' + (dosageFrom || '') + '"></td>' +
+                            '<td>' + (dosageQty || '') + '<input type="hidden" class="field-value" value="' + (dosageQty || '') + '"></td>' +
+                            '<td>' + (otherInstruction || '') + '<input type="hidden" class="field-value" value="' + (otherInstruction || '') + '"></td>' +
+                            '<td><a href="#" onclick="editMedicine(this); return false;">Edit</a> | <a href="#" onclick="deleteMedicine(this); return false;"><i class="fa fa-times"></i></a><input type="hidden" name="uurowid" value="' + uuid() + '"></td>' +
+                            '<td style="display:none;"></td>' +
+                            '</tr>';
+                    });
+
+                    $('#tblDischargeMedicines tbody').html(rows);
+                    $('#dvtblDischargeMedicines').toggle(Medicines.length > 0);
+
+                } catch (error) {
+                    console.error('Error loading medicines:', error);
+                    // Optionally show user-friendly error message
+                    alert('Failed to load medicines. Please try again.');
+                }
+            }, function (error) {
+                console.error('PageMethod failed:', error);
+                alert('Failed to load medicines. Please check your connection and try again.');
+            });
         }
+
     </script>
 
 </asp:Content>
@@ -5090,28 +5077,28 @@
                             alt="Sidebar Toggle" class="sidebarToggleIcon" />
                     </div>
                 </div>
- 
-       
-        <div class="col-lg-4">
-    <div class="search-container">
-        <div class="search-input-wrapper">
-            <input
-                type="text"
-                class="search-input"
-                placeholder="Search for anything..."
-                id="searchInput"
-                autocomplete="off"
-                style="height: 45px; width: 100% !important; padding: 16px 50px 16px 20px !important; border: 1.5px solid #ccc !important; border-radius: 25px !important; background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; color: black !important; font-size: 16px !important; box-shadow: none !important" />
-            <div class="search-icon">🔍</div>
-        </div>
-        <div class="search-results" id="searchResults"></div>
-    </div>
-</div>
-      
- 
+
+
+                <div class="col-lg-4">
+                    <div class="search-container">
+                        <div class="search-input-wrapper">
+                            <input
+                                type="text"
+                                class="search-input"
+                                placeholder="Search for anything..."
+                                id="searchInput"
+                                autocomplete="off"
+                                style="height: 45px; width: 100% !important; padding: 16px 50px 16px 20px !important; border: 1.5px solid #ccc !important; border-radius: 25px !important; background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; color: black !important; font-size: 16px !important; box-shadow: none !important" />
+                            <div class="search-icon">🔍</div>
+                        </div>
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                </div>
+
+
                 <div class="col-lg-6">
                     <div style="display: flex; justify-content: flex-end;">
-                          <input type="button" value="Add Patient" id="btnSearchPatient"   onclick="OpenModal()" class="btn btn-primry" />
+                        <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn btn-primry" />
                         <input type="button" class="btn btn-primry" value="History" onclick="ShowHistory()" />
                         <input type="button" class="btn btn-primry" value="Queue" onclick="openQueue()" />
                         <label class="mybutton2-wrapper">
@@ -5157,7 +5144,7 @@
                                                 </div>
                                             </div>
 
-                                        
+
 
                                             <div class="row mb-3">
                                                 <div class="col-md-5 col-sm-6">
@@ -5186,7 +5173,7 @@
                                                 </div>
                                             </div>
 
-                                         
+
                                             <div class="row mb-3" style="display: none">
                                                 <div class="col-md-5 col-sm-6">
                                                     <asp:Label ID="Doctor" CssClass="labels" runat="server" Text="Doctor:"></asp:Label>
@@ -5371,7 +5358,7 @@
                                                 <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
                                                     <div style="display: flex; align-items: center; width: 100%;">
                                                         <asp:Label Style="width: 200px;" ID="lblRN_Special_Instruction" runat="server" Text="Special Instruction"></asp:Label>
-                                                        <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" CssClass="form-control" onchange="FillInstruction()"></asp:TextBox>
+                                                        <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" CssClass="form-control"></asp:TextBox>
                                                     </div>
                                                 </div>
                                             </div>
@@ -6477,32 +6464,32 @@
                                         </div>
                                     </div>
                                     <div class="tabs" id="tab13" style="display: none">
-                                         <div style="display: flex; justify-content: flex-end;">
-     <input type="button" class="btn btn-primry" value="By Template" onclick="ShowDischargeMediceneTemplateDiv()" />
-     <input style="margin-left: 5px" type="button" class="btn btn-primry" value="All Meds" onclick="ShowAllDischargeMedicenesDiv()" />
- </div>
- <div id="tab13_01" class="tab13subtab">
-     <div class="row editMed1">
-         <div class="col-md-7 col-sm-12">
-             <input type="text" class="form-control mb-2" id="tab13_01Search" placeholder="Search..." />
-         </div>
-         <div class="col-md-5 col-sm-12">
-         </div>
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <input type="button" class="btn btn-primry" value="By Template" onclick="ShowDischargeMediceneTemplateDiv()" />
+                                            <input style="margin-left: 5px" type="button" class="btn btn-primry" value="All Meds" onclick="ShowAllDischargeMedicenesDiv()" />
+                                        </div>
+                                        <div id="tab13_01" class="tab13subtab">
+                                            <div class="row editMed1">
+                                                <div class="col-md-7 col-sm-12">
+                                                    <input type="text" class="form-control mb-2" id="tab13_01Search" placeholder="Search..." />
+                                                </div>
+                                                <div class="col-md-5 col-sm-12">
+                                                </div>
 
-     </div>
-     <div id="allDischargeMedicenes"></div>
- </div>
- <div id="tab13_02" class="tab11subtab" style="display: none">
-     <div class="row">
-         <div class="col-md-7 col-sm-12">
-             <input type="text" class="form-control mb-2" id="tab13_02Search" placeholder="Search..." />
-         </div>
-         <div class="col-md-5 col-sm-12">
-         </div>
+                                            </div>
+                                            <div id="allDischargeMedicenes"></div>
+                                        </div>
+                                        <div id="tab13_02" class="tab11subtab" style="display: none">
+                                            <div class="row">
+                                                <div class="col-md-7 col-sm-12">
+                                                    <input type="text" class="form-control mb-2" id="tab13_02Search" placeholder="Search..." />
+                                                </div>
+                                                <div class="col-md-5 col-sm-12">
+                                                </div>
 
-     </div>
-     <div id="allDischargeMediceneTemplates"></div>
- </div>
+                                            </div>
+                                            <div id="allDischargeMediceneTemplates"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -6595,7 +6582,7 @@
                                     </div>
                                 </div>
                                 <!-- Six separate tables - one per section. Keep structure/classes same as your Vitals/History panels. -->
-                                <div class="col-lg-9" id="divtblCVS" style="display: none">
+                                <div class="col-lg-3" id="divtblCVS" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-stethoscope"></i>CVS Findings</h4>
@@ -6614,7 +6601,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-9" id="divtblGCS" style="display: none">
+                                <div class="col-lg-3" id="divtblGCS" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-brain"></i>GCS Findings</h4>
@@ -6633,7 +6620,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-9" id="divtblGPE" style="display: none">
+                                <div class="col-lg-3" id="divtblGPE" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-user-md"></i>GPE Findings</h4>
@@ -6652,7 +6639,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-9" id="divtblRESP" style="display: none">
+                                <div class="col-lg-3" id="divtblRESP" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-lungs"></i>RESP Findings</h4>
@@ -6671,7 +6658,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-9" id="divtblGIT" style="display: none">
+                                <div class="col-lg-3" id="divtblGIT" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-stomach"></i>GIT Findings</h4>
@@ -6690,7 +6677,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-9" id="divtblCNS" style="display: none">
+                                <div class="col-lg-3" id="divtblCNS" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-brain"></i>CNS Findings</h4>
@@ -6710,7 +6697,7 @@
                                 </div>
 
 
-                                <div class="col-lg-9" id="divtblAdmissions">
+                                <div class="col-lg-9" id="divtblAdmissions" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-procedures"></i>Admission Info</h4>
@@ -6818,32 +6805,32 @@
                                 </div>
 
                                 <div class="col-lg-12" id="dvtblDischargeMedicines" style="display: none">
-    <div class="dashboard-card">
-        <div class="card-header">
-            <h4><i class="fa fa-pills"></i>Discharge Medicines</h4>
+                                    <div class="dashboard-card">
+                                        <div class="card-header">
+                                            <h4><i class="fa fa-pills"></i>Discharge Medicines</h4>
 
-        </div>
-        <div class="table-responsive">
-            <table class="table modern-table" id="tblDischargeMedicines">
-                <thead>
-                    <tr style="position: sticky; top: 0px; z-index: 10;">
-                        <th style="display: none">Date</th>
-                        <th>Medicine Name</th>
-                        <th>Frequency</th>
-                        <th>Routes</th>
-                        <th>Duration</th>
-                        <th>Special Instructions</th>
-                        <th>Dosage Form</th>
-                        <th>Dosage Qty</th>
-                        <th>Other Instructions</th>
-                        <th>Edit</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table modern-table" id="tblDischargeMedicines">
+                                                <thead>
+                                                    <tr style="position: sticky; top: 0px; z-index: 10;">
+                                                        <th style="display: none">Date</th>
+                                                        <th>Medicine Name</th>
+                                                        <th>Frequency</th>
+                                                        <th>Routes</th>
+                                                        <th>Duration</th>
+                                                        <th>Special Instructions</th>
+                                                        <th>Dosage Form</th>
+                                                        <th>Dosage Qty</th>
+                                                        <th>Other Instructions</th>
+                                                        <th>Edit</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Refer Panel -->
                                 <div class="col-lg-3" id="divtblRefer" style="display: none">
@@ -6915,28 +6902,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Complaints Panel -->
-                                <div class="col-lg-4" id="dvtblComplaints" style="display: none">
-                                    <div class="dashboard-card">
-                                        <div class="card-header">
-                                            <h4><i class="fa fa-comment-medical"></i>Complaints</h4>
-
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table modern-table" id="tblComplaints">
-                                                <thead class="hidden">
-                                                    <tr>
-                                                        <th>Complaints</th>
-                                                        <th class="actions-col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
-
 
 
 
@@ -6960,67 +6925,10 @@
                                     </div>
                                 </div>
 
-                                <!-- Systematic Examination Panel -->
-                                <div class="col-lg-6" id="divtblSystematicExam" style="display: none">
-                                    <div class="dashboard-card">
-                                        <div class="card-header">
-                                            <h4><i class="fa fa-procedures"></i>Systematic Exam</h4>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table modern-table" id="SystematicExam">
-                                                <thead class="hidden">
-                                                    <tr>
-                                                        <th>Systematic Examination</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
 
 
 
-                                <!-- Diagnosis Panels -->
-                                <div class="col-lg-4" id="dvtblPrimaryDiagnosis" style="display: none">
-                                    <div class="dashboard-card">
-                                        <div class="card-header">
-                                            <h4><i class="fa fa-diagnoses"></i>Primary Diagnosis</h4>
 
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table modern-table" id="tblPrimaryDiagnosis">
-                                                <thead class="hidden">
-                                                    <tr>
-                                                        <th>Primary Diagnosis</th>
-                                                        <th class="actions-col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4" id="dvtblFinalDiagnosis" style="display: none">
-                                    <div class="dashboard-card">
-                                        <div class="card-header">
-                                            <h4><i class="fa fa-file-medical-alt"></i>Final Diagnosis</h4>
-
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table modern-table" id="tblFinalDiagnosis">
-                                                <thead class="hidden">
-                                                    <tr>
-                                                        <th>Final Diagnosis</th>
-                                                        <th class="actions-col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <!-- Disposal Panel -->
                                 <div class="col-lg-4" id="divtblDisposal" style="display: none">
@@ -7042,32 +6950,11 @@
                                 </div>
 
 
-                                <!-- Follow Up Panel -->
-                                <div class="col-lg-8" id="divtblFollowUp" style="display: none">
-                                    <div class="dashboard-card">
-                                        <div class="card-header">
-                                            <h4><i class="fa fa-calendar-check"></i>Follow Up</h4>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table modern-table" id="tblFollowUp">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Doctor Name</th>
-                                                        <th>Designation</th>
-                                                        <th>Admission</th>
-                                                        <th>Follow Up</th>
-                                                        <th>Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+
 
                                 <!-- History Panel -->
 
-                                <div class="col-lg-9" id="divtblHistory" style="display: none">
+                                <div class="col-lg-6" id="divtblHistory" style="display: none">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-file-alt"></i>History</h4>
@@ -7084,25 +6971,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Protos Panel -->
-                                <div class="col-lg-4" id="dvtblProto" style="display: none">
-                                    <div class="dashboard-card">
-                                        <div class="card-header">
-                                            <h4><i class="fa fa-file-prescription"></i>Protos</h4>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table modern-table" id="tblProto">
-                                                <thead class="hidden">
-                                                    <tr>
-                                                        <th>Protos</th>
-                                                        <th class="actions-col">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+
 
                             </div>
                         </div>
@@ -7116,16 +6985,16 @@
 
 
     <asp:TextBox ID="txtEmergency_Patient_ID" runat="server" ReadOnly="True" Style="display: none;"></asp:TextBox>
-  
+
     <asp:HiddenField ID="hdfReg_ID" Value="(New)" runat="server" />
- 
+
     <asp:HiddenField ID="hdfdhischarge" Value="false" runat="server" />
- 
 
 
 
- 
-  
+
+
+
 
 
 </asp:Content>
