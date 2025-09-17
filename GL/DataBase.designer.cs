@@ -606,12 +606,6 @@ namespace PMS
 		partial void InsertStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
 		partial void UpdateStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
 		partial void DeleteStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
-		partial void InsertStudent_Time_Table(Student_Time_Table instance);
-		partial void UpdateStudent_Time_Table(Student_Time_Table instance);
-		partial void DeleteStudent_Time_Table(Student_Time_Table instance);
-		partial void InsertStudent_Attendance(Student_Attendance instance);
-		partial void UpdateStudent_Attendance(Student_Attendance instance);
-		partial void DeleteStudent_Attendance(Student_Attendance instance);
 		partial void InsertHR_Swap_Record(HR_Swap_Record instance);
 		partial void UpdateHR_Swap_Record(HR_Swap_Record instance);
 		partial void DeleteHR_Swap_Record(HR_Swap_Record instance);
@@ -882,6 +876,12 @@ namespace PMS
 		partial void InsertSubject_Definition(Subject_Definition instance);
 		partial void UpdateSubject_Definition(Subject_Definition instance);
 		partial void DeleteSubject_Definition(Subject_Definition instance);
+		partial void InsertStudent_Time_Table(Student_Time_Table instance);
+		partial void UpdateStudent_Time_Table(Student_Time_Table instance);
+		partial void DeleteStudent_Time_Table(Student_Time_Table instance);
+		partial void InsertStudent_Attendance(Student_Attendance instance);
+		partial void UpdateStudent_Attendance(Student_Attendance instance);
+		partial void DeleteStudent_Attendance(Student_Attendance instance);
 		#endregion
 
 		public DataBaseDataContext() :
@@ -2482,22 +2482,6 @@ namespace PMS
 			}
 		}
 
-		public System.Data.Linq.Table<Student_Time_Table> Student_Time_Tables
-		{
-			get
-			{
-				return this.GetTable<Student_Time_Table>();
-			}
-		}
-
-		public System.Data.Linq.Table<Student_Attendance> Student_Attendances
-		{
-			get
-			{
-				return this.GetTable<Student_Attendance>();
-			}
-		}
-
 		public System.Data.Linq.Table<HR_Swap_Record> HR_Swap_Records
 		{
 			get
@@ -3215,6 +3199,22 @@ namespace PMS
 			get
 			{
 				return this.GetTable<Subject_Definition>();
+			}
+		}
+
+		public System.Data.Linq.Table<Student_Time_Table> Student_Time_Tables
+		{
+			get
+			{
+				return this.GetTable<Student_Time_Table>();
+			}
+		}
+
+		public System.Data.Linq.Table<Student_Attendance> Student_Attendances
+		{
+			get
+			{
+				return this.GetTable<Student_Attendance>();
 			}
 		}
 
@@ -72276,778 +72276,6 @@ namespace PMS
 					this._Teacher = value;
 					this.SendPropertyChanged("Teacher");
 					this.OnTeacherChanged();
-				}
-			}
-		}
-
-		public event PropertyChangingEventHandler PropertyChanging;
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-
-	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Time_Table")]
-	public partial class Student_Time_Table : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-		private int _St_id;
-
-		private string _Program;
-
-		private string _Class;
-
-		private string _Weeks;
-
-		private System.Nullable<System.DateTime> _CreatedTime;
-
-		private System.Nullable<System.Guid> _CreatedBy;
-
-		private System.Nullable<System.DateTime> _UpdateTime;
-
-		private System.Nullable<System.Guid> _UpdatedBy;
-
-		#region Extensibility Method Definitions
-		partial void OnLoaded();
-		partial void OnValidate(System.Data.Linq.ChangeAction action);
-		partial void OnCreated();
-		partial void OnSt_idChanging(int value);
-		partial void OnSt_idChanged();
-		partial void OnProgramChanging(string value);
-		partial void OnProgramChanged();
-		partial void OnClassChanging(string value);
-		partial void OnClassChanged();
-		partial void OnWeeksChanging(string value);
-		partial void OnWeeksChanged();
-		partial void OnCreatedTimeChanging(System.Nullable<System.DateTime> value);
-		partial void OnCreatedTimeChanged();
-		partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
-		partial void OnCreatedByChanged();
-		partial void OnUpdateTimeChanging(System.Nullable<System.DateTime> value);
-		partial void OnUpdateTimeChanged();
-		partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
-		partial void OnUpdatedByChanged();
-		#endregion
-
-		public Student_Time_Table()
-		{
-			OnCreated();
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_St_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-		public int St_id
-		{
-			get
-			{
-				return this._St_id;
-			}
-			set
-			{
-				if ((this._St_id != value))
-				{
-					this.OnSt_idChanging(value);
-					this.SendPropertyChanging();
-					this._St_id = value;
-					this.SendPropertyChanged("St_id");
-					this.OnSt_idChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Program", DbType = "NVarChar(150)")]
-		public string Program
-		{
-			get
-			{
-				return this._Program;
-			}
-			set
-			{
-				if ((this._Program != value))
-				{
-					this.OnProgramChanging(value);
-					this.SendPropertyChanging();
-					this._Program = value;
-					this.SendPropertyChanged("Program");
-					this.OnProgramChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
-		public string Class
-		{
-			get
-			{
-				return this._Class;
-			}
-			set
-			{
-				if ((this._Class != value))
-				{
-					this.OnClassChanging(value);
-					this.SendPropertyChanging();
-					this._Class = value;
-					this.SendPropertyChanged("Class");
-					this.OnClassChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Weeks", DbType = "NVarChar(150)")]
-		public string Weeks
-		{
-			get
-			{
-				return this._Weeks;
-			}
-			set
-			{
-				if ((this._Weeks != value))
-				{
-					this.OnWeeksChanging(value);
-					this.SendPropertyChanging();
-					this._Weeks = value;
-					this.SendPropertyChanged("Weeks");
-					this.OnWeeksChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedTime", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> CreatedTime
-		{
-			get
-			{
-				return this._CreatedTime;
-			}
-			set
-			{
-				if ((this._CreatedTime != value))
-				{
-					this.OnCreatedTimeChanging(value);
-					this.SendPropertyChanging();
-					this._CreatedTime = value;
-					this.SendPropertyChanged("CreatedTime");
-					this.OnCreatedTimeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
-		public System.Nullable<System.Guid> CreatedBy
-		{
-			get
-			{
-				return this._CreatedBy;
-			}
-			set
-			{
-				if ((this._CreatedBy != value))
-				{
-					this.OnCreatedByChanging(value);
-					this.SendPropertyChanging();
-					this._CreatedBy = value;
-					this.SendPropertyChanged("CreatedBy");
-					this.OnCreatedByChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdateTime", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> UpdateTime
-		{
-			get
-			{
-				return this._UpdateTime;
-			}
-			set
-			{
-				if ((this._UpdateTime != value))
-				{
-					this.OnUpdateTimeChanging(value);
-					this.SendPropertyChanging();
-					this._UpdateTime = value;
-					this.SendPropertyChanged("UpdateTime");
-					this.OnUpdateTimeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "UniqueIdentifier")]
-		public System.Nullable<System.Guid> UpdatedBy
-		{
-			get
-			{
-				return this._UpdatedBy;
-			}
-			set
-			{
-				if ((this._UpdatedBy != value))
-				{
-					this.OnUpdatedByChanging(value);
-					this.SendPropertyChanging();
-					this._UpdatedBy = value;
-					this.SendPropertyChanged("UpdatedBy");
-					this.OnUpdatedByChanged();
-				}
-			}
-		}
-
-		public event PropertyChangingEventHandler PropertyChanging;
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-
-	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Attendance")]
-	public partial class Student_Attendance : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-		private int _Attendance_Id;
-
-		private System.Nullable<int> _Stud_Id;
-
-		private string _Student_Name;
-
-		private System.Nullable<int> _Roll_No;
-
-		private System.Nullable<bool> _Present;
-
-		private System.Nullable<bool> _Absent;
-
-		private System.Nullable<bool> _Leave;
-
-		private System.Nullable<System.DateTime> _Created_Time;
-
-		private System.Nullable<System.Guid> _Created_By;
-
-		private System.Nullable<System.DateTime> _Updated_Time;
-
-		private System.Nullable<System.Guid> _Updated_By;
-
-		private string _ReferBy;
-
-		private System.Nullable<System.DateTime> _Fromtime;
-
-		private System.Nullable<System.DateTime> _Totime;
-
-		private string _Class;
-
-		private string _Subject;
-
-		private string _Practical;
-
-		private string _Batch;
-
-		private string _Groups;
-
-		private System.Nullable<System.DateTime> _Attendance_date;
-
-		private string _Day_Name;
-
-		#region Extensibility Method Definitions
-		partial void OnLoaded();
-		partial void OnValidate(System.Data.Linq.ChangeAction action);
-		partial void OnCreated();
-		partial void OnAttendance_IdChanging(int value);
-		partial void OnAttendance_IdChanged();
-		partial void OnStud_IdChanging(System.Nullable<int> value);
-		partial void OnStud_IdChanged();
-		partial void OnStudent_NameChanging(string value);
-		partial void OnStudent_NameChanged();
-		partial void OnRoll_NoChanging(System.Nullable<int> value);
-		partial void OnRoll_NoChanged();
-		partial void OnPresentChanging(System.Nullable<bool> value);
-		partial void OnPresentChanged();
-		partial void OnAbsentChanging(System.Nullable<bool> value);
-		partial void OnAbsentChanged();
-		partial void OnLeaveChanging(System.Nullable<bool> value);
-		partial void OnLeaveChanged();
-		partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
-		partial void OnCreated_TimeChanged();
-		partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
-		partial void OnCreated_ByChanged();
-		partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
-		partial void OnUpdated_TimeChanged();
-		partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
-		partial void OnUpdated_ByChanged();
-		partial void OnReferByChanging(string value);
-		partial void OnReferByChanged();
-		partial void OnFromtimeChanging(System.Nullable<System.DateTime> value);
-		partial void OnFromtimeChanged();
-		partial void OnTotimeChanging(System.Nullable<System.DateTime> value);
-		partial void OnTotimeChanged();
-		partial void OnClassChanging(string value);
-		partial void OnClassChanged();
-		partial void OnSubjectChanging(string value);
-		partial void OnSubjectChanged();
-		partial void OnPracticalChanging(string value);
-		partial void OnPracticalChanged();
-		partial void OnBatchChanging(string value);
-		partial void OnBatchChanged();
-		partial void OnGroupsChanging(string value);
-		partial void OnGroupsChanged();
-		partial void OnAttendance_dateChanging(System.Nullable<System.DateTime> value);
-		partial void OnAttendance_dateChanged();
-		partial void OnDay_NameChanging(string value);
-		partial void OnDay_NameChanged();
-		#endregion
-
-		public Student_Attendance()
-		{
-			OnCreated();
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-		public int Attendance_Id
-		{
-			get
-			{
-				return this._Attendance_Id;
-			}
-			set
-			{
-				if ((this._Attendance_Id != value))
-				{
-					this.OnAttendance_IdChanging(value);
-					this.SendPropertyChanging();
-					this._Attendance_Id = value;
-					this.SendPropertyChanged("Attendance_Id");
-					this.OnAttendance_IdChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stud_Id", DbType = "Int")]
-		public System.Nullable<int> Stud_Id
-		{
-			get
-			{
-				return this._Stud_Id;
-			}
-			set
-			{
-				if ((this._Stud_Id != value))
-				{
-					this.OnStud_IdChanging(value);
-					this.SendPropertyChanging();
-					this._Stud_Id = value;
-					this.SendPropertyChanged("Stud_Id");
-					this.OnStud_IdChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Student_Name", DbType = "NVarChar(150)")]
-		public string Student_Name
-		{
-			get
-			{
-				return this._Student_Name;
-			}
-			set
-			{
-				if ((this._Student_Name != value))
-				{
-					this.OnStudent_NameChanging(value);
-					this.SendPropertyChanging();
-					this._Student_Name = value;
-					this.SendPropertyChanged("Student_Name");
-					this.OnStudent_NameChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Roll_No", DbType = "Int")]
-		public System.Nullable<int> Roll_No
-		{
-			get
-			{
-				return this._Roll_No;
-			}
-			set
-			{
-				if ((this._Roll_No != value))
-				{
-					this.OnRoll_NoChanging(value);
-					this.SendPropertyChanging();
-					this._Roll_No = value;
-					this.SendPropertyChanged("Roll_No");
-					this.OnRoll_NoChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Present", DbType = "Bit")]
-		public System.Nullable<bool> Present
-		{
-			get
-			{
-				return this._Present;
-			}
-			set
-			{
-				if ((this._Present != value))
-				{
-					this.OnPresentChanging(value);
-					this.SendPropertyChanging();
-					this._Present = value;
-					this.SendPropertyChanged("Present");
-					this.OnPresentChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Absent", DbType = "Bit")]
-		public System.Nullable<bool> Absent
-		{
-			get
-			{
-				return this._Absent;
-			}
-			set
-			{
-				if ((this._Absent != value))
-				{
-					this.OnAbsentChanging(value);
-					this.SendPropertyChanging();
-					this._Absent = value;
-					this.SendPropertyChanged("Absent");
-					this.OnAbsentChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Leave", DbType = "Bit")]
-		public System.Nullable<bool> Leave
-		{
-			get
-			{
-				return this._Leave;
-			}
-			set
-			{
-				if ((this._Leave != value))
-				{
-					this.OnLeaveChanging(value);
-					this.SendPropertyChanging();
-					this._Leave = value;
-					this.SendPropertyChanged("Leave");
-					this.OnLeaveChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> Created_Time
-		{
-			get
-			{
-				return this._Created_Time;
-			}
-			set
-			{
-				if ((this._Created_Time != value))
-				{
-					this.OnCreated_TimeChanging(value);
-					this.SendPropertyChanging();
-					this._Created_Time = value;
-					this.SendPropertyChanged("Created_Time");
-					this.OnCreated_TimeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
-		public System.Nullable<System.Guid> Created_By
-		{
-			get
-			{
-				return this._Created_By;
-			}
-			set
-			{
-				if ((this._Created_By != value))
-				{
-					this.OnCreated_ByChanging(value);
-					this.SendPropertyChanging();
-					this._Created_By = value;
-					this.SendPropertyChanged("Created_By");
-					this.OnCreated_ByChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> Updated_Time
-		{
-			get
-			{
-				return this._Updated_Time;
-			}
-			set
-			{
-				if ((this._Updated_Time != value))
-				{
-					this.OnUpdated_TimeChanging(value);
-					this.SendPropertyChanging();
-					this._Updated_Time = value;
-					this.SendPropertyChanged("Updated_Time");
-					this.OnUpdated_TimeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
-		public System.Nullable<System.Guid> Updated_By
-		{
-			get
-			{
-				return this._Updated_By;
-			}
-			set
-			{
-				if ((this._Updated_By != value))
-				{
-					this.OnUpdated_ByChanging(value);
-					this.SendPropertyChanging();
-					this._Updated_By = value;
-					this.SendPropertyChanged("Updated_By");
-					this.OnUpdated_ByChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ReferBy", DbType = "NVarChar(150)")]
-		public string ReferBy
-		{
-			get
-			{
-				return this._ReferBy;
-			}
-			set
-			{
-				if ((this._ReferBy != value))
-				{
-					this.OnReferByChanging(value);
-					this.SendPropertyChanging();
-					this._ReferBy = value;
-					this.SendPropertyChanged("ReferBy");
-					this.OnReferByChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Fromtime", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> Fromtime
-		{
-			get
-			{
-				return this._Fromtime;
-			}
-			set
-			{
-				if ((this._Fromtime != value))
-				{
-					this.OnFromtimeChanging(value);
-					this.SendPropertyChanging();
-					this._Fromtime = value;
-					this.SendPropertyChanged("Fromtime");
-					this.OnFromtimeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Totime", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> Totime
-		{
-			get
-			{
-				return this._Totime;
-			}
-			set
-			{
-				if ((this._Totime != value))
-				{
-					this.OnTotimeChanging(value);
-					this.SendPropertyChanging();
-					this._Totime = value;
-					this.SendPropertyChanged("Totime");
-					this.OnTotimeChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
-		public string Class
-		{
-			get
-			{
-				return this._Class;
-			}
-			set
-			{
-				if ((this._Class != value))
-				{
-					this.OnClassChanging(value);
-					this.SendPropertyChanging();
-					this._Class = value;
-					this.SendPropertyChanged("Class");
-					this.OnClassChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Subject", DbType = "NVarChar(150)")]
-		public string Subject
-		{
-			get
-			{
-				return this._Subject;
-			}
-			set
-			{
-				if ((this._Subject != value))
-				{
-					this.OnSubjectChanging(value);
-					this.SendPropertyChanging();
-					this._Subject = value;
-					this.SendPropertyChanged("Subject");
-					this.OnSubjectChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Practical", DbType = "NVarChar(150)")]
-		public string Practical
-		{
-			get
-			{
-				return this._Practical;
-			}
-			set
-			{
-				if ((this._Practical != value))
-				{
-					this.OnPracticalChanging(value);
-					this.SendPropertyChanging();
-					this._Practical = value;
-					this.SendPropertyChanged("Practical");
-					this.OnPracticalChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch", DbType = "NVarChar(150)")]
-		public string Batch
-		{
-			get
-			{
-				return this._Batch;
-			}
-			set
-			{
-				if ((this._Batch != value))
-				{
-					this.OnBatchChanging(value);
-					this.SendPropertyChanging();
-					this._Batch = value;
-					this.SendPropertyChanged("Batch");
-					this.OnBatchChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Groups", DbType = "NVarChar(150)")]
-		public string Groups
-		{
-			get
-			{
-				return this._Groups;
-			}
-			set
-			{
-				if ((this._Groups != value))
-				{
-					this.OnGroupsChanging(value);
-					this.SendPropertyChanging();
-					this._Groups = value;
-					this.SendPropertyChanged("Groups");
-					this.OnGroupsChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_date", DbType = "DateTime")]
-		public System.Nullable<System.DateTime> Attendance_date
-		{
-			get
-			{
-				return this._Attendance_date;
-			}
-			set
-			{
-				if ((this._Attendance_date != value))
-				{
-					this.OnAttendance_dateChanging(value);
-					this.SendPropertyChanging();
-					this._Attendance_date = value;
-					this.SendPropertyChanged("Attendance_date");
-					this.OnAttendance_dateChanged();
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Day_Name", DbType = "NVarChar(150)")]
-		public string Day_Name
-		{
-			get
-			{
-				return this._Day_Name;
-			}
-			set
-			{
-				if ((this._Day_Name != value))
-				{
-					this.OnDay_NameChanging(value);
-					this.SendPropertyChanging();
-					this._Day_Name = value;
-					this.SendPropertyChanged("Day_Name");
-					this.OnDay_NameChanged();
 				}
 			}
 		}
@@ -153645,6 +152873,874 @@ namespace PMS
 					this._Update_By = value;
 					this.SendPropertyChanged("Update_By");
 					this.OnUpdate_ByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Block", DbType = "NVarChar(150)")]
+		public string Block
+		{
+			get
+			{
+				return this._Block;
+			}
+			set
+			{
+				if ((this._Block != value))
+				{
+					this.OnBlockChanging(value);
+					this.SendPropertyChanging();
+					this._Block = value;
+					this.SendPropertyChanged("Block");
+					this.OnBlockChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Module", DbType = "NVarChar(150)")]
+		public string Module
+		{
+			get
+			{
+				return this._Module;
+			}
+			set
+			{
+				if ((this._Module != value))
+				{
+					this.OnModuleChanging(value);
+					this.SendPropertyChanging();
+					this._Module = value;
+					this.SendPropertyChanged("Module");
+					this.OnModuleChanged();
+				}
+			}
+		}
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+
+	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Time_Table")]
+	public partial class Student_Time_Table : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+		private int _St_id;
+
+		private string _Program;
+
+		private string _Class;
+
+		private string _Weeks;
+
+		private System.Nullable<System.DateTime> _CreatedTime;
+
+		private System.Nullable<System.Guid> _CreatedBy;
+
+		private System.Nullable<System.DateTime> _UpdateTime;
+
+		private System.Nullable<System.Guid> _UpdatedBy;
+
+		private string _Block;
+
+		private string _Module;
+
+		#region Extensibility Method Definitions
+		partial void OnLoaded();
+		partial void OnValidate(System.Data.Linq.ChangeAction action);
+		partial void OnCreated();
+		partial void OnSt_idChanging(int value);
+		partial void OnSt_idChanged();
+		partial void OnProgramChanging(string value);
+		partial void OnProgramChanged();
+		partial void OnClassChanging(string value);
+		partial void OnClassChanged();
+		partial void OnWeeksChanging(string value);
+		partial void OnWeeksChanged();
+		partial void OnCreatedTimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnCreatedTimeChanged();
+		partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
+		partial void OnCreatedByChanged();
+		partial void OnUpdateTimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnUpdateTimeChanged();
+		partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
+		partial void OnUpdatedByChanged();
+		partial void OnBlockChanging(string value);
+		partial void OnBlockChanged();
+		partial void OnModuleChanging(string value);
+		partial void OnModuleChanged();
+		#endregion
+
+		public Student_Time_Table()
+		{
+			OnCreated();
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_St_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+		public int St_id
+		{
+			get
+			{
+				return this._St_id;
+			}
+			set
+			{
+				if ((this._St_id != value))
+				{
+					this.OnSt_idChanging(value);
+					this.SendPropertyChanging();
+					this._St_id = value;
+					this.SendPropertyChanged("St_id");
+					this.OnSt_idChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Program", DbType = "NVarChar(150)")]
+		public string Program
+		{
+			get
+			{
+				return this._Program;
+			}
+			set
+			{
+				if ((this._Program != value))
+				{
+					this.OnProgramChanging(value);
+					this.SendPropertyChanging();
+					this._Program = value;
+					this.SendPropertyChanged("Program");
+					this.OnProgramChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
+		public string Class
+		{
+			get
+			{
+				return this._Class;
+			}
+			set
+			{
+				if ((this._Class != value))
+				{
+					this.OnClassChanging(value);
+					this.SendPropertyChanging();
+					this._Class = value;
+					this.SendPropertyChanged("Class");
+					this.OnClassChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Weeks", DbType = "NVarChar(150)")]
+		public string Weeks
+		{
+			get
+			{
+				return this._Weeks;
+			}
+			set
+			{
+				if ((this._Weeks != value))
+				{
+					this.OnWeeksChanging(value);
+					this.SendPropertyChanging();
+					this._Weeks = value;
+					this.SendPropertyChanged("Weeks");
+					this.OnWeeksChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedTime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> CreatedTime
+		{
+			get
+			{
+				return this._CreatedTime;
+			}
+			set
+			{
+				if ((this._CreatedTime != value))
+				{
+					this.OnCreatedTimeChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedTime = value;
+					this.SendPropertyChanged("CreatedTime");
+					this.OnCreatedTimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> CreatedBy
+		{
+			get
+			{
+				return this._CreatedBy;
+			}
+			set
+			{
+				if ((this._CreatedBy != value))
+				{
+					this.OnCreatedByChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedBy = value;
+					this.SendPropertyChanged("CreatedBy");
+					this.OnCreatedByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdateTime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> UpdateTime
+		{
+			get
+			{
+				return this._UpdateTime;
+			}
+			set
+			{
+				if ((this._UpdateTime != value))
+				{
+					this.OnUpdateTimeChanging(value);
+					this.SendPropertyChanging();
+					this._UpdateTime = value;
+					this.SendPropertyChanged("UpdateTime");
+					this.OnUpdateTimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> UpdatedBy
+		{
+			get
+			{
+				return this._UpdatedBy;
+			}
+			set
+			{
+				if ((this._UpdatedBy != value))
+				{
+					this.OnUpdatedByChanging(value);
+					this.SendPropertyChanging();
+					this._UpdatedBy = value;
+					this.SendPropertyChanged("UpdatedBy");
+					this.OnUpdatedByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Block", DbType = "NVarChar(150)")]
+		public string Block
+		{
+			get
+			{
+				return this._Block;
+			}
+			set
+			{
+				if ((this._Block != value))
+				{
+					this.OnBlockChanging(value);
+					this.SendPropertyChanging();
+					this._Block = value;
+					this.SendPropertyChanged("Block");
+					this.OnBlockChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Module", DbType = "NVarChar(150)")]
+		public string Module
+		{
+			get
+			{
+				return this._Module;
+			}
+			set
+			{
+				if ((this._Module != value))
+				{
+					this.OnModuleChanging(value);
+					this.SendPropertyChanging();
+					this._Module = value;
+					this.SendPropertyChanged("Module");
+					this.OnModuleChanged();
+				}
+			}
+		}
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+
+	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Attendance")]
+	public partial class Student_Attendance : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+		private int _Attendance_Id;
+
+		private System.Nullable<int> _Stud_Id;
+
+		private string _Student_Name;
+
+		private System.Nullable<int> _Roll_No;
+
+		private System.Nullable<bool> _Present;
+
+		private System.Nullable<bool> _Absent;
+
+		private System.Nullable<bool> _Leave;
+
+		private System.Nullable<System.DateTime> _Created_Time;
+
+		private System.Nullable<System.Guid> _Created_By;
+
+		private System.Nullable<System.DateTime> _Updated_Time;
+
+		private System.Nullable<System.Guid> _Updated_By;
+
+		private string _ReferBy;
+
+		private System.Nullable<System.DateTime> _Fromtime;
+
+		private System.Nullable<System.DateTime> _Totime;
+
+		private string _Class;
+
+		private string _Subject;
+
+		private string _Practical;
+
+		private string _Batch;
+
+		private string _Groups;
+
+		private System.Nullable<System.DateTime> _Attendance_date;
+
+		private string _Day_Name;
+
+		private string _Block;
+
+		private string _Module;
+
+		#region Extensibility Method Definitions
+		partial void OnLoaded();
+		partial void OnValidate(System.Data.Linq.ChangeAction action);
+		partial void OnCreated();
+		partial void OnAttendance_IdChanging(int value);
+		partial void OnAttendance_IdChanged();
+		partial void OnStud_IdChanging(System.Nullable<int> value);
+		partial void OnStud_IdChanged();
+		partial void OnStudent_NameChanging(string value);
+		partial void OnStudent_NameChanged();
+		partial void OnRoll_NoChanging(System.Nullable<int> value);
+		partial void OnRoll_NoChanged();
+		partial void OnPresentChanging(System.Nullable<bool> value);
+		partial void OnPresentChanged();
+		partial void OnAbsentChanging(System.Nullable<bool> value);
+		partial void OnAbsentChanged();
+		partial void OnLeaveChanging(System.Nullable<bool> value);
+		partial void OnLeaveChanged();
+		partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnCreated_TimeChanged();
+		partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+		partial void OnCreated_ByChanged();
+		partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnUpdated_TimeChanged();
+		partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+		partial void OnUpdated_ByChanged();
+		partial void OnReferByChanging(string value);
+		partial void OnReferByChanged();
+		partial void OnFromtimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnFromtimeChanged();
+		partial void OnTotimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnTotimeChanged();
+		partial void OnClassChanging(string value);
+		partial void OnClassChanged();
+		partial void OnSubjectChanging(string value);
+		partial void OnSubjectChanged();
+		partial void OnPracticalChanging(string value);
+		partial void OnPracticalChanged();
+		partial void OnBatchChanging(string value);
+		partial void OnBatchChanged();
+		partial void OnGroupsChanging(string value);
+		partial void OnGroupsChanged();
+		partial void OnAttendance_dateChanging(System.Nullable<System.DateTime> value);
+		partial void OnAttendance_dateChanged();
+		partial void OnDay_NameChanging(string value);
+		partial void OnDay_NameChanged();
+		partial void OnBlockChanging(string value);
+		partial void OnBlockChanged();
+		partial void OnModuleChanging(string value);
+		partial void OnModuleChanged();
+		#endregion
+
+		public Student_Attendance()
+		{
+			OnCreated();
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+		public int Attendance_Id
+		{
+			get
+			{
+				return this._Attendance_Id;
+			}
+			set
+			{
+				if ((this._Attendance_Id != value))
+				{
+					this.OnAttendance_IdChanging(value);
+					this.SendPropertyChanging();
+					this._Attendance_Id = value;
+					this.SendPropertyChanged("Attendance_Id");
+					this.OnAttendance_IdChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stud_Id", DbType = "Int")]
+		public System.Nullable<int> Stud_Id
+		{
+			get
+			{
+				return this._Stud_Id;
+			}
+			set
+			{
+				if ((this._Stud_Id != value))
+				{
+					this.OnStud_IdChanging(value);
+					this.SendPropertyChanging();
+					this._Stud_Id = value;
+					this.SendPropertyChanged("Stud_Id");
+					this.OnStud_IdChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Student_Name", DbType = "NVarChar(150)")]
+		public string Student_Name
+		{
+			get
+			{
+				return this._Student_Name;
+			}
+			set
+			{
+				if ((this._Student_Name != value))
+				{
+					this.OnStudent_NameChanging(value);
+					this.SendPropertyChanging();
+					this._Student_Name = value;
+					this.SendPropertyChanged("Student_Name");
+					this.OnStudent_NameChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Roll_No", DbType = "Int")]
+		public System.Nullable<int> Roll_No
+		{
+			get
+			{
+				return this._Roll_No;
+			}
+			set
+			{
+				if ((this._Roll_No != value))
+				{
+					this.OnRoll_NoChanging(value);
+					this.SendPropertyChanging();
+					this._Roll_No = value;
+					this.SendPropertyChanged("Roll_No");
+					this.OnRoll_NoChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Present", DbType = "Bit")]
+		public System.Nullable<bool> Present
+		{
+			get
+			{
+				return this._Present;
+			}
+			set
+			{
+				if ((this._Present != value))
+				{
+					this.OnPresentChanging(value);
+					this.SendPropertyChanging();
+					this._Present = value;
+					this.SendPropertyChanged("Present");
+					this.OnPresentChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Absent", DbType = "Bit")]
+		public System.Nullable<bool> Absent
+		{
+			get
+			{
+				return this._Absent;
+			}
+			set
+			{
+				if ((this._Absent != value))
+				{
+					this.OnAbsentChanging(value);
+					this.SendPropertyChanging();
+					this._Absent = value;
+					this.SendPropertyChanged("Absent");
+					this.OnAbsentChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Leave", DbType = "Bit")]
+		public System.Nullable<bool> Leave
+		{
+			get
+			{
+				return this._Leave;
+			}
+			set
+			{
+				if ((this._Leave != value))
+				{
+					this.OnLeaveChanging(value);
+					this.SendPropertyChanging();
+					this._Leave = value;
+					this.SendPropertyChanged("Leave");
+					this.OnLeaveChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Created_Time
+		{
+			get
+			{
+				return this._Created_Time;
+			}
+			set
+			{
+				if ((this._Created_Time != value))
+				{
+					this.OnCreated_TimeChanging(value);
+					this.SendPropertyChanging();
+					this._Created_Time = value;
+					this.SendPropertyChanged("Created_Time");
+					this.OnCreated_TimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> Created_By
+		{
+			get
+			{
+				return this._Created_By;
+			}
+			set
+			{
+				if ((this._Created_By != value))
+				{
+					this.OnCreated_ByChanging(value);
+					this.SendPropertyChanging();
+					this._Created_By = value;
+					this.SendPropertyChanged("Created_By");
+					this.OnCreated_ByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Updated_Time
+		{
+			get
+			{
+				return this._Updated_Time;
+			}
+			set
+			{
+				if ((this._Updated_Time != value))
+				{
+					this.OnUpdated_TimeChanging(value);
+					this.SendPropertyChanging();
+					this._Updated_Time = value;
+					this.SendPropertyChanged("Updated_Time");
+					this.OnUpdated_TimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> Updated_By
+		{
+			get
+			{
+				return this._Updated_By;
+			}
+			set
+			{
+				if ((this._Updated_By != value))
+				{
+					this.OnUpdated_ByChanging(value);
+					this.SendPropertyChanging();
+					this._Updated_By = value;
+					this.SendPropertyChanged("Updated_By");
+					this.OnUpdated_ByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ReferBy", DbType = "NVarChar(150)")]
+		public string ReferBy
+		{
+			get
+			{
+				return this._ReferBy;
+			}
+			set
+			{
+				if ((this._ReferBy != value))
+				{
+					this.OnReferByChanging(value);
+					this.SendPropertyChanging();
+					this._ReferBy = value;
+					this.SendPropertyChanged("ReferBy");
+					this.OnReferByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Fromtime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Fromtime
+		{
+			get
+			{
+				return this._Fromtime;
+			}
+			set
+			{
+				if ((this._Fromtime != value))
+				{
+					this.OnFromtimeChanging(value);
+					this.SendPropertyChanging();
+					this._Fromtime = value;
+					this.SendPropertyChanged("Fromtime");
+					this.OnFromtimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Totime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Totime
+		{
+			get
+			{
+				return this._Totime;
+			}
+			set
+			{
+				if ((this._Totime != value))
+				{
+					this.OnTotimeChanging(value);
+					this.SendPropertyChanging();
+					this._Totime = value;
+					this.SendPropertyChanged("Totime");
+					this.OnTotimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
+		public string Class
+		{
+			get
+			{
+				return this._Class;
+			}
+			set
+			{
+				if ((this._Class != value))
+				{
+					this.OnClassChanging(value);
+					this.SendPropertyChanging();
+					this._Class = value;
+					this.SendPropertyChanged("Class");
+					this.OnClassChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Subject", DbType = "NVarChar(150)")]
+		public string Subject
+		{
+			get
+			{
+				return this._Subject;
+			}
+			set
+			{
+				if ((this._Subject != value))
+				{
+					this.OnSubjectChanging(value);
+					this.SendPropertyChanging();
+					this._Subject = value;
+					this.SendPropertyChanged("Subject");
+					this.OnSubjectChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Practical", DbType = "NVarChar(150)")]
+		public string Practical
+		{
+			get
+			{
+				return this._Practical;
+			}
+			set
+			{
+				if ((this._Practical != value))
+				{
+					this.OnPracticalChanging(value);
+					this.SendPropertyChanging();
+					this._Practical = value;
+					this.SendPropertyChanged("Practical");
+					this.OnPracticalChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch", DbType = "NVarChar(150)")]
+		public string Batch
+		{
+			get
+			{
+				return this._Batch;
+			}
+			set
+			{
+				if ((this._Batch != value))
+				{
+					this.OnBatchChanging(value);
+					this.SendPropertyChanging();
+					this._Batch = value;
+					this.SendPropertyChanged("Batch");
+					this.OnBatchChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Groups", DbType = "NVarChar(150)")]
+		public string Groups
+		{
+			get
+			{
+				return this._Groups;
+			}
+			set
+			{
+				if ((this._Groups != value))
+				{
+					this.OnGroupsChanging(value);
+					this.SendPropertyChanging();
+					this._Groups = value;
+					this.SendPropertyChanged("Groups");
+					this.OnGroupsChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_date", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Attendance_date
+		{
+			get
+			{
+				return this._Attendance_date;
+			}
+			set
+			{
+				if ((this._Attendance_date != value))
+				{
+					this.OnAttendance_dateChanging(value);
+					this.SendPropertyChanging();
+					this._Attendance_date = value;
+					this.SendPropertyChanged("Attendance_date");
+					this.OnAttendance_dateChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Day_Name", DbType = "NVarChar(150)")]
+		public string Day_Name
+		{
+			get
+			{
+				return this._Day_Name;
+			}
+			set
+			{
+				if ((this._Day_Name != value))
+				{
+					this.OnDay_NameChanging(value);
+					this.SendPropertyChanging();
+					this._Day_Name = value;
+					this.SendPropertyChanged("Day_Name");
+					this.OnDay_NameChanged();
 				}
 			}
 		}
