@@ -916,6 +916,7 @@
     </style>
     <script id="ScriptmanageSymptomsModal">
         $(document).ready(function () {
+            $("#12").hide();
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != "") {
                 $('#<%= txtEmergency_Patient_ID.ClientID%>').val(id);
@@ -1068,6 +1069,11 @@
                     selectedTab.style.display = 'block';
                 }
             });
+            updateHistoryTable();
+            AddAdmission();
+            AddVitals();
+            AddDischargeVitals();
+            AddDischargeDetails();
             $("[id$='ddlPatientCondition']").on('change', AddAdmission);
             $("[id$='ddlDoctor']").on('change', AddAdmission);
             $("[id$='ddlWard_No']").on('change', AddAdmission);
@@ -1133,6 +1139,8 @@
 
             // update on change/blur - works for both user typing and selects (change)
             $(selectors).on('change blur', AddHistory);
+            AddHistory();
+            AddDoctorCall();
             // checkbox change inside entire tab
             $("[id$='ddl_Department']").on('change', AddDoctorCall);
             $("[id$='ddlCallToDoctor']").on('change', AddDoctorCall);
@@ -1336,6 +1344,18 @@
                 }
             });
         });
+       
+            function showdeathtab() {
+                debugger;
+                var chck_death = $("#ctl00_MainContent_cb_death").prop('checked')
+                if (chck_death == true) {
+                    $('#12').show();
+                }
+                else {
+                    $('#12').hide();
+                }
+            }
+       
         function ReplaceNullWith_Space(value) {
             return value == null ? '' : value;
         }
@@ -1815,10 +1835,11 @@
 
             var btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'remove-find-simple';
-            btn.setAttribute('data-key', key);
+             btn.setAttribute('data-key', key);
             btn.setAttribute('aria-label', 'Remove');
-            btn.textContent = '×';
+
+            // add font awesome cross icon
+            btn.innerHTML = '<i class="fa fa-times"></i>';
 
             tdAction.appendChild(btn);
             tr.appendChild(tdText);
@@ -4121,7 +4142,7 @@
             table.find('tbody tr').each(function (key, value) {
                 var date = '<%= DateTime.Now%>'
                 MedicinesList.push({
-                    'Medicine_Date': $(value).find('td input[name=testDate]').val(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
+                    'Medicine_Date': date, 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
                     'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
                 });
 
@@ -4522,7 +4543,7 @@
                             showConfirmButton: false,
                             timer: 2500
                         });
-                        window.location = "YourPageName.aspx?ID=" + response.d;
+                        window.location = "NewEmergencyCase.aspx?ID=" + response.d;
                         $('#btnSave').val("Update");
                     }
                 },
@@ -4980,7 +5001,7 @@
                 <div class="menu-item no-submenu" id="06" onclick="navigateAction(this)">
                     <div class="menu-title">
                         <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/complaints.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Complaints</span>
+                        <span>Admission</span>
                     </div>
                 </div>
                 <div class="menu-item no-submenu" id="01" onclick="navigateAction(this)">
@@ -5020,14 +5041,14 @@
                 <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
                     <div class="menu-title">
                         <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/primarydiagnosis.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Primary Diagnosis</span>
+                        <span>Vitals Discharge</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="08" onclick="navigateAction(this)">
                     <div class="menu-title">
                         <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/finaldiagnosis.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Final Diagnosis</span>
+                        <span>Discharge Details</span>
                     </div>
                 </div>
 
@@ -5055,7 +5076,7 @@
                 <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
                     <div class="menu-title">
                         <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/followup.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Follow Up</span>
+                        <span>Death</span>
                     </div>
                 </div>
 
@@ -6505,7 +6526,7 @@
                     <div id="PreviewPane" class="medical-dashboard" style="height: 85vh; overflow-y: auto;">
                         <div class="dashboard-container">
                             <div class="row g-3">
-                                <div class="col-lg-12" id="divtblDischargeDetails" style="display: none; margin-top: 12px;">
+                                <div class="col-lg-6" id="divtblDischargeDetails" style="display: none; margin-top: 12px;">
                                     <div class="dashboard-card">
                                         <div class="card-header">
                                             <h4><i class="fa fa-file-medical-alt"></i>Discharge Details</h4>

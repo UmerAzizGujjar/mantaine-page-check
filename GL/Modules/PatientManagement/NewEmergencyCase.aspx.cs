@@ -40,7 +40,6 @@ namespace PMS.Modules.PatientManagement
                     string QS = id.Split('=')[1];
                     PopulateGetEmergencyPatientData(Convert.ToInt32(QS));
                     InPatient_Case_id = Convert.ToInt32(QS);
-                    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "", "FillInstruction();", true);
                 }
 
             }
@@ -287,53 +286,152 @@ namespace PMS.Modules.PatientManagement
         {
             try
             {
+                object valueset;
                 db = new DataBaseDataContext(DBClass.ConnectionString());
                 var qry = db.sp_GetEmergencyPatientDetail(Emergency_ID).FirstOrDefault();
                 #region Old Code
-
+                
                 #endregion
+                          var Emergency_Doctor_Notes = (from rn in db.Emergency_Doctor_Notes
+                                                        where rn.EmergencyId == Emergency_ID
+                                                  orderby rn.Emergency_Doc_Id descending
+                                                  select rn).FirstOrDefault();
+                // Get the latest Receiving Note for this Emergency_ID
+                var receivingNoteQry = (from rn in db.ReceivingNotes
+                                        where rn.Emergency_ID == Emergency_ID &&
+                                              rn.Type_Nursing == "Receiving Note Emergency"
+                                        orderby rn.ReceivingNoteID descending
+                                        select rn).FirstOrDefault();
 
+                if (receivingNoteQry != null)
+                {
+                    // Populate Receiving Notes tab (tab02) fields
+                    txtRateBeats.Text = receivingNoteQry.RateBeats ?? "";
+                    txtBP.Text = receivingNoteQry.BloodPressure ?? "";
+                    txtTemp.Text = receivingNoteQry.Temperature ?? "";
+                    txtRespiration.Text = receivingNoteQry.RespirationRate ?? "";
+                    txtSaturation_Oxygen2.Text = receivingNoteQry.O2_Saturation_Oxygen2 ?? "";
+                    txtOthersRcvNote.Text = receivingNoteQry.OthersRecieveNote ?? "";
+                    txtSaturation.Text = receivingNoteQry.O2_Saturation ?? "";
+                    txtSaturation_Oxygen1.Text = receivingNoteQry.O2_Saturation_Oxygen1 ?? "";
+                    txtRN_Special_Instruction.Text = receivingNoteQry.RN_Special_Instruction ?? "";
+
+                    if (receivingNoteQry.Receiving_Date.HasValue)
+                    {
+                        txtReceiving_Date.Text = receivingNoteQry.Receiving_Date.Value.ToString("MM/dd/yyyy hh:mm tt");
+                    }
+
+                    // Set dropdown values if they exist
+                    if (!string.IsNullOrEmpty(receivingNoteQry.Emergency_Rhythm))
+                    {
+                        if (ddlRhythm.Items.FindByValue(receivingNoteQry.Emergency_Rhythm) != null)
+                        {
+                            ddlRhythm.SelectedValue = receivingNoteQry.Emergency_Rhythm;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(receivingNoteQry.Emergency_Volume))
+                    {
+                        if (ddlVolume.Items.FindByValue(receivingNoteQry.Emergency_Volume) != null)
+                        {
+                            ddlVolume.SelectedValue = receivingNoteQry.Emergency_Volume;
+                        }
+                    }
+
+                    // Set checkboxes - you may need to add logic based on your business rules
+                    // For example, if certain values indicate Room Air or With O2
+                    // chk_OnRoomAir.Checked = // your logic here
+                    // chk_WithOxygen.Checked = // your logic here
+                }
+
+                // Get the latest Discharge Receiving Note for this Emergency_ID
+                var dischargeNoteQry = (from rn in db.ReceivingNotes
+                                        where rn.Emergency_ID == Emergency_ID &&
+                                              rn.Type_Nursing == "Discharge Receiving Note"
+                                        orderby rn.ReceivingNoteID descending
+                                        select rn).FirstOrDefault();
+
+                if (dischargeNoteQry != null)
+                {
+                    // Populate Discharge tab (tab07) fields
+                    txtPulseRate.Text = dischargeNoteQry.RateBeats ?? "";
+                    txtBPDischarge.Text = dischargeNoteQry.BloodPressure ?? "";
+                    txtTempdisch.Text = dischargeNoteQry.Temperature ?? "";
+                    txtRespRateDesc.Text = dischargeNoteQry.RespirationRate ?? "";
+                    txtSaturation_Oxygen2_desc.Text = dischargeNoteQry.O2_Saturation_Oxygen2 ?? "";
+                    txtotherecdesc.Text = dischargeNoteQry.OthersRecieveNote ?? "";
+                    txtRN_Special_Instruction_Desc.Text = dischargeNoteQry.RN_Special_Instruction ?? "";
+                    txtsaturationDis.Text = dischargeNoteQry.O2_Saturation ?? "";
+                    txtOxygen1.Text = dischargeNoteQry.O2_Saturation_Oxygen1 ?? "";
+
+                    if (dischargeNoteQry.Receiving_Date.HasValue)
+                    {
+                        txttxtReceiving_DateDesc.Text = dischargeNoteQry.Receiving_Date.Value.ToString("MM/dd/yyyy hh:mm tt");
+                    }
+
+                    // Set dropdown values for discharge
+                    if (!string.IsNullOrEmpty(dischargeNoteQry.Emergency_Rhythm))
+                    {
+                        if (ddlRhythmdischarge.Items.FindByValue(dischargeNoteQry.Emergency_Rhythm) != null)
+                        {
+                            ddlRhythmdischarge.SelectedValue = dischargeNoteQry.Emergency_Rhythm;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(dischargeNoteQry.Emergency_Volume))
+                    {
+                        if (ddlvolumedisc.Items.FindByValue(dischargeNoteQry.Emergency_Volume) != null)
+                        {
+                            ddlvolumedisc.SelectedValue = dischargeNoteQry.Emergency_Volume;
+                        }
+                    }
+
+                    // Set discharge checkboxes based on your business logic
+                    // chk_OnRoomAirDesc.Checked = // your logic here
+                    // chk_WithOxygenDesc.Checked = // your logic here
+                }
                 if (qry != null)
                 {
                     ReferToOPD.Checked = Convert.ToBoolean(qry.Refer_To_OPD);
                     hdfReg_ID.Value = qry.Patient_ID.ToString();
-                     vlblPatients_Name.Text = qry.Full_Name;
+                    vlblPatients_Name.Text = qry.Full_Name;
                     vLbl_Contact.Text = qry.Mobile1;
                     vLbl_Adress.Text = qry.Permanent_Address;
-                     vLbl_Age.Text = qry.Age_years;
+                    vLbl_Age.Text = qry.Age_years;
+
                     //if (qry.Entry_Date == null)
                     //    vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
                     //else
-                    //vLbl_RegDate.Text = qry.Entry_Date.Value.ToString(AppConfig.DateFormat);
-                     txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
+                    //    vLbl_RegDate.Text = qry.Entry_Date.Value.ToString(AppConfig.DateFormat);
 
-                    txtRN_Special_Instruction.Text = qry.RN_Special_Instruction;
+                    txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
                     ddlIssuance_Of.SelectedValue = qry.Issuance_Of;
-                     if (qry.Issuance_Of == "002")
-                    {
 
+                    if (qry.Issuance_Of == "002")
+                    {
+                        // your logic if required
                     }
+
                     if (qry.Issuance_Of == "001")
                     {
                         ddlWard_No.SelectedValue = qry.Ward_ID.ToString();
                         if (qry.Bed_No != null && qry.Bed_No != 0)
                             txtBed_No.Text = qry.Bed_No.ToString();
                     }
+
                     ddlDepartment.SelectedValue = qry.Department;
                     ddlPatientCondition.SelectedValue = qry.Emergency_Pat_Condition;
                     txtCallToDoctor.Text = qry.remarks_call_to_doctor;
 
-
-
                     db = new DataBaseDataContext(DBClass.ConnectionString());
-                    List<HR_Employee> EmpList = new List<HR_Employee>();
-                    List<HR_Employee> EmpList2 = new List<HR_Employee>();
-                    EmpList = (from tbl in db.HR_Employees
-                               where tbl.IsDoctor == true
-                               select tbl).ToList();
-                    EmpList2 = (from tbl in db.HR_Employees
-                                where tbl.IsDoctor == true
-                                select tbl).ToList();
+                    List<HR_Employee> EmpList = (from tbl in db.HR_Employees
+                                                 where tbl.IsDoctor == true
+                                                 select tbl).ToList();
+
+                    List<HR_Employee> EmpList2 = (from tbl in db.HR_Employees
+                                                  where tbl.IsDoctor == true
+                                                  select tbl).ToList();
+
                     ddlDoctor.Items.Clear();
                     ddlDoctor.DataSource = EmpList;
                     ddlDoctor.DataTextField = "Emp_Name";
@@ -357,22 +455,18 @@ namespace PMS.Modules.PatientManagement
                     ddlDischarge_By.DataBind();
                     ddlDischarge_By.SelectedValue = qry.Discharge_By;
 
-                    ddlRhythm.SelectedValue = qry.Emergency_Rhythm;
-                    ddlVolume.SelectedValue = qry.Emergency_Volume;
+                    valueset = DBClass.GetValueSet("Patient Main Category");
+                    ddl_Department.DataSource = valueset;
+                    ddl_Department.DataTextField = "DataValue_Description";
+                    ddl_Department.DataValueField = "DataValue_Name";
+                    ddl_Department.Items.Add(new ListItem("Please Select", "0"));
+                    ddl_Department.DataBind();
+
+                    txtMobileNo.Text = Emergency_Doctor_Notes.DoctorMobile;
+                    ddl_Department.SelectedValue = Emergency_Doctor_Notes.Department;
+                    ddlCallToDoctor.SelectedValue = Emergency_Doctor_Notes.DoctorToCall;
                     ddlDischargeStatus.SelectedValue = qry.Discharge_Status;
-
-                    if (qry.Expected_Discharge_Date != null)
-
-                        txtBP.Text = qry.BP_mm_Hg;
-                    ctl00_MainContent_txtEOR.Text = qry.Eye_Opening_Response;
-                    txtMR.Text = qry.Motor_Response;
-                    txtVR.Text = qry.Verbal_Response;
-                    txtAcc.Text = qry.Accumulated_Response;
-                    txtTemp.Text = qry.Temp_C;
-                    txtRespiration.Text = qry.Respiration_Min;
-                    txtRateBeats.Text = qry.RateBeats;
-                    txtOthersRcvNote.Text = qry.OthersRecieveNote;
-                    txtSaturation.Text = qry.O2_Saturation;
+                    ddlDischarge_By.SelectedValue = qry.Discharge_By;
                     txtVaccinationHistory.Text = qry.Vaccination_History;
                     txtAnyOtherHistory.Text = qry.Other_History;
                     txtProcedureRecommended.Text = qry.Procedure_Recommended;
@@ -383,6 +477,7 @@ namespace PMS.Modules.PatientManagement
                     TextBoxResp.Text = qry.RESP_Value;
                     TextBoxGit.Text = qry.GIT_Value;
                     TextBoxGpe.Text = qry.GPE_Value;
+
                     if (!string.IsNullOrEmpty(qry.DateOfDeath.ToString()))
                     {
                         txtDateofDeath.Text = Convert.ToDateTime(qry.DateOfDeath.Value).ToString("MM/dd/yyyy");
@@ -799,7 +894,7 @@ namespace PMS.Modules.PatientManagement
  
 
 
-                    ddlDischarge_By.SelectedValue = qry.Discharge_By;
+                   
 
                     txtPrevention_Precaution.Text = qry.Prevention_Precaution;
                     if (qry.Next_Visit != null)
@@ -810,7 +905,7 @@ namespace PMS.Modules.PatientManagement
                     if (qry.Discharge_On != null && qry.Discharge == true)
                     {
                      }
-
+                  
                 }
             }
             catch (Exception ex)
@@ -1284,7 +1379,16 @@ namespace PMS.Modules.PatientManagement
                         OPD.Bed_No = !string.IsNullOrEmpty(data.txtBed_No) && int.TryParse(data.txtBed_No, out int bedNo) ?
                             bedNo : 0;
                     }
-
+                    OPD.Prevention_Precaution = data.txtAdvice;
+                    if (DateTime.TryParse(data.txtNext_Visit, out DateTime parsedDate))
+                    {
+                        OPD.Next_Visit = parsedDate;
+                    }
+                    else
+                    {
+                        OPD.Next_Visit = null;
+                    }
+                    OPD.remarks_call_to_doctor = data.remrks_call_to_doc;
                     OPD.Refer_To_OPD = data.ReferToOPD;
                     OPD.Health_Complaints = data.txtHealth_Complaints ?? "";
                     OPD.Doctor = data.ddlDoctor ?? "";
@@ -1331,7 +1435,7 @@ namespace PMS.Modules.PatientManagement
                     OPD.Procedure_Recommended = data.Procedure_Recommended ?? "";
                     OPD.IdentificationMarks = data.IdentificationMarks ?? "";
                     OPD.Diagnosis = data.Diagnosis ?? "";
-
+                    OPD.Discharge_By = data.ddlDischarge_By;
                     if (!string.IsNullOrEmpty(data.DateOfDeath))
                         OPD.DateOfDeath = Convert.ToDateTime(data.DateOfDeath);
 
@@ -1707,7 +1811,9 @@ namespace PMS.Modules.PatientManagement
                         db.ReceivingNotes.InsertOnSubmit(rcvNote);
                         db.SubmitChanges();
                     }
-
+                   
+                    // Update related records with the new Out_Patient_ID
+                    UpdateRelatedRecords(db, OPD.Emergency_ID);
                     return OPD.Emergency_ID.ToString();
                 }
             }
@@ -1716,6 +1822,30 @@ namespace PMS.Modules.PatientManagement
                 return "Error: " + ex.Message;
             }
         }
+        private static void UpdateRelatedRecords(DataBaseDataContext db, int outPatientId)
+        {
+            // Update medicines
+            var medicines = db.In_Patient_Medicines
+                .Where(p => p.Patient_ID == 0 && (p.Transaction_Type == "Emergency Patient" || p.Transaction_Type == "Emergency Patient Discharge"))
+                .ToList();
+            foreach (var med in medicines)
+            {
+                med.Patient_ID = outPatientId;
+            }
+ 
+
+            // Update lab tests
+            var labTest = db.Laboratory_Tests
+                .FirstOrDefault(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient");
+            if (labTest != null)
+            {
+                labTest.Patient_ID = outPatientId;
+            }
+
+          
+            db.SubmitChanges();
+        }
+
         [WebMethod]
         public static string LoadSymtompsHistory(int EmergencyID)
         {
