@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="prch" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=prch;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="prchConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3249,17 +3248,6 @@
       <Column Name="Depreciation_Method_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Depreciation_Method_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Depreciation_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Subject_Definition_List" Member="Subject_Definition_Lists">
-    <Type Name="Subject_Definition_List">
-      <Column Name="Subject_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Subject_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Subject_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Student_Time_Table_Detail" Member="Student_Time_Table_Details">

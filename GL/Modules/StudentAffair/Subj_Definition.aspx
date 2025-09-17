@@ -1,67 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Subj_Definition.aspx.cs" Inherits="PMS.Modules.StudentAffair.Subj_Definition" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-
-    <style type="text/css">
-.custom-card {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  overflow: hidden;
-  margin: 20px 0;
-  background: #fff;
-  transition: transform 0.2s ease-in-out;
-}
-
-.custom-card:hover {
-  transform: translateY(-3px);
-}
-
-.custom-card-header {
-  background: linear-gradient(90deg, #007bff, #0056b3);
-  padding: 12px 20px;
-  color: #fff;
-}
-
-.custom-card-header h5 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.custom-card-body {
-  padding: 20px;
-}
-
-.custom-card-body label {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 6px;
-  display: block;
-}
-
-.custom-card-body select {
-  width: 100%;
-  border-radius: 8px;
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.custom-card-body select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 6px rgba(0,123,255,0.4);
-  outline: none;
-}
-.custom-card-body .row {
-  margin-bottom: 1rem;
-}
-
-.tblscroll {
-    height:227px !important;
-    overflow-y:auto;
-}
-    </style>
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/SubjDefinintion.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             var dropdowns = [
@@ -72,19 +12,29 @@
             ];
 
             dropdowns.forEach(item => {
-                const $element = $(item.id);
-                $element.select2();
-                $element.off('select2:open').on('select2:open', function () {
-                    fillDropdown($element, item.method);
-                });
-            });
+             const $element = $(item.id);
+             $element.select2();
 
-            // Initialize ddlClass on load
-            fillDropdown($('#ddlClass'), 'GetStudentClass');
+             $element.off('select2:opening').on('select2:opening', function (e) {
+               if (!$element.data('filled')) {
+                e.preventDefault(); 
+               $element.data('shouldReopen', true);
+              fillDropdown($element, item.method);
+              }
+          });
+        });
+
+            
+            const subjectId = getParameterByName('ID');
+             if (subjectId) {
+              loadSubjectDefinition(parseInt(subjectId));
+              $("#btnSave").val('Update');
+            } else {
+             fillDropdown($('#ddlClass'), 'GetStudentClass');
+            }
 
             $('#ddlProgram').on('change', Selectfunc);
 
-            // Add subject field
             $('#btnAddSubject').on('click', addSubjectField);
             $('#newSubject').on('keypress', function (e) {
                 if (e.which === 13) {
@@ -95,12 +45,31 @@
 
         });
 
+        function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
         let subjectCounter = 0;
 
         function addSubjectField() {
             const subjectName = $('#newSubject').val().trim();
             if (!subjectName) {
-                alert('Please enter a subject name.');
+                 Swal.fire({
+                 icon: 'error',
+                 title: 'Error!',
+             text: 'Please enter a subject name.',
+             showConfirmButton: false,
+             timer: 2000,
+             customClass: {
+              popup: 'swal-big-popup',
+                 title: 'swal-big-title',
+                 htmlContainer: 'swal-big-text'
+             }
+           });
                 $('#newSubject').focus();
                 return;
             }
@@ -110,7 +79,7 @@
 
             const subjectHtml = `
         <div class="row mb-2 align-items-center" id="${subjectId}">
-            <div class="col-lg-5 col-md-4 col-sm-12">
+            <div class="col-lg-6 col-md-4 col-sm-12">
                 <input type="text" class="form-control subject-name" value="${escapeHtml(subjectName)}" readonly />
             </div>
             <div class="col-lg-1 col-md-4 col-sm-12">
@@ -139,19 +108,27 @@
 
         function getSubjects() {
             const subjects = [];
-            $('.subject-name').each(function () {
-                subjects.push($(this).val());
+            $('#subjectRowsContainer .row').each(function () {
+                const $row = $(this);
+                const subjectName = $row.find('.subject-name').val().trim();
+                const isActive = $row.find('.subject-active').length ? $row.find('.subject-active').is(':checked') : true;
+
+                if (subjectName) {
+                    subjects.push({
+                        SubjectName: subjectName,
+                        IsActive: isActive
+                    });
+                }
             });
             return subjects;
         }
 
-        function fillDropdown($dropdown, methodName, callback) {
-            if ($dropdown.data('filled')) {
-                if (callback) callback();
-                return;
-            }
+
+        function fillDropdown($dropdown, methodName) {
+            if ($dropdown.data('filled')) return;
 
             var currentValue = $dropdown.val();
+            var currentText = $dropdown.find('option:selected').text();
 
             $.ajax({
                 type: "POST",
@@ -162,72 +139,85 @@
                 success: function (response) {
                     try {
                         const data = JSON.parse(response.d);
-                        const allOptions = [{ DataValue_Name: "", DataValue_Description: "Select" }].concat(data);
+                        var options = '<option value="0">Please Select</option>';
+                        var valueFound = false;
 
-                        $dropdown.data('allOptions', allOptions);
+                        $.each(data, function (key, value) {
+                            var isSelected = (value.DataValue_Name == currentValue);
+                            if (isSelected) valueFound = true;
 
-                        let optionsHtml = '';
-                        allOptions.forEach(opt => {
-                            const sel = opt.DataValue_Name === currentValue ? ' selected="selected"' : '';
-                            optionsHtml += `<option value="${opt.DataValue_Name}"${sel}>${opt.DataValue_Description}</option>`;
+                            options += `<option value="${value.DataValue_Name}" ${isSelected ? 'selected="selected"' : ''}>
+                            ${value.DataValue_Description}
+                        </option>`;
                         });
 
-                        $dropdown.html(optionsHtml).data('filled', true).trigger('change.select2');
+                        $dropdown.html(options)
+                            .data('filled', true)
+                            .trigger('change');
 
-                        if (callback) callback();
+                        if (currentValue && currentValue !== "0" && !valueFound) {
+                            $dropdown.prepend(`<option value="${currentValue}" selected="selected">
+                            ${currentText}
+                        </option>`);
+                            $dropdown.trigger('change');
+                        }
+
+                        if ($dropdown.hasClass('select2-hidden-accessible')) {
+                            $dropdown.select2('close').select2('open');
+                        }
                     } catch (e) {
-                        console.error("Error parsing dropdown data:", e);
                         $dropdown.data('filled', false);
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error("Ajax failed for dropdown:", error);
                     $dropdown.data('filled', false);
                 }
             });
         }
 
-        function Selectfunc() {
-            var currentYear = new Date().getFullYear();
-            var slct_value = $("#ddlProgram").val() || "";
-            var pid = slct_value.replace(/^0+/, '') || slct_value;
-            var $ddlClass = $('#ddlClass');
-            var all = $ddlClass.data('allOptions') || [];
+      function Selectfunc() {
+       var currentYear = new Date().getFullYear();
+      var slct_value = $("#ddlProgram").val() || "";
+      var pid = slct_value.replace(/^0+/, '') || slct_value;
+      var $ddlClass = $('#ddlClass');
+         var all = $ddlClass.data('allOptions') || [];
 
-            if (!all.length) {
-                fillDropdown($ddlClass, 'GetStudentClass', Selectfunc);
-                return;
-            }
-
-            var allowedIndexes;
-            switch (pid) {
-                case '2':
-                    allowedIndexes = [1, 2, 3, 4, 5];
-                    $('#txtSession').val(currentYear + '-' + (currentYear + 5));
-                    break;
-                case '1':
-                    allowedIndexes = [1];
-                    $('#txtSession').val(currentYear + '-' + (currentYear + 2));
-                    break;
-                case '3':
-                    allowedIndexes = [1, 2, 3, 4];
-                    $('#txtSession').val(currentYear + '-' + (currentYear + 1));
-                    break;
-                default:
-                    allowedIndexes = [];
-                    for (var i = 1; i < all.length; i++) allowedIndexes.push(i);
-                    $('#txtSession').val('');
-            }
-
-            let newHtml = `<option value="${all[0].DataValue_Name}">${all[0].DataValue_Description}</option>`;
-            allowedIndexes.forEach(idx => {
-                if (all[idx]) {
-                    newHtml += `<option value="${all[idx].DataValue_Name}">${all[idx].DataValue_Description}</option>`;
-                }
-            });
-
-            $ddlClass.html(newHtml).val('').trigger('change.select2');
+     if (!all.length) {
+        fillDropdown($ddlClass, 'GetStudentClass', Selectfunc);
+        return;
         }
+
+      var allowedIndexes;
+
+     if (pid === '2') {
+        allowedIndexes = [1, 2, 3, 4, 5];
+        $('#txtSession').val(currentYear + '-' + (currentYear + 5));
+        }
+     else if (pid === '1') {
+        allowedIndexes = [1];
+        $('#txtSession').val(currentYear + '-' + (currentYear + 2));
+     }
+     else if (pid === '3') {
+        allowedIndexes = [1, 2, 3, 4];
+        $('#txtSession').val(currentYear + '-' + (currentYear + 1));
+    }
+         else {
+        allowedIndexes = [];
+        for (var i = 1; i < all.length; i++) {
+            allowedIndexes.push(i);
+        }
+        $('#txtSession').val('');
+    }
+
+    let newHtml = `<option value="${all[0].DataValue_Name}">${all[0].DataValue_Description}</option>`;
+    allowedIndexes.forEach(idx => {
+        if (all[idx]) {
+            newHtml += `<option value="${all[idx].DataValue_Name}">${all[idx].DataValue_Description}</option>`;
+        }
+    });
+
+    $ddlClass.html(newHtml).val('').trigger('change.select2');
+}
 
         function saveSubjectDefinition() {
             debugger;
@@ -236,15 +226,56 @@
             const block = $('#ddlBlock').val();
             const module = $('#ddlModule').val();
             const subjects = getSubjects();
-            const masterId = $('#hfMasterId').val(); // Hidden field for ID
+            const masterId = $('#hfMasterId').val();
             debugger;
-            if (!program || !studentClass) {
-                alert('Please select Program and Class.');
+            if (!program ) {
+                 Swal.fire({
+                  icon: 'error',
+                 title: 'Error!',
+                 text: 'Please select Program and Class.',
+                 showConfirmButton: false,
+                 timer: 2000,
+                 customClass: {
+                 popup: 'swal-big-popup',
+                 title: 'swal-big-title',
+                 htmlContainer: 'swal-big-text'
+                  }
+            });
+              
                 return;
             }
 
+            if (!studentClass ) {
+            Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select Class.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+          }
+         });
+         return;
+      }
+
+           
+
             if (subjects.length === 0) {
-                alert('Please add at least one subject.');
+                     Swal.fire({
+                     icon: 'error',
+                     title: 'Error!',
+                     text: 'Please add at least one subject.',
+                     showConfirmButton: false,
+                     timer: 2000,
+                     customClass: {
+                     popup: 'swal-big-popup',
+                     title: 'swal-big-title',
+                     htmlContainer: 'swal-big-text'
+                  }
+            });
                 return;
             }
 
@@ -258,7 +289,10 @@
                     StudentClass: studentClass,
                     Block: block || null,
                     Module: module || null,
-                    Subjects: subjects.map(name => ({ SubjectName: name.trim() }))
+                    Subjects: subjects.map(item => ({
+                        SubjectName: item.SubjectName.trim(),
+                        IsActive: item.IsActive
+                    }))
                 })
             };
 
@@ -270,9 +304,19 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.d && response.d !== "0") {
-                        alert('Saved successfully!');
-                        // Optionally reload or redirect
-                        loadSubjectDefinition(parseInt(response.d));
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Saved successfully!',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                        }
+             });
+                       window.location.href = "SubjectList.aspx";
                     } else {
                         alert('Failed to save. Please check inputs.');
                     }
@@ -282,12 +326,121 @@
                 }
             });
         }
+
+        function loadSubjectDefinition(subjectId) {
+       $.ajax({
+        type: "POST",
+        url: "Subj_Definition.aspx/GetSubjectDefinitionById",
+        data: JSON.stringify({ id: subjectId.toString() }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (!response.d) {
+                alert('Failed to load subject definition.');
+                return;
+            }
+
+            const data = JSON.parse(response.d);
+
+            $('#hfMasterId').val(data.SubjectId);
+
+            $('#ddlProgram').html(
+             $('<option>', {
+              value: data.Program,
+              text: data.Program_Text
+               })
+             );
+
+           
+          $('#ddlClass').html(
+            $('<option>', {
+             value: data.StudentClass,
+             text: data.StudentClass_Text
+             })
+            );
+
+            $('#ddlBlock').html(
+             $('<option>', {
+              value: data.Block,
+              text: data.Block_Text
+            })
+            );
+
+              $('#ddlModule').html(
+              $('<option>', {
+             value: data.Module,
+             text: data.Module_Text
+              })
+         );
+          
+            $('#subjectRowsContainer').empty();
+            if (data.Subjects && data.Subjects.length > 0) {
+                $('#noSubjectsMessage').hide();
+                data.Subjects.forEach(subject => {
+                    addSubjectFieldFromData(subject.SubjectName, subject.IsActive, true);
+                });
+            } else {
+                $('#noSubjectsMessage').show();
+            }
+
+        },
+        error: function () {
+            alert('Error loading subject definition.');
+        }
+    });
+}
+
+        function addSubjectFieldFromData(subjectName, isActive = true, isEditMode = false) {
+            subjectCounter++;
+            const subjectId = 'subject_' + subjectCounter;
+
+            let checkboxHtml = '';
+            if (isEditMode) {
+                checkboxHtml = `
+            <div class="col-lg-1 col-md-2 col-sm-12 d-flex align-items-center">
+                <label class="form-check mb-0">
+                    <input type="checkbox" class="form-check-input subject-active" ${isActive ? 'checked' : ''} />
+                    <span class="form-check-label ms-1" style="font-size: 0.9rem;">Active</span>
+                </label>
+            </div>
+        `;
+            }
+
+            const subjectHtml = `
+<div class="row mb-2 align-items-center" id="${subjectId}">
+    <div class="col-lg-5 col-md-4 col-sm-12">
+        <input type="text" class="form-control subject-name" value="${escapeHtml(subjectName)}" readonly />
+    </div>
+    ${checkboxHtml}
+    <div class="col-lg-1 col-md-2 col-sm-12">
+        <i class="fa fa-trash text-danger" style="cursor: pointer; font-size: 2.3rem;" title="Remove"></i>
+    </div>
+</div>`;
+
+            $('#noSubjectsMessage').hide();
+            $('#subjectRowsContainer').append(subjectHtml);
+
+            $(`#${subjectId} .fa-trash`).on('click', function () {
+                $(this).closest('.row').remove();
+                if ($('.fa-trash').length === 0) {
+                    $('#noSubjectsMessage').show();
+                }
+            });
+        }
+
+        function redirect() {
+       window.location.href = "SubjectList.aspx";
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-     <div class="row">
+    <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
             <div class="custom-card">
+                <div class="custom-card-header">
+                    <h4>Academic Configuration</h4>
+                </div>
                 <div class="custom-card-body">
                     <div class="row">
                         <div class="col-lg-10 col-md-12 col-sm-12">
@@ -328,39 +481,42 @@
             </div>
         </div>
 
-         <div class="col-lg-5 col-md-6 col-sm-12">
-             <div class="custom-card">
-                 <div class="custom-card-body">
-                     <div class="row mb-3">
-                         <div class="col-lg-5 col-md-6 col-sm-12 ">
-                             <input type="text" id="newSubject" class="form-control" placeholder="Enter subject name" />
-                         </div>
-                         <div class="col-lg-2 col-md-4 col-sm-12">
-                             <i id="btnAddSubject" class="fa fa-plus-circle" style="cursor: pointer; font-size: 2.3rem;" title="Add Subject"></i>
-                         </div>
-                     </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="custom-card">
+                <div class="custom-card-header">
+                    <h4>Subject Management</h4>
+                </div>
+                <div class="custom-card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6 col-md-6 col-sm-12 ">
+                            <input type="text" id="newSubject" class="form-control" placeholder="Enter subject name" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-12">
+                            <i id="btnAddSubject" class="fa fa-plus-circle" style="cursor: pointer; font-size: 2.3rem;" title="Add Subject"></i>
+                        </div>
+                    </div>
 
-                     <div id="subjectRowsContainer" class="tblscroll">
-                     </div>
-                 </div>
-             </div>
-         </div>       
+                    <div id="subjectRowsContainer" class="tblscroll">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-12">
             <div class="row">
                 <div class="col-lg-2 col-md-6 col-sm-12">
                     <input type="button" id="btnSave" class="btn btn-primry" onclick="saveSubjectDefinition()" value="Save" />
-                </div> 
-                <div class="col-lg-2 col-md-6 col-sm-12">
-                    <input type="button" id="btnSave" class="btn btn-primry" onclick="saveSubjectDefinition()" value="Save" />
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-12">
-                    <input type="button" id="btnSave" class="btn btn-primry" onclick="saveSubjectDefinition()" value="Save" />
+                    <input type="button" id="btnView" class="btn btn-primry" onclick="redirect()" value="View" />
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <input type="button" class="btn-gray" value="New" id="btnBack" onclick="window.location = 'Subj_Definition.aspx'" />
                 </div>
             </div>
         </div>
     </div>
-<input type="hidden" id="hfMasterId" />
-<input type="hidden" id="hfCurrentPath" />
+    <input type="hidden" id="hfMasterId" />
+    <input type="hidden" id="hfCurrentPath" />
 </asp:Content>

@@ -17,7 +17,7 @@
                     "serverSide": true,
                     "dom": 'lBfrtip',
                     "lengthChange": true,
-                    "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'SubjectDefinition.aspx'; } }, 'copy', 'excel', 'pdf'],
+                    "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Subj_Definition.aspx'; } }, 'copy', 'excel', 'pdf'],
                     "filter": true,
                     "ajax": function (data, callback, settings) {
                         $.ajax({
@@ -48,7 +48,11 @@
                     },
                     "columns": [
                         { "data": "subject_Id", "visible": false, "width": "0%" },
-                        { "data": null, "orderable": false, "width": "10%" },
+                        {"data": null,"orderable": false,"width": "10%",
+                            "render": function (data, type, row, meta) {
+                                return meta.row + 1 + meta.settings._iDisplayStart;
+                            }
+                        },
                         { "data": "Program", "name": "Program", "width": "15%", "orderable": true },
                         { "data": "Class", "name": "Class", "width": "55%", "orderable": false },                                           
                         {
@@ -92,7 +96,7 @@
 
 
             function editOpen(id) {             
-                window.location.href = "SubjectDefinition.aspx?ID=" + id + ""
+                window.location.href = "Subj_Definition.aspx?ID=" + id + ""
             }
 
             function DeleteData(id) {
@@ -127,12 +131,6 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-lg-1 col-md-4 col-sm-6" style="margin-bottom:1%">
-            <input type="button" class="btn-primry" onclick="FormOpen()" id="NewForm"  value="New" />
-        </div>
-    </div>
-
     <table id="example" class="table table-striped table-bordered display" >
         <thead>
             <tr>
