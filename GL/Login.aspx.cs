@@ -167,7 +167,6 @@ namespace PMS
 
                 if (userExists == null)
                 {
-                    // No such user
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Invalid username or password.');", true);
                     return;
                 }
@@ -182,45 +181,37 @@ namespace PMS
                     return;
                 }
 
-                // ✅ Check if account is already locked out
-                // Check if account is locked out
                 if (membershipRecord.IsLockedOut)
                 {
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "accountLockedAlert", @"
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Account Locked',
-                            text: 'Account is locked due to too many failed login attempts. Contact administrator.',
-                            timer: 2000,
-                            showConfirmButton: false,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });", true);
-
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Account Locked',
+                    text: 'Account is locked due to too many failed login attempts. Contact administrator.',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });", true);
                     return;
                 }
 
-                // ✅ Validate password manually
                 string hashedInputPassword = EncryptPassword(pass, membershipRecord.PasswordSalt);
                 if (hashedInputPassword == membershipRecord.Password)
                 {
-                    // ✅ CORRECT PASSWORD: Reset failed attempts and unlock if needed
                     membershipRecord.FailedPasswordAttemptCount = 0;
-                    membershipRecord.LastLoginDate = DateTime.Now;
                     membershipRecord.LastLoginDate = DateTime.Now;
                     if (membershipRecord.IsLockedOut)
                         membershipRecord.IsLockedOut = false;
 
-                    db.SubmitChanges(); // Save reset
+                    db.SubmitChanges();
 
-                    // Store in ViewState (avoid storing password ideally)
                     ViewState["usrname"] = userName;
                     ViewState["psword"] = pass;
 
-                    // Check block/OTP status
                     if (userExists.BlockUser == true)
                     {
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('User Blocked');", true);
@@ -257,35 +248,94 @@ namespace PMS
                         return;
                     }
 
-                    // Load user session
+                    // Get Book_ID
+                    string Book_ID = DBClass.getField("Select Book_ID From sys_Companys Where Company_ID=" + Convert.ToInt32(((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedValue));
+
+                    // Set Session Values
                     Session["MenuLoaded"] = false;
-                    PasswordChangeAlter_ModalPopupExtender.Hide();
-                    LoadUserDetail();
+                    Session["UNChnagePassword"] = userName;
+                    Session["UserName"] = ((TextBox)UserLogin.FindControl("UserName")).Text;
+                    Session["Company_Name"] = ((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedItem.Text;
+                    Session["Company_ID"] = ((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedValue;
+                    Session["Book_ID"] = Book_ID;
+
+                    System.Web.Security.MembershipUser user = System.Web.Security.Membership.GetUser(userName);
+                    if (user != null)
+                    {
+                        Session["UserID"] = user.ProviderUserKey.ToString();
+                    }
+
+                    String[] roleList = System.Web.Security.Roles.GetRolesForUser(userName);
+                    string roles = string.Join(",", roleList);
+
+                    int duration = 50;
+                    string LoginDuration = WebConfigurationManager.AppSettings["LoginDuration"];
+                    if (!string.IsNullOrEmpty(LoginDuration))
+                        duration = Convert.ToInt32(LoginDuration);
+
+                    Session.Timeout = duration;
+
+                    string ticketRoles = roles.Length > 0 ? roles : "User";
+
+                    // Create Forms Auth Ticket
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                        1,
+                        userName,
+                        DateTime.Now,
+                        DateTime.Now.AddMinutes(duration),
+                        false,
+                        ticketRoles,
+                        "/");
+
+                    string hashCookies = FormsAuthentication.Encrypt(ticket);
+                    HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, hashCookies)
+                    {
+                        HttpOnly = true,
+                        Secure = Request.IsSecureConnection,
+                        Path = "/",
+                        Expires = ticket.Expiration,
+                        SameSite = System.Web.SameSiteMode.Strict  // 👈 Critical
+                    };
+
+                    Response.Cookies.Set(authCookie);
+
+
+                    // 💥 REDIRECT FIRST — THEN ABANDON SESSION (simulate delay)
+                    object ReferrerUrl = ViewState["ReferrerUrl"];
+                    string redirectUrl = "~/Modules/Dashboards/ShortCuts.aspx";
+                    if (ReferrerUrl != null && !string.IsNullOrEmpty(Convert.ToString(ReferrerUrl)) && !ReferrerUrl.ToString().Contains("Login.aspx"))
+                    {
+                        redirectUrl = (string)ReferrerUrl;
+                    }
+
+                    // 🚀 Redirect with true to end request and send cookie
+                    Response.Redirect(redirectUrl, true);
+
+                    // ❌ DO NOT CALL Session.Abandon() HERE — it breaks cookie recognition
+                    // We’ll handle session fixation via machineKey + cookie security instead
                 }
                 else
                 {
-                    // ❌ WRONG PASSWORD: Increment failed attempts
                     membershipRecord.FailedPasswordAttemptCount += 1;
                     membershipRecord.LastLoginDate = DateTime.Now;
 
-                    // Lock account if 10 or more failed attempts
                     if (membershipRecord.FailedPasswordAttemptCount >= 10)
                     {
                         membershipRecord.IsLockedOut = true;
 
                         string lockScript = @"
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Account Locked',
-                                    text: 'Account locked after 10 failed attempts.',
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                    customClass: {
-                                        popup: 'swal-big-popup',
-                                        title: 'swal-big-title',
-                                        htmlContainer: 'swal-big-text'
-                                    }
-                                });";
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Account Locked',
+                        text: 'Account locked after 10 failed attempts.',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });";
 
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "accountLocked", lockScript, true);
                     }
@@ -294,23 +344,22 @@ namespace PMS
                         int remaining = 10 - membershipRecord.FailedPasswordAttemptCount;
 
                         string script = $@"
-                            Swal.fire({{
-                                icon: 'warning',
-                                title: 'Invalid Password',
-                                text: 'Invalid password. {remaining} attempt(s) remaining.',
-                                timer: 2000,
-                                showConfirmButton: false,
-                                customClass: {{
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }}
-                            }});";
+                    Swal.fire({{
+                        icon: 'warning',
+                        title: 'Invalid Password',
+                        text: 'Invalid password. {remaining} attempt(s) remaining.',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        customClass: {{
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }}
+                    }});";
 
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "passwordWarning", script, true);
                     }
 
-                    // Save changes to DB
                     db.SubmitChanges();
                 }
             }

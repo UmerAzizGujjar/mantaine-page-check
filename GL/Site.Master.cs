@@ -15,6 +15,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
+
 namespace PMS
 {
     public partial class SiteMaster : System.Web.UI.MasterPage
@@ -553,10 +554,26 @@ namespace PMS
 
             return returnVal;
         }
-        
+
         protected void HeadLoginStatus_LoggedOut(object sender, EventArgs e)
         {
+            FormsAuthentication.SignOut();
             Session.Abandon();
+            Session.Clear();
+
+            // Clear .ASPXAUTH
+            HttpCookie newAuthCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+            newAuthCookie.Expires = DateTime.Now.AddYears(-1);
+            newAuthCookie.Path = "/";
+            Response.Cookies.Add(newAuthCookie);
+
+            // Clear .ASPXFORMSAUTH (legacy)
+            HttpCookie legacyAuthCookie = new HttpCookie(".ASPXFORMSAUTH", "");
+            legacyAuthCookie.Expires = DateTime.Now.AddYears(-1);
+            legacyAuthCookie.Path = "/";
+            Response.Cookies.Add(legacyAuthCookie);
+
+            Response.Redirect("~/Login.aspx", true);
         }
         protected void RightsForNotification()
         {
