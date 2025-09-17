@@ -140,10 +140,11 @@ namespace PMS.Modules.StudentAffair
                             {
                                 Subject_ID = masterId,
                                 Subject_Name = subject.SubjectName.Trim(),
+                                IS_Active = subject.IsActive,
                                 Created_Time = DateTime.Now,
                                 Created_By = AppConfig.UserID,
-                                Update_Time = null,
-                                Update_By = null
+                                Update_Time = DateTime.Now,
+                                Update_By = AppConfig.UserID
                             };
                             db.Subject_Definition_Lists.InsertOnSubmit(newDetail);
                         }
@@ -176,6 +177,7 @@ namespace PMS.Modules.StudentAffair
                             {
                                 Subject_ID = newMaster.subject_Id,
                                 Subject_Name = subject.SubjectName.Trim(),
+                                IS_Active = subject.IsActive,
                                 Created_Time = DateTime.Now,
                                 Created_By = AppConfig.UserID,
                                 Update_Time = null,
@@ -209,7 +211,51 @@ namespace PMS.Modules.StudentAffair
         public class SubjectItem
         {
             public string SubjectName { get; set; }
+            public bool IsActive { get; set; }
         }
 
+
+        [WebMethod]
+        public static string GetSubjectDefinitionById(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int subjectId))
+                    return null;
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var master = db.Subject_Definitions.FirstOrDefault(x => x.subject_Id == subjectId);
+                    if (master == null)
+                        return null;
+                    var details = db.Subject_Definition_Lists
+                                     .Where(x => x.Subject_ID == subjectId)
+                                     .Select(x => new {
+                                         SubjectName = x.Subject_Name,
+                                         IsActive = x.IS_Active == null ? true : x.IS_Active
+                                     }).ToList();
+
+                    var result = new
+                    {
+                        SubjectId = master.subject_Id.ToString(),
+                        Program = master.Program,
+                        Program_Text = db.GetDataValueName("Admission Category", master.Program),
+                        StudentClass = master.Class,
+                        StudentClass_Text = db.GetDataValueName("Student Class", master.Class),
+                        Block = master.Block,
+                        Block_Text = db.GetDataValueName("Academic Block", master.Block),
+                        Module = master.Module,
+                        Module_Text = db.GetDataValueName("Academic Module", master.Module),
+                        Subjects = details
+                    };
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

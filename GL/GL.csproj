@@ -4051,6 +4051,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\SubjDefinintion.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\TestDefinition.css" />
@@ -7602,6 +7603,7 @@
     <Content Include="wwwroot\khurshid\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Student.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\khurshid\css\CustomCss\SubjDefinintion.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\TestDefinition.css" />
@@ -11027,6 +11029,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Student.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\SubjDefinintion.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\TestDefinition.css" />
@@ -14184,6 +14187,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Policy.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\SubjDefinintion.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
@@ -14261,6 +14265,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\studentReceipt.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\SubjDefinintion.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\TestApproval.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\TestDefinition.css" />

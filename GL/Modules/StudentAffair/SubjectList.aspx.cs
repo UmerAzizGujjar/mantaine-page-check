@@ -43,7 +43,7 @@ namespace PMS
                             Subject = sortColumnDirection == "asc" ? Subject.OrderBy(a => a.Program) : Subject.OrderByDescending(a => a.Program);
                             break;                      
                         default:
-                            Subject = Subject.OrderBy(a => a.subject_Id); 
+                            Subject = Subject.OrderByDescending(a => a.subject_Id); 
                             break;
                     }
 
