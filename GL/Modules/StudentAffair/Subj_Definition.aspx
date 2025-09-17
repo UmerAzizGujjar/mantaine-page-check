@@ -93,8 +93,6 @@
                 }
             });
 
-            // Save button
-            $('#btnSave').on('click', saveSubjectDefinition);
         });
 
         let subjectCounter = 0;
@@ -351,6 +349,12 @@
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-12">
             <div class="row">
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <input type="button" id="btnSave" class="btn btn-primry" onclick="saveSubjectDefinition()" value="Save" />
+                </div> 
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                    <input type="button" id="btnSave" class="btn btn-primry" onclick="saveSubjectDefinition()" value="Save" />
+                </div>
                 <div class="col-lg-2 col-md-6 col-sm-12">
                     <input type="button" id="btnSave" class="btn btn-primry" onclick="saveSubjectDefinition()" value="Save" />
                 </div>

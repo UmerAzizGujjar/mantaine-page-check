@@ -115,7 +115,7 @@ namespace PMS.Modules.StudentAffair
                         if (!int.TryParse(record.SubjectId, out int masterId))
                             return "0";
 
-                        var master = db.Subject_Definitions.FirstOrDefault(x => x.Subject_Id == masterId);
+                        var master = db.Subject_Definitions.FirstOrDefault(x => x.subject_Id == masterId);
                         if (master == null)
                             return "0";
 
@@ -174,7 +174,7 @@ namespace PMS.Modules.StudentAffair
 
                             var newDetail = new Subject_Definition_List
                             {
-                                Subject_ID = newMaster.Subject_Id,
+                                Subject_ID = newMaster.subject_Id,
                                 Subject_Name = subject.SubjectName.Trim(),
                                 Created_Time = DateTime.Now,
                                 Created_By = AppConfig.UserID,
@@ -185,7 +185,7 @@ namespace PMS.Modules.StudentAffair
                         }
 
                         db.SubmitChanges();
-                        return newMaster.Subject_Id.ToString();
+                        return newMaster.subject_Id.ToString();
                     }
                 }
             }
