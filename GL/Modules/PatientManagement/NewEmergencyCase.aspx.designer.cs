@@ -51,24 +51,6 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label vlblPatients_Name;
 
         /// <summary>
-        /// lblPatien_ID control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPatien_ID;
-
-        /// <summary>
-        /// Label1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
-
-        /// <summary>
         /// lblAge_Years control.
         /// </summary>
         /// <remarks>
@@ -121,24 +103,6 @@ namespace PMS.Modules.PatientManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label vLbl_Adress;
-
-        /// <summary>
-        /// dlblFollowNo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label dlblFollowNo;
-
-        /// <summary>
-        /// lblFollow control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblFollow;
 
         /// <summary>
         /// Doctor control.
@@ -2130,22 +2094,13 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.TextBox txtCMO_Police;
 
         /// <summary>
-        /// txtOut_Patient_ID control.
+        /// txtEmergency_Patient_ID control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtOut_Patient_ID;
-
-        /// <summary>
-        /// hdfPatient_ID control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdfPatient_ID;
+        protected global::System.Web.UI.WebControls.TextBox txtEmergency_Patient_ID;
 
         /// <summary>
         /// hdfReg_ID control.
@@ -2157,15 +2112,6 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.HiddenField hdfReg_ID;
 
         /// <summary>
-        /// hdfPatient_No control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdfPatient_No;
-
-        /// <summary>
         /// hdfdhischarge control.
         /// </summary>
         /// <remarks>
@@ -2173,32 +2119,5 @@ namespace PMS.Modules.PatientManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdfdhischarge;
-
-        /// <summary>
-        /// hdfFetch_ID control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdfFetch_ID;
-
-        /// <summary>
-        /// txtPatient_ID control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPatient_ID;
-
-        /// <summary>
-        /// HiddenField1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HiddenField1;
     }
 }
