@@ -5802,7 +5802,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
+                            <input type="text" tabindex="1" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
                         </div>
 
 
@@ -5813,7 +5813,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select id="ddl_Gender" tabindex="4" style="width: 197px;">
+                            <select id="ddl_Gender" tabindex="2" style="width: 197px;">
                             </select>
                         </div>
                     </div>
@@ -5824,7 +5824,7 @@
                         </div>
 
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop1 fcux" name="name" id="ddl_name">
+                            <select class="impo-drop1 fcux" tabindex="3" name="name" id="ddl_name">
                                 <option value="Mr.">Mr.</option>
                                 <option value="Mrs.">Mrs.</option>
                                 <option value="Ms.">Ms.</option>
@@ -5834,7 +5834,7 @@
 
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input name="dob"  type="text" id="txt_name" tabindex="1" style="margin-left: -12px !important" />
+                            <input name="dob"  type="text" id="txt_name" tabindex="4" style="margin-left: -12px !important" />
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
@@ -5842,7 +5842,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select  tabindex="5" id="ddl_status" style="width: 197px;">
+                            <select  tabindex="5" id="ddl_status"  style="width: 197px;">
                                 <option></option>
                             </select>
                         </div>
@@ -5853,14 +5853,14 @@
                             <label>Relation</label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop fcux" name="name" id="ddlRelation">
+                            <select class="impo-drop fcux" tabindex="6" name="name" id="ddlRelation">
                                 <option value="S/O">S/O</option>
                                 <option value="W/O">W/O</option>
                                 <option value="D/O">D/O</option>
                             </select>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_relation" tabindex="2" style="margin-left: -12px !important" />
+                            <input type="text" id="txt_relation" tabindex="7" style="margin-left: -12px !important" />
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
@@ -5868,7 +5868,7 @@
                             <label>Mobile</label>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" tabindex="6" id="txt_mobile" style="width: 197px !important;" />
+                            <input type="text" tabindex="8" id="txt_mobile" style="width: 197px !important;" />
                         </div>
                     </div>
 
@@ -5878,7 +5878,7 @@
                             <label>Age/DOB</label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select name="name" id="PrefixAge" >
+                            <select name="name" tabindex="9" id="PrefixAge" >
                                 <option value="Year">Year</option>
                                 <option value="Month">Month</option>
                                 <option value="Day">Day</option>
@@ -5886,7 +5886,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_dob" tabindex="3" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
+                            <input type="text" id="txt_dob" tabindex="10" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
                             <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
                         </div>
 
@@ -5896,7 +5896,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input tabindex="7"  type="text" id="txt_cnic" style="width: 200px !important" />
+                            <input tabindex="11"  type="text" id="txt_cnic" style="width: 200px !important" />
                         </div>
                     </div>
 
@@ -5907,7 +5907,7 @@
                         </div>
 
                         <div class="col-lg-6 col-md-3 col-sm-4">
-                            <input type="text" tabindex="8" id="txt_Address"  />
+                            <input type="text" tabindex="12" id="txt_Address"  />
                         </div>
                     </div>
                 </div>
@@ -5915,7 +5915,7 @@
 
 
             <div class="modal-footer" style="margin-top: 6%;">
-                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="9" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
+                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="13" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
                 <%-- <input type="button" id="RevistPat" name="RevistPat" value="Revist" onclick="SaveRevist_Patient();" />--%>
                 <input type="button" id="updatePatient_Data" class="btn btn-primry"  name="updatePatient_Data" style="text-transform: capitalize;width:10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
                 <input type="button" id="CloseSearchModel" class="btn-gray" style="width:10% !important" name="saveENT" value="Close" data-dismiss="modal" />
@@ -6181,7 +6181,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">               
             <asp:Label ID="lblPatientCondition" runat="server" Text="Triage Area"></asp:Label>
-                <asp:UpdatePanel ID="UpdatePanel1" TabIndex="6" runat="server">
+                <asp:UpdatePanel ID="UpdatePanel1"  runat="server">
                     <ContentTemplate><asp:DropDownList ID="ddlPatientCondition" runat="server" AppendDataBoundItems="true"   onchange="checkPatientCondition(this)" ></asp:DropDownList></ContentTemplate>
                 </asp:UpdatePanel>
             </div>
@@ -6231,7 +6231,7 @@
             <div class="col-lg-1 col-md-4 col-sm-6"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <asp:Label ID="lblIssuance_Of" runat="server" Text="Admit To"></asp:Label>&nbsp;&nbsp;<span class="text-danger">*</span>
-                <asp:UpdatePanel ID="UpdatePanel9" TabIndex="6" runat="server">
+                <asp:UpdatePanel ID="UpdatePanel9"  runat="server">
                     <ContentTemplate>
                         <asp:DropDownList ID="ddlIssuance_Of" runat="server" AppendDataBoundItems="true" onChange="chkIssuance_Of_Select()" Enabled="false"></asp:DropDownList>
                     </ContentTemplate>
@@ -6241,12 +6241,12 @@
             <div class="col-lg-1 col-md-4 col-sm-6"></div>
            <div class="col-lg-2 col-md-4 col-sm-6">
                 <asp:Label ID="LblBed_No" runat="server" Text="Bed No"></asp:Label>
-                <asp:TextBox ID="txtBed_No" TabIndex="8" runat="server" Enabled="true" class="form-control"></asp:TextBox>
+                <asp:TextBox ID="txtBed_No" runat="server" Enabled="true" class="form-control"></asp:TextBox>
             </div>        
             <div class="col-lg-1 col-md-4 col-sm-6"></div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <asp:Label ID="lblWard_No" runat="server" Text="Ward"></asp:Label>&nbsp;&nbsp;<span class="text-danger">*</span>
-                <asp:UpdatePanel ID="UpdatePanel11" TabIndex="7" runat="server" UpdateMode="Always">
+                <asp:UpdatePanel ID="UpdatePanel11"  runat="server" UpdateMode="Always">
                     <ContentTemplate>
                         <asp:DropDownList ID="ddlWard_No" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()" class="form-control"></asp:DropDownList>
                     </ContentTemplate>
@@ -6256,7 +6256,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-6">
              <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
-             <asp:TextBox ID="txtadmissionfee" ReadOnly="true" TabIndex="8" runat="server" Enabled="true" class="form-control"></asp:TextBox>
+             <asp:TextBox ID="txtadmissionfee" ReadOnly="true" runat="server" Enabled="true" class="form-control"></asp:TextBox>
                  </div>
             <div class="col-lg-1 col-md-4 col-sm-6"></div>
            
@@ -6671,7 +6671,7 @@
                                                 <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
                                             </Triggers>
                                             <ContentTemplate>
-                                                <asp:DropDownList ID="ddlDischarge_By" runat="server" Width="167px" AppendDataBoundItems="true" TabIndex="1"></asp:DropDownList>
+                                                <asp:DropDownList ID="ddlDischarge_By" runat="server" Width="167px" AppendDataBoundItems="true" ></asp:DropDownList>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
                                                 </td>
@@ -6686,11 +6686,11 @@
                                                 </td>
                                                    <td style="width:20%;padding:5px;">
                                                      <asp:Label ID="lblPrevention_Precaution" runat="server" Text="Advice "></asp:Label>
-                                                    <asp:TextBox ID="txtPrevention_Precaution"  style="width: 100% !important;height: 35px !important;" runat="server" TextMode="MultiLine"  TabIndex="2"></asp:TextBox>
+                                                    <asp:TextBox ID="txtPrevention_Precaution"  style="width: 100% !important;height: 35px !important;" runat="server" TextMode="MultiLine"  ></asp:TextBox>
                                                 </td>
                                                    <td style="width:20%;padding:5px;">
                                                     <asp:Label ID="Label6" runat="server" Text="Follow Up"></asp:Label>
-                                                    <asp:TextBox ID="txtNext_Visit" runat="server" TabIndex="5"></asp:TextBox>
+                                                    <asp:TextBox ID="txtNext_Visit" runat="server" ></asp:TextBox>
                                                 </td>
                                             </tr>
                                          
@@ -6698,7 +6698,7 @@
                                           
                                                 <td  style="width:20%;padding:5px;">
                                                      <asp:Label ID="lblTreatmentAtDischarge" runat="server" Text="Treatment At Discharge"></asp:Label>
-                                                    <asp:TextBox ID="txtTreatmentAtDischarge" runat="server" style="width: 100% !important;height: 35px !important;"  TextMode="MultiLine"  TabIndex="4"></asp:TextBox>
+                                                    <asp:TextBox ID="txtTreatmentAtDischarge" runat="server" style="width: 100% !important;height: 35px !important;"  TextMode="MultiLine" ></asp:TextBox>
                                                 </td>
 
                                                 <td  style="width:20%;padding:5px;">
@@ -6707,7 +6707,7 @@
                                                 </td >
                                                     <td  style="width:20%;padding:5px;">
                                                      <asp:Label ID="lblProcRecommended" runat="server" Text="Procedure Recommended"></asp:Label>
-                                                    <asp:TextBox ID="txtProcedureRecommended" style="width: 100% !important;height: 35px !important;"  runat="server" TextMode="MultiLine"  TabIndex="4"></asp:TextBox>
+                                                    <asp:TextBox ID="txtProcedureRecommended" style="width: 100% !important;height: 35px !important;"  runat="server" TextMode="MultiLine"  ></asp:TextBox>
                                                 </td>
 
                                                 <td  style="width:20%;padding:5px;">
