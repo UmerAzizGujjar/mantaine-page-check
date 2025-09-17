@@ -28,871 +28,873 @@ namespace PMS
 
         private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
 
-        #region Extensibility Method Definitions
-        partial void OnCreated();
-        partial void InsertAr_Customer(Ar_Customer instance);
-        partial void UpdateAr_Customer(Ar_Customer instance);
-        partial void DeleteAr_Customer(Ar_Customer instance);
-        partial void InsertAR_Invoice(AR_Invoice instance);
-        partial void UpdateAR_Invoice(AR_Invoice instance);
-        partial void DeleteAR_Invoice(AR_Invoice instance);
-        partial void InsertAR_Invoice_Item(AR_Invoice_Item instance);
-        partial void UpdateAR_Invoice_Item(AR_Invoice_Item instance);
-        partial void DeleteAR_Invoice_Item(AR_Invoice_Item instance);
-        partial void InsertAR_Quotation_Item(AR_Quotation_Item instance);
-        partial void UpdateAR_Quotation_Item(AR_Quotation_Item instance);
-        partial void DeleteAR_Quotation_Item(AR_Quotation_Item instance);
-        partial void InsertAR_Quotation(AR_Quotation instance);
-        partial void UpdateAR_Quotation(AR_Quotation instance);
-        partial void DeleteAR_Quotation(AR_Quotation instance);
-        partial void InsertAr_Sale(Ar_Sale instance);
-        partial void UpdateAr_Sale(Ar_Sale instance);
-        partial void DeleteAr_Sale(Ar_Sale instance);
-        partial void InsertAR_Sales_Item(AR_Sales_Item instance);
-        partial void UpdateAR_Sales_Item(AR_Sales_Item instance);
-        partial void DeleteAR_Sales_Item(AR_Sales_Item instance);
-        partial void Insertaspnet_Application(aspnet_Application instance);
-        partial void Updateaspnet_Application(aspnet_Application instance);
-        partial void Deleteaspnet_Application(aspnet_Application instance);
-        partial void Insertaspnet_Path(aspnet_Path instance);
-        partial void Updateaspnet_Path(aspnet_Path instance);
-        partial void Deleteaspnet_Path(aspnet_Path instance);
-        partial void Insertaspnet_PersonalizationAllUser(aspnet_PersonalizationAllUser instance);
-        partial void Updateaspnet_PersonalizationAllUser(aspnet_PersonalizationAllUser instance);
-        partial void Deleteaspnet_PersonalizationAllUser(aspnet_PersonalizationAllUser instance);
-        partial void Insertaspnet_PersonalizationPerUser(aspnet_PersonalizationPerUser instance);
-        partial void Updateaspnet_PersonalizationPerUser(aspnet_PersonalizationPerUser instance);
-        partial void Deleteaspnet_PersonalizationPerUser(aspnet_PersonalizationPerUser instance);
-        partial void Insertaspnet_Profile(aspnet_Profile instance);
-        partial void Updateaspnet_Profile(aspnet_Profile instance);
-        partial void Deleteaspnet_Profile(aspnet_Profile instance);
-        partial void Insertaspnet_RolesInMenus(aspnet_RolesInMenus instance);
-        partial void Updateaspnet_RolesInMenus(aspnet_RolesInMenus instance);
-        partial void Deleteaspnet_RolesInMenus(aspnet_RolesInMenus instance);
-        partial void Insertaspnet_SchemaVersion(aspnet_SchemaVersion instance);
-        partial void Updateaspnet_SchemaVersion(aspnet_SchemaVersion instance);
-        partial void Deleteaspnet_SchemaVersion(aspnet_SchemaVersion instance);
-        partial void Insertaspnet_UsersInRole(aspnet_UsersInRole instance);
-        partial void Updateaspnet_UsersInRole(aspnet_UsersInRole instance);
-        partial void Deleteaspnet_UsersInRole(aspnet_UsersInRole instance);
-        partial void Insertaspnet_WebEvent_Event(aspnet_WebEvent_Event instance);
-        partial void Updateaspnet_WebEvent_Event(aspnet_WebEvent_Event instance);
-        partial void Deleteaspnet_WebEvent_Event(aspnet_WebEvent_Event instance);
-        partial void InsertAssign_Hostel_Room(Assign_Hostel_Room instance);
-        partial void UpdateAssign_Hostel_Room(Assign_Hostel_Room instance);
-        partial void DeleteAssign_Hostel_Room(Assign_Hostel_Room instance);
-        partial void InsertBus_Stop(Bus_Stop instance);
-        partial void UpdateBus_Stop(Bus_Stop instance);
-        partial void DeleteBus_Stop(Bus_Stop instance);
-        partial void InsertChild_Birth(Child_Birth instance);
-        partial void UpdateChild_Birth(Child_Birth instance);
-        partial void DeleteChild_Birth(Child_Birth instance);
-        partial void InsertClient_Information(Client_Information instance);
-        partial void UpdateClient_Information(Client_Information instance);
-        partial void DeleteClient_Information(Client_Information instance);
-        partial void InsertConfiguration(Configuration instance);
-        partial void UpdateConfiguration(Configuration instance);
-        partial void DeleteConfiguration(Configuration instance);
-        partial void InsertConsultation_Booking(Consultation_Booking instance);
-        partial void UpdateConsultation_Booking(Consultation_Booking instance);
-        partial void DeleteConsultation_Booking(Consultation_Booking instance);
-        partial void InsertConsultation_Prescribed_Medicine_Detail(Consultation_Prescribed_Medicine_Detail instance);
-        partial void UpdateConsultation_Prescribed_Medicine_Detail(Consultation_Prescribed_Medicine_Detail instance);
-        partial void DeleteConsultation_Prescribed_Medicine_Detail(Consultation_Prescribed_Medicine_Detail instance);
-        partial void InsertConsultation_Test_Detail(Consultation_Test_Detail instance);
-        partial void UpdateConsultation_Test_Detail(Consultation_Test_Detail instance);
-        partial void DeleteConsultation_Test_Detail(Consultation_Test_Detail instance);
-        partial void InsertDialysis_Case(Dialysis_Case instance);
-        partial void UpdateDialysis_Case(Dialysis_Case instance);
-        partial void DeleteDialysis_Case(Dialysis_Case instance);
-        partial void InsertDialysis_Visit(Dialysis_Visit instance);
-        partial void UpdateDialysis_Visit(Dialysis_Visit instance);
-        partial void DeleteDialysis_Visit(Dialysis_Visit instance);
-        partial void InsertDialysis_Visit_Srvc_Dtl(Dialysis_Visit_Srvc_Dtl instance);
-        partial void UpdateDialysis_Visit_Srvc_Dtl(Dialysis_Visit_Srvc_Dtl instance);
-        partial void DeleteDialysis_Visit_Srvc_Dtl(Dialysis_Visit_Srvc_Dtl instance);
-        partial void InsertEmergency_Case_Srvc_Dtl(Emergency_Case_Srvc_Dtl instance);
-        partial void UpdateEmergency_Case_Srvc_Dtl(Emergency_Case_Srvc_Dtl instance);
-        partial void DeleteEmergency_Case_Srvc_Dtl(Emergency_Case_Srvc_Dtl instance);
-        partial void InsertFiscal_Calender(Fiscal_Calender instance);
-        partial void UpdateFiscal_Calender(Fiscal_Calender instance);
-        partial void DeleteFiscal_Calender(Fiscal_Calender instance);
-        partial void InsertGL_SetOfBook(GL_SetOfBook instance);
-        partial void UpdateGL_SetOfBook(GL_SetOfBook instance);
-        partial void DeleteGL_SetOfBook(GL_SetOfBook instance);
-        partial void InsertGL_Voucher_Type(GL_Voucher_Type instance);
-        partial void UpdateGL_Voucher_Type(GL_Voucher_Type instance);
-        partial void DeleteGL_Voucher_Type(GL_Voucher_Type instance);
-        partial void InsertHostel(Hostel instance);
-        partial void UpdateHostel(Hostel instance);
-        partial void DeleteHostel(Hostel instance);
-        partial void InsertHouse_Keeping(House_Keeping instance);
-        partial void UpdateHouse_Keeping(House_Keeping instance);
-        partial void DeleteHouse_Keeping(House_Keeping instance);
-        partial void InsertHR_Shift(HR_Shift instance);
-        partial void UpdateHR_Shift(HR_Shift instance);
-        partial void DeleteHR_Shift(HR_Shift instance);
-        partial void InsertIn_Patient_Srvc_Dtl(In_Patient_Srvc_Dtl instance);
-        partial void UpdateIn_Patient_Srvc_Dtl(In_Patient_Srvc_Dtl instance);
-        partial void DeleteIn_Patient_Srvc_Dtl(In_Patient_Srvc_Dtl instance);
-        partial void InsertINV_Item_Account_Category(INV_Item_Account_Category instance);
-        partial void UpdateINV_Item_Account_Category(INV_Item_Account_Category instance);
-        partial void DeleteINV_Item_Account_Category(INV_Item_Account_Category instance);
-        partial void InsertIssue_To_Laundary(Issue_To_Laundary instance);
-        partial void UpdateIssue_To_Laundary(Issue_To_Laundary instance);
-        partial void DeleteIssue_To_Laundary(Issue_To_Laundary instance);
-        partial void InsertLaundary_Issuance(Laundary_Issuance instance);
-        partial void UpdateLaundary_Issuance(Laundary_Issuance instance);
-        partial void DeleteLaundary_Issuance(Laundary_Issuance instance);
-        partial void InsertLaundary_Received(Laundary_Received instance);
-        partial void UpdateLaundary_Received(Laundary_Received instance);
-        partial void DeleteLaundary_Received(Laundary_Received instance);
-        partial void InsertMenus(Menus instance);
-        partial void UpdateMenus(Menus instance);
-        partial void DeleteMenus(Menus instance);
-        partial void InsertOperation_Booking_Srvc_Dtl(Operation_Booking_Srvc_Dtl instance);
-        partial void UpdateOperation_Booking_Srvc_Dtl(Operation_Booking_Srvc_Dtl instance);
-        partial void DeleteOperation_Booking_Srvc_Dtl(Operation_Booking_Srvc_Dtl instance);
-        partial void InsertPatient_Billing_Dtl(Patient_Billing_Dtl instance);
-        partial void UpdatePatient_Billing_Dtl(Patient_Billing_Dtl instance);
-        partial void DeletePatient_Billing_Dtl(Patient_Billing_Dtl instance);
-        partial void InsertReceived_From_Laundry(Received_From_Laundry instance);
-        partial void UpdateReceived_From_Laundry(Received_From_Laundry instance);
-        partial void DeleteReceived_From_Laundry(Received_From_Laundry instance);
-        partial void InsertRole_Page(Role_Page instance);
-        partial void UpdateRole_Page(Role_Page instance);
-        partial void DeleteRole_Page(Role_Page instance);
-        partial void InsertRoom_Allocatrion_History(Room_Allocatrion_History instance);
-        partial void UpdateRoom_Allocatrion_History(Room_Allocatrion_History instance);
-        partial void DeleteRoom_Allocatrion_History(Room_Allocatrion_History instance);
-        partial void InsertRoute_Driver(Route_Driver instance);
-        partial void UpdateRoute_Driver(Route_Driver instance);
-        partial void DeleteRoute_Driver(Route_Driver instance);
-        partial void InsertRoute(Route instance);
-        partial void UpdateRoute(Route instance);
-        partial void DeleteRoute(Route instance);
-        partial void Insertrpt_BalanceSheet(rpt_BalanceSheet instance);
-        partial void Updaterpt_BalanceSheet(rpt_BalanceSheet instance);
-        partial void Deleterpt_BalanceSheet(rpt_BalanceSheet instance);
-        partial void Insertrpt_DailyBook(rpt_DailyBook instance);
-        partial void Updaterpt_DailyBook(rpt_DailyBook instance);
-        partial void Deleterpt_DailyBook(rpt_DailyBook instance);
-        partial void InsertService_Definition(Service_Definition instance);
-        partial void UpdateService_Definition(Service_Definition instance);
-        partial void DeleteService_Definition(Service_Definition instance);
-        partial void InsertShift_Assign(Shift_Assign instance);
-        partial void UpdateShift_Assign(Shift_Assign instance);
-        partial void DeleteShift_Assign(Shift_Assign instance);
-        partial void InsertTerms_and_condition(Terms_and_condition instance);
-        partial void UpdateTerms_and_condition(Terms_and_condition instance);
-        partial void DeleteTerms_and_condition(Terms_and_condition instance);
-        partial void InsertTest_Value(Test_Value instance);
-        partial void UpdateTest_Value(Test_Value instance);
-        partial void DeleteTest_Value(Test_Value instance);
-        partial void InsertToken(Token instance);
-        partial void UpdateToken(Token instance);
-        partial void DeleteToken(Token instance);
-        partial void InsertValueSet(ValueSet instance);
-        partial void UpdateValueSet(ValueSet instance);
-        partial void DeleteValueSet(ValueSet instance);
-        partial void InsertVehicle_Route(Vehicle_Route instance);
-        partial void UpdateVehicle_Route(Vehicle_Route instance);
-        partial void DeleteVehicle_Route(Vehicle_Route instance);
-        partial void InsertVehicle(Vehicle instance);
-        partial void UpdateVehicle(Vehicle instance);
-        partial void DeleteVehicle(Vehicle instance);
-        partial void InsertWard_Allocatrion_History(Ward_Allocatrion_History instance);
-        partial void UpdateWard_Allocatrion_History(Ward_Allocatrion_History instance);
-        partial void DeleteWard_Allocatrion_History(Ward_Allocatrion_History instance);
-        partial void InsertPatient_Appointment(Patient_Appointment instance);
-        partial void UpdatePatient_Appointment(Patient_Appointment instance);
-        partial void DeletePatient_Appointment(Patient_Appointment instance);
-        partial void InsertTimeShedule(TimeShedule instance);
-        partial void UpdateTimeShedule(TimeShedule instance);
-        partial void DeleteTimeShedule(TimeShedule instance);
-        partial void InsertLaboratory_Test(Laboratory_Test instance);
-        partial void UpdateLaboratory_Test(Laboratory_Test instance);
-        partial void DeleteLaboratory_Test(Laboratory_Test instance);
-        partial void InsertEyeDetail(EyeDetail instance);
-        partial void UpdateEyeDetail(EyeDetail instance);
-        partial void DeleteEyeDetail(EyeDetail instance);
-        partial void InsertEyeMainTypes_Definition(EyeMainTypes_Definition instance);
-        partial void UpdateEyeMainTypes_Definition(EyeMainTypes_Definition instance);
-        partial void DeleteEyeMainTypes_Definition(EyeMainTypes_Definition instance);
-        partial void InsertEyeSubTypes_Definition(EyeSubTypes_Definition instance);
-        partial void UpdateEyeSubTypes_Definition(EyeSubTypes_Definition instance);
-        partial void DeleteEyeSubTypes_Definition(EyeSubTypes_Definition instance);
-        partial void InsertAr_Billing_PackageDetail(Ar_Billing_PackageDetail instance);
-        partial void UpdateAr_Billing_PackageDetail(Ar_Billing_PackageDetail instance);
-        partial void DeleteAr_Billing_PackageDetail(Ar_Billing_PackageDetail instance);
-        partial void InsertOrtho(Ortho instance);
-        partial void UpdateOrtho(Ortho instance);
-        partial void DeleteOrtho(Ortho instance);
-        partial void InsertINV_Item_Account_Category_Detail(INV_Item_Account_Category_Detail instance);
-        partial void UpdateINV_Item_Account_Category_Detail(INV_Item_Account_Category_Detail instance);
-        partial void DeleteINV_Item_Account_Category_Detail(INV_Item_Account_Category_Detail instance);
-        partial void InsertINV_Item_Account_Category_Detail1(INV_Item_Account_Category_Detail1 instance);
-        partial void UpdateINV_Item_Account_Category_Detail1(INV_Item_Account_Category_Detail1 instance);
-        partial void DeleteINV_Item_Account_Category_Detail1(INV_Item_Account_Category_Detail1 instance);
-        partial void InsertPrevious_Dpt(Previous_Dpt instance);
-        partial void UpdatePrevious_Dpt(Previous_Dpt instance);
-        partial void DeletePrevious_Dpt(Previous_Dpt instance);
-        partial void InsertPackage(Package instance);
-        partial void UpdatePackage(Package instance);
-        partial void DeletePackage(Package instance);
-        partial void InsertRoom_Allocation(Room_Allocation instance);
-        partial void UpdateRoom_Allocation(Room_Allocation instance);
-        partial void DeleteRoom_Allocation(Room_Allocation instance);
-        partial void InsertDischarge(Discharge instance);
-        partial void UpdateDischarge(Discharge instance);
-        partial void DeleteDischarge(Discharge instance);
-        partial void InsertEN_Colono(EN_Colono instance);
-        partial void UpdateEN_Colono(EN_Colono instance);
-        partial void DeleteEN_Colono(EN_Colono instance);
-        partial void InsertPT_Endoscopy(PT_Endoscopy instance);
-        partial void UpdatePT_Endoscopy(PT_Endoscopy instance);
-        partial void DeletePT_Endoscopy(PT_Endoscopy instance);
-        partial void InsertEN_Gastro(EN_Gastro instance);
-        partial void UpdateEN_Gastro(EN_Gastro instance);
-        partial void DeleteEN_Gastro(EN_Gastro instance);
-        partial void InsertGL_Days_Process(GL_Days_Process instance);
-        partial void UpdateGL_Days_Process(GL_Days_Process instance);
-        partial void DeleteGL_Days_Process(GL_Days_Process instance);
-        partial void InsertInPatient_Mon_InTake(InPatient_Mon_InTake instance);
-        partial void UpdateInPatient_Mon_InTake(InPatient_Mon_InTake instance);
-        partial void DeleteInPatient_Mon_InTake(InPatient_Mon_InTake instance);
-        partial void Insertsys_Parm(sys_Parm instance);
-        partial void Updatesys_Parm(sys_Parm instance);
-        partial void Deletesys_Parm(sys_Parm instance);
-        partial void InsertDischarge_Detail(Discharge_Detail instance);
-        partial void UpdateDischarge_Detail(Discharge_Detail instance);
-        partial void DeleteDischarge_Detail(Discharge_Detail instance);
-        partial void InsertRecieving_Invoice(Recieving_Invoice instance);
-        partial void UpdateRecieving_Invoice(Recieving_Invoice instance);
-        partial void DeleteRecieving_Invoice(Recieving_Invoice instance);
-        partial void InsertInPatient_Mon_Progress_Note(InPatient_Mon_Progress_Note instance);
-        partial void UpdateInPatient_Mon_Progress_Note(InPatient_Mon_Progress_Note instance);
-        partial void DeleteInPatient_Mon_Progress_Note(InPatient_Mon_Progress_Note instance);
-        partial void InsertRecieving_Invoice_Detail(Recieving_Invoice_Detail instance);
-        partial void UpdateRecieving_Invoice_Detail(Recieving_Invoice_Detail instance);
-        partial void DeleteRecieving_Invoice_Detail(Recieving_Invoice_Detail instance);
-        partial void InsertAP_Purchase_Item(AP_Purchase_Item instance);
-        partial void UpdateAP_Purchase_Item(AP_Purchase_Item instance);
-        partial void DeleteAP_Purchase_Item(AP_Purchase_Item instance);
-        partial void InsertAP_Purchase(AP_Purchase instance);
-        partial void UpdateAP_Purchase(AP_Purchase instance);
-        partial void DeleteAP_Purchase(AP_Purchase instance);
-        partial void InsertReceipt_Item(Receipt_Item instance);
-        partial void UpdateReceipt_Item(Receipt_Item instance);
-        partial void DeleteReceipt_Item(Receipt_Item instance);
-        partial void InsertItem_Org(Item_Org instance);
-        partial void UpdateItem_Org(Item_Org instance);
-        partial void DeleteItem_Org(Item_Org instance);
-        partial void InsertAR_Billing_Detail_Doctor_Share(AR_Billing_Detail_Doctor_Share instance);
-        partial void UpdateAR_Billing_Detail_Doctor_Share(AR_Billing_Detail_Doctor_Share instance);
-        partial void DeleteAR_Billing_Detail_Doctor_Share(AR_Billing_Detail_Doctor_Share instance);
-        partial void InsertLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
-        partial void UpdateLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
-        partial void DeleteLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
-        partial void InsertTest_Image(Test_Image instance);
-        partial void UpdateTest_Image(Test_Image instance);
-        partial void DeleteTest_Image(Test_Image instance);
-        partial void InsertOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
-        partial void UpdateOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
-        partial void DeleteOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
-        partial void InsertOut_Patient_Slit_Lamp_Exam(Out_Patient_Slit_Lamp_Exam instance);
-        partial void UpdateOut_Patient_Slit_Lamp_Exam(Out_Patient_Slit_Lamp_Exam instance);
-        partial void DeleteOut_Patient_Slit_Lamp_Exam(Out_Patient_Slit_Lamp_Exam instance);
-        partial void InsertPackages_Detail(Packages_Detail instance);
-        partial void UpdatePackages_Detail(Packages_Detail instance);
-        partial void DeletePackages_Detail(Packages_Detail instance);
-        partial void InsertUltraSoundLevel(UltraSoundLevel instance);
-        partial void UpdateUltraSoundLevel(UltraSoundLevel instance);
-        partial void DeleteUltraSoundLevel(UltraSoundLevel instance);
-        partial void InsertResult_Organism(Result_Organism instance);
-        partial void UpdateResult_Organism(Result_Organism instance);
-        partial void DeleteResult_Organism(Result_Organism instance);
-        partial void InsertBlood_Donor(Blood_Donor instance);
-        partial void UpdateBlood_Donor(Blood_Donor instance);
-        partial void DeleteBlood_Donor(Blood_Donor instance);
-        partial void InsertBlood_Transfusion_CheckList(Blood_Transfusion_CheckList instance);
-        partial void UpdateBlood_Transfusion_CheckList(Blood_Transfusion_CheckList instance);
-        partial void DeleteBlood_Transfusion_CheckList(Blood_Transfusion_CheckList instance);
-        partial void InsertBlood_Division(Blood_Division instance);
-        partial void UpdateBlood_Division(Blood_Division instance);
-        partial void DeleteBlood_Division(Blood_Division instance);
-        partial void InsertSysmtopm(Sysmtopm instance);
-        partial void UpdateSysmtopm(Sysmtopm instance);
-        partial void DeleteSysmtopm(Sysmtopm instance);
-        partial void InsertLab_Resultrpt(Lab_Resultrpt instance);
-        partial void UpdateLab_Resultrpt(Lab_Resultrpt instance);
-        partial void DeleteLab_Resultrpt(Lab_Resultrpt instance);
-        partial void InsertInPatient_Instruction(InPatient_Instruction instance);
-        partial void UpdateInPatient_Instruction(InPatient_Instruction instance);
-        partial void DeleteInPatient_Instruction(InPatient_Instruction instance);
-        partial void InsertDonor(Donor instance);
-        partial void UpdateDonor(Donor instance);
-        partial void DeleteDonor(Donor instance);
-        partial void InsertPanel_Detail_Service(Panel_Detail_Service instance);
-        partial void UpdatePanel_Detail_Service(Panel_Detail_Service instance);
-        partial void DeletePanel_Detail_Service(Panel_Detail_Service instance);
-        partial void InsertBlood_Bank(Blood_Bank instance);
-        partial void UpdateBlood_Bank(Blood_Bank instance);
-        partial void DeleteBlood_Bank(Blood_Bank instance);
-        partial void InsertOT_Patient_Vital(OT_Patient_Vital instance);
-        partial void UpdateOT_Patient_Vital(OT_Patient_Vital instance);
-        partial void DeleteOT_Patient_Vital(OT_Patient_Vital instance);
-        partial void InsertReceivingNote(ReceivingNote instance);
-        partial void UpdateReceivingNote(ReceivingNote instance);
-        partial void DeleteReceivingNote(ReceivingNote instance);
-        partial void InsertBlood_Division_Type(Blood_Division_Type instance);
-        partial void UpdateBlood_Division_Type(Blood_Division_Type instance);
-        partial void DeleteBlood_Division_Type(Blood_Division_Type instance);
-        partial void InsertEmergency_Doctor_Note(Emergency_Doctor_Note instance);
-        partial void UpdateEmergency_Doctor_Note(Emergency_Doctor_Note instance);
-        partial void DeleteEmergency_Doctor_Note(Emergency_Doctor_Note instance);
-        partial void InsertAr_PaymentForm(Ar_PaymentForm instance);
-        partial void UpdateAr_PaymentForm(Ar_PaymentForm instance);
-        partial void DeleteAr_PaymentForm(Ar_PaymentForm instance);
-        partial void InsertAr_PaymentForm_Detail(Ar_PaymentForm_Detail instance);
-        partial void UpdateAr_PaymentForm_Detail(Ar_PaymentForm_Detail instance);
-        partial void DeleteAr_PaymentForm_Detail(Ar_PaymentForm_Detail instance);
-        partial void InsertLab_Test(Lab_Test instance);
-        partial void UpdateLab_Test(Lab_Test instance);
-        partial void DeleteLab_Test(Lab_Test instance);
-        partial void InsertInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
-        partial void UpdateInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
-        partial void DeleteInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
-        partial void InsertDiscount_Definition(Discount_Definition instance);
-        partial void UpdateDiscount_Definition(Discount_Definition instance);
-        partial void DeleteDiscount_Definition(Discount_Definition instance);
-        partial void InsertDiscount_Definition_Detail(Discount_Definition_Detail instance);
-        partial void UpdateDiscount_Definition_Detail(Discount_Definition_Detail instance);
-        partial void DeleteDiscount_Definition_Detail(Discount_Definition_Detail instance);
-        partial void InsertDiscount_Assigned_Patient_Detail(Discount_Assigned_Patient_Detail instance);
-        partial void UpdateDiscount_Assigned_Patient_Detail(Discount_Assigned_Patient_Detail instance);
-        partial void DeleteDiscount_Assigned_Patient_Detail(Discount_Assigned_Patient_Detail instance);
-        partial void InsertHistory_Data(History_Data instance);
-        partial void UpdateHistory_Data(History_Data instance);
-        partial void DeleteHistory_Data(History_Data instance);
-        partial void InsertInfusion_Order(Infusion_Order instance);
-        partial void UpdateInfusion_Order(Infusion_Order instance);
-        partial void DeleteInfusion_Order(Infusion_Order instance);
-        partial void InsertInPatient_Monitoring(InPatient_Monitoring instance);
-        partial void UpdateInPatient_Monitoring(InPatient_Monitoring instance);
-        partial void DeleteInPatient_Monitoring(InPatient_Monitoring instance);
-        partial void InsertInPatient_Doctor_Note(InPatient_Doctor_Note instance);
-        partial void UpdateInPatient_Doctor_Note(InPatient_Doctor_Note instance);
-        partial void DeleteInPatient_Doctor_Note(InPatient_Doctor_Note instance);
-        partial void InsertLab_Test_Detail(Lab_Test_Detail instance);
-        partial void UpdateLab_Test_Detail(Lab_Test_Detail instance);
-        partial void DeleteLab_Test_Detail(Lab_Test_Detail instance);
-        partial void InsertInPatient_Mon_Output(InPatient_Mon_Output instance);
-        partial void UpdateInPatient_Mon_Output(InPatient_Mon_Output instance);
-        partial void DeleteInPatient_Mon_Output(InPatient_Mon_Output instance);
-        partial void InsertPharmacy_User(Pharmacy_User instance);
-        partial void UpdatePharmacy_User(Pharmacy_User instance);
-        partial void DeletePharmacy_User(Pharmacy_User instance);
-        partial void InsertWithHold_Tax(WithHold_Tax instance);
-        partial void UpdateWithHold_Tax(WithHold_Tax instance);
-        partial void DeleteWithHold_Tax(WithHold_Tax instance);
-        partial void InsertAP_Vendors_Person(AP_Vendors_Person instance);
-        partial void UpdateAP_Vendors_Person(AP_Vendors_Person instance);
-        partial void DeleteAP_Vendors_Person(AP_Vendors_Person instance);
-        partial void InsertBlood_Transfusion(Blood_Transfusion instance);
-        partial void UpdateBlood_Transfusion(Blood_Transfusion instance);
-        partial void DeleteBlood_Transfusion(Blood_Transfusion instance);
-        partial void InsertDiscount_Assigned_Patient(Discount_Assigned_Patient instance);
-        partial void UpdateDiscount_Assigned_Patient(Discount_Assigned_Patient instance);
-        partial void DeleteDiscount_Assigned_Patient(Discount_Assigned_Patient instance);
-        partial void InsertAccounting_Payment_Purchase_Invoice(Accounting_Payment_Purchase_Invoice instance);
-        partial void UpdateAccounting_Payment_Purchase_Invoice(Accounting_Payment_Purchase_Invoice instance);
-        partial void DeleteAccounting_Payment_Purchase_Invoice(Accounting_Payment_Purchase_Invoice instance);
-        partial void InsertStock_Transfer_Item(Stock_Transfer_Item instance);
-        partial void UpdateStock_Transfer_Item(Stock_Transfer_Item instance);
-        partial void DeleteStock_Transfer_Item(Stock_Transfer_Item instance);
-        partial void InsertItem_Replacement_Detail(Item_Replacement_Detail instance);
-        partial void UpdateItem_Replacement_Detail(Item_Replacement_Detail instance);
-        partial void DeleteItem_Replacement_Detail(Item_Replacement_Detail instance);
-        partial void InsertItem_Replacement_Master(Item_Replacement_Master instance);
-        partial void UpdateItem_Replacement_Master(Item_Replacement_Master instance);
-        partial void DeleteItem_Replacement_Master(Item_Replacement_Master instance);
-        partial void InsertAccount_Category(Account_Category instance);
-        partial void UpdateAccount_Category(Account_Category instance);
-        partial void DeleteAccount_Category(Account_Category instance);
-        partial void InsertRoom(Room instance);
-        partial void UpdateRoom(Room instance);
-        partial void DeleteRoom(Room instance);
-        partial void InsertSales_Tax(Sales_Tax instance);
-        partial void UpdateSales_Tax(Sales_Tax instance);
-        partial void DeleteSales_Tax(Sales_Tax instance);
-        partial void InsertAP_RequestForQuotation_Item(AP_RequestForQuotation_Item instance);
-        partial void UpdateAP_RequestForQuotation_Item(AP_RequestForQuotation_Item instance);
-        partial void DeleteAP_RequestForQuotation_Item(AP_RequestForQuotation_Item instance);
-        partial void InsertMaterialIssueRequest(MaterialIssueRequest instance);
-        partial void UpdateMaterialIssueRequest(MaterialIssueRequest instance);
-        partial void DeleteMaterialIssueRequest(MaterialIssueRequest instance);
-        partial void InsertMaterialIssueRequest_Detail(MaterialIssueRequest_Detail instance);
-        partial void UpdateMaterialIssueRequest_Detail(MaterialIssueRequest_Detail instance);
-        partial void DeleteMaterialIssueRequest_Detail(MaterialIssueRequest_Detail instance);
-        partial void InsertINV_ITEM_COMPANY_STORE(INV_ITEM_COMPANY_STORE instance);
-        partial void UpdateINV_ITEM_COMPANY_STORE(INV_ITEM_COMPANY_STORE instance);
-        partial void DeleteINV_ITEM_COMPANY_STORE(INV_ITEM_COMPANY_STORE instance);
-        partial void InsertUser_Branch_Master(User_Branch_Master instance);
-        partial void UpdateUser_Branch_Master(User_Branch_Master instance);
-        partial void DeleteUser_Branch_Master(User_Branch_Master instance);
-        partial void InsertUser_Branch(User_Branch instance);
-        partial void UpdateUser_Branch(User_Branch instance);
-        partial void DeleteUser_Branch(User_Branch instance);
-        partial void InsertCS_Vendor(CS_Vendor instance);
-        partial void UpdateCS_Vendor(CS_Vendor instance);
-        partial void DeleteCS_Vendor(CS_Vendor instance);
-        partial void InsertAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
-        partial void UpdateAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
-        partial void DeleteAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
-        partial void InsertSys_Approval_Stage_Detail(Sys_Approval_Stage_Detail instance);
-        partial void UpdateSys_Approval_Stage_Detail(Sys_Approval_Stage_Detail instance);
-        partial void DeleteSys_Approval_Stage_Detail(Sys_Approval_Stage_Detail instance);
-        partial void InsertSys_Approval_Tempelate_Master(Sys_Approval_Tempelate_Master instance);
-        partial void UpdateSys_Approval_Tempelate_Master(Sys_Approval_Tempelate_Master instance);
-        partial void DeleteSys_Approval_Tempelate_Master(Sys_Approval_Tempelate_Master instance);
-        partial void InsertSys_Approval_Tempelate_Detail_Form(Sys_Approval_Tempelate_Detail_Form instance);
-        partial void UpdateSys_Approval_Tempelate_Detail_Form(Sys_Approval_Tempelate_Detail_Form instance);
-        partial void DeleteSys_Approval_Tempelate_Detail_Form(Sys_Approval_Tempelate_Detail_Form instance);
-        partial void InsertSys_Approval_Tempelate_Detail_Stage(Sys_Approval_Tempelate_Detail_Stage instance);
-        partial void UpdateSys_Approval_Tempelate_Detail_Stage(Sys_Approval_Tempelate_Detail_Stage instance);
-        partial void DeleteSys_Approval_Tempelate_Detail_Stage(Sys_Approval_Tempelate_Detail_Stage instance);
-        partial void InsertSys_Approval_Tempelate_Detail_Originator(Sys_Approval_Tempelate_Detail_Originator instance);
-        partial void UpdateSys_Approval_Tempelate_Detail_Originator(Sys_Approval_Tempelate_Detail_Originator instance);
-        partial void DeleteSys_Approval_Tempelate_Detail_Originator(Sys_Approval_Tempelate_Detail_Originator instance);
-        partial void InsertSys_Approval_Stage_Master(Sys_Approval_Stage_Master instance);
-        partial void UpdateSys_Approval_Stage_Master(Sys_Approval_Stage_Master instance);
-        partial void DeleteSys_Approval_Stage_Master(Sys_Approval_Stage_Master instance);
-        partial void InsertSys_Form(Sys_Form instance);
-        partial void UpdateSys_Form(Sys_Form instance);
-        partial void DeleteSys_Form(Sys_Form instance);
-        partial void InsertStock_Transfer(Stock_Transfer instance);
-        partial void UpdateStock_Transfer(Stock_Transfer instance);
-        partial void DeleteStock_Transfer(Stock_Transfer instance);
-        partial void InsertInPatientService(InPatientService instance);
-        partial void UpdateInPatientService(InPatientService instance);
-        partial void DeleteInPatientService(InPatientService instance);
-        partial void InsertDepartment_Wise_User(Department_Wise_User instance);
-        partial void UpdateDepartment_Wise_User(Department_Wise_User instance);
-        partial void DeleteDepartment_Wise_User(Department_Wise_User instance);
-        partial void InsertDepartment_Wise_User_Detail(Department_Wise_User_Detail instance);
-        partial void UpdateDepartment_Wise_User_Detail(Department_Wise_User_Detail instance);
-        partial void DeleteDepartment_Wise_User_Detail(Department_Wise_User_Detail instance);
-        partial void InsertWareHouse_Wise_User_Detail(WareHouse_Wise_User_Detail instance);
-        partial void UpdateWareHouse_Wise_User_Detail(WareHouse_Wise_User_Detail instance);
-        partial void DeleteWareHouse_Wise_User_Detail(WareHouse_Wise_User_Detail instance);
-        partial void InsertWareHouse_Wise_User(WareHouse_Wise_User instance);
-        partial void UpdateWareHouse_Wise_User(WareHouse_Wise_User instance);
-        partial void DeleteWareHouse_Wise_User(WareHouse_Wise_User instance);
-        partial void InsertDoctor_Rouster_Detail(Doctor_Rouster_Detail instance);
-        partial void UpdateDoctor_Rouster_Detail(Doctor_Rouster_Detail instance);
-        partial void DeleteDoctor_Rouster_Detail(Doctor_Rouster_Detail instance);
-        partial void InsertDoctor_Rouster_Master(Doctor_Rouster_Master instance);
-        partial void UpdateDoctor_Rouster_Master(Doctor_Rouster_Master instance);
-        partial void DeleteDoctor_Rouster_Master(Doctor_Rouster_Master instance);
-        partial void InsertAP_Vendor(AP_Vendor instance);
-        partial void UpdateAP_Vendor(AP_Vendor instance);
-        partial void DeleteAP_Vendor(AP_Vendor instance);
-        partial void InsertAP_Vendor_General_Item(AP_Vendor_General_Item instance);
-        partial void UpdateAP_Vendor_General_Item(AP_Vendor_General_Item instance);
-        partial void DeleteAP_Vendor_General_Item(AP_Vendor_General_Item instance);
-        partial void InsertAP_Vendor_Pharmacy_Item(AP_Vendor_Pharmacy_Item instance);
-        partial void UpdateAP_Vendor_Pharmacy_Item(AP_Vendor_Pharmacy_Item instance);
-        partial void DeleteAP_Vendor_Pharmacy_Item(AP_Vendor_Pharmacy_Item instance);
-        partial void InsertAP_Vendor_Company(AP_Vendor_Company instance);
-        partial void UpdateAP_Vendor_Company(AP_Vendor_Company instance);
-        partial void DeleteAP_Vendor_Company(AP_Vendor_Company instance);
-        partial void InsertDoctor_Template_Master(Doctor_Template_Master instance);
-        partial void UpdateDoctor_Template_Master(Doctor_Template_Master instance);
-        partial void DeleteDoctor_Template_Master(Doctor_Template_Master instance);
-        partial void InsertDoctor_Template_Medicine(Doctor_Template_Medicine instance);
-        partial void UpdateDoctor_Template_Medicine(Doctor_Template_Medicine instance);
-        partial void DeleteDoctor_Template_Medicine(Doctor_Template_Medicine instance);
-        partial void InsertDoctor_Template_Test(Doctor_Template_Test instance);
-        partial void UpdateDoctor_Template_Test(Doctor_Template_Test instance);
-        partial void DeleteDoctor_Template_Test(Doctor_Template_Test instance);
-        partial void InsertBudget(Budget instance);
-        partial void UpdateBudget(Budget instance);
-        partial void DeleteBudget(Budget instance);
-        partial void InsertBudget_Account(Budget_Account instance);
-        partial void UpdateBudget_Account(Budget_Account instance);
-        partial void DeleteBudget_Account(Budget_Account instance);
-        partial void InsertPurchase_Requisition_Detail(Purchase_Requisition_Detail instance);
-        partial void UpdatePurchase_Requisition_Detail(Purchase_Requisition_Detail instance);
-        partial void DeletePurchase_Requisition_Detail(Purchase_Requisition_Detail instance);
-        partial void InsertAP_RequestForQuotation_Vendor(AP_RequestForQuotation_Vendor instance);
-        partial void UpdateAP_RequestForQuotation_Vendor(AP_RequestForQuotation_Vendor instance);
-        partial void DeleteAP_RequestForQuotation_Vendor(AP_RequestForQuotation_Vendor instance);
-        partial void InsertIgp_Detail(Igp_Detail instance);
-        partial void UpdateIgp_Detail(Igp_Detail instance);
-        partial void DeleteIgp_Detail(Igp_Detail instance);
-        partial void InsertAsset_Definition_Cost_Fill(Asset_Definition_Cost_Fill instance);
-        partial void UpdateAsset_Definition_Cost_Fill(Asset_Definition_Cost_Fill instance);
-        partial void DeleteAsset_Definition_Cost_Fill(Asset_Definition_Cost_Fill instance);
-        partial void InsertAsset_Selection(Asset_Selection instance);
-        partial void UpdateAsset_Selection(Asset_Selection instance);
-        partial void DeleteAsset_Selection(Asset_Selection instance);
-        partial void InsertGRN_Detail(GRN_Detail instance);
-        partial void UpdateGRN_Detail(GRN_Detail instance);
-        partial void DeleteGRN_Detail(GRN_Detail instance);
-        partial void InsertINV_Stock_Adjustment(INV_Stock_Adjustment instance);
-        partial void UpdateINV_Stock_Adjustment(INV_Stock_Adjustment instance);
-        partial void DeleteINV_Stock_Adjustment(INV_Stock_Adjustment instance);
-        partial void InsertStore_Issue(Store_Issue instance);
-        partial void UpdateStore_Issue(Store_Issue instance);
-        partial void DeleteStore_Issue(Store_Issue instance);
-        partial void InsertSys_Inv_OrignatorTempelate_Detail(Sys_Inv_OrignatorTempelate_Detail instance);
-        partial void UpdateSys_Inv_OrignatorTempelate_Detail(Sys_Inv_OrignatorTempelate_Detail instance);
-        partial void DeleteSys_Inv_OrignatorTempelate_Detail(Sys_Inv_OrignatorTempelate_Detail instance);
-        partial void InsertSys_Inv_OrignatorTempelate_Detail_Form(Sys_Inv_OrignatorTempelate_Detail_Form instance);
-        partial void UpdateSys_Inv_OrignatorTempelate_Detail_Form(Sys_Inv_OrignatorTempelate_Detail_Form instance);
-        partial void DeleteSys_Inv_OrignatorTempelate_Detail_Form(Sys_Inv_OrignatorTempelate_Detail_Form instance);
-        partial void InsertSys_Inv_OrignatorTempelate_Master(Sys_Inv_OrignatorTempelate_Master instance);
-        partial void UpdateSys_Inv_OrignatorTempelate_Master(Sys_Inv_OrignatorTempelate_Master instance);
-        partial void DeleteSys_Inv_OrignatorTempelate_Master(Sys_Inv_OrignatorTempelate_Master instance);
-        partial void InsertIn_Patient_Medicine(In_Patient_Medicine instance);
-        partial void UpdateIn_Patient_Medicine(In_Patient_Medicine instance);
-        partial void DeleteIn_Patient_Medicine(In_Patient_Medicine instance);
-        partial void InsertDataValue(DataValue instance);
-        partial void UpdateDataValue(DataValue instance);
-        partial void DeleteDataValue(DataValue instance);
-        partial void InsertGRN_Master(GRN_Master instance);
-        partial void UpdateGRN_Master(GRN_Master instance);
-        partial void DeleteGRN_Master(GRN_Master instance);
-        partial void InsertIgp_master(Igp_master instance);
-        partial void UpdateIgp_master(Igp_master instance);
-        partial void DeleteIgp_master(Igp_master instance);
-        partial void InsertMedicines_Template(Medicines_Template instance);
-        partial void UpdateMedicines_Template(Medicines_Template instance);
-        partial void DeleteMedicines_Template(Medicines_Template instance);
-        partial void InsertPurchase_Requisition(Purchase_Requisition instance);
-        partial void UpdatePurchase_Requisition(Purchase_Requisition instance);
-        partial void DeletePurchase_Requisition(Purchase_Requisition instance);
-        partial void InsertSys_Approval_Log(Sys_Approval_Log instance);
-        partial void UpdateSys_Approval_Log(Sys_Approval_Log instance);
-        partial void DeleteSys_Approval_Log(Sys_Approval_Log instance);
-        partial void InsertOutPatients_Proto(OutPatients_Proto instance);
-        partial void UpdateOutPatients_Proto(OutPatients_Proto instance);
-        partial void DeleteOutPatients_Proto(OutPatients_Proto instance);
-        partial void InsertAppointment_Form(Appointment_Form instance);
-        partial void UpdateAppointment_Form(Appointment_Form instance);
-        partial void DeleteAppointment_Form(Appointment_Form instance);
-        partial void InsertPayment_Invoice(Payment_Invoice instance);
-        partial void UpdatePayment_Invoice(Payment_Invoice instance);
-        partial void DeletePayment_Invoice(Payment_Invoice instance);
-        partial void InsertAP_Purchase_Order(AP_Purchase_Order instance);
-        partial void UpdateAP_Purchase_Order(AP_Purchase_Order instance);
-        partial void DeleteAP_Purchase_Order(AP_Purchase_Order instance);
-        partial void Insertaspnet_Membership(aspnet_Membership instance);
-        partial void Updateaspnet_Membership(aspnet_Membership instance);
-        partial void Deleteaspnet_Membership(aspnet_Membership instance);
-        partial void InsertApiCredential(ApiCredential instance);
-        partial void UpdateApiCredential(ApiCredential instance);
-        partial void DeleteApiCredential(ApiCredential instance);
-        partial void Insertaspnet_Role(aspnet_Role instance);
-        partial void Updateaspnet_Role(aspnet_Role instance);
-        partial void Deleteaspnet_Role(aspnet_Role instance);
-        partial void InsertAsset_Category(Asset_Category instance);
-        partial void UpdateAsset_Category(Asset_Category instance);
-        partial void DeleteAsset_Category(Asset_Category instance);
-        partial void InsertStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
-        partial void UpdateStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
-        partial void DeleteStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
-        partial void InsertStudent_Time_Table(Student_Time_Table instance);
-        partial void UpdateStudent_Time_Table(Student_Time_Table instance);
-        partial void DeleteStudent_Time_Table(Student_Time_Table instance);
-        partial void InsertStudent_Attendance(Student_Attendance instance);
-        partial void UpdateStudent_Attendance(Student_Attendance instance);
-        partial void DeleteStudent_Attendance(Student_Attendance instance);
-        partial void InsertHR_Swap_Record(HR_Swap_Record instance);
-        partial void UpdateHR_Swap_Record(HR_Swap_Record instance);
-        partial void DeleteHR_Swap_Record(HR_Swap_Record instance);
-        partial void InsertTempReg_patient(TempReg_patient instance);
-        partial void UpdateTempReg_patient(TempReg_patient instance);
-        partial void DeleteTempReg_patient(TempReg_patient instance);
-        partial void InsertOut_Patient(Out_Patient instance);
-        partial void UpdateOut_Patient(Out_Patient instance);
-        partial void DeleteOut_Patient(Out_Patient instance);
-        partial void InsertPanel(Panel instance);
-        partial void UpdatePanel(Panel instance);
-        partial void DeletePanel(Panel instance);
-        partial void InsertAsset_SubCategory(Asset_SubCategory instance);
-        partial void UpdateAsset_SubCategory(Asset_SubCategory instance);
-        partial void DeleteAsset_SubCategory(Asset_SubCategory instance);
-        partial void InsertLocation(Location instance);
-        partial void UpdateLocation(Location instance);
-        partial void DeleteLocation(Location instance);
-        partial void InsertStudent(Student instance);
-        partial void UpdateStudent(Student instance);
-        partial void DeleteStudent(Student instance);
-        partial void InsertStudent_Receipt_Detail(Student_Receipt_Detail instance);
-        partial void UpdateStudent_Receipt_Detail(Student_Receipt_Detail instance);
-        partial void DeleteStudent_Receipt_Detail(Student_Receipt_Detail instance);
-        partial void InsertStudent_Fee_Detail(Student_Fee_Detail instance);
-        partial void UpdateStudent_Fee_Detail(Student_Fee_Detail instance);
-        partial void DeleteStudent_Fee_Detail(Student_Fee_Detail instance);
-        partial void InsertGL_Account(GL_Account instance);
-        partial void UpdateGL_Account(GL_Account instance);
-        partial void DeleteGL_Account(GL_Account instance);
-        partial void InsertGL_Voucher(GL_Voucher instance);
-        partial void UpdateGL_Voucher(GL_Voucher instance);
-        partial void DeleteGL_Voucher(GL_Voucher instance);
-        partial void InsertTest_Defination_Detail_Rate(Test_Defination_Detail_Rate instance);
-        partial void UpdateTest_Defination_Detail_Rate(Test_Defination_Detail_Rate instance);
-        partial void DeleteTest_Defination_Detail_Rate(Test_Defination_Detail_Rate instance);
-        partial void InsertDoctor_Agreement(Doctor_Agreement instance);
-        partial void UpdateDoctor_Agreement(Doctor_Agreement instance);
-        partial void DeleteDoctor_Agreement(Doctor_Agreement instance);
-        partial void InsertDoctor_agreement_detail(Doctor_agreement_detail instance);
-        partial void UpdateDoctor_agreement_detail(Doctor_agreement_detail instance);
-        partial void DeleteDoctor_agreement_detail(Doctor_agreement_detail instance);
-        partial void InsertReg_Student(Reg_Student instance);
-        partial void UpdateReg_Student(Reg_Student instance);
-        partial void DeleteReg_Student(Reg_Student instance);
-        partial void InsertStudent_Account_Category(Student_Account_Category instance);
-        partial void UpdateStudent_Account_Category(Student_Account_Category instance);
-        partial void DeleteStudent_Account_Category(Student_Account_Category instance);
-        partial void InsertStudent_Fee(Student_Fee instance);
-        partial void UpdateStudent_Fee(Student_Fee instance);
-        partial void DeleteStudent_Fee(Student_Fee instance);
-        partial void InsertChallan_Amount(Challan_Amount instance);
-        partial void UpdateChallan_Amount(Challan_Amount instance);
-        partial void DeleteChallan_Amount(Challan_Amount instance);
-        partial void InsertStudent_Receipt(Student_Receipt instance);
-        partial void UpdateStudent_Receipt(Student_Receipt instance);
-        partial void DeleteStudent_Receipt(Student_Receipt instance);
-        partial void InsertPharmacy_SaleReturn(Pharmacy_SaleReturn instance);
-        partial void UpdatePharmacy_SaleReturn(Pharmacy_SaleReturn instance);
-        partial void DeletePharmacy_SaleReturn(Pharmacy_SaleReturn instance);
-        partial void InsertReg_patient(Reg_patient instance);
-        partial void UpdateReg_patient(Reg_patient instance);
-        partial void DeleteReg_patient(Reg_patient instance);
-        partial void InsertAsset_Definition(Asset_Definition instance);
-        partial void UpdateAsset_Definition(Asset_Definition instance);
-        partial void DeleteAsset_Definition(Asset_Definition instance);
-        partial void InsertDepereciation_Policy(Depereciation_Policy instance);
-        partial void UpdateDepereciation_Policy(Depereciation_Policy instance);
-        partial void DeleteDepereciation_Policy(Depereciation_Policy instance);
-        partial void InsertAsset_Depereciation(Asset_Depereciation instance);
-        partial void UpdateAsset_Depereciation(Asset_Depereciation instance);
-        partial void DeleteAsset_Depereciation(Asset_Depereciation instance);
-        partial void InsertAsset_Retirement(Asset_Retirement instance);
-        partial void UpdateAsset_Retirement(Asset_Retirement instance);
-        partial void DeleteAsset_Retirement(Asset_Retirement instance);
-        partial void InsertAsset_Expense_detail(Asset_Expense_detail instance);
-        partial void UpdateAsset_Expense_detail(Asset_Expense_detail instance);
-        partial void DeleteAsset_Expense_detail(Asset_Expense_detail instance);
-        partial void InsertAsset_Retirement_detail(Asset_Retirement_detail instance);
-        partial void UpdateAsset_Retirement_detail(Asset_Retirement_detail instance);
-        partial void DeleteAsset_Retirement_detail(Asset_Retirement_detail instance);
-        partial void InsertAsset_Depereciation_Detail(Asset_Depereciation_Detail instance);
-        partial void UpdateAsset_Depereciation_Detail(Asset_Depereciation_Detail instance);
-        partial void DeleteAsset_Depereciation_Detail(Asset_Depereciation_Detail instance);
-        partial void InsertAsset_Expense(Asset_Expense instance);
-        partial void UpdateAsset_Expense(Asset_Expense instance);
-        partial void DeleteAsset_Expense(Asset_Expense instance);
-        partial void InsertSurve_Form(Surve_Form instance);
-        partial void UpdateSurve_Form(Surve_Form instance);
-        partial void DeleteSurve_Form(Surve_Form instance);
-        partial void InsertPayment_Invoice_Detail(Payment_Invoice_Detail instance);
-        partial void UpdatePayment_Invoice_Detail(Payment_Invoice_Detail instance);
-        partial void DeletePayment_Invoice_Detail(Payment_Invoice_Detail instance);
-        partial void InsertAdvance_Payment(Advance_Payment instance);
-        partial void UpdateAdvance_Payment(Advance_Payment instance);
-        partial void DeleteAdvance_Payment(Advance_Payment instance);
-        partial void InsertAdvance_Payment_Purchase_Invoice(Advance_Payment_Purchase_Invoice instance);
-        partial void UpdateAdvance_Payment_Purchase_Invoice(Advance_Payment_Purchase_Invoice instance);
-        partial void DeleteAdvance_Payment_Purchase_Invoice(Advance_Payment_Purchase_Invoice instance);
-        partial void InsertManual_Invoice_Detail(Manual_Invoice_Detail instance);
-        partial void UpdateManual_Invoice_Detail(Manual_Invoice_Detail instance);
-        partial void DeleteManual_Invoice_Detail(Manual_Invoice_Detail instance);
-        partial void InsertManual_Invoice(Manual_Invoice instance);
-        partial void UpdateManual_Invoice(Manual_Invoice instance);
-        partial void DeleteManual_Invoice(Manual_Invoice instance);
-        partial void InsertPurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
-        partial void UpdatePurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
-        partial void DeletePurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
-        partial void InsertPurchase_Invoice_Master(Purchase_Invoice_Master instance);
-        partial void UpdatePurchase_Invoice_Master(Purchase_Invoice_Master instance);
-        partial void DeletePurchase_Invoice_Master(Purchase_Invoice_Master instance);
-        partial void InsertPurchase_Return_Master(Purchase_Return_Master instance);
-        partial void UpdatePurchase_Return_Master(Purchase_Return_Master instance);
-        partial void DeletePurchase_Return_Master(Purchase_Return_Master instance);
-        partial void InsertWard_Definition(Ward_Definition instance);
-        partial void UpdateWard_Definition(Ward_Definition instance);
-        partial void DeleteWard_Definition(Ward_Definition instance);
-        partial void InsertAr_Billing_Detail(Ar_Billing_Detail instance);
-        partial void UpdateAr_Billing_Detail(Ar_Billing_Detail instance);
-        partial void DeleteAr_Billing_Detail(Ar_Billing_Detail instance);
-        partial void InsertReceipt(Receipt instance);
-        partial void UpdateReceipt(Receipt instance);
-        partial void DeleteReceipt(Receipt instance);
-        partial void InsertPurchase_Return_Detail(Purchase_Return_Detail instance);
-        partial void UpdatePurchase_Return_Detail(Purchase_Return_Detail instance);
-        partial void DeletePurchase_Return_Detail(Purchase_Return_Detail instance);
-        partial void InsertPharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
-        partial void UpdatePharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
-        partial void DeletePharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
-        partial void InsertStore_Issue_Detail(Store_Issue_Detail instance);
-        partial void UpdateStore_Issue_Detail(Store_Issue_Detail instance);
-        partial void DeleteStore_Issue_Detail(Store_Issue_Detail instance);
-        partial void InsertClinicalAccountCategory(ClinicalAccountCategory instance);
-        partial void UpdateClinicalAccountCategory(ClinicalAccountCategory instance);
-        partial void DeleteClinicalAccountCategory(ClinicalAccountCategory instance);
-        partial void InsertEmergency_Case(Emergency_Case instance);
-        partial void UpdateEmergency_Case(Emergency_Case instance);
-        partial void DeleteEmergency_Case(Emergency_Case instance);
-        partial void InsertOperation_Booking(Operation_Booking instance);
-        partial void UpdateOperation_Booking(Operation_Booking instance);
-        partial void DeleteOperation_Booking(Operation_Booking instance);
-        partial void InsertRefund(Refund instance);
-        partial void UpdateRefund(Refund instance);
-        partial void DeleteRefund(Refund instance);
-        partial void InsertRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
-        partial void UpdateRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
-        partial void DeleteRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
-        partial void InsertRefund_Detail_Service(Refund_Detail_Service instance);
-        partial void UpdateRefund_Detail_Service(Refund_Detail_Service instance);
-        partial void DeleteRefund_Detail_Service(Refund_Detail_Service instance);
-        partial void InsertAR_Advance(AR_Advance instance);
-        partial void UpdateAR_Advance(AR_Advance instance);
-        partial void DeleteAR_Advance(AR_Advance instance);
-        partial void InsertWard_Allocation(Ward_Allocation instance);
-        partial void UpdateWard_Allocation(Ward_Allocation instance);
-        partial void DeleteWard_Allocation(Ward_Allocation instance);
-        partial void InsertAP_RequestForQuotation(AP_RequestForQuotation instance);
-        partial void UpdateAP_RequestForQuotation(AP_RequestForQuotation instance);
-        partial void DeleteAP_RequestForQuotation(AP_RequestForQuotation instance);
-        partial void InsertCS_Vendor_Master(CS_Vendor_Master instance);
-        partial void UpdateCS_Vendor_Master(CS_Vendor_Master instance);
-        partial void DeleteCS_Vendor_Master(CS_Vendor_Master instance);
-        partial void Insertaspnet_User(aspnet_User instance);
-        partial void Updateaspnet_User(aspnet_User instance);
-        partial void Deleteaspnet_User(aspnet_User instance);
-        partial void InsertSymptomsCategorization(SymptomsCategorization instance);
-        partial void UpdateSymptomsCategorization(SymptomsCategorization instance);
-        partial void DeleteSymptomsCategorization(SymptomsCategorization instance);
-        partial void InsertSymptomsCategorization1(SymptomsCategorization1 instance);
-        partial void UpdateSymptomsCategorization1(SymptomsCategorization1 instance);
-        partial void DeleteSymptomsCategorization1(SymptomsCategorization1 instance);
-        partial void InsertPolicy(Policy instance);
-        partial void UpdatePolicy(Policy instance);
-        partial void DeletePolicy(Policy instance);
-        partial void InsertComplaintsDefinition(ComplaintsDefinition instance);
-        partial void UpdateComplaintsDefinition(ComplaintsDefinition instance);
-        partial void DeleteComplaintsDefinition(ComplaintsDefinition instance);
-        partial void InsertDiagnosisDefinition(DiagnosisDefinition instance);
-        partial void UpdateDiagnosisDefinition(DiagnosisDefinition instance);
-        partial void DeleteDiagnosisDefinition(DiagnosisDefinition instance);
-        partial void InsertOutPatientComplaint(OutPatientComplaint instance);
-        partial void UpdateOutPatientComplaint(OutPatientComplaint instance);
-        partial void DeleteOutPatientComplaint(OutPatientComplaint instance);
-        partial void InsertOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
-        partial void UpdateOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
-        partial void DeleteOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
-        partial void InsertOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
-        partial void UpdateOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
-        partial void DeleteOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
-        partial void InsertPolicy_Detail(Policy_Detail instance);
-        partial void UpdatePolicy_Detail(Policy_Detail instance);
-        partial void DeletePolicy_Detail(Policy_Detail instance);
-        partial void InsertPolicy_Department_Assignment(Policy_Department_Assignment instance);
-        partial void UpdatePolicy_Department_Assignment(Policy_Department_Assignment instance);
-        partial void DeletePolicy_Department_Assignment(Policy_Department_Assignment instance);
-        partial void Insertcompany_opd_policy(company_opd_policy instance);
-        partial void Updatecompany_opd_policy(company_opd_policy instance);
-        partial void Deletecompany_opd_policy(company_opd_policy instance);
-        partial void Insertsys_Company(sys_Company instance);
-        partial void Updatesys_Company(sys_Company instance);
-        partial void Deletesys_Company(sys_Company instance);
-        partial void InsertHR_Employee(HR_Employee instance);
-        partial void UpdateHR_Employee(HR_Employee instance);
-        partial void DeleteHR_Employee(HR_Employee instance);
-        partial void InsertEmergency_Patient(Emergency_Patient instance);
-        partial void UpdateEmergency_Patient(Emergency_Patient instance);
-        partial void DeleteEmergency_Patient(Emergency_Patient instance);
-        partial void InsertDoctor_Packages_Detail(Doctor_Packages_Detail instance);
-        partial void UpdateDoctor_Packages_Detail(Doctor_Packages_Detail instance);
-        partial void DeleteDoctor_Packages_Detail(Doctor_Packages_Detail instance);
-        partial void InsertDoctor_Packages_Detail_Rate(Doctor_Packages_Detail_Rate instance);
-        partial void UpdateDoctor_Packages_Detail_Rate(Doctor_Packages_Detail_Rate instance);
-        partial void DeleteDoctor_Packages_Detail_Rate(Doctor_Packages_Detail_Rate instance);
-        partial void InsertDepartment_Packages_Detail(Department_Packages_Detail instance);
-        partial void UpdateDepartment_Packages_Detail(Department_Packages_Detail instance);
-        partial void DeleteDepartment_Packages_Detail(Department_Packages_Detail instance);
-        partial void InsertDepartment_Packages_Detail_Rate(Department_Packages_Detail_Rate instance);
-        partial void UpdateDepartment_Packages_Detail_Rate(Department_Packages_Detail_Rate instance);
-        partial void DeleteDepartment_Packages_Detail_Rate(Department_Packages_Detail_Rate instance);
-        partial void InsertPanel_Packages_Detail(Panel_Packages_Detail instance);
-        partial void UpdatePanel_Packages_Detail(Panel_Packages_Detail instance);
-        partial void DeletePanel_Packages_Detail(Panel_Packages_Detail instance);
-        partial void InsertPanel_Packages_Detail_Rate(Panel_Packages_Detail_Rate instance);
-        partial void UpdatePanel_Packages_Detail_Rate(Panel_Packages_Detail_Rate instance);
-        partial void DeletePanel_Packages_Detail_Rate(Panel_Packages_Detail_Rate instance);
-        partial void InsertDepartmentPackage(DepartmentPackage instance);
-        partial void UpdateDepartmentPackage(DepartmentPackage instance);
-        partial void DeleteDepartmentPackage(DepartmentPackage instance);
-        partial void InsertDoctorPackage(DoctorPackage instance);
-        partial void UpdateDoctorPackage(DoctorPackage instance);
-        partial void DeleteDoctorPackage(DoctorPackage instance);
-        partial void InsertPanelPackage(PanelPackage instance);
-        partial void UpdatePanelPackage(PanelPackage instance);
-        partial void DeletePanelPackage(PanelPackage instance);
-        partial void InsertDoctor_Payabled(Doctor_Payabled instance);
-        partial void UpdateDoctor_Payabled(Doctor_Payabled instance);
-        partial void DeleteDoctor_Payabled(Doctor_Payabled instance);
-        partial void InsertIn_Patient(In_Patient instance);
-        partial void UpdateIn_Patient(In_Patient instance);
-        partial void DeleteIn_Patient(In_Patient instance);
-        partial void InsertPatient(Patient instance);
-        partial void UpdatePatient(Patient instance);
-        partial void DeletePatient(Patient instance);
-        partial void InsertINV_Item(INV_Item instance);
-        partial void UpdateINV_Item(INV_Item instance);
-        partial void DeleteINV_Item(INV_Item instance);
-        partial void InsertINV_Item_RateBatchWise(INV_Item_RateBatchWise instance);
-        partial void UpdateINV_Item_RateBatchWise(INV_Item_RateBatchWise instance);
-        partial void DeleteINV_Item_RateBatchWise(INV_Item_RateBatchWise instance);
-        partial void InsertINV_Item_PatientWise(INV_Item_PatientWise instance);
-        partial void UpdateINV_Item_PatientWise(INV_Item_PatientWise instance);
-        partial void DeleteINV_Item_PatientWise(INV_Item_PatientWise instance);
-        partial void InsertAr_Billing(Ar_Billing instance);
-        partial void UpdateAr_Billing(Ar_Billing instance);
-        partial void DeleteAr_Billing(Ar_Billing instance);
-        partial void InsertINV_ITEM_COMPANy(INV_ITEM_COMPANy instance);
-        partial void UpdateINV_ITEM_COMPANy(INV_ITEM_COMPANy instance);
-        partial void DeleteINV_ITEM_COMPANy(INV_ITEM_COMPANy instance);
-        partial void InsertSample_Detail(Sample_Detail instance);
-        partial void UpdateSample_Detail(Sample_Detail instance);
-        partial void DeleteSample_Detail(Sample_Detail instance);
-        partial void InsertSample_Master(Sample_Master instance);
-        partial void UpdateSample_Master(Sample_Master instance);
-        partial void DeleteSample_Master(Sample_Master instance);
-        partial void InsertGL_Voucher_Account(GL_Voucher_Account instance);
-        partial void UpdateGL_Voucher_Account(GL_Voucher_Account instance);
-        partial void DeleteGL_Voucher_Account(GL_Voucher_Account instance);
-        partial void InsertSubject_Definition(Subject_Definition instance);
-        partial void UpdateSubject_Definition(Subject_Definition instance);
-        partial void DeleteSubject_Definition(Subject_Definition instance);
-        partial void InsertSubject_Definition_List(Subject_Definition_List instance);
-        partial void UpdateSubject_Definition_List(Subject_Definition_List instance);
-        partial void DeleteSubject_Definition_List(Subject_Definition_List instance);
-        #endregion
-        public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
-        {
-            OnCreated();
-        }
-        public DataBaseDataContext(string connection) :
-                base(connection, mappingSource)
-        {
-            OnCreated();
-        }
+		#region Extensibility Method Definitions
+		partial void OnCreated();
+		partial void InsertAr_Customer(Ar_Customer instance);
+		partial void UpdateAr_Customer(Ar_Customer instance);
+		partial void DeleteAr_Customer(Ar_Customer instance);
+		partial void InsertAR_Invoice(AR_Invoice instance);
+		partial void UpdateAR_Invoice(AR_Invoice instance);
+		partial void DeleteAR_Invoice(AR_Invoice instance);
+		partial void InsertAR_Invoice_Item(AR_Invoice_Item instance);
+		partial void UpdateAR_Invoice_Item(AR_Invoice_Item instance);
+		partial void DeleteAR_Invoice_Item(AR_Invoice_Item instance);
+		partial void InsertAR_Quotation_Item(AR_Quotation_Item instance);
+		partial void UpdateAR_Quotation_Item(AR_Quotation_Item instance);
+		partial void DeleteAR_Quotation_Item(AR_Quotation_Item instance);
+		partial void InsertAR_Quotation(AR_Quotation instance);
+		partial void UpdateAR_Quotation(AR_Quotation instance);
+		partial void DeleteAR_Quotation(AR_Quotation instance);
+		partial void InsertAr_Sale(Ar_Sale instance);
+		partial void UpdateAr_Sale(Ar_Sale instance);
+		partial void DeleteAr_Sale(Ar_Sale instance);
+		partial void InsertAR_Sales_Item(AR_Sales_Item instance);
+		partial void UpdateAR_Sales_Item(AR_Sales_Item instance);
+		partial void DeleteAR_Sales_Item(AR_Sales_Item instance);
+		partial void Insertaspnet_Application(aspnet_Application instance);
+		partial void Updateaspnet_Application(aspnet_Application instance);
+		partial void Deleteaspnet_Application(aspnet_Application instance);
+		partial void Insertaspnet_Path(aspnet_Path instance);
+		partial void Updateaspnet_Path(aspnet_Path instance);
+		partial void Deleteaspnet_Path(aspnet_Path instance);
+		partial void Insertaspnet_PersonalizationAllUser(aspnet_PersonalizationAllUser instance);
+		partial void Updateaspnet_PersonalizationAllUser(aspnet_PersonalizationAllUser instance);
+		partial void Deleteaspnet_PersonalizationAllUser(aspnet_PersonalizationAllUser instance);
+		partial void Insertaspnet_PersonalizationPerUser(aspnet_PersonalizationPerUser instance);
+		partial void Updateaspnet_PersonalizationPerUser(aspnet_PersonalizationPerUser instance);
+		partial void Deleteaspnet_PersonalizationPerUser(aspnet_PersonalizationPerUser instance);
+		partial void Insertaspnet_Profile(aspnet_Profile instance);
+		partial void Updateaspnet_Profile(aspnet_Profile instance);
+		partial void Deleteaspnet_Profile(aspnet_Profile instance);
+		partial void Insertaspnet_RolesInMenus(aspnet_RolesInMenus instance);
+		partial void Updateaspnet_RolesInMenus(aspnet_RolesInMenus instance);
+		partial void Deleteaspnet_RolesInMenus(aspnet_RolesInMenus instance);
+		partial void Insertaspnet_SchemaVersion(aspnet_SchemaVersion instance);
+		partial void Updateaspnet_SchemaVersion(aspnet_SchemaVersion instance);
+		partial void Deleteaspnet_SchemaVersion(aspnet_SchemaVersion instance);
+		partial void Insertaspnet_UsersInRole(aspnet_UsersInRole instance);
+		partial void Updateaspnet_UsersInRole(aspnet_UsersInRole instance);
+		partial void Deleteaspnet_UsersInRole(aspnet_UsersInRole instance);
+		partial void Insertaspnet_WebEvent_Event(aspnet_WebEvent_Event instance);
+		partial void Updateaspnet_WebEvent_Event(aspnet_WebEvent_Event instance);
+		partial void Deleteaspnet_WebEvent_Event(aspnet_WebEvent_Event instance);
+		partial void InsertAssign_Hostel_Room(Assign_Hostel_Room instance);
+		partial void UpdateAssign_Hostel_Room(Assign_Hostel_Room instance);
+		partial void DeleteAssign_Hostel_Room(Assign_Hostel_Room instance);
+		partial void InsertBus_Stop(Bus_Stop instance);
+		partial void UpdateBus_Stop(Bus_Stop instance);
+		partial void DeleteBus_Stop(Bus_Stop instance);
+		partial void InsertChild_Birth(Child_Birth instance);
+		partial void UpdateChild_Birth(Child_Birth instance);
+		partial void DeleteChild_Birth(Child_Birth instance);
+		partial void InsertClient_Information(Client_Information instance);
+		partial void UpdateClient_Information(Client_Information instance);
+		partial void DeleteClient_Information(Client_Information instance);
+		partial void InsertConfiguration(Configuration instance);
+		partial void UpdateConfiguration(Configuration instance);
+		partial void DeleteConfiguration(Configuration instance);
+		partial void InsertConsultation_Booking(Consultation_Booking instance);
+		partial void UpdateConsultation_Booking(Consultation_Booking instance);
+		partial void DeleteConsultation_Booking(Consultation_Booking instance);
+		partial void InsertConsultation_Prescribed_Medicine_Detail(Consultation_Prescribed_Medicine_Detail instance);
+		partial void UpdateConsultation_Prescribed_Medicine_Detail(Consultation_Prescribed_Medicine_Detail instance);
+		partial void DeleteConsultation_Prescribed_Medicine_Detail(Consultation_Prescribed_Medicine_Detail instance);
+		partial void InsertConsultation_Test_Detail(Consultation_Test_Detail instance);
+		partial void UpdateConsultation_Test_Detail(Consultation_Test_Detail instance);
+		partial void DeleteConsultation_Test_Detail(Consultation_Test_Detail instance);
+		partial void InsertDialysis_Case(Dialysis_Case instance);
+		partial void UpdateDialysis_Case(Dialysis_Case instance);
+		partial void DeleteDialysis_Case(Dialysis_Case instance);
+		partial void InsertDialysis_Visit(Dialysis_Visit instance);
+		partial void UpdateDialysis_Visit(Dialysis_Visit instance);
+		partial void DeleteDialysis_Visit(Dialysis_Visit instance);
+		partial void InsertDialysis_Visit_Srvc_Dtl(Dialysis_Visit_Srvc_Dtl instance);
+		partial void UpdateDialysis_Visit_Srvc_Dtl(Dialysis_Visit_Srvc_Dtl instance);
+		partial void DeleteDialysis_Visit_Srvc_Dtl(Dialysis_Visit_Srvc_Dtl instance);
+		partial void InsertEmergency_Case_Srvc_Dtl(Emergency_Case_Srvc_Dtl instance);
+		partial void UpdateEmergency_Case_Srvc_Dtl(Emergency_Case_Srvc_Dtl instance);
+		partial void DeleteEmergency_Case_Srvc_Dtl(Emergency_Case_Srvc_Dtl instance);
+		partial void InsertFiscal_Calender(Fiscal_Calender instance);
+		partial void UpdateFiscal_Calender(Fiscal_Calender instance);
+		partial void DeleteFiscal_Calender(Fiscal_Calender instance);
+		partial void InsertGL_SetOfBook(GL_SetOfBook instance);
+		partial void UpdateGL_SetOfBook(GL_SetOfBook instance);
+		partial void DeleteGL_SetOfBook(GL_SetOfBook instance);
+		partial void InsertGL_Voucher_Type(GL_Voucher_Type instance);
+		partial void UpdateGL_Voucher_Type(GL_Voucher_Type instance);
+		partial void DeleteGL_Voucher_Type(GL_Voucher_Type instance);
+		partial void InsertHostel(Hostel instance);
+		partial void UpdateHostel(Hostel instance);
+		partial void DeleteHostel(Hostel instance);
+		partial void InsertHouse_Keeping(House_Keeping instance);
+		partial void UpdateHouse_Keeping(House_Keeping instance);
+		partial void DeleteHouse_Keeping(House_Keeping instance);
+		partial void InsertHR_Shift(HR_Shift instance);
+		partial void UpdateHR_Shift(HR_Shift instance);
+		partial void DeleteHR_Shift(HR_Shift instance);
+		partial void InsertIn_Patient_Srvc_Dtl(In_Patient_Srvc_Dtl instance);
+		partial void UpdateIn_Patient_Srvc_Dtl(In_Patient_Srvc_Dtl instance);
+		partial void DeleteIn_Patient_Srvc_Dtl(In_Patient_Srvc_Dtl instance);
+		partial void InsertINV_Item_Account_Category(INV_Item_Account_Category instance);
+		partial void UpdateINV_Item_Account_Category(INV_Item_Account_Category instance);
+		partial void DeleteINV_Item_Account_Category(INV_Item_Account_Category instance);
+		partial void InsertIssue_To_Laundary(Issue_To_Laundary instance);
+		partial void UpdateIssue_To_Laundary(Issue_To_Laundary instance);
+		partial void DeleteIssue_To_Laundary(Issue_To_Laundary instance);
+		partial void InsertLaundary_Issuance(Laundary_Issuance instance);
+		partial void UpdateLaundary_Issuance(Laundary_Issuance instance);
+		partial void DeleteLaundary_Issuance(Laundary_Issuance instance);
+		partial void InsertLaundary_Received(Laundary_Received instance);
+		partial void UpdateLaundary_Received(Laundary_Received instance);
+		partial void DeleteLaundary_Received(Laundary_Received instance);
+		partial void InsertMenus(Menus instance);
+		partial void UpdateMenus(Menus instance);
+		partial void DeleteMenus(Menus instance);
+		partial void InsertOperation_Booking_Srvc_Dtl(Operation_Booking_Srvc_Dtl instance);
+		partial void UpdateOperation_Booking_Srvc_Dtl(Operation_Booking_Srvc_Dtl instance);
+		partial void DeleteOperation_Booking_Srvc_Dtl(Operation_Booking_Srvc_Dtl instance);
+		partial void InsertPatient_Billing_Dtl(Patient_Billing_Dtl instance);
+		partial void UpdatePatient_Billing_Dtl(Patient_Billing_Dtl instance);
+		partial void DeletePatient_Billing_Dtl(Patient_Billing_Dtl instance);
+		partial void InsertReceived_From_Laundry(Received_From_Laundry instance);
+		partial void UpdateReceived_From_Laundry(Received_From_Laundry instance);
+		partial void DeleteReceived_From_Laundry(Received_From_Laundry instance);
+		partial void InsertRole_Page(Role_Page instance);
+		partial void UpdateRole_Page(Role_Page instance);
+		partial void DeleteRole_Page(Role_Page instance);
+		partial void InsertRoom_Allocatrion_History(Room_Allocatrion_History instance);
+		partial void UpdateRoom_Allocatrion_History(Room_Allocatrion_History instance);
+		partial void DeleteRoom_Allocatrion_History(Room_Allocatrion_History instance);
+		partial void InsertRoute_Driver(Route_Driver instance);
+		partial void UpdateRoute_Driver(Route_Driver instance);
+		partial void DeleteRoute_Driver(Route_Driver instance);
+		partial void InsertRoute(Route instance);
+		partial void UpdateRoute(Route instance);
+		partial void DeleteRoute(Route instance);
+		partial void Insertrpt_BalanceSheet(rpt_BalanceSheet instance);
+		partial void Updaterpt_BalanceSheet(rpt_BalanceSheet instance);
+		partial void Deleterpt_BalanceSheet(rpt_BalanceSheet instance);
+		partial void Insertrpt_DailyBook(rpt_DailyBook instance);
+		partial void Updaterpt_DailyBook(rpt_DailyBook instance);
+		partial void Deleterpt_DailyBook(rpt_DailyBook instance);
+		partial void InsertService_Definition(Service_Definition instance);
+		partial void UpdateService_Definition(Service_Definition instance);
+		partial void DeleteService_Definition(Service_Definition instance);
+		partial void InsertShift_Assign(Shift_Assign instance);
+		partial void UpdateShift_Assign(Shift_Assign instance);
+		partial void DeleteShift_Assign(Shift_Assign instance);
+		partial void InsertTerms_and_condition(Terms_and_condition instance);
+		partial void UpdateTerms_and_condition(Terms_and_condition instance);
+		partial void DeleteTerms_and_condition(Terms_and_condition instance);
+		partial void InsertTest_Value(Test_Value instance);
+		partial void UpdateTest_Value(Test_Value instance);
+		partial void DeleteTest_Value(Test_Value instance);
+		partial void InsertToken(Token instance);
+		partial void UpdateToken(Token instance);
+		partial void DeleteToken(Token instance);
+		partial void InsertValueSet(ValueSet instance);
+		partial void UpdateValueSet(ValueSet instance);
+		partial void DeleteValueSet(ValueSet instance);
+		partial void InsertVehicle_Route(Vehicle_Route instance);
+		partial void UpdateVehicle_Route(Vehicle_Route instance);
+		partial void DeleteVehicle_Route(Vehicle_Route instance);
+		partial void InsertVehicle(Vehicle instance);
+		partial void UpdateVehicle(Vehicle instance);
+		partial void DeleteVehicle(Vehicle instance);
+		partial void InsertWard_Allocatrion_History(Ward_Allocatrion_History instance);
+		partial void UpdateWard_Allocatrion_History(Ward_Allocatrion_History instance);
+		partial void DeleteWard_Allocatrion_History(Ward_Allocatrion_History instance);
+		partial void InsertPatient_Appointment(Patient_Appointment instance);
+		partial void UpdatePatient_Appointment(Patient_Appointment instance);
+		partial void DeletePatient_Appointment(Patient_Appointment instance);
+		partial void InsertTimeShedule(TimeShedule instance);
+		partial void UpdateTimeShedule(TimeShedule instance);
+		partial void DeleteTimeShedule(TimeShedule instance);
+		partial void InsertLaboratory_Test(Laboratory_Test instance);
+		partial void UpdateLaboratory_Test(Laboratory_Test instance);
+		partial void DeleteLaboratory_Test(Laboratory_Test instance);
+		partial void InsertEyeDetail(EyeDetail instance);
+		partial void UpdateEyeDetail(EyeDetail instance);
+		partial void DeleteEyeDetail(EyeDetail instance);
+		partial void InsertEyeMainTypes_Definition(EyeMainTypes_Definition instance);
+		partial void UpdateEyeMainTypes_Definition(EyeMainTypes_Definition instance);
+		partial void DeleteEyeMainTypes_Definition(EyeMainTypes_Definition instance);
+		partial void InsertEyeSubTypes_Definition(EyeSubTypes_Definition instance);
+		partial void UpdateEyeSubTypes_Definition(EyeSubTypes_Definition instance);
+		partial void DeleteEyeSubTypes_Definition(EyeSubTypes_Definition instance);
+		partial void InsertAr_Billing_PackageDetail(Ar_Billing_PackageDetail instance);
+		partial void UpdateAr_Billing_PackageDetail(Ar_Billing_PackageDetail instance);
+		partial void DeleteAr_Billing_PackageDetail(Ar_Billing_PackageDetail instance);
+		partial void InsertOrtho(Ortho instance);
+		partial void UpdateOrtho(Ortho instance);
+		partial void DeleteOrtho(Ortho instance);
+		partial void InsertINV_Item_Account_Category_Detail(INV_Item_Account_Category_Detail instance);
+		partial void UpdateINV_Item_Account_Category_Detail(INV_Item_Account_Category_Detail instance);
+		partial void DeleteINV_Item_Account_Category_Detail(INV_Item_Account_Category_Detail instance);
+		partial void InsertINV_Item_Account_Category_Detail1(INV_Item_Account_Category_Detail1 instance);
+		partial void UpdateINV_Item_Account_Category_Detail1(INV_Item_Account_Category_Detail1 instance);
+		partial void DeleteINV_Item_Account_Category_Detail1(INV_Item_Account_Category_Detail1 instance);
+		partial void InsertPrevious_Dpt(Previous_Dpt instance);
+		partial void UpdatePrevious_Dpt(Previous_Dpt instance);
+		partial void DeletePrevious_Dpt(Previous_Dpt instance);
+		partial void InsertPackage(Package instance);
+		partial void UpdatePackage(Package instance);
+		partial void DeletePackage(Package instance);
+		partial void InsertRoom_Allocation(Room_Allocation instance);
+		partial void UpdateRoom_Allocation(Room_Allocation instance);
+		partial void DeleteRoom_Allocation(Room_Allocation instance);
+		partial void InsertDischarge(Discharge instance);
+		partial void UpdateDischarge(Discharge instance);
+		partial void DeleteDischarge(Discharge instance);
+		partial void InsertEN_Colono(EN_Colono instance);
+		partial void UpdateEN_Colono(EN_Colono instance);
+		partial void DeleteEN_Colono(EN_Colono instance);
+		partial void InsertPT_Endoscopy(PT_Endoscopy instance);
+		partial void UpdatePT_Endoscopy(PT_Endoscopy instance);
+		partial void DeletePT_Endoscopy(PT_Endoscopy instance);
+		partial void InsertEN_Gastro(EN_Gastro instance);
+		partial void UpdateEN_Gastro(EN_Gastro instance);
+		partial void DeleteEN_Gastro(EN_Gastro instance);
+		partial void InsertGL_Days_Process(GL_Days_Process instance);
+		partial void UpdateGL_Days_Process(GL_Days_Process instance);
+		partial void DeleteGL_Days_Process(GL_Days_Process instance);
+		partial void InsertInPatient_Mon_InTake(InPatient_Mon_InTake instance);
+		partial void UpdateInPatient_Mon_InTake(InPatient_Mon_InTake instance);
+		partial void DeleteInPatient_Mon_InTake(InPatient_Mon_InTake instance);
+		partial void Insertsys_Parm(sys_Parm instance);
+		partial void Updatesys_Parm(sys_Parm instance);
+		partial void Deletesys_Parm(sys_Parm instance);
+		partial void InsertDischarge_Detail(Discharge_Detail instance);
+		partial void UpdateDischarge_Detail(Discharge_Detail instance);
+		partial void DeleteDischarge_Detail(Discharge_Detail instance);
+		partial void InsertRecieving_Invoice(Recieving_Invoice instance);
+		partial void UpdateRecieving_Invoice(Recieving_Invoice instance);
+		partial void DeleteRecieving_Invoice(Recieving_Invoice instance);
+		partial void InsertInPatient_Mon_Progress_Note(InPatient_Mon_Progress_Note instance);
+		partial void UpdateInPatient_Mon_Progress_Note(InPatient_Mon_Progress_Note instance);
+		partial void DeleteInPatient_Mon_Progress_Note(InPatient_Mon_Progress_Note instance);
+		partial void InsertRecieving_Invoice_Detail(Recieving_Invoice_Detail instance);
+		partial void UpdateRecieving_Invoice_Detail(Recieving_Invoice_Detail instance);
+		partial void DeleteRecieving_Invoice_Detail(Recieving_Invoice_Detail instance);
+		partial void InsertAP_Purchase_Item(AP_Purchase_Item instance);
+		partial void UpdateAP_Purchase_Item(AP_Purchase_Item instance);
+		partial void DeleteAP_Purchase_Item(AP_Purchase_Item instance);
+		partial void InsertAP_Purchase(AP_Purchase instance);
+		partial void UpdateAP_Purchase(AP_Purchase instance);
+		partial void DeleteAP_Purchase(AP_Purchase instance);
+		partial void InsertReceipt_Item(Receipt_Item instance);
+		partial void UpdateReceipt_Item(Receipt_Item instance);
+		partial void DeleteReceipt_Item(Receipt_Item instance);
+		partial void InsertItem_Org(Item_Org instance);
+		partial void UpdateItem_Org(Item_Org instance);
+		partial void DeleteItem_Org(Item_Org instance);
+		partial void InsertAR_Billing_Detail_Doctor_Share(AR_Billing_Detail_Doctor_Share instance);
+		partial void UpdateAR_Billing_Detail_Doctor_Share(AR_Billing_Detail_Doctor_Share instance);
+		partial void DeleteAR_Billing_Detail_Doctor_Share(AR_Billing_Detail_Doctor_Share instance);
+		partial void InsertLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
+		partial void UpdateLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
+		partial void DeleteLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
+		partial void InsertTest_Image(Test_Image instance);
+		partial void UpdateTest_Image(Test_Image instance);
+		partial void DeleteTest_Image(Test_Image instance);
+		partial void InsertOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
+		partial void UpdateOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
+		partial void DeleteOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
+		partial void InsertOut_Patient_Slit_Lamp_Exam(Out_Patient_Slit_Lamp_Exam instance);
+		partial void UpdateOut_Patient_Slit_Lamp_Exam(Out_Patient_Slit_Lamp_Exam instance);
+		partial void DeleteOut_Patient_Slit_Lamp_Exam(Out_Patient_Slit_Lamp_Exam instance);
+		partial void InsertPackages_Detail(Packages_Detail instance);
+		partial void UpdatePackages_Detail(Packages_Detail instance);
+		partial void DeletePackages_Detail(Packages_Detail instance);
+		partial void InsertUltraSoundLevel(UltraSoundLevel instance);
+		partial void UpdateUltraSoundLevel(UltraSoundLevel instance);
+		partial void DeleteUltraSoundLevel(UltraSoundLevel instance);
+		partial void InsertResult_Organism(Result_Organism instance);
+		partial void UpdateResult_Organism(Result_Organism instance);
+		partial void DeleteResult_Organism(Result_Organism instance);
+		partial void InsertBlood_Donor(Blood_Donor instance);
+		partial void UpdateBlood_Donor(Blood_Donor instance);
+		partial void DeleteBlood_Donor(Blood_Donor instance);
+		partial void InsertBlood_Transfusion_CheckList(Blood_Transfusion_CheckList instance);
+		partial void UpdateBlood_Transfusion_CheckList(Blood_Transfusion_CheckList instance);
+		partial void DeleteBlood_Transfusion_CheckList(Blood_Transfusion_CheckList instance);
+		partial void InsertBlood_Division(Blood_Division instance);
+		partial void UpdateBlood_Division(Blood_Division instance);
+		partial void DeleteBlood_Division(Blood_Division instance);
+		partial void InsertSysmtopm(Sysmtopm instance);
+		partial void UpdateSysmtopm(Sysmtopm instance);
+		partial void DeleteSysmtopm(Sysmtopm instance);
+		partial void InsertLab_Resultrpt(Lab_Resultrpt instance);
+		partial void UpdateLab_Resultrpt(Lab_Resultrpt instance);
+		partial void DeleteLab_Resultrpt(Lab_Resultrpt instance);
+		partial void InsertInPatient_Instruction(InPatient_Instruction instance);
+		partial void UpdateInPatient_Instruction(InPatient_Instruction instance);
+		partial void DeleteInPatient_Instruction(InPatient_Instruction instance);
+		partial void InsertDonor(Donor instance);
+		partial void UpdateDonor(Donor instance);
+		partial void DeleteDonor(Donor instance);
+		partial void InsertPanel_Detail_Service(Panel_Detail_Service instance);
+		partial void UpdatePanel_Detail_Service(Panel_Detail_Service instance);
+		partial void DeletePanel_Detail_Service(Panel_Detail_Service instance);
+		partial void InsertBlood_Bank(Blood_Bank instance);
+		partial void UpdateBlood_Bank(Blood_Bank instance);
+		partial void DeleteBlood_Bank(Blood_Bank instance);
+		partial void InsertOT_Patient_Vital(OT_Patient_Vital instance);
+		partial void UpdateOT_Patient_Vital(OT_Patient_Vital instance);
+		partial void DeleteOT_Patient_Vital(OT_Patient_Vital instance);
+		partial void InsertReceivingNote(ReceivingNote instance);
+		partial void UpdateReceivingNote(ReceivingNote instance);
+		partial void DeleteReceivingNote(ReceivingNote instance);
+		partial void InsertBlood_Division_Type(Blood_Division_Type instance);
+		partial void UpdateBlood_Division_Type(Blood_Division_Type instance);
+		partial void DeleteBlood_Division_Type(Blood_Division_Type instance);
+		partial void InsertEmergency_Doctor_Note(Emergency_Doctor_Note instance);
+		partial void UpdateEmergency_Doctor_Note(Emergency_Doctor_Note instance);
+		partial void DeleteEmergency_Doctor_Note(Emergency_Doctor_Note instance);
+		partial void InsertAr_PaymentForm(Ar_PaymentForm instance);
+		partial void UpdateAr_PaymentForm(Ar_PaymentForm instance);
+		partial void DeleteAr_PaymentForm(Ar_PaymentForm instance);
+		partial void InsertAr_PaymentForm_Detail(Ar_PaymentForm_Detail instance);
+		partial void UpdateAr_PaymentForm_Detail(Ar_PaymentForm_Detail instance);
+		partial void DeleteAr_PaymentForm_Detail(Ar_PaymentForm_Detail instance);
+		partial void InsertLab_Test(Lab_Test instance);
+		partial void UpdateLab_Test(Lab_Test instance);
+		partial void DeleteLab_Test(Lab_Test instance);
+		partial void InsertInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
+		partial void UpdateInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
+		partial void DeleteInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
+		partial void InsertDiscount_Definition(Discount_Definition instance);
+		partial void UpdateDiscount_Definition(Discount_Definition instance);
+		partial void DeleteDiscount_Definition(Discount_Definition instance);
+		partial void InsertDiscount_Definition_Detail(Discount_Definition_Detail instance);
+		partial void UpdateDiscount_Definition_Detail(Discount_Definition_Detail instance);
+		partial void DeleteDiscount_Definition_Detail(Discount_Definition_Detail instance);
+		partial void InsertDiscount_Assigned_Patient_Detail(Discount_Assigned_Patient_Detail instance);
+		partial void UpdateDiscount_Assigned_Patient_Detail(Discount_Assigned_Patient_Detail instance);
+		partial void DeleteDiscount_Assigned_Patient_Detail(Discount_Assigned_Patient_Detail instance);
+		partial void InsertHistory_Data(History_Data instance);
+		partial void UpdateHistory_Data(History_Data instance);
+		partial void DeleteHistory_Data(History_Data instance);
+		partial void InsertInfusion_Order(Infusion_Order instance);
+		partial void UpdateInfusion_Order(Infusion_Order instance);
+		partial void DeleteInfusion_Order(Infusion_Order instance);
+		partial void InsertInPatient_Monitoring(InPatient_Monitoring instance);
+		partial void UpdateInPatient_Monitoring(InPatient_Monitoring instance);
+		partial void DeleteInPatient_Monitoring(InPatient_Monitoring instance);
+		partial void InsertInPatient_Doctor_Note(InPatient_Doctor_Note instance);
+		partial void UpdateInPatient_Doctor_Note(InPatient_Doctor_Note instance);
+		partial void DeleteInPatient_Doctor_Note(InPatient_Doctor_Note instance);
+		partial void InsertLab_Test_Detail(Lab_Test_Detail instance);
+		partial void UpdateLab_Test_Detail(Lab_Test_Detail instance);
+		partial void DeleteLab_Test_Detail(Lab_Test_Detail instance);
+		partial void InsertInPatient_Mon_Output(InPatient_Mon_Output instance);
+		partial void UpdateInPatient_Mon_Output(InPatient_Mon_Output instance);
+		partial void DeleteInPatient_Mon_Output(InPatient_Mon_Output instance);
+		partial void InsertPharmacy_User(Pharmacy_User instance);
+		partial void UpdatePharmacy_User(Pharmacy_User instance);
+		partial void DeletePharmacy_User(Pharmacy_User instance);
+		partial void InsertWithHold_Tax(WithHold_Tax instance);
+		partial void UpdateWithHold_Tax(WithHold_Tax instance);
+		partial void DeleteWithHold_Tax(WithHold_Tax instance);
+		partial void InsertAP_Vendors_Person(AP_Vendors_Person instance);
+		partial void UpdateAP_Vendors_Person(AP_Vendors_Person instance);
+		partial void DeleteAP_Vendors_Person(AP_Vendors_Person instance);
+		partial void InsertBlood_Transfusion(Blood_Transfusion instance);
+		partial void UpdateBlood_Transfusion(Blood_Transfusion instance);
+		partial void DeleteBlood_Transfusion(Blood_Transfusion instance);
+		partial void InsertDiscount_Assigned_Patient(Discount_Assigned_Patient instance);
+		partial void UpdateDiscount_Assigned_Patient(Discount_Assigned_Patient instance);
+		partial void DeleteDiscount_Assigned_Patient(Discount_Assigned_Patient instance);
+		partial void InsertAccounting_Payment_Purchase_Invoice(Accounting_Payment_Purchase_Invoice instance);
+		partial void UpdateAccounting_Payment_Purchase_Invoice(Accounting_Payment_Purchase_Invoice instance);
+		partial void DeleteAccounting_Payment_Purchase_Invoice(Accounting_Payment_Purchase_Invoice instance);
+		partial void InsertStock_Transfer_Item(Stock_Transfer_Item instance);
+		partial void UpdateStock_Transfer_Item(Stock_Transfer_Item instance);
+		partial void DeleteStock_Transfer_Item(Stock_Transfer_Item instance);
+		partial void InsertItem_Replacement_Detail(Item_Replacement_Detail instance);
+		partial void UpdateItem_Replacement_Detail(Item_Replacement_Detail instance);
+		partial void DeleteItem_Replacement_Detail(Item_Replacement_Detail instance);
+		partial void InsertItem_Replacement_Master(Item_Replacement_Master instance);
+		partial void UpdateItem_Replacement_Master(Item_Replacement_Master instance);
+		partial void DeleteItem_Replacement_Master(Item_Replacement_Master instance);
+		partial void InsertAccount_Category(Account_Category instance);
+		partial void UpdateAccount_Category(Account_Category instance);
+		partial void DeleteAccount_Category(Account_Category instance);
+		partial void InsertRoom(Room instance);
+		partial void UpdateRoom(Room instance);
+		partial void DeleteRoom(Room instance);
+		partial void InsertSales_Tax(Sales_Tax instance);
+		partial void UpdateSales_Tax(Sales_Tax instance);
+		partial void DeleteSales_Tax(Sales_Tax instance);
+		partial void InsertAP_RequestForQuotation_Item(AP_RequestForQuotation_Item instance);
+		partial void UpdateAP_RequestForQuotation_Item(AP_RequestForQuotation_Item instance);
+		partial void DeleteAP_RequestForQuotation_Item(AP_RequestForQuotation_Item instance);
+		partial void InsertMaterialIssueRequest(MaterialIssueRequest instance);
+		partial void UpdateMaterialIssueRequest(MaterialIssueRequest instance);
+		partial void DeleteMaterialIssueRequest(MaterialIssueRequest instance);
+		partial void InsertMaterialIssueRequest_Detail(MaterialIssueRequest_Detail instance);
+		partial void UpdateMaterialIssueRequest_Detail(MaterialIssueRequest_Detail instance);
+		partial void DeleteMaterialIssueRequest_Detail(MaterialIssueRequest_Detail instance);
+		partial void InsertINV_ITEM_COMPANY_STORE(INV_ITEM_COMPANY_STORE instance);
+		partial void UpdateINV_ITEM_COMPANY_STORE(INV_ITEM_COMPANY_STORE instance);
+		partial void DeleteINV_ITEM_COMPANY_STORE(INV_ITEM_COMPANY_STORE instance);
+		partial void InsertUser_Branch_Master(User_Branch_Master instance);
+		partial void UpdateUser_Branch_Master(User_Branch_Master instance);
+		partial void DeleteUser_Branch_Master(User_Branch_Master instance);
+		partial void InsertUser_Branch(User_Branch instance);
+		partial void UpdateUser_Branch(User_Branch instance);
+		partial void DeleteUser_Branch(User_Branch instance);
+		partial void InsertCS_Vendor(CS_Vendor instance);
+		partial void UpdateCS_Vendor(CS_Vendor instance);
+		partial void DeleteCS_Vendor(CS_Vendor instance);
+		partial void InsertAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
+		partial void UpdateAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
+		partial void DeleteAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
+		partial void InsertSys_Approval_Stage_Detail(Sys_Approval_Stage_Detail instance);
+		partial void UpdateSys_Approval_Stage_Detail(Sys_Approval_Stage_Detail instance);
+		partial void DeleteSys_Approval_Stage_Detail(Sys_Approval_Stage_Detail instance);
+		partial void InsertSys_Approval_Tempelate_Master(Sys_Approval_Tempelate_Master instance);
+		partial void UpdateSys_Approval_Tempelate_Master(Sys_Approval_Tempelate_Master instance);
+		partial void DeleteSys_Approval_Tempelate_Master(Sys_Approval_Tempelate_Master instance);
+		partial void InsertSys_Approval_Tempelate_Detail_Form(Sys_Approval_Tempelate_Detail_Form instance);
+		partial void UpdateSys_Approval_Tempelate_Detail_Form(Sys_Approval_Tempelate_Detail_Form instance);
+		partial void DeleteSys_Approval_Tempelate_Detail_Form(Sys_Approval_Tempelate_Detail_Form instance);
+		partial void InsertSys_Approval_Tempelate_Detail_Stage(Sys_Approval_Tempelate_Detail_Stage instance);
+		partial void UpdateSys_Approval_Tempelate_Detail_Stage(Sys_Approval_Tempelate_Detail_Stage instance);
+		partial void DeleteSys_Approval_Tempelate_Detail_Stage(Sys_Approval_Tempelate_Detail_Stage instance);
+		partial void InsertSys_Approval_Tempelate_Detail_Originator(Sys_Approval_Tempelate_Detail_Originator instance);
+		partial void UpdateSys_Approval_Tempelate_Detail_Originator(Sys_Approval_Tempelate_Detail_Originator instance);
+		partial void DeleteSys_Approval_Tempelate_Detail_Originator(Sys_Approval_Tempelate_Detail_Originator instance);
+		partial void InsertSys_Approval_Stage_Master(Sys_Approval_Stage_Master instance);
+		partial void UpdateSys_Approval_Stage_Master(Sys_Approval_Stage_Master instance);
+		partial void DeleteSys_Approval_Stage_Master(Sys_Approval_Stage_Master instance);
+		partial void InsertSys_Form(Sys_Form instance);
+		partial void UpdateSys_Form(Sys_Form instance);
+		partial void DeleteSys_Form(Sys_Form instance);
+		partial void InsertStock_Transfer(Stock_Transfer instance);
+		partial void UpdateStock_Transfer(Stock_Transfer instance);
+		partial void DeleteStock_Transfer(Stock_Transfer instance);
+		partial void InsertInPatientService(InPatientService instance);
+		partial void UpdateInPatientService(InPatientService instance);
+		partial void DeleteInPatientService(InPatientService instance);
+		partial void InsertDepartment_Wise_User(Department_Wise_User instance);
+		partial void UpdateDepartment_Wise_User(Department_Wise_User instance);
+		partial void DeleteDepartment_Wise_User(Department_Wise_User instance);
+		partial void InsertDepartment_Wise_User_Detail(Department_Wise_User_Detail instance);
+		partial void UpdateDepartment_Wise_User_Detail(Department_Wise_User_Detail instance);
+		partial void DeleteDepartment_Wise_User_Detail(Department_Wise_User_Detail instance);
+		partial void InsertWareHouse_Wise_User_Detail(WareHouse_Wise_User_Detail instance);
+		partial void UpdateWareHouse_Wise_User_Detail(WareHouse_Wise_User_Detail instance);
+		partial void DeleteWareHouse_Wise_User_Detail(WareHouse_Wise_User_Detail instance);
+		partial void InsertWareHouse_Wise_User(WareHouse_Wise_User instance);
+		partial void UpdateWareHouse_Wise_User(WareHouse_Wise_User instance);
+		partial void DeleteWareHouse_Wise_User(WareHouse_Wise_User instance);
+		partial void InsertDoctor_Rouster_Detail(Doctor_Rouster_Detail instance);
+		partial void UpdateDoctor_Rouster_Detail(Doctor_Rouster_Detail instance);
+		partial void DeleteDoctor_Rouster_Detail(Doctor_Rouster_Detail instance);
+		partial void InsertDoctor_Rouster_Master(Doctor_Rouster_Master instance);
+		partial void UpdateDoctor_Rouster_Master(Doctor_Rouster_Master instance);
+		partial void DeleteDoctor_Rouster_Master(Doctor_Rouster_Master instance);
+		partial void InsertAP_Vendor(AP_Vendor instance);
+		partial void UpdateAP_Vendor(AP_Vendor instance);
+		partial void DeleteAP_Vendor(AP_Vendor instance);
+		partial void InsertAP_Vendor_General_Item(AP_Vendor_General_Item instance);
+		partial void UpdateAP_Vendor_General_Item(AP_Vendor_General_Item instance);
+		partial void DeleteAP_Vendor_General_Item(AP_Vendor_General_Item instance);
+		partial void InsertAP_Vendor_Pharmacy_Item(AP_Vendor_Pharmacy_Item instance);
+		partial void UpdateAP_Vendor_Pharmacy_Item(AP_Vendor_Pharmacy_Item instance);
+		partial void DeleteAP_Vendor_Pharmacy_Item(AP_Vendor_Pharmacy_Item instance);
+		partial void InsertAP_Vendor_Company(AP_Vendor_Company instance);
+		partial void UpdateAP_Vendor_Company(AP_Vendor_Company instance);
+		partial void DeleteAP_Vendor_Company(AP_Vendor_Company instance);
+		partial void InsertDoctor_Template_Master(Doctor_Template_Master instance);
+		partial void UpdateDoctor_Template_Master(Doctor_Template_Master instance);
+		partial void DeleteDoctor_Template_Master(Doctor_Template_Master instance);
+		partial void InsertDoctor_Template_Medicine(Doctor_Template_Medicine instance);
+		partial void UpdateDoctor_Template_Medicine(Doctor_Template_Medicine instance);
+		partial void DeleteDoctor_Template_Medicine(Doctor_Template_Medicine instance);
+		partial void InsertDoctor_Template_Test(Doctor_Template_Test instance);
+		partial void UpdateDoctor_Template_Test(Doctor_Template_Test instance);
+		partial void DeleteDoctor_Template_Test(Doctor_Template_Test instance);
+		partial void InsertBudget(Budget instance);
+		partial void UpdateBudget(Budget instance);
+		partial void DeleteBudget(Budget instance);
+		partial void InsertBudget_Account(Budget_Account instance);
+		partial void UpdateBudget_Account(Budget_Account instance);
+		partial void DeleteBudget_Account(Budget_Account instance);
+		partial void InsertPurchase_Requisition_Detail(Purchase_Requisition_Detail instance);
+		partial void UpdatePurchase_Requisition_Detail(Purchase_Requisition_Detail instance);
+		partial void DeletePurchase_Requisition_Detail(Purchase_Requisition_Detail instance);
+		partial void InsertAP_RequestForQuotation_Vendor(AP_RequestForQuotation_Vendor instance);
+		partial void UpdateAP_RequestForQuotation_Vendor(AP_RequestForQuotation_Vendor instance);
+		partial void DeleteAP_RequestForQuotation_Vendor(AP_RequestForQuotation_Vendor instance);
+		partial void InsertIgp_Detail(Igp_Detail instance);
+		partial void UpdateIgp_Detail(Igp_Detail instance);
+		partial void DeleteIgp_Detail(Igp_Detail instance);
+		partial void InsertAsset_Definition_Cost_Fill(Asset_Definition_Cost_Fill instance);
+		partial void UpdateAsset_Definition_Cost_Fill(Asset_Definition_Cost_Fill instance);
+		partial void DeleteAsset_Definition_Cost_Fill(Asset_Definition_Cost_Fill instance);
+		partial void InsertAsset_Selection(Asset_Selection instance);
+		partial void UpdateAsset_Selection(Asset_Selection instance);
+		partial void DeleteAsset_Selection(Asset_Selection instance);
+		partial void InsertGRN_Detail(GRN_Detail instance);
+		partial void UpdateGRN_Detail(GRN_Detail instance);
+		partial void DeleteGRN_Detail(GRN_Detail instance);
+		partial void InsertINV_Stock_Adjustment(INV_Stock_Adjustment instance);
+		partial void UpdateINV_Stock_Adjustment(INV_Stock_Adjustment instance);
+		partial void DeleteINV_Stock_Adjustment(INV_Stock_Adjustment instance);
+		partial void InsertStore_Issue(Store_Issue instance);
+		partial void UpdateStore_Issue(Store_Issue instance);
+		partial void DeleteStore_Issue(Store_Issue instance);
+		partial void InsertSys_Inv_OrignatorTempelate_Detail(Sys_Inv_OrignatorTempelate_Detail instance);
+		partial void UpdateSys_Inv_OrignatorTempelate_Detail(Sys_Inv_OrignatorTempelate_Detail instance);
+		partial void DeleteSys_Inv_OrignatorTempelate_Detail(Sys_Inv_OrignatorTempelate_Detail instance);
+		partial void InsertSys_Inv_OrignatorTempelate_Detail_Form(Sys_Inv_OrignatorTempelate_Detail_Form instance);
+		partial void UpdateSys_Inv_OrignatorTempelate_Detail_Form(Sys_Inv_OrignatorTempelate_Detail_Form instance);
+		partial void DeleteSys_Inv_OrignatorTempelate_Detail_Form(Sys_Inv_OrignatorTempelate_Detail_Form instance);
+		partial void InsertSys_Inv_OrignatorTempelate_Master(Sys_Inv_OrignatorTempelate_Master instance);
+		partial void UpdateSys_Inv_OrignatorTempelate_Master(Sys_Inv_OrignatorTempelate_Master instance);
+		partial void DeleteSys_Inv_OrignatorTempelate_Master(Sys_Inv_OrignatorTempelate_Master instance);
+		partial void InsertIn_Patient_Medicine(In_Patient_Medicine instance);
+		partial void UpdateIn_Patient_Medicine(In_Patient_Medicine instance);
+		partial void DeleteIn_Patient_Medicine(In_Patient_Medicine instance);
+		partial void InsertDataValue(DataValue instance);
+		partial void UpdateDataValue(DataValue instance);
+		partial void DeleteDataValue(DataValue instance);
+		partial void InsertGRN_Master(GRN_Master instance);
+		partial void UpdateGRN_Master(GRN_Master instance);
+		partial void DeleteGRN_Master(GRN_Master instance);
+		partial void InsertIgp_master(Igp_master instance);
+		partial void UpdateIgp_master(Igp_master instance);
+		partial void DeleteIgp_master(Igp_master instance);
+		partial void InsertMedicines_Template(Medicines_Template instance);
+		partial void UpdateMedicines_Template(Medicines_Template instance);
+		partial void DeleteMedicines_Template(Medicines_Template instance);
+		partial void InsertPurchase_Requisition(Purchase_Requisition instance);
+		partial void UpdatePurchase_Requisition(Purchase_Requisition instance);
+		partial void DeletePurchase_Requisition(Purchase_Requisition instance);
+		partial void InsertSys_Approval_Log(Sys_Approval_Log instance);
+		partial void UpdateSys_Approval_Log(Sys_Approval_Log instance);
+		partial void DeleteSys_Approval_Log(Sys_Approval_Log instance);
+		partial void InsertOutPatients_Proto(OutPatients_Proto instance);
+		partial void UpdateOutPatients_Proto(OutPatients_Proto instance);
+		partial void DeleteOutPatients_Proto(OutPatients_Proto instance);
+		partial void InsertAppointment_Form(Appointment_Form instance);
+		partial void UpdateAppointment_Form(Appointment_Form instance);
+		partial void DeleteAppointment_Form(Appointment_Form instance);
+		partial void InsertPayment_Invoice(Payment_Invoice instance);
+		partial void UpdatePayment_Invoice(Payment_Invoice instance);
+		partial void DeletePayment_Invoice(Payment_Invoice instance);
+		partial void InsertAP_Purchase_Order(AP_Purchase_Order instance);
+		partial void UpdateAP_Purchase_Order(AP_Purchase_Order instance);
+		partial void DeleteAP_Purchase_Order(AP_Purchase_Order instance);
+		partial void Insertaspnet_Membership(aspnet_Membership instance);
+		partial void Updateaspnet_Membership(aspnet_Membership instance);
+		partial void Deleteaspnet_Membership(aspnet_Membership instance);
+		partial void InsertApiCredential(ApiCredential instance);
+		partial void UpdateApiCredential(ApiCredential instance);
+		partial void DeleteApiCredential(ApiCredential instance);
+		partial void Insertaspnet_Role(aspnet_Role instance);
+		partial void Updateaspnet_Role(aspnet_Role instance);
+		partial void Deleteaspnet_Role(aspnet_Role instance);
+		partial void InsertAsset_Category(Asset_Category instance);
+		partial void UpdateAsset_Category(Asset_Category instance);
+		partial void DeleteAsset_Category(Asset_Category instance);
+		partial void InsertSubject_Definition_List(Subject_Definition_List instance);
+		partial void UpdateSubject_Definition_List(Subject_Definition_List instance);
+		partial void DeleteSubject_Definition_List(Subject_Definition_List instance);
+		partial void InsertStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
+		partial void UpdateStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
+		partial void DeleteStudent_Time_Table_Detail(Student_Time_Table_Detail instance);
+		partial void InsertHR_Swap_Record(HR_Swap_Record instance);
+		partial void UpdateHR_Swap_Record(HR_Swap_Record instance);
+		partial void DeleteHR_Swap_Record(HR_Swap_Record instance);
+		partial void InsertTempReg_patient(TempReg_patient instance);
+		partial void UpdateTempReg_patient(TempReg_patient instance);
+		partial void DeleteTempReg_patient(TempReg_patient instance);
+		partial void InsertOut_Patient(Out_Patient instance);
+		partial void UpdateOut_Patient(Out_Patient instance);
+		partial void DeleteOut_Patient(Out_Patient instance);
+		partial void InsertPanel(Panel instance);
+		partial void UpdatePanel(Panel instance);
+		partial void DeletePanel(Panel instance);
+		partial void InsertAsset_SubCategory(Asset_SubCategory instance);
+		partial void UpdateAsset_SubCategory(Asset_SubCategory instance);
+		partial void DeleteAsset_SubCategory(Asset_SubCategory instance);
+		partial void InsertLocation(Location instance);
+		partial void UpdateLocation(Location instance);
+		partial void DeleteLocation(Location instance);
+		partial void InsertStudent(Student instance);
+		partial void UpdateStudent(Student instance);
+		partial void DeleteStudent(Student instance);
+		partial void InsertStudent_Receipt_Detail(Student_Receipt_Detail instance);
+		partial void UpdateStudent_Receipt_Detail(Student_Receipt_Detail instance);
+		partial void DeleteStudent_Receipt_Detail(Student_Receipt_Detail instance);
+		partial void InsertStudent_Fee_Detail(Student_Fee_Detail instance);
+		partial void UpdateStudent_Fee_Detail(Student_Fee_Detail instance);
+		partial void DeleteStudent_Fee_Detail(Student_Fee_Detail instance);
+		partial void InsertGL_Account(GL_Account instance);
+		partial void UpdateGL_Account(GL_Account instance);
+		partial void DeleteGL_Account(GL_Account instance);
+		partial void InsertGL_Voucher(GL_Voucher instance);
+		partial void UpdateGL_Voucher(GL_Voucher instance);
+		partial void DeleteGL_Voucher(GL_Voucher instance);
+		partial void InsertTest_Defination_Detail_Rate(Test_Defination_Detail_Rate instance);
+		partial void UpdateTest_Defination_Detail_Rate(Test_Defination_Detail_Rate instance);
+		partial void DeleteTest_Defination_Detail_Rate(Test_Defination_Detail_Rate instance);
+		partial void InsertDoctor_Agreement(Doctor_Agreement instance);
+		partial void UpdateDoctor_Agreement(Doctor_Agreement instance);
+		partial void DeleteDoctor_Agreement(Doctor_Agreement instance);
+		partial void InsertDoctor_agreement_detail(Doctor_agreement_detail instance);
+		partial void UpdateDoctor_agreement_detail(Doctor_agreement_detail instance);
+		partial void DeleteDoctor_agreement_detail(Doctor_agreement_detail instance);
+		partial void InsertReg_Student(Reg_Student instance);
+		partial void UpdateReg_Student(Reg_Student instance);
+		partial void DeleteReg_Student(Reg_Student instance);
+		partial void InsertStudent_Account_Category(Student_Account_Category instance);
+		partial void UpdateStudent_Account_Category(Student_Account_Category instance);
+		partial void DeleteStudent_Account_Category(Student_Account_Category instance);
+		partial void InsertStudent_Fee(Student_Fee instance);
+		partial void UpdateStudent_Fee(Student_Fee instance);
+		partial void DeleteStudent_Fee(Student_Fee instance);
+		partial void InsertChallan_Amount(Challan_Amount instance);
+		partial void UpdateChallan_Amount(Challan_Amount instance);
+		partial void DeleteChallan_Amount(Challan_Amount instance);
+		partial void InsertStudent_Receipt(Student_Receipt instance);
+		partial void UpdateStudent_Receipt(Student_Receipt instance);
+		partial void DeleteStudent_Receipt(Student_Receipt instance);
+		partial void InsertPharmacy_SaleReturn(Pharmacy_SaleReturn instance);
+		partial void UpdatePharmacy_SaleReturn(Pharmacy_SaleReturn instance);
+		partial void DeletePharmacy_SaleReturn(Pharmacy_SaleReturn instance);
+		partial void InsertReg_patient(Reg_patient instance);
+		partial void UpdateReg_patient(Reg_patient instance);
+		partial void DeleteReg_patient(Reg_patient instance);
+		partial void InsertAsset_Definition(Asset_Definition instance);
+		partial void UpdateAsset_Definition(Asset_Definition instance);
+		partial void DeleteAsset_Definition(Asset_Definition instance);
+		partial void InsertDepereciation_Policy(Depereciation_Policy instance);
+		partial void UpdateDepereciation_Policy(Depereciation_Policy instance);
+		partial void DeleteDepereciation_Policy(Depereciation_Policy instance);
+		partial void InsertAsset_Depereciation(Asset_Depereciation instance);
+		partial void UpdateAsset_Depereciation(Asset_Depereciation instance);
+		partial void DeleteAsset_Depereciation(Asset_Depereciation instance);
+		partial void InsertAsset_Retirement(Asset_Retirement instance);
+		partial void UpdateAsset_Retirement(Asset_Retirement instance);
+		partial void DeleteAsset_Retirement(Asset_Retirement instance);
+		partial void InsertAsset_Expense_detail(Asset_Expense_detail instance);
+		partial void UpdateAsset_Expense_detail(Asset_Expense_detail instance);
+		partial void DeleteAsset_Expense_detail(Asset_Expense_detail instance);
+		partial void InsertAsset_Retirement_detail(Asset_Retirement_detail instance);
+		partial void UpdateAsset_Retirement_detail(Asset_Retirement_detail instance);
+		partial void DeleteAsset_Retirement_detail(Asset_Retirement_detail instance);
+		partial void InsertAsset_Depereciation_Detail(Asset_Depereciation_Detail instance);
+		partial void UpdateAsset_Depereciation_Detail(Asset_Depereciation_Detail instance);
+		partial void DeleteAsset_Depereciation_Detail(Asset_Depereciation_Detail instance);
+		partial void InsertAsset_Expense(Asset_Expense instance);
+		partial void UpdateAsset_Expense(Asset_Expense instance);
+		partial void DeleteAsset_Expense(Asset_Expense instance);
+		partial void InsertSurve_Form(Surve_Form instance);
+		partial void UpdateSurve_Form(Surve_Form instance);
+		partial void DeleteSurve_Form(Surve_Form instance);
+		partial void InsertPayment_Invoice_Detail(Payment_Invoice_Detail instance);
+		partial void UpdatePayment_Invoice_Detail(Payment_Invoice_Detail instance);
+		partial void DeletePayment_Invoice_Detail(Payment_Invoice_Detail instance);
+		partial void InsertAdvance_Payment(Advance_Payment instance);
+		partial void UpdateAdvance_Payment(Advance_Payment instance);
+		partial void DeleteAdvance_Payment(Advance_Payment instance);
+		partial void InsertAdvance_Payment_Purchase_Invoice(Advance_Payment_Purchase_Invoice instance);
+		partial void UpdateAdvance_Payment_Purchase_Invoice(Advance_Payment_Purchase_Invoice instance);
+		partial void DeleteAdvance_Payment_Purchase_Invoice(Advance_Payment_Purchase_Invoice instance);
+		partial void InsertManual_Invoice_Detail(Manual_Invoice_Detail instance);
+		partial void UpdateManual_Invoice_Detail(Manual_Invoice_Detail instance);
+		partial void DeleteManual_Invoice_Detail(Manual_Invoice_Detail instance);
+		partial void InsertManual_Invoice(Manual_Invoice instance);
+		partial void UpdateManual_Invoice(Manual_Invoice instance);
+		partial void DeleteManual_Invoice(Manual_Invoice instance);
+		partial void InsertPurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
+		partial void UpdatePurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
+		partial void DeletePurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
+		partial void InsertPurchase_Invoice_Master(Purchase_Invoice_Master instance);
+		partial void UpdatePurchase_Invoice_Master(Purchase_Invoice_Master instance);
+		partial void DeletePurchase_Invoice_Master(Purchase_Invoice_Master instance);
+		partial void InsertPurchase_Return_Master(Purchase_Return_Master instance);
+		partial void UpdatePurchase_Return_Master(Purchase_Return_Master instance);
+		partial void DeletePurchase_Return_Master(Purchase_Return_Master instance);
+		partial void InsertWard_Definition(Ward_Definition instance);
+		partial void UpdateWard_Definition(Ward_Definition instance);
+		partial void DeleteWard_Definition(Ward_Definition instance);
+		partial void InsertAr_Billing_Detail(Ar_Billing_Detail instance);
+		partial void UpdateAr_Billing_Detail(Ar_Billing_Detail instance);
+		partial void DeleteAr_Billing_Detail(Ar_Billing_Detail instance);
+		partial void InsertReceipt(Receipt instance);
+		partial void UpdateReceipt(Receipt instance);
+		partial void DeleteReceipt(Receipt instance);
+		partial void InsertPurchase_Return_Detail(Purchase_Return_Detail instance);
+		partial void UpdatePurchase_Return_Detail(Purchase_Return_Detail instance);
+		partial void DeletePurchase_Return_Detail(Purchase_Return_Detail instance);
+		partial void InsertPharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
+		partial void UpdatePharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
+		partial void DeletePharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
+		partial void InsertStore_Issue_Detail(Store_Issue_Detail instance);
+		partial void UpdateStore_Issue_Detail(Store_Issue_Detail instance);
+		partial void DeleteStore_Issue_Detail(Store_Issue_Detail instance);
+		partial void InsertClinicalAccountCategory(ClinicalAccountCategory instance);
+		partial void UpdateClinicalAccountCategory(ClinicalAccountCategory instance);
+		partial void DeleteClinicalAccountCategory(ClinicalAccountCategory instance);
+		partial void InsertEmergency_Case(Emergency_Case instance);
+		partial void UpdateEmergency_Case(Emergency_Case instance);
+		partial void DeleteEmergency_Case(Emergency_Case instance);
+		partial void InsertOperation_Booking(Operation_Booking instance);
+		partial void UpdateOperation_Booking(Operation_Booking instance);
+		partial void DeleteOperation_Booking(Operation_Booking instance);
+		partial void InsertRefund(Refund instance);
+		partial void UpdateRefund(Refund instance);
+		partial void DeleteRefund(Refund instance);
+		partial void InsertRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
+		partial void UpdateRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
+		partial void DeleteRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
+		partial void InsertRefund_Detail_Service(Refund_Detail_Service instance);
+		partial void UpdateRefund_Detail_Service(Refund_Detail_Service instance);
+		partial void DeleteRefund_Detail_Service(Refund_Detail_Service instance);
+		partial void InsertAR_Advance(AR_Advance instance);
+		partial void UpdateAR_Advance(AR_Advance instance);
+		partial void DeleteAR_Advance(AR_Advance instance);
+		partial void InsertWard_Allocation(Ward_Allocation instance);
+		partial void UpdateWard_Allocation(Ward_Allocation instance);
+		partial void DeleteWard_Allocation(Ward_Allocation instance);
+		partial void InsertAP_RequestForQuotation(AP_RequestForQuotation instance);
+		partial void UpdateAP_RequestForQuotation(AP_RequestForQuotation instance);
+		partial void DeleteAP_RequestForQuotation(AP_RequestForQuotation instance);
+		partial void InsertCS_Vendor_Master(CS_Vendor_Master instance);
+		partial void UpdateCS_Vendor_Master(CS_Vendor_Master instance);
+		partial void DeleteCS_Vendor_Master(CS_Vendor_Master instance);
+		partial void Insertaspnet_User(aspnet_User instance);
+		partial void Updateaspnet_User(aspnet_User instance);
+		partial void Deleteaspnet_User(aspnet_User instance);
+		partial void InsertSymptomsCategorization(SymptomsCategorization instance);
+		partial void UpdateSymptomsCategorization(SymptomsCategorization instance);
+		partial void DeleteSymptomsCategorization(SymptomsCategorization instance);
+		partial void InsertSymptomsCategorization1(SymptomsCategorization1 instance);
+		partial void UpdateSymptomsCategorization1(SymptomsCategorization1 instance);
+		partial void DeleteSymptomsCategorization1(SymptomsCategorization1 instance);
+		partial void InsertPolicy(Policy instance);
+		partial void UpdatePolicy(Policy instance);
+		partial void DeletePolicy(Policy instance);
+		partial void InsertComplaintsDefinition(ComplaintsDefinition instance);
+		partial void UpdateComplaintsDefinition(ComplaintsDefinition instance);
+		partial void DeleteComplaintsDefinition(ComplaintsDefinition instance);
+		partial void InsertDiagnosisDefinition(DiagnosisDefinition instance);
+		partial void UpdateDiagnosisDefinition(DiagnosisDefinition instance);
+		partial void DeleteDiagnosisDefinition(DiagnosisDefinition instance);
+		partial void InsertOutPatientComplaint(OutPatientComplaint instance);
+		partial void UpdateOutPatientComplaint(OutPatientComplaint instance);
+		partial void DeleteOutPatientComplaint(OutPatientComplaint instance);
+		partial void InsertOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
+		partial void UpdateOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
+		partial void DeleteOutPatientFinalDiagnosi(OutPatientFinalDiagnosi instance);
+		partial void InsertOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
+		partial void UpdateOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
+		partial void DeleteOutPatientPrimaryDiagnosi(OutPatientPrimaryDiagnosi instance);
+		partial void InsertPolicy_Detail(Policy_Detail instance);
+		partial void UpdatePolicy_Detail(Policy_Detail instance);
+		partial void DeletePolicy_Detail(Policy_Detail instance);
+		partial void InsertPolicy_Department_Assignment(Policy_Department_Assignment instance);
+		partial void UpdatePolicy_Department_Assignment(Policy_Department_Assignment instance);
+		partial void DeletePolicy_Department_Assignment(Policy_Department_Assignment instance);
+		partial void Insertcompany_opd_policy(company_opd_policy instance);
+		partial void Updatecompany_opd_policy(company_opd_policy instance);
+		partial void Deletecompany_opd_policy(company_opd_policy instance);
+		partial void Insertsys_Company(sys_Company instance);
+		partial void Updatesys_Company(sys_Company instance);
+		partial void Deletesys_Company(sys_Company instance);
+		partial void InsertHR_Employee(HR_Employee instance);
+		partial void UpdateHR_Employee(HR_Employee instance);
+		partial void DeleteHR_Employee(HR_Employee instance);
+		partial void InsertEmergency_Patient(Emergency_Patient instance);
+		partial void UpdateEmergency_Patient(Emergency_Patient instance);
+		partial void DeleteEmergency_Patient(Emergency_Patient instance);
+		partial void InsertDoctor_Packages_Detail(Doctor_Packages_Detail instance);
+		partial void UpdateDoctor_Packages_Detail(Doctor_Packages_Detail instance);
+		partial void DeleteDoctor_Packages_Detail(Doctor_Packages_Detail instance);
+		partial void InsertDoctor_Packages_Detail_Rate(Doctor_Packages_Detail_Rate instance);
+		partial void UpdateDoctor_Packages_Detail_Rate(Doctor_Packages_Detail_Rate instance);
+		partial void DeleteDoctor_Packages_Detail_Rate(Doctor_Packages_Detail_Rate instance);
+		partial void InsertDepartment_Packages_Detail(Department_Packages_Detail instance);
+		partial void UpdateDepartment_Packages_Detail(Department_Packages_Detail instance);
+		partial void DeleteDepartment_Packages_Detail(Department_Packages_Detail instance);
+		partial void InsertDepartment_Packages_Detail_Rate(Department_Packages_Detail_Rate instance);
+		partial void UpdateDepartment_Packages_Detail_Rate(Department_Packages_Detail_Rate instance);
+		partial void DeleteDepartment_Packages_Detail_Rate(Department_Packages_Detail_Rate instance);
+		partial void InsertPanel_Packages_Detail(Panel_Packages_Detail instance);
+		partial void UpdatePanel_Packages_Detail(Panel_Packages_Detail instance);
+		partial void DeletePanel_Packages_Detail(Panel_Packages_Detail instance);
+		partial void InsertPanel_Packages_Detail_Rate(Panel_Packages_Detail_Rate instance);
+		partial void UpdatePanel_Packages_Detail_Rate(Panel_Packages_Detail_Rate instance);
+		partial void DeletePanel_Packages_Detail_Rate(Panel_Packages_Detail_Rate instance);
+		partial void InsertDepartmentPackage(DepartmentPackage instance);
+		partial void UpdateDepartmentPackage(DepartmentPackage instance);
+		partial void DeleteDepartmentPackage(DepartmentPackage instance);
+		partial void InsertDoctorPackage(DoctorPackage instance);
+		partial void UpdateDoctorPackage(DoctorPackage instance);
+		partial void DeleteDoctorPackage(DoctorPackage instance);
+		partial void InsertPanelPackage(PanelPackage instance);
+		partial void UpdatePanelPackage(PanelPackage instance);
+		partial void DeletePanelPackage(PanelPackage instance);
+		partial void InsertDoctor_Payabled(Doctor_Payabled instance);
+		partial void UpdateDoctor_Payabled(Doctor_Payabled instance);
+		partial void DeleteDoctor_Payabled(Doctor_Payabled instance);
+		partial void InsertIn_Patient(In_Patient instance);
+		partial void UpdateIn_Patient(In_Patient instance);
+		partial void DeleteIn_Patient(In_Patient instance);
+		partial void InsertPatient(Patient instance);
+		partial void UpdatePatient(Patient instance);
+		partial void DeletePatient(Patient instance);
+		partial void InsertINV_Item(INV_Item instance);
+		partial void UpdateINV_Item(INV_Item instance);
+		partial void DeleteINV_Item(INV_Item instance);
+		partial void InsertINV_Item_RateBatchWise(INV_Item_RateBatchWise instance);
+		partial void UpdateINV_Item_RateBatchWise(INV_Item_RateBatchWise instance);
+		partial void DeleteINV_Item_RateBatchWise(INV_Item_RateBatchWise instance);
+		partial void InsertINV_Item_PatientWise(INV_Item_PatientWise instance);
+		partial void UpdateINV_Item_PatientWise(INV_Item_PatientWise instance);
+		partial void DeleteINV_Item_PatientWise(INV_Item_PatientWise instance);
+		partial void InsertAr_Billing(Ar_Billing instance);
+		partial void UpdateAr_Billing(Ar_Billing instance);
+		partial void DeleteAr_Billing(Ar_Billing instance);
+		partial void InsertINV_ITEM_COMPANy(INV_ITEM_COMPANy instance);
+		partial void UpdateINV_ITEM_COMPANy(INV_ITEM_COMPANy instance);
+		partial void DeleteINV_ITEM_COMPANy(INV_ITEM_COMPANy instance);
+		partial void InsertSample_Detail(Sample_Detail instance);
+		partial void UpdateSample_Detail(Sample_Detail instance);
+		partial void DeleteSample_Detail(Sample_Detail instance);
+		partial void InsertSample_Master(Sample_Master instance);
+		partial void UpdateSample_Master(Sample_Master instance);
+		partial void DeleteSample_Master(Sample_Master instance);
+		partial void InsertGL_Voucher_Account(GL_Voucher_Account instance);
+		partial void UpdateGL_Voucher_Account(GL_Voucher_Account instance);
+		partial void DeleteGL_Voucher_Account(GL_Voucher_Account instance);
+		partial void InsertSubject_Definition(Subject_Definition instance);
+		partial void UpdateSubject_Definition(Subject_Definition instance);
+		partial void DeleteSubject_Definition(Subject_Definition instance);
+		partial void InsertStudent_Time_Table(Student_Time_Table instance);
+		partial void UpdateStudent_Time_Table(Student_Time_Table instance);
+		partial void DeleteStudent_Time_Table(Student_Time_Table instance);
+		partial void InsertStudent_Attendance(Student_Attendance instance);
+		partial void UpdateStudent_Attendance(Student_Attendance instance);
+		partial void DeleteStudent_Attendance(Student_Attendance instance);
+		#endregion
+
+		public DataBaseDataContext() :
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+		{
+			OnCreated();
+		}
+
+		public DataBaseDataContext(string connection) :
+				base(connection, mappingSource)
+		{
+			OnCreated();
+		}
 
         public DataBaseDataContext(System.Data.IDbConnection connection) :
                 base(connection, mappingSource)
@@ -2472,29 +2474,13 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<Student_Time_Table> Student_Time_Tables
-        {
-            get
-            {
-                return this.GetTable<Student_Time_Table>();
-            }
-        }
-
-        public System.Data.Linq.Table<Student_Attendance> Student_Attendances
-        {
-            get
-            {
-                return this.GetTable<Student_Attendance>();
-            }
-        }
-
-        public System.Data.Linq.Table<HR_Swap_Record> HR_Swap_Records
-        {
-            get
-            {
-                return this.GetTable<HR_Swap_Record>();
-            }
-        }
+		public System.Data.Linq.Table<HR_Swap_Record> HR_Swap_Records
+		{
+			get
+			{
+				return this.GetTable<HR_Swap_Record>();
+			}
+		}
 
         public System.Data.Linq.Table<TempReg_patient> TempReg_patients
         {
@@ -3208,19 +3194,27 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<Subject_Definition_List> Subject_Definition_Lists
-        {
-            get
-            {
-                return this.GetTable<Subject_Definition_List>();
-            }
-        }
+		public System.Data.Linq.Table<Student_Time_Table> Student_Time_Tables
+		{
+			get
+			{
+				return this.GetTable<Student_Time_Table>();
+			}
+		}
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetDataValueName", IsComposable = true)]
-        public string GetDataValueName([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ValueSetName", DbType = "VarChar(150)")] string valueSetName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DataValueName", DbType = "VarChar(50)")] string dataValueName)
-        {
-            return ((string)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), valueSetName, dataValueName).ReturnValue));
-        }
+		public System.Data.Linq.Table<Student_Attendance> Student_Attendances
+		{
+			get
+			{
+				return this.GetTable<Student_Attendance>();
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetDataValueName", IsComposable = true)]
+		public string GetDataValueName([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ValueSetName", DbType = "VarChar(150)")] string valueSetName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DataValueName", DbType = "VarChar(50)")] string dataValueName)
+		{
+			return ((string)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), valueSetName, dataValueName).ReturnValue));
+		}
 
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetDataValueName", IsComposable = true)]
         public string GetDataValueName1([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ValueSetName", DbType = "VarChar(150)")] string valueSetName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DataValueName", DbType = "VarChar(50)")] string dataValueName)
@@ -72093,781 +72087,9 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Time_Table")]
-    public partial class Student_Time_Table : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _St_id;
-
-        private string _Program;
-
-        private string _Class;
-
-        private string _Weeks;
-
-        private System.Nullable<System.DateTime> _CreatedTime;
-
-        private System.Nullable<System.Guid> _CreatedBy;
-
-        private System.Nullable<System.DateTime> _UpdateTime;
-
-        private System.Nullable<System.Guid> _UpdatedBy;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnSt_idChanging(int value);
-        partial void OnSt_idChanged();
-        partial void OnProgramChanging(string value);
-        partial void OnProgramChanged();
-        partial void OnClassChanging(string value);
-        partial void OnClassChanged();
-        partial void OnWeeksChanging(string value);
-        partial void OnWeeksChanged();
-        partial void OnCreatedTimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreatedTimeChanged();
-        partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
-        partial void OnCreatedByChanged();
-        partial void OnUpdateTimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnUpdateTimeChanged();
-        partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
-        partial void OnUpdatedByChanged();
-        #endregion
-
-        public Student_Time_Table()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_St_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int St_id
-        {
-            get
-            {
-                return this._St_id;
-            }
-            set
-            {
-                if ((this._St_id != value))
-                {
-                    this.OnSt_idChanging(value);
-                    this.SendPropertyChanging();
-                    this._St_id = value;
-                    this.SendPropertyChanged("St_id");
-                    this.OnSt_idChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Program", DbType = "NVarChar(150)")]
-        public string Program
-        {
-            get
-            {
-                return this._Program;
-            }
-            set
-            {
-                if ((this._Program != value))
-                {
-                    this.OnProgramChanging(value);
-                    this.SendPropertyChanging();
-                    this._Program = value;
-                    this.SendPropertyChanged("Program");
-                    this.OnProgramChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
-        public string Class
-        {
-            get
-            {
-                return this._Class;
-            }
-            set
-            {
-                if ((this._Class != value))
-                {
-                    this.OnClassChanging(value);
-                    this.SendPropertyChanging();
-                    this._Class = value;
-                    this.SendPropertyChanged("Class");
-                    this.OnClassChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Weeks", DbType = "NVarChar(150)")]
-        public string Weeks
-        {
-            get
-            {
-                return this._Weeks;
-            }
-            set
-            {
-                if ((this._Weeks != value))
-                {
-                    this.OnWeeksChanging(value);
-                    this.SendPropertyChanging();
-                    this._Weeks = value;
-                    this.SendPropertyChanged("Weeks");
-                    this.OnWeeksChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedTime", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> CreatedTime
-        {
-            get
-            {
-                return this._CreatedTime;
-            }
-            set
-            {
-                if ((this._CreatedTime != value))
-                {
-                    this.OnCreatedTimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._CreatedTime = value;
-                    this.SendPropertyChanged("CreatedTime");
-                    this.OnCreatedTimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> CreatedBy
-        {
-            get
-            {
-                return this._CreatedBy;
-            }
-            set
-            {
-                if ((this._CreatedBy != value))
-                {
-                    this.OnCreatedByChanging(value);
-                    this.SendPropertyChanging();
-                    this._CreatedBy = value;
-                    this.SendPropertyChanged("CreatedBy");
-                    this.OnCreatedByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdateTime", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> UpdateTime
-        {
-            get
-            {
-                return this._UpdateTime;
-            }
-            set
-            {
-                if ((this._UpdateTime != value))
-                {
-                    this.OnUpdateTimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._UpdateTime = value;
-                    this.SendPropertyChanged("UpdateTime");
-                    this.OnUpdateTimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> UpdatedBy
-        {
-            get
-            {
-                return this._UpdatedBy;
-            }
-            set
-            {
-                if ((this._UpdatedBy != value))
-                {
-                    this.OnUpdatedByChanging(value);
-                    this.SendPropertyChanging();
-                    this._UpdatedBy = value;
-                    this.SendPropertyChanged("UpdatedBy");
-                    this.OnUpdatedByChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Attendance")]
-    public partial class Student_Attendance : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Attendance_Id;
-
-        private System.Nullable<int> _Stud_Id;
-
-        private string _Student_Name;
-
-        private System.Nullable<int> _Roll_No;
-
-        private System.Nullable<bool> _Present;
-
-        private System.Nullable<bool> _Absent;
-
-        private System.Nullable<bool> _Leave;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private System.Nullable<System.Guid> _Created_By;
-
-        private System.Nullable<System.DateTime> _Updated_Time;
-
-        private System.Nullable<System.Guid> _Updated_By;
-
-        private string _ReferBy;
-
-        private System.Nullable<System.DateTime> _Fromtime;
-
-        private System.Nullable<System.DateTime> _Totime;
-
-        private string _Class;
-
-        private string _Subject;
-
-        private string _Practical;
-
-        private string _Batch;
-
-        private string _Groups;
-
-        private System.Nullable<System.DateTime> _Attendance_date;
-
-        private string _Day_Name;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnAttendance_IdChanging(int value);
-        partial void OnAttendance_IdChanged();
-        partial void OnStud_IdChanging(System.Nullable<int> value);
-        partial void OnStud_IdChanged();
-        partial void OnStudent_NameChanging(string value);
-        partial void OnStudent_NameChanged();
-        partial void OnRoll_NoChanging(System.Nullable<int> value);
-        partial void OnRoll_NoChanged();
-        partial void OnPresentChanging(System.Nullable<bool> value);
-        partial void OnPresentChanged();
-        partial void OnAbsentChanging(System.Nullable<bool> value);
-        partial void OnAbsentChanged();
-        partial void OnLeaveChanging(System.Nullable<bool> value);
-        partial void OnLeaveChanged();
-        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreated_TimeChanged();
-        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnCreated_ByChanged();
-        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnUpdated_TimeChanged();
-        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnUpdated_ByChanged();
-        partial void OnReferByChanging(string value);
-        partial void OnReferByChanged();
-        partial void OnFromtimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnFromtimeChanged();
-        partial void OnTotimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnTotimeChanged();
-        partial void OnClassChanging(string value);
-        partial void OnClassChanged();
-        partial void OnSubjectChanging(string value);
-        partial void OnSubjectChanged();
-        partial void OnPracticalChanging(string value);
-        partial void OnPracticalChanged();
-        partial void OnBatchChanging(string value);
-        partial void OnBatchChanged();
-        partial void OnGroupsChanging(string value);
-        partial void OnGroupsChanged();
-        partial void OnAttendance_dateChanging(System.Nullable<System.DateTime> value);
-        partial void OnAttendance_dateChanged();
-        partial void OnDay_NameChanging(string value);
-        partial void OnDay_NameChanged();
-        #endregion
-
-        public Student_Attendance()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Attendance_Id
-        {
-            get
-            {
-                return this._Attendance_Id;
-            }
-            set
-            {
-                if ((this._Attendance_Id != value))
-                {
-                    this.OnAttendance_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._Attendance_Id = value;
-                    this.SendPropertyChanged("Attendance_Id");
-                    this.OnAttendance_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stud_Id", DbType = "Int")]
-        public System.Nullable<int> Stud_Id
-        {
-            get
-            {
-                return this._Stud_Id;
-            }
-            set
-            {
-                if ((this._Stud_Id != value))
-                {
-                    this.OnStud_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._Stud_Id = value;
-                    this.SendPropertyChanged("Stud_Id");
-                    this.OnStud_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Student_Name", DbType = "NVarChar(150)")]
-        public string Student_Name
-        {
-            get
-            {
-                return this._Student_Name;
-            }
-            set
-            {
-                if ((this._Student_Name != value))
-                {
-                    this.OnStudent_NameChanging(value);
-                    this.SendPropertyChanging();
-                    this._Student_Name = value;
-                    this.SendPropertyChanged("Student_Name");
-                    this.OnStudent_NameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Roll_No", DbType = "Int")]
-        public System.Nullable<int> Roll_No
-        {
-            get
-            {
-                return this._Roll_No;
-            }
-            set
-            {
-                if ((this._Roll_No != value))
-                {
-                    this.OnRoll_NoChanging(value);
-                    this.SendPropertyChanging();
-                    this._Roll_No = value;
-                    this.SendPropertyChanged("Roll_No");
-                    this.OnRoll_NoChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Present", DbType = "Bit")]
-        public System.Nullable<bool> Present
-        {
-            get
-            {
-                return this._Present;
-            }
-            set
-            {
-                if ((this._Present != value))
-                {
-                    this.OnPresentChanging(value);
-                    this.SendPropertyChanging();
-                    this._Present = value;
-                    this.SendPropertyChanged("Present");
-                    this.OnPresentChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Absent", DbType = "Bit")]
-        public System.Nullable<bool> Absent
-        {
-            get
-            {
-                return this._Absent;
-            }
-            set
-            {
-                if ((this._Absent != value))
-                {
-                    this.OnAbsentChanging(value);
-                    this.SendPropertyChanging();
-                    this._Absent = value;
-                    this.SendPropertyChanged("Absent");
-                    this.OnAbsentChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Leave", DbType = "Bit")]
-        public System.Nullable<bool> Leave
-        {
-            get
-            {
-                return this._Leave;
-            }
-            set
-            {
-                if ((this._Leave != value))
-                {
-                    this.OnLeaveChanging(value);
-                    this.SendPropertyChanging();
-                    this._Leave = value;
-                    this.SendPropertyChanged("Leave");
-                    this.OnLeaveChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this.OnCreated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_Time = value;
-                    this.SendPropertyChanged("Created_Time");
-                    this.OnCreated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Created_By
-        {
-            get
-            {
-                return this._Created_By;
-            }
-            set
-            {
-                if ((this._Created_By != value))
-                {
-                    this.OnCreated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_By = value;
-                    this.SendPropertyChanged("Created_By");
-                    this.OnCreated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Updated_Time
-        {
-            get
-            {
-                return this._Updated_Time;
-            }
-            set
-            {
-                if ((this._Updated_Time != value))
-                {
-                    this.OnUpdated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_Time = value;
-                    this.SendPropertyChanged("Updated_Time");
-                    this.OnUpdated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Updated_By
-        {
-            get
-            {
-                return this._Updated_By;
-            }
-            set
-            {
-                if ((this._Updated_By != value))
-                {
-                    this.OnUpdated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_By = value;
-                    this.SendPropertyChanged("Updated_By");
-                    this.OnUpdated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ReferBy", DbType = "NVarChar(150)")]
-        public string ReferBy
-        {
-            get
-            {
-                return this._ReferBy;
-            }
-            set
-            {
-                if ((this._ReferBy != value))
-                {
-                    this.OnReferByChanging(value);
-                    this.SendPropertyChanging();
-                    this._ReferBy = value;
-                    this.SendPropertyChanged("ReferBy");
-                    this.OnReferByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Fromtime", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Fromtime
-        {
-            get
-            {
-                return this._Fromtime;
-            }
-            set
-            {
-                if ((this._Fromtime != value))
-                {
-                    this.OnFromtimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Fromtime = value;
-                    this.SendPropertyChanged("Fromtime");
-                    this.OnFromtimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Totime", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Totime
-        {
-            get
-            {
-                return this._Totime;
-            }
-            set
-            {
-                if ((this._Totime != value))
-                {
-                    this.OnTotimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Totime = value;
-                    this.SendPropertyChanged("Totime");
-                    this.OnTotimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
-        public string Class
-        {
-            get
-            {
-                return this._Class;
-            }
-            set
-            {
-                if ((this._Class != value))
-                {
-                    this.OnClassChanging(value);
-                    this.SendPropertyChanging();
-                    this._Class = value;
-                    this.SendPropertyChanged("Class");
-                    this.OnClassChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Subject", DbType = "NVarChar(150)")]
-        public string Subject
-        {
-            get
-            {
-                return this._Subject;
-            }
-            set
-            {
-                if ((this._Subject != value))
-                {
-                    this.OnSubjectChanging(value);
-                    this.SendPropertyChanging();
-                    this._Subject = value;
-                    this.SendPropertyChanged("Subject");
-                    this.OnSubjectChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Practical", DbType = "NVarChar(150)")]
-        public string Practical
-        {
-            get
-            {
-                return this._Practical;
-            }
-            set
-            {
-                if ((this._Practical != value))
-                {
-                    this.OnPracticalChanging(value);
-                    this.SendPropertyChanging();
-                    this._Practical = value;
-                    this.SendPropertyChanged("Practical");
-                    this.OnPracticalChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch", DbType = "NVarChar(150)")]
-        public string Batch
-        {
-            get
-            {
-                return this._Batch;
-            }
-            set
-            {
-                if ((this._Batch != value))
-                {
-                    this.OnBatchChanging(value);
-                    this.SendPropertyChanging();
-                    this._Batch = value;
-                    this.SendPropertyChanged("Batch");
-                    this.OnBatchChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Groups", DbType = "NVarChar(150)")]
-        public string Groups
-        {
-            get
-            {
-                return this._Groups;
-            }
-            set
-            {
-                if ((this._Groups != value))
-                {
-                    this.OnGroupsChanging(value);
-                    this.SendPropertyChanging();
-                    this._Groups = value;
-                    this.SendPropertyChanged("Groups");
-                    this.OnGroupsChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Attendance_date
-        {
-            get
-            {
-                return this._Attendance_date;
-            }
-            set
-            {
-                if ((this._Attendance_date != value))
-                {
-                    this.OnAttendance_dateChanging(value);
-                    this.SendPropertyChanging();
-                    this._Attendance_date = value;
-                    this.SendPropertyChanged("Attendance_date");
-                    this.OnAttendance_dateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Day_Name", DbType = "NVarChar(150)")]
-        public string Day_Name
-        {
-            get
-            {
-                return this._Day_Name;
-            }
-            set
-            {
-                if ((this._Day_Name != value))
-                {
-                    this.OnDay_NameChanging(value);
-                    this.SendPropertyChanging();
-                    this._Day_Name = value;
-                    this.SendPropertyChanged("Day_Name");
-                    this.OnDay_NameChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.HR_Swap_Record")]
-    public partial class HR_Swap_Record : INotifyPropertyChanging, INotifyPropertyChanged
-    {
+	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.HR_Swap_Record")]
+	public partial class HR_Swap_Record : INotifyPropertyChanging, INotifyPropertyChanged
+	{
 
         private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 
@@ -153502,238 +152724,876 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Subject_Definition_List")]
-    public partial class Subject_Definition_List : INotifyPropertyChanging, INotifyPropertyChanged
-    {
+	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Time_Table")]
+	public partial class Student_Time_Table : INotifyPropertyChanging, INotifyPropertyChanged
+	{
 
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 
-        private int _Subject_Detail_ID;
+		private int _St_id;
 
-        private System.Nullable<int> _Subject_ID;
+		private string _Program;
 
-        private string _Subject_Name;
+		private string _Class;
 
-        private System.Nullable<System.DateTime> _Created_Time;
+		private string _Weeks;
 
-        private System.Nullable<System.Guid> _Created_By;
+		private System.Nullable<System.DateTime> _CreatedTime;
 
-        private System.Nullable<System.DateTime> _Update_Time;
+		private System.Nullable<System.Guid> _CreatedBy;
 
-        private System.Nullable<System.Guid> _Update_By;
+		private System.Nullable<System.DateTime> _UpdateTime;
 
-        private System.Nullable<bool> _IS_Active;
+		private System.Nullable<System.Guid> _UpdatedBy;
 
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnSubject_Detail_IDChanging(int value);
-        partial void OnSubject_Detail_IDChanged();
-        partial void OnSubject_IDChanging(System.Nullable<int> value);
-        partial void OnSubject_IDChanged();
-        partial void OnSubject_NameChanging(string value);
-        partial void OnSubject_NameChanged();
-        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreated_TimeChanged();
-        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnCreated_ByChanged();
-        partial void OnUpdate_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnUpdate_TimeChanged();
-        partial void OnUpdate_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnUpdate_ByChanged();
-        partial void OnIS_ActiveChanging(System.Nullable<bool> value);
-        partial void OnIS_ActiveChanged();
-        #endregion
+		private string _Block;
 
-        public Subject_Definition_List()
-        {
-            OnCreated();
-        }
+		private string _Module;
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Subject_Detail_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Subject_Detail_ID
-        {
-            get
-            {
-                return this._Subject_Detail_ID;
-            }
-            set
-            {
-                if ((this._Subject_Detail_ID != value))
-                {
-                    this.OnSubject_Detail_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Subject_Detail_ID = value;
-                    this.SendPropertyChanged("Subject_Detail_ID");
-                    this.OnSubject_Detail_IDChanged();
-                }
-            }
-        }
+		#region Extensibility Method Definitions
+		partial void OnLoaded();
+		partial void OnValidate(System.Data.Linq.ChangeAction action);
+		partial void OnCreated();
+		partial void OnSt_idChanging(int value);
+		partial void OnSt_idChanged();
+		partial void OnProgramChanging(string value);
+		partial void OnProgramChanged();
+		partial void OnClassChanging(string value);
+		partial void OnClassChanged();
+		partial void OnWeeksChanging(string value);
+		partial void OnWeeksChanged();
+		partial void OnCreatedTimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnCreatedTimeChanged();
+		partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
+		partial void OnCreatedByChanged();
+		partial void OnUpdateTimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnUpdateTimeChanged();
+		partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
+		partial void OnUpdatedByChanged();
+		partial void OnBlockChanging(string value);
+		partial void OnBlockChanged();
+		partial void OnModuleChanging(string value);
+		partial void OnModuleChanged();
+		#endregion
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Subject_ID", DbType = "Int")]
-        public System.Nullable<int> Subject_ID
-        {
-            get
-            {
-                return this._Subject_ID;
-            }
-            set
-            {
-                if ((this._Subject_ID != value))
-                {
-                    this.OnSubject_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Subject_ID = value;
-                    this.SendPropertyChanged("Subject_ID");
-                    this.OnSubject_IDChanged();
-                }
-            }
-        }
+		public Student_Time_Table()
+		{
+			OnCreated();
+		}
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Subject_Name", DbType = "NVarChar(150)")]
-        public string Subject_Name
-        {
-            get
-            {
-                return this._Subject_Name;
-            }
-            set
-            {
-                if ((this._Subject_Name != value))
-                {
-                    this.OnSubject_NameChanging(value);
-                    this.SendPropertyChanging();
-                    this._Subject_Name = value;
-                    this.SendPropertyChanged("Subject_Name");
-                    this.OnSubject_NameChanged();
-                }
-            }
-        }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_St_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+		public int St_id
+		{
+			get
+			{
+				return this._St_id;
+			}
+			set
+			{
+				if ((this._St_id != value))
+				{
+					this.OnSt_idChanging(value);
+					this.SendPropertyChanging();
+					this._St_id = value;
+					this.SendPropertyChanged("St_id");
+					this.OnSt_idChanged();
+				}
+			}
+		}
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this.OnCreated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_Time = value;
-                    this.SendPropertyChanged("Created_Time");
-                    this.OnCreated_TimeChanged();
-                }
-            }
-        }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Program", DbType = "NVarChar(150)")]
+		public string Program
+		{
+			get
+			{
+				return this._Program;
+			}
+			set
+			{
+				if ((this._Program != value))
+				{
+					this.OnProgramChanging(value);
+					this.SendPropertyChanging();
+					this._Program = value;
+					this.SendPropertyChanged("Program");
+					this.OnProgramChanged();
+				}
+			}
+		}
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Created_By
-        {
-            get
-            {
-                return this._Created_By;
-            }
-            set
-            {
-                if ((this._Created_By != value))
-                {
-                    this.OnCreated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_By = value;
-                    this.SendPropertyChanged("Created_By");
-                    this.OnCreated_ByChanged();
-                }
-            }
-        }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
+		public string Class
+		{
+			get
+			{
+				return this._Class;
+			}
+			set
+			{
+				if ((this._Class != value))
+				{
+					this.OnClassChanging(value);
+					this.SendPropertyChanging();
+					this._Class = value;
+					this.SendPropertyChanged("Class");
+					this.OnClassChanged();
+				}
+			}
+		}
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Update_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Update_Time
-        {
-            get
-            {
-                return this._Update_Time;
-            }
-            set
-            {
-                if ((this._Update_Time != value))
-                {
-                    this.OnUpdate_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Update_Time = value;
-                    this.SendPropertyChanged("Update_Time");
-                    this.OnUpdate_TimeChanged();
-                }
-            }
-        }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Weeks", DbType = "NVarChar(150)")]
+		public string Weeks
+		{
+			get
+			{
+				return this._Weeks;
+			}
+			set
+			{
+				if ((this._Weeks != value))
+				{
+					this.OnWeeksChanging(value);
+					this.SendPropertyChanging();
+					this._Weeks = value;
+					this.SendPropertyChanged("Weeks");
+					this.OnWeeksChanged();
+				}
+			}
+		}
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Update_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Update_By
-        {
-            get
-            {
-                return this._Update_By;
-            }
-            set
-            {
-                if ((this._Update_By != value))
-                {
-                    this.OnUpdate_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Update_By = value;
-                    this.SendPropertyChanged("Update_By");
-                    this.OnUpdate_ByChanged();
-                }
-            }
-        }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedTime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> CreatedTime
+		{
+			get
+			{
+				return this._CreatedTime;
+			}
+			set
+			{
+				if ((this._CreatedTime != value))
+				{
+					this.OnCreatedTimeChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedTime = value;
+					this.SendPropertyChanged("CreatedTime");
+					this.OnCreatedTimeChanged();
+				}
+			}
+		}
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IS_Active", DbType = "Bit")]
-        public System.Nullable<bool> IS_Active
-        {
-            get
-            {
-                return this._IS_Active;
-            }
-            set
-            {
-                if ((this._IS_Active != value))
-                {
-                    this.OnIS_ActiveChanging(value);
-                    this.SendPropertyChanging();
-                    this._IS_Active = value;
-                    this.SendPropertyChanged("IS_Active");
-                    this.OnIS_ActiveChanged();
-                }
-            }
-        }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> CreatedBy
+		{
+			get
+			{
+				return this._CreatedBy;
+			}
+			set
+			{
+				if ((this._CreatedBy != value))
+				{
+					this.OnCreatedByChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedBy = value;
+					this.SendPropertyChanged("CreatedBy");
+					this.OnCreatedByChanged();
+				}
+			}
+		}
 
-        public event PropertyChangingEventHandler PropertyChanging;
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdateTime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> UpdateTime
+		{
+			get
+			{
+				return this._UpdateTime;
+			}
+			set
+			{
+				if ((this._UpdateTime != value))
+				{
+					this.OnUpdateTimeChanging(value);
+					this.SendPropertyChanging();
+					this._UpdateTime = value;
+					this.SendPropertyChanged("UpdateTime");
+					this.OnUpdateTimeChanged();
+				}
+			}
+		}
 
-        public event PropertyChangedEventHandler PropertyChanged;
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> UpdatedBy
+		{
+			get
+			{
+				return this._UpdatedBy;
+			}
+			set
+			{
+				if ((this._UpdatedBy != value))
+				{
+					this.OnUpdatedByChanging(value);
+					this.SendPropertyChanging();
+					this._UpdatedBy = value;
+					this.SendPropertyChanged("UpdatedBy");
+					this.OnUpdatedByChanged();
+				}
+			}
+		}
 
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Block", DbType = "NVarChar(150)")]
+		public string Block
+		{
+			get
+			{
+				return this._Block;
+			}
+			set
+			{
+				if ((this._Block != value))
+				{
+					this.OnBlockChanging(value);
+					this.SendPropertyChanging();
+					this._Block = value;
+					this.SendPropertyChanged("Block");
+					this.OnBlockChanged();
+				}
+			}
+		}
 
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Module", DbType = "NVarChar(150)")]
+		public string Module
+		{
+			get
+			{
+				return this._Module;
+			}
+			set
+			{
+				if ((this._Module != value))
+				{
+					this.OnModuleChanging(value);
+					this.SendPropertyChanging();
+					this._Module = value;
+					this.SendPropertyChanged("Module");
+					this.OnModuleChanged();
+				}
+			}
+		}
 
-    public partial class sp_DispatchedTestListResult
-    {
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+
+	[global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Student_Attendance")]
+	public partial class Student_Attendance : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+		private int _Attendance_Id;
+
+		private System.Nullable<int> _Stud_Id;
+
+		private string _Student_Name;
+
+		private System.Nullable<int> _Roll_No;
+
+		private System.Nullable<bool> _Present;
+
+		private System.Nullable<bool> _Absent;
+
+		private System.Nullable<bool> _Leave;
+
+		private System.Nullable<System.DateTime> _Created_Time;
+
+		private System.Nullable<System.Guid> _Created_By;
+
+		private System.Nullable<System.DateTime> _Updated_Time;
+
+		private System.Nullable<System.Guid> _Updated_By;
+
+		private string _ReferBy;
+
+		private System.Nullable<System.DateTime> _Fromtime;
+
+		private System.Nullable<System.DateTime> _Totime;
+
+		private string _Class;
+
+		private string _Subject;
+
+		private string _Practical;
+
+		private string _Batch;
+
+		private string _Groups;
+
+		private System.Nullable<System.DateTime> _Attendance_date;
+
+		private string _Day_Name;
+
+		private string _Block;
+
+		private string _Module;
+
+		#region Extensibility Method Definitions
+		partial void OnLoaded();
+		partial void OnValidate(System.Data.Linq.ChangeAction action);
+		partial void OnCreated();
+		partial void OnAttendance_IdChanging(int value);
+		partial void OnAttendance_IdChanged();
+		partial void OnStud_IdChanging(System.Nullable<int> value);
+		partial void OnStud_IdChanged();
+		partial void OnStudent_NameChanging(string value);
+		partial void OnStudent_NameChanged();
+		partial void OnRoll_NoChanging(System.Nullable<int> value);
+		partial void OnRoll_NoChanged();
+		partial void OnPresentChanging(System.Nullable<bool> value);
+		partial void OnPresentChanged();
+		partial void OnAbsentChanging(System.Nullable<bool> value);
+		partial void OnAbsentChanged();
+		partial void OnLeaveChanging(System.Nullable<bool> value);
+		partial void OnLeaveChanged();
+		partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnCreated_TimeChanged();
+		partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+		partial void OnCreated_ByChanged();
+		partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnUpdated_TimeChanged();
+		partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+		partial void OnUpdated_ByChanged();
+		partial void OnReferByChanging(string value);
+		partial void OnReferByChanged();
+		partial void OnFromtimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnFromtimeChanged();
+		partial void OnTotimeChanging(System.Nullable<System.DateTime> value);
+		partial void OnTotimeChanged();
+		partial void OnClassChanging(string value);
+		partial void OnClassChanged();
+		partial void OnSubjectChanging(string value);
+		partial void OnSubjectChanged();
+		partial void OnPracticalChanging(string value);
+		partial void OnPracticalChanged();
+		partial void OnBatchChanging(string value);
+		partial void OnBatchChanged();
+		partial void OnGroupsChanging(string value);
+		partial void OnGroupsChanged();
+		partial void OnAttendance_dateChanging(System.Nullable<System.DateTime> value);
+		partial void OnAttendance_dateChanged();
+		partial void OnDay_NameChanging(string value);
+		partial void OnDay_NameChanged();
+		partial void OnBlockChanging(string value);
+		partial void OnBlockChanged();
+		partial void OnModuleChanging(string value);
+		partial void OnModuleChanged();
+		#endregion
+
+		public Student_Attendance()
+		{
+			OnCreated();
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+		public int Attendance_Id
+		{
+			get
+			{
+				return this._Attendance_Id;
+			}
+			set
+			{
+				if ((this._Attendance_Id != value))
+				{
+					this.OnAttendance_IdChanging(value);
+					this.SendPropertyChanging();
+					this._Attendance_Id = value;
+					this.SendPropertyChanged("Attendance_Id");
+					this.OnAttendance_IdChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Stud_Id", DbType = "Int")]
+		public System.Nullable<int> Stud_Id
+		{
+			get
+			{
+				return this._Stud_Id;
+			}
+			set
+			{
+				if ((this._Stud_Id != value))
+				{
+					this.OnStud_IdChanging(value);
+					this.SendPropertyChanging();
+					this._Stud_Id = value;
+					this.SendPropertyChanged("Stud_Id");
+					this.OnStud_IdChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Student_Name", DbType = "NVarChar(150)")]
+		public string Student_Name
+		{
+			get
+			{
+				return this._Student_Name;
+			}
+			set
+			{
+				if ((this._Student_Name != value))
+				{
+					this.OnStudent_NameChanging(value);
+					this.SendPropertyChanging();
+					this._Student_Name = value;
+					this.SendPropertyChanged("Student_Name");
+					this.OnStudent_NameChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Roll_No", DbType = "Int")]
+		public System.Nullable<int> Roll_No
+		{
+			get
+			{
+				return this._Roll_No;
+			}
+			set
+			{
+				if ((this._Roll_No != value))
+				{
+					this.OnRoll_NoChanging(value);
+					this.SendPropertyChanging();
+					this._Roll_No = value;
+					this.SendPropertyChanged("Roll_No");
+					this.OnRoll_NoChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Present", DbType = "Bit")]
+		public System.Nullable<bool> Present
+		{
+			get
+			{
+				return this._Present;
+			}
+			set
+			{
+				if ((this._Present != value))
+				{
+					this.OnPresentChanging(value);
+					this.SendPropertyChanging();
+					this._Present = value;
+					this.SendPropertyChanged("Present");
+					this.OnPresentChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Absent", DbType = "Bit")]
+		public System.Nullable<bool> Absent
+		{
+			get
+			{
+				return this._Absent;
+			}
+			set
+			{
+				if ((this._Absent != value))
+				{
+					this.OnAbsentChanging(value);
+					this.SendPropertyChanging();
+					this._Absent = value;
+					this.SendPropertyChanged("Absent");
+					this.OnAbsentChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Leave", DbType = "Bit")]
+		public System.Nullable<bool> Leave
+		{
+			get
+			{
+				return this._Leave;
+			}
+			set
+			{
+				if ((this._Leave != value))
+				{
+					this.OnLeaveChanging(value);
+					this.SendPropertyChanging();
+					this._Leave = value;
+					this.SendPropertyChanged("Leave");
+					this.OnLeaveChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Created_Time
+		{
+			get
+			{
+				return this._Created_Time;
+			}
+			set
+			{
+				if ((this._Created_Time != value))
+				{
+					this.OnCreated_TimeChanging(value);
+					this.SendPropertyChanging();
+					this._Created_Time = value;
+					this.SendPropertyChanged("Created_Time");
+					this.OnCreated_TimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> Created_By
+		{
+			get
+			{
+				return this._Created_By;
+			}
+			set
+			{
+				if ((this._Created_By != value))
+				{
+					this.OnCreated_ByChanging(value);
+					this.SendPropertyChanging();
+					this._Created_By = value;
+					this.SendPropertyChanged("Created_By");
+					this.OnCreated_ByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Updated_Time
+		{
+			get
+			{
+				return this._Updated_Time;
+			}
+			set
+			{
+				if ((this._Updated_Time != value))
+				{
+					this.OnUpdated_TimeChanging(value);
+					this.SendPropertyChanging();
+					this._Updated_Time = value;
+					this.SendPropertyChanged("Updated_Time");
+					this.OnUpdated_TimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+		public System.Nullable<System.Guid> Updated_By
+		{
+			get
+			{
+				return this._Updated_By;
+			}
+			set
+			{
+				if ((this._Updated_By != value))
+				{
+					this.OnUpdated_ByChanging(value);
+					this.SendPropertyChanging();
+					this._Updated_By = value;
+					this.SendPropertyChanged("Updated_By");
+					this.OnUpdated_ByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ReferBy", DbType = "NVarChar(150)")]
+		public string ReferBy
+		{
+			get
+			{
+				return this._ReferBy;
+			}
+			set
+			{
+				if ((this._ReferBy != value))
+				{
+					this.OnReferByChanging(value);
+					this.SendPropertyChanging();
+					this._ReferBy = value;
+					this.SendPropertyChanged("ReferBy");
+					this.OnReferByChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Fromtime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Fromtime
+		{
+			get
+			{
+				return this._Fromtime;
+			}
+			set
+			{
+				if ((this._Fromtime != value))
+				{
+					this.OnFromtimeChanging(value);
+					this.SendPropertyChanging();
+					this._Fromtime = value;
+					this.SendPropertyChanged("Fromtime");
+					this.OnFromtimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Totime", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Totime
+		{
+			get
+			{
+				return this._Totime;
+			}
+			set
+			{
+				if ((this._Totime != value))
+				{
+					this.OnTotimeChanging(value);
+					this.SendPropertyChanging();
+					this._Totime = value;
+					this.SendPropertyChanged("Totime");
+					this.OnTotimeChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Class", DbType = "NVarChar(150)")]
+		public string Class
+		{
+			get
+			{
+				return this._Class;
+			}
+			set
+			{
+				if ((this._Class != value))
+				{
+					this.OnClassChanging(value);
+					this.SendPropertyChanging();
+					this._Class = value;
+					this.SendPropertyChanged("Class");
+					this.OnClassChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Subject", DbType = "NVarChar(150)")]
+		public string Subject
+		{
+			get
+			{
+				return this._Subject;
+			}
+			set
+			{
+				if ((this._Subject != value))
+				{
+					this.OnSubjectChanging(value);
+					this.SendPropertyChanging();
+					this._Subject = value;
+					this.SendPropertyChanged("Subject");
+					this.OnSubjectChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Practical", DbType = "NVarChar(150)")]
+		public string Practical
+		{
+			get
+			{
+				return this._Practical;
+			}
+			set
+			{
+				if ((this._Practical != value))
+				{
+					this.OnPracticalChanging(value);
+					this.SendPropertyChanging();
+					this._Practical = value;
+					this.SendPropertyChanged("Practical");
+					this.OnPracticalChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch", DbType = "NVarChar(150)")]
+		public string Batch
+		{
+			get
+			{
+				return this._Batch;
+			}
+			set
+			{
+				if ((this._Batch != value))
+				{
+					this.OnBatchChanging(value);
+					this.SendPropertyChanging();
+					this._Batch = value;
+					this.SendPropertyChanged("Batch");
+					this.OnBatchChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Groups", DbType = "NVarChar(150)")]
+		public string Groups
+		{
+			get
+			{
+				return this._Groups;
+			}
+			set
+			{
+				if ((this._Groups != value))
+				{
+					this.OnGroupsChanging(value);
+					this.SendPropertyChanging();
+					this._Groups = value;
+					this.SendPropertyChanged("Groups");
+					this.OnGroupsChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Attendance_date", DbType = "DateTime")]
+		public System.Nullable<System.DateTime> Attendance_date
+		{
+			get
+			{
+				return this._Attendance_date;
+			}
+			set
+			{
+				if ((this._Attendance_date != value))
+				{
+					this.OnAttendance_dateChanging(value);
+					this.SendPropertyChanging();
+					this._Attendance_date = value;
+					this.SendPropertyChanged("Attendance_date");
+					this.OnAttendance_dateChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Day_Name", DbType = "NVarChar(150)")]
+		public string Day_Name
+		{
+			get
+			{
+				return this._Day_Name;
+			}
+			set
+			{
+				if ((this._Day_Name != value))
+				{
+					this.OnDay_NameChanging(value);
+					this.SendPropertyChanging();
+					this._Day_Name = value;
+					this.SendPropertyChanged("Day_Name");
+					this.OnDay_NameChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Block", DbType = "NVarChar(150)")]
+		public string Block
+		{
+			get
+			{
+				return this._Block;
+			}
+			set
+			{
+				if ((this._Block != value))
+				{
+					this.OnBlockChanging(value);
+					this.SendPropertyChanging();
+					this._Block = value;
+					this.SendPropertyChanged("Block");
+					this.OnBlockChanged();
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Module", DbType = "NVarChar(150)")]
+		public string Module
+		{
+			get
+			{
+				return this._Module;
+			}
+			set
+			{
+				if ((this._Module != value))
+				{
+					this.OnModuleChanging(value);
+					this.SendPropertyChanging();
+					this._Module = value;
+					this.SendPropertyChanged("Module");
+					this.OnModuleChanged();
+				}
+			}
+		}
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+
+	public partial class sp_DispatchedTestListResult
+	{
 
         private int _Patient_ID;
 
