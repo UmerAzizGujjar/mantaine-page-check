@@ -332,6 +332,7 @@
     <Content Include="Modules\StudentAffair\StudentTimeTable.aspx" />
     <Content Include="Modules\StudentAffair\SubjectDefinition.aspx" />
     <Content Include="Modules\StudentAffair\SubjectList.aspx" />
+    <Content Include="Modules\StudentAffair\Subj_Definition.aspx" />
     <Content Include="Modules\StudentAffair\TimeTableList.aspx" />
     <Content Include="Modules\Others\Assign_Hostel_Room.aspx" />
     <Content Include="Modules\Others\Assign_Hostel_Room_View.aspx" />
@@ -23111,6 +23112,13 @@
     </Compile>
     <Compile Include="Modules\StudentAffair\SubjectList.aspx.designer.cs">
       <DependentUpon>SubjectList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\StudentAffair\Subj_Definition.aspx.cs">
+      <DependentUpon>Subj_Definition.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\StudentAffair\Subj_Definition.aspx.designer.cs">
+      <DependentUpon>Subj_Definition.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\StudentAffair\TimeTableList.aspx.cs">
       <DependentUpon>TimeTableList.aspx</DependentUpon>
