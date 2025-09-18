@@ -76,21 +76,60 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(valuset);
         }
 
+        [WebMethod]
+        public static string GetAcademicBlock()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Academic Block"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
 
         [WebMethod]
-        public static string GetSubj(string program, string classs)
+        public static string GetAcademicModule()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Academic Module"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetSubj(string studentPRogram, string studentClass, string studentBlock, string studentModule)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
             string data = string.Empty;
             var listItems = (from s in db.Subject_Definitions
                              join sd in db.Subject_Definition_Lists on s.subject_Id equals sd.Subject_ID
-                             where s.Program == program && s.Class == classs
+                             where s.Program == studentPRogram
+                                && s.Class == studentClass
+                                && s.Block == studentBlock
+                                && s.Module == studentModule
                              select new
                              {
                                  sd.Subject_Detail_ID,
                                  sd.Subject_Name
-
                              }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(listItems);
@@ -114,6 +153,8 @@ namespace PMS
                 lstItems.Program = subjects.program;
                 lstItems.Class = subjects.ddlClass;
                 lstItems.Weeks = subjects.ddlWeek;
+                lstItems.Block = subjects.ddlBlock;
+                lstItems.Module = subjects.ddlModule;
                 lstItems.UpdatedBy = AppConfig.UserID;
                 lstItems.UpdateTime = DateTime.Now;
 
@@ -125,6 +166,8 @@ namespace PMS
                 subjectDef.Program = subjects.program;
                 subjectDef.Class = subjects.ddlClass;
                 subjectDef.Weeks = subjects.ddlWeek;
+                subjectDef.Block = subjects.ddlBlock;
+                subjectDef.Module = subjects.ddlModule;
                 subjectDef.CreatedBy = AppConfig.UserID;
                 subjectDef.CreatedTime = DateTime.Now;
 
@@ -219,15 +262,47 @@ namespace PMS
         }
 
 
-
-
+      
         [WebMethod]
         public static string editMaster(int Stu_ID)
         {
-            DataBaseDataContext db = new DataBaseDataContext();
-            var obj = db.Student_Time_Tables.FirstOrDefault(r => r.St_id == Stu_ID);
-            return (new JavaScriptSerializer().Serialize(obj));
+            string result = string.Empty;
+
+            if (Stu_ID <= 0)
+                return result;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = (from obj in db.Student_Time_Tables
+                             where obj.St_id == Stu_ID
+                             select new
+                             {
+                                 obj.St_id,
+                                 obj.Program,
+                                 Program_Text = db.GetDataValueName("Admission Category", obj.Program),
+                                 obj.Class,
+                                 Class_Text = db.GetDataValueName("Student Class", obj.Class),
+                                 obj.Weeks,
+                                 Weeks_Text = db.GetDataValueName("Week", obj.Weeks),
+                                 obj.Block,
+                                 Block_Text = db.GetDataValueName("Academic Block", obj.Block),
+                                 obj.Module,
+                                 Module_Text = db.GetDataValueName("Academic Module", obj.Module),
+                                 obj.CreatedTime,
+                                 obj.CreatedBy,
+                                 obj.UpdateTime,
+                                 obj.UpdatedBy
+                             }).FirstOrDefault();
+
+                if (query != null)
+                {
+                    result = new JavaScriptSerializer().Serialize(query).ToString();
+                }
+            }
+
+            return result;
         }
+
         [WebMethod]
         public static string EditDetail(string Stu_ID)
         {
@@ -268,6 +343,8 @@ namespace PMS
             public string program { get; set; }
             public string ddlClass { get; set; }
             public string ddlWeek { get; set; }
+            public string ddlBlock { get; set; }
+            public string ddlModule { get; set; }
             public List<Detaillist> Save_list { get; set; }
 
         }

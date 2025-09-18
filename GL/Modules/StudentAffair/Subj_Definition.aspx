@@ -124,11 +124,16 @@
         }
 
 
-        function fillDropdown($dropdown, methodName) {
-            if ($dropdown.data('filled')) return;
+        function fillDropdown($dropdown, methodName, callback) {
+            if ($dropdown.data('filled')) {
+                if (callback) callback();
+                return;
+            }
+
+
+            $dropdown.html('<option value="">Loading...</option>').trigger('change.select2');
 
             var currentValue = $dropdown.val();
-            var currentText = $dropdown.find('option:selected').text();
 
             $.ajax({
                 type: "POST",
@@ -139,38 +144,34 @@
                 success: function (response) {
                     try {
                         const data = JSON.parse(response.d);
-                        var options = '<option value="0">Please Select</option>';
-                        var valueFound = false;
+                        const allOptions = [{ DataValue_Name: "", DataValue_Description: "Select" }].concat(data);
 
-                        $.each(data, function (key, value) {
-                            var isSelected = (value.DataValue_Name == currentValue);
-                            if (isSelected) valueFound = true;
+                        $dropdown.data('allOptions', allOptions);
 
-                            options += `<option value="${value.DataValue_Name}" ${isSelected ? 'selected="selected"' : ''}>
-                            ${value.DataValue_Description}
-                        </option>`;
+                        let optionsHtml = '';
+                        allOptions.forEach(opt => {
+                            const sel = opt.DataValue_Name === currentValue ? ' selected="selected"' : '';
+                            optionsHtml += `<option value="${opt.DataValue_Name}"${sel}>${opt.DataValue_Description}</option>`;
                         });
 
-                        $dropdown.html(options)
-                            .data('filled', true)
-                            .trigger('change');
+                        $dropdown.html(optionsHtml).data('filled', true).trigger('change.select2');
 
-                        if (currentValue && currentValue !== "0" && !valueFound) {
-                            $dropdown.prepend(`<option value="${currentValue}" selected="selected">
-                            ${currentText}
-                        </option>`);
-                            $dropdown.trigger('change');
+                        if ($dropdown.data('shouldReopen')) {
+                            $dropdown.data('shouldReopen', false);
+                            setTimeout(() => {
+                                $dropdown.select2('open');
+                            }, 50);
                         }
 
-                        if ($dropdown.hasClass('select2-hidden-accessible')) {
-                            $dropdown.select2('close').select2('open');
-                        }
+                        if (callback) callback();
                     } catch (e) {
                         $dropdown.data('filled', false);
+                        $dropdown.html('<option value="">Error loading</option>').trigger('change.select2');
                     }
                 },
                 error: function (xhr, status, error) {
                     $dropdown.data('filled', false);
+                    $dropdown.html('<option value="">Load failed</option>').trigger('change.select2');
                 }
             });
         }
