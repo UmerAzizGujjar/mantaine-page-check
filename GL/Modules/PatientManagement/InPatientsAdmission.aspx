@@ -6226,7 +6226,7 @@
 
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                      <asp:Label ID="LblDepartment" runat="server" Text="SubDepartment"></asp:Label>
-                                    <asp:DropDownList ID="ddlDepartment" TabIndex="1" runat="server" AppendDataBoundItems="true" onchange="Chk_Doctor_Info()"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlDepartment"  runat="server" AppendDataBoundItems="true" onchange="Chk_Doctor_Info()"></asp:DropDownList>
                                     <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Always">
                                         <ContentTemplate>
                                             <asp:Button ID="btnGet_Doctor" Style="display: none;" Text="" runat="server" OnClick="btnGet_Doctor_Click" CausesValidation="false" />
@@ -6235,7 +6235,7 @@
                                 </div>
                                   <div class="col-lg-3 col-md-4 col-sm-6">
                                     <asp:Label ID="Label34" runat="server" Text="InPatient Admit Catagory"></asp:Label>
-                                    <asp:DropDownList ID="ddlPatientType" TabIndex="5" runat="server" AppendDataBoundItems="true" onChange="ChangePanel()"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlPatientType"  runat="server" AppendDataBoundItems="true" onChange="ChangePanel()"></asp:DropDownList>
                                 </div>
                        
                              
@@ -6244,7 +6244,7 @@
                             <div class="row mt">
                                          <div class="col-lg-3 col-md-4 col-sm-6">
                                     <asp:Label ID="LblDoctor" runat="server" Text="Admitting Doctor"></asp:Label>
-                                    <asp:UpdatePanel runat="server" TabIndex="2" ID="UpdatePanel13">
+                                    <asp:UpdatePanel runat="server"  ID="UpdatePanel13">
                                         <Triggers>
                                             <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
                                         </Triggers>
@@ -6255,15 +6255,15 @@
                                 </div>
                                   <div class="col-lg-3 col-md-4 col-sm-6">
                                     <asp:Label ID="lblpkgtype" runat="server" Text="Pacakge Type"></asp:Label>
-                                   <asp:DropDownList ID="ddlpacakagetype"  onchange="loadPackages()" TabIndex="1" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
+                                   <asp:DropDownList ID="ddlpacakagetype"  onchange="loadPackages()" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
                                 </div>
                                  <div class="col-lg-3 col-md-4 col-sm-6">
                                     <asp:Label ID="lblpackagename" runat="server" Text="Pacakge Name"></asp:Label>
-                                   <asp:DropDownList ID="ddlpackagename" TabIndex="1" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
+                                   <asp:DropDownList ID="ddlpackagename" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
                                 </div>
                                   <div class="col-lg-3 col-md-4 col-sm-6">
                                     <asp:Label ID="lblipdprocedures" runat="server" Text="Procedures"></asp:Label>
-                                   <asp:DropDownList ID="ddlipdProcedures" TabIndex="1" runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
+                                   <asp:DropDownList ID="ddlipdProcedures"  runat="server" AppendDataBoundItems="true" ></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row mt">
@@ -6271,7 +6271,7 @@
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <asp:Label ID="lblIssuance_Of" runat="server" Text="Admit To *"></asp:Label>
                                     <td style="width: 203px">
-                                        <asp:UpdatePanel ID="UpdatePanel9" TabIndex="6" runat="server">
+                                        <asp:UpdatePanel ID="UpdatePanel9"  runat="server">
                                             <ContentTemplate>
                                                 <asp:DropDownList ID="ddlIssuance_Of" runat="server" AppendDataBoundItems="true" onChange="chkIssuance_Of_Select()"></asp:DropDownList>
                                             </ContentTemplate>
@@ -6281,7 +6281,7 @@
                               
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                         <asp:Label ID="lblWard_No" runat="server" Text="Ward *"></asp:Label>
-                                        <asp:UpdatePanel ID="UpdatePanel11" TabIndex="7" runat="server" UpdateMode="Always">
+                                        <asp:UpdatePanel ID="UpdatePanel11"  runat="server" UpdateMode="Always">
                                             <ContentTemplate>
                                                 <asp:DropDownList ID="ddlWard_No" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()" disabled="disabled"></asp:DropDownList>
                                             </ContentTemplate>
@@ -6289,11 +6289,11 @@
                                 </div>
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                         <asp:Label ID="LblBed_No" runat="server" Text="Bed No"></asp:Label>
-                                        <asp:TextBox ID="txtBed_No"  TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtBed_No"   runat="server" Enabled="true"></asp:TextBox>
                                 </div>
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                         <asp:Label ID="lblRoom_No" runat="server" Text="Room_No *"></asp:Label>
-                                        <asp:DropDownList ID="ddlRoom_No" TabIndex="9" runat="server" AppendDataBoundItems="true" AutoPostBack="true" disabled="disabled"></asp:DropDownList>
+                                        <asp:DropDownList ID="ddlRoom_No"  runat="server" AppendDataBoundItems="true" AutoPostBack="true" disabled="disabled"></asp:DropDownList>
                                 </div>
                                 
                               
@@ -6301,7 +6301,7 @@
                             <div class="row mt" >
                                   <div class="col-lg-3 co-md-4 col-sm-6">
                                         <asp:Label ID="LblRoom_Type" runat="server" Text="Room Type"></asp:Label>
-                                        <asp:UpdatePanel ID="UpdatePanel1" TabIndex="10" runat="server">
+                                        <asp:UpdatePanel ID="UpdatePanel1"  runat="server">
                                             <ContentTemplate>
                                                 <asp:DropDownList ID="txtRoom_Type" runat="server" AppendDataBoundItems="true" AutoPostBack="true" onChange="FillRooms()"></asp:DropDownList>
                                             </ContentTemplate>
@@ -6309,11 +6309,11 @@
                                 </div>
                                  <div class="col-lg-3 col-md-4 col-sm-6 ">
                                         <asp:Label ID="lblprocedurename" runat="server" Text="Procedure Name"></asp:Label>
-                                        <asp:TextBox ID="txtprocedurename"  TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtprocedurename"   runat="server" Enabled="true"></asp:TextBox>
                                 </div>
                                      <div class="col-lg-6 col-md-7 col-sm-9">
                                     <asp:Label ID="LblHealth_Complaints" runat="server" Text="Health Complaint *"></asp:Label>
-                                        <asp:TextBox ID="txtHealth_Complaints" TabIndex="3" Rows="1" runat="server" TextMode="MultiLine" Style="width:100%" ></asp:TextBox>
+                                        <asp:TextBox ID="txtHealth_Complaints" Rows="1" runat="server" TextMode="MultiLine" Style="width:100%" ></asp:TextBox>
                                         <asp:RequiredFieldValidator ID="rfvHealth_Complaints" ControlToValidate="txtHealth_Complaints" runat="server" ErrorMessage="Enter Health Complaint" Text="*"></asp:RequiredFieldValidator>
                                 </div>
                               
@@ -6322,11 +6322,11 @@
                                     <div class="row mt">
                                          <div class="col-lg-3 col-md-4 col-sm-6">
                                                       <asp:Label ID="lbladvamount" runat="server" Text="Advance Amount"></asp:Label>
-                                        <asp:TextBox ID="txtadvamount" TabIndex="8" runat="server" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="txtadvamount"  runat="server" Enabled="false"></asp:TextBox>
                                                </div>
                                           <div class="col-lg-3 col-md-4 col-sm-6">
                                                         <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
-                                        <asp:TextBox ID="txtadmissionfee" TabIndex="8" runat="server" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="txtadmissionfee" runat="server" Enabled="false"></asp:TextBox>
                                                </div>
                                          <div class="col-lg-1 col-md-2 col-sm-2">
                                                              <label></label>
@@ -6334,7 +6334,7 @@
                                                </div>
                                          <div class="col-lg-3 col-md-4 col-sm-6" style="display:none">
                                      <asp:Label ID="LblExpected_Discharge_Date" runat="server" Text="Expected Discharge Date"></asp:Label>
-                                      <asp:TextBox ID="txtExpected_Discharge_Date" TabIndex="4" runat="server"></asp:TextBox>
+                                      <asp:TextBox ID="txtExpected_Discharge_Date"  runat="server"></asp:TextBox>
                                  </div>
                                 </div>
                                 </div>
@@ -11735,7 +11735,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select id="ddl_Gender" tabindex="4" style="width: 197px;">
+                            <select id="ddl_Gender" style="width: 197px;">
                             </select>
                         </div>
                     </div>
@@ -11764,7 +11764,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select  tabindex="5" id="ddl_status" style="width: 197px;">
+                            <select  tabindex="2" id="ddl_status" style="width: 197px;">
                                 <option></option>
                             </select>
                         </div>
@@ -11775,14 +11775,14 @@
                             <label>Relation<span style="color:red;">*</span></label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop fcux" name="name" id="ddlRelation">
+                            <select class="impo-drop fcux" tabindex="3" name="name" id="ddlRelation">
                                 <option value="S/O">S/O</option>
                                 <option value="W/O">W/O</option>
                                 <option value="D/O">D/O</option>
                             </select>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_relation" tabindex="2" style="margin-left: -12px !important" />
+                            <input type="text" id="txt_relation" tabindex="4" style="margin-left: -12px !important" />
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
@@ -11790,7 +11790,7 @@
                             <label>Mobile<span style="color:red;">*</span></label>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" tabindex="6" id="txt_mobile" style="width: 197px !important;" />
+                            <input type="text" tabindex="5" id="txt_mobile" style="width: 197px !important;" />
                         </div>
                     </div>
 
@@ -11800,7 +11800,7 @@
                             <label>Age/DOB<span style="color:red;">*</span></label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select name="name" id="PrefixAge" >
+                            <select name="name" tabindex="6" id="PrefixAge" >
                                 <option value="Year">Year</option>
                                 <option value="Month">Month</option>
                                 <option value="Day">Day</option>
@@ -11808,7 +11808,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_dob" tabindex="3" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
+                            <input type="text" id="txt_dob" tabindex="7" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
                             <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
                         </div>
 
@@ -11818,7 +11818,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input tabindex="7"  type="text" id="txt_cnic" style="width: 200px !important" />
+                            <input tabindex="8"  type="text" id="txt_cnic" style="width: 200px !important" />
                         </div>
                     </div>
 
@@ -11829,7 +11829,7 @@
                         </div>
 
                         <div class="col-lg-6 col-md-3 col-sm-4">
-                            <input type="text" tabindex="8" id="txt_Address"  />
+                            <input type="text"  tabindex="9" id="txt_Address"  />
                         </div>
                     </div>
                 </div>
@@ -11837,7 +11837,7 @@
 
 
             <div class="modal-footer" style="margin-top: 6%;">
-                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="9" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
+                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="10" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
                 <%-- <input type="button" id="RevistPat" name="RevistPat" value="Revist" onclick="SaveRevist_Patient();" />--%>
                 <input type="button" id="updatePatient_Data" class="btn btn-primry"  name="updatePatient_Data" style="text-transform: capitalize;width:10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
                 <input type="button" id="CloseSearchModel" class="btn-gray" style="width:10% !important" name="saveENT" value="Close" data-dismiss="modal" />

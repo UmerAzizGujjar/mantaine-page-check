@@ -1,0 +1,64 @@
+﻿.custom-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin: 20px 0;
+    background: #fff;
+    transition: transform 0.2s ease-in-out;
+}
+
+    .custom-card:hover {
+        transform: translateY(-3px);
+    }
+
+.custom-card-header {
+    background: linear-gradient(90deg, #EFA63E, #EFA63E);
+    padding: 12px 20px;
+    color: #fff;
+}
+
+    .custom-card-header h5 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+.custom-card-body {
+    padding: 20px;
+}
+
+    .custom-card-body label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .custom-card-body select {
+        width: 100%;
+        border-radius: 8px;
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        font-size: 0.95rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .custom-card-body select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 6px rgba(0,123,255,0.4);
+            outline: none;
+        }
+
+    .custom-card-body .row {
+        margin-bottom: 1rem;
+    }
+
+.tblscroll {
+    height: 227px !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}

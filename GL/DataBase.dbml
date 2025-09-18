@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="prch" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=prch;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="prchConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3250,28 +3251,6 @@
       <Column Name="Depreciation_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Subject_Definition" Member="Subject_Definitions">
-    <Type Name="Subject_Definition">
-      <Column Name="subject_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Program" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Class" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Subject_Definition_List" Member="Subject_Definition_Lists">
-    <Type Name="Subject_Definition_List">
-      <Column Name="Subject_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Subject_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Subject_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Student_Time_Table_Detail" Member="Student_Time_Table_Details">
     <Type Name="Student_Time_Table_Detail">
       <Column Name="Std_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3296,43 +3275,6 @@
       <Column Name="Topic" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Venue" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Teacher" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Student_Time_Table" Member="Student_Time_Tables">
-    <Type Name="Student_Time_Table">
-      <Column Name="St_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Program" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Class" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Weeks" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="UpdateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Student_Attendance" Member="Student_Attendances">
-    <Type Name="Student_Attendance">
-      <Column Name="Attendance_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Stud_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Student_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Roll_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Present" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Absent" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Leave" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="ReferBy" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Fromtime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Totime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Class" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Subject" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Practical" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Batch" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Groups" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Attendance_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Day_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.HR_Swap_Record" Member="HR_Swap_Records">
@@ -6892,6 +6834,72 @@
       <Column Name="Segment_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="SubSegment_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="DepartmentId" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Subject_Definition" Member="Subject_Definitions">
+    <Type Name="Subject_Definition">
+      <Column Name="subject_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Program" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Class" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Block" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Module" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student_Time_Table" Member="Student_Time_Tables">
+    <Type Name="Student_Time_Table">
+      <Column Name="St_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Program" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Class" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Weeks" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="UpdateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Block" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Module" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student_Attendance" Member="Student_Attendances">
+    <Type Name="Student_Attendance">
+      <Column Name="Attendance_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Stud_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Student_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Roll_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Present" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Absent" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Leave" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="ReferBy" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Fromtime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Totime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Class" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Subject" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Practical" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Batch" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Groups" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Attendance_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Day_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Block" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Module" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Subject_Definition_List" Member="Subject_Definition_Lists">
+    <Type Name="Subject_Definition_List">
+      <Column Name="Subject_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Subject_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Subject_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="IS_Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

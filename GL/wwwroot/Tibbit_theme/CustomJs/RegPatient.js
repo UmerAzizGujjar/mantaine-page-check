@@ -39,7 +39,8 @@ $(document).ready(function () {
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;
 
-    $dropdown.data('filled', false);
+    var currentValue = $dropdown.val();
+    var currentText = $dropdown.find('option:selected').text();
 
     $.ajax({
         type: "POST",
@@ -50,28 +51,38 @@ function fillDropdown($dropdown, methodName) {
         success: function (response) {
             try {
                 const data = JSON.parse(response.d);
-                var options = '<option value="0">Please Select</option>'; 
+                var options = '<option value="0">Please Select</option>';
+                var valueFound = false;
 
                 $.each(data, function (key, value) {
-                    options += `<option value="${value.DataValue_Name}">
-                                    ${value.DataValue_Description}
-                                </option>`;
+                    var isSelected = (value.DataValue_Name == currentValue);
+                    if (isSelected) valueFound = true;
+
+                    options += `<option value="${value.DataValue_Name}" ${isSelected ? 'selected="selected"' : ''}>
+                            ${value.DataValue_Description}
+                        </option>`;
                 });
 
                 $dropdown.html(options)
-                    .data('filled', true) 
-                    .trigger('change');  
+                    .data('filled', true)
+                    .trigger('change');
+
+                if (currentValue && currentValue !== "0" && !valueFound) {
+                    $dropdown.prepend(`<option value="${currentValue}" selected="selected">
+                            ${currentText}
+                        </option>`);
+                    $dropdown.trigger('change');
+                }
+
                 if ($dropdown.hasClass('select2-hidden-accessible')) {
                     $dropdown.select2('close').select2('open');
                 }
             } catch (e) {
-                console.error(`Error parsing data from ${methodName}:`, e);
-                $dropdown.data('filled', false); 
+                $dropdown.data('filled', false);
             }
         },
         error: function (xhr, status, error) {
-            console.error(`Error fetching ${methodName}:`, error);
-            $dropdown.data('filled', false); 
+            $dropdown.data('filled', false);
         }
     });
 }
