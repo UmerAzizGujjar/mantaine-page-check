@@ -1683,6 +1683,7 @@ namespace PMS
                 //rd.SetParameterValue("@stDate", stDate);
                 //rd.SetParameterValue("@endDate", endDate);
                 rd.SetParameterValue("@PaymentInvoiceID", Convert.ToInt32(InvoiceID));
+                rd.SetParameterValue("@InvId", Convert.ToInt32(InvoiceID));
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }

@@ -299,6 +299,9 @@
                         $("#txtSampleCollected_Date").val(parse[0].Sample_Collected_Date);
                         FillTokenInputForMRNo(parse[0].Patient_ID);
                         $("#Emp_Name").val(parse[0].Collected_Emp_ID);
+                        setTimeout(function () {
+                            $("#ddlSample_Status").val(parse[0].Sample_Status).trigger();
+                        }, 2000);
                         debugger;
                         $.ajax({
                             type: "post",
@@ -318,10 +321,16 @@
                                 for (var i = 0; i < length; i++) {
                                     var checked = '';
                                     debugger;
-                                    rows += '<tr><td style="display:none">' + parse[i].Test_ID + '</td><td style="display:none">' + parse[i].Bill_Details_ID + '</td><td style="text-align: center;">' + parse[i].Test_Name + '</td><td style="text-align: center;">' + parse[i].Dept + '</td><td style="text-align: center;">' + parse[i].Gener + '</td><td style="text-align: center;">' + parse[i].Qty + '</td><td style="text-align: center;"><input type="checkbox"  value="' + parse[i].Sample_Collected + '" id="Check' + i + '" name="Check"/><td style="text-align: center;"><input style="width: 150px;" type="text" name="Remarks" value="' + parse[i].Remarks + '" id="Remarks' + i + '"/></td></td><td style="text-align: center;"><a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
+                                    rows += '<tr><td style="display:none">' + parse[i].Test_ID + '</td><td style="display:none">' + parse[i].Bill_Details_ID + '</td><td style="text-align: center;">' + parse[i].Test_Name + '</td><td style="text-align: center;">' + parse[i].Dept + '</td><td style="text-align: center;">' + parse[i].Gener + '</td><td style="text-align: center;">' + parse[i].Qty + '</td><td style="text-align: center;"><input type="checkbox"  value="' + parse[i].Sample_Collected + '" id="Check' + i + '" name="Check"/><td style="text-align: center;"><input style="width: 150px;" type="text" name="Remarks" value="' + parse[i].Remarks + '" id="Remarks' + i + '"/></td></td><td><select id="ddlOutSource" name="ddlOutSource">' + option_OutSource + '</select></td><td style="text-align: center;"><a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
+                               /*     $('select[name="ddlOutSource"]').eq(i).val(parse[i].OutSource);*/
                                 }
+                                debugger;
                                 $('#CollectedSample tbody tr').remove();
                                 $('#CollectedSample tbody').append(rows);
+                                for (var i = 0; i < parse.length; i++) {
+                                    $('select[name="ddlOutSource"]').eq(i).val(parse[i].OutSource);
+                                }
+
                                 $.each(parse_for_check, function (key, value) {
                                     if (parse_for_check[key].Sample_Collected == true) {
                                         $('#Check' + key + '').prop('checked', true);
@@ -458,39 +467,6 @@
         }
 
 
-        //function checkBoxClicked(value) {
-        //    debugger;
-        //    var TempArray = [];
-        //    debugger;
-        //    TempArray[0] = value.className;
-        //    TempArray[1] = value.value.split(',')[0];
-        //    TempArray[2] = value.value.split(',')[1];
-        //    TempArray[3] = value.value.split(',')[2];
-        //    TempArray[4] = value.value.split(',')[3];
-        //    TempArray[5] = value.value.split(',')[4];
-        //    if (value.checked == true) {
-        //        CheckedTest.push(TempArray);
-        //        debugger;
-        //        var row;
-
-        //        row = '<tr id=' + TempArray[1] + '><td style="display:none;">' + TempArray[1] + '</td><td style="display:none;">' + TempArray[2] + '</td><td style="text-align: center;">' + TempArray[0] + '</td><td style="text-align: center;">' + TempArray[3] + '</td><td style="text-align: center;">' + TempArray[4] + '</td><td style="text-align: center;">' + TempArray[5] + '</td><td style="text-align: center;"><input type="checkbox" name="Check" checked="checked" disabled = "disabled"/></td><td style="text-align: center;"><input type="text" name="Remarks"/></td><td style="text-align: center;"><a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
-
-        //        $('#CollectedSample tbody').append(row);
-        //    }
-        //    else if (value.checked == false) {
-        //        debugger;
-        //        var length = CheckedTest.length;
-        //        debugger;
-        //        for (var i = 0; i < length; i++) {
-
-        //            if (CheckedTest[i][1] == value.value.split(',')[0] /*Test ID*/) {
-        //                $('#' + TempArray[1] + '').remove();
-        //                CheckedTest.splice(i, 1);
-        //                return false;
-        //            }
-        //        }
-        //    }
-        //}
         function FillSampleStatus() {
             var options = '<option value="">Select Status</option>';
             PageMethods.GetSampleStatus(function (data) {
@@ -528,8 +504,6 @@
                 CheckedTest.push(TempArray);
                 debugger;
                 var row;
-
-                // Add a dropdown at the end
                 row = '<tr id="' + TempArray[1] + '">' +
                     '<td style="display:none;">' + TempArray[1] + '</td>' +
                     '<td style="display:none;">' + TempArray[2] + '</td>' +
