@@ -171,6 +171,20 @@ function GetGroup() {
         },
     });
 }
+function loadnewaccountToCreate() {
+
+    PageMethods.LoadNewAccountToCreate(function (data) {
+        var NewAccountData = JSON.parse(data);
+
+        $("#hdfParent_Code").val(NewAccountData.NewhdfParent_Code);
+        $("#hdfAccount_Code").val(NewAccountData.NewhdfAccount_Code);
+        $("#hdfAccount_Serial").val(NewAccountData.NewhdfAccount_Serial);
+        $("#hdfLevel").val(NewAccountData.NewhdfLevel);
+    }
+        , function (err) {
+            alert("Error: " + err.get_message());
+        });
+}
 function LoadStudentData(Stu_ID) {
     debugger;
     PageMethods.LoadStudentData(Stu_ID, function (resp) {
@@ -209,6 +223,25 @@ function LoadStudentData(Stu_ID) {
 
             $('#ddlGlAccount').val(studata.Account_id).trigger('change');
         }, 2500);
+        if (studata.Account_id != null) {
+            PageMethods.LoadGLAccount(parseInt(studata.Account_id), function (data) {
+                var AccountData = JSON.parse(data);
+
+                $("#txtAccount_Code_Name").val(AccountData.txtAccount_Code_Name);
+                $("#hdfAccount_Name").val(AccountData.hdfAccount_Name);
+                $("#hdfAccount_Code").val(AccountData.hdfAccount_Code);
+                $("#hdfParent_Code").val(AccountData.hdfParent_Code);
+                $("#hdfAccount_Serial").val(AccountData.hdfAccount_Serial);
+                $("#hdfLevel").val(AccountData.hdfLevel);
+                $("#hdfAccount_ID").val(AccountData.hdfAccount_ID);
+
+
+            }
+                , function (err) {
+                    alert("Error: " + err.get_message());
+                });
+        }
+
         setTimeout(function () {
             $('#Bld_group').val(studata.BloodGroup).trigger('change');
         }, 2000);
