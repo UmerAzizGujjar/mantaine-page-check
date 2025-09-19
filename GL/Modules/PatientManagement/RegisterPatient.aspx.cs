@@ -13,7 +13,7 @@ namespace PMS.Modules.PatientManagement
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+           
         }
         [WebMethod]
         public static string GetGender()
@@ -172,6 +172,8 @@ namespace PMS.Modules.PatientManagement
         [WebMethod]
         public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age, string city, string area, string city_val, string area_val,string Blood_Group,string State, string Country)
         {
+            
+
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
             if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")

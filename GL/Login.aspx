@@ -8,7 +8,7 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/login.css" rel="stylesheet" />
     <script src="wwwroot/Tibbit_theme/js/swalalert.js"></script>
     <link href="wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
-
+   
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
@@ -87,7 +87,7 @@
 
                                 </div>
                             </fieldset>
-                            
+                          
                             <p class="submitButton">
                                 <asp:Button ID="LoginButton" Style="border-radius: 5px;" runat="server" CommandName="Login" Text="LOGIN" ValidationGroup="LoginUserValidationGroup" OnClick="LoginButton_Click" />
                             </p>
@@ -199,6 +199,7 @@
         }
     }
 </script>
+ 
 
 
 </asp:Content>
