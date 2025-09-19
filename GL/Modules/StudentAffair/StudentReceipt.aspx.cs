@@ -352,7 +352,7 @@ namespace PMS.Modules.StudentAffair
 
 
         [WebMethod]
-        public static string LoadStudentChilds(int StudentID)
+        public static string LoadStudentChilds(int StudentID) /*add class parameter*/
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var Details = db.sp_StudentDetailonReceipt(StudentID).ToList();

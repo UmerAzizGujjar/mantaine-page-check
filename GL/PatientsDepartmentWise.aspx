@@ -3,12 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <script type="text/javascript" src="wwwroot/Scripts/jquery.tokeninput.js"></script>
-    <script src="wwwroot/Scripts/bootstrap.min.js" type="text/css"></script>
-    <link href="wwwroot/js/select2.min.css" rel="stylesheet" />
-    <script src="wwwroot/js/select2.min.js"></script>
-    <link href="wwwroot/Styles/jquery.ptTimeSelect.css" rel="stylesheet" />
-    <script src="wwwroot/Scripts/jquery.ptTimeSelect.js"></script>
+   
     <script type="text/javascript">
         function loaddoctor() {
             debugger;

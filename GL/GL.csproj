@@ -243,6 +243,7 @@
     <Content Include="Modules\Inventory\ServiceView.aspx" />
     <Content Include="Modules\Lab\SampleView.aspx" />
     <Content Include="Modules\Others\About.aspx" />
+    <Content Include="Modules\Others\CustomError.aspx" />
     <Content Include="Modules\OT\AbsentOnOperationDay.aspx" />
     <Content Include="Modules\Accounts\ChangePassword.aspx" />
     <Content Include="Modules\Accounts\ChangePasswordSuccess.aspx" />
@@ -2758,6 +2759,7 @@
     <Content Include="wwwroot\ASsiratTheme\fontawesomes\svgs\solid\z.svg" />
     <Content Include="wwwroot\ASsiratTheme\fonts\fontawesome-webfont.svg" />
     <Content Include="wwwroot\ASsiratTheme\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="wwwroot\ASsiratTheme\header-footer\Footer.ascx" />
     <Content Include="wwwroot\ASsiratTheme\images\AsiratIcons\LoginBackground.jpg" />
     <Content Include="wwwroot\ASsiratTheme\images\AsiratIcons\logo.jpeg" />
     <Content Include="wwwroot\ASsiratTheme\images\AsiratIcons\logo.PNG" />
@@ -22369,6 +22371,13 @@
     <Compile Include="Modules\Others\About.aspx.designer.cs">
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Others\CustomError.aspx.cs">
+      <DependentUpon>CustomError.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Others\CustomError.aspx.designer.cs">
+      <DependentUpon>CustomError.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\OT\AbsentOnOperationDay.aspx.cs">
       <DependentUpon>AbsentOnOperationDay.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -24715,6 +24724,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\WithHoldingTaxAccountDefinition.aspx.designer.cs">
       <DependentUpon>WithHoldingTaxAccountDefinition.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wwwroot\ASsiratTheme\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\ASsiratTheme\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
     </Compile>
     <Compile Include="wwwroot\IITH_Theme\header-footer\Footer.ascx.cs">
       <DependentUpon>Footer.ascx</DependentUpon>

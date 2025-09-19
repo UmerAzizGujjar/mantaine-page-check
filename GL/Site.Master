@@ -108,6 +108,63 @@
             $('#ctl00_lblMessage').hide();
 
         });
+
+    </script>
+    <script type="text/javascript">
+     
+
+      
+        $(document).ajaxError(function (event, xhr, settings, thrownError) {
+            console.error("AJAX Error:", xhr.status, thrownError);
+
+            if (xhr.status === 500) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response && response.redirect) {
+                    
+                        window.location.href = response.redirect;
+                        return;
+                    }
+                } catch (e) { }
+
+              
+                showToast("A server error occurred. Please try again or contact support.", "error");
+            }
+            else if (xhr.status === 404) {
+                showToast("Requested resource not found.", "warning");
+            }
+            else {
+                showToast("Network error. Please check your connection.", "warning");
+            }
+        });
+
+      
+        window.onerror = function (message, source, lineno, colno, error) {
+           
+
+            return true;
+        };
+
+        
+        window.addEventListener('unhandledrejection', function (event) {
+            console.error("Unhandled Promise Rejection:", event.reason);
+            showToast("Something went wrong. Please try again.", "error");
+            event.preventDefault();
+        });
+
+     
+        function showToast(message, type) {
+         
+            if (typeof toastr !== 'undefined') {
+                toastr[type](message);
+            }
+            else if (typeof Swal !== 'undefined') {
+                Swal.fire("Error", message, "error");
+            }
+            else {
+                alert(message); 
+            }
+        }
     </script>
 <%-- <script type="text/javascript">
         $(document).ready(function () {
