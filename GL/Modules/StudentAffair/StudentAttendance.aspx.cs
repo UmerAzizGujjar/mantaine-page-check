@@ -96,12 +96,67 @@ namespace PMS
                              where v.ValueSet_Description == "Batch"
                              select new
                              {
-                                 DataValueName = p.DataValue_Name,
-                                 DataValueDescription = p.DataValue_Description,
+                                 DataValue_Name = p.DataValue_Name,
+                                 DataValue_Description = p.DataValue_Description,
                              }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+
+        [WebMethod]
+        public static string GetAcademicBlockByWeek(string week)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var result = (from link in db.Student_Time_Tables
+                                  join dv in db.DataValues on link.Block equals dv.DataValue_Name
+                                  join ds in db.ValueSets on dv.ValueSet_ID equals ds.ValueSet_ID
+                                  where ds.ValueSet_Name == "Academic Block"
+                                        && link.Weeks == week 
+                                  select new
+                                  {
+                                      dv.DataValue_Name,
+                                      dv.DataValue_Description
+                                  }).Distinct().ToList(); 
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new List<object>());
+            }
+        }
+
+        [WebMethod]
+        public static string GetAcademicModuleByWeek(string week)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var result = (from link in db.Student_Time_Tables
+                                  join dv in db.DataValues on link.Module equals dv.DataValue_Name
+                                  join ds in db.ValueSets on dv.ValueSet_ID equals ds.ValueSet_ID
+                                  where ds.ValueSet_Name == "Academic Module"
+                                        && link.Weeks == week 
+                                  select new
+                                  {
+                                      dv.DataValue_Name,
+                                      dv.DataValue_Description
+                                  }).Distinct().ToList();
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new List<object>());
+            }
+        }
+
         [WebMethod]
         public static string StudentGroup()
 
@@ -173,14 +228,13 @@ namespace PMS
                         where sta.Program == prgrm && sta.Class == clas && sta.Weeks == week
                         select new
                         {
-                            std.Date,
-                            std.Day_Name
+                             std.Date,
+                             std.Day_Name
                         }).ToList().Distinct();
             return (new JavaScriptSerializer()).Serialize(Time);
 
-
-
         }
+
 
         [WebMethod]
         public static string SaveAttendance(string Parameter)
@@ -231,6 +285,8 @@ namespace PMS
                 SaAtt.Groups = record.groups;
                 SaAtt.Created_Time = DateTime.Now;
                 SaAtt.Created_By = AppConfig.UserID;
+                SaAtt.Block = record.Block; 
+                SaAtt.Module = record.Module;
                 db.Student_Attendances.InsertOnSubmit(SaAtt);
                 db.SubmitChanges();
             }
@@ -334,6 +390,8 @@ namespace PMS
             public string TTimes { get; set; }
             public string ATime { get; set; }
 
+            public string Block { get; set; } 
+            public string Module { get; set; }
 
 
 

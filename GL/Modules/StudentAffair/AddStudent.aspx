@@ -15,7 +15,7 @@
             <% } %>
             var studentid = '<%= Request.QueryString["ID"]%>'
             if (studentid == '') {
-               
+                loadnewaccountToCreate();
             }
             var date = '<%= DateTime.Now%>';
             $("#txt_Date").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
@@ -91,6 +91,13 @@
             var Gl_code = $('#ddlGlAccount').val();
             var Is_Active = $('#Is_Active').prop("checked");
             var newSelect = $('#nslct').val();
+
+            var hdfAccount_ID = $('#hdfAccount_ID').val();
+            var hdfParent_Code = $('#hdfParent_Code').val();
+            var hdfAccount_Serial = $('#hdfAccount_Serial').val();
+            var hdfLevel = $('#hdfLevel').val();
+            var hdfAccount_Code = $('#hdfAccount_Code').val();
+         
             debugger;
 
             if (newSelect == "0" && fullname == "") {
@@ -183,7 +190,7 @@
                 return;
             }
 
-            var AllRecords = { 'Student_Id': Student_Id, 'Rollnum': Rollnum  , 'admission': admission, 'fullname': fullname, 'Father_Name': Father_Name, 'Guard_Name': Guard_Name, 'Cust_Address': Cust_Address, 'StdCntct_No': StdCntct_No, 'Fcntc_No': Fcntc_No, 'Per_Address': Per_Address, 'EmailAdrr': EmailAdrr, 'txt_Date': txt_Date, 'txtadmDate': txtadmDate, 'St_CNIC': St_CNIC, 'Bld_group': Bld_group, 'Domicile': Domicile, 'Ft_CNIC': Ft_CNIC, 'txtDisease_alergy': txtDisease_alergy, 'Std_Status': Std_Status, 'ddlProgram': ddlProgram, 'ddlBatch': ddlBatch, 'ddlGroup': ddlGroup, 'txt_WholeClass': txt_WholeClass, 'ddlClass': ddlClass, 'txtSession': txtSession, 'Gl_code': Gl_code, 'Is_Active': Is_Active };
+            var AllRecords = { 'Student_Id': Student_Id, 'Rollnum': Rollnum, 'admission': admission, 'fullname': fullname, 'Father_Name': Father_Name, 'Guard_Name': Guard_Name, 'Cust_Address': Cust_Address, 'StdCntct_No': StdCntct_No, 'Fcntc_No': Fcntc_No, 'Per_Address': Per_Address, 'EmailAdrr': EmailAdrr, 'txt_Date': txt_Date, 'txtadmDate': txtadmDate, 'St_CNIC': St_CNIC, 'Bld_group': Bld_group, 'Domicile': Domicile, 'Ft_CNIC': Ft_CNIC, 'txtDisease_alergy': txtDisease_alergy, 'Std_Status': Std_Status, 'ddlProgram': ddlProgram, 'ddlBatch': ddlBatch, 'ddlGroup': ddlGroup, 'txt_WholeClass': txt_WholeClass, 'ddlClass': ddlClass, 'txtSession': txtSession, 'Gl_code': Gl_code, 'Is_Active': Is_Active, 'hdfAccount_ID': hdfAccount_ID, 'hdfParent_Code': hdfParent_Code, 'hdfAccount_Serial': hdfAccount_Serial, 'hdfLevel': hdfLevel, 'hdfAccount_Code': hdfAccount_Code };
             
             PageMethods.SaveStudentData(btnsave, JSON.stringify(AllRecords), function (res) {
                 debugger;
@@ -427,9 +434,17 @@
                    
                 </div>
                 <div class="row">
-                     <div class="col-lg-4 col-md-2 col-sm-4">
-                          <select id="ddlGlAccount"></select>
-                     </div>
+                    <div class="col-lg-4 col-md-2 col-sm-4">
+                        <%--<select id="ddlGlAccount"></select>--%>
+                         <input type="text" id="txtAccount_Code_Name" name="txtAccount_Code_Name" readonly />
+                        <input type="hidden" id="hdfAccount_Name" name="hdfAccount_Name" />
+                        <input type="hidden" id="hdfAccount_Code" name="hdfAccount_Code" />
+                        <input type="hidden" id="hdfParent_Code" name="hdfParent_Code" />
+                        <input type="hidden" id="hdfAccount_Serial" name="hdfAccount_Serial" />
+                        <input type="hidden" id="hdfLevel" name="hdfLevel" />
+                        <input type="hidden" id="hdfAccount_ID" name="hdfAccount_ID" />
+                        <input type="hidden" id="hdfAccountExists" name="hdfAccountExists" />
+                    </div>
                 </div>
             </div>
               <div class="col-lg-1 col-md-1 col-sm-12"></div>

@@ -81,58 +81,70 @@
             }
         });
 
-            function fillDropdown($dropdown, methodName, callback) {
-                if ($dropdown.data('filled')) {
-                    if (callback) callback();
-                    return;
-                }
-
-
-                $dropdown.html('<option value="">Loading...</option>').trigger('change.select2');
-
-                var currentValue = $dropdown.val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "StudentTimeTable.aspx/" + methodName,
-                    data: '{}',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        try {
-                            const data = JSON.parse(response.d);
-                            const allOptions = [{ DataValue_Name: "", DataValue_Description: "Select" }].concat(data);
-
-                            $dropdown.data('allOptions', allOptions);
-
-                            let optionsHtml = '';
-                            allOptions.forEach(opt => {
-                                const sel = opt.DataValue_Name === currentValue ? ' selected="selected"' : '';
-                                optionsHtml += `<option value="${opt.DataValue_Name}"${sel}>${opt.DataValue_Description}</option>`;
-                            });
-
-                            $dropdown.html(optionsHtml).data('filled', true).trigger('change.select2');
-
-                            if ($dropdown.data('shouldReopen')) {
-                                $dropdown.data('shouldReopen', false);
-                                setTimeout(() => {
-                                    $dropdown.select2('open');
-                                }, 50);
-                            }
-
-                            if (callback) callback();
-                        } catch (e) {
-                            $dropdown.data('filled', false);
-                            $dropdown.html('<option value="">Error loading</option>').trigger('change.select2');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        $dropdown.data('filled', false);
-                        $dropdown.html('<option value="">Load failed</option>').trigger('change.select2');
-                    }
-                });
+        function fillDropdown($dropdown, methodName, callback) {
+            if ($dropdown.data('filled')) {
+                if (callback) callback();
+                return;
             }
 
+            var currentValue = $dropdown.val();
+            var currentText = $dropdown.find('option:selected').text();
+
+            $dropdown.html('<option value="">Loading...</option>').trigger('change.select2');
+
+            $.ajax({
+                type: "POST",
+                url: "StudentTimeTable.aspx/" + methodName,
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        const data = JSON.parse(response.d);
+                        const allOptions = [{ DataValue_Name: "", DataValue_Description: "Select" }].concat(data);
+                        $dropdown.data('allOptions', allOptions);
+
+                        let optionsHtml = '';
+                        let valueFound = false;
+
+                        allOptions.forEach(opt => {
+                            const isSelected = opt.DataValue_Name === currentValue;
+                            if (isSelected) valueFound = true;
+                            optionsHtml += `<option value="${opt.DataValue_Name}"${isSelected ? ' selected="selected"' : ''}>${opt.DataValue_Description}</option>`;
+                        });
+
+                        if ($dropdown.hasClass('select2-hidden-accessible')) {
+                            $dropdown.select2('destroy');
+                        }
+
+                        $dropdown.html(optionsHtml).data('filled', true);
+
+                        if (currentValue && currentValue !== "" && !valueFound) {
+                            $dropdown.prepend(`<option value="${currentValue}" selected="selected">${currentText}</option>`);
+                        }
+
+                        $dropdown.select2();
+
+                        $dropdown.trigger('change.select2');
+
+                        if ($dropdown.data('shouldReopen')) {
+                            $dropdown.data('shouldReopen', false);
+                            setTimeout(() => {
+                                $dropdown.select2('open');
+                            }, 50);
+                        }
+                        if (callback) callback();
+                    } catch (e) {
+                        $dropdown.data('filled', false);
+                        $dropdown.html('<option value="">Error loading</option>').trigger('change.select2');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $dropdown.data('filled', false);
+                    $dropdown.html('<option value="">Load failed</option>').trigger('change.select2');
+                }
+            });
+        }
 
         function Selectfunc() {
             var currentYear = new Date().getFullYear();
@@ -487,33 +499,36 @@
 
         var GetStudentSubject;
         function GetSubject($targetDropdown) {
-            var studentClass = $('#ddlClass').val();
-            var studentPRogram = $('#program').val();
-            var studentBlock = $('#ddlBlock').val();
-            var studentModule = $('#ddlModule').val();
+            return new Promise(function (resolve, reject) {
+                var studentClass = $('#ddlClass').val();
+                var studentPRogram = $('#program').val();
+                var studentBlock = $('#ddlBlock').val();
+                var studentModule = $('#ddlModule').val();
 
-            $.ajax({
-                url: 'StudentTimeTable.aspx/GetSubj',
-                data: JSON.stringify({
-                    "studentPRogram": studentPRogram,
-                    "studentClass": studentClass,
-                    "studentBlock": studentBlock,
-                    "studentModule": studentModule
-                }),
-                type: 'post',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                async: true,
-                success: function (data) {
-                    var GetStudentSubject = '<option value="0">Please Select</option>';
-                    $.each(JSON.parse(data.d), function (key, value) {
-                        GetStudentSubject += '<option value="' + value.Subject_Detail_ID + '">' + value.Subject_Name + '</option>';
-                    });
-                    $targetDropdown.html(GetStudentSubject); 
-                },
-                error: function () {
-                    console.log("Error loading subjects.");
-                }
+                $.ajax({
+                    url: 'StudentTimeTable.aspx/GetSubj',
+                    data: JSON.stringify({
+                        "studentPRogram": studentPRogram,
+                        "studentClass": studentClass,
+                        "studentBlock": studentBlock,
+                        "studentModule": studentModule
+                    }),
+                    type: 'post',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        var optionsHtml = '<option value="0">Please Select</option>';
+                        $.each(JSON.parse(data.d), function (key, value) {
+                            optionsHtml += '<option value="' + value.Subject_Detail_ID + '">' + value.Subject_Name + '</option>';
+                        });
+                        $targetDropdown.html(optionsHtml);
+                        resolve();
+                    },
+                    error: function () {
+                        console.log("Error loading subjects.");
+                        reject();
+                    }
+                });
             });
         }
         
@@ -555,31 +570,7 @@
                     $('#ddlTeacher').html(GetTeacher);
                 },
             });
-        }
-        //function Selectfunc() {
-        //    debugger;
-        //    var slct_value = $("#program").val();
-        //    if (slct_value == 01) {
-        //        $($('#ddlClass').find('option')[1]).show();
-        //        $($('#ddlClass').find('option')[2]).show();
-        //        $($('#ddlClass').find('option')[3]).show();
-        //        $($('#ddlClass').find('option')[4]).show();
-        //        $($('#ddlClass').find('option')[5]).show();
-        //    }
-        //    else if (slct_value == 02) {
-        //        $($('#ddlClass').find('option')[2]).hide();
-        //        $($('#ddlClass').find('option')[3]).hide();
-        //        $($('#ddlClass').find('option')[4]).hide();
-        //        $($('#ddlClass').find('option')[5]).hide();
-        //    }
-        //    else if (slct_value == 03) {
-        //        $($('#ddlClass').find('option')[1]).show();
-        //        $($('#ddlClass').find('option')[2]).show();
-        //        $($('#ddlClass').find('option')[3]).show();
-        //        $($('#ddlClass').find('option')[4]).show();
-        //        $($('#ddlClass').find('option')[5]).hide();
-        //    }
-        //}  
+        }       
         debugger;
         function Delete(row) {
             debugger;
@@ -640,152 +631,155 @@
 
             });
             GetGroup();
-            setTimeout(function () {
                 editDetail(Stu_ID);
-            }, 2500);
+            
          
         }
-
-
-
-        function editDetail(Stu_ID) {
+    
+        async function editDetail(Stu_ID) {
             $("#btnSave").attr('disabled', true);
-            //setTimeout(function () {
-            //    GetSubject();
-            //}, 5000)
-            debugger;
-            $.ajax({
-                type: "post",
-                url: "StudentTimeTable.aspx/EditDetail",
-                data: JSON.stringify({
-                    "Stu_ID": Stu_ID
-                }),
-                contentType: "application/json; charset=utf-8",
-                datatype: "json",
-                success:function (response) {
-                    debugger;
-                    var studata = JSON.parse(response.d);
-                    var mdTable = $('#tblPerson');
-                    mdTable.empty();
-                    debugger;
-                    $(studata).each(function (index, md) {
-                        debugger;
-                        var time = moment(md.FromTime).format('HH:mm');
-                        var ttime = moment(md.ToTime).format('HH:mm');
-                        var dt = new Date(parseInt(md.Date.substr(6)));
-                        dt = moment(dt).format('DD/MM/YYYY');
-                        var ab = md.Day_Name;
-                        var da = index + 1;
-                        mdTable.append('<tr class="rowtr"><td style= "display:none; width: 78px !important; "><input style="display:none; width: 80px !important;" type="text" name="clas" id="clas"  value="' + md.Class_Year + '"/></td><td>' + md.classname + '</td><td><input type="text" style="width: 110px !important;font-size: 12px;height: 23px;" name="Date" id="txt_Date' + da + '" value="' + dt + ' -' + ab + '" /></td><td>From:<input type="time" "  style="width: 95px!important;font-size: 12px;height: 23px;"  name="FTime" id="FTime' + index + '" value="' + time + '" />To: <input type="time" "  style="width: 95px!important;font-size: 12px;height: 23px;"  name="TTime" id="Time' + index + '" value="' + ttime + '" /></td></td><td><select style ="font-size:12px;height:25px;" id="ddlstdsubj' + index + '" name="ddlGetStuSub">' + GetStudentSubject + '</select></td><td ><select style ="font-size:12px;height:25px;" id="ddlitmeCode' + index + '" value ="' + md.Practical + '" name="ddlSubject">' + GlobSubj + '</select></td><td><select style ="font-size:12px;height:25px;" id="ddlbatchs' + index + '" value ="' + md.Batch + '" name="ddlBatch">' + Getbatch + '</select> </td><td> <select style ="font-size:12px;height:25px;" id="ddlgroups' + index + '" value ="' + md.Groups + '" name="ddlGroup">' + Getgrp + '</select></td>   <td><input style = "margin-left: 12px !important; width: 31px !important;" type="Checkbox" name="whlclass" id="whole' + index + '"  value="' + md.Whole_Class + '" /></td> <td><input disabled type="text" name="Topic" id="Topic' + index + '" value="' + md.Topic + '" style="height: 25px;"/></td>  <td> <select style ="font-size:12px;height:25px;" id="ddlTeacher' + index + '" value ="' + md.Teacher + '" name="ddlTeacher" class="teach">' + GetTeacher + '</select></td> <td> <select style =" font-size:12px;height:25px;" id="ddlVenue' + index + '" value ="' + md.Venue + '" name="ddlVenue">' + GetVenue + '</select></td> <td> <input style = "margin-left: 15px !important;" type="Checkbox" name="chkhldy" id="chkhldy' + index + '"  value="' + md.Holiday + '"/> </td><td> <input style = "margin-left: 12px !important;" type="Checkbox" name="chkbrk" id="chkbrks' + index + '"  value="' + md.Brea_k + '"/> </td><td><a href="#" onclick ="Delete(this)"><i class="glyphicon glyphicon-trash"  style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative; margin-left: 12px !important;"></i></a></td></tr>');
-                        var $subjectDropdown = $('#ddlstdsubj' + index);
-                        GetSubject($subjectDropdown);
-                        setTimeout(function () {
-                            $subjectDropdown.val(md.Subjects).trigger('change');
-                        }, 1000);
-                        $('.teach').select2();
-                        debugger;
-                        $('#whole' + index + '').val(md.Whole_Class);
-                        if (md.Whole_Class == true) {
-                            $('#whole' + index + '').attr('checked', true);
 
-                        }
-                        $('#chkhldy' + index + '').val(md.Holiday);
-                        if (md.Holiday == true) {
-                            $('#chkhldy' + index + '').attr('checked', true);
-                        }
-                        $('#chkbrks' + index + '').val(md.Brea_k);
-                        if (md.Brea_k == true) {
-                            $('#chkbrks' + index + '').attr('checked', true);
-                        }
-                        debugger;
-                        setTimeout(function () {
-                            $('#ddlitmeCode' + index + '').val(md.Practical).trigger('change');
-                        }, 900);
-                        setTimeout(function () {
-                            $('#ddlbatchs' + index + '').val(md.Batch).trigger('change');
-                        }, 900);
+            try {
+                const response = await $.ajax({
+                    type: "post",
+                    url: "StudentTimeTable.aspx/EditDetail",
+                    data: JSON.stringify({ "Stu_ID": Stu_ID }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
 
+                var studata = JSON.parse(response.d);
+                var mdTable = $('#tblPerson');
+                mdTable.empty();
 
+                for (let index = 0; index < studata.length; index++) {
+                    let md = studata[index];
 
-                        $('#ddlgroups' + index + '').val(md.Groups);
+                    var time = moment(md.FromTime).format('HH:mm');
+                    var ttime = moment(md.ToTime).format('HH:mm');
+                    var dt = new Date(parseInt(md.Date.substr(6)));
+                    dt = moment(dt).format('DD/MM/YYYY');
+                    var ab = md.Day_Name;
+                    var da = index + 1;
+                    mdTable.append(`
+                <tr class="rowtr">
+                    <td style="display:none; width: 78px !important;">
+                        <input style="display:none; width: 80px !important;" type="text" name="clas" id="clas" value="${md.Class_Year}"/>
+                    </td>
+                    <td>${md.classname}</td>
+                    <td><input type="text" style="width: 110px !important;font-size: 12px;height: 23px;" name="Date" id="txt_Date${da}" value="${dt} -${ab}" /></td>
+                    <td>
+                        From:<input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="FTime" id="FTime${index}" value="${time}" />
+                        To: <input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="TTime" id="Time${index}" value="${ttime}" />
+                    </td>
+                    <td><select style="font-size:12px;height:25px;" id="ddlstdsubj${index}" name="ddlGetStuSub">${GetStudentSubject}</select></td>
+                    <td><select style="font-size:12px;height:25px;" id="ddlitmeCode${index}" name="ddlSubject">${GlobSubj}</select></td>
+                    <td><select style="font-size:12px;height:25px;" id="ddlbatchs${index}" name="ddlBatch">${Getbatch}</select></td>
+                    <td><select style="font-size:12px;height:25px;" id="ddlgroups${index}" name="ddlGroup">${Getgrp}</select></td>
+                    <td><input style="margin-left: 12px !important; width: 31px !important;" type="checkbox" name="whlclass" id="whole${index}" value="${md.Whole_Class}" /></td>
+                    <td><input disabled type="text" name="Topic" id="Topic${index}" value="${md.Topic}" style="height: 25px;"/></td>
+                    <td><select style="font-size:12px;height:25px;" id="ddlTeacher${index}" name="ddlTeacher" class="teach">${GetTeacher}</select></td>
+                    <td><select style="font-size:12px;height:25px;" id="ddlVenue${index}" name="ddlVenue">${GetVenue}</select></td>
+                    <td><input style="margin-left: 15px !important;" type="checkbox" name="chkhldy" id="chkhldy${index}" value="${md.Holiday}" /></td>
+                    <td><input style="margin-left: 12px !important;" type="checkbox" name="chkbrk" id="chkbrks${index}" value="${md.Brea_k}" /></td>
+                    <td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative; margin-left: 12px !important;"></i></a></td>
+                </tr>
+            `);
+                    $('.teach').select2();
+                    if (md.Whole_Class == true) {
+                        $(`#whole${index}`).prop('checked', true);
+                    }
+                    if (md.Holiday == true) {
+                        $(`#chkhldy${index}`).prop('checked', true);
+                    }
+                    if (md.Brea_k == true) {
+                        $(`#chkbrks${index}`).prop('checked', true);
+                    }
+                    $(`#ddlitmeCode${index}`).val(md.Practical).trigger('change');
+                    $(`#ddlbatchs${index}`).val(md.Batch).trigger('change');
+                    $(`#ddlgroups${index}`).val(md.Groups).trigger('change');
+                    $(`#ddlTeacher${index}`).val(md.Teacher).trigger('change');
+                    $(`#ddlVenue${index}`).val(md.Venue).trigger('change');
 
+                    var $subjectDropdown = $(`#ddlstdsubj${index}`);
+                    await GetSubject($subjectDropdown);
+                    $subjectDropdown.val(md.Subjects).trigger('change');
 
-
-                        setTimeout(function () {
-                            debugger;
-                            $('#ddlVenue' + index + '').val(md.Venue).trigger('change');
-                        }, 500);
-
-                        setTimeout(function () {
-                            debugger;
-                            $('#ddlTeacher' + index + '').val(md.Teacher).trigger('change');
-                        }, 500);
-                        debugger;
-                        setTimeout(function () {
-                            debugger;
-                            $('#ddlstdsubj' + index + '').val(md.Subjects).trigger('change');
-                        }, 4000);
-                        setTimeout(function () {
-                            $("#btnSave").attr('disabled', false);
-                        }, 4500);
-                      
-                        $('#ddlbatchs' + index + '').on('change', function () {
-                            debugger;
-                            var subject1 = $(this).find(':selected').text();
-                            if (subject1 != "") {
-                                debugger;
-                                $('#whole' + index + '').attr('disabled', true);
-                                $('#ddlgroups' + index + '').attr('disabled', true);
-                                $('#ddlbatchs' + index + '').attr('disabled', false);
-                            }
-                            else if (subject1 == "Please Select") {
-                                $('#whole' + index + '').attr('disabled', false);
-                                $('#ddlgroups' + index + '').attr('disabled', false);
-                                $('#ddlbatchs' + index + '').attr('disabled', false)
-
-                            }
-
-
-                        });
-
-
-
-
-                    });
-
-                    ToDate();
-                    FromDate();
-                    debugger;
-                    $(function () {
-                        debugger;
-                        var date = new Date();
-                        var dayNo = date.getDay();
-                        var mindate = (dayNo);
-                        var d = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                        $('input[name="Date"]').datepicker({
-                            dateFormat: 'dd/mm/yy',
-               
-                            onSelect: function (dateText, inst) {
-                                debugger;
-                                var day = dateText.split('/');
-                                var today = new Date(parseInt(day[2]), parseInt(day[1]) - 1, parseInt(day[0]), null, null, null, null);
-                                $(this).val(dateText + ' - ' + d[today.getDay()]);
-                                $(this).focus();
-                            }
-                        });
-                    });
-                    $('input[name="TTime"]').ptTimeSelect({
-                        onClose: function () {
-                            debugger;
-                            $('input[name="TTime"]').focus();
+                    $(`#ddlbatchs${index}`).on('change', function () {
+                        var subject1 = $(this).find(':selected').text();
+                        if (subject1 != "Please Select") {
+                            $(`#whole${index}`).prop('disabled', true);
+                            $(`#ddlgroups${index}`).prop('disabled', true);
+                        } else {
+                            $(`#whole${index}`).prop('disabled', false);
+                            $(`#ddlgroups${index}`).prop('disabled', false);
                         }
                     });
-                    $('input[name="FTime"]').ptTimeSelect({});
-                },
-                error: function () {
-                    alert(" Data not transfer");
+
+                    $(`#ddlgroups${index}`).on('change', function () {
+                        var subject1 = $(this).find(':selected').text();
+                        if (subject1 != "Please Select") {
+                            $(`#whole${index}`).prop('disabled', true);
+                            $(`#ddlbatchs${index}`).prop('disabled', true);
+                        } else {
+                            $(`#whole${index}`).prop('disabled', false);
+                            $(`#ddlbatchs${index}`).prop('disabled', false);
+                        }
+                    });
+
+                    $(`#whole${index}`).on('change', function () {
+                        if ($(this).is(':checked')) {
+                            $(`#ddlbatchs${index}`).prop('disabled', true);
+                            $(`#ddlgroups${index}`).prop('disabled', true);
+                        } else {
+                            $(`#ddlbatchs${index}`).prop('disabled', false);
+                            $(`#ddlgroups${index}`).prop('disabled', false);
+                        }
+                    });
+
+                    $(`#chkhldy${index}`).on('change', function () {
+                        var disabled = $(this).is(':checked');
+                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index}, #FTime${index}, #Time${index}, #ddlTeacher${index}, #ddlVenue${index}`)
+                            .prop('disabled', disabled);
+                    });
+
+                    $(`#chkbrks${index}`).on('change', function () {
+                        var disabled = $(this).is(':checked');
+                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index}, #ddlTeacher${index}, #ddlVenue${index}`)
+                            .prop('disabled', disabled);
+                    });
                 }
-            })
+
+                initializeDatePickers();
+                initializeTimePickers();
+
+                $("#btnSave").attr('disabled', false);
+
+            } catch (error) {
+                alert("Data not transferred");
+            }
+        }
+
+        function initializeDatePickers() {
+            var d = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            $('input[name="Date"]').datepicker({
+                dateFormat: 'dd/mm/yy',
+                onSelect: function (dateText, inst) {
+                    var day = dateText.split('/');
+                    var today = new Date(parseInt(day[2]), parseInt(day[1]) - 1, parseInt(day[0]));
+                    $(this).val(dateText + ' - ' + d[today.getDay()]);
+                    $(this).focus();
+                }
+            });
+        }
+
+        function initializeTimePickers() {
+            $('input[name="TTime"]').ptTimeSelect({
+                onClose: function () {
+                    $('input[name="TTime"]').focus();
+                }
+            });
+            $('input[name="FTime"]').ptTimeSelect({});
         }
         function Replicates() {
                 debugger;
@@ -793,6 +787,8 @@
                 var program = $('#program').val();
                 var ddlClass = $('#ddlClass').val();
                 var ddlWeek = $('#ddlWeek').val();
+                var ddlBlock = $('#ddlBlock').val();
+                var ddlModule = $('#ddlModule').val();
                 var Save_list = [];
                 debugger;
                 $.each($('#tblItemDescription tbody tr'), function (key, value) {
@@ -840,7 +836,7 @@
                         Class: Class, txtClass: txtClass, dat: dat, day: day, FTimes: FTimes, TTime: TTime, ddlSubject: ddlSubject, ddlBatch: ddlBatch, ddlGroup: ddlGroup, topic: topic, whlclass: whlclass, ddlVenu: ddlVenu, ddlTeacher: ddlTeacher, ddlGetStuSub: ddlGetStuSub, chkhldy: chkhldy, chkbrk: chkbrk,
                     });
                 });
-                var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "Save_list": Save_list };
+            var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "ddlBlock ": ddlBlock, "ddlModule ": ddlModule, "Save_list": Save_list };
             PageMethods.Replicate(JSON.stringify(StdTimetable), function () {
                 window.location.href = 'StudentTimeTable.aspx'
                 Swal.fire({
@@ -863,11 +859,61 @@
             debugger;
             var Subject_id = $('#Subject_id').val();
             var btnSave = $('#btnSave').val();
+
             var program = $('#program').val();
             var ddlClass = $('#ddlClass').val();
             var ddlWeek = $('#ddlWeek').val();
             var ddlBlock = $('#ddlBlock').val();
             var ddlModule = $('#ddlModule').val();
+
+            if (!program || program === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Program',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return; 
+            }
+
+            if (!ddlClass || ddlClass === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Class',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            if (!ddlWeek || ddlWeek === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Week',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             var Save_list = [];
             debugger;
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
