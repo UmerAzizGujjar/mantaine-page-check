@@ -224,6 +224,8 @@ namespace PMS
                 subjectDef.Program = subjects.program;
                 subjectDef.Class = subjects.ddlClass;
                 subjectDef.Weeks = subjects.ddlWeek;
+                subjectDef.Block = subjects.ddlBlock;
+                subjectDef.Module = subjects.ddlModule;
                 subjectDef.CreatedBy = AppConfig.UserID;
                 subjectDef.CreatedTime = DateTime.Now;
 

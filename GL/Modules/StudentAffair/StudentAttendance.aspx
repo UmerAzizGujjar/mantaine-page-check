@@ -10,16 +10,85 @@
             $('#Practical').hide();
             $('#lblsubjtype').hide();
             UserRoless();
-            GetStudentprograms();
-            Selectfunc();
-            GetStuWeek();
-            GetBatch();
-            GetGroup();
 
-            $('#program').on("change", function () {
+            var dropdowns = [
+                { id: '#program', method: 'GetProgram' },
+                { id: '#ddlWeek', method: 'GetWeek' },
+                { id: '#ddlBatch', method: 'StudentBatch' },
+                { id: '#ddlGroup', method: 'StudentGroup' },
+                { id: '#Class', method: 'GetClass' },
+                {
+                    id: '#ddlBlock',
+                    method: 'GetAcademicBlockByWeek',
+                    dependsOn: ['#ddlWeek']
+                },
+                {
+                    id: '#ddlModule',
+                    method: 'GetAcademicModuleByWeek',
+                    dependsOn: ['#ddlWeek']
+                }
+            ];
 
-                GetClass();
-            })
+            $('#ddldate').select2();
+            $('#Subject').select2();
+            $('#Time').select2();
+
+            dropdowns.forEach(item => {
+                const $element = $(item.id);
+                $element.select2();
+                $element.data('lastParams', null);
+
+                $element.off('select2:opening').on('select2:opening', function (e) {
+                    const params = item.getParams ? item.getParams() : null;
+
+                    let needsFetch = false;
+
+                    if (!$element.data('filled')) {
+                        needsFetch = true;
+                    } else if (item.dependsOn && item.getParams) {
+                        const currentParamString = JSON.stringify(params || {});
+                        const lastParamString = $element.data('lastParams') || "{}";
+
+                        if (currentParamString !== lastParamString) {
+                            needsFetch = true;
+                        }
+                    }
+
+                    if (needsFetch) {
+                        e.preventDefault();
+                        $element.data('shouldReopen', true);
+                        if (params && item.dependsOn) {
+                            let missing = false;
+                            item.dependsOn.forEach(dep => {
+                                const depVal = $(dep).val();
+                                if (!depVal || depVal === "0" || depVal === "") {
+                                    missing = true;
+                                }
+                            });
+                            if (missing) {
+                                $element.html('<option value="">Please select dependencies first</option>').trigger('change.select2');
+                                return;
+                            }
+                        }
+                        fillDropdown($element, item.method, null, params, function () {
+                            if (params) {
+                                $element.data('lastParams', JSON.stringify(params));
+                            }
+                        });
+                    }
+                });
+
+                $element.off('select2:select').on('select2:select', function () {
+                    $element.data('shouldReopen', false);
+                    if (typeof item.onSelect === 'function') {
+                        item.onSelect($element);
+                    }
+                });
+            });
+
+            $('#program').on('change', Selectfunc);
+
+            
 
 
 
@@ -53,12 +122,23 @@
             });
 
 
+       
+
             $('#ddlWeek').on("change", function () {
                 debugger;
                 clas = $('#Class').val();
                 prgrm = $('#program').val();
                 week = $('#ddlWeek').val();
                 Getnewdate();
+
+                const selectedWeek = $(this).val();
+                if (selectedWeek && selectedWeek !== "0") {
+                    fillDropdown($('#ddlBlock'), 'GetAcademicBlockByWeek', null, { week: selectedWeek });
+                    fillDropdown($('#ddlModule'), 'GetAcademicModuleByWeek', null, { week: selectedWeek });
+                } else {
+                    $('#ddlBlock').html('<option value="">Select Week First</option>').trigger('change.select2');
+                    $('#ddlModule').html('<option value="">Select Week First</option>').trigger('change.select2');
+                }
             });
 
 
@@ -210,49 +290,114 @@
             $("#txt_WholeClass").prop('checked', true)
         })
 
-        function Selectfunc() {
-            debugger;
-            var slct_value = $("#program").val();
-            if (slct_value == 01) {
-                $($('#Class').find('option')[1]).show();
-                $($('#Class').find('option')[2]).show();
-                $($('#Class').find('option')[3]).show();
-                $($('#Class').find('option')[4]).show();
-                $($('#Class').find('option')[5]).show();
-            }
-            else if (slct_value == 02) {
-                $($('#Class').find('option')[2]).hide();
-                $($('#Class').find('option')[3]).hide();
-                $($('#Class').find('option')[4]).hide();
-                $($('#Class').find('option')[5]).hide();
-            }
-            else if (slct_value == 03) {
-                $($('#Class').find('option')[1]).show();
-                $($('#Class').find('option')[2]).show();
-                $($('#Class').find('option')[3]).show();
-                $($('#Class').find('option')[4]).show();
-                $($('#Class').find('option')[5]).hide();
-            }
-        }
+            function Selectfunc() {
+                var currentYear = new Date().getFullYear();
+                var slct_value = $("#program").val() || "";
+                var pid = slct_value.replace(/^0+/, '') || slct_value;
+                var $ddlClass = $('#Class');
+                var all = $ddlClass.data('allOptions') || [];
 
-        function GetStudentprograms() {
-            var Getprgrme = '';
+                if (!all.length) {
+                    fillDropdown($ddlClass, 'GetClass', Selectfunc, false);
+                    return;
+                }
+
+                var allowedIndexes;
+
+                if (pid === '2') {
+                    allowedIndexes = [1, 2, 3, 4, 5];
+                    $('#Class').val(currentYear + '-' + (currentYear + 5));
+                }
+                else if (pid === '1') {
+                    allowedIndexes = [1];
+                    $('#Class').val(currentYear + '-' + (currentYear + 2));
+                }
+                else if (pid === '3') {
+                    allowedIndexes = [1, 2, 3, 4];
+                    $('#Class').val(currentYear + '-' + (currentYear + 1));
+                }
+                else {
+                    allowedIndexes = [];
+                    for (var i = 1; i < all.length; i++) {
+                        allowedIndexes.push(i);
+                    }
+                    $('#Class').val('');
+                }
+
+                let newHtml = `<option value="${all[0].DataValue_Name}">${all[0].DataValue_Description}</option>`;
+                allowedIndexes.forEach(idx => {
+                    if (all[idx]) {
+                        newHtml += `<option value="${all[idx].DataValue_Name}">${all[idx].DataValue_Description}</option>`;
+                    }
+                });
+
+                $ddlClass.html(newHtml).val('').trigger('change');
+            }
+
+        
+
+        function fillDropdown($dropdown, methodName, callback, params = null) {
+            if ($dropdown.data('filled') && !params) { 
+                if (callback) callback();
+                return;
+            }
+
+            $dropdown.html('<option value="">Loading...</option>').trigger('change.select2');
+            var currentValue = $dropdown.val();
+
+            var requestData = params ? JSON.stringify(params) : '{}';
+
             $.ajax({
-                url: 'StudentAttendance.aspx/GetProgram',
-                type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                success: function (data) {
-                    Getprgrme = '<option value="0">Please Select</option>';
+                type: "POST",
+                url: "StudentAttendance.aspx/" + methodName,
+                data: requestData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    try {
+                        const data = JSON.parse(response.d);
+                        const allOptions = [{ DataValue_Name: "", DataValue_Description: "Select" }].concat(data);
 
-                    $.each(JSON.parse(data.d), function (key, value) {
+                        $dropdown.data('allOptions', allOptions);
 
-                        Getprgrme += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                    });
-                    $('#program').html(Getprgrme);
+                        let optionsHtml = '';
+                        allOptions.forEach(opt => {
+                            const value = opt.Std_Id || opt.DataValue_Name;
+                            const text = (opt.FromTime && opt.ToTime)
+                                ? `${moment(opt.FromTime).format('h:mm a')} - ${moment(opt.ToTime).format('h:mm a')}`
+                                : (opt.Date && opt.Day_Name)
+                                    ? `${opt.Day_Name} - ${moment(new Date(parseInt(opt.Date.substr(6)))).format('DD-MM-YY')}`
+                                    : opt.DataValue_Description || "Unknown";
+
+                            const sel = value === currentValue ? ' selected="selected"' : '';
+                            optionsHtml += `<option value="${value}"${sel}>${text}</option>`;
+                        });
+
+                        $dropdown.html(optionsHtml).data('filled', true).trigger('change.select2');
+
+                        if ($dropdown.data('shouldReopen')) {
+                            $dropdown.data('shouldReopen', false);
+                            setTimeout(() => {
+                                $dropdown.select2('open');
+                            }, 50);
+                        }
+
+                        if (callback) callback();
+                    } catch (e) {
+                        console.error("Error parsing dropdown data:", e);
+                        $dropdown.data('filled', false);
+                        $dropdown.html('<option value="">Error loading</option>').trigger('change.select2');
+                    }
                 },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    $dropdown.data('filled', false);
+                    $dropdown.html('<option value="">Load failed</option>').trigger('change.select2');
+                }
             });
         }
+
+        
 
         var classs;
         var program;
@@ -284,7 +429,7 @@
                         debugger;
                         GetStudentSubject += '<option value="' + value.Subject_Detail_ID + '" >' + value.Subject_Name + '</option>';
                     });
-                    $('#Subject').html(GetStudentSubject);
+                    $('#Subject').html(GetStudentSubject).trigger('change.select2');
                 },
             });
         }
@@ -313,23 +458,7 @@
             });
         }
 
-        function GetClass() {
-            var GetClass = '';
-            $.ajax({
-                url: 'StudentAttendance.aspx/GetClass',
-                type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                success: function (data) {
-                    GetClass = '<option value="0">Please Select</option>';
-                    $.each(JSON.parse(data.d), function (key, value) {
-
-                        GetClass += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                    });
-                    $('#Class').html(GetClass);
-                },
-            });
-        }
+        
 
         var Subj;
         var Prac;
@@ -359,7 +488,7 @@
                         var Totime = moment(value.ToTime).format('h:mm a');
                         getTime += '<option value="' + value.Std_Id + '" >' + Fromtime + ' - ' + Totime + '</option>';
                     });
-                    $('#Time').html(getTime);
+                    $('#Time').html(getTime).trigger('change.select2');
                 },
             });
         }
@@ -389,7 +518,7 @@
                         var newdate = value.Day_Name + '-' + dt;
                         getTimes += '<option value="' + value.Date + '" >' + newdate + '</option>';
                     });
-                    $('#ddldate').html(getTimes);
+                    $('#ddldate').html(getTimes).trigger('change.select2');
 
 
                 },
@@ -556,67 +685,7 @@
         function FromDate() {
             $('input[name="FTime"]').ptTimeSelect({});
         }
-
-
-        function GetStuWeek() {
-            var GetWeek = '';
-            $.ajax({
-                url: 'StudentTimeTable.aspx/GetWeek',
-                type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                success: function (data) {
-                    GetWeek = '<option value="0">Please Select</option>';
-
-                    $.each(JSON.parse(data.d), function (key, value) {
-                        GetWeek += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                    });
-                    $('#ddlWeek').html(GetWeek);
-                },
-            });
-        }
-
-        function GetBatch() {
-            var GetBatch = '';
-            $.ajax({
-                url: 'AddStudent.aspx/StudentBatch',
-                type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                success: function (data) {
-                    debugger;
-                    GetBatch = '<option value="0">Select</option>';
-
-                    $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
-
-                        GetBatch += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
-                    });
-                    $('#ddlBatch').html(GetBatch);
-                },
-            });
-        }
-        function GetGroup() {
-            var GetGroup = '';
-            $.ajax({
-                url: 'AddStudent.aspx/StudentGroup',
-                type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                success: function (data) {
-                    debugger;
-                    GetGroup = '<option value="0">Select</option>';
-
-                    $.each(JSON.parse(data.d), function (key, value) {
-                        debugger;
-
-                        GetGroup += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                    });
-                    $('#ddlGroup').html(GetGroup);
-                },
-            });
-        }
-
+     
         function Print() {
 
 
@@ -826,7 +895,8 @@
 
 
                 Save_list.push({
-                    Student_Id: Student_Id, frmtim: frmtim, batchs: batchs, dat: dat, day: day, groups: groups, FTimes: FTimes, TTimes: TTimes, totim: totim, Classval: Classval, Subval: Subval, pracval: pracval, Student_Name: Student_Name, Roll_No: Roll_No, chkPresent: chkPresent, chkAbsent: chkAbsent, chkLeave: chkLeave, ATime
+                    Student_Id: Student_Id, frmtim: frmtim, batchs: batchs, dat: dat, day: day, groups: groups, FTimes: FTimes, TTimes: TTimes, totim: totim, Classval: Classval, Subval: Subval, pracval: pracval, Student_Name: Student_Name, Roll_No: Roll_No, chkPresent: chkPresent, chkAbsent: chkAbsent, chkLeave: chkLeave, ATime, Block: $('#ddlBlock').val(),
+                    Module: $('#ddlModule').val()
                 });
             });
 
@@ -937,105 +1007,105 @@
 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-
     <div class="row">
         <div class="col-md-2">
-
             <label>Program</label>
             <select id="program" name="program" onchange="Selectfunc()">
+                <option value="0">Please Select</option>
             </select>
         </div>
 
         <div class="col-md-2">
             <label>Class</label>
             <select id="Class" name="Class">
+                <option value="0">Please Select</option>
             </select>
         </div>
 
         <div class="col-md-2">
             <label>Week:</label>
             <select id="ddlWeek" name="Class">
+                <option value="0">Please Select</option>
             </select>
         </div>
-
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <label>Block</label>
+            <select id="ddlBlock" class="form-control">
+                <option value="">Please Select</option>
+            </select>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <label>Module</label>
+            <select id="ddlModule" class="form-control">
+                <option value="">Please Select</option>
+            </select>
+        </div>
         <div class="col-md-2">
             <label>Date:</label>
-            <select id="ddldate" name="ddldate"></select>
-
-        </div>
-        <div class="col-md-2">
-
-            <label>Subject</label>
-            <select id="Subject" name="Subject">
-                <option></option>
-            </select>
-        </div>
-        <div class="col-md-2">
-
-            <label style="margin-left: 14px !important;">Time</label>
-            <select id="Time" name="Time">
-                <option></option>
-            </select>
-        </div>
-
-        <div class="col-md-1">
-            <label id="lblsubjtype">Sub_Subject</label>
-
-            <select id="Practical" name="Practical">
-                <option></option>
+            <select id="ddldate" name="ddldate">
+                <option value="0">Please Select</option>
             </select>
 
         </div>
     </div>
     <div class="row">
         <div class="col-md-2">
-
-            <label>Group</label>
-            <select id="ddlGroup"></select>
+            <label>Subject</label>
+            <select id="Subject" name="Subject">
+                <option value="0">Please Select</option>
+            </select>
         </div>
-
         <div class="col-md-2">
-
-            <label>Batch</label>
-
-            <select id="ddlBatch"></select>
-
+            <label style="margin-left: 14px !important;">Time</label>
+            <select id="Time" name="Time">
+                <option value="0">Please Select</option>
+            </select>
         </div>
-
-
+        <div class="col-md-2">
+            <label>Group</label>
+            <select id="ddlGroup">
+                <option value="0">Please Select</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label>Batch</label>
+            <select id="ddlBatch">
+                <option value="0">Please Select</option>
+            </select>
+        </div>
         <div class="col-md-3" style="margin-top: 23px !important; margin-left: 3px;">
-
-
             <div class="col-md-2">
                 <label>W.C</label>
             </div>
             <div class="col-md-2">
                 <input type="checkbox" id="txt_WholeClass" />
             </div>
-
         </div>
-
-
+        <div class="col-md-1">
+            <label id="lblsubjtype">Sub_Subject</label>
+            <select id="Practical" name="Practical">
+                <option value="0">Please Select</option>
+            </select>
+        </div>
     </div>
-
-
+    <br />
     <div class="row">
         <div class="col-lg-8">
             <div class="row">
-        <div class="col-lg-2 col-md-1 col-sm-2">
-            <input type="button" class="btn-primry" onclick="SaveAttendance()" value="Save" id="Save" />
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2">
-            <input type="button" class="btn btn-gray" onclick="ProcessAttendance()" value="Attendance Process" id="AttendanceProc" />
-        </div>
-        <div class="col-lg-2 col-md-1 col-sm-2">
-            <input type="button" class="btn-primry"  onclick="Print()" value="Print" id="btnPrint" />
-        </div>
-        <div class="col-lg-2 col-md-1 col-sm-2">
+                <div class="col-lg-2 col-md-1 col-sm-2">
+                    <input type="button" class="btn-primry" onclick="SaveAttendance()" value="Save" id="Save" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="button" class="btn btn-gray" onclick="ProcessAttendance()" value="Attendance Process" id="AttendanceProc" />
+                </div>
+                <div class="col-lg-2 col-md-1 col-sm-2">
+                    <input type="button" class="btn-primry" onclick="Print()" value="Print" id="btnPrint" />
+                </div>
+                <div class="col-lg-2 col-md-1 col-sm-2">
 
-            <input type="button" class="btn btn-yellow"  onclick="UpdateAttendance()" value="Update" id="Update" />
-        </div>
-    </div>
+                    <input type="button" class="btn btn-yellow" onclick="UpdateAttendance()" value="Update" id="Update" />
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1079,7 +1149,6 @@
             </table>
         </div>
     </div>
-
 
 
 </asp:Content>

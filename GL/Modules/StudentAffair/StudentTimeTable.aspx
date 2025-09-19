@@ -522,7 +522,7 @@
                             optionsHtml += '<option value="' + value.Subject_Detail_ID + '">' + value.Subject_Name + '</option>';
                         });
                         $targetDropdown.html(optionsHtml);
-                        resolve(); // Resolve when done
+                        resolve();
                     },
                     error: function () {
                         console.log("Error loading subjects.");
@@ -787,6 +787,8 @@
                 var program = $('#program').val();
                 var ddlClass = $('#ddlClass').val();
                 var ddlWeek = $('#ddlWeek').val();
+                var ddlBlock = $('#ddlBlock').val();
+                var ddlModule = $('#ddlModule').val();
                 var Save_list = [];
                 debugger;
                 $.each($('#tblItemDescription tbody tr'), function (key, value) {
@@ -834,7 +836,7 @@
                         Class: Class, txtClass: txtClass, dat: dat, day: day, FTimes: FTimes, TTime: TTime, ddlSubject: ddlSubject, ddlBatch: ddlBatch, ddlGroup: ddlGroup, topic: topic, whlclass: whlclass, ddlVenu: ddlVenu, ddlTeacher: ddlTeacher, ddlGetStuSub: ddlGetStuSub, chkhldy: chkhldy, chkbrk: chkbrk,
                     });
                 });
-                var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "Save_list": Save_list };
+            var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "ddlBlock ": ddlBlock, "ddlModule ": ddlModule, "Save_list": Save_list };
             PageMethods.Replicate(JSON.stringify(StdTimetable), function () {
                 window.location.href = 'StudentTimeTable.aspx'
                 Swal.fire({
@@ -857,11 +859,61 @@
             debugger;
             var Subject_id = $('#Subject_id').val();
             var btnSave = $('#btnSave').val();
+
             var program = $('#program').val();
             var ddlClass = $('#ddlClass').val();
             var ddlWeek = $('#ddlWeek').val();
             var ddlBlock = $('#ddlBlock').val();
             var ddlModule = $('#ddlModule').val();
+
+            if (!program || program === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Program',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return; 
+            }
+
+            if (!ddlClass || ddlClass === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Class',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            if (!ddlWeek || ddlWeek === "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Week',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             var Save_list = [];
             debugger;
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
