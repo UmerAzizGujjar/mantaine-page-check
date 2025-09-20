@@ -1,0 +1,55 @@
+.shortcut {
+    border: 1px solid #DFC303 !important;
+    border-radius: 7px;
+    transition: border-color 0.3s ease;
+    height: 185px !important;
+}
+
+    .shortcut:hover {
+        border-color: #c11718  !important;
+    }
+
+        .shortcut:hover .cocotxt {
+            font-weight: bold;
+            color: #c11718  !important;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+        }
+
+
+.cocotxt {
+    margin-top: 30px;
+    color: #484b4d !important;
+}
+
+img {
+    margin-top: 10px !important;
+}
+
+.container .row .col-md-4,
+.container .row .col-lg-3,
+.container .row .col-xl-2 {
+    padding: 10px;
+}
+
+@media (max-width: 768px) {
+    .container .row .col-md-4,
+    .container .row .col-lg-3,
+    .container .row .col-xl-2 {
+        width: 100%;
+    }
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.btn-coco {
+    width: 100%;
+}
+
+.img-fluid {
+    max-width: 80%;
+}

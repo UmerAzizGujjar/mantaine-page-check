@@ -1,0 +1,228 @@
+﻿#token-input-txtMRNo {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.summary-label {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+    /*padding-top: 8px;*/
+}
+
+.summary-input {
+    height: 30px;
+    font-size: 22px;
+    text-align: right;
+    width: 100%;
+}
+
+.discount-section {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+}
+
+
+.table tr {
+    border: 1px solid #D9E4E6;
+}
+
+    .table tr:nth-child(even) {
+        background-color: #EAF3F3;
+    }
+
+.table th {
+    display: none;
+    border: 1px solid #FFF;
+    background-color: #c11718;
+    color: #FFF;
+    padding: 1em;
+}
+
+.table thead th {
+    display: table-cell;
+    text-align: center;
+}
+
+@media (min-width: 480px) {
+    .table th:nth-child(2) span {
+        display: block;
+    }
+
+    .table th:nth-child(2):after {
+        display: none;
+    }
+}
+
+.table td {
+    display: block;
+    word-wrap: break-word;
+    max-width: 7em;
+}
+
+    .table td:first-child {
+        display: table-cell;
+        text-align: center;
+        border-right: 1px solid #D9E4E6;
+    }
+
+@media (min-width: 480px) {
+    .table td {
+        border: 1px solid #D9E4E6;
+    }
+}
+
+.table th, .table td {
+    text-align: center;
+    margin: .5em 1em;
+}
+
+@media (min-width: 480px) {
+    .table th, .table td {
+        display: table-cell;
+        padding: 1em;
+    }
+}
+.mtop {
+    margin-top :10px !important
+}
+.mg {
+    padding-left: 50px;
+}
+
+.mgMode {
+    padding-left: 7px;
+}
+
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.auto-style1 {
+    height: 24px;
+}
+
+.auto-style2 {
+    padding-left: 20px;
+    height: 24px;
+}
+
+textarea {
+    width: 200px !important;
+}
+
+/*.token-input-input-token {height: 25px;}*/
+#txt_mobile {
+    border-color: red;
+}
+
+.impo {
+    border-color: red !important;
+}
+
+.txt-impo {
+    width: 203px;
+}
+
+/*#addNewbtn {
+    position: relative;
+    float: right;
+    margin-right: 30px;
+    width: 145px;
+    font-size: 15px;
+    border-radius: 20px;
+}*/
+
+.impo-drop {
+    max-width: 60px;
+    display: inline;
+    float: right;
+    height: 33px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.impo-drop1 {
+    max-width: 60px;
+    display: inline;
+    float: right;
+    height: 33px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-color: red !important;
+}
+
+.star {
+    color: red;
+}
+
+.Add_new_test {
+    margin-left: 65px;
+    margin-top: 20px;
+}
+
+/* #txtBillDate {
+            width: 100px !important;
+        }*/
+select {
+    border-radius: 5px;
+}
+
+td {
+    text-align: left !important;
+    font-size: 12px !important;
+}
+
+.height_height {
+    height: 20px !important;
+    width: 90px !important;
+}
+.mtt {
+    margin-top: 2px !important
+}
+.p_font_size {
+    font-size: 13px !important;
+}
+
+
+.fcux:focus {
+    border: 1px solid #6fb3e0 !important;
+}
+
+.custom-dropdown {
+    width: 175px !important;
+    border-radius: 5px;
+}
+
+input[type="text"] {
+    font-size: 12px;
+    border-radius: 5px !important;
+}
+
+
+.mtt {
+    margin-top: 2px !important
+}
+
+.formrgn {
+    margin-top: 6px;
+}
+
+.formrgn2 {
+    margin-top: 12px;
+}
+
+.formrgn3 {
+    margin-top: 21px;
+}
