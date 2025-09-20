@@ -6,6 +6,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static Telerik.Web.UI.ComboBox.ComboBoxStyles;
 
 namespace PMS.Modules.StudentAffair
 {
@@ -75,8 +76,10 @@ namespace PMS.Modules.StudentAffair
                                   Program = db.GetDataValueName("Admission_Category", s.Program),
                                   //s.Admission_Category,
                                   s.Sesion,
-                                  StuClass = db.GetDataValueName("Student Class", s.Class),
+                                  f.Student_Class,
+                                  StuClass_Text = db.GetDataValueName("Student Class", s.Class),
                                   a.Student_Receipt_ID,
+                                  a.Class,
                                   a.Student_Receipt_No,
                                   a.Student_ID,
                                   a.Student_Receipt_Date,
@@ -128,7 +131,7 @@ namespace PMS.Modules.StudentAffair
                 lstItem.Account_ID = Convert.ToInt32(record.ddl_bankCash);
                 lstItem.Status = record.txtStatus;
                 lstItem.Doc_No = record.txt_DocNo;
-
+                lstItem.Class = record.Class;
 
 
                 if (record.txtTotalPayable != "")
@@ -185,6 +188,7 @@ namespace PMS.Modules.StudentAffair
                 stu.Account_ID = Convert.ToInt32(record.ddl_bankCash);
                 stu.Status = record.txtStatus;
                 stu.Doc_No = record.txt_DocNo;
+                stu.Class = record.Class;
                 stu.isCancel = false;
 
 
@@ -352,11 +356,27 @@ namespace PMS.Modules.StudentAffair
 
 
         [WebMethod]
-        public static string LoadStudentChilds(int StudentID) /*add class parameter*/
+        public static string LoadStudentChilds(int StudentID,int ClassID) 
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_StudentDetailonReceipt(StudentID).ToList();
+            var Details = db.sp_StudentDetailonReceipt(StudentID, ClassID).ToList();
             return (new JavaScriptSerializer()).Serialize(Details);
+        }
+
+        [WebMethod]
+        public static string GetStudentClasses(int StudentID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var studentClasses = (from sf in db.Student_Fees
+                                  join stu in db.Reg_Students on sf.Roll_No equals stu.Student_Id.ToString() 
+                                  where stu.Student_Id == StudentID
+                                  select new
+                                  {
+                                      ClassID = sf.Student_Class,
+                                      ClassName = db.GetDataValueName("Student Class", sf.Student_Class)
+                                  }).Distinct().ToList();
+
+            return (new JavaScriptSerializer()).Serialize(studentClasses);
         }
 
 
@@ -442,6 +462,7 @@ namespace PMS.Modules.StudentAffair
             public string txtAmountReceived { get; set; }
             public string txtBalances { get; set; }
             public string txt_DocNo { get; set; }
+            public string Class { get; set; }
             public List<StudentReceiptDetailList> ItemList { get; set; }
         }
         public class StudentReceiptDetailList
