@@ -1,0 +1,31 @@
+﻿.toggle-btns .btn {
+    border-radius: 0;
+}
+
+    .toggle-btns .btn.active {
+        background-color: red;
+        color: white;
+    }
+
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 33px !important;
+    width: 209px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.select2-dropdown--below {
+    width: 209px !important;
+}
+
+.select2-container {
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    vertical-align: middle;
+    width: 209px !important;
+}
