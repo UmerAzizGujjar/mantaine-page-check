@@ -1290,6 +1290,7 @@
             var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
             var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
+           
             //if (PatientDiscountType == "10") {
             //    if (PanelCompany == "0") {
             //        Swal.fire({
@@ -3131,6 +3132,7 @@
             var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
             var pkg = $('#ctl00_MainContent_ddlpacakagetype').val();
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
+            var Discount = $('#ctl00_MainContent_txtDiscount').val();
             //if (PatientDiscountType == "10") {
             //    if (PanelCompany == "0") {
 
@@ -3168,7 +3170,7 @@
             //}
 
 
-            PageMethods.SaveAllRecord(Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number, ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date, ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type, PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId, CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder, main_department, packagetype, packagename, packagetypename, packagenamess, ipdProcedures, proc_name, panelcompanys, CardNo, Cardholdername, CompanyName, Approvelimit, Roomlimit, Cardlimit, ApproveDays, Privatecharges, /*DischargeDate, Time_Out, DaysOccupied,*/
+            PageMethods.SaveAllRecord(Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number, ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date, ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type, PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId, CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder, main_department, packagetype, packagename, packagetypename, packagenamess, ipdProcedures, proc_name, panelcompanys, CardNo, Cardholdername, CompanyName, Approvelimit, Roomlimit, Cardlimit, ApproveDays, Discount, Privatecharges, /*DischargeDate, Time_Out, DaysOccupied,*/
                 function (response) {
 
                     debugger;
@@ -5214,6 +5216,29 @@
             }
           
         }
+        var originalFee;
+            function Calc_Discount() {
+                debugger;
+
+                var disc_perc = $('#ctl00_MainContent_txtDiscount').val();
+                var currentFee = $('#ctl00_MainContent_txtadmissionfee').val();
+              
+
+                if (!originalFee) {
+                    originalFee = Number(currentFee);
+                }
+
+                if (disc_perc && !isNaN(disc_perc) && originalFee && !isNaN(originalFee)) {
+
+                    var discountAmount = (Number(disc_perc) / 100) * originalFee;
+                    var discountedFee = originalFee - discountAmount;
+
+                    $('#ctl00_MainContent_txtadmissionfee').val(discountedFee.toFixed(0));
+                } else {
+                    $('#ctl00_MainContent_txtadmissionfee').val(originalFee.toFixed(0));
+                }
+            }
+
 
         function Selectroom(anchor) {
             var row = $(anchor).parents('tr')[0];
@@ -6327,6 +6352,10 @@
                                           <div class="col-lg-3 col-md-4 col-sm-6">
                                                         <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
                                         <asp:TextBox ID="txtadmissionfee" runat="server" Enabled="false"></asp:TextBox>
+                                               </div>  
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                                        <asp:Label ID="lbldiscount" runat="server" Text="Discount %"></asp:Label>
+                                        <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server" ></asp:TextBox>
                                                </div>
                                          <div class="col-lg-1 col-md-2 col-sm-2">
                                                              <label></label>

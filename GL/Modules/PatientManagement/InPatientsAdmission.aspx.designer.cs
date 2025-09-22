@@ -600,6 +600,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtadmissionfee;
 
         /// <summary>
+        /// lbldiscount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbldiscount;
+
+        /// <summary>
+        /// txtDiscount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDiscount;
+
+        /// <summary>
         /// LblExpected_Discharge_Date control.
         /// </summary>
         /// <remarks>
