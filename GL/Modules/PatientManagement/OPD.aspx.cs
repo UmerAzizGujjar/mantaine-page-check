@@ -644,6 +644,10 @@ namespace PMS.Modules.PatientManagement
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static string SaveOpdData(MasterList data, string opdid)
         {
+            if (HttpContext.Current.Session["UserID"] == null)
+            {
+                return "ERROR: Unauthorized Access. Please login.";
+            }
             DataBaseDataContext db = new DataBaseDataContext();
             Patient pat = null;
 
@@ -771,7 +775,15 @@ namespace PMS.Modules.PatientManagement
                 pat.AccountID = Convert.ToInt32(data.accountid);
                 pat.Card_Issued = data.IssueCard;
                 pat.free_check = data.FreeCheck;
-                pat.Created_By = AppConfig.UserID;
+                if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
+                {
+                    pat.Created_By = userId;
+                }
+                else
+                {
+                    // Handle error — maybe log or throw
+                    return "ERROR: Invalid user ID format.";
+                } // ✅ Use session user
                 pat.Created_Time = DateTime.Now;
                 pat.Entry_Date = DateTime.Now;
                 pat.Company_ID = AppConfig.Company_ID;

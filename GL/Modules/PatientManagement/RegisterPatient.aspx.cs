@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
@@ -157,11 +158,18 @@ namespace PMS.Modules.PatientManagement
 
         [WebMethod]
         public static string SavePatientDetail(
-            string Full_Name, string RelationType, string Relation, string Gender,
-            string Mobile, string Date_Of_Birth, string CNIC, string Address,
-            string PatientID, string martail_status, string Age, string city, string area,
-            string city_val, string area_val, string Blood_Group, string State, string Country)
+      string Full_Name, string RelationType, string Relation, string Gender,
+      string Mobile, string Date_Of_Birth, string CNIC, string Address,
+      string PatientID, string martail_status, string Age, string city, string area,
+      string city_val, string area_val, string Blood_Group, string State, string Country)
         {
+            // 🔐 SECURITY CHECK — Check if user is logged in
+            if (HttpContext.Current.Session["UserID"] == null)
+            {
+                return "ERROR: Unauthorized Access. Please login.";
+            }
+
+            // ✅ If authorized, proceed with logic
             using (var db = new DataBaseDataContext())
             {
                 Reg_patient pat;
@@ -206,7 +214,15 @@ namespace PMS.Modules.PatientManagement
                     pat.NIC = CNIC;
                     pat.Permanent_Address = Address;
                     pat.Created_time = DateTime.Now;
-                    pat.Created_by = AppConfig.UserID;
+                    if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
+                    {
+                        pat.Created_by = userId;
+                    }
+                    else
+                    {
+                        // Handle error — maybe log or throw
+                        return "ERROR: Invalid user ID format.";
+                    } // ✅ Use session user
                     pat.iscancel = false;
                     pat.Martial_Status = martail_status;
                     pat.city = city;
@@ -227,8 +243,6 @@ namespace PMS.Modules.PatientManagement
                 return pat?.pat_id.ToString() ?? "0";
             }
         }
-
-        // ✅ SECURE VERSION — RETURNS ONLY SAFE FIELDS
         [WebMethod]
         public static string GetRegData(int reg_id)
         {
