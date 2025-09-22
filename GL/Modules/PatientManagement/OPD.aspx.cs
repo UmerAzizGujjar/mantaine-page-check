@@ -503,7 +503,8 @@ namespace PMS.Modules.PatientManagement
                     pd.Hospital_Share,
                     pd.Doctor_Share,
                     pd.Expiry_Date,
-                    pd.IsTime
+                    pd.IsTime,
+                    pd.Discount_Percentage,
                 }
             ).ToList();
 
@@ -542,6 +543,7 @@ namespace PMS.Modules.PatientManagement
             {
                 success = true,
                 fee = matchingPolicy.Fees,
+                discount_percentage= matchingPolicy.Discount_Percentage,
                 Hospital_Share = matchingPolicy.Hospital_Share,
                 Doctor_Share = matchingPolicy.Doctor_Share
             });

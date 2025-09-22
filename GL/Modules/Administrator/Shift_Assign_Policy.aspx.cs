@@ -66,6 +66,8 @@ namespace PMS.Modules.Administrator
                                          Policy_Name = p.Policy_Name,
                                          Fees = p.Fees,
                                          Hospital_Share = p.Hospital_Share ?? 0,
+                                         Discount_Percentage = p.Discount_Percentage ?? 0,
+                                         Discount_Amount = p.Discount_Amount ?? 0,
                                          Doctor_Share = p.Doctor_Share ?? 0,
                                          Expiry_Date = p.Expiry_Date.HasValue ? p.Expiry_Date.Value.ToString("dd MMM yyyy") : "",
                                          IsTime = p.IsTime ?? false,
@@ -105,6 +107,8 @@ namespace PMS.Modules.Administrator
                             existingPolicy.Policy_ID = item.Policy_ID;
                             existingPolicy.Policy_Name = item.Policy_Name;
                             existingPolicy.Fees = item.Fees;
+                            existingPolicy.Discount_Percentage = item.Discount_Percentage;
+                            existingPolicy.Discount_Amount = item.Discount_Amount;
                             existingPolicy.Hospital_Share = item.Hospital_Share;
                             existingPolicy.Doctor_Share = item.Doctor_Share;
                             existingPolicy.Expiry_Date = item.Expiry_Date;
@@ -123,6 +127,8 @@ namespace PMS.Modules.Administrator
                             Policy_ID = item.Policy_ID,
                             Policy_Name = item.Policy_Name,
                             Fees = item.Fees,
+                            Discount_Percentage = item.Discount_Percentage,
+                            Discount_Amount = item.Discount_Amount,
                             Hospital_Share = item.Hospital_Share,
                             Doctor_Share = item.Doctor_Share,
                             Expiry_Date = item.Expiry_Date,
@@ -155,6 +161,8 @@ namespace PMS.Modules.Administrator
             public int? Policy_ID { get; set; }
             public string Policy_Name { get; set; }
             public decimal? Fees { get; set; }
+            public decimal? Discount_Percentage { get; set; }
+            public decimal? Discount_Amount { get; set; }
             public int? Hospital_Share { get; set; }           
             public int? Doctor_Share { get; set; }
             public DateTime? Expiry_Date { get; set; }
