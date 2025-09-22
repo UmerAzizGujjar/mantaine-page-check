@@ -225,16 +225,15 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
         success: function (resp) {
             debugger;
             var data = JSON.parse(resp.d);
-
             $('#txtPatientNo').val(data.Mr_No);
             $('#txtpatient_no').val(data.pat_no);
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC);
+            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
             $('#txtmobile').val(data.Mobile);
             $('#txtAdrress').val(data.PermanentAdrress);
-            $('#hdn_regid').val(reg_id);
+            $('#hdn_regid').val(data.Reg_PatientID);
             $('#hdn_aptid').val(apt_Id);
 
             debugger;
@@ -314,10 +313,10 @@ function Get_Pat_Info(reg_id) {
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC);
+            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
             $('#txtmobile').val(data.Mobile);
             $('#txtAdrress').val(data.Address);
-            $('#hdn_regid').val(reg_id);
+            $('#hdn_regid').val(data.Reg_PatientID);
             $('#follow_up').text(data.opdCount);
             $('#ddlmartialstatus').html(
                 $('<option>', {
@@ -900,7 +899,8 @@ function SaveData() {
     var hdnDepartment = $("#hdn_dep_id").val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
-    var employee_id = $('#Employe_id').val();
+    var employee_id_raw = $('#Employe_id').val();
+    var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
     var EmployeeName = $('#empname').val();
@@ -922,6 +922,7 @@ function SaveData() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
+    var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').prop('checked');
     if (!patient_no || patient_no === "0") {
         Swal.fire({
             icon: 'error',
@@ -1052,11 +1053,17 @@ function SaveData() {
         accountid: accountid,
         IssueCard: IssueCard,
         FreeCheck: FreeCheck,
+        hfAntiForgery: hfAntiForgery,
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName
     };
-
+    // 👇 ADD THIS BLOCK
+    if (data.IssueCard === undefined) data.IssueCard = null;
+    if (data.FreeCheck === undefined) data.FreeCheck = null;
+    if (data.employee_id === undefined) data.employee_id = null;
+    if (data.dependent === undefined) data.dependent = null;
+    if (data.designation === undefined) data.designation = null; // 👈 ADD THIS
     console.log("Data being sent:", data);
 
     $.ajax({
@@ -1243,7 +1250,7 @@ function loadPatientDetail(OPDID) {
             $('#ddlMode_Of_Registration').val(data.Mode_Of_Registration).attr('disabled', true);
             $('#txtage').val(data.Age_years).attr('disabled', true);
 
-            $('#txtnic').val(data.NIC).attr('disabled', true);
+            $('#txtnic').val(data.CNIC_Masked).attr('disabled', true);
             $('#EmpDept').val(data.EmployeeDept).attr('disabled', true);
             $('#txtmobile').val(data.Mobile1).attr('disabled', true);
             $('#txtStdName').val(data.StudentName).attr('disabled', true);
