@@ -1,0 +1,342 @@
+﻿.stdFontFamily
+{
+	font-family: Verdana, Tahoma, Arial;
+}
+
+.stdFontSize
+{
+	font-size: 10px;
+}
+
+.stdText
+{
+	font-family: Verdana, Tahoma, Arial;
+	font-size: 10px;
+	font-weight: normal;
+	color: #000000;
+}
+
+/* for water marks */
+.wmText
+{
+   color: #BBBBBB;
+}
+
+.stdSmallTitle
+{
+	font-family: Verdana, Tahoma, Arial;
+	font-size: 10px;
+	font-weight: bold;
+	color: #000000;
+}
+
+.stdMediumTitle
+{
+	font-family: Verdana, Tahoma, Arial;
+	font-size: 12px;
+	color: #000000;
+	font-weight: bold;
+}
+
+.pnlHdrBG
+{
+	font-family: Verdana, Tahoma, Arial;
+	font-size: 12px;
+	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#EFF3F9', EndColorStr='#85A1C3');
+	background-color: #85A1C3;
+}
+
+.pnlDividerBG
+{
+	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#5583D3', EndColorStr='#0F439D');
+	background-color: #0F439D;
+}
+
+.stdLink
+{
+	color: Black;
+	text-decoration: none;
+	font-size: 10px;
+}
+
+.stdLink:hover
+{
+	color: Gray;
+	text-decoration: none;
+	font-size: 10px;
+}
+
+input, select, textarea, button
+{
+	font-family: Verdana, Tahoma, Arial;
+	font-size: 10px;
+}
+
+/* Table 1: Main Style */
+table.tbl1px
+{
+	border-width: 1px;
+	border-spacing: 0px;
+	border-style: solid;
+	border-color: #BEBFC0;
+	border-collapse: collapse;
+}
+
+table.tbl1px th
+{
+	border-width: 1px;
+	padding: 2px;
+	padding: 4px 1px 3px 1px;
+	border-style: solid;
+	border-color: #BEBFC0;
+	background-color: #D6D8DB;
+}
+
+/* Table 2: Row Styles */
+tr.tbl1pxRowPurple1
+{
+	background-color: #D6D2FB;
+}
+
+tr.tbl1pxRowPurple1 td
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #A19FC7;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #A19FC7;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+tr.tbl1pxRowPurple2
+{
+	background-color: #EDEBFF;
+}
+
+tr.tbl1pxRowPurple2 td
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #A19FC7;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #A19FC7;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+tr.tbl1pxRowGray1
+{
+	background-color: #FAFAFF;
+}
+
+tr.tbl1pxRowGray1 td
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #BBBBBB;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #BBBBBB;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+tr.tbl1pxRowGray2
+{
+	background-color: #D6D8DB;
+}
+
+tr.tbl1pxRowGray2 td
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #BEBFC0;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #BEBFC0;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+/* Table 2: Single Styles */
+td.tbl1pxColPurple1
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #A19FC7;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #A19FC7;
+	background-color: #D6D2FB;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+td.tbl1pxColPurple2
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #BBBBBB;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #BBBBBB;
+	background-color: #7A75AA;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+td.tbl1pxColPurple3
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #A19FC7;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #A19FC7;
+	background-color: #EDEBFF;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+td.tbl1pxColGray1
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #BBBBBB;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #BBBBBB;
+	background-color: #FAFAFF;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+td.tbl1pxColRed1
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #DF9090;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #DF9090;
+	background-color: #FFAAAA;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+td.tbl1pxColGreen1
+{
+	padding: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #35A035;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #35A035;
+	background-color: #6DF121;
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+}
+
+tr.clearRow
+{
+}
+    
+tr.clearRow td
+{
+    padding: 1px;
+    border: 0px;
+}
+
+.bgColPurple1
+{
+	background-color: #D6D2FB;
+}
+
+.bgColPurple2
+{
+	background-color: #EDEBFF;
+}
+
+/* menu related */
+.Height0
+{
+	height: 0px;
+}
+
+.menuCategory
+{
+	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#EFF3F9', EndColorStr='#85A1C3');
+	background-color: #85A1C3;
+	font-family: Verdana, Tahoma, Arial, Sans-Serif;
+	font-size: x-small;
+	font-weight: bold;
+	padding-left: 5px;
+	height: 16px;
+	border-bottom: solid 1px gray;
+}
+
+.menuCategoryItem
+{
+	font-family: Verdana, Tahoma, Arial, Sans-Serif;
+	font-size: x-small;
+	font-weight: bold;
+	padding-left: 10px;
+	filter:alpha(opacity=80);
+	-moz-opacity:0.8;
+	-khtml-opacity: 0.8;
+	opacity: 0.8;
+}
+
+.menuCategoryItem:hover
+{
+	font-family: Verdana, Tahoma, Arial, Sans-Serif;
+	font-size: x-small;
+	font-weight: bold;
+	padding-left: 10px;
+	background-color: #EEC778;
+	text-decoration: none;
+	filter:alpha(opacity=100);
+	-moz-opacity:1.0;
+	-khtml-opacity: 1.0;
+	opacity: 1.0;
+}
+
+.menuLink
+{
+	color: Black;
+	text-decoration: none;
+	display: block;
+}
+
+.Hidden
+{
+	display: none;
+}
+
+.DarkScreen
+{
+	background-color: rgb(0, 0, 0);
+	opacity: 0.4; /* Safari, Opera */
+	-moz-opacity:0.40; /* FireFox */
+	filter: alpha(opacity=40); /* IE */
+	z-index: 20;
+	height: 100%;
+	width: 100%;
+	background-repeat:repeat;
+	position:fixed;
+	top: 0px;
+	left: 0px;
+}

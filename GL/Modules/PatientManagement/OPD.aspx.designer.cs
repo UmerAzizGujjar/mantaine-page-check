@@ -15,6 +15,15 @@ namespace PMS.Modules.PatientManagement
     {
 
         /// <summary>
+        /// hfAntiForgery control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hfAntiForgery;
+
+        /// <summary>
         /// lbltotpat control.
         /// </summary>
         /// <remarks>

@@ -1,0 +1,28 @@
+﻿html, body
+{
+	height: 100%;
+}
+
+body 
+{
+	margin: 0px;
+	font-family:verdana, Tahoma, Arial, MS Sans Serif;
+	font:100.01%/1.4 sans-serif;
+	font-size:xx-small;
+	background-color: #85A1C3;
+	overflow: hidden;
+}
+
+body.Logon
+{
+	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#EFF3F9', EndColorStr='#85A1C3');
+}
+
+#distance
+{
+	width:1px;
+	height:50%;
+	background-color:#fc6;
+	margin-bottom:-150px;
+	float:left;
+}

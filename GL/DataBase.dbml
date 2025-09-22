@@ -3967,33 +3967,6 @@
       <Column Name="isCancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Student_Receipt" Member="Student_Receipts">
-    <Type Name="Student_Receipt">
-      <Column Name="Student_Receipt_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Student_Receipt_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Student_Receipt_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Student_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Total_Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Disc_Perc" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Disc_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Net_Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount_Received" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Voucher_ID_Accrued" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doc_No" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="isCancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Pharmacy_SaleReturns" Member="Pharmacy_SaleReturns">
     <Type Name="Pharmacy_SaleReturn">
       <Column Name="Return_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -5072,45 +5045,6 @@
       <Column Name="PatientID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="DiagnosisID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Policy_Details" Member="Policy_Details">
-    <Type Name="Policy_Detail">
-      <Column Name="Policy_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Policy_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Policy_Name" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="Fees" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Hospital_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doctor_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Expiry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="IsTime" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Next_Day" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Is_Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Policy_Department_Assignment" Member="Policy_Department_Assignments">
-    <Type Name="Policy_Department_Assignment">
-      <Column Name="Policy_Assign_Dep_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Department_ID" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Policy_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Fees" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Hospital_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doctor_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Expiry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Is_Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.company_opd_policy" Member="company_opd_policies">
@@ -6900,6 +6834,77 @@
       <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="IS_Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student_Receipt" Member="Student_Receipts">
+    <Type Name="Student_Receipt">
+      <Column Name="Student_Receipt_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Student_Receipt_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Student_Receipt_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Student_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Disc_Perc" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Disc_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_Payable" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount_Received" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Voucher_ID_Accrued" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doc_No" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="IsCancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Class" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Policy_Department_Assignment" Member="Policy_Department_Assignments">
+    <Type Name="Policy_Department_Assignment">
+      <Column Name="Policy_Assign_Dep_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Department_ID" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Policy_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Fees" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Hospital_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doctor_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Expiry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Is_Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Policy_Details" Member="Policy_Details">
+    <Type Name="Policy_Detail">
+      <Column Name="Policy_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Policy_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Policy_Name" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="Fees" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Hospital_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doctor_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Expiry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="IsTime" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Next_Day" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Is_Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -9041,20 +9046,6 @@
       <Column Name="Student_Fee_Detail_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_StudentDetailonReceipt" Method="sp_StudentDetailonReceipt">
-    <Parameter Name="StudentID" Parameter="studentID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_StudentDetailonReceiptResult">
-      <Column Name="Student_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Student_Fee_Detail_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Fee_Type" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Payable_Fee" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Accrued_Income_Acc_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="NetIncome_Acc_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Fee_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spApproveStudentFee" Method="spApproveStudentFee">
     <Parameter Name="Fee_ID" Parameter="fee_ID" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="Date" Parameter="date" Type="System.DateTime" DbType="DateTime" />
@@ -9578,20 +9569,6 @@
       <Column Name="Category_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="NetIncomeAccName" Type="System.String" DbType="VarChar(211)" CanBeNull="true" />
       <Column Name="AccruedIncomeAccName" Type="System.String" DbType="VarChar(211)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_StudentDetailonReceipt" Method="sp_StudentDetailonReceipt1">
-    <Parameter Name="StudentID" Parameter="studentID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_StudentDetailonReceiptResult1">
-      <Column Name="Student_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Student_Fee_Detail_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Fee_Type" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Payable_Fee" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Accrued_Income_Acc_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="NetIncome_Acc_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Fee_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_StudentReceiptDetail" Method="sp_StudentReceiptDetail1">
@@ -10552,6 +10529,21 @@
       <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Sample_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_StudentDetailonReceipt" Method="sp_StudentDetailonReceipt">
+    <Parameter Name="StudentID" Parameter="studentID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ClassID" Parameter="classID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_StudentDetailonReceiptResult">
+      <Column Name="Student_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Student_Fee_Detail_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Fee_Type" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Payable_Fee" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Accrued_Income_Acc_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NetIncome_Acc_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Fee_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
