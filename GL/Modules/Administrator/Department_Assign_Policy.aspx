@@ -21,6 +21,18 @@
                     }
                 });
             });
+
+            $(document).on('keyup', 'input[name="Discount_Percentage"]', function () {
+                let $row = $(this).closest('tr'); 
+
+                let fees = parseFloat($row.find('input[name="Fees"]').val()) || 0;
+                let discountPercentage = parseFloat($(this).val()) || 0;
+
+                let discountAmount = (fees * discountPercentage) / 100;
+
+                $row.find('input[name="Discount_Amount"]').val(discountAmount.toFixed(2));
+            });
+
         });
 
 
@@ -150,6 +162,8 @@
             </select>
         </td>
         <td><input type="text" name="Fees" class="form-control" placeholder="Enter Fees"></td>
+        <td><input type="text" name="Discount_Percentage" class="form-control" placeholder="Discount %"></td>
+        <td style="display:none;"><input type="hidden" name="Discount_Amount" class="form-control" placeholder="Discount %"></td>
         <td><input type="text" name="Hospital_Share" class="form-control" placeholder="Hospital %"></td>
         <td><input type="text" name="Doctor_Share" class="form-control" placeholder="Doctor %"></td>
         <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
@@ -216,6 +230,8 @@
                     Department_Name: dept.text(),
                     Policy_ID: policy.val(),
                     Policy_Name: policy.text(),
+                    Fees: $(this).find('[name="Fees"]').val(),
+                    Fees: $(this).find('[name="Discount_Percentage"]').val(),
                     Fees: $(this).find('[name="Fees"]').val(),
                     Hospital_Share: $(this).find('[name="Hospital_Share"]').val(),
                     Doctor_Share: $(this).find('[name="Doctor_Share"]').val(),
@@ -341,6 +357,8 @@
                 <th>Department</th>
                 <th>Policy</th>
                 <th>Fees</th>
+                <th>Discount</th>
+                <th style="display:none;">Discount Amount</th>
                 <th>Hospital Share</th>
                 <th>Doctor Share</th>
                 <th>Expiry Date</th>

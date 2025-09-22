@@ -1035,83 +1035,79 @@ namespace PMS.Modules.PatientManagement
                                    opdCount = db.Patients.Count(p => p.Reg_PatId == reg_id)
                                }).FirstOrDefault();
 
-                return new JavaScriptSerializer().Serialize(patient);
+
+
+
+                if (patient == null)
+                {
+                    return new JavaScriptSerializer().Serialize(null);
+                }
+                int numberOfDaysLatest = 0;
+                int numberOfDaysSecondLatest = 0;
+
+                var opd_time = (from pt in db.Patients
+                                where pt.Reg_PatId == patient.Reg_PatientID
+                                orderby pt.Patient_ID descending
+                                select pt.Created_Time).FirstOrDefault();
+
+                if (opd_time != null)
+                {
+                    DateTime currentTimeRounded = DateTime.Now.Date;
+                    DateTime createdTimeRounded = opd_time.Value.Date;
+                    TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
+                    numberOfDaysLatest = (int)daysSinceCreation.TotalDays;
+                }
+                var opd_time2 = (from pt in db.Patients
+                                 where pt.Reg_PatId == patient.Reg_PatientID
+                                 orderby pt.Patient_ID descending
+                                 select pt.Created_Time)
+                                 .Skip(1)
+                                 .FirstOrDefault();
+
+                if (opd_time2 != null)
+                {
+                    DateTime currentTimeRounded = DateTime.Now.Date;
+                    DateTime createdTimeRounded = opd_time2.Value.Date;
+                    TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
+                    numberOfDaysSecondLatest = (int)daysSinceCreation.TotalDays;
+                }
+                else
+                {
+                    numberOfDaysSecondLatest = 0;
+                }
+
+                var query = (from rg in db.Reg_patients
+                             where rg.pat_id == reg_id
+                             select new
+                             {
+                                 Name = rg.Full_Name,
+                                 FatherName = rg.Father_Name,
+                                 Relation = rg.Relation_prefix,
+                                 Gender = rg.Gender,
+                                 DOB = rg.DOB,
+                                 Age = rg.Age_years,
+                                 MaritalStatus = rg.Martial_Status,
+                                 MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
+                                 Gender_text = db.GetDataValueName("Gender", rg.Gender),
+                                 Mr_No = rg.mr_no_sequence,
+                                 pat_no = rg.Patient_No,
+                                 Address = rg.Permanent_Address,
+                                 Mobile = rg.Mobile1,
+                                 CNIC = rg.NIC,
+                                 HouseNo = rg.House_No,
+                                 Area = rg.area,
+                                 StreetNo = rg.stno_mno,
+                                 City = rg.city,
+                                 ValArea = rg.val_area,
+                                 ValCity = rg.val_city,
+                                 Reg_PatientID = rg.pat_id,
+                                 opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id),
+                                 DaysSinceLatestVisit = numberOfDaysLatest,
+                                 DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
+                             }).FirstOrDefault();
+
+                return (new JavaScriptSerializer()).Serialize(query);
             }
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            // First, fetch the patient basic info
-            var patient = (from rg in db.Reg_patients
-                           where rg.pat_id == reg_id
-                           select rg).FirstOrDefault();
-
-            if (patient == null)
-            {
-                return new JavaScriptSerializer().Serialize(null);
-            }
-            int numberOfDaysLatest = 0;
-            int numberOfDaysSecondLatest = 0;
-            var opd_time = (from pt in db.Patients
-                            where pt.Reg_PatId == patient.pat_id
-                            orderby pt.Patient_ID descending
-                            select pt.Created_Time).FirstOrDefault();
-
-            if (opd_time != null)
-            {
-                DateTime currentTimeRounded = DateTime.Now.Date;
-                DateTime createdTimeRounded = opd_time.Value.Date;
-                TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
-                numberOfDaysLatest = (int)daysSinceCreation.TotalDays;
-            }
-            var opd_time2 = (from pt in db.Patients
-                             where pt.Reg_PatId == patient.pat_id
-                             orderby pt.Patient_ID descending
-                             select pt.Created_Time)
-                             .Skip(1)
-                             .FirstOrDefault();
-
-            if (opd_time2 != null)
-            {
-                DateTime currentTimeRounded = DateTime.Now.Date;
-                DateTime createdTimeRounded = opd_time2.Value.Date;
-                TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
-                numberOfDaysSecondLatest = (int)daysSinceCreation.TotalDays;
-            }
-            else
-            {
-                numberOfDaysSecondLatest = 0;
-            }
-
-            var query = (from rg in db.Reg_patients
-                         where rg.pat_id == reg_id
-                         select new
-                         {
-                             Name = rg.Full_Name,
-                             FatherName = rg.Father_Name,
-                             Relation = rg.Relation_prefix,
-                             Gender = rg.Gender,
-                             DOB = rg.DOB,
-                             Age = rg.Age_years,
-                             MaritalStatus = rg.Martial_Status,
-                             MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
-                             Gender_text = db.GetDataValueName("Gender", rg.Gender),
-                             Mr_No = rg.mr_no_sequence,
-                             pat_no = rg.Patient_No,
-                             Address = rg.Permanent_Address,
-                             Mobile = rg.Mobile1,
-                             CNIC = rg.NIC,
-                             HouseNo = rg.House_No,
-                             Area = rg.area,
-                             StreetNo = rg.stno_mno,
-                             City = rg.city,
-                             ValArea = rg.val_area,
-                             ValCity = rg.val_city,
-                             Reg_PatientID = rg.pat_id,
-                             opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id),
-                             DaysSinceLatestVisit = numberOfDaysLatest,
-                             DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
-                         }).FirstOrDefault();
-
-            return (new JavaScriptSerializer()).Serialize(query);
         }
 
         //[WebMethod]
@@ -1210,34 +1206,7 @@ namespace PMS.Modules.PatientManagement
 
                 string department_Text = db.GetDataValueName("Patient Main Category", departmentid);
 
-                var result = new
-                {
-                    Name = patient.Full_Name,
-                    FatherName = patient.Father_Name,
-                    Relation = patient.Relation_prefix,
-                    Gender_text = gender_text,
-                    Age = patient.Age_years,
-                    MaritalStatus_text = maritalStatus_text,
-                    Mr_No = patient.mr_no_sequence,
-                    pat_no = patient.Patient_No,
-                    Address = $"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}",
-                    PermanentAdrress = patient.Permanent_Address,
-                    Mobile = patient.Mobile1,
-                    CNIC_Masked = patient.NIC, // 👈 Masked!
-                    HouseNo = patient.House_No,
-                    Area = patient.area,
-                    StreetNo = patient.stno_mno,
-                    City = patient.city,
-                    ValArea = patient.val_area,
-                    ValCity = patient.val_city,
-                    Reg_PatientID = patient.pat_id,
-                    doctorId = doctorId,
-                    DoctorName = DoctorName,
-                    departmentid = departmentid,
-                    department_Text = department_Text,
-                    pat_type_Val = pat_type_Val,
-                    pat_type_text = pat_type_text
-                };
+             
             int numberOfDaysLatest = 0;
             int numberOfDaysSecondLatest = 0;
             var opd_time = (from pt in db.Patients
@@ -1273,39 +1242,36 @@ namespace PMS.Modules.PatientManagement
             }
 
 
-            var result = new
-            {
-                Name = patient.Full_Name,
-                FatherName = patient.Father_Name,
-                Relation = patient.Relation_prefix,
-                Gender = patient.Gender,
-                DOB = patient.DOB,
-                Age = patient.Age_years,
-                MaritalStatus = patient.Martial_Status,
-                Mr_No = patient.mr_no_sequence,
-                pat_no = patient.Patient_No,
-                Address = $"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}",
-                PermanentAdrress = patient.Permanent_Address,
-                Mobile = patient.Mobile1,
-                CNIC = patient.NIC,
-                HouseNo = patient.House_No,
-                Area = patient.area,
-                StreetNo = patient.stno_mno,
-                City = patient.city,
-                MaritalStatus_text = maritalStatus_text,
-                Gender_text = gender_text,
-                pat_type_Val = pat_type_Val,
-                pat_type_text = pat_type_text,
-                ValArea = patient.val_area,
-                ValCity = patient.val_city,
-                Reg_PatientID = patient.pat_id,
-                doctorId = doctorId,
-                DoctorName= DoctorName,
-                departmentid = departmentid,
-                department_Text = department_Text,
-                DaysSinceLatestVisit = numberOfDaysLatest,
-                DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
-            };
+                var result = new
+                {
+                    Name = patient.Full_Name,
+                    FatherName = patient.Father_Name,
+                    Relation = patient.Relation_prefix,
+                    Gender_text = gender_text,
+                    Age = patient.Age_years,
+                    MaritalStatus_text = maritalStatus_text,
+                    Mr_No = patient.mr_no_sequence,
+                    pat_no = patient.Patient_No,
+                    Address = $"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}",
+                    PermanentAdrress = patient.Permanent_Address,
+                    Mobile = patient.Mobile1,
+                    CNIC_Masked = patient.NIC, // 👈 Masked!
+                    HouseNo = patient.House_No,
+                    Area = patient.area,
+                    StreetNo = patient.stno_mno,
+                    City = patient.city,
+                    ValArea = patient.val_area,
+                    ValCity = patient.val_city,
+                    Reg_PatientID = patient.pat_id,
+                    doctorId = doctorId,
+                    DoctorName = DoctorName,
+                    departmentid = departmentid,
+                    department_Text = department_Text,
+                    pat_type_Val = pat_type_Val,
+                    pat_type_text = pat_type_text,
+                    DaysSinceLatestVisit = numberOfDaysLatest,
+                    DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
+                };
 
                 return new JavaScriptSerializer().Serialize(result);
             }
