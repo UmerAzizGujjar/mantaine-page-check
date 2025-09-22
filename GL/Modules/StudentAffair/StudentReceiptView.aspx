@@ -80,7 +80,8 @@
                                  return date;
                              }, "width": "15%", "orderable": false
                          },
-                         { "data": "Student_ID","name":"Student_ID", "width": "10%", "orderable": true },
+                         { "data": "Full_Name", "name":"Full_Name", "width": "10%", "orderable": true },
+                         { "data": "Class", "name":"Class", "width": "10%", },
                          { "data": "Status", "width": "10%", "orderable": false },
                          { "data": "RollNo", "width": "10%", "orderable": false },
                          { "data": "Balance", "width": "10%", "orderable": false },
@@ -158,7 +159,8 @@
                         <th style="display: none;">Student_Receipt_ID</th>
                         <th>Receipt No</th>
                         <th>Receipt Date</th>
-                        <th>Student_ID</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
                         <th>Status</th>
                         <th>Roll No</th>
                         <th>Balance</th>
