@@ -11,7 +11,16 @@
         } else {
             $("#btnSave").val("Save");
         }
+        $(document).on('keyup', 'input[name="Discount_Percentage"]', function () {
+            let $row = $(this).closest('tr');
 
+            let fees = parseFloat($row.find('input[name="Fees"]').val()) || 0;
+            let discountPercentage = parseFloat($(this).val()) || 0;
+
+            let discountAmount = (fees * discountPercentage) / 100;
+
+            $row.find('input[name="Discount_Amount"]').val(discountAmount.toFixed(2));
+        });
 
         let policyOptions = '<option value="">Select</option>';
 
@@ -104,6 +113,9 @@
                         newRow.find('[name="Policy_Detail_ID"]').val(policy.Policy_Detail_ID);
                         newRow.find('[name="Fees"]').val(policy.Fees);
                         newRow.find('[name="Hospital_Share"]').val(policy.Hospital_Share);
+                        newRow.find('[name="Discount_Amount"]').val(policy.Discount_Amount);
+                        newRow.find('[name="Discount_Percentage"]').val(policy.Discount_Percentage); 
+
                         newRow.find('[name="Doctor_Share"]').val(policy.Doctor_Share);
                         newRow.find('[name="Expiry_Date"]').val(policy.Expiry_Date);
 
@@ -178,6 +190,8 @@
                 </select>
             </td>
             <td><input type="text" name="Fees" class="form-control" placeholder="Fees"></td>
+            <td><input type="text" name="Discount_Percentage" class="form-control" placeholder="Discount %"></td>
+            <td style="display:none;"><input type="hidden" name="Discount_Amount" class="form-control"></td>
             <td><input type="number" name="Hospital_Share" class="form-control" placeholder="Hospital %" min="0" max="100"></td>
             <td><input type="number" name="Doctor_Share" class="form-control" placeholder="Doctor %" min="0" max="100"></td>
             <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
@@ -260,6 +274,8 @@
                     Policy_ID: policyId,
                     Policy_Name: $policySelect.find('option:selected').text(),
                     Fees: $row.find('[name="Fees"]').val().trim(),
+                    Discount_Percentage: $row.find('[name="Discount_Percentage"]').val().trim(),
+                    Discount_Amount: $row.find('[name="Discount_Amount"]').val().trim(),
                     Hospital_Share: $row.find('[name="Hospital_Share"]').val().trim(),
                     Doctor_Share: $row.find('[name="Doctor_Share"]').val().trim(),
                     Expiry_Date: $row.find('[name="Expiry_Date"]').val(),
@@ -461,6 +477,8 @@
             <tr>
                 <th>Policy Name</th>
                 <th>Fees</th>
+                <th>Discount_Percentage</th>
+                <th style ="display:none">Fees</th>
                 <th>Hospital Share</th>
                 <th>Doctor Share</th>
                 <th>Expiry Date</th>

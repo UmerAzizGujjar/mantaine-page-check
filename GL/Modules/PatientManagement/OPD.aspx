@@ -9,7 +9,9 @@
       
         $(document).ready(function () {
 
-            loadOPDPermissions();
+     
+            loadPermissions(function () {
+            });
             DisableCardPrint();
 
             var reg_id = '<%= Request.QueryString["ID"] %>'
@@ -76,63 +78,206 @@
                 $('#btnPrintBackCard').hide()
             }
         }
-
-
-        function loadOPDPermissions() {
+        var permissions = {};
+        var fieldPermissionMapping = {
+            "field_mr_no": "mr_no",
+            "field_Patient_name": "patient_name",
+            "field_Last_name": "last_name",
+            "field_OPD_No": "opd_no",
+            "Field-CIH": "cash_in_hand",
+            "field_Mode_Reg": "mode_presentation",
+            "field_Mobile": "mobile",
+            "field_CNIC": "cnic",
+            "field_Category": "patient_category",
+            "field_Martial_Status": "marital_status",
+            "field_age": "age",
+            "field_Gender": "gender",
+            "field_Fee": "fee",
+            "field_Address": "address",
+            "Field_Card": "card",
+            "Field_FollowUP": "follow_up",
+            "Field_freeCheck": "Free_Check",
+            "field_Services": "Services",
+            "field_Clinic": "FilterClinic"  
+        };    
+        function loadPermissions(callback) {
             $.ajax({
                 type: "POST",
-                url: "OPD.aspx/GetCompanyOPDPermissions",  // Correct page name
-                data: "{}",  // ← Required even for no parameters
+                url: "OPD.aspx/GetCompanyOPDPermissions", 
+                data: "{}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (response) {
-                    
-                    var permissions = response.d;
-
-                    var fieldContainers = {
-                        "mr_no": "field_mr_no",
-                        "patient_name": "field_Patient_name",
-                        "last_name": "field_Last_name",
-                        "opd_no": "field_OPD_No",
-                        "cash_in_hand": "Field-CIH",
-                        "mode_presentation": "field_Mode_Reg",
-                        "mobile": "field_Mobile",
-                        "cnic": "field_CNIC",
-                        "patient_category": "field_Category",
-                        "marital_status": "field_Martial_Status",
-                        "age": "field_age",
-                        "gender": "field_Gender",
-                        "fee": "field_Fee",
-                        "address": "field_Address",
-                        "card": "Field_Card",
-                        "follow_up": "Field_FollowUP",
-                        "Free_Check": "Field_freeCheck",
-                        "Services": "field_Services",
-                       // "FilterClinic": "field_Clinic",
-                    };
-
-                    for (var dbField in fieldContainers) {
-                        
-                        var containerId = fieldContainers[dbField];
-                        var $container = $("#" + containerId);
-
-                        if ($container.length > 0) {
-                            if (permissions[dbField] === true) {
-                                $container.show();
-                            } else {
-                                $container.hide();
-                            }
-                        }
+                success: function (response) {                 
+                    permissions = response.d || {};
+                    if (typeof callback === 'function') {
+                        callback();
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error);
-                    console.error("Response:", xhr.responseText);
-                    alert("Could not load form settings.");
+                    alert("Could not load permissions.");
                 }
             });
         }
+        function showIfAllowed(fieldId, conditionToShow) {
+            var permissionKey = fieldPermissionMapping[fieldId];
+            if (!permissions || $.isEmptyObject(permissions)) {
+                return;
+            }
+            if (!permissionKey) {
+                return;
+            }
 
+            var permissionValue = permissions[permissionKey];
+            if (permissionValue === true) {
+                if (conditionToShow) {
+                    $('#' + fieldId).show();
+                } else {
+                    $('#' + fieldId).hide();
+                }
+            } else {
+                console.warn("⚠ Permission value is undefined or false for:", permissionKey);
+                $('#' + fieldId).hide();
+            }
+        }
+
+        function loaddata() {
+            debugger;
+            var Category = $('#ddlPatient_Type').val();
+            $('#ddlPatient_Type').attr('disabled', true);
+            debugger;
+            if (Category == "0") {
+
+                $('.show').show();
+                $('#fees').hide();
+                $('#department').hide();
+                showIfAllowed('field_Clinic', false);  
+
+                $('#field_Clinic').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+                $('#txtfees').val('');
+                $('#txtactualfee').val('');
+                $('#discount').hide();
+                $('#empname').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#emp_id').hide();
+            }
+            else if (Category == "01") {
+                $('#fees').show();
+                $('#department').show();
+                showIfAllowed('field_Clinic', true); 
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#dependent').hide();
+                $('#emp_id').hide();
+            }
+            else if (Category == "02") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').show();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#emp_id').hide();
+            }
+            else if (Category == "03") {
+                $('#fees').show();
+                $('#department').hide();
+                $('#doctor').show();
+                $('#pnlcompany').show();
+                $('#employee').show();
+                $('#refference').show();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#discount').hide();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#emp_id').hide();
+
+
+            }
+            else if (Category == "04") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+                $('#discount').show();
+                $('#empname').show();
+                $('#EmployeeName').show();
+                $('#emp_id').hide();
+                $('#designation').show();
+                $('#dependent').show();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#EmpDep').show();
+
+
+            }
+            else if (Category == "05") {
+                $('#fees').hide();
+                $('#department').show();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#rollno').show();
+                $('#class').hide();
+                $('#section').hide();
+
+                $('#emp_id').hide();
+                $('#StdName').show();
+            }
+            else if (Category == "06") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#dependent').hide();
+
+                $('#emp_id').hide();
+
+
+            }
+        }
         function Approve() {
             var pat_id = '<% =Request.QueryString["OPDID"] %>';
             var Pat_Category = $('#ddlPatient_Type').val();
@@ -519,8 +664,13 @@
                                 });
                             } else {
 
-                                $('#txtfees').val(res.fee);
+                                var fee = res.fee;
+                                var disper = res.discount_percentage
+                                var afterdiscountfee = (fee * disper) / 100
+
+                                $('#txtfees').val(afterdiscountfee);
                                 $('#txtactualfee').val(res.fee);
+                                $('#txtdiscount').val(res.discount_percentage);
                                 $('#hdnhospShare').val(res.Hospital_Share);
                                 $('#hdnDocshare').val(res.Doctor_Share);
                             }
