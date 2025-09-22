@@ -27,7 +27,7 @@ namespace PMS.Modules.StudentAffair
                     var Total_Student_Receipts = _dbContext.Student_Receipts.Count();
                     var Student_Receipts = from SR in _dbContext.Student_Receipts
                                            join RS in _dbContext.Reg_Students on SR.Student_ID equals RS.Student_Id
-                                           where (SR.isCancel== false && (SR.Student_Receipt_No.ToString().Contains(searchValue) ||SR.Student_ID.ToString().Contains(searchValue)))
+                                           where ((SR.Student_Receipt_No.ToString().Contains(searchValue) ||SR.Student_ID.ToString().Contains(searchValue)))
                                      select new
                                      {
                                          Student_Receipt_ID = SR.Student_Receipt_ID,
