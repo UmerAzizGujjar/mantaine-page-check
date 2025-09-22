@@ -106,8 +106,9 @@
                         "address": "field_Address",
                         "card": "Field_Card",
                         "follow_up": "Field_FollowUP",
+                        "Free_Check": "Field_freeCheck",
                         "Services": "field_Services",
-                        "FilterClinic": "field_Clinic",
+                       // "FilterClinic": "field_Clinic",
                     };
 
                     for (var dbField in fieldContainers) {
@@ -580,7 +581,16 @@
             <div class="card3">
                 <span style="font-size: 15px;">Total OPD</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat" class="blink" runat="server"></span>
-            </div>
+
+          
+
+                <span style="font-size: 15px;">Recent Visit</span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2" class="blink" runat="server"></span>
+
+
+                <span style="font-size: 15px;">Previous Visit </span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span6" class="blink" runat="server"></span>
+                  </div>
         </div>
     </div>
 
@@ -654,12 +664,7 @@
                             <option value="0">Select Service</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Clinic">
-                        <label>Filter Clinic</label>
-                        <select id="ddlFilterClnic">
-                            <option value="0">Select Clinic</option>
-                        </select>
-                    </div>
+
                     <div class="col-lg-12 col-md-12 col-sm-12" id="field_Address">
                         <label>Address *</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
@@ -683,6 +688,12 @@
                     <label>Department</label>
                     <select id="ddlDepartment"  class="form-control">
                         <option value="0">Select Department</option>
+                    </select>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" id="field_Clinic">
+                    <label>Filter Clinic</label>
+                    <select id="ddlFilterClnic" class="form-control">
+                        <option value="0">Select Clinic</option>
                     </select>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="doctor">
@@ -755,16 +766,16 @@
                         <label for="chckcardissue" class="ml-2">Card</label>
                         <input type="checkbox" id="chckcardissue" runat="server" class="custom-checkbox" onclick="DisableCardPrint()" />
                     </div>
+
+                    <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop" id="Field_freeCheck">
+                        <label for="chckfreecheck" class="ml-2 wdth">Free Check</label>
+                        <input type="checkbox" id="chckfreecheck" class="custom-checkbox " />
+                    </div>
+                </div>
+                <div class="row" style="width: 100%;" id="Follow_Up">
                     <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop" id="Field_FollowUP">
                         <label for="lblfollowup" class="ml-2">Follow Up</label>
                         <span id="follow_up"></span>
-                    </div>
-
-                </div>
-                <div class="row" style="display: none">
-                    <div class="col-lg-7 col-md-4 col-sm-6 d-flex align-items-center mtop" style="display: none">
-                        <label for="chckfreecheck" class="ml-2 wdth">Free Check</label>
-                        <input type="checkbox" id="chckfreecheck" class="custom-checkbox " />
                     </div>
                 </div>
             </div>

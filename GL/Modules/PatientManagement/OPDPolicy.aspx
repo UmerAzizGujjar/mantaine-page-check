@@ -921,6 +921,13 @@
                                         <div class="field-desc">Clinic Related options</div>
                                     </div>
                                 </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="Free_Check" name="rights[]" value="Free_Check" />
+                                    <div>
+                                        <label for="Free_Check">Free Check</label>
+                                        <div class="field-desc">Free patinets options</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

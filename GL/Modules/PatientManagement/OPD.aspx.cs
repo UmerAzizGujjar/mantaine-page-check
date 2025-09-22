@@ -377,6 +377,58 @@ namespace PMS.Modules.PatientManagement
 
 
 
+        //[WebMethod]
+        //public static string loadRegistrationFees(string Doc)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+        //    int? policyId = (from emp in db.HR_Employees
+        //                     where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+        //                     select emp.Policy_id).FirstOrDefault();
+
+        //    if (policyId == null)
+        //        return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy found." });
+
+        //    DateTime today = DateTime.Now;
+        //    TimeSpan currentTime = today.TimeOfDay;
+
+        //    // Get all policy details for the policy
+        //    var policyDetails = (
+        //        from pd in db.Policy_Details
+        //        where pd.Policy_ID == policyId
+        //        orderby pd.Policy_Detail_ID descending
+        //        select new { pd.Start_Time, pd.End_Time, pd.Fees,pd.Hospital_Share,pd.Doctor_Share,pd.Expiry_Date }
+        //    ).ToList();
+
+        //    if (policyDetails.Count == 0)
+        //        return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy details found." });
+
+        //    var matchingPolicy = policyDetails.FirstOrDefault(pd =>
+        //        (pd.Start_Time <= pd.End_Time && 
+        //         currentTime >= pd.Start_Time && currentTime <= pd.End_Time)
+        //        ||
+        //        (pd.Start_Time > pd.End_Time &&
+        //         (currentTime >= pd.Start_Time || currentTime <= pd.End_Time)
+        //         && today <= pd.Expiry_Date
+        //         )
+        //    );
+
+        //    if (matchingPolicy == null)
+        //    {
+        //        return (new JavaScriptSerializer()).Serialize(new
+        //        {
+        //            success = false,
+        //            message = "You cannot register at this time."
+        //        });
+        //    }
+        //    return (new JavaScriptSerializer()).Serialize(new
+        //    {
+        //        success = true,
+        //        fee = matchingPolicy.Fees,
+        //        Hospital_Share = matchingPolicy.Hospital_Share,
+        //        Doctor_Share = matchingPolicy.Doctor_Share
+        //    });
+        //}
         [WebMethod]
         public static string loadRegistrationFees(string Doc)
         {
@@ -397,20 +449,38 @@ namespace PMS.Modules.PatientManagement
                 from pd in db.Policy_Details
                 where pd.Policy_ID == policyId
                 orderby pd.Policy_Detail_ID descending
-                select new { pd.Start_Time, pd.End_Time, pd.Fees,pd.Hospital_Share,pd.Doctor_Share,pd.Expiry_Date }
+                select new
+                {
+                    pd.Start_Time,
+                    pd.End_Time,
+                    pd.Fees,
+                    pd.Hospital_Share,
+                    pd.Doctor_Share,
+                    pd.Expiry_Date,
+                    pd.IsTime
+                }
             ).ToList();
 
             if (policyDetails.Count == 0)
                 return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy details found." });
-          
+
+            // Matching policy logic
             var matchingPolicy = policyDetails.FirstOrDefault(pd =>
-                (pd.Start_Time <= pd.End_Time && 
-                 currentTime >= pd.Start_Time && currentTime <= pd.End_Time)
-                ||
-                (pd.Start_Time > pd.End_Time &&
-                 (currentTime >= pd.Start_Time || currentTime <= pd.End_Time)
-                 && today <= pd.Expiry_Date
-                 )
+                pd.IsTime == true
+                ? // ✅ Check BOTH time and expiry date
+                    (
+                        (
+                            pd.Start_Time <= pd.End_Time &&
+                            currentTime >= pd.Start_Time && currentTime <= pd.End_Time
+                        )
+                        ||
+                        (
+                            pd.Start_Time > pd.End_Time &&
+                            (currentTime >= pd.Start_Time || currentTime <= pd.End_Time)
+                        )
+                    ) && today <= pd.Expiry_Date
+                : // ❌ Check ONLY expiry date
+                    today <= pd.Expiry_Date
             );
 
             if (matchingPolicy == null)
@@ -418,9 +488,10 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(new
                 {
                     success = false,
-                    message = "You cannot register at this time."
+                    message = "You cannot register at this time or policy has expired."
                 });
             }
+
             return (new JavaScriptSerializer()).Serialize(new
             {
                 success = true,
@@ -429,6 +500,7 @@ namespace PMS.Modules.PatientManagement
                 Doctor_Share = matchingPolicy.Doctor_Share
             });
         }
+
 
         [WebMethod]
         public static string LoadEmplData(string employeeid)
@@ -680,24 +752,32 @@ namespace PMS.Modules.PatientManagement
                 pat.Patient_Main_Category = data.hdnDepartment;
                 pat.Actual_amount = data.Actual_Fees;
 
-                if (data.pat_category == "01" && data.discount == "")
-                {
-                    pat.Receipt_Amount = Convert.ToDecimal(opdfee);
-                }
-                else
-                {
-                    pat.Receipt_Amount = data.Fees;
-                }
-                if (data.discount == "")
-                {
-                    pat.discount_amt = 0;
 
+                if (data.FreeCheck == true)
+                {
+                    pat.Receipt_Amount = 0;
+                    pat.discount_amt = data.Actual_Fees;
                 }
                 else
                 {
-                    pat.discount_amt = Convert.ToInt32(data.discount);
+                    if (data.pat_category == "01" && data.discount == "")
+                    {
+                        pat.Receipt_Amount = Convert.ToDecimal(opdfee);
+                    }
+                    else
+                    {
+                        pat.Receipt_Amount = data.Fees;
+                    }
+                    if (data.discount == "")
+                    {
+                        pat.discount_amt = 0;
+
+                    }
+                    else
+                    {
+                        pat.discount_amt = Convert.ToInt32(data.discount);
+                    }
                 }
-              
 
 
                 if (data.doctor == "0" || data.doctor == "")
@@ -756,12 +836,12 @@ namespace PMS.Modules.PatientManagement
                 decimal Net_Amount = opdfees;
 
                 // Save discount % just for reference
-                decimal disc = 0;
-                if (!string.IsNullOrEmpty(data.discount))
-                {
-                    disc = Convert.ToDecimal(data.discount);
-                }
-                pat.discount_amt = disc;
+                //decimal disc = 0;
+                //if (!string.IsNullOrEmpty(data.discount))
+                //{
+                //    disc = Convert.ToDecimal(data.discount);
+                //}
+                //pat.discount_amt = disc;
 
                 // Calculate shares
                 decimal Hospital_Amount = Math.Round((Net_Amount * hospital_share) / 100, 2);
@@ -861,17 +941,57 @@ namespace PMS.Modules.PatientManagement
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
-
         [WebMethod]
         public static string GetBasicInfo(int reg_id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
+            // First, fetch the patient basic info
+            var patient = (from rg in db.Reg_patients
+                           where rg.pat_id == reg_id
+                           select rg).FirstOrDefault();
+
+            if (patient == null)
+            {
+                return new JavaScriptSerializer().Serialize(null);
+            }
+            int numberOfDaysLatest = 0;
+            int numberOfDaysSecondLatest = 0;
+            var opd_time = (from pt in db.Patients
+                            where pt.Reg_PatId == patient.pat_id
+                            orderby pt.Patient_ID descending
+                            select pt.Created_Time).FirstOrDefault();
+
+            if (opd_time != null)
+            {
+                DateTime currentTimeRounded = DateTime.Now.Date;
+                DateTime createdTimeRounded = opd_time.Value.Date;
+                TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
+                numberOfDaysLatest = (int)daysSinceCreation.TotalDays;
+            }
+            var opd_time2 = (from pt in db.Patients
+                             where pt.Reg_PatId == patient.pat_id
+                             orderby pt.Patient_ID descending
+                             select pt.Created_Time)
+                             .Skip(1)
+                             .FirstOrDefault();
+
+            if (opd_time2 != null)
+            {
+                DateTime currentTimeRounded = DateTime.Now.Date;
+                DateTime createdTimeRounded = opd_time2.Value.Date;
+                TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
+                numberOfDaysSecondLatest = (int)daysSinceCreation.TotalDays;
+            }
+            else
+            {
+                numberOfDaysSecondLatest = 0;
+            }
+
             var query = (from rg in db.Reg_patients
                          where rg.pat_id == reg_id
                          select new
                          {
-
                              Name = rg.Full_Name,
                              FatherName = rg.Father_Name,
                              Relation = rg.Relation_prefix,
@@ -883,7 +1003,7 @@ namespace PMS.Modules.PatientManagement
                              Gender_text = db.GetDataValueName("Gender", rg.Gender),
                              Mr_No = rg.mr_no_sequence,
                              pat_no = rg.Patient_No,
-                             Address = rg.Permanent_Address /*"H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city*/,
+                             Address = rg.Permanent_Address,
                              Mobile = rg.Mobile1,
                              CNIC = rg.NIC,
                              HouseNo = rg.House_No,
@@ -893,11 +1013,50 @@ namespace PMS.Modules.PatientManagement
                              ValArea = rg.val_area,
                              ValCity = rg.val_city,
                              Reg_PatientID = rg.pat_id,
-                             opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id)
-
+                             opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id),
+                             DaysSinceLatestVisit = numberOfDaysLatest,
+                             DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
                          }).FirstOrDefault();
+
             return (new JavaScriptSerializer()).Serialize(query);
         }
+
+        //[WebMethod]
+        //public static string GetBasicInfo(int reg_id)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    var query = (from rg in db.Reg_patients
+        //                 where rg.pat_id == reg_id
+        //                 select new
+        //                 {
+
+        //                     Name = rg.Full_Name,
+        //                     FatherName = rg.Father_Name,
+        //                     Relation = rg.Relation_prefix,
+        //                     Gender = rg.Gender,
+        //                     DOB = rg.DOB,
+        //                     Age = rg.Age_years,
+        //                     MaritalStatus = rg.Martial_Status,
+        //                     MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
+        //                     Gender_text = db.GetDataValueName("Gender", rg.Gender),
+        //                     Mr_No = rg.mr_no_sequence,
+        //                     pat_no = rg.Patient_No,
+        //                     Address = rg.Permanent_Address /*"H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city*/,
+        //                     Mobile = rg.Mobile1,
+        //                     CNIC = rg.NIC,
+        //                     HouseNo = rg.House_No,
+        //                     Area = rg.area,
+        //                     StreetNo = rg.stno_mno,
+        //                     City = rg.city,
+        //                     ValArea = rg.val_area,
+        //                     ValCity = rg.val_city,
+        //                     Reg_PatientID = rg.pat_id,
+        //                     opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id)
+
+        //                 }).FirstOrDefault();
+        //    return (new JavaScriptSerializer()).Serialize(query);
+        //}
         //[WebMethod]
         //public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
         //{
@@ -1000,6 +1159,41 @@ namespace PMS.Modules.PatientManagement
                                  .FirstOrDefault();
             string department_Text = db.GetDataValueName("Patient Main Category", departmentid);
 
+            int numberOfDaysLatest = 0;
+            int numberOfDaysSecondLatest = 0;
+            var opd_time = (from pt in db.Patients
+                            where pt.Reg_PatId == patient.pat_id
+                            orderby pt.Patient_ID descending
+                            select pt.Created_Time).FirstOrDefault();
+
+            if (opd_time != null)
+            {
+                DateTime currentTimeRounded = DateTime.Now.Date;
+                DateTime createdTimeRounded = opd_time.Value.Date;
+                TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
+                numberOfDaysLatest = (int)daysSinceCreation.TotalDays;
+            }
+            var opd_time2 = (from pt in db.Patients
+                             where pt.Reg_PatId == patient.pat_id
+                             orderby pt.Patient_ID descending
+                             select pt.Created_Time)
+                             .Skip(1)
+                             .FirstOrDefault();
+
+            if (opd_time2 != null)
+            {
+                DateTime currentTimeRounded = DateTime.Now.Date;
+                DateTime createdTimeRounded = opd_time2.Value.Date;
+
+                TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
+                numberOfDaysSecondLatest = (int)daysSinceCreation.TotalDays;
+            }
+            else
+            {
+                numberOfDaysSecondLatest = 0;
+            }
+
+
             var result = new
             {
                 Name = patient.Full_Name,
@@ -1029,7 +1223,9 @@ namespace PMS.Modules.PatientManagement
                 doctorId = doctorId,
                 DoctorName= DoctorName,
                 departmentid = departmentid,
-                department_Text = department_Text
+                department_Text = department_Text,
+                DaysSinceLatestVisit = numberOfDaysLatest,
+                DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
             };
 
             return new JavaScriptSerializer().Serialize(result);

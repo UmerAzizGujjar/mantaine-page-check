@@ -146,7 +146,7 @@ function fillDropdown($dropdown, methodName) {
                     options += `<option value="${value.DataValue_Name}">
                                     ${value.DataValue_Description}
                                 </option>`;
-                });
+                }); 
 
                 $dropdown.html(options)
                     .data('filled', true)
@@ -180,6 +180,7 @@ function showhide() {
     $('.show').show();
     $('#fees').hide();
     $('#department').hide();
+    $('#field_Clinic').hide();
     $('#doctor').hide();
     $('#pnlcompany').hide();
     $('#employee').hide();
@@ -236,6 +237,8 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(reg_id);
             $('#hdn_aptid').val(apt_Id);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
             debugger;
 
@@ -316,6 +319,8 @@ function Get_Pat_Info(reg_id) {
             $('#txtage').val(data.Age);
             $('#txtnic').val(data.CNIC);
             $('#txtmobile').val(data.Mobile);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
             $('#txtAdrress').val(data.Address);
             $('#hdn_regid').val(reg_id);
             $('#follow_up').text(data.opdCount);
@@ -1359,6 +1364,7 @@ function loaddata() {
         $('.show').show();
         $('#fees').hide();
         $('#department').hide();
+        $('#field_Clinic').hide();
         $('#doctor').hide();
         $('#pnlcompany').hide();
         $('#employee').hide();
@@ -1377,11 +1383,11 @@ function loaddata() {
     else if (Category == "01") {
         $('#fees').show();
         $('#department').show();
+        $('#field_Clinic').show();
         $('#doctor').hide();
         $('#pnlcompany').hide();
         $('#employee').hide();
         $('#refference').hide();
-
         $('#discount').show();
         $('#empname').hide();
         $('#designation').hide();
@@ -1389,10 +1395,7 @@ function loaddata() {
         $('#class').hide();
         $('#section').hide();
         $('#dependent').hide();
-
         $('#emp_id').hide();
-
-
     }
     else if (Category == "02") {
         $('#fees').show();

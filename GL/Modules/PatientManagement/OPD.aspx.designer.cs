@@ -24,6 +24,24 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lbltotpat;
 
         /// <summary>
+        /// Span2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Span2;
+
+        /// <summary>
+        /// Span6 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Span6;
+
+        /// <summary>
         /// txtPatient_ID control.
         /// </summary>
         /// <remarks>
