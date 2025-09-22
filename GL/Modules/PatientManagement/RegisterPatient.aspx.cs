@@ -11,7 +11,15 @@ namespace PMS.Modules.PatientManagement
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Nothing needed here for now
+            if (!IsPostBack)
+            {
+                // Generate unique anti-forgery token
+                string token = Guid.NewGuid().ToString();
+                Session["AntiForgeryToken"] = token;
+
+                // Assign to hidden field
+                hfAntiForgery.Value = token;
+            }
         }
 
         // ========= SAFE DTO CLASS =========
@@ -161,7 +169,7 @@ namespace PMS.Modules.PatientManagement
       string Full_Name, string RelationType, string Relation, string Gender,
       string Mobile, string Date_Of_Birth, string CNIC, string Address,
       string PatientID, string martail_status, string Age, string city, string area,
-      string city_val, string area_val, string Blood_Group, string State, string Country)
+      string city_val, string area_val, string Blood_Group, string State, string Country ,string AntiForgeryToken)
         {
             // 🔐 SECURITY CHECK — Check if user is logged in
             if (HttpContext.Current.Session["UserID"] == null)
@@ -169,7 +177,14 @@ namespace PMS.Modules.PatientManagement
                 return "ERROR: Unauthorized Access. Please login.";
             }
 
-            // ✅ If authorized, proceed with logic
+            // 🔐 STEP 2: Validate CSRF Token
+            string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
+            if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(AntiForgeryToken))
+            {
+                return "ERROR: Invalid request. CSRF attack detected.";
+            }
+
+            // ✅ If both checks pass, proceed with normal logic...
             using (var db = new DataBaseDataContext())
             {
                 Reg_patient pat;
@@ -220,9 +235,8 @@ namespace PMS.Modules.PatientManagement
                     }
                     else
                     {
-                        // Handle error — maybe log or throw
                         return "ERROR: Invalid user ID format.";
-                    } // ✅ Use session user
+                    }
                     pat.iscancel = false;
                     pat.Martial_Status = martail_status;
                     pat.city = city;

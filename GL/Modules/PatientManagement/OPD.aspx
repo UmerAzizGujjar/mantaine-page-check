@@ -539,7 +539,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
-
+    <!-- Anti-CSRF Token -->
+<input type="hidden" id="hfAntiForgery" runat="server" />
     <input type="text " id="hdfPatient_ID" style="display: none;" />
     <input type="text" id="hdn_aptid" style="display: none;" />
     <input type="text" id="hdn_regid" style="display: none;" />

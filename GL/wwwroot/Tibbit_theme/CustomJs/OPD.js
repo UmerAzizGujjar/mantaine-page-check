@@ -922,6 +922,7 @@ function SaveData() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
+    var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').prop('checked');
     if (!patient_no || patient_no === "0") {
         Swal.fire({
             icon: 'error',
@@ -1052,6 +1053,7 @@ function SaveData() {
         accountid: accountid,
         IssueCard: IssueCard,
         FreeCheck: FreeCheck,
+        hfAntiForgery: hfAntiForgery,
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName

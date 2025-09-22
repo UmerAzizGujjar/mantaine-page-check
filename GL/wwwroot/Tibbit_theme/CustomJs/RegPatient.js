@@ -149,7 +149,7 @@ function CalculateDateOfBirth() {
 
 
 function SavePatient() {
-  
+    debugger;
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
@@ -172,6 +172,7 @@ function SavePatient() {
     var Blood_Group = $('#ddl_bloodGroup').val();
     var State = $('#ddlstate').val();
     var Country = $('#ddlCountry :selected').val();
+    var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
     if (PatientName === "") {
         $('#firstname-error').show();
@@ -225,6 +226,7 @@ function SavePatient() {
         "Blood_Group": Blood_Group,
         "State": State,
         "Country": Country,
+        "AntiForgeryToken": AntiForgeryToken,
 
     });
     console.log(data);

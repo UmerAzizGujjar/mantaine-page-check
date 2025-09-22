@@ -17,7 +17,13 @@ namespace PMS.Modules.PatientManagement
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                // Generate unique anti-forgery token
+                string token = Guid.NewGuid().ToString();
+                Session["AntiForgeryToken"] = token;
+                hfAntiForgery.Value = token; // Assign to hidden field
+            }
         }
         // ========= HELPER: Mask Mobile & CNIC =========
         private static string MaskMobile(string mobile)
@@ -647,6 +653,11 @@ namespace PMS.Modules.PatientManagement
             if (HttpContext.Current.Session["UserID"] == null)
             {
                 return "ERROR: Unauthorized Access. Please login.";
+            }
+            string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
+            if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(data.AntiForgeryToken))
+            {
+                return "ERROR: Invalid request. CSRF attack detected.";
             }
             DataBaseDataContext db = new DataBaseDataContext();
             Patient pat = null;
@@ -1381,6 +1392,7 @@ namespace PMS.Modules.PatientManagement
             public string FilterClinic { get; set; }
             public string EmployeeName { get; set; }
             public string EmployeeDept { get; set; }
+            public string AntiForgeryToken { get; set; }
             public bool? IssueCard { get; set; }    // 👈 Added "?"
             public bool? FreeCheck { get; set; }    // 👈 Added "?"
             public int Fees { get; set; }

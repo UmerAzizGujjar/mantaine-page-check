@@ -57,6 +57,7 @@
     <div class="row">
         <div class="col-lg-11 col-md-10 col-sm-12">
     <div class="card">
+        <input type="hidden" id="hfAntiForgery" runat="server" />
         <input type="hidden" id="hdfPatient_ID" />
         <input type="hidden" id="hdn_regid" />
         <div class="row">
