@@ -1040,23 +1040,15 @@ namespace PMS.Modules.PatientManagement
                     return new JavaScriptSerializer().Serialize(null);
                 }
 
-                // ✅✅✅ INJECTED: Calculate & Update Age from DOB ✅✅✅
-          
                 var patientRecord = db.Reg_patients.FirstOrDefault(x => x.pat_id == reg_id);
                 if (patientRecord != null && patientRecord.DOB.HasValue)
                 {
                     DateTime dob = patientRecord.DOB.Value;
                     DateTime today = DateTime.Today;
                     int calculatedAge = today.Year - dob.Year;
-
-                    // Adjust if birthday hasn't occurred yet this year
                     if (dob > today.AddYears(-calculatedAge))
                         calculatedAge--;
-
-                    // Convert to string for comparison and assignment
                     string currentAgeStr = calculatedAge.ToString();
-
-                    // Only update if age changed (avoid unnecessary DB writes)
                     if (patientRecord.Age_years != currentAgeStr)
                     {
                         patientRecord.Age_years = currentAgeStr; 
