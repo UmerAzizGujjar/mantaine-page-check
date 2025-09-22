@@ -1037,13 +1037,27 @@ namespace PMS.Modules.PatientManagement
                                    opdCount = db.Patients.Count(p => p.Reg_PatId == reg_id)
                                }).FirstOrDefault();
 
-
-
-
                 if (patient == null)
                 {
                     return new JavaScriptSerializer().Serialize(null);
                 }
+
+                var patientRecord = db.Reg_patients.FirstOrDefault(x => x.pat_id == reg_id);
+                if (patientRecord != null && patientRecord.DOB.HasValue)
+                {
+                    DateTime dob = patientRecord.DOB.Value;
+                    DateTime today = DateTime.Today;
+                    int calculatedAge = today.Year - dob.Year;
+                    if (dob > today.AddYears(-calculatedAge))
+                        calculatedAge--;
+                    string currentAgeStr = calculatedAge.ToString();
+                    if (patientRecord.Age_years != currentAgeStr)
+                    {
+                        patientRecord.Age_years = currentAgeStr; 
+                        db.SubmitChanges(); 
+                    }
+                }
+
                 int numberOfDaysLatest = 0;
                 int numberOfDaysSecondLatest = 0;
 
@@ -1059,6 +1073,7 @@ namespace PMS.Modules.PatientManagement
                     TimeSpan daysSinceCreation = currentTimeRounded - createdTimeRounded;
                     numberOfDaysLatest = (int)daysSinceCreation.TotalDays;
                 }
+
                 var opd_time2 = (from pt in db.Patients
                                  where pt.Reg_PatId == patient.Reg_PatientID
                                  orderby pt.Patient_ID descending
@@ -1087,7 +1102,7 @@ namespace PMS.Modules.PatientManagement
                                  Relation = rg.Relation_prefix,
                                  Gender = rg.Gender,
                                  DOB = rg.DOB,
-                                 Age = rg.Age_years,
+                                 Age = rg.Age_years, // 👈 Now this will be UPDATED age!
                                  MaritalStatus = rg.Martial_Status,
                                  MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
                                  Gender_text = db.GetDataValueName("Gender", rg.Gender),
@@ -1095,7 +1110,7 @@ namespace PMS.Modules.PatientManagement
                                  pat_no = rg.Patient_No,
                                  Address = rg.Permanent_Address,
                                  Mobile = rg.Mobile1,
-                                 CNIC = rg.NIC,
+                                 CNIC_Masked = rg.NIC,
                                  HouseNo = rg.House_No,
                                  Area = rg.area,
                                  StreetNo = rg.stno_mno,
@@ -1112,46 +1127,6 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-        //[WebMethod]
-        //public static string GetBasicInfo(int reg_id)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-
-        //    var query = (from rg in db.Reg_patients
-        //                 where rg.pat_id == reg_id
-        //                 select new
-        //                 {
-
-        //                     Name = rg.Full_Name,
-        //                     FatherName = rg.Father_Name,
-        //                     Relation = rg.Relation_prefix,
-        //                     Gender = rg.Gender,
-        //                     DOB = rg.DOB,
-        //                     Age = rg.Age_years,
-        //                     MaritalStatus = rg.Martial_Status,
-        //                     MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
-        //                     Gender_text = db.GetDataValueName("Gender", rg.Gender),
-        //                     Mr_No = rg.mr_no_sequence,
-        //                     pat_no = rg.Patient_No,
-        //                     Address = rg.Permanent_Address /*"H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city*/,
-        //                     Mobile = rg.Mobile1,
-        //                     CNIC = rg.NIC,
-        //                     HouseNo = rg.House_No,
-        //                     Area = rg.area,
-        //                     StreetNo = rg.stno_mno,
-        //                     City = rg.city,
-        //                     ValArea = rg.val_area,
-        //                     ValCity = rg.val_city,
-        //                     Reg_PatientID = rg.pat_id,
-        //                     opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id)
-
-        //                 }).FirstOrDefault();
-        //    return (new JavaScriptSerializer()).Serialize(query);
-        //}
-        //[WebMethod]
-        //public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
 
 
         [WebMethod]
