@@ -189,7 +189,7 @@ namespace PMS.Modules.StudentAffair
                 stu.Status = record.txtStatus;
                 stu.Doc_No = record.txt_DocNo;
                 stu.Class = record.Class;
-                stu.isCancel = false;
+                //stu.isCancel = false;
 
 
                 if (record.txtTotalPayable != "")
