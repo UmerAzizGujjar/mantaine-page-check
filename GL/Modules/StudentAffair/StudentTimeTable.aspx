@@ -703,7 +703,14 @@
 
                     var $subjectDropdown = $(`#ddlstdsubj${index}`);
                     await GetSubject($subjectDropdown);
-                    $subjectDropdown.val(md.Subjects).trigger('change');
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                    if ($subjectDropdown.find(`option[value="${md.Subjects}"]`).length) {
+                        $subjectDropdown.val(md.Subjects).trigger('change');
+                    } else {
+                        console.warn(`Subject "${md.Subjects}" not available in dropdown for row ${index}`);
+                        $subjectDropdown.val('0');
+                    }
+                    $(`#ddlTeacher${index}`).select2();
 
                     $(`#ddlbatchs${index}`).on('change', function () {
                         var subject1 = $(this).find(':selected').text();
@@ -836,7 +843,7 @@
                         Class: Class, txtClass: txtClass, dat: dat, day: day, FTimes: FTimes, TTime: TTime, ddlSubject: ddlSubject, ddlBatch: ddlBatch, ddlGroup: ddlGroup, topic: topic, whlclass: whlclass, ddlVenu: ddlVenu, ddlTeacher: ddlTeacher, ddlGetStuSub: ddlGetStuSub, chkhldy: chkhldy, chkbrk: chkbrk,
                     });
                 });
-            var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "ddlBlock ": ddlBlock, "ddlModule ": ddlModule, "Save_list": Save_list };
+            var StdTimetable = { "Subject_id": Subject_id, "program": program, "ddlClass": ddlClass, "ddlWeek": ddlWeek, "ddlBlock": ddlBlock, "ddlModule": ddlModule, "Save_list": Save_list };
             PageMethods.Replicate(JSON.stringify(StdTimetable), function () {
                 window.location.href = 'StudentTimeTable.aspx'
                 Swal.fire({

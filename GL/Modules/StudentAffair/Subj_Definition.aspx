@@ -12,25 +12,25 @@
             ];
 
             dropdowns.forEach(item => {
-             const $element = $(item.id);
-             $element.select2();
+                const $element = $(item.id);
+                $element.select2();
 
-             $element.off('select2:opening').on('select2:opening', function (e) {
-               if (!$element.data('filled')) {
-                e.preventDefault(); 
-               $element.data('shouldReopen', true);
-              fillDropdown($element, item.method);
-              }
-          });
-        });
+                $element.off('select2:opening').on('select2:opening', function (e) {
+                    if (!$element.data('filled')) {
+                        e.preventDefault();
+                        $element.data('shouldReopen', true);
+                        fillDropdown($element, item.method);
+                    }
+                });
+            });
 
-            
+
             const subjectId = getParameterByName('ID');
-             if (subjectId) {
-              loadSubjectDefinition(parseInt(subjectId));
-              $("#btnSave").val('Update');
+            if (subjectId) {
+                loadSubjectDefinition(parseInt(subjectId));
+                $("#btnSave").val('Update');
             } else {
-             fillDropdown($('#ddlClass'), 'GetStudentClass');
+                fillDropdown($('#ddlClass'), 'GetStudentClass');
             }
 
             $('#ddlProgram').on('change', Selectfunc);
@@ -46,30 +46,30 @@
         });
 
         function getParameterByName(name, url = window.location.href) {
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
         let subjectCounter = 0;
 
         function addSubjectField() {
             const subjectName = $('#newSubject').val().trim();
             if (!subjectName) {
-                 Swal.fire({
-                 icon: 'error',
-                 title: 'Error!',
-             text: 'Please enter a subject name.',
-             showConfirmButton: false,
-             timer: 2000,
-             customClass: {
-              popup: 'swal-big-popup',
-                 title: 'swal-big-title',
-                 htmlContainer: 'swal-big-text'
-             }
-           });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter a subject name.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 $('#newSubject').focus();
                 return;
             }
@@ -176,49 +176,49 @@
             });
         }
 
-      function Selectfunc() {
-       var currentYear = new Date().getFullYear();
-      var slct_value = $("#ddlProgram").val() || "";
-      var pid = slct_value.replace(/^0+/, '') || slct_value;
-      var $ddlClass = $('#ddlClass');
-         var all = $ddlClass.data('allOptions') || [];
+        function Selectfunc() {
+            var currentYear = new Date().getFullYear();
+            var slct_value = $("#ddlProgram").val() || "";
+            var pid = slct_value.replace(/^0+/, '') || slct_value;
+            var $ddlClass = $('#ddlClass');
+            var all = $ddlClass.data('allOptions') || [];
 
-     if (!all.length) {
-        fillDropdown($ddlClass, 'GetStudentClass', Selectfunc);
-        return;
+            if (!all.length) {
+                fillDropdown($ddlClass, 'GetStudentClass', Selectfunc);
+                return;
+            }
+
+            var allowedIndexes;
+
+            if (pid === '2') {
+                allowedIndexes = [1, 2, 3, 4, 5];
+                $('#txtSession').val(currentYear + '-' + (currentYear + 5));
+            }
+            else if (pid === '1') {
+                allowedIndexes = [1];
+                $('#txtSession').val(currentYear + '-' + (currentYear + 2));
+            }
+            else if (pid === '3') {
+                allowedIndexes = [1, 2, 3, 4];
+                $('#txtSession').val(currentYear + '-' + (currentYear + 1));
+            }
+            else {
+                allowedIndexes = [];
+                for (var i = 1; i < all.length; i++) {
+                    allowedIndexes.push(i);
+                }
+                $('#txtSession').val('');
+            }
+
+            let newHtml = `<option value="${all[0].DataValue_Name}">${all[0].DataValue_Description}</option>`;
+            allowedIndexes.forEach(idx => {
+                if (all[idx]) {
+                    newHtml += `<option value="${all[idx].DataValue_Name}">${all[idx].DataValue_Description}</option>`;
+                }
+            });
+
+            $ddlClass.html(newHtml).val('').trigger('change.select2');
         }
-
-      var allowedIndexes;
-
-     if (pid === '2') {
-        allowedIndexes = [1, 2, 3, 4, 5];
-        $('#txtSession').val(currentYear + '-' + (currentYear + 5));
-        }
-     else if (pid === '1') {
-        allowedIndexes = [1];
-        $('#txtSession').val(currentYear + '-' + (currentYear + 2));
-     }
-     else if (pid === '3') {
-        allowedIndexes = [1, 2, 3, 4];
-        $('#txtSession').val(currentYear + '-' + (currentYear + 1));
-    }
-         else {
-        allowedIndexes = [];
-        for (var i = 1; i < all.length; i++) {
-            allowedIndexes.push(i);
-        }
-        $('#txtSession').val('');
-    }
-
-    let newHtml = `<option value="${all[0].DataValue_Name}">${all[0].DataValue_Description}</option>`;
-    allowedIndexes.forEach(idx => {
-        if (all[idx]) {
-            newHtml += `<option value="${all[idx].DataValue_Name}">${all[idx].DataValue_Description}</option>`;
-        }
-    });
-
-    $ddlClass.html(newHtml).val('').trigger('change.select2');
-}
 
         function saveSubjectDefinition() {
             debugger;
@@ -229,54 +229,54 @@
             const subjects = getSubjects();
             const masterId = $('#hfMasterId').val();
             debugger;
-            if (!program ) {
-                 Swal.fire({
-                  icon: 'error',
-                 title: 'Error!',
-                 text: 'Please select Program and Class.',
-                 showConfirmButton: false,
-                 timer: 2000,
-                 customClass: {
-                 popup: 'swal-big-popup',
-                 title: 'swal-big-title',
-                 htmlContainer: 'swal-big-text'
-                  }
-            });
-              
+            if (!program) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select Program and Class.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
 
-            if (!studentClass ) {
-            Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Please select Class.',
-            showConfirmButton: false,
-            timer: 2000,
-            customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-          }
-         });
-         return;
-      }
+            if (!studentClass) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select Class.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
 
-           
+
 
             if (subjects.length === 0) {
-                     Swal.fire({
-                     icon: 'error',
-                     title: 'Error!',
-                     text: 'Please add at least one subject.',
-                     showConfirmButton: false,
-                     timer: 2000,
-                     customClass: {
-                     popup: 'swal-big-popup',
-                     title: 'swal-big-title',
-                     htmlContainer: 'swal-big-text'
-                  }
-            });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please add at least one subject.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
                 return;
             }
 
@@ -306,18 +306,18 @@
                 success: function (response) {
                     if (response.d && response.d !== "0") {
                         Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Data Saved successfully!',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                        }
-             });
-                       window.location.href = "SubjectList.aspx";
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Saved successfully!',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        window.location.href = "SubjectList.aspx";
                     } else {
                         alert('Failed to save. Please check inputs.');
                     }
@@ -329,67 +329,67 @@
         }
 
         function loadSubjectDefinition(subjectId) {
-       $.ajax({
-        type: "POST",
-        url: "Subj_Definition.aspx/GetSubjectDefinitionById",
-        data: JSON.stringify({ id: subjectId.toString() }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            if (!response.d) {
-                alert('Failed to load subject definition.');
-                return;
-            }
+            $.ajax({
+                type: "POST",
+                url: "Subj_Definition.aspx/GetSubjectDefinitionById",
+                data: JSON.stringify({ id: subjectId.toString() }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (!response.d) {
+                        alert('Failed to load subject definition.');
+                        return;
+                    }
 
-            const data = JSON.parse(response.d);
+                    const data = JSON.parse(response.d);
 
-            $('#hfMasterId').val(data.SubjectId);
+                    $('#hfMasterId').val(data.SubjectId);
 
-            $('#ddlProgram').html(
-             $('<option>', {
-              value: data.Program,
-              text: data.Program_Text
-               })
-             );
+                    $('#ddlProgram').html(
+                        $('<option>', {
+                            value: data.Program,
+                            text: data.Program_Text
+                        })
+                    );
 
-           
-          $('#ddlClass').html(
-            $('<option>', {
-             value: data.StudentClass,
-             text: data.StudentClass_Text
-             })
-            );
 
-            $('#ddlBlock').html(
-             $('<option>', {
-              value: data.Block,
-              text: data.Block_Text
-            })
-            );
+                    $('#ddlClass').html(
+                        $('<option>', {
+                            value: data.StudentClass,
+                            text: data.StudentClass_Text
+                        })
+                    );
 
-              $('#ddlModule').html(
-              $('<option>', {
-             value: data.Module,
-             text: data.Module_Text
-              })
-         );
-          
-            $('#subjectRowsContainer').empty();
-            if (data.Subjects && data.Subjects.length > 0) {
-                $('#noSubjectsMessage').hide();
-                data.Subjects.forEach(subject => {
-                    addSubjectFieldFromData(subject.SubjectName, subject.IsActive, true);
-                });
-            } else {
-                $('#noSubjectsMessage').show();
-            }
+                    $('#ddlBlock').html(
+                        $('<option>', {
+                            value: data.Block,
+                            text: data.Block_Text
+                        })
+                    );
 
-        },
-        error: function () {
-            alert('Error loading subject definition.');
+                    $('#ddlModule').html(
+                        $('<option>', {
+                            value: data.Module,
+                            text: data.Module_Text
+                        })
+                    );
+
+                    $('#subjectRowsContainer').empty();
+                    if (data.Subjects && data.Subjects.length > 0) {
+                        $('#noSubjectsMessage').hide();
+                        data.Subjects.forEach(subject => {
+                            addSubjectFieldFromData(subject.SubjectName, subject.IsActive, true);
+                        });
+                    } else {
+                        $('#noSubjectsMessage').show();
+                    }
+
+                },
+                error: function () {
+                    alert('Error loading subject definition.');
+                }
+            });
         }
-    });
-}
 
         function addSubjectFieldFromData(subjectName, isActive = true, isEditMode = false) {
             subjectCounter++;
@@ -430,7 +430,7 @@
         }
 
         function redirect() {
-       window.location.href = "SubjectList.aspx";
+            window.location.href = "SubjectList.aspx";
         }
 
     </script>
