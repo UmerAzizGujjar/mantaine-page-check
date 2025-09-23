@@ -50,7 +50,7 @@ namespace PMS
                         string fileExtension = Path.GetExtension(fileName);
                         str_image = $"{Studid}{fileExtension}";
                         string pathToSave = Path.Combine(dirFullPath, str_image);
-                        image_path = $"~../../../..//wwwroot/images/StudentImages/{str_image}";
+                        image_path = $"~../../../../wwwroot/images/StudentImages/{str_image}";
 
                         if (!string.IsNullOrEmpty(oldpath))
                         {

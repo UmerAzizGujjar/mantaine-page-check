@@ -881,8 +881,7 @@ function SavePatient() {
             });
         }
     });
-}
-function SaveData() {
+} function SaveData() {
     debugger;
 
     var regid = $('#hdn_regid').val();
@@ -927,7 +926,11 @@ function SaveData() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
-    var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').prop('checked');
+
+    // ✅ CORRECT: Get VALUE of hidden field
+    var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
+
+    // 🚨 VALIDATIONS (unchanged)
     if (!patient_no || patient_no === "0") {
         Swal.fire({
             icon: 'error',
@@ -1021,6 +1024,8 @@ function SaveData() {
         });
         return;
     }
+
+    // ✅ FIXED: Send token under CORRECT property name → "AntiForgeryToken"
     var data = {
         regid: regid,
         appid: appid,
@@ -1058,17 +1063,14 @@ function SaveData() {
         accountid: accountid,
         IssueCard: IssueCard,
         FreeCheck: FreeCheck,
-        hfAntiForgery: hfAntiForgery,
+        AntiForgeryToken: hfAntiForgery, // ✅ THIS WAS THE BUG — NOW FIXED
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName
     };
-    // 👇 ADD THIS BLOCK
-    if (data.IssueCard === undefined) data.IssueCard = null;
-    if (data.FreeCheck === undefined) data.FreeCheck = null;
-    if (data.employee_id === undefined) data.employee_id = null;
-    if (data.dependent === undefined) data.dependent = null;
-    if (data.designation === undefined) data.designation = null; // 👈 ADD THIS
+
+    // 👇 Optional: Log to verify
+    console.log("AntiForgeryToken being sent:", data.AntiForgeryToken);
     console.log("Data being sent:", data);
 
     $.ajax({
