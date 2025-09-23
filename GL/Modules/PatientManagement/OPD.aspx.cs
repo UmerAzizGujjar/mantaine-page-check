@@ -728,11 +728,21 @@ namespace PMS.Modules.PatientManagement
             {
                 return "ERROR: Unauthorized Access. Please login.";
             }
+
             string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
-            if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(data.AntiForgeryToken))
+            string receivedToken = data?.AntiForgeryToken;
+
+            // 🔍 DEBUG: Log tokens to Output window
+            System.Diagnostics.Debug.WriteLine(">>> [CSRF DEBUG] Session Token: " + storedToken);
+            System.Diagnostics.Debug.WriteLine(">>> [CSRF DEBUG] Received Token: " + receivedToken);
+            System.Diagnostics.Debug.WriteLine(">>> [CSRF DEBUG] Match? " + (storedToken == receivedToken));
+
+            if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(receivedToken))
             {
                 return "ERROR: Invalid request. CSRF attack detected.";
             }
+
+            // ... REST OF YOUR EXISTING CODE (unchanged) ...
             DataBaseDataContext db = new DataBaseDataContext();
             Patient pat = null;
 
@@ -780,9 +790,6 @@ namespace PMS.Modules.PatientManagement
                 {
                     pat.appointment_id = Convert.ToInt32(data.appid);
                 }
-                //var opdfee = (from tbl in db.sys_Parms
-                //              where tbl.Name == "OPD Fee"
-                //              select tbl.Code).FirstOrDefault(); from system params 
 
                 var opdfee = data.Fees;
                 pat.Full_Name = data.Full_Name;
@@ -800,7 +807,7 @@ namespace PMS.Modules.PatientManagement
                 pat.Permanent_Address = data.Address;
                 pat.Marital_Status = data.Martial_Status;
                 pat.Patient_Main_Category = data.Department;
-                
+
                 pat.Doctor_ID = data.doctor;
                 pat.mr_no_sequence = data.patient_no;
                 pat.Patient_No = Convert.ToInt32(data.pat_no);
@@ -809,7 +816,6 @@ namespace PMS.Modules.PatientManagement
                 pat.Emp_Department = data.EmployeeDept;
                 pat.Patient_Main_Category = data.hdnDepartment;
                 pat.Actual_amount = data.Actual_Fees;
-
 
                 if (data.FreeCheck == true)
                 {
@@ -829,7 +835,6 @@ namespace PMS.Modules.PatientManagement
                     if (data.discount == "")
                     {
                         pat.discount_amt = 0;
-
                     }
                     else
                     {
@@ -837,11 +842,9 @@ namespace PMS.Modules.PatientManagement
                     }
                 }
 
-
                 if (data.doctor == "0" || data.doctor == "")
                 {
                     pat.Doc_Token = 0;
-
                     pat.tokenNo = db.Patients.Where(p => p.Created_Time.Value.Year == DateTime.Now.Year
                                 && p.Created_Time.Value.Month == DateTime.Now.Month
                                 && p.Created_Time.Value.Day == DateTime.Now.Day
@@ -856,10 +859,9 @@ namespace PMS.Modules.PatientManagement
                                   && p.Doctor_ID == data.doctor).Count() + 1;
                 }
 
-                //pat.Employee_Name = data.employee;
                 pat.PanelCompany = Convert.ToInt32(data.panel);
                 pat.employee_ID = Convert.ToString(data.employee_id);
-                pat.Designation = data.designation ?? 0; // 👈 Safe — if null, use 0
+                pat.Designation = data.designation ?? 0;
                 pat.Dependent = data.dependent;
                 pat.RollNo = Convert.ToInt32(data.rollno);
                 pat.Class = Convert.ToInt32(data.Class);
@@ -868,58 +870,37 @@ namespace PMS.Modules.PatientManagement
                 pat.AccountID = Convert.ToInt32(data.accountid);
                 pat.Card_Issued = data.IssueCard;
                 pat.free_check = data.FreeCheck;
+
                 if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
                 {
                     pat.Created_By = userId;
                 }
                 else
                 {
-                    // Handle error — maybe log or throw
                     return "ERROR: Invalid user ID format.";
-                } // ✅ Use session user
+                }
+
                 pat.Created_Time = DateTime.Now;
                 pat.Entry_Date = DateTime.Now;
                 pat.Company_ID = AppConfig.Company_ID;
                 pat.Book_ID = AppConfig.Book_ID;
                 pat.isCancel = false;
-                if (data.appid == "")
-                {
 
-                }
-                else
+                if (data.appid != "")
                 {
                     DBClass.executeNonQueryWithoutBegin("update Appointment_Form set Status='Visited' where Appointment_ID=" + data.appid);
                 }
 
-
-                decimal opdfees = data.Fees; // This is already discounted final fee (receipt amount)
-
-                // Percentages from DB
-                decimal hospital_share = data.Hosp_share;   // e.g. 60
-                decimal doctor_share = data.Doc_Share;      // e.g. 40
-
-                // No need to calculate discount again, just use opdfees directly
+                decimal opdfees = data.Fees;
+                decimal hospital_share = data.Hosp_share;
+                decimal doctor_share = data.Doc_Share;
                 decimal Net_Amount = opdfees;
 
-                // Save discount % just for reference
-                //decimal disc = 0;
-                //if (!string.IsNullOrEmpty(data.discount))
-                //{
-                //    disc = Convert.ToDecimal(data.discount);
-                //}
-                //pat.discount_amt = disc;
-
-                // Calculate shares
                 decimal Hospital_Amount = Math.Round((Net_Amount * hospital_share) / 100, 2);
                 decimal Doctor_Amount = Math.Round((Net_Amount * doctor_share) / 100, 2);
 
-                // Assign
                 pat.Hospital_share = Hospital_Amount;
                 pat.doc_share = Doctor_Amount.ToString("F2");
-
-
-
-
 
                 if (data.pat_category == "02")
                 {
@@ -933,7 +914,8 @@ namespace PMS.Modules.PatientManagement
                 db.Patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
             }
-            return pat.Patient_ID.ToString();
+
+            return pat?.Patient_ID.ToString() ?? "0";
         }
 
         [WebMethod]
@@ -1562,7 +1544,7 @@ namespace PMS.Modules.PatientManagement
         public class MasterList
         {
             public int regid { get; set; }
-            public int? employee_id { get; set; }           // 👈 Nullable
+            public int? employee_id { get; set; }
             public string appid { get; set; }
             public string Full_Name { get; set; }
             public string StudentName { get; set; }
@@ -1585,8 +1567,8 @@ namespace PMS.Modules.PatientManagement
             public string reffer_no { get; set; }
             public string discount { get; set; }
             public string employee_name { get; set; }
-            public int? designation { get; set; } // 👈 Change to nullable int
-            public string dependent { get; set; }           // 👈 Already string (nullable)
+            public int? designation { get; set; }
+            public string dependent { get; set; }
             public string rollno { get; set; }
             public string Class { get; set; }
             public string section { get; set; }
@@ -1598,9 +1580,12 @@ namespace PMS.Modules.PatientManagement
             public string FilterClinic { get; set; }
             public string EmployeeName { get; set; }
             public string EmployeeDept { get; set; }
+
+            // ✅ CRITICAL — This must exist and be spelled exactly this way
             public string AntiForgeryToken { get; set; }
-            public bool? IssueCard { get; set; }    // 👈 Added "?"
-            public bool? FreeCheck { get; set; }    // 👈 Added "?"
+
+            public bool? IssueCard { get; set; }
+            public bool? FreeCheck { get; set; }
             public int Fees { get; set; }
             public int Actual_Fees { get; set; }
         }
