@@ -180,6 +180,7 @@ function showhide() {
     $('.show').show();
     $('#fees').hide();
     $('#department').hide();
+    $('#field_Clinic').hide();
     $('#doctor').hide();
     $('#pnlcompany').hide();
     $('#employee').hide();
@@ -235,6 +236,8 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#hdn_aptid').val(apt_Id);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
             debugger;
 
@@ -315,6 +318,8 @@ function Get_Pat_Info(reg_id) {
             $('#txtage').val(data.Age);
             $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
             $('#txtmobile').val(data.Mobile);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
             $('#txtAdrress').val(data.Address);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#follow_up').text(data.opdCount);
@@ -1357,143 +1362,7 @@ function loadPatientDetail(OPDID) {
         }
     });
 }
-function loaddata() {
-    debugger;
-    var Category = $('#ddlPatient_Type').val();
-    $('#ddlPatient_Type').attr('disabled', true);
-    if (Category == "0") {
 
-        $('.show').show();
-        $('#fees').hide();
-        $('#department').hide();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-        $('#txtfees').val('');
-        $('#txtactualfee').val('');
-        $('#discount').hide();
-        $('#empname').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#emp_id').hide();
-    }
-    else if (Category == "01") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#dependent').hide();
-
-        $('#emp_id').hide();
-
-
-    }
-    else if (Category == "02") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').show();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#emp_id').hide();
-    }
-    else if (Category == "03") {
-        $('#fees').show();
-        $('#department').hide();
-        $('#doctor').show();
-        $('#pnlcompany').show();
-        $('#employee').show();
-        $('#refference').show();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#discount').hide();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#emp_id').hide();
-
-
-    }
-    else if (Category == "04") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-        $('#discount').show();
-        $('#empname').show();
-        $('#EmployeeName').show();
-        $('#emp_id').hide();
-        $('#designation').show();
-        $('#dependent').show();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#EmpDep').show();
-
-
-    }
-    else if (Category == "05") {
-        $('#fees').hide();
-        $('#department').show();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#rollno').show();
-        $('#class').hide();
-        $('#section').hide();
-
-        $('#emp_id').hide();
-        $('#StdName').show();
-    }
-    else if (Category == "06") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#dependent').hide();
-
-        $('#emp_id').hide();
-
-
-    }
-}
 
 $(document).ready(function () {
     MaskedInput({

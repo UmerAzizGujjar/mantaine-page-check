@@ -70,12 +70,16 @@
         function DisableCardPrint() {
             var chkStatus = document.getElementById('<%=chckcardissue.ClientID%>');
             if (chkStatus.checked) {
-                $('#divcard').show();
-                $('#btnPrintBackCard').show()
+                $('#divcardfront').show();
+                $('#divcardback').show();
+                $('#btnPrintCardFront').show()
+                $('#btnPrintCardBack').show()
             }
             else {
-                $('#divcard').hide();
-                $('#btnPrintBackCard').hide()
+                $('#divcardfront').hide();
+                $('#divcardback').hide();
+                $('#btnPrintCardFront').hide()
+                $('#btnPrintCardBack').hide()
             }
         }
         var permissions = {};
@@ -377,8 +381,6 @@
             $('#ctl00_MainContent_chckcardissue').attr('disabled', true);
 
             var ID = '<%= Request.QueryString["OPDID"]%>';
-
-            console.log(ID);
             debugger
             $.ajax({
                 type: "POST",
@@ -399,7 +401,10 @@
                 }
             });
         }
-
+        function PrintPatientBackCard() {
+            $('#ctl00_MainContent_chckPatientCard').attr('disabled', true);
+            Patient_ID =  '<%= Request.QueryString["OPDID"]%>';                    var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;                    window.open(url);
+                }
 
 
         function PrintVoucher() {
@@ -944,8 +949,11 @@
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input type="button" class="btn btn-gray " id="btnView" value="View" onclick="window.location = 'OPDView.aspx'" />
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-4" id="divcard">
-                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCard" onclick="getcardAmount()" value="Card" />
+                <div class="col-lg-2 col-md-3 col-sm-4" id="divcardfront">
+                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardFront" onclick="getcardAmount()" value="Front Card" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4" id="divcardback">
+                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="getcardAmount()" value="Back Card" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                     <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
