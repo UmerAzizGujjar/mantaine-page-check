@@ -11,6 +11,9 @@
 
      
             loadPermissions(function () {
+                for (var fieldId in fieldPermissionMapping) {
+                    showIfAllowed(fieldId, true); 
+                }
             });
             DisableCardPrint();
 
@@ -102,44 +105,65 @@
             "Field_FollowUP": "follow_up",
             "Field_freeCheck": "Free_Check",
             "field_Services": "Services",
-            "field_Clinic": "FilterClinic"  
-        };    
+            "field_Clinic": "FilterClinic"
+        };
+
         function loadPermissions(callback) {
             $.ajax({
                 type: "POST",
-                url: "OPD.aspx/GetCompanyOPDPermissions", 
+                url: "OPD.aspx/GetCompanyOPDPermissions",
                 data: "{}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (response) {                 
+                success: function (response) {
                     permissions = response.d || {};
+                
+
                     if (typeof callback === 'function') {
                         callback();
                     }
                 },
                 error: function (xhr, status, error) {
+               
                     alert("Could not load permissions.");
                 }
             });
         }
+
         function showIfAllowed(fieldId, conditionToShow) {
             var permissionKey = fieldPermissionMapping[fieldId];
             if (!permissions || $.isEmptyObject(permissions)) {
-                return;
-            }
-            if (!permissionKey) {
+              
                 return;
             }
 
-            var permissionValue = permissions[permissionKey];
+            if (!permissionKey) {
+               
+                $('#' + fieldId).hide(); 
+                return;
+            }
+
+            var permissionValue = null;
+            var matchedKey = null;
+
+            for (var key in permissions) {
+                if (key.toLowerCase() === permissionKey.toLowerCase()) {
+                    permissionValue = permissions[key];
+                    matchedKey = key;
+                    break;
+                }
+            }
+
             if (permissionValue === true) {
                 if (conditionToShow) {
                     $('#' + fieldId).show();
+                  
                 } else {
                     $('#' + fieldId).hide();
+                   
                 }
             } else {
-                console.warn("⚠ Permission value is undefined or false for:", permissionKey);
+          
                 $('#' + fieldId).hide();
             }
         }
