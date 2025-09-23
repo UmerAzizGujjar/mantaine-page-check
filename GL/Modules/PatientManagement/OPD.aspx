@@ -12,7 +12,7 @@
      
             loadPermissions(function () {
                 for (var fieldId in fieldPermissionMapping) {
-                    showIfAllowed(fieldId, true); // Show if allowed, else hide
+                    showIfAllowed(fieldId, true); 
                 }
             });
             DisableCardPrint();
@@ -117,14 +117,14 @@
                 dataType: "json",
                 success: function (response) {
                     permissions = response.d || {};
-                    console.log("✅ Permissions loaded:", permissions); // 🔍 DEBUG
+                
 
                     if (typeof callback === 'function') {
                         callback();
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error("❌ Could not load permissions:", error);
+               
                     alert("Could not load permissions.");
                 }
             });
@@ -133,12 +133,12 @@
         function showIfAllowed(fieldId, conditionToShow) {
             var permissionKey = fieldPermissionMapping[fieldId];
             if (!permissions || $.isEmptyObject(permissions)) {
-                console.warn("⚠ Permissions not loaded yet for field:", fieldId);
+              
                 return;
             }
 
             if (!permissionKey) {
-                console.warn("⚠ No permission mapping found for field ID:", fieldId);
+               
                 $('#' + fieldId).hide(); 
                 return;
             }
@@ -157,13 +157,13 @@
             if (permissionValue === true) {
                 if (conditionToShow) {
                     $('#' + fieldId).show();
-                    console.log("✅ SHOWING field:", fieldId, "| Permission key:", matchedKey || permissionKey);
+                  
                 } else {
                     $('#' + fieldId).hide();
-                    console.log("🔽 HIDING field (condition false):", fieldId);
+                   
                 }
             } else {
-                console.warn("❌ HIDING field - permission false/undefined:", fieldId, "| Key:", permissionKey, "| Matched:", matchedKey, "| Value:", permissionValue);
+          
                 $('#' + fieldId).hide();
             }
         }
