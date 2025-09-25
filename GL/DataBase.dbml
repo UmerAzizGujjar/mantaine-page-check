@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="prch" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=prch;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="prchConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Standard" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-26G8PT5;Initial Catalog=Standard;Integrated Security=True;Persist Security Info=True;User ID=sa;Connect Timeout=60;Encrypt=True;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="StandardConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6908,6 +6908,16 @@
       <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Refer_To_OPD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Ar_Billing_Logs" Member="Ar_Billing_Logs">
+    <Type Name="Ar_Billing_Log">
+      <Column Name="Log_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bill_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Master_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details_Log" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Loged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Log_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
