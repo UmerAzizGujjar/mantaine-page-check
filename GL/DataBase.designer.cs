@@ -4506,13 +4506,6 @@ namespace PMS
 			return ((ISingleResult<spUnApprovePaymentResult>)(result.ReturnValue));
 		}
 
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spPharmacyitem")]
-		public ISingleResult<spPharmacyitemResult> spPharmacyitem([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemName", DbType = "NVarChar(500)")] string itemName)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemName);
-			return ((ISingleResult<spPharmacyitemResult>)(result.ReturnValue));
-		}
-
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadDetailforPurchaseReturn")]
 		public ISingleResult<sp_LoadDetailforPurchaseReturnResult> sp_LoadDetailforPurchaseReturn([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Purchase_Return_ID", DbType = "BigInt")] System.Nullable<long> purchase_Return_ID)
 		{
@@ -4684,6 +4677,13 @@ namespace PMS
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), emergency_ID);
 			return ((ISingleResult<sp_GetEmergencyPatientDetailResult>)(result.ReturnValue));
+		}
+
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spPharmacyitem")]
+		public ISingleResult<spPharmacyitemResult> spPharmacyitem([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemName", DbType = "NVarChar(500)")] string itemName)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemName);
+			return ((ISingleResult<spPharmacyitemResult>)(result.ReturnValue));
 		}
 	}
 
@@ -182318,68 +182318,6 @@ namespace PMS
 		}
 	}
 
-	public partial class spPharmacyitemResult
-	{
-
-		private int _Item_ID;
-
-		private string _Item_Code;
-
-		private string _Description;
-
-		public spPharmacyitemResult()
-		{
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
-		public int Item_ID
-		{
-			get
-			{
-				return this._Item_ID;
-			}
-			set
-			{
-				if ((this._Item_ID != value))
-				{
-					this._Item_ID = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
-		public string Item_Code
-		{
-			get
-			{
-				return this._Item_Code;
-			}
-			set
-			{
-				if ((this._Item_Code != value))
-				{
-					this._Item_Code = value;
-				}
-			}
-		}
-
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
-		public string Description
-		{
-			get
-			{
-				return this._Description;
-			}
-			set
-			{
-				if ((this._Description != value))
-				{
-					this._Description = value;
-				}
-			}
-		}
-	}
-
 	public partial class sp_LoadDetailforPurchaseReturnResult
 	{
 
@@ -201127,6 +201065,86 @@ namespace PMS
 				if ((this._Refer_To_OPD != value))
 				{
 					this._Refer_To_OPD = value;
+				}
+			}
+		}
+	}
+
+	public partial class spPharmacyitemResult
+	{
+
+		private int _Item_ID;
+
+		private string _Item_Code;
+
+		private string _Description;
+
+		private string _Generic_Name;
+
+		public spPharmacyitemResult()
+		{
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
+		public int Item_ID
+		{
+			get
+			{
+				return this._Item_ID;
+			}
+			set
+			{
+				if ((this._Item_ID != value))
+				{
+					this._Item_ID = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
+		public string Item_Code
+		{
+			get
+			{
+				return this._Item_Code;
+			}
+			set
+			{
+				if ((this._Item_Code != value))
+				{
+					this._Item_Code = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this._Description = value;
+				}
+			}
+		}
+
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Generic_Name", DbType = "VarChar(250)")]
+		public string Generic_Name
+		{
+			get
+			{
+				return this._Generic_Name;
+			}
+			set
+			{
+				if ((this._Generic_Name != value))
+				{
+					this._Generic_Name = value;
 				}
 			}
 		}

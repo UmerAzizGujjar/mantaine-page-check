@@ -154,14 +154,12 @@ namespace PMS
         [WebMethod]
         public static string loadMedicine(string ItemName)
         {
-            string result = "[]";
-            if (!string.IsNullOrWhiteSpace(ItemName) && ItemName.Length >= 2)
+            string result = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-                    var query = db.spPharmacyitem(ItemName).Take(10).ToList();
-                    result = (new JavaScriptSerializer()).Serialize(query);
-                }
+                var query = db.spPharmacyitem(ItemName).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
         }

@@ -9384,14 +9384,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spPharmacyitem" Method="spPharmacyitem">
-    <Parameter Name="ItemName" Parameter="itemName" Type="System.String" DbType="NVarChar(500)" />
-    <ElementType Name="spPharmacyitemResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadDetailforPurchaseReturn" Method="sp_LoadDetailforPurchaseReturn">
     <Parameter Name="Purchase_Return_ID" Parameter="purchase_Return_ID" Type="System.Int64" DbType="BigInt" />
     <ElementType Name="sp_LoadDetailforPurchaseReturnResult">
@@ -10559,6 +10551,15 @@
       <Column Name="Verbal_Response" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="remarks_call_to_doctor" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Refer_To_OPD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spPharmacyitem" Method="spPharmacyitem">
+    <Parameter Name="ItemName" Parameter="itemName" Type="System.String" DbType="NVarChar(500)" />
+    <ElementType Name="spPharmacyitemResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Generic_Name" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
