@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
+using System.Text.RegularExpressions;
 
 namespace PMS.Modules.PatientManagement
 {
@@ -13,16 +15,61 @@ namespace PMS.Modules.PatientManagement
         {
             if (!IsPostBack)
             {
-                // Generate unique anti-forgery token
                 string token = Guid.NewGuid().ToString();
                 Session["AntiForgeryToken"] = token;
-
-                // Assign to hidden field
                 hfAntiForgery.Value = token;
             }
         }
 
-        // ========= SAFE DTO CLASS =========
+        // ===== XSS SANITIZATION HELPER =====
+        private static string SanitizeInput(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+
+            // Remove any HTML/script tags to prevent Stored XSS
+            return Regex.Replace(input.Trim(), @"<[^>]*>", "", RegexOptions.IgnoreCase);
+        }
+
+        public static class ValidationHelper
+        {
+            public static bool IsValidMobile(string mobile)
+            {
+                return !string.IsNullOrWhiteSpace(mobile) &&
+                       Regex.IsMatch(mobile, @"^\+92[0-9]{10}$");
+            }
+
+            public static bool IsValidCNIC(string cnic)
+            {
+                return !string.IsNullOrWhiteSpace(cnic) &&
+                       Regex.IsMatch(cnic, @"^\d{5}-\d{7}-\d$");
+            }
+
+            public static bool IsValidName(string name)
+            {
+                return !string.IsNullOrWhiteSpace(name) &&
+                       name.Length <= 100 &&
+                       Regex.IsMatch(name, @"^[a-zA-Z\s\.\-]+$");
+            }
+
+            public static bool IsValidAddress(string address)
+            {
+                return !string.IsNullOrWhiteSpace(address) && address.Length <= 500;
+            }
+
+            public static bool IsValidAge(string ageStr)
+            {
+                if (string.IsNullOrWhiteSpace(ageStr)) return false;
+                if (!int.TryParse(ageStr, out int age)) return false;
+                return age >= 0 && age <= 150;
+            }
+
+            public static bool IsValidDate(string dateStr)
+            {
+                return DateTime.TryParseExact(dateStr, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out _);
+            }
+        }
+
         public class SafePatientData
         {
             public string Name { get; set; }
@@ -40,11 +87,9 @@ namespace PMS.Modules.PatientManagement
             public string City_text { get; set; }
             public string Area_text { get; set; }
             public int Reg_PatientID { get; set; }
-
-            // 👇 ADD THIS NEW FIELD
             public string CNIC_Masked { get; set; }
         }
-        // ========= HELPER: Mask Mobile Number =========
+
         private static string MaskMobile(string mobile)
         {
             if (string.IsNullOrEmpty(mobile) || mobile.Length < 8) return mobile;
@@ -52,15 +97,14 @@ namespace PMS.Modules.PatientManagement
                 ? mobile.Substring(0, 5) + new string('*', mobile.Length - 7) + mobile.Substring(mobile.Length - 2)
                 : mobile;
         }
+
         private static string MaskCNIC(string cnic)
         {
             if (string.IsNullOrEmpty(cnic)) return "";
-            // Format: 12345-1234567-1 → *****-1234567-*
             if (cnic.Length >= 13)
                 return "*****-" + cnic.Substring(6, 7) + "-*";
-            return "*****-*******-*"; // fallback mask
+            return "*****-*******-*";
         }
-        // ========= WEB METHODS =========
 
         [WebMethod]
         public static string GetGender()
@@ -164,80 +208,96 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
+       
         [WebMethod]
         public static string SavePatientDetail(
-      string Full_Name, string RelationType, string Relation, string Gender,
-      string Mobile, string Date_Of_Birth, string CNIC, string Address,
-      string PatientID, string martail_status, string Age, string city, string area,
-      string city_val, string area_val, string Blood_Group, string State, string Country ,string AntiForgeryToken)
+            string Full_Name, string RelationType, string Relation, string Gender,
+            string Mobile, string Date_Of_Birth, string CNIC, string Address,
+            string PatientID, string martail_status, string Age, string city, string area,
+            string city_val, string area_val, string Blood_Group, string State, string Country, string AntiForgeryToken)
         {
-            // 🔐 SECURITY CHECK — Check if user is logged in
+            
             if (HttpContext.Current.Session["UserID"] == null)
-            {
-                return "ERROR: Unauthorized Access. Please login.";
-            }
+                return "ERROR: Unauthorized. Please log in.";
 
-            // 🔐 STEP 2: Validate CSRF Token
             string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
             if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(AntiForgeryToken))
-            {
-                return "ERROR: Invalid request. CSRF attack detected.";
-            }
+                return "ERROR: Invalid request. Possible CSRF attack.";
 
-            // ✅ If both checks pass, proceed with normal logic...
-            using (var db = new DataBaseDataContext())
+            Full_Name = SanitizeInput(Full_Name);
+            Relation = SanitizeInput(Relation);
+            Address = SanitizeInput(Address);
+            // Note: RelationType is from a fixed dropdown (Mr./Mrs./B/O.) — assumed safe
+            // Mobile, CNIC, Age, etc. are validated by strict regex — low XSS risk
+
+            var errors = new List<string>();
+
+            if (!ValidationHelper.IsValidName(Full_Name))
+                errors.Add("Full name is required and must contain only letters.");
+            if (!ValidationHelper.IsValidName(Relation))
+                errors.Add("Relation name is required and must contain only letters.");
+            if (!ValidationHelper.IsValidMobile(Mobile))
+                errors.Add("Mobile must be in format +923001234567 (13 digits starting with +92).");
+            if (!ValidationHelper.IsValidAge(Age))
+                errors.Add("Age must be a number between 0 and 150.");
+            if (!ValidationHelper.IsValidDate(Date_Of_Birth))
+                errors.Add("Date of Birth must be in dd/MM/yyyy format.");
+            if (!ValidationHelper.IsValidAddress(Address))
+                errors.Add("Address is required and must not exceed 500 characters.");
+            if (!string.IsNullOrWhiteSpace(CNIC) && !ValidationHelper.IsValidCNIC(CNIC))
+                errors.Add("CNIC must be in format 12345-1234567-1.");
+            if (Gender == "0" || string.IsNullOrWhiteSpace(Gender))
+                errors.Add("Please select a valid Gender.");
+            if (martail_status == "0")
+                errors.Add("Please select Marital Status.");
+            if (Blood_Group == "0")
+                errors.Add("Please select Blood Group.");
+
+            if (errors.Any())
+                return "ERROR: " + string.Join("; ", errors);
+
+            try
             {
-                Reg_patient pat;
-                if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
+                using (var db = new DataBaseDataContext())
                 {
-                    pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == Convert.ToInt32(PatientID));
-                    if (pat != null)
+                    Reg_patient pat;
+                    bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+                    if (!isNew)
                     {
-                        pat.Relation_prefix = RelationType;
-                        pat.Full_Name = Full_Name;
-                        pat.Father_Name = Relation;
-                        pat.Gender = Gender;
-                        pat.Mobile1 = Mobile;
-                        pat.Age_years = Age;
-                        pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
-                        pat.NIC = CNIC;
-                        pat.Permanent_Address = Address;
-                        pat.Martial_Status = martail_status;
-                        pat.city = city;
-                        pat.area = area;
-                        pat.val_city = city_val;
-                        pat.val_area = area_val;
-                        pat.State = State;
-                        pat.Blood_Group = Blood_Group;
-                        pat.Country = Country;
-                        db.SubmitChanges();
+                        int patId = Convert.ToInt32(PatientID);
+                        pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == patId);
+                        if (pat == null)
+                            return "ERROR: Patient record not found.";
                     }
-                }
-                else
-                {
-                    pat = new Reg_patient();
-                    string PatientNumber = DBClass.getMaxEntry_No("Reg_patient", "Patient_No").ToString();
-                    pat.Patient_No = Convert.ToInt32(PatientNumber);
-                    pat.Full_Name = Full_Name;
-                    pat.walkin = false;
-                    pat.Father_Name = Relation;
-                    pat.Relation_prefix = RelationType;
+                    else
+                    {
+                        pat = new Reg_patient();
+                        string PatientNumber = DBClass.getMaxEntry_No("Reg_patient", "Patient_No").ToString();
+                        pat.Patient_No = Convert.ToInt32(PatientNumber);
+                        pat.walkin = false;
+                        pat.Created_time = DateTime.Now;
+                        if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
+                            pat.Created_by = userId;
+                        else
+                            return "ERROR: Invalid user session.";
+                        pat.iscancel = false;
+
+                        var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
+                        string companyCode = company?.CompanyCode ?? "HOSP";
+                        pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
+                    }
+
+                    // === SAVE SANITIZED VALUES ===
+                    pat.Relation_prefix = RelationType; // Safe (dropdown)
+                    pat.Full_Name = Full_Name;          // ✅ Sanitized
+                    pat.Father_Name = Relation;         // ✅ Sanitized
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
                     pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                     pat.NIC = CNIC;
-                    pat.Permanent_Address = Address;
-                    pat.Created_time = DateTime.Now;
-                    if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
-                    {
-                        pat.Created_by = userId;
-                    }
-                    else
-                    {
-                        return "ERROR: Invalid user ID format.";
-                    }
-                    pat.iscancel = false;
+                    pat.Permanent_Address = Address;    // ✅ Sanitized
                     pat.Martial_Status = martail_status;
                     pat.city = city;
                     pat.area = area;
@@ -247,16 +307,20 @@ namespace PMS.Modules.PatientManagement
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
 
-                    var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
-                    string companyCode = company?.CompanyCode ?? "HOSP";
-                    pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
+                    if (isNew)
+                        db.Reg_patients.InsertOnSubmit(pat);
 
-                    db.Reg_patients.InsertOnSubmit(pat);
                     db.SubmitChanges();
+                    return pat.pat_id.ToString();
                 }
-                return pat?.pat_id.ToString() ?? "0";
+            }
+            catch (Exception ex)
+            {
+                // Log ex if needed (e.g., to file or DB)
+                return "ERROR: Failed to save patient. Please try again.";
             }
         }
+
         [WebMethod]
         public static string GetRegData(int reg_id)
         {
@@ -266,21 +330,22 @@ namespace PMS.Modules.PatientManagement
                                where rg.pat_id == reg_id
                                select new SafePatientData
                                {
-                                   Name = rg.Full_Name,
-                                   FatherName = rg.Father_Name,
-                                   Relation = rg.Relation_prefix,
-                                   Gender_text = db.GetDataValueName("Gender", rg.Gender),
+                                  
+                                   Name = HttpUtility.HtmlEncode(rg.Full_Name ?? ""),
+                                   FatherName = HttpUtility.HtmlEncode(rg.Father_Name ?? ""),
+                                   Relation = HttpUtility.HtmlEncode(rg.Relation_prefix ?? ""),
+                                   Gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", rg.Gender) ?? ""),
                                    Age = rg.Age_years,
-                                   MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
-                                   Mr_No = rg.mr_no_sequence,
+                                   MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", rg.Martial_Status) ?? ""),
+                                   Mr_No = HttpUtility.HtmlEncode(rg.mr_no_sequence ?? ""),
                                    CNIC_Masked = MaskCNIC(rg.NIC),
-                                   Address = rg.Permanent_Address,
+                                   Address = HttpUtility.HtmlEncode(rg.Permanent_Address ?? ""),
                                    Mobile = MaskMobile(rg.Mobile1),
-                                   BloodGroup_text = db.GetDataValueName("Blood Group", rg.Blood_Group),
-                                   Country_text = db.GetDataValueName("Country", rg.Country),
-                                   State_text = db.GetDataValueName("Province", rg.State),
-                                   City_text = db.GetDataValueName("City", rg.val_city),
-                                   Area_text = db.GetDataValueName("Area", rg.val_area),
+                                   BloodGroup_text = HttpUtility.HtmlEncode(db.GetDataValueName("Blood Group", rg.Blood_Group) ?? ""),
+                                   Country_text = HttpUtility.HtmlEncode(db.GetDataValueName("Country", rg.Country) ?? ""),
+                                   State_text = HttpUtility.HtmlEncode(db.GetDataValueName("Province", rg.State) ?? ""),
+                                   City_text = HttpUtility.HtmlEncode(db.GetDataValueName("City", rg.val_city) ?? ""),
+                                   Area_text = HttpUtility.HtmlEncode(db.GetDataValueName("Area", rg.val_area) ?? ""),
                                    Reg_PatientID = rg.pat_id
                                }).FirstOrDefault();
 

@@ -1080,7 +1080,22 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger;
+            if (response.d.startsWith("ERROR:")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Failed',
+                    text: response.d.replace("ERROR: ", ""),
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             var patientID = response.d;
             Swal.fire({
                 icon: 'success',

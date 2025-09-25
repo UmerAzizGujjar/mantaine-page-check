@@ -237,17 +237,21 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            
-            var ini_patientID = data.d;
+            if (data.d.startsWith("ERROR:")) {
+                toasterMessage(true, "Validation Failed", data.d.replace("ERROR: ", ""));
+                $('#SavePatient_Data').attr('disabled', false);
+                return;
+            }
 
-            toasterMessage(false, "Data Saved Successfully");
+            var ini_patientID = data.d;
+            toasterMessage(false, "Success", "Data Saved Successfully");
             window.location.reload();
             var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
             window.open(url, '_blank');
-
         },
-        error: function (response) {
-            alert("Error");
+        error: function (xhr, status, error) {
+            toasterMessage(true, "Request Failed", "An unexpected error occurred.");
+            $('#SavePatient_Data').attr('disabled', false);
         }
     });
 }
