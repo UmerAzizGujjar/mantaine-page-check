@@ -179,11 +179,13 @@
                         callback(data);
                     };
                     $(document).ready(function () {
-                        debugger;
+                        debugger;                      
                         $("#medName").select2({
                             ajax: {},
                             dataAdapter: CustomData,
-                            placeholder: "Select Medicine...."
+                            placeholder: "Write Three Words",
+                            minimumInputLength: 2, 
+                            allowClear: true
                         });
                     });
                 })
