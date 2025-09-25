@@ -23,70 +23,64 @@
     </div>
 
     <br />
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Purchase-Invoice">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPurchaseInvoice.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/inv_pur.png" alt="Purchase" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Purchase Invoice</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Payment-Invoice">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPaymentInvoice.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pay_inv.png" alt="Payment" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Payment Invoice</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-CPV">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CPV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CPV_V.png" alt="CPV" style="object-fit: contain;" />
-                    <h5 class="cocotxt">CPV</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-BPV">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BPV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/bpv_v.png" alt="BPV" style="object-fit: contain;" />
-                    <h5 class="cocotxt">BPV</h5>
-                </a>
-            </div>
+   <div class="container">
+    <div class="row text-center" id="purchase-vouchers-container">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Purchase-Invoice">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPurchaseInvoice.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/inv_pur.png" alt="Purchase" style="object-fit: contain;" />
+                <h5 class="cocotxt">Purchase Invoice</h5>
+            </a>
         </div>
-        <br />
-        <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-CRV">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CRV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CRV_v.png" alt="CRV" style="object-fit: contain;" />
-                    <h5 class="cocotxt">CRV</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-BRV">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BRV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/bank-note.png" alt="BRV" style="object-fit: contain;" />
-                    <h5 class="cocotxt">BRV</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Manual-Invoice">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddManualInvoice.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/manual_inv.png" alt="Manual" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Manual Invoice</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Advance-Payment">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AdvancePayment.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/payment-method.png" alt="Advance" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Advance Payment</h5>
-                </a>
-            </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Payment-Invoice">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddPaymentInvoice.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pay_inv.png" alt="Payment" style="object-fit: contain;" />
+                <h5 class="cocotxt">Payment Invoice</h5>
+            </a>
         </div>
-        <br />
-        <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-JV">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=JV" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/jv_v.png" alt="JV" style="object-fit: contain;" />
-                    <h5 class="cocotxt">JV</h5>
-                </a>
-            </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-CPV">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CPV" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CPV_V.png" alt="CPV" style="object-fit: contain;" />
+                <h5 class="cocotxt">CPV</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-BPV">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BPV" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/bpv_v.png" alt="BPV" style="object-fit: contain;" />
+                <h5 class="cocotxt">BPV</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-CRV">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=CRV" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CRV_v.png" alt="CRV" style="object-fit: contain;" />
+                <h5 class="cocotxt">CRV</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-BRV">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=BRV" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/bank-note.png" alt="BRV" style="object-fit: contain;" />
+                <h5 class="cocotxt">BRV</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Manual-Invoice">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AddManualInvoice.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/manual_inv.png" alt="Manual" style="object-fit: contain;" />
+                <h5 class="cocotxt">Manual Invoice</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Advance-Payment">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/AdvancePayment.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/payment-method.png" alt="Advance" style="object-fit: contain;" />
+                <h5 class="cocotxt">Advance Payment</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-JV">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/GL/Voucher.aspx?VoucherType=JV" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/jv_v.png" alt="JV" style="object-fit: contain;" />
+                <h5 class="cocotxt">JV</h5>
+            </a>
         </div>
     </div>
+</div>
 
     <!-- jQuery and Script -->
     <script type="text/javascript">

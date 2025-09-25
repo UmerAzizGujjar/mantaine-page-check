@@ -8,45 +8,42 @@
 
     <br /><br />
     <div class="container">
-        <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Pharmacy-Sale">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pharmacy.png" alt="Sale" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Pharmacy Sale</h5>
-                </a>
-            </div>
-
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Issue-Medicine">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/diagnosis.png" alt="Medicnine" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Issue Medicine</h5>
-                </a>
-            </div>
-
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Pharmacy-User">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/Pharmacy_Users.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pharmacist.png" alt="User" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Pharmacy User</h5>
-                </a>
-            </div>
-
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sale-Return">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/sales.png" alt="Return" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Sale Return</h5>
-                </a>
-            </div>
+    <div class="row text-center" id="pharmacy-shortcuts-container">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Pharmacy-Sale">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pharmacy.png" alt="Sale" style="object-fit: contain;" />
+                <h5 class="cocotxt">Pharmacy Sale</h5>
+            </a>
         </div>
-        <br />
-        <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sale-Report">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Report.png" alt="Report" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Sale Report</h5>
-                </a>
-            </div>
+
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Issue-Medicine">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/diagnosis.png" alt="Medicnine" style="object-fit: contain;" />
+                <h5 class="cocotxt">Issue Medicine</h5>
+            </a>
+        </div>
+
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Pharmacy-User">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/Pharmacy_Users.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pharmacist.png" alt="User" style="object-fit: contain;" />
+                <h5 class="cocotxt">Pharmacy User</h5>
+            </a>
+        </div>
+
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sale-Return">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicine.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/sales.png" alt="Return" style="object-fit: contain;" />
+                <h5 class="cocotxt">Sale Return</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sale-Report">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/IssueMedicineList.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Report.png" alt="Report" style="object-fit: contain;" />
+                <h5 class="cocotxt">Sale Report</h5>
+            </a>
         </div>
     </div>
+</div>
 
     <script type="text/javascript">
         $(document).ready(function () {
