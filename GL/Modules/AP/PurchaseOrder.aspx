@@ -213,6 +213,7 @@
         }
         $(document).ready(function () {
             UserRights();
+            GetWareHouseCondition();
             $('#ddlWarehouse').change(function () {
 
                 $("#ddlWarehouse").attr('disabled', true);
@@ -506,7 +507,46 @@
                 $('#ctl00_MainContent_ddlPrNo').html(optionsPR);
             });
         }
-        
+        function getprNoBy() {
+            debugger;
+            var optionsPR = '';
+            var Warehouse;
+
+            PageMethods.GetPRNoBy( function (res) {
+                var item = JSON.parse(res);
+                optionsPR = '<option value="0">Please Select</option>';
+                $.each(item, function (key, value) {
+                    optionsPR += '<option value="' + value.PR_Id + '" >' + value.PR_Num + '</option>';
+                });
+                $("#ctl00_MainContent_ddlPrNo option").remove();
+                $('#ctl00_MainContent_ddlPrNo').html(optionsPR);
+            });
+        }
+        var warehouseCond;
+        function GetWareHouseCondition() {
+
+            $.ajax({
+                type: "POST",
+                url: "PurchaseOrder.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        $('#warehouse').show();
+                    }
+                    else {
+                        $('#warehouse').hide();
+                        getprNoBy();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
     </script>
     <script type="text/javascript">
         function HideItemPopup() {
@@ -1178,7 +1218,7 @@
             <div class="col-lg-1 col-md-2 col-sm-4">
                 <input type="button" value="Add" id="btnPRSave" class="btn btn-primry" style="margin-top: 16px;" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="col-lg-2 col-md-4 col-sm-6" id ="warehouse">
                 <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
                 <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
                     <option value="0">Please Select</option>

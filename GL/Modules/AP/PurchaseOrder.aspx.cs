@@ -44,7 +44,17 @@ namespace PMS.AP
             }
 
         }
-
+        [WebMethod]
+        public static string GetWareHouseCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "WareHouse For PR"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
 
         [WebMethod]
         public static string getwtaxtype()
@@ -301,14 +311,19 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
         [WebMethod]
-
         public static string GetPRNoByWarehouse(string Warehouse)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var POList = db.sp_LoadPRNum(Convert.ToInt32(Warehouse));
+            var POList = db.sp_LoadPRNumByWarehouse(Convert.ToInt32(Warehouse));
             return (new JavaScriptSerializer()).Serialize(POList);
         }
-
+        [WebMethod]
+        public static string GetPRNoBy()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var POList = db.sp_LoadPRNum();
+            return (new JavaScriptSerializer()).Serialize(POList);
+        }
         private class ddlListItems
         {
             public string DataValueName;

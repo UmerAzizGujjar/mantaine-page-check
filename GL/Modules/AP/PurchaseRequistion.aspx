@@ -11,39 +11,48 @@
 
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
-            $('#txtItem').tokenInput(function () {
-                var warehouseVal = $('#ddlWarehouse').val();
-                debugger;
-                if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
+            GetWareHouseCondition();
+   
+           
+                $('#txtItem').tokenInput(function () {
+                    if (warehouseCond == '01') {
+                        var warehouseVal = $('#ddlWarehouse').val();
+                        debugger;
+                        if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
+                            return "";
+                        }
+                        return "../../json.aspx?Table=INV_ItemsForPRwithWarehouse&WarehouseID=" + encodeURIComponent(warehouseVal);
+                    }
+                    else {
+                        return "../../json.aspx?Table=INV_ItemsForPR"
+                    }
+                     
+                }, {
+                    tokenLimit: 1,
+                    hintText: "Select a warehouse first...",
+                    noResultsText: "No items found.",
+                    searchingText: "Searching...",
 
-                    return "";
-                }
+                    onAdd: function (item) {
 
-
-                return "../../json.aspx?Table=INV_ItemsForPR&WarehouseID=" + encodeURIComponent(warehouseVal);
-            }, {
-                tokenLimit: 1,
-                hintText: "Select a warehouse first...",
-                noResultsText: "No items found.",
-                searchingText: "Searching...",
-
-                onAdd: function (item) {
-                
-                    $("#hditemID").val(item.id);
-                    GetItemDetail();
-                    $('#btnGIR').attr('disabled', true);
-                    $('#btnGIR').css('pointer-events', 'none');
-                    $('#ctl00_MainContent_ddlGIR').css('pointer-events', 'none');
-                    $('#ctl00_MainContent_ddlGIR').attr('disabled', true);
-                }
-            });
-            $('#ddlWarehouse').change(function () {
-
-                $("#ddlWarehouse").attr('disabled', true);
-            });
+                        $("#hditemID").val(item.id);
+                        GetItemDetail();
+                        $('#btnGIR').attr('disabled', true);
+                        $('#btnGIR').css('pointer-events', 'none');
+                        $('#ctl00_MainContent_ddlGIR').css('pointer-events', 'none');
+                        $('#ctl00_MainContent_ddlGIR').attr('disabled', true);
+                    }
+                });
+                $('#ddlWarehouse').change(function () {
+                    if ($(this).val() !== "" && $(this).val() !== "0") {
+                        $(this).prop('disabled', true);
+                    }
+                });
+            
             FillPriority();
             FillWarehouse();
             UserRights();
+            
 
             FillDepartments();
             $('#ddlWarehouse').select2();
@@ -472,6 +481,30 @@
                 }
             });
         }
+        var warehouseCond;
+        function GetWareHouseCondition() {
+            
+            $.ajax({
+                type: "POST",
+                url: "PurchaseRequistion.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        $('#warehouse').show();
+                    }
+                    else {
+                        $('#warehouse').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
         function SaveTest() {
             debugger
             $("#btnSave").prop("disabled", true);
@@ -496,23 +529,23 @@
             var dept = $('#ddldept').val();
 
 
-
-            if (Warehouse == '0') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please Select Warehouse',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return false;
+            if (warehouseCond != "01") {
+                if (Warehouse == '0') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Warehouse',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
             }
-
             if (Pirority == '0') {
                 Swal.fire({
                     icon: 'error',
@@ -1109,7 +1142,7 @@
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12">
                 <span class="btn-item" id="btnGetAllItems"><i id="faGetAllItems" class="fa fa-check-square btn-gray btntop">Items</i></span>
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
+            <div id="warehouse" class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
                 <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
                 <select id="ddlWarehouse" class="form-select">
                     <option value="0">Please Select</option>
