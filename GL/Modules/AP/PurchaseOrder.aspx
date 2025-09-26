@@ -507,6 +507,21 @@
                 $('#ctl00_MainContent_ddlPrNo').html(optionsPR);
             });
         }
+        function getprNoBy() {
+            debugger;
+            var optionsPR = '';
+            var Warehouse;
+
+            PageMethods.GetPRNoBy( function (res) {
+                var item = JSON.parse(res);
+                optionsPR = '<option value="0">Please Select</option>';
+                $.each(item, function (key, value) {
+                    optionsPR += '<option value="' + value.PR_Id + '" >' + value.PR_Num + '</option>';
+                });
+                $("#ctl00_MainContent_ddlPrNo option").remove();
+                $('#ctl00_MainContent_ddlPrNo').html(optionsPR);
+            });
+        }
         var warehouseCond;
         function GetWareHouseCondition() {
 
