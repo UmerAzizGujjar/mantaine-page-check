@@ -813,6 +813,10 @@ namespace PMS
             public bool Is_Approve { get; set; }
             public string Test_Main_Department { get; set; }
 
+            public string Test_Performed_By { get; set; }
+            public string Result_Time { get; set; }
+            public string Approved_By { get; set; }
+            public string Approved_Time { get; set; }
         }
 
         [WebMethod]
@@ -868,7 +872,13 @@ namespace PMS
                         
                             ltd.isApproved,
                             lt.Patient_ID,
-                            bd.Test_Main_Department
+                            bd.Test_Main_Department,
+                            ltd.Test_Performed_By,
+                            ltd.Test_Ready_On,
+                            ltd.Approved_Time,
+                            Approved_By = (from asp in db.aspnet_Users
+                                           where asp.UserId == ltd.Approved_By
+                                           select asp.UserName).FirstOrDefault()
 
                         }).ToList();
 
@@ -924,7 +934,11 @@ namespace PMS
                 test.Service_Date = item.Service_Date.ToString();
              
                 test.patient_ID = Convert.ToString(item.Patient_ID);
-                if(item.Test_Main_Department == null)
+                test.Test_Performed_By = item.Test_Performed_By ?? "";
+                test.Result_Time = item.Test_Ready_On?.ToString() ?? "";
+                test.Approved_By = item.Approved_By ?? "";
+                test.Approved_Time = item.Approved_Time?.ToString() ?? "";
+                if (item.Test_Main_Department == null)
                 {
                     test.Test_Main_Department = "";
                 }
@@ -938,7 +952,7 @@ namespace PMS
 
             AlltestListRefined = AlltestList;
           
-            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], bd.Bill_Details_ID,ld.Rejected_Reason,bd.Service_Date,isnull(ld.isApproved,'') as IsApproved,isnull(ld.Is_Result,'') as [Is_Result],ltm.patient_ID,bd.Test_Main_Department from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Ar_Billings ar where bd.Bill_Details_ID = ld.Bill_Details_ID and ar.Bill_ID=bd.Bill_ID and bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = (case when " + Patient_ID + " = 0 then ld.Patient_ID else " + Patient_ID + " end) and lt.Test_ID = ld.Test_ID /*and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID and ar.Bill_ID = (case when " + Bill_ID + " = 0 then ar.Bill_ID else " + Bill_ID + " end)");
+            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], ld.Test_Performed_By,ld.Test_Ready_On,ld.Approved_Time,(select top 1 UserName from aspnet_Users where UserId = ld.Approved_By) as Approved_By, bd.Bill_Details_ID,ld.Rejected_Reason,bd.Service_Date,isnull(ld.isApproved,'') as IsApproved,isnull(ld.Is_Result,'') as [Is_Result],ltm.patient_ID,bd.Test_Main_Department from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Ar_Billings ar where bd.Bill_Details_ID = ld.Bill_Details_ID and ar.Bill_ID=bd.Bill_ID and bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = (case when " + Patient_ID + " = 0 then ld.Patient_ID else " + Patient_ID + " end) and lt.Test_ID = ld.Test_ID /*and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID and ar.Bill_ID = (case when " + Bill_ID + " = 0 then ar.Bill_ID else " + Bill_ID + " end)");
 
             foreach (DataRow item in GroupTest.Rows)
             {
@@ -957,7 +971,11 @@ namespace PMS
                     Is_Approve = Convert.ToBoolean(item[8] == DBNull.Value ? "" : item[8]),
                     patient_ID = item[10] == DBNull.Value ? "" : item[10].ToString(),
                     Test_Main_Department = item[11] == DBNull.Value ? "" : item[11].ToString(),
-                };
+                    Test_Performed_By = item[12] == DBNull.Value ? "" : item[12].ToString(),
+                     Result_Time = item[13] == DBNull.Value ? "" : Convert.ToDateTime(item[13]).ToString(),
+                     Approved_Time = item[14] == DBNull.Value ? "" : Convert.ToDateTime(item[14]).ToString(),
+                     Approved_By = item[15] == DBNull.Value ? "" : item[15].ToString(),
+            };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
 
@@ -1018,7 +1036,13 @@ namespace PMS
                             bd.Service_Date,
                             ltd.isApproved,
                             lt.Patient_ID,
-                            bd.Test_Main_Department
+                            bd.Test_Main_Department,
+                            ltd.Test_Performed_By,
+                            ltd.Test_Ready_On,    
+                            ltd.Approved_Time,
+                            Approved_By = (from asp in db.aspnet_Users
+                                           where asp.UserId == ltd.Approved_By
+                                           select asp.UserName).FirstOrDefault()
                         } ).ToList();
 
             List<Test> AlltestList = new List<Test>();
@@ -1082,11 +1106,15 @@ namespace PMS
                     test.Test_Main_Department = item.Test_Main_Department.ToString();
                 }          
                 test.patient_ID = Convert.ToString(item.Patient_ID);
+                test.Test_Performed_By = item.Test_Performed_By ?? "";
+                test.Result_Time = item.Test_Ready_On?.ToString() ?? "";
+                test.Approved_By = item.Approved_By ?? "";
+                test.Approved_Time = item.Approved_Time?.ToString() ?? "";
                 AlltestList.Add(test);
             }
 
             AlltestListRefined = AlltestList;
-            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], bd.Bill_Details_ID,ld.Is_Result,ld.Rejected_Reason,bd.Service_Date,isnull(ld.isApproved,'') as IsApproved,ltm.patient_id,isnull(bd.Test_Main_Department,'') Test_Main_Department from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Reg_patient pat where bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = pat.pat_id  and pat.Patient_No = (case when " + patientNo + " = 0 then pat.Patient_No else " + patientNo + " end) and lt.Test_ID = ld.Test_ID /* and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID");
+            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], ld.Test_Performed_By,ld.Test_Ready_On, ld.Approved_Time,(select top 1 UserName from aspnet_Users where UserId = ld.Approved_By) as Approved_By,bd.Bill_Details_ID,ld.Is_Result,ld.Rejected_Reason,bd.Service_Date,isnull(ld.isApproved,'') as IsApproved,ltm.patient_id,isnull(bd.Test_Main_Department,'') Test_Main_Department from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Reg_patient pat where bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = pat.pat_id  and pat.Patient_No = (case when " + patientNo + " = 0 then pat.Patient_No else " + patientNo + " end) and lt.Test_ID = ld.Test_ID /* and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID");
 
 
             foreach (DataRow item in GroupTest.Rows)
@@ -1106,11 +1134,16 @@ namespace PMS
                     Is_Approve = Convert.ToBoolean(item[9] == DBNull.Value ? "" : item[9]),
                     patient_ID = item[10] == DBNull.Value ? "" : item[10].ToString(),
                     Test_Main_Department = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Test_Performed_By = item[12] == DBNull.Value ? "" : item[12].ToString(),
+                    Result_Time = item[13] == DBNull.Value ? "" : Convert.ToDateTime(item[13]).ToString(),
+                    Approved_Time = item[14] == DBNull.Value ? "" : Convert.ToDateTime(item[14]).ToString(),
+                    Approved_By = item[15] == DBNull.Value ? "" : item[15].ToString(),
 
-                };
+
+            };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
-
+                
                 AlltestListRefined.Add(TestObj);
             }
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
@@ -1271,6 +1304,9 @@ namespace PMS
 
             return (new JavaScriptSerializer().Serialize(result));
         }
+
+        
+
         [WebMethod]
         public static string GetAll_UltraSoundLevel()
         {

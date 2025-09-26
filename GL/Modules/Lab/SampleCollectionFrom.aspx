@@ -456,7 +456,7 @@
                     debugger;
                     var maxno = response.d;
                     var date = new Date().getFullYear().toString().substr(-2);
-                    SampleNoWithYear = (maxno + '-' + date);
+                    SampleNoWithYear = (date + '-' + maxno); 
                     $("#txtSample_ID").val(SampleNoWithYear);
                 },
                 failure: function (response) {

@@ -997,7 +997,7 @@
        <div class="form-group">
                 <label id="Lblfiance_integration">Account Category</label> 
                  <select id="ddlfiance_integration" class="form-control">
-                  <option>Please Select</option>
+                  <option value="0">Please Select</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
                 </select>
@@ -1205,7 +1205,7 @@
                     </td>
                     <td style="width: 170px !important;min-width:170px !important;" >  
                         <select id="ddlmanu" style="height: 33px !important">
-                            <option>Please Select</option>
+                            <option value="0">Please Select</option>
                         </select>
                     </td>
                     <td><label id="Lblitem_Qty" style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Item Main Category</label></td>
@@ -1213,7 +1213,7 @@
                     <td  style="width: 170px !important;min-width:170px !important;">
                         
                         <select id="ddlitem_Qty" style="height: 33px !important" name="ddlitem_Qty">
-                             <option>Please Select</option>
+                             <option value="0">Please Select</option>
                         </select>
                     </td>
                 </tr>
