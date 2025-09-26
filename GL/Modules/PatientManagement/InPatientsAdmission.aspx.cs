@@ -398,6 +398,7 @@ namespace PMS
                     vLbl_Adress.Text = qry.Permanent_Address;
                     vLbl_Gender.Text = db.GetDataValueName("Gender", qry.Gender);
                     vLbl_Age.Text = qry.Age_years;
+                    txtDiscount.Text = Convert.ToString(qry.Discount);
                     if (qry.Entry_Date == null)
                         vLbl_RegDate.Text = qry.Created_Time.Value.ToString(AppConfig.DateFormat);
                     else
@@ -446,6 +447,7 @@ namespace PMS
                     txtprocedurename.Text = qry.Procedure_Desc;
 
                     txtVisitId.Text = qry.VisitId;
+                  
                     ddlpacakagetype_SelectedIndexChanged();
                     txtSehatCardNo.Text = qry.SehatCardNo;
                     txtSehatHolder.Text = qry.Sehat_Card_Holder_CNIC;
@@ -806,7 +808,7 @@ namespace PMS
 
         [WebMethod]
         public static string SaveAllRecord(int Patient_ID, string btnsave, string txtAdmission_Date,string patient_name, string patient_age,string patient_number, string ddlDepartment, string ddlDoctor, string txtHealth_Complaints, DateTime txtExpected_Discharge_Date, string ddlIssuance_Of, string ddlWard_No, string txtBed_No, string ddlRoom_No, string txtRoom_Type, string PatientDiscountType, string panelCompany, string admissionType, string sehatCardNo, string visitId, string CardHolderName, string InsuranceCardNo, string PolicyHolderName ,string Sehat_Holder, string main_department, string packagetype, string packagename, string packagetypename, string packagenamess, string ipdProcedures, string proc_name,string panelcompanys, string CardNo,string Cardholdername,string CompanyName,string Approvelimit,string Roomlimit,string Cardlimit,
-            string ApproveDays,string Privatecharges/* string ddl_IPD_Procedure, string Time_in, string DischargeDate, string Time_Out, string DaysOccupied */ )
+            string ApproveDays,string Discount,string Privatecharges/* string ddl_IPD_Procedure, string Time_in, string DischargeDate, string Time_Out, string DaysOccupied */ )
         {
 
             In_Patient OPD = null;
@@ -870,6 +872,7 @@ namespace PMS
                     OPD.Admission_Fees = int.Parse(fee);
                     OPD.Admission_Date = Convert.ToDateTime(txtAdmission_Date);
                     OPD.Department = ddlDepartment;
+                    OPD.Discount = Convert.ToDecimal(Discount);
                     if (ddlIssuance_Of == "001")
                     {
                         OPD.Ward_ID = Convert.ToInt32(ddlWard_No);

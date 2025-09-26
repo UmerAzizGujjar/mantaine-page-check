@@ -21,6 +21,18 @@
                     }
                 });
             });
+
+            $(document).on('keyup', 'input[name="Discount_Percentage"]', function () {
+                let $row = $(this).closest('tr'); 
+
+                let fees = parseFloat($row.find('input[name="Fees"]').val()) || 0;
+                let discountPercentage = parseFloat($(this).val()) || 0;
+
+                let discountAmount = (fees * discountPercentage) / 100;
+
+                $row.find('input[name="Discount_Amount"]').val(discountAmount.toFixed(2));
+            });
+
         });
 
 
@@ -90,6 +102,8 @@
 
                         row.data('id', d.Dep_ID);
                         row.find('[name="Fees"]').val(d.Fees);
+                        row.find('[name="Discount_Percentage"]').val(d.Discount_Percentage);
+                        row.find('[name="Discount_Amount"]').val(d.Discount_Amount);
                         row.find('[name="Hospital_Share"]').val(d.Hospital_Share);
                         row.find('[name="Doctor_Share"]').val(d.Doctor_Share);
                         row.find('[name="Expiry_Date"]').val(d.Expiry_Date);
@@ -150,6 +164,8 @@
             </select>
         </td>
         <td><input type="text" name="Fees" class="form-control" placeholder="Enter Fees"></td>
+        <td><input type="text" name="Discount_Percentage" class="form-control" placeholder="Discount %"></td>
+        <td style="display:none;"><input type="hidden" name="Discount_Amount" class="form-control"></td>
         <td><input type="text" name="Hospital_Share" class="form-control" placeholder="Hospital %"></td>
         <td><input type="text" name="Doctor_Share" class="form-control" placeholder="Doctor %"></td>
         <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
@@ -217,6 +233,8 @@
                     Policy_ID: policy.val(),
                     Policy_Name: policy.text(),
                     Fees: $(this).find('[name="Fees"]').val(),
+                    Discount_Percentage: $(this).find('[name="Discount_Percentage"]').val(),
+                    Discount_Amount: $(this).find('[name="Discount_Amount"]').val(),
                     Hospital_Share: $(this).find('[name="Hospital_Share"]').val(),
                     Doctor_Share: $(this).find('[name="Doctor_Share"]').val(),
                     Expiry_Date: $(this).find('[name="Expiry_Date"]').val(),
@@ -341,6 +359,8 @@
                 <th>Department</th>
                 <th>Policy</th>
                 <th>Fees</th>
+                <th>Discount</th>
+                <th style="display:none;">Discount Amount</th>
                 <th>Hospital Share</th>
                 <th>Doctor Share</th>
                 <th>Expiry Date</th>

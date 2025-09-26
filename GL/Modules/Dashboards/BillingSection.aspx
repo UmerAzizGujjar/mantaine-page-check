@@ -9,7 +9,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(245, 245, 245, 0.95); /* Whitish semi-transparent */
+    background: rgba(245, 245, 245, 0.95);
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -18,19 +18,19 @@
     animation: fadeIn 0.4s ease forwards;
 }
 .modern-table tbody td {
-    white-space: normal !important; /* allow text wrapping */
-    word-wrap: break-word; /* wrap long words */
-    word-break: break-word; /* force breaking if needed */
-    vertical-align: top; /* keep text aligned to top */
+    white-space: normal !important; 
+    word-wrap: break-word; 
+    word-break: break-word;
+    vertical-align: top; 
 }
 .loading-content {
-    background: rgba(255, 255, 255, 0.85); /* Solid whitish */
+    background: rgba(255, 255, 255, 0.85); 
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(239, 166, 62, 0.4); /* Subtle orange border */
+    border: 1px solid rgba(239, 166, 62, 0.4); 
     padding: 40px;
     border-radius: 20px;
     text-align: center;
-    color: #333; /* Dark text for contrast */
+    color: #333; 
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     transform: scale(0.8);
     animation: scaleIn 0.4s ease 0.2s forwards;
@@ -48,8 +48,8 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 3px solid rgba(239, 166, 62, 0.1); /* Very subtle orange */
-    border-top: 3px solid #EFA63E; /* Bright orange */
+    border: 3px solid rgba(239, 166, 62, 0.1); 
+    border-top: 3px solid #EFA63E; 
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -87,7 +87,7 @@
 
 .loading-subtext {
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.7); /* Darker subtext */
+    color: rgba(0, 0, 0, 0.7); 
     margin-bottom: 20px;
 }
 
@@ -107,7 +107,6 @@
     animation: progressMove 2s ease-in-out infinite;
 }
 
-/* Floating particles - adjusted for light background */
 .particle {
     position: absolute;
     width: 4px;
@@ -117,7 +116,6 @@
     animation: float 3s ease-in-out infinite;
 }
 
-    /* Keep original particle positions */
     .particle:nth-child(1) {
         top: 20%;
         left: 20%;
@@ -142,7 +140,6 @@
         animation-delay: 1.5s;
     }
 
-/* Animations remain unchanged */
 @keyframes fadeIn {
     to {
         opacity: 1;
@@ -209,7 +206,6 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <!-- Loading Spinner -->
     <div id="loading">
         <div id="loading-center">
             <div id="loading-center-absolute">
@@ -254,8 +250,6 @@
                 </a>
             </div>
         </div>
-        <!-- Second Row (if needed later, or keep for symmetry) -->
-        <!-- You can add more shortcuts here if required -->
     </div>
 
     <script type="text/javascript">
@@ -263,7 +257,6 @@
             loadBillingSectionPermissions();
         });
         function showLoading() {
-            // Add your loading indicator here
             $('body').append(`
     <div class="modern-loading-overlay">
         <div class="loading-content">
@@ -293,7 +286,7 @@
                     if (overlay && overlay.parentNode) {
                         overlay.parentNode.removeChild(overlay);
                     }
-                }, 500); // Match this duration with your CSS transition time
+                }, 500); 
             }
         }
         function loadBillingSectionPermissions() {
@@ -332,7 +325,6 @@
                     console.error("Response:", xhr.responseText);
                     alert("Could not load permissions for Billing Section.");
 
-                    // Optionally hide all shortcuts on error
                     Object.keys(shortcutToMenuMap).forEach(function (id) {
                         $("#" + id).hide();
                     });

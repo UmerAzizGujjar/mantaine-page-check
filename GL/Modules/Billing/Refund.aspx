@@ -314,7 +314,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
+                    window.location.reload();
                     $('#btnSave').attr('disabled', 'disabled');
                 }, function (error) {
                     alert(error.get_message());
@@ -329,22 +329,22 @@
             var Totaldoctorshare = $('#txtTotalDoctorShare').val();
             var Totaldoctordistribution = $('#txtDoctorTotalDistribution').val();
 
-            if (Totaldoctorshare != Totaldoctordistribution) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Doctor Refund and Doctor Distribution Refund Should be Same.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
+            //if (Totaldoctorshare != Totaldoctordistribution) {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Doctor Refund and Doctor Distribution Refund Should be Same.',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
 
-                proceed = false;
-            }
+            //    proceed = false;
+            //}
 
             return proceed;
         }
@@ -518,7 +518,7 @@
                         </td>
                         <td>
                             <div>
-                                <fieldset>
+                                <fieldset style="display:none">
                                     <legend style="margin-bottom: 0px">Doctor Refund Distribution</legend>
                                     <div class="table-responsive" style="max-height: 217px;">
                                         <table class="table table-borderless" id="Doctor_Share_Table">
@@ -564,7 +564,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12">
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-12" style="display:none">
                 <div id="dvSummary">
                     <tr>
                         <td>Doctors Refund Distribution</td>

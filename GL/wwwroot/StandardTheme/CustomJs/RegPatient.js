@@ -39,7 +39,8 @@ $(document).ready(function () {
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;
 
-    $dropdown.data('filled', false);
+    var currentValue = $dropdown.val();
+    var currentText = $dropdown.find('option:selected').text();
 
     $.ajax({
         type: "POST",
@@ -51,26 +52,36 @@ function fillDropdown($dropdown, methodName) {
             try {
                 const data = JSON.parse(response.d);
                 var options = '<option value="0">Please Select</option>';
+                var valueFound = false;
 
                 $.each(data, function (key, value) {
-                    options += `<option value="${value.DataValue_Name}">
-                                    ${value.DataValue_Description}
-                                </option>`;
+                    var isSelected = (value.DataValue_Name == currentValue);
+                    if (isSelected) valueFound = true;
+
+                    options += `<option value="${value.DataValue_Name}" ${isSelected ? 'selected="selected"' : ''}>
+                            ${value.DataValue_Description}
+                        </option>`;
                 });
 
                 $dropdown.html(options)
                     .data('filled', true)
                     .trigger('change');
+
+                if (currentValue && currentValue !== "0" && !valueFound) {
+                    $dropdown.prepend(`<option value="${currentValue}" selected="selected">
+                            ${currentText}
+                        </option>`);
+                    $dropdown.trigger('change');
+                }
+
                 if ($dropdown.hasClass('select2-hidden-accessible')) {
                     $dropdown.select2('close').select2('open');
                 }
             } catch (e) {
-                console.error(`Error parsing data from ${methodName}:`, e);
                 $dropdown.data('filled', false);
             }
         },
         error: function (xhr, status, error) {
-            console.error(`Error fetching ${methodName}:`, error);
             $dropdown.data('filled', false);
         }
     });
@@ -138,7 +149,7 @@ function CalculateDateOfBirth() {
 
 
 function SavePatient() {
-
+    debugger;
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();
@@ -161,6 +172,7 @@ function SavePatient() {
     var Blood_Group = $('#ddl_bloodGroup').val();
     var State = $('#ddlstate').val();
     var Country = $('#ddlCountry :selected').val();
+    var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
     if (PatientName === "") {
         $('#firstname-error').show();
@@ -214,6 +226,7 @@ function SavePatient() {
         "Blood_Group": Blood_Group,
         "State": State,
         "Country": Country,
+        "AntiForgeryToken": AntiForgeryToken,
 
     });
     console.log(data);
@@ -224,17 +237,21 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
+            if (data.d.startsWith("ERROR:")) {
+                toasterMessage(true, "Validation Failed", data.d.replace("ERROR: ", ""));
+                $('#SavePatient_Data').attr('disabled', false);
+                return;
+            }
 
             var ini_patientID = data.d;
-
-            toasterMessage(false, "Data Saved Successfully");
+            toasterMessage(false, "Success", "Data Saved Successfully");
             window.location.reload();
             var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
             window.open(url, '_blank');
-
         },
-        error: function (response) {
-            alert("Error");
+        error: function (xhr, status, error) {
+            toasterMessage(true, "Request Failed", "An unexpected error occurred.");
+            $('#SavePatient_Data').attr('disabled', false);
         }
     });
 }
@@ -244,7 +261,7 @@ function toasterMessage(isError = false, title, message) {
         "closeButton": true,
         "debug": false,
         "preventDuplicates": false,
-        "positionClass": "toast-center-screen", // Custom class for center
+        "positionClass": "toast-center-screen",
         "onclick": null,
         "showDuration": "551500",
         "hideDuration": "2000",
@@ -266,7 +283,6 @@ function toasterMessage(isError = false, title, message) {
 }
 
 function Get_Pat_Info(reg_id) {
-    debugger;
     $.ajax({
         type: "POST",
         url: "RegisterPatient.aspx/GetRegData",
@@ -274,75 +290,38 @@ function Get_Pat_Info(reg_id) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (resp) {
-            debugger;
             var data = JSON.parse(resp.d);
-
 
             $('#txt_Mrno').val(data.Mr_No);
             $('#txt_name').val(data.Name);
-
-
             $('#ddlRelation').val(data.Relation);
             $('#txt_relation').val(data.FatherName);
             $('#txt_dob').val(data.Age);
-
-            var dobString = data.DOB;
-
-            var timestamp = parseInt(dobString.match(/\d+/)[0]);
-            var finalDate = moment(timestamp).format("DD/MM/YYYY");
-
-            $('#txtAge_yearss').val(finalDate);
             $('#txt_mobile').val(data.Mobile);
             $('#txt_Address').val(data.Address);
-            $('#txt_cnic').val(data.CNIC);
-            $('#hdn_regid').val(reg_id);
-            $('#txtcity').val(data.ValCity);
-            $('#ddl_status').html(
-                $('<option>', {
-                    value: data.MaritalStatus,
-                    text: data.MaritalStatus_text
-                })
-            );
-            $('#ddlCountry').html(
-                $('<option>', {
-                    value: data.Country,
-                    text: data.Country_text
-                })
-            );
-            $('#ddl_bloodGroup').html(
-                $('<option>', {
-                    value: data.BloodGroup,
-                    text: data.B_Grtoup_text
-                })
-            );
-            $('#txtarea').html(
-                $('<option>', {
-                    value: data.ValArea,
-                    text: data.Area_text
-                })
-            );
-            $('#ddl_Gender').html(
-                $('<option>', {
-                    value: data.Gender,
-                    text: data.Gender_text
-                })
-            );
-            $('#ddlstate').html(
-                $('<option>', {
-                    value: data.state,
-                    text: data.State_text
-                })
-            );
-            $('#txtcity').html(
-                $('<option>', {
-                    value: data.ValCity,
-                    text: data.City_text
-                })
-            );
+            $('#hdn_regid').val(data.Reg_PatientID);
+            $('#txt_cnic').val(data.CNIC_Masked);
 
+            if (data.MaritalStatus_text)
+                $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
+            if (data.Country_text)
+                $('#ddlCountry').html($('<option>', { value: '', text: data.Country_text }).prop('selected', true));
+            if (data.BloodGroup_text)
+                $('#ddl_bloodGroup').html($('<option>', { value: '', text: data.BloodGroup_text }).prop('selected', true));
+            if (data.Area_text)
+                $('#txtarea').html($('<option>', { value: '', text: data.Area_text }).prop('selected', true));
+            if (data.Gender_text)
+                $('#ddl_Gender').html($('<option>', { value: '', text: data.Gender_text }).prop('selected', true));
+            if (data.State_text)
+                $('#ddlstate').html($('<option>', { value: '', text: data.State_text }).prop('selected', true));
+            if (data.City_text)
+                $('#txtcity').html($('<option>', { value: '', text: data.City_text }).prop('selected', true));
+
+            $('#SavePatient_Data').val('Update');
+            $('#btnPrint').prop('disabled', false);
         },
         error: function (response) {
-            alert("Error: " + response.responseText);
+            alert("Error loading patient data.");
             console.error("AJAX Error: ", response);
         }
     });

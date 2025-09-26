@@ -170,36 +170,36 @@
                 var Min = $(this).children(":selected").attr('name');
                 if (typeof (Min) != "undefined") {
 
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'You must check this Patient within ' + Min + ' minutes!',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
+                    //Swal.fire({
+                    //    toast: true,
+                    //    position: 'top-end',
+                    //    icon: 'success',
+                    //    title: 'Success!',
+                    //    text: 'You must check this Patient within ' + Min + ' minutes!',
+                    //    showConfirmButton: false,
+                    //    timer: 2500,
+                    //    customClass: {
+                    //        popup: 'swal-big-popup',
+                    //        title: 'swal-big-title',
+                    //        htmlContainer: 'swal-big-text'
+                    //    }
+                    //});
 
-                    if (Min == 30) {
-                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-Urgent" });
-                    }
-                    if (Min == 2) {
-                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-immediate" });
-                    }
-                    if (Min == 10) {
-                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-emergency" });
-                    }
-                    if (Min == 60) {
-                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-semi-urgent" });
-                    }
-                    if (Min == 120) {
-                        Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-not-urgent" });
-                    }
+                    //if (Min == 30) {
+                    //    Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-Urgent" });
+                    //}
+                    //if (Min == 2) {
+                    //    Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-immediate" });
+                    //}
+                    //if (Min == 10) {
+                    //    Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-emergency" });
+                    //}
+                    //if (Min == 60) {
+                    //    Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-semi-urgent" });
+                    //}
+                    //if (Min == 120) {
+                    //    Swal.info("", "You must check this Patient with in " + Min + " minutes !", { iconClass: "toast-not-urgent" });
+                    //}
 
 
                     var Minutes = parseInt(Min, 10);
@@ -266,7 +266,28 @@
                 }
             });
         }
+        var originalFee;
+        function Calc_Discount() {
+            debugger;
 
+            var disc_perc = $('#ctl00_MainContent_txtDiscount').val();
+            var currentFee = $('#ctl00_MainContent_txtadmissionfee').val();
+
+
+            if (!originalFee) {
+                originalFee = Number(currentFee);
+            }
+
+            if (disc_perc && !isNaN(disc_perc) && originalFee && !isNaN(originalFee)) {
+
+                var discountAmount = (Number(disc_perc) / 100) * originalFee;
+                var discountedFee = originalFee - discountAmount;
+
+                $('#ctl00_MainContent_txtadmissionfee').val(discountedFee.toFixed(0));
+            } else {
+                $('#ctl00_MainContent_txtadmissionfee').val(originalFee.toFixed(0));
+            }
+        }
 
         function showdeathtab() {
             debugger;
@@ -1830,13 +1851,14 @@
             var Special_Instruction_Desc = $('#ctl00_MainContent_txtRN_Special_Instruction_Desc').val();
             var Receiving_DateDesc = $('#ctl00_MainContent_txttxtReceiving_DateDesc').val();
             var remrks_call_to_doc = $('#ctl00_MainContent_txtCallToDoctor').val();
+            var discount = $('#ctl00_MainContent_txtDiscount').val();
             debugger;
 
             var ID = '<%= Request.QueryString["ID"]%>';
             PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, ddlCallToDoctor, txtHealth_Complaints, ddlIssuance_Of, ddlWard_No, txtBed_No, RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
                 txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
                 DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane,
-                DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, ddlPatientCondition, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, TreatmentTime, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc,ReferToOPD ,
+                DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, ddlPatientCondition, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, TreatmentTime, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD, discount,
                 function (response) {
 
 
@@ -6258,7 +6280,12 @@
              <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
              <asp:TextBox ID="txtadmissionfee" ReadOnly="true" runat="server" Enabled="true" class="form-control"></asp:TextBox>
                  </div>
+        
             <div class="col-lg-1 col-md-4 col-sm-6"></div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <asp:Label ID="lbldiscount" runat="server" Text="Discount %"></asp:Label>
+                    <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server" ></asp:TextBox>
+                 </div>
            
         </div>
         <div class="row">

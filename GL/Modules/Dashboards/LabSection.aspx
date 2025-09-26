@@ -3,10 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-
-    <!-- Loading Spinner -->
     <div id="loading">
         <div id="loading-center">
             <div id="loading-center-absolute">
@@ -25,46 +22,40 @@
 
     <br /><br />
 
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sample-Collection">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/SampleCollectionFrom.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blood-sample.png" alt="Sample Collection" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Sample Collection</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Acknowledgment">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/LaboratoryTest.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blood-test.png" alt="Acknowledgment" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Acknowledgment</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Lab-Report">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/LabReportPreview.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Lab2.png" alt="Lab Report" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Lab Report</h5>
-                </a>
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Review-Approval">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/TestApproval.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/search.png" alt="Review Approval" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Review/Approval</h5>
-                </a>
-            </div>
+   <div class="container">
+    <div class="row text-center" id="lab-shortcuts-container">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Sample-Collection">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/SampleCollectionFrom.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blood-sample.png" alt="Sample Collection" style="object-fit: contain;" />
+                <h5 class="cocotxt">Sample Collection</h5>
+            </a>
         </div>
-
-        <br />
-
-        <div class="row text-center">
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Approved-Tests">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/TestApproval.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/qualitative-research.png" alt="Approved Tests" style="object-fit: contain;" />
-                    <h5 class="cocotxt">Approved Tests</h5>
-                </a>
-            </div>
-            <!-- You can add more shortcuts here in the future if needed -->
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Acknowledgment">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/LaboratoryTest.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blood-test.png" alt="Acknowledgment" style="object-fit: contain;" />
+                <h5 class="cocotxt">Acknowledgment</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Lab-Report">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Lab/LabReportPreview.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Lab2.png" alt="Lab Report" style="object-fit: contain;" />
+                <h5 class="cocotxt">Lab Report</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Review-Approval">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/TestApproval.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/search.png" alt="Review Approval" style="object-fit: contain;" />
+                <h5 class="cocotxt">Review/Approval</h5>
+            </a>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Approved-Tests">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Administrator/TestApproval.aspx" style="width: 60%;">
+                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/qualitative-research.png" alt="Approved Tests" style="object-fit: contain;" />
+                <h5 class="cocotxt">Approved Tests</h5>
+            </a>
         </div>
     </div>
+</div>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -105,8 +96,6 @@
                     console.error("Failed to load permissions for Lab Section:", error);
                     console.error("Response:", xhr.responseText);
                     alert("Could not load permissions for Lab Section.");
-
-                    // Hide all lab shortcuts on error
                     Object.keys(shortcutToMenuMap).forEach(function (id) {
                         $("#" + id).hide();
                     });

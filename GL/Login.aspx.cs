@@ -7,7 +7,6 @@ using System.Web.UI.WebControls;
 using System.Web.Security;
 using System.Data;
 using System.Configuration;
-using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +15,6 @@ using DB;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
-using System.Net.PeerToPeer;
 
 namespace PMS
 {
@@ -27,7 +25,6 @@ namespace PMS
             if (!IsPostBack)
             {
                 Session.Abandon();
-                //ViewState["ReferrerUrl"] = Convert.ToString(Request.UrlReferrer);
                 BindCompanies();
                 VerifyPanel.Visible = false;
                 forgot_pass_Panel.Visible = false;
@@ -37,8 +34,7 @@ namespace PMS
 
         private void BindCompanies()
         {
-            DataTable dtbCompanies = new DataTable();
-            dtbCompanies = DBClass.getDataTable("Select * from sys_Companys");
+            DataTable dtbCompanies = DBClass.getDataTable("Select * from sys_Companys");
             DropDownList ddlCompany = (DropDownList)UserLogin.FindControl("ddlCompany");
             if (ddlCompany != null)
             {
@@ -54,106 +50,11 @@ namespace PMS
             }
         }
 
-
         protected void LoginUser_Authenticate(object sender, AuthenticateEventArgs e)
         {
-
+            // Not used — logic handled in LoginButton_Click
         }
-        //protected void LoginButton_Click(object sender, EventArgs e)
-        //{
-        //    string userName = UserLogin.UserName.Trim();
-        //    string pass = UserLogin.Password.ToString();
 
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var userExists = (from u in db.aspnet_Users
-        //                          where u.UserName == userName
-        //                          select u.UserId).FirstOrDefault();
-
-        //        if (userExists != null)
-        //        {
-        //            var membershipRecord = (from m in db.aspnet_Memberships
-        //                                    where m.UserId == userExists
-        //                                    select new { m.Password, m.PasswordSalt }).FirstOrDefault();
-
-        //            if (membershipRecord != null)
-        //            {
-        //                string hashedInputPassword = EncryptPassword(pass, membershipRecord.PasswordSalt);
-        //                if (hashedInputPassword == membershipRecord.Password)
-        //                {
-        //                    ViewState["usrname"] = userName.Trim();
-        //                    ViewState["psword"] = pass;
-
-        //                    var block_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.BlockUser).FirstOrDefault();
-        //                    var otp_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.OTPUsers).FirstOrDefault();
-        //                    var mblnumber = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.mobileno).FirstOrDefault();
-
-        //                    if (block_user == true)
-        //                    {
-        //                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{"User Blocked"}');", true);
-        //                        return;
-
-        //                    }
-
-        //                    if (otp_user == true)
-        //                    {
-        //                        loginportion.Visible = false;
-        //                        VerifyPanel.Visible = true;
-        //                        if (!string.IsNullOrEmpty(mblnumber))
-        //                        {
-        //                            string session = "";
-        //                            bool sentStatus = false;
-        //                            string statusMsg = string.Empty;
-        //                            Random random = new Random();
-        //                            int value = random.Next(1001, 9999);
-        //                            string masking = "TibbIT";
-        //                            string message = "Verification Code:  " + value + "";
-        //                            string message1 = HttpUtility.UrlEncode(message);
-        //                            MyWebRequest myRequest = new MyWebRequest("https://connect.jazzcmt.com/sendsms_url.html?Username=03091893765&Password=XQoQwxAc&From=" + masking + "&To=" + mblnumber + "&Message=" + message1 + "");
-
-
-        //                            string s = myRequest.GetResponse();
-
-
-        //                            session = s;
-        //                            Console.WriteLine(session); // Display in console
-        //                            if (session.Contains("Message Sent"))
-        //                            {
-        //                                sentStatus = true;
-        //                                session = "SMS Sent Successfully";
-        //                            }
-        //                            else
-        //                            {
-        //                                Console.WriteLine(session);
-        //                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{session}');", true);
-        //                                session = "Error";
-        //                                sentStatus = false;
-
-        //                            }
-
-        //                            // Display in console again
-        //                            Console.WriteLine(session);
-
-        //                            Session["OTP"] = value;
-        //                        }
-        //                        return;
-        //                    }
-
-        //                    var user_detail = Membership.GetUser(userName.Trim());
-        //                    Session["MenuLoaded"] = false;
-        //                    PasswordChangeAlter_ModalPopupExtender.Hide();
-
-        //                    LoadUserDetail();
-        //                }
-        //                else
-        //                {
-        //                    // Password mismatch
-        //                    // Show error message (e.g., "Invalid username or password.")
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
         protected void LoginButton_Click(object sender, EventArgs e)
         {
             string userName = UserLogin.UserName.Trim();
@@ -167,7 +68,7 @@ namespace PMS
 
                 if (userExists == null)
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Invalid username or password.');", true);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Invalid username or password.');", true);
                     return;
                 }
 
@@ -177,31 +78,32 @@ namespace PMS
 
                 if (membershipRecord == null)
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Invalid username or password.');", true);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Invalid username or password.');", true);
                     return;
                 }
 
                 if (membershipRecord.IsLockedOut)
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "accountLockedAlert", @"
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Account Locked',
-                    text: 'Account is locked due to too many failed login attempts. Contact administrator.',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });", true);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "accountLockedAlert", @"
+Swal.fire({
+    icon: 'error',
+    title: 'Account Locked',
+    text: 'Account is locked due to too many failed login attempts. Contact administrator.',
+    timer: 2000,
+    showConfirmButton: false,
+    customClass: {
+        popup: 'swal-big-popup',
+        title: 'swal-big-title',
+        htmlContainer: 'swal-big-text'
+    }
+});", true);
                     return;
                 }
 
                 string hashedInputPassword = EncryptPassword(pass, membershipRecord.PasswordSalt);
                 if (hashedInputPassword == membershipRecord.Password)
                 {
+                    // ✅ SUCCESS → RESET COUNTER
                     membershipRecord.FailedPasswordAttemptCount = 0;
                     membershipRecord.LastLoginDate = DateTime.Now;
                     if (membershipRecord.IsLockedOut)
@@ -209,12 +111,13 @@ namespace PMS
 
                     db.SubmitChanges();
 
+                    // 👇 PROCEED WITH LOGIN FLOW
                     ViewState["usrname"] = userName;
                     ViewState["psword"] = pass;
 
                     if (userExists.BlockUser == true)
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('User Blocked');", true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('User Blocked');", true);
                         return;
                     }
 
@@ -241,17 +144,15 @@ namespace PMS
                             }
                             else
                             {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('SMS failed: {response}');", true);
+                                ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('SMS failed: {response}');", true);
                                 return;
                             }
                         }
                         return;
                     }
 
-                    // Get Book_ID
                     string Book_ID = DBClass.getField("Select Book_ID From sys_Companys Where Company_ID=" + Convert.ToInt32(((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedValue));
 
-                    // Set Session Values
                     Session["MenuLoaded"] = false;
                     Session["UNChnagePassword"] = userName;
                     Session["UserName"] = ((TextBox)UserLogin.FindControl("UserName")).Text;
@@ -259,13 +160,13 @@ namespace PMS
                     Session["Company_ID"] = ((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedValue;
                     Session["Book_ID"] = Book_ID;
 
-                    System.Web.Security.MembershipUser user = System.Web.Security.Membership.GetUser(userName);
+                    MembershipUser user = Membership.GetUser(userName);
                     if (user != null)
                     {
                         Session["UserID"] = user.ProviderUserKey.ToString();
                     }
 
-                    String[] roleList = System.Web.Security.Roles.GetRolesForUser(userName);
+                    string[] roleList = Roles.GetRolesForUser(userName);
                     string roles = string.Join(",", roleList);
 
                     int duration = 50;
@@ -275,16 +176,13 @@ namespace PMS
 
                     Session.Timeout = duration;
 
-                    string ticketRoles = roles.Length > 0 ? roles : "User";
-
-                    // Create Forms Auth Ticket
                     FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
                         1,
                         userName,
                         DateTime.Now,
                         DateTime.Now.AddMinutes(duration),
                         false,
-                        ticketRoles,
+                        roles,
                         "/");
 
                     string hashCookies = FormsAuthentication.Encrypt(ticket);
@@ -294,13 +192,11 @@ namespace PMS
                         Secure = Request.IsSecureConnection,
                         Path = "/",
                         Expires = ticket.Expiration,
-                        SameSite = System.Web.SameSiteMode.Strict  // 👈 Critical
+                        SameSite = System.Web.SameSiteMode.Strict
                     };
 
                     Response.Cookies.Set(authCookie);
 
-
-                    // 💥 REDIRECT FIRST — THEN ABANDON SESSION (simulate delay)
                     object ReferrerUrl = ViewState["ReferrerUrl"];
                     string redirectUrl = "~/Modules/Dashboards/ShortCuts.aspx";
                     if (ReferrerUrl != null && !string.IsNullOrEmpty(Convert.ToString(ReferrerUrl)) && !ReferrerUrl.ToString().Contains("Login.aspx"))
@@ -308,71 +204,120 @@ namespace PMS
                         redirectUrl = (string)ReferrerUrl;
                     }
 
-                    // 🚀 Redirect with true to end request and send cookie
                     Response.Redirect(redirectUrl, true);
-
-                    // ❌ DO NOT CALL Session.Abandon() HERE — it breaks cookie recognition
-                    // We’ll handle session fixation via machineKey + cookie security instead
                 }
                 else
                 {
+                    // ❌ WRONG PASSWORD
                     membershipRecord.FailedPasswordAttemptCount += 1;
                     membershipRecord.LastLoginDate = DateTime.Now;
 
-                    if (membershipRecord.FailedPasswordAttemptCount >= 10)
+                    int currentAttempt = membershipRecord.FailedPasswordAttemptCount;
+
+                    if (currentAttempt >= 7)
                     {
                         membershipRecord.IsLockedOut = true;
 
                         string lockScript = @"
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Account Locked',
-                        text: 'Account locked after 10 failed attempts.',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });";
+Swal.fire({
+    icon: 'error',
+    title: 'Account Locked',
+    text: 'Account locked after 7 failed attempts.',
+    timer: 2000,
+    showConfirmButton: false,
+    customClass: {
+        popup: 'swal-big-popup',
+        title: 'swal-big-title',
+        htmlContainer: 'swal-big-text'
+    }
+});";
 
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "accountLocked", lockScript, true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "accountLocked", lockScript, true);
                     }
-                    else
+                    else if (currentAttempt >= 5) // 5th and 6th attempt
                     {
-                        int remaining = 10 - membershipRecord.FailedPasswordAttemptCount;
+                        // ✅ SHOW "Too many attempts" + DISABLE BUTTON FOR 60s
+                        string message = "Too many login attempts. Please wait 1 minute.";
 
                         string script = $@"
-                    Swal.fire({{
-                        icon: 'warning',
-                        title: 'Invalid Password',
-                        text: 'Invalid password. {remaining} attempt(s) remaining.',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        customClass: {{
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }}
-                    }});";
+setTimeout(function() {{
+    if (typeof Swal !== 'undefined') {{
+        Swal.fire({{
+            icon: 'error',
+            title: 'Too Many Attempts',
+            text: '{message.Replace("'", "\\'")}',
+            timer: 60000,
+            showConfirmButton: false,
+            customClass: {{
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }}
+        }});
+    }} else {{
+        alert('{message.Replace("'", "\\'")}');
+    }}
 
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "passwordWarning", script, true);
+    var loginButton = document.getElementById('{((Button)sender).ClientID}');
+    if (loginButton) {{
+        loginButton.disabled = true;
+        loginButton.value = 'Wait 60s...';
+
+        let timeLeft = 60;
+        const timer = setInterval(() => {{
+            timeLeft--;
+            loginButton.value = 'Wait ' + timeLeft + 's...';
+            if (timeLeft <= 0) {{
+                clearInterval(timer);
+                loginButton.disabled = false;
+                loginButton.value = 'LOGIN';
+                if (typeof Swal !== 'undefined') {{
+                    Swal.fire({{
+                        icon: 'success',
+                        title: 'Ready to Try Again',
+                        text: 'You may now attempt to log in.',
+                        timer: 3000,
+                        showConfirmButton: false
+                    }});
+                }}
+            }}
+        }}, 1000);
+    }}
+}}, 100);";
+
+                        ScriptManager.RegisterStartupScript(this, GetType(), "rateLimit5", script, true);
+                    }
+                    else // 1st to 4th attempt
+                    {
+                        int remaining = 7 - currentAttempt;
+
+                        string script = $@"
+Swal.fire({{
+    icon: 'warning',
+    title: 'Invalid Password',
+    text: 'Invalid password. {remaining} attempt(s) remaining.',
+    timer: 2000,
+    showConfirmButton: false,
+    customClass: {{
+        popup: 'swal-big-popup',
+        title: 'swal-big-title',
+        htmlContainer: 'swal-big-text'
+    }}
+}});";
+
+                        ScriptManager.RegisterStartupScript(this, GetType(), "passwordWarning", script, true);
                     }
 
                     db.SubmitChanges();
+                    return;
                 }
             }
         }
 
-
-
-
         private string EncryptPassword(string password, string salt)
         {
             var combinedPasswordSalt = password + salt;
-
-            using (SHA1 sha1 = SHA1.Create())
+            using (var sha1 = SHA1.Create())
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(combinedPasswordSalt);
                 byte[] hash = sha1.ComputeHash(bytes);
@@ -380,81 +325,69 @@ namespace PMS
             }
         }
 
-
-
-
         private void LoadUserDetail()
         {
-            MembershipUser u = Membership.GetUser("");
-            
-
             string username = Convert.ToString(ViewState["usrname"]);
             string password = Convert.ToString(ViewState["psword"]);
             Session["UNChnagePassword"] = username;
-            string Book_ID = DBClass.getField("Select Book_ID From sys_Companys Where Company_ID=" + Convert.ToInt32(((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedValue));
 
-                Session.Add("UserName", ((TextBox)UserLogin.FindControl("UserName")).Text);
-                Session.Add("Company_Name", ((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedItem.Text);
-                Session.Add("Company_ID", ((DropDownList)UserLogin.FindControl("ddlCompany")).SelectedValue);
-                Session.Add("Book_ID", Book_ID);
+            TextBox userNameTextBox = (TextBox)UserLogin.FindControl("UserName");
+            DropDownList ddlCompany = (DropDownList)UserLogin.FindControl("ddlCompany");
 
-                System.Web.Security.MembershipUser user = System.Web.Security.Membership.GetUser(AppConfig.UserName);
-                Session.Add("UserID", user.ProviderUserKey.ToString());
-                String[] roleList = System.Web.Security.Roles.GetRolesForUser(UserLogin.UserName);
-
-                string roles = "";
-                foreach (string role in roleList)
-                {
-                    roles = roles + "," + role;
-
-                }
-                if (roles != "")
-                {
-                    string LoginDuration = WebConfigurationManager.AppSettings["LoginDuration"].ToString();
-                    int duration = 50;
-                    if (LoginDuration != "")
-
-                        duration = Convert.ToInt32(LoginDuration);
-                    Session.Timeout = duration;
-
-                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, Session["UserName"].ToString(), DateTime.Now,
-                           DateTime.Now.AddMinutes(duration), false, roles.Substring(1, roles.Length - 1), FormsAuthentication.FormsCookiePath);
-
-                    string hashCookies = FormsAuthentication.Encrypt(ticket);
-                    HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, hashCookies);
-                    Response.Cookies.Add(cookie);
-                }
-                else
-                {
-                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1, Session["UserName"].ToString(), DateTime.Now,
-                           DateTime.Now.AddMinutes(360), false, "User", FormsAuthentication.FormsCookiePath);
-
-                    string hashCookies = FormsAuthentication.Encrypt(ticket);
-                    HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, hashCookies);
-                    Response.Cookies.Add(cookie);
-                }
-                object ReferrerUrl = ViewState["ReferrerUrl"];
-                if (ReferrerUrl != null && Convert.ToString(ViewState["ReferrerUrl"]) != "")
-                {
-                    if (!ReferrerUrl.ToString().Contains("Login.aspx"))
-                    {
-                        Response.Redirect((string)ReferrerUrl, false);
-                    }
-                    else
-                    {
-                        Response.Redirect("~/Modules/Dashboards/ShortCuts.aspx", false);
-                    }
-                }
-                else
-                {
-                Response.Redirect("~/Modules/Dashboards/ShortCuts.aspx", false);
+            if (ddlCompany == null || userNameTextBox == null)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "controlError", "alert('Required login controls not found.');", true);
+                return;
             }
-            //}
+
+            string Book_ID = DBClass.getField("Select Book_ID From sys_Companys Where Company_ID=" + Convert.ToInt32(ddlCompany.SelectedValue));
+
+            Session["UserName"] = userNameTextBox.Text;
+            Session["Company_Name"] = ddlCompany.SelectedItem.Text;
+            Session["Company_ID"] = ddlCompany.SelectedValue;
+            Session["Book_ID"] = Book_ID;
+
+            MembershipUser user = Membership.GetUser(username);
+            if (user != null)
+            {
+                Session["UserID"] = user.ProviderUserKey.ToString();
+            }
+
+            string[] roleList = Roles.GetRolesForUser(username);
+            string roles = string.Join(",", roleList);
+
+            int duration = 50;
+            string LoginDuration = WebConfigurationManager.AppSettings["LoginDuration"];
+            if (!string.IsNullOrEmpty(LoginDuration))
+                duration = Convert.ToInt32(LoginDuration);
+
+            Session.Timeout = duration;
+
+            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                1,
+                username,
+                DateTime.Now,
+                DateTime.Now.AddMinutes(duration),
+                false,
+                roles,
+                FormsAuthentication.FormsCookiePath);
+
+            string hashCookies = FormsAuthentication.Encrypt(ticket);
+            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, hashCookies);
+            Response.Cookies.Add(cookie);
+
+            object ReferrerUrl = ViewState["ReferrerUrl"];
+            string redirectUrl = "~/Modules/Dashboards/ShortCuts.aspx";
+            if (ReferrerUrl != null && !string.IsNullOrEmpty(Convert.ToString(ReferrerUrl)) && !ReferrerUrl.ToString().Contains("Login.aspx"))
+            {
+                redirectUrl = (string)ReferrerUrl;
+            }
+
+            Response.Redirect(redirectUrl, false);
         }
 
         protected void btnmessageOk_Click(object sender, EventArgs e)
         {
-
         }
 
         protected void btnverify_Click(object sender, EventArgs e)
@@ -462,8 +395,6 @@ namespace PMS
             string enteredOtp = otp1.Text + otp2.Text + otp3.Text + otp4.Text;
             if (enteredOtp == Session["OTP"].ToString())
             {
-                //txtOtp.Visible = false;
-                //ScriptManager.RegisterStartupScript(this, typeof(string), "Message", "confirm('Your Mobilenumber has been verify sccessfully.');", true);
                 LoadUserDetail();
             }
             else
@@ -471,103 +402,57 @@ namespace PMS
                 otpError.InnerText = "Invalid PassCode.";
             }
         }
+
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            // Reload the current page
             Response.Redirect(Request.RawUrl);
         }
+
         protected void forgetPassword_Click(object sender, EventArgs e)
         {
             string userName = UserLogin.UserName.Trim();
             VerifyPanel.Visible = false;
             loginportion.Visible = false;
             forgot_pass_Panel.Visible = true;
-            DataBaseDataContext db = new DataBaseDataContext();
-            txtPhone.Text = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.mobileno).FirstOrDefault();
-            txtPhone.ReadOnly = true;
+            using (var db = new DataBaseDataContext())
+            {
+                txtPhone.Text = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.mobileno).FirstOrDefault();
+                txtPhone.ReadOnly = true;
+            }
         }
 
         protected void btnrequestOTP(object sender, EventArgs e)
         {
             string userName = UserLogin.UserName.Trim();
-            string userid = UserLogin.ID.Trim();
-
-
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            var block_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.BlockUser).FirstOrDefault();
-            var otp_user = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.OTPUsers).FirstOrDefault();
-            var mblnumber = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.mobileno).FirstOrDefault();
-
-            if (block_user == true)
+            using (var db = new DataBaseDataContext())
             {
-
-                return;
-            }
-            if(block_user == false)
-            {
-                VerifyPanel.Visible = false;
-                forgot_pass_Panel.Visible = false;
-                Panel_changePasword.Visible = true;
+                var mblnumber = (from a in db.aspnet_Users where a.UserName == userName.Trim() select a.mobileno).FirstOrDefault();
 
                 if (!string.IsNullOrEmpty(mblnumber))
                 {
-                    string session = "";
-                    bool sentStatus = false;
-                    string statusMsg = string.Empty;
-                    Random random = new Random();
-                    int value = random.Next(1001, 9999);
+                    int value = new Random().Next(1001, 9999);
                     string masking = "TibbIT";
-                    string message = "Verification Code:  " + value + "";
-                    string message1 = HttpUtility.UrlEncode(message);
-                    MyWebRequest myRequest = new MyWebRequest("https://connect.jazzcmt.com/sendsms_url.html?Username=03091893765&Password=XQoQwxAc&From=" + masking + "&To=" + mblnumber + "&Message=" + message1 + "");
+                    string message = HttpUtility.UrlEncode("Verification Code: " + value);
+                    string url = $"https://connect.jazzcmt.com/sendsms_url.html?Username=03091893765&Password=XQoQwxAc&From={masking}&To={mblnumber}&Message={message}";
 
+                    string response = new MyWebRequest(url).GetResponse();
 
-                    string s = myRequest.GetResponse();
-                    
-
-                    session = s;
-                    Console.WriteLine(session); // Display in console
-                    if (session.Contains("Message Sent"))
+                    if (response.Contains("Message Sent"))
                     {
-                        sentStatus = true;
-                        session = "SMS Sent Successfully";
-                        Console.WriteLine(session);
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{session}');", true);
+                        ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('SMS Sent Successfully');", true);
+                        Session["OTP"] = value;
                     }
                     else
                     {
-                        Console.WriteLine(session);
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", $"alert('{session}');", true);
-                        session = "Error";
-                        sentStatus = false;
-
+                        ScriptManager.RegisterStartupScript(this, GetType(), "alert", $"alert('SMS failed: {response}');", true);
+                        return;
                     }
-
-                    // Display in console again
-                    Console.WriteLine(session);
-
-                    // Show alert in browser
-                  
-
-                    Session["OTP"] = value;
                 }
-
-
-                return;
             }
-            
-              
-         
 
-            var user_detail = Membership.GetUser(userName.Trim());
-            Session["MenuLoaded"] = false;
-            PasswordChangeAlter_ModalPopupExtender.Hide();
-          
-
-
-            LoadUserDetail();
-
+            VerifyPanel.Visible = false;
+            forgot_pass_Panel.Visible = false;
+            Panel_changePasword.Visible = true;
         }
 
         protected void btnverify_Click_changePass(object sender, EventArgs e)
@@ -575,10 +460,7 @@ namespace PMS
             string enteredOtp = pass1.Text + pass2.Text + pass3.Text + pass4.Text;
             if (enteredOtp == Session["OTP"].ToString())
             {
-                string userName = UserLogin.UserName.Trim();
-                Session["UNChnagePassword"] = userName;
-                //txtOtp.Visible = false;
-                //ScriptManager.RegisterStartupScript(this, typeof(string), "Message", "confirm('Your Mobilenumber has been verify sccessfully.');", true);
+                Session["UNChnagePassword"] = UserLogin.UserName.Trim();
                 Response.Redirect("~/Modules/Accounts/ChangePassword.aspx", true);
             }
             else
@@ -586,6 +468,5 @@ namespace PMS
                 otpChangePassError.InnerText = "Invalid PassCode.";
             }
         }
-
     }
 }

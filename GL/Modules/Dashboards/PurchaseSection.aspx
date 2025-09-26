@@ -25,7 +25,6 @@
     <br />
     <div class="container">
         <div class="row text-center">
-
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Purchase-Request">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/AP/PurchaseRequistion.aspx" style="width: 60%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/request.png" alt="Request" style="object-fit: contain;" />
@@ -48,7 +47,7 @@
             </div>
 
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Comparative-Statement">
-                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/AP/ComparativeStatementVendor.aspx" style="width: 60%;">
+                <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/AP/ComparativeStatementVendor.aspx" style="width: 65%;">
                     <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/CsState.png" alt="Statement" style="object-fit: contain;" />
                     <h5 class="cocotxt">Compartv Statement</h5>
                 </a>

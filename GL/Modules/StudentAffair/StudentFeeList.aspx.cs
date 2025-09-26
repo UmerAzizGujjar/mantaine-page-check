@@ -27,7 +27,7 @@ namespace PMS.Modules.StudentAffair
 
                     var Total_Fees = _dbContext.Student_Fees.Count();
                     var Student_Fees = from SF in _dbContext.Student_Fees
-                                        where SF.IsCancel == false &&
+                                        where (SF.IsCancel == false || SF.IsCancel == null) &&
                                             ((SF.Student_Name.ToString().Contains(searchValue) || SF.Roll_No.ToString().Contains(searchValue) || SF.Total_Amount.ToString().Contains(searchValue) || SF.Fee_No.ToString().Contains(searchValue)))
 
 

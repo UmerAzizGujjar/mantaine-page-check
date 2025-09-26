@@ -270,9 +270,11 @@ namespace PMS
                         db.GL_Accounts.InsertOnSubmit(accounts);
                         db.SubmitChanges();
                         accountID = accounts.Account_ID;
-                    }
+                    obj.Account_ID = accountID;
+                }
                 
                 obj.TaxPayerTyp = record.TaxTyp;
+               
                 obj.CompanyType_Id =record.CompanyTyp;
                 obj.Company_ID = AppConfig.Company_ID;
                 obj.Book_ID = AppConfig.Book_ID;

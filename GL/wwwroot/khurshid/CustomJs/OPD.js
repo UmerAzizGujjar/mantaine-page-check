@@ -180,6 +180,7 @@ function showhide() {
     $('.show').show();
     $('#fees').hide();
     $('#department').hide();
+    $('#field_Clinic').hide();
     $('#doctor').hide();
     $('#pnlcompany').hide();
     $('#employee').hide();
@@ -225,17 +226,18 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
         success: function (resp) {
             debugger;
             var data = JSON.parse(resp.d);
-
             $('#txtPatientNo').val(data.Mr_No);
             $('#txtpatient_no').val(data.pat_no);
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC);
+            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
             $('#txtmobile').val(data.Mobile);
             $('#txtAdrress').val(data.PermanentAdrress);
-            $('#hdn_regid').val(reg_id);
+            $('#hdn_regid').val(data.Reg_PatientID);
             $('#hdn_aptid').val(apt_Id);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
             debugger;
 
@@ -314,10 +316,12 @@ function Get_Pat_Info(reg_id) {
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC);
+            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
             $('#txtmobile').val(data.Mobile);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
             $('#txtAdrress').val(data.Address);
-            $('#hdn_regid').val(reg_id);
+            $('#hdn_regid').val(data.Reg_PatientID);
             $('#follow_up').text(data.opdCount);
             $('#ddlmartialstatus').html(
                 $('<option>', {
@@ -877,8 +881,7 @@ function SavePatient() {
             });
         }
     });
-}
-function SaveData() {
+} function SaveData() {
     debugger;
 
     var regid = $('#hdn_regid').val();
@@ -900,7 +903,8 @@ function SaveData() {
     var hdnDepartment = $("#hdn_dep_id").val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
-    var employee_id = $('#Employe_id').val();
+    var employee_id_raw = $('#Employe_id').val();
+    var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
     var EmployeeName = $('#empname').val();
@@ -922,6 +926,11 @@ function SaveData() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
+
+    // ✅ CORRECT: Get VALUE of hidden field
+    var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
+
+    // 🚨 VALIDATIONS (unchanged)
     if (!patient_no || patient_no === "0") {
         Swal.fire({
             icon: 'error',
@@ -1015,6 +1024,8 @@ function SaveData() {
         });
         return;
     }
+
+    // ✅ FIXED: Send token under CORRECT property name → "AntiForgeryToken"
     var data = {
         regid: regid,
         appid: appid,
@@ -1052,11 +1063,14 @@ function SaveData() {
         accountid: accountid,
         IssueCard: IssueCard,
         FreeCheck: FreeCheck,
+        AntiForgeryToken: hfAntiForgery, // ✅ THIS WAS THE BUG — NOW FIXED
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
         StudentName: StudentName
     };
 
+    // 👇 Optional: Log to verify
+    console.log("AntiForgeryToken being sent:", data.AntiForgeryToken);
     console.log("Data being sent:", data);
 
     $.ajax({
@@ -1066,7 +1080,22 @@ function SaveData() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            debugger;
+            if (response.d.startsWith("ERROR:")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Failed',
+                    text: response.d.replace("ERROR: ", ""),
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             var patientID = response.d;
             Swal.fire({
                 icon: 'success',
@@ -1243,7 +1272,7 @@ function loadPatientDetail(OPDID) {
             $('#ddlMode_Of_Registration').val(data.Mode_Of_Registration).attr('disabled', true);
             $('#txtage').val(data.Age_years).attr('disabled', true);
 
-            $('#txtnic').val(data.NIC).attr('disabled', true);
+            $('#txtnic').val(data.CNIC_Masked).attr('disabled', true);
             $('#EmpDept').val(data.EmployeeDept).attr('disabled', true);
             $('#txtmobile').val(data.Mobile1).attr('disabled', true);
             $('#txtStdName').val(data.StudentName).attr('disabled', true);
@@ -1350,143 +1379,7 @@ function loadPatientDetail(OPDID) {
         }
     });
 }
-function loaddata() {
-    debugger;
-    var Category = $('#ddlPatient_Type').val();
-    $('#ddlPatient_Type').attr('disabled', true);
-    if (Category == "0") {
 
-        $('.show').show();
-        $('#fees').hide();
-        $('#department').hide();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-        $('#txtfees').val('');
-        $('#txtactualfee').val('');
-        $('#discount').hide();
-        $('#empname').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#emp_id').hide();
-    }
-    else if (Category == "01") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#dependent').hide();
-
-        $('#emp_id').hide();
-
-
-    }
-    else if (Category == "02") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').show();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#emp_id').hide();
-    }
-    else if (Category == "03") {
-        $('#fees').show();
-        $('#department').hide();
-        $('#doctor').show();
-        $('#pnlcompany').show();
-        $('#employee').show();
-        $('#refference').show();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#discount').hide();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#emp_id').hide();
-
-
-    }
-    else if (Category == "04") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-        $('#discount').show();
-        $('#empname').show();
-        $('#EmployeeName').show();
-        $('#emp_id').hide();
-        $('#designation').show();
-        $('#dependent').show();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#EmpDep').show();
-
-
-    }
-    else if (Category == "05") {
-        $('#fees').hide();
-        $('#department').show();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#dependent').hide();
-        $('#rollno').show();
-        $('#class').hide();
-        $('#section').hide();
-
-        $('#emp_id').hide();
-        $('#StdName').show();
-    }
-    else if (Category == "06") {
-        $('#fees').show();
-        $('#department').show();
-        $('#doctor').hide();
-        $('#pnlcompany').hide();
-        $('#employee').hide();
-        $('#refference').hide();
-
-        $('#discount').show();
-        $('#empname').hide();
-        $('#designation').hide();
-        $('#rollno').hide();
-        $('#class').hide();
-        $('#section').hide();
-        $('#dependent').hide();
-
-        $('#emp_id').hide();
-
-
-    }
-}
 
 $(document).ready(function () {
     MaskedInput({

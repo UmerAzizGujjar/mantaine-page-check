@@ -214,23 +214,31 @@ namespace PMS.Modules.StudentAffair
             public bool IsActive { get; set; }
         }
 
-
         [WebMethod]
         public static string GetSubjectDefinitionById(string id)
         {
             try
             {
                 if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int subjectId))
-                    return null;
+                {
+                    // Log or return meaningful error
+                    System.Diagnostics.Debug.WriteLine("❌ Invalid ID: " + id);
+                    return "{\"error\": \"Invalid subject ID\"}";
+                }
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     var master = db.Subject_Definitions.FirstOrDefault(x => x.subject_Id == subjectId);
                     if (master == null)
-                        return null;
+                    {
+                        System.Diagnostics.Debug.WriteLine($"❌ No Subject_Definition found for ID: {subjectId}");
+                        return "{\"error\": \"Subject not found\"}";
+                    }
+
                     var details = db.Subject_Definition_Lists
                                      .Where(x => x.Subject_ID == subjectId)
-                                     .Select(x => new {
+                                     .Select(x => new
+                                     {
                                          SubjectName = x.Subject_Name,
                                          IsActive = x.IS_Active == null ? true : x.IS_Active
                                      }).ToList();
@@ -252,9 +260,17 @@ namespace PMS.Modules.StudentAffair
                     return new JavaScriptSerializer().Serialize(result);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                // 🔥 LOG EXCEPTION FOR DEBUGGING
+                System.Diagnostics.Debug.WriteLine("🔥 EXCEPTION in GetSubjectDefinitionById: " + ex.ToString());
+
+                // 💡 Return user-friendly error (or full error in dev mode)
+#if DEBUG
+                return "{\"error\": \"Exception: " + ex.Message.Replace("\"", "\\\"") + "\"}";
+#else
+        return "{\"error\": \"An internal error occurred.\"}";
+#endif
             }
         }
     }

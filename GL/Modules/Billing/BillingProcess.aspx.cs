@@ -874,18 +874,89 @@ namespace PMS
 
             if (data.Bill_ID == 0)
             {
+                // New Bill
                 newBill = new Ar_Billing();
                 newBill.Created_By = AppConfig.UserID;
                 newBill.Creation_Date = DateTime.Now;
                 newBill.Bill_No = DBClass.GetNewNumber("Bill_No", "Ar_Billings", "").ToString();
-
             }
             else
             {
-                newBill = db.Ar_Billings.Where(b => b.Bill_ID == data.Bill_ID).FirstOrDefault();
+                // Existing Bill – Load FULL current state for logging
+                newBill = db.Ar_Billings
+                    .Where(b => b.Bill_ID == data.Bill_ID)
+                    .FirstOrDefault();
+
+                if (newBill == null)
+                    throw new Exception("Bill not found for update.");
+
+              
+                var existingDetails = db.Ar_Billing_Details
+                    .Where(d => d.Bill_ID == data.Bill_ID)
+                    .ToList();
+
+                var previousBillData = new
+                {
+                    Bill = new
+                    {
+                        newBill.Bill_No,
+                        newBill.Patient_ID,
+                        Bill_Date = newBill.Bill_Date ?? DateTime.MinValue,
+                        newBill.Cash_In_Hand,
+                        newBill.Bank_Account,
+                        newBill.Discount_Amount,
+                        newBill.Total_Amount,
+                        newBill.Net_Amount,
+                        newBill.Received_Amount,
+                        newBill.Balance_Amount,
+                        newBill.Main_Department,
+                        newBill.BillType,
+                        newBill.In_Patient_ID,
+                        //newBill.Approved_By,
+                        //Approved_Time = newBill.Approved_Time ?? DateTime.MinValue,
+                        //newBill.Blood_No
+                    },
+                    Details = new
+                    {
+                        Billing_Details = existingDetails.Select(d => new
+                        {
+                            d.Bill_Details_ID,
+                            d.Bill_ID,
+                            d.Item_ID,
+                            d.Item_Name,
+                            d.Amount,
+                            d.Net_Amount,
+                            d.Discount_Amount,
+                            d.Qty,
+                            d.Item_Type,
+                            d.Doctor_id,
+                            d.Doctor_Share,
+                            d.Hospital_Share  // Fixed casing to match your model
+                        }).ToList()
+                    }
+                };
+
+                string masterLogJson = JSS.Serialize(previousBillData.Bill);
+                string detailsLogJson = JSS.Serialize(previousBillData.Details);
+
+                Ar_Billing_Log billLog = new Ar_Billing_Log
+                {
+                    Bill_Id = newBill.Bill_ID,
+                    Master_Log = masterLogJson,
+                    Details_Log = detailsLogJson,
+                    Log_Time = DateTime.Now,
+                    Loged_By = AppConfig.UserID
+                };
+
+                db.Ar_Billing_Logs.InsertOnSubmit(billLog);
+                // >>>>>>>>>>>>>>>>>> END LOGGING <<<<<<<<<<<<<<<<<<<<
+
+                // Now safe to update audit fields
                 newBill.Updated_By = AppConfig.UserID;
                 newBill.Updation_Date = DateTime.Now;
             }
+
+            // Common fields (applies to both insert & update)
             newBill.Company_ID = AppConfig.Company_ID;
             newBill.Patient_ID = data.Patient_ID;
             newBill.Opd_Id = data.Opd_id;
@@ -908,9 +979,9 @@ namespace PMS
             newBill.Bank_Cash = data.Bank_Cash;
             newBill.Main_Department = data.Main_Department;
 
+            // Handle In-Patient logic
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
-            var inpatient_ID = db.In_Patients.Where(m => m.Patient_ID.Equals(data.Patient_ID)).Select(m => m.In_Patient_ID).ToList();
-            var ipdid = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID=" + data.Patient_ID + "order by Created_Time desc");
+            var ipdid = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID=" + data.Patient_ID + " order by Created_Time desc");
 
             if (ipdid != "There is no row at position 0.")
             {
@@ -919,7 +990,7 @@ namespace PMS
                                  where ipd.In_Patient_ID == Convert.ToInt32(ipdid)
                                  orderby ipd.Created_Time descending
                                  select ipd.Discharge
-                                 ).FirstOrDefault();
+                                ).FirstOrDefault();
                 if (Discharge == true)
                 {
                     newBill.Package_Type = data.PackageType;
@@ -929,15 +1000,13 @@ namespace PMS
                         var shareType = (from Dp in db.DoctorPackages
                                          where Dp.Doc_Packages_ID == Convert.ToInt32(data.PackageName)
                                          select Dp.Share_type).FirstOrDefault();
-
-                        newBill.Share_Type = shareType; 
+                        newBill.Share_Type = shareType;
                     }
                     else if (data.PackageType == "02")
                     {
                         var shareType = (from Dp in db.DepartmentPackages
                                          where Dp.Dep_Packages_ID == Convert.ToInt32(data.PackageName)
                                          select Dp.Share_type).FirstOrDefault();
-
                         newBill.Share_Type = shareType;
                     }
                     else if (data.PackageType == "03")
@@ -945,7 +1014,6 @@ namespace PMS
                         var shareType = (from Dp in db.PanelPackages
                                          where Dp.Pan_Packages_ID == Convert.ToInt32(data.PackageName)
                                          select Dp.Share_type).FirstOrDefault();
-
                         newBill.Share_Type = shareType;
                     }
                     else
@@ -953,533 +1021,413 @@ namespace PMS
                         newBill.Share_Type = null;
                     }
                 }
-
-
             }
             else
             {
                 newBill.In_Patient_ID = 0;
             }
 
-
-
-            // Insert or Upate Bill Header
-
+            // Save Bill Header
             if (data.Bill_ID == 0)
             {
                 db.Ar_Billings.InsertOnSubmit(newBill);
-                db.SubmitChanges();
+                db.SubmitChanges(); // Needed to get new Bill_ID for details
             }
 
-
+            // Prepare Bill Details
             List<Ar_Billing_Detail> ListOfDetails = new List<Ar_Billing_Detail>();
             List<Ar_Billing_Detail> ListOfDetails_Previous = db.Ar_Billing_Details.Where(b => b.Bill_ID == data.Bill_ID).ToList();
 
-            // Inserting or Updating Bill Details
-            decimal sum = 0;
-            decimal sum_ultra = 0;
-            decimal sum_Xray = 0;
-            decimal sum_CTscan = 0;
-            decimal sum_Blood = 0;
-            decimal sum_Item = 0;
-            decimal sum_Procedure = 0;
-            decimal sum_Package = 0;
+            decimal sum = 0, sum_ultra = 0, sum_Xray = 0, sum_CTscan = 0, sum_Blood = 0, sum_Item = 0, sum_Procedure = 0, sum_Package = 0;
+
             foreach (BillingProcessDetails dtls in data.Details)
             {
-                Ar_Billing_Detail newBillDetails = new Ar_Billing_Detail();
+                Ar_Billing_Detail newBillDetails = new Ar_Billing_Detail
+                {
+                    Bill_ID = newBill.Bill_ID,
+                    ParentTrans_ID = dtls.ParentTrans_ID,
+                    ParentTrans_Name = dtls.ParentTrans_Name,
+                    ParentTrans_Type = dtls.ParentTrans_Type,
+                    Item_ID = dtls.ItemID,
+                    Item_Name = dtls.ItemName,
+                    Item_Type = dtls.ItemType,
+                    RecommendedByDoctor = dtls.RecommendedByDoctor,
+                    Amount = dtls.Amount,
+                    Discount_Percentage = dtls.DisPer,
+                    Discount_Amount = dtls.DisAmt,
+                    Net_Amount = dtls.Net_Amount,
+                    Qty = dtls.Qty,
+                    Remarks = dtls.Remarks,
+                    Doctor_Share = dtls.DocShare,
+                    Hospital_Share = dtls.HosShare,
+                    Doctor_id = dtls.Doctor_Id,
+                    Category_ID = dtls.CategoryID,
+                    Test_Main_Department = dtls.MainDepartment,
+                    Service_Date = DateTime.Now
+                };
 
-                newBillDetails.Bill_ID = newBill.Bill_ID;
-                newBillDetails.ParentTrans_ID = dtls.ParentTrans_ID;
-                newBillDetails.ParentTrans_Name = dtls.ParentTrans_Name;
-                newBillDetails.ParentTrans_Type = dtls.ParentTrans_Type;
-                newBillDetails.Item_ID = dtls.ItemID;
-                newBillDetails.Item_Name = dtls.ItemName;
-                newBillDetails.Item_Type = dtls.ItemType;
-                newBillDetails.RecommendedByDoctor = dtls.RecommendedByDoctor;
-                newBillDetails.Amount = dtls.Amount;
-                newBillDetails.Discount_Percentage = dtls.DisPer;
-                newBillDetails.Discount_Amount = dtls.DisAmt;
-                newBillDetails.Net_Amount = (dtls.Net_Amount);
-                newBillDetails.Qty = dtls.Qty;
-                newBillDetails.Remarks = dtls.Remarks;
-                newBillDetails.Doctor_Share = dtls.DocShare;
-                newBillDetails.Hospital_Share = dtls.HosShare;
-                newBillDetails.Doctor_id = dtls.Doctor_Id;
-                newBillDetails.Category_ID = dtls.CategoryID;
-                newBillDetails.Test_Main_Department = dtls.MainDepartment;
-                newBillDetails.Service_Date = DateTime.Now;
-                if (dtls.MainDepartment == "001")
-                {
-                    sum = Convert.ToDecimal(dtls.Consumed_Lab);
-                }
-                if (dtls.MainDepartment == "002")
-                {
-                    sum_ultra = Convert.ToDecimal(dtls.Consumed_Ultra_Sound);
-                }
-                if (dtls.MainDepartment == "003")
-                {
-                    sum_Xray = Convert.ToDecimal(dtls.Consumed_Xray);
-                }
-                if (dtls.MainDepartment == "004")
-                {
-                    sum_CTscan = Convert.ToDecimal(dtls.Consumed_Scan);
-                }
-                if (dtls.MainDepartment == "005")
-                {
-                    sum_Blood = Convert.ToDecimal(dtls.Consumed_Blood);
-                }
-                if (dtls.Consumed_Procedure != 0)
-                {
-                    sum_Procedure = Convert.ToDecimal(dtls.Consumed_Procedure);
-                }
-
-
+                // Accumulate consumed amounts
+                if (dtls.MainDepartment == "001") sum = Convert.ToDecimal(dtls.Consumed_Lab);
+                else if (dtls.MainDepartment == "002") sum_ultra = Convert.ToDecimal(dtls.Consumed_Ultra_Sound);
+                else if (dtls.MainDepartment == "003") sum_Xray = Convert.ToDecimal(dtls.Consumed_Xray);
+                else if (dtls.MainDepartment == "004") sum_CTscan = Convert.ToDecimal(dtls.Consumed_Scan);
+                else if (dtls.MainDepartment == "005") sum_Blood = Convert.ToDecimal(dtls.Consumed_Blood);
+                else if (dtls.Consumed_Procedure != 0) sum_Procedure = Convert.ToDecimal(dtls.Consumed_Procedure);
                 else if (dtls.ItemType == "Item" || dtls.ItemType == "Service")
                 {
                     if (dtls.ParentTrans_Type == "Package")
-                    {
                         sum_Package = Convert.ToDecimal(dtls.Consumed_Package);
-                    }
                     else
-                    {
                         sum_Item = Convert.ToDecimal(dtls.Consumed_Item);
-                    }
                 }
-                bool isGroupCategory = false;
-                if (dtls.ItemType == "Test" && dtls.ItemID == 0)
-                {
-                    if (dtls.CategoryID != null)
-                    {
-                        if (dtls.CategoryID.ToString().Trim() != string.Empty)
-                        {
-                            isGroupCategory = true;
-                        }
-                    }
-                }
+
+                bool isGroupCategory = (dtls.ItemType == "Test" && dtls.ItemID == 0 && !string.IsNullOrWhiteSpace(dtls.CategoryID?.ToString()));
                 newBillDetails.Is_Group_Category = isGroupCategory;
 
                 ListOfDetails.Add(newBillDetails);
             }
 
+            // Prepare Doctor Shares
             List<AR_Billing_Detail_Doctor_Share> ListOfshare = new List<AR_Billing_Detail_Doctor_Share>();
             foreach (DoctorDistributionList doc in data.Share)
             {
-                AR_Billing_Detail_Doctor_Share share = new AR_Billing_Detail_Doctor_Share();
-                share.Bill_ID = newBill.Bill_ID;
-                share.Emp_ID = doc.Doc_ID;
-                share.Share_type = doc.Share_type;
-                share.Amount = doc.Doc_Amount;
-                ListOfshare.Add(share);
+                ListOfshare.Add(new AR_Billing_Detail_Doctor_Share
+                {
+                    Bill_ID = newBill.Bill_ID,
+                    Emp_ID = doc.Doc_ID,
+                    Share_type = doc.Share_type,
+                    Amount = doc.Doc_Amount
+                });
             }
 
-            #region "Edit"
-
+            // >>>>>>>>>>>>>>>>>> UPDATE LOGIC (Edit Mode) <<<<<<<<<<<<<<<<<<<<
             if (data.Bill_ID != 0)
             {
+                // Sync ParentTrans_ID for existing items
                 foreach (var newItem in ListOfDetails)
                 {
-                    foreach (var PreviousItem in ListOfDetails_Previous)
-                    {
-                        if (newItem.Item_ID == PreviousItem.Item_ID)
-                        {
-                            newItem.ParentTrans_ID = PreviousItem.ParentTrans_ID;
-                        }
-                    }
+                    var match = ListOfDetails_Previous.FirstOrDefault(p => p.Item_ID == newItem.Item_ID);
+                    if (match != null)
+                        newItem.ParentTrans_ID = match.ParentTrans_ID;
                 }
 
-                if (ListOfDetails_Previous.Count > 0)
+                // Delete old details
+                if (ListOfDetails_Previous.Any())
                 {
-                    // Deleting Previous Details...
-
                     db.Ar_Billing_Details.DeleteAllOnSubmit(ListOfDetails_Previous);
                     var deletedTests = (from old in ListOfDetails_Previous
-                                        where !(from newRcd in ListOfDetails select newRcd.ParentTrans_ID).Contains(old.ParentTrans_ID)
-                                        && old.Item_Type == "Test"
+                                        where !(from n in ListOfDetails select n.ParentTrans_ID).Contains(old.ParentTrans_ID)
+                                              && old.Item_Type == "Test"
                                         select old.ParentTrans_ID).ToList();
-                    if (deletedTests != null)
+
+                    foreach (var item in deletedTests)
                     {
-                        foreach (var item in deletedTests)
-                        {
-                            MarkTestAsExcludedFromPayment((int)item);
-                            MarkTestAsUnBilled((int)item);
-                        }
+                        MarkTestAsExcludedFromPayment((int)item);
+                        MarkTestAsUnBilled((int)item);
                     }
                 }
 
-                #region "Entry of newly entered group tests from front desk coutner in databse."
-
-                // Entry of newly entered group tests from front desk coutner in databse.
-
-                var newGroups = (from t in ListOfDetails where t.Item_Type == "Test" && t.RecommendedByDoctor == false && t.ParentTrans_Type == "Test Group Category" && t.ParentTrans_ID == 0 select t).ToList();
+                // Handle new group tests (Front Desk)
+                var newGroups = (from t in ListOfDetails
+                                 where t.Item_Type == "Test"
+                                       && t.RecommendedByDoctor == false
+                                       && t.ParentTrans_Type == "Test Group Category"
+                                       && t.ParentTrans_ID == 0
+                                 select t).ToList();
 
                 var distinctCategories = newGroups.Select(t => t.Category_ID).Distinct().ToList();
-
-                int typesOfGroups = distinctCategories.Count();
-
-                string[] CategoryIDs = new string[typesOfGroups];
-
-                int counter = 0;
-
-                foreach (var item in distinctCategories)
+                foreach (var catId in distinctCategories)
                 {
-                    CategoryIDs[counter] = item;
-                    counter++;
-                }
-
-                for (int i = 0; i < CategoryIDs.Length; i++)
-                {
-                    var Category = newGroups.Where(c => c.Category_ID == CategoryIDs[i]).ToList();
-
-                    // Entry with 0 values for inserting group...
-
-                    Laboratory_Test grpHeader = new Laboratory_Test();
-
-                    grpHeader.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                    grpHeader.Transaction_Type = "Front Desk";
+                    var categoryTests = newGroups.Where(c => c.Category_ID == catId).ToList();
+                    Laboratory_Test grpHeader = new Laboratory_Test
+                    {
+                        Patient_ID = newBill.Bill_ID,
+                        Transaction_Type = "Front Desk",
+                        Created_Time = DateTime.Now
+                    };
                     db.Laboratory_Tests.InsertOnSubmit(grpHeader);
                     db.SubmitChanges();
 
-                    Lab_Test_Detail grpdtl = new Lab_Test_Detail();
-                    grpdtl.Lab_Test_ID = grpHeader.Lab_Test_ID;
-                    grpdtl.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                    grpdtl.Date = newBill.Creation_Date;
-                    grpdtl.Test_ID = 0;
-                    grpdtl.IsBilled = true;
-                    grpdtl.Catagory_ID = Category[0].Category_ID;
-                    //grpdtl.Dept_ID = Category[0].t.Main_Department;
+                    Lab_Test_Detail grpdtl = new Lab_Test_Detail
+                    {
+                        Lab_Test_ID = grpHeader.Lab_Test_ID,
+                        Patient_ID = newBill.Bill_ID,
+                        Date = newBill.Creation_Date,
+                        Test_ID = 0,
+                        IsBilled = true,
+                        Catagory_ID = catId,
+                        Actual_Patient_ID = newBill.Patient_ID
+                    };
                     db.Lab_Test_Details.InsertOnSubmit(grpdtl);
                     db.SubmitChanges();
+
                     grpHeader.Parent_Transaction_Type = "Front Desk";
                     grpHeader.Parent_Transaction_Type_ID = grpdtl.Lab_Test_Detail_ID;
                     db.SubmitChanges();
-                    var Item = (from d in ListOfDetails
-                                where d.Category_ID == Category[0].Category_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type == "Test Group Category"
-                                select d).FirstOrDefault();
 
-                    if (Item != null)
-
-                        ListOfDetails.Where(d => d.Category_ID == Category[0].Category_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type == "Test Group Category").FirstOrDefault().ParentTrans_ID = grpdtl.Lab_Test_Detail_ID;
-
-
+                    // Update ParentTrans_ID in ListOfDetails
+                    foreach (var test in categoryTests)
+                    {
+                        var detail = ListOfDetails.FirstOrDefault(d =>
+                            d.Category_ID == catId &&
+                            d.Item_Type == "Test" &&
+                            d.RecommendedByDoctor == false &&
+                            d.ParentTrans_Type == "Test Group Category");
+                        if (detail != null)
+                            detail.ParentTrans_ID = grpdtl.Lab_Test_Detail_ID;
+                    }
                 }
-                #endregion
 
-                #region "Entry of newly entered individual tests from front desk coutner in databse."
+                // Handle new individual tests (Front Desk)
+                var NewTests = (from t in ListOfDetails
+                                where t.Item_Type == "Test"
+                                      && t.RecommendedByDoctor == false
+                                      && t.ParentTrans_Type != "Test Group Category"
+                                      && t.ParentTrans_ID == 0
+                                select t).ToList();
 
-                // Entry of newly entered individual tests from front desk coutner in databse.
-
-                var NewTests = (from t in ListOfDetails where t.Item_Type == "Test" && t.RecommendedByDoctor == false && t.ParentTrans_Type != "Test Group Category" && t.ParentTrans_ID == 0 select t).ToList();
-
-                if (NewTests.Count > 0)
+                if (NewTests.Any())
                 {
-
-                    Laboratory_Test lt = new Laboratory_Test();
-
-                    lt.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                    lt.Transaction_Type = "Front Desk";
-                    lt.Created_Time = DateTime.Now;
+                    Laboratory_Test lt = new Laboratory_Test
+                    {
+                        Patient_ID = newBill.Bill_ID,
+                        Transaction_Type = "Front Desk",
+                        Created_Time = DateTime.Now
+                    };
                     db.Laboratory_Tests.InsertOnSubmit(lt);
                     db.SubmitChanges();
 
                     foreach (var test in NewTests)
                     {
-                        Lab_Test_Detail ltd = new Lab_Test_Detail();
-                        ltd.Lab_Test_ID = lt.Lab_Test_ID;
-                        ltd.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                        ltd.Date = newBill.Creation_Date;
-                        ltd.Test_ID = (int)test.Item_ID;
+                        Lab_Test_Detail ltd = new Lab_Test_Detail
+                        {
+                            Lab_Test_ID = lt.Lab_Test_ID,
+                            Patient_ID = newBill.Bill_ID,
+                            Date = newBill.Creation_Date,
+                            Test_ID = (int)test.Item_ID,
+                            Actual_Patient_ID = newBill.Patient_ID,
+                            IsBilled = true
+                        };
                         db.Lab_Test_Details.InsertOnSubmit(ltd);
                         db.SubmitChanges();
 
-                        var Item = (from d in ListOfDetails
-                                    where d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type != "Test Group Category" && d.ParentTrans_ID == 0
-                                    select d).FirstOrDefault();
-
-                        if (Item != null)
-
-                            ListOfDetails.Where(d => d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type != "Test Group Category" && d.ParentTrans_ID == 0).FirstOrDefault().ParentTrans_ID = ltd.Lab_Test_Detail_ID;
+                        var detail = ListOfDetails.FirstOrDefault(d =>
+                            d.Item_ID == test.Item_ID &&
+                            d.Item_Type == "Test" &&
+                            d.RecommendedByDoctor == false &&
+                            d.ParentTrans_Type != "Test Group Category" &&
+                            d.ParentTrans_ID == 0);
+                        if (detail != null)
+                            detail.ParentTrans_ID = ltd.Lab_Test_Detail_ID;
                     }
                 }
-
-                #endregion
             }
-            #endregion
-
-            #region "Save & Print"
+            // >>>>>>>>>>>>>>>>>> INSERT LOGIC (New Bill) <<<<<<<<<<<<<<<<<<<<
             else
             {
-                #region "Entry of group tests from OPD."
-
-                foreach (var item in (from t in ListOfDetails where t.Item_Type == "Test" select t))
+                // Mark OPD-recommended tests as billed
+                foreach (var item in ListOfDetails.Where(t => t.Item_Type == "Test"))
                 {
-                    MarkTestAsBilled((int)(item.ParentTrans_ID));
+                    MarkTestAsBilled((int)item.ParentTrans_ID);
                 }
 
+                // Group tests from OPD
+                var opdGroups = (from t in ListOfDetails
+                                 where t.Item_Type == "Test"
+                                       && t.RecommendedByDoctor == true
+                                       && t.ParentTrans_Type == "Test Group Category"
+                                 select t).ToList();
 
-                // Entry of group tests from OPD.
-
-                var newGroups = (from t in ListOfDetails where t.Item_Type == "Test" && t.RecommendedByDoctor == true && t.ParentTrans_Type == "Test Group Category" select t).ToList();
-
-                var distinctCategories = newGroups.Select(t => t.Category_ID).Distinct().ToList();
-
-                int typesOfGroups = distinctCategories.Count();
-
-                string[] CategoryIDs = new string[typesOfGroups];
-
-                int counter = 0;
-
-                foreach (var item in distinctCategories)
+                var opdCategories = opdGroups.Select(t => t.Category_ID).Distinct().ToList();
+                foreach (var catId in opdCategories)
                 {
-                    CategoryIDs[counter] = item;
-                    counter++;
-                }
+                    var categoryTests = opdGroups.Where(c => c.Category_ID == catId).ToList();
+                    MarkTestAsBilled((int)categoryTests.First().ParentTrans_ID);
 
-                for (int i = 0; i < CategoryIDs.Length; i++)
-                {
-                    var Category = newGroups.Where(c => c.Category_ID == CategoryIDs[i]).ToList();
-
-                    MarkTestAsBilled((int)Category[0].ParentTrans_ID);
-
-                    Laboratory_Test lt = new Laboratory_Test();
-
-                    lt.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                    lt.Transaction_Type = "OutPatient";
-                    lt.Parent_Transaction_Type = "OutPatient";
-                    lt.Created_Time = DateTime.Now;
-                    lt.Parent_Transaction_Type_ID = Category[0].ParentTrans_ID;
+                    Laboratory_Test lt = new Laboratory_Test
+                    {
+                        Patient_ID = newBill.Bill_ID,
+                        Transaction_Type = "OutPatient",
+                        Parent_Transaction_Type = "OutPatient",
+                        Parent_Transaction_Type_ID = categoryTests.First().ParentTrans_ID,
+                        Created_Time = DateTime.Now
+                    };
                     db.Laboratory_Tests.InsertOnSubmit(lt);
                     db.SubmitChanges();
 
-                    foreach (var item in Category)
+                    foreach (var test in categoryTests)
                     {
-                        Lab_Test_Detail ltd = new Lab_Test_Detail();
-                        ltd.Lab_Test_ID = lt.Lab_Test_ID;
-                        ltd.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                        ltd.Date = newBill.Creation_Date;
-                        ltd.Test_ID = (int)item.Item_ID;
-                        ltd.Actual_Patient_ID = newBill.Patient_ID;
-                        ltd.Catagory_ID = item.Category_ID;
-                        //ltd.Dept_ID = item.Main_Department;
+                        Lab_Test_Detail ltd = new Lab_Test_Detail
+                        {
+                            Lab_Test_ID = lt.Lab_Test_ID,
+                            Patient_ID = newBill.Bill_ID,
+                            Date = newBill.Creation_Date,
+                            Test_ID = (int)test.Item_ID,
+                            Actual_Patient_ID = newBill.Patient_ID,
+                            Catagory_ID = test.Category_ID
+                        };
                         db.Lab_Test_Details.InsertOnSubmit(ltd);
                         db.SubmitChanges();
 
-                        var Item = (from d in ListOfDetails
-                                    where d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == true && d.ParentTrans_Type == "Test Group Category"
-                                    select d).FirstOrDefault();
-
-                        if (Item != null)
-
-                            ListOfDetails.Where(d => d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == true && d.ParentTrans_Type == "Test Group Category").FirstOrDefault().ParentTrans_ID = ltd.Lab_Test_Detail_ID;
+                        var detail = ListOfDetails.FirstOrDefault(d =>
+                            d.Item_ID == test.Item_ID &&
+                            d.Item_Type == "Test" &&
+                            d.RecommendedByDoctor == true &&
+                            d.ParentTrans_Type == "Test Group Category");
+                        if (detail != null)
+                            detail.ParentTrans_ID = ltd.Lab_Test_Detail_ID;
                     }
                 }
 
-                #endregion
+                // Front Desk Group Tests (New Bill)
+                var fdGroups = (from t in ListOfDetails
+                                where t.Item_Type == "Test"
+                                      && t.RecommendedByDoctor == false
+                                      && t.ParentTrans_Type == "Test Group Category"
+                                select t).ToList();
 
-                #region "Entry of newly entered group tests from front desk coutner in databse."
-
-                // Entry of newly entered group tests from front desk coutner in databse.
-
-                newGroups = (from t in ListOfDetails where t.Item_Type == "Test" && t.RecommendedByDoctor == false && t.ParentTrans_Type == "Test Group Category" select t).ToList();
-
-                distinctCategories = newGroups.Select(t => t.Category_ID).Distinct().ToList();
-
-                typesOfGroups = distinctCategories.Count();
-
-                CategoryIDs = new string[typesOfGroups];
-
-                counter = 0;
-
-                foreach (var item in distinctCategories)
+                foreach (var test in fdGroups)
                 {
-                    CategoryIDs[counter] = item;
-                    counter++;
-                }
-                foreach (var test in newGroups)
-
-                {
-                    //var Category = newGroups.Where(c => c.Category_ID == CategoryIDs[i]).ToList();
-
-                    // Entry with 0 values for inserting group...
-
-                    Laboratory_Test grpHeader = new Laboratory_Test();
-
-                    grpHeader.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                    grpHeader.Transaction_Type = "Front Desk";
-                    grpHeader.Created_Time = DateTime.Now;
+                    Laboratory_Test grpHeader = new Laboratory_Test
+                    {
+                        Patient_ID = newBill.Bill_ID,
+                        Transaction_Type = "Front Desk",
+                        Created_Time = DateTime.Now
+                    };
                     db.Laboratory_Tests.InsertOnSubmit(grpHeader);
                     db.SubmitChanges();
 
-                    Lab_Test_Detail grpdtl = new Lab_Test_Detail();
-                    grpdtl.Lab_Test_ID = grpHeader.Lab_Test_ID;
-                    grpdtl.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                    grpdtl.Date = newBill.Creation_Date;
-                    grpdtl.Test_ID = 0;
-                    grpdtl.IsBilled = true;
-                    grpdtl.Catagory_ID = test.Category_ID;
-                    grpdtl.Actual_Patient_ID = newBill.Patient_ID;
-                    //grpdtl.Dept_ID = Category[0].t.Main_Department;
+                    Lab_Test_Detail grpdtl = new Lab_Test_Detail
+                    {
+                        Lab_Test_ID = grpHeader.Lab_Test_ID,
+                        Patient_ID = newBill.Bill_ID,
+                        Date = newBill.Creation_Date,
+                        Test_ID = 0,
+                        IsBilled = true,
+                        Catagory_ID = test.Category_ID,
+                        Actual_Patient_ID = newBill.Patient_ID
+                    };
                     db.Lab_Test_Details.InsertOnSubmit(grpdtl);
                     db.SubmitChanges();
+
                     grpHeader.Parent_Transaction_Type = "Front Desk";
                     grpHeader.Parent_Transaction_Type_ID = grpdtl.Lab_Test_Detail_ID;
                     db.SubmitChanges();
-                    var Item = (from d in ListOfDetails
-                                where d.Category_ID == test.Category_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type == "Test Group Category"
-                                select d).FirstOrDefault();
 
-                    if (Item != null)
-
-                        ListOfDetails.Where(d => d.Category_ID == test.Category_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type == "Test Group Category").FirstOrDefault().ParentTrans_ID = grpdtl.Lab_Test_Detail_ID;
-
+                    var detail = ListOfDetails.FirstOrDefault(d =>
+                        d.Category_ID == test.Category_ID &&
+                        d.Item_Type == "Test" &&
+                        d.RecommendedByDoctor == false &&
+                        d.ParentTrans_Type == "Test Group Category");
+                    if (detail != null)
+                        detail.ParentTrans_ID = grpdtl.Lab_Test_Detail_ID;
                 }
-                #endregion
 
-                #region "Entry of newly entered individual tests from front desk coutner in databse."
-
-                // Entry of newly entered individual tests from front desk coutner in databse.
-                foreach (var item in (from t in ListOfDetails where t.Item_Type == "Test" select t))
+                // Front Desk Individual Tests & Services
+                foreach (var item in ListOfDetails.Where(t => t.Item_Type == "Test"))
                 {
-                    MarkTestAsBilled((int)(item.ParentTrans_ID));
+                    MarkTestAsBilled((int)item.ParentTrans_ID);
                 }
-                var NewTests = (from t in ListOfDetails where t.Item_Type == "Test" && t.RecommendedByDoctor == false && t.ParentTrans_Type != "Test Group Category" select t).ToList();
 
-                //var checkid = (from a in db.InPatientServices)
-
-
+                var NewTests = (from t in ListOfDetails
+                                where t.Item_Type == "Test"
+                                      && t.RecommendedByDoctor == false
+                                      && t.ParentTrans_Type != "Test Group Category"
+                                select t).ToList();
 
                 var NewServices = (from t in ListOfDetails where t.Item_Type == "Service" select t).ToList();
-                if (NewServices.Count > 0)
+
+                // Mark services as billed
+                foreach (var serv in NewServices)
                 {
-                    foreach (var servs in NewServices)
+                    var ipdservices = db.InPatientServices
+                        .Where(b => b.PatientId == data.Patient_ID && b.Service_ItemId == serv.Item_ID.ToString())
+                        .FirstOrDefault();
+                    if (ipdservices != null)
                     {
-                        var ipdservices = db.InPatientServices.Where(b => b.PatientId == data.Patient_ID && b.Service_ItemId == Convert.ToString(servs.Item_ID)).FirstOrDefault();
-                        if (ipdservices != null)
-                        {
-                            ipdservices.isbilled = true;
-                            db.SubmitChanges();
-                        }
-
-
+                        ipdservices.isbilled = true;
                     }
-
                 }
 
-                if (NewTests.Count > 0)
+                if (NewTests.Any())
                 {
-
-                    Laboratory_Test lt = new Laboratory_Test();
-
-                    lt.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                    lt.Transaction_Type = "Front Desk";
-                    lt.Created_Time = DateTime.Now;
+                    Laboratory_Test lt = new Laboratory_Test
+                    {
+                        Patient_ID = newBill.Bill_ID,
+                        Transaction_Type = "Front Desk",
+                        Created_Time = DateTime.Now
+                    };
                     db.Laboratory_Tests.InsertOnSubmit(lt);
                     db.SubmitChanges();
 
                     foreach (var test in NewTests)
                     {
-                        Lab_Test_Detail ltd = new Lab_Test_Detail();
-                        ltd.Lab_Test_ID = lt.Lab_Test_ID;
-                        ltd.Patient_ID = Convert.ToInt32(ListOfDetails[0].Bill_ID);
-                        ltd.Date = newBill.Creation_Date;
-                        ltd.Test_ID = (int)test.Item_ID;
-                        ltd.Actual_Patient_ID = newBill.Patient_ID;
-                        ltd.IsBilled = true;
+                        Lab_Test_Detail ltd = new Lab_Test_Detail
+                        {
+                            Lab_Test_ID = lt.Lab_Test_ID,
+                            Patient_ID = newBill.Bill_ID,
+                            Date = newBill.Creation_Date,
+                            Test_ID = (int)test.Item_ID,
+                            Actual_Patient_ID = newBill.Patient_ID,
+                            IsBilled = true
+                        };
                         db.Lab_Test_Details.InsertOnSubmit(ltd);
                         db.SubmitChanges();
 
-                        var Item = (from d in ListOfDetails
-                                    where d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type != "Test Group Category"
-                                    select d).FirstOrDefault();
-
-                        var ItemInPat = (from d in ListOfDetails
-                                         where d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type != "Test Group Category" && d.ParentTrans_ID != 0
-                                         select d).FirstOrDefault();
-                        if (ItemInPat == null)
-                        {
-
-                            if (Item != null)
-                                ListOfDetails.Where(d => d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type != "Test Group Category" && d.ParentTrans_ID == 0).FirstOrDefault().ParentTrans_ID = ltd.Lab_Test_Detail_ID;
-                        }
-                        else
-                        {
-                            ListOfDetails.Where(d => d.Item_ID == ltd.Test_ID && d.Item_Type == "Test" && d.RecommendedByDoctor == false && d.ParentTrans_Type != "Test Group Category").FirstOrDefault().ParentTrans_ID = ltd.Lab_Test_Detail_ID;
-                        }
+                        var detail = ListOfDetails.FirstOrDefault(d =>
+                            d.Item_ID == test.Item_ID &&
+                            d.Item_Type == "Test" &&
+                            d.RecommendedByDoctor == false &&
+                            d.ParentTrans_Type != "Test Group Category");
+                        if (detail != null)
+                            detail.ParentTrans_ID = ltd.Lab_Test_Detail_ID;
                     }
-
                 }
-
-                #endregion
-
             }
-            #endregion
 
-            // Marking that test is Billed in Lab Test Details.
+            // Save all new details and shares
             db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
             db.AR_Billing_Detail_Doctor_Shares.InsertAllOnSubmit(ListOfshare);
             db.SubmitChanges();
 
+            // Update BillDetailID in Lab_Test_Detail
             var Bill_Detail_List = db.Ar_Billing_Details
-               .Where(abd => abd.Bill_ID == ListOfDetails[0].Bill_ID && (abd.ParentTrans_Type == "Test"))
-               .ToList();
+                .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test")
+                .ToList();
 
             var Bill_Detail_Lists = db.Ar_Billing_Details
-              .Where(abd => abd.Bill_ID == ListOfDetails[0].Bill_ID && (abd.ParentTrans_Type == "Test Group Category"))
-              .ToList();
+                .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test Group Category")
+                .ToList();
 
-            foreach (var billDetailss in Bill_Detail_Lists)
+            foreach (var billDetail in Bill_Detail_Lists)
             {
-                int billDetailIDs = billDetailss.Bill_Details_ID;
-
-                // Update matching Lab_Test_Details rows using raw SQL
                 db.ExecuteCommand(@"
-                UPDATE Lab_Test_Detail 
-                 SET BillDetailID = {0} 
-                 WHERE Actual_Patient_ID = {1} 
-                 AND Test_ID = {2} 
-                 AND Catagory_ID = {3}",
-                    billDetailIDs,
+            UPDATE Lab_Test_Detail 
+            SET BillDetailID = {0} 
+            WHERE Actual_Patient_ID = {1} 
+              AND Test_ID = {2} 
+              AND Catagory_ID = {3}",
+                    billDetail.Bill_Details_ID,
                     newBill.Patient_ID,
-                    billDetailss.Item_ID,
-                    billDetailss.Category_ID);
+                    billDetail.Item_ID,
+                    billDetail.Category_ID);
             }
-            //To Update The latest Billing Entry
+
             foreach (var billDetail in Bill_Detail_List)
             {
-                int billDetailID = billDetail.Bill_Details_ID;
-                var labTestDetail = db.Lab_Test_Details
-                    .FirstOrDefault(ltd => ltd.Patient_ID == billDetail.Bill_ID && ltd.Test_ID == billDetail.Item_ID);
-
-                if (labTestDetail != null)
-                {
-                    labTestDetail.BillDetailID = billDetailID;
-
-                    db.SubmitChanges();
-                }
-            }
-            //To Update The OutPatient Billing Entry
-            foreach (var billDetails in Bill_Detail_List)
-            {
-                int billDetailID = billDetails.Bill_Details_ID;
-
                 var labTestDetails = db.Lab_Test_Details
-                    .Where(ltd => ltd.Actual_Patient_ID == newBill.Patient_ID && ltd.Test_ID == billDetails.Item_ID)
-                    .ToList(); // Get all matching rows
+                    .Where(ltd => ltd.Actual_Patient_ID == newBill.Patient_ID && ltd.Test_ID == billDetail.Item_ID)
+                    .ToList();
 
-                foreach (var labTestDetail in labTestDetails)
+                foreach (var ltd in labTestDetails)
                 {
-                    labTestDetail.BillDetailID = billDetailID;
-
+                    ltd.BillDetailID = billDetail.Bill_Details_ID;
                 }
-
-                db.SubmitChanges();
             }
+            db.SubmitChanges();
 
-
-                //bypass X-Ray etc
-
-                #region"Deleting previous receipt and insert new according to bill."
-
-                List<Receipt> rcpt = db.Receipts.Where(r => r.Bill_ID == newBill.Bill_ID).ToList();
+            // Manage Receipts
+            var rcpt = db.Receipts.Where(r => r.Bill_ID == newBill.Bill_ID).ToList();
             if (rcpt != null)
                 db.Receipts.DeleteAllOnSubmit(rcpt);
             db.SubmitChanges();
@@ -1488,154 +1436,43 @@ namespace PMS
                 Receipts.SaveRecord((int)0, (int)(newBill.Patient_ID), (DateTime)newBill.Bill_Date, (string)"Amount received while billing, Bill No:- " + newBill.Bill_No + "", (decimal)newBill.Received_Amount, (int)newBill.Bill_ID);
             }
 
-            #endregion
+            // Final updates
+            string sql = $"UPDATE AR_Billing_Details SET Category_ID = '' WHERE Item_Type = 'Test' AND Item_ID IN (SELECT Test_ID FROM Lab_Tests) AND Bill_ID = {newBill.Bill_ID}";
+            DBClass.executeNonQueryWithoutBegin(sql);
 
-            #region "Billing Segment"
-
-            // Inserting Voucher
-            //     InsertVoucher(newBill.Bill_ID);
-
-
-
-            #endregion
-
-            string sql = "Update AR_Billing_Details set Category_ID = '' where Item_Type = 'Test' and Item_ID in (Select Test_ID from Lab_Tests) and Bill_ID = " + newBill.Bill_ID + "";
-            //string sqls = "Update InPatientServices set isbilled =1 where PatientId =" + newBill.Patient_ID + "";
-            bool status = DBClass.executeNonQueryWithoutBegin(sql) > 0 ? true : false;
-            string sql_query = "select top 1 Discount_Assigned_Patient_Id from Discount_Assigned_Patient where Patient_Id=" + newBill.Patient_ID;
+            string sql_query = $"SELECT TOP 1 Discount_Assigned_Patient_Id FROM Discount_Assigned_Patient WHERE Patient_Id = {newBill.Patient_ID}";
             var get = DBClass.getField(sql_query);
-            if (get.Equals("There is no row at position 0."))
+            if (get != "There is no row at position 0.")
             {
+                var querys = db.Discount_Assigned_Patient_Details
+                    .Where(datas => datas.Discount_Assigned_Patient_Id == Convert.ToInt32(get))
+                    .ToList();
 
-
-            }
-            else
-            {
-                var querys = (from datas in db.Discount_Assigned_Patient_Details where datas.Discount_Assigned_Patient_Id == Convert.ToInt32(get) select datas).ToList();
-                //decimal sum_ultra = 0;
-                //decimal sum_Xray = 0;
-                //decimal sum_CTscan = 0;
-                //decimal sum_Blood = 0;
-                //decimal sum_Item = 0;
-                //decimal sum_Procedure = 0;
                 foreach (var item in querys)
                 {
                     var type = item.Department_Name;
-                    if (type == "Hospital Services")
+                    var disamt = item.Discount_Amount;
+                    if (disamt != 0)
                     {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
+                        var remain = item.Remaining_Amount;
+                        switch (type)
                         {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum_Item + Remain;
+                            case "Hospital Services": item.Remaining_Amount = sum_Item + remain; break;
+                            case "Procedure": item.Remaining_Amount = sum_Procedure + remain; break;
+                            case "Package": item.Remaining_Amount = sum_Package + remain; break;
+                            case "Lab": item.Remaining_Amount = sum + remain; break;
+                            case "UltraSound": item.Remaining_Amount = sum_ultra + remain; break;
+                            case "X-Ray": item.Remaining_Amount = sum_Xray + remain; break;
+                            case "CT-Scan": item.Remaining_Amount = sum_CTscan + remain; break;
+                            case "Blood Bank": item.Remaining_Amount = sum_Blood + remain; break;
                         }
                     }
-                    else if (type == "Procedure")
-                    {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
-                        {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum_Procedure + Remain;
-                        }
-                    }
-                    else if (type == "Package")
-                    {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
-                        {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum_Package + Remain;
-                        }
-
-                    }
-                    else if (type == "Lab")
-                    {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
-                        {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum + Remain;
-                        }
-
-
-                    }
-                    else if (type == "UltraSound")
-                    {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
-                        {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum_ultra + Remain;
-                        }
-                    }
-                    else if (type == "X-Ray")
-                    {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
-                        {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum_Xray + Remain;
-                        }
-                    }
-                    else if (type == "CT-Scan")
-                    {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
-                        {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum_CTscan + Remain;
-                        }
-                    }
-                    else if (type == "Blood Bank")
-                    {
-                        var disamt = item.Discount_Amount;
-                        if (disamt == Convert.ToDecimal("0.0000"))
-                        {
-
-                        }
-                        else
-                        {
-                            var Remain = item.Remaining_Amount;
-                            item.Remaining_Amount = sum_Blood + Remain;
-                        }
-                    }
-                    db.SubmitChanges();
                 }
+                db.SubmitChanges();
             }
 
-            sql = "exec spAutoGenerateLabTestEntry";
-            DBClass.executeNonQueryWithoutBegin(sql);
-            //DBClass.executeNonQueryWithoutBegin(sqls);
-            //end
+            DBClass.executeNonQueryWithoutBegin("exec spAutoGenerateLabTestEntry");
+
             return newBill.Bill_ID.ToString();
         }
         public class Billings

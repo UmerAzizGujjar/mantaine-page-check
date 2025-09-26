@@ -179,11 +179,11 @@
                         callback(data);
                     };
                     $(document).ready(function () {
-                        debugger;
+                        debugger;                      
                         $("#medName").select2({
                             ajax: {},
                             dataAdapter: CustomData,
-                            placeholder: "Select Medicine...."
+                  
                         });
                     });
                 })
@@ -959,33 +959,53 @@
         debugger;
         var addedItemIDs = [];
         var items = [];
+        var addedItemIDs = [];
+        var items = [];
+
         function loadmed() {
-            debugger;
-            ItemName = ItemNames;
-            if (ItemName === undefined) {
-                ItemName = '';
-            }
-            
+            var ItemName = ItemNames || '';
+
             $.ajax({
-                type: "post",
+                type: "POST",
                 url: "IssueMedicine.aspx/loadMedicine",
-                data: JSON.stringify({
-                    "ItemName": ItemName,
-                }),
-                dataType: 'JSON',
+                data: JSON.stringify({ "ItemName": ItemName }),
+                dataType: 'json',
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 success: function (msg) {
                     var data = JSON.parse(msg.d);
                     items = [];
                     addedItemIDs = [];
+
                     $.each(data, function (key, value) {
-                        if (addedItemIDs.indexOf(value.Item_ID) === -1) {
-                            items.push({ id: value.Item_ID, text: value.Description });
-                            addedItemIDs.push(value.Item_ID);
+                        // Skip if already added (prevents duplicates)
+                        if (addedItemIDs.indexOf(value.Item_ID) !== -1) return;
+
+                        // Build display text: prefer Description, fallback to Generic_Name
+                        let displayText = value.Description && value.Description.trim() !== ''
+                            ? value.Description
+                            : (value.Generic_Name && value.Generic_Name.trim() !== ''
+                                ? value.Generic_Name
+                                : 'No Name');
+
+                        // Optional: Highlight if Generic_Name matched the search
+                        if (value.Generic_Name && value.Generic_Name.toLowerCase().includes(ItemName.toLowerCase())) {
+                            displayText = `[${value.Generic_Name}] ${displayText}`;
                         }
+
+                        // Final display: Item_Code - DisplayText
+                        let fullText = `${value.Item_Code} - ${displayText}`;
+
+                        items.push({ id: value.Item_ID, text: fullText });
+                        addedItemIDs.push(value.Item_ID);
                     });
+
+                    // Optional: Log to console for debugging
+                    console.log("Loaded items:", items);
                 },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                }
             });
         }
         debugger;

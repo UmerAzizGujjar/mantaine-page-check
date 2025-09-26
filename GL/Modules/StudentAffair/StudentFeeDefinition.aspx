@@ -736,13 +736,13 @@
                        <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'StudentFeeDefinition.aspx'" />
                 </div>  
                 <div class="col-md-2 col-lg-2 col-sm-3">
-                       <input type="button" class="btn btn-warning" id="btnApprove" value="Approve" onclick="Approve()" />
+                       <input type="button" class="btn btn-primry" id="btnApprove" value="Approve" onclick="Approve()" />
                 </div>  
                 <div class="col-md-2 col-lg-2 col-sm-3">
-                      <input type="button" class="btn btn-danger" id="btnUnApprove" value="UnApprove" onclick="UnApprove()" />
+                      <input type="button" class="btn btn-primry" id="btnUnApprove" value="UnApprove" onclick="UnApprove()" />
                 </div> 
                 <div class="col-md-2 col-lg-2 col-sm-3">
-                     <input type="button" class="btn btn-info" id="btnVoucher" value="Voucher" onclick="PrintVoucher()" />
+                     <input type="button" class="btn btn-primry" id="btnVoucher" value="Voucher" onclick="PrintVoucher()" />
                 </div>
             </div>
           

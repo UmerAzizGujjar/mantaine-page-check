@@ -1,0 +1,438 @@
+﻿/* DEFAULTS
+----------------------------------------------------------*/
+
+body {
+
+   background: #a6a6a6;
+    font-size: .80em;
+    font-family: "Helvetica Neue" , "Lucida Grande" , "Segoe UI" , Arial, Helvetica, Verdana, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    color: #696969;
+}
+
+.popupBackground {
+    background-color: Gray;
+    filter: alpha(opacity=70);
+    opacity: 0.7;
+    /*background-color: #CCCCCC;*/
+}
+
+a:link, a:visited {
+    color: #034af3;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #1d60ff;
+    text-decoration: underline;
+}
+
+a:active {
+    color: #034af3;
+}
+
+p {
+    margin-bottom: 10px;
+    line-height: 1.6em;
+}
+.login-layout .widget-box.visible {
+    width:auto !important;
+}
+
+
+/* HEADINGS   
+----------------------------------------------------------*/
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 1.5em;
+    color: #666666;
+    font-variant: small-caps;
+    text-transform: none;
+    font-weight: 200;
+    margin-bottom: 0px;
+}
+
+h1 {
+    font-size: 1.6em;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+h4 {
+    font-size: 1.1em;
+}
+
+h5, h6 {
+    font-size: 1em;
+}
+
+/* this rule styles <h1> and <h2> tags that are the 
+first child of the left and right table columns */
+.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2 {
+    margin-top: 0px;
+}
+
+td {
+    padding: 0px 2px 0px;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+.page {
+    /*width: 1125px;
+    background-color: #eaeaea;
+    margin: 20px auto 0px auto;
+    border: 1px solid #496077;*/
+}
+
+.header {
+    position: relative;
+    margin: 0px;
+    padding: 0;
+    background: #ababab;
+    width: 100%;
+}
+
+    .header h1 {
+        font-weight: 700;
+        margin: 0px;
+        padding-top: 12px;
+        color: #3c3c3c;
+        border: none;
+        line-height: 2em;
+        font-size: 2em;
+    }
+
+.main {
+   /*margin-left: 20px;
+    margin-right: 20px;*/
+   margin: 0 auto;
+    width: 1240px;
+}
+
+.leftCol {
+    padding: 6px 0px;
+    margin: 12px 8px 8px 8px;
+    width: 200px;
+    min-height: 200px;
+}
+
+.footer {
+    color: #4e5766;
+    padding: 8px 0px 0px 0px;
+    margin: 0px auto;
+    text-align: center;
+    line-height: normal;
+}
+
+
+/* TAB MENU   
+----------------------------------------------------------*/
+
+div.menu
+{
+    float:right;
+    padding-top:6px;
+    height: 14px;
+    width: 1px;
+}
+    div.menu td
+    {
+        padding:0 3px;
+    }
+
+
+    div.menu ul {
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+        width: auto;
+    }
+
+        div.menu ul li a, div.menu ul li a:visited {
+            background-color: #465c71;
+            border: 1px #4e667d solid;
+            color: #dde4ec;
+            display: block;
+            line-height: 1.35em;
+            padding: 4px 20px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+            div.menu ul li a:hover {
+                background-color: #bfcbd6;
+                color: #465c71;
+                text-decoration: none;
+            }
+
+            div.menu ul li a:active {
+                background-color: #465c71;
+                color: #cfdbe6;
+                text-decoration: none;
+            }
+
+/* FORM ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset {
+    margin: 1em 0px;
+    padding: 1em;
+    border: 1px solid #ccc;
+}
+
+    fieldset p {
+        margin: 2px 12px 10px 10px;
+    }
+
+    fieldset.login label, fieldset.register label, fieldset.changePassword label {
+        display: block;
+    }
+
+    fieldset label.inline {
+        display: inline;
+    }
+
+legend {
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 2px 4px 8px 4px;
+}
+
+input.textEntry {
+    width: 320px;
+    border: 1px solid #ccc;
+}
+
+input.passwordEntry {
+    width: 320px;
+    border: 1px solid #ccc;
+}
+
+
+div.accountInfo {
+    /*width: 42%;*/
+}
+
+/* MISC  
+----------------------------------------------------------*/
+
+.clear {
+    clear: both;
+}
+
+.title {
+    display: block;
+    float: left;
+    text-align: left;
+    width: 1066px;
+    height: 24px;
+    margin-left: 4px;
+}
+
+.loginDisplay {
+    font-size: 1.1em;
+    display: block;
+    text-align: right;
+    padding: 0 10px 0 10px;
+    height:44px;
+    color: #fff;
+    background-color:#4a4a4a;
+}
+
+    .loginDisplay a:link {
+        color: #fff;
+    }
+
+    .loginDisplay a:visited {
+        color: #fff;
+    }
+
+    .loginDisplay a:hover {
+        color: #fff;
+    }
+
+.failureNotification {
+    font-size: 1.2em;
+    color: Red;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.submitButton {
+    text-align: right;
+    padding-right: 10px;
+}
+
+label.error {
+    color: Red;
+    padding-left: 0.5em;
+}
+
+.errorMessage {
+    color: Red;
+    padding-left: 0.5em;
+    font-style: italic;
+}
+
+.sucessfullMessage {
+    color: Green;
+    padding-left: 0.5em;
+    font-style: italic;
+}
+
+.subtype {
+    padding-left: 10px;
+}
+
+.hideSkiplink a {
+    /*color: #032aa3;
+    border: 1px;*/
+    color: #fff !important;
+    display: inline-block;
+    font-family: 'PT Sans', sans-serif;
+    font-size:16px;
+    text-shadow: 0 0;
+    
+}
+
+.submenu {
+    background-color: #9f9f9f;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 5px;
+}
+
+
+.whitelinks a {
+    color: White;
+    font-size: medium;
+}
+
+.popupContainer {
+    background-color: White;
+    padding: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+input[type="button"], [type="submit"] {
+    /* FF3.6+ */
+    /* Chrome,Safari4+ */
+    /* Chrome10+,Safari5.1+ */
+    /* Opera 11.10+ */
+    /* IE10+ */
+    /* W3C */
+    /*border-left: 1px solid rgb(143, 155, 179);
+    border-right: 1px solid rgb(143, 155, 179);
+    border-top: 1px solid rgb(163, 177, 204);
+    border-bottom: 1px solid rgb(102, 111, 128);
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset, 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+    color: rgb(41, 44, 51);
+    display: inline-block;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: bold;
+    line-height: 2em;
+    overflow: hidden;
+    padding: 0px 1em;
+    text-align: center;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+    height: 25px;*/
+     background-color: greenyellow !important;
+    font-size: 13px;
+    line-height: 1.39;
+    padding: 3px 14px;
+    background-image: none !important;
+    border: 5px solid #6fb3e0;
+    border-radius: 0;
+    box-shadow: none !important;
+    color: #fff !important;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
+    transition: all 0.15s ease 0s;
+    vertical-align: middle;
+    text-align: center;
+    margin-left:0px;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+    input[type="button"]:hover, [type="submit"]:hover, .uvStyle-button:focus {
+        background-color: #4f99c6 !important;
+    }
+    [type="submit"]:focus {
+        background-color:green !important;
+    }
+
+.plot
+{
+    position:relative;
+}
+.pin img
+{
+    width:14px;
+    position:absolute;
+    top:0;
+    left:0;
+    display:none;
+    z-index:1;
+}
+#ctl00_MenuBar
+{
+    position:relative;
+    /*z-index:9999;*/
+}
+	
+.popbox {
+    display: none;
+    position: absolute;
+    z-index: 99999;
+    width: 200px;
+    padding: 10px;
+    background: #EEEFEB;
+    color: #000000;
+    border: 1px solid #4D4F53;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(164, 164, 164, 1);
+    box-shadow: 0px 0px 5px 0px rgba(164, 164, 164, 1);
+    margin-left:35%;
+    margin-top:10%;
+}
+
+.popbox h2
+{
+    background-color: #4D4F53;
+    color:  #E3E5DD;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    margin: -10px 0px 8px -10px;
+    padding: 5px 10px;
+}
+#ctl00_MainContent_pin
+{
+    display:none;
+}
+.ctl00_MenuBar_0
+{
+    background-color:#9f9f9f !important;
+}

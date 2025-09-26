@@ -60,6 +60,18 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(dept);
         }
 
+        [WebMethod]
+        public static string GetWareHouseCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "WareHouse For PR"
+                        select                       
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
         private void LoadGIRNum()
         {
             #region "Bind GIRNUM in Dropdown"

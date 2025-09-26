@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using Telerik.Web;
 
 
 
@@ -50,7 +51,98 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+        [WebMethod]
+        public static string LoadNewAccountToCreate()
+        {
+            string sql = "";
+            string[] accountLength;
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            sys_Parm AccountPram = new sys_Parm();
+            AccountPram = (from tbl in db.sys_Parms
+                           where tbl.Name == "Fee Receivable"
 
+                           select tbl).FirstOrDefault();
+            if (AccountPram != null && AccountPram.Code != null)
+            {
+                GL_Account account = new GL_Account();
+
+                var tbl = (from config in db.Configurations
+                           where config.Configuration_Name == "Chart of Accounts Level"
+                           select config).SingleOrDefault();
+                accountLength = tbl.Configuration_Value.Split(',');
+                sql = "Select account_id from gl_Accounts where Account_Code='" + AccountPram.Code + "' and Book_ID=" + AppConfig.Book_ID;
+                string value = DBClass.getField(sql);
+                var NewhdfParent_Code = "";
+                if (value == "There is no row at position 0.")
+                {
+                    NewhdfParent_Code = AccountPram.Code.ToString();
+                }
+                else
+                {
+                    NewhdfParent_Code = value;
+                }
+
+                sql = "Select isNUll(MAX(Convert(int, Account_Serial)),0) from gl_accounts where parent_code=" + value;
+                string maxcode = DBClass.getField(sql);
+                int newcode = Convert.ToInt32(maxcode);
+                newcode += 1;
+                string newAccountcode = newcode.ToString("000");
+                var NewhdfAccount_Code = AccountPram.Code + newAccountcode;
+                var NewhdfAccount_Serial = newAccountcode;
+                var NewhdfLevel = "4";
+
+                var result = new
+                {
+                    NewhdfParent_Code,
+                    NewhdfAccount_Code,
+                    NewhdfAccount_Serial,
+                    NewhdfLevel,
+
+                };
+
+
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                return js.Serialize(result);
+            }
+            else
+            {
+                var Newlblmessage = "Please assign Customers account in sys_Params table.";
+                var result = new
+                {
+                    Newlblmessage,
+
+                };
+
+
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                return js.Serialize(result);
+            }
+
+        }
+        [WebMethod]
+        public static string LoadGLAccount(int? AccountID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            string data = string.Empty;
+            var qury = (from a in db.GL_Accounts
+                        where a.Account_ID == AccountID
+                        select a).FirstOrDefault();
+            if (qury != null)
+            {
+                var details = new
+                {
+                    hdfAccount_Serial = qury.Account_Serial,
+                    hdfLevel = qury.Levels.ToString(),
+                    hdfParent_Code = qury.Parent_Code.ToString(),
+                    hdfAccount_Code = qury.Account_Code,
+                    hdfAccount_Name = qury.Account_Name,
+                    hdfAccount_ID = qury.Account_ID.ToString(),
+                    txtAccount_Code_Name = qury.Account_Code + " - " + qury.Account_Name,
+                };
+                data = new JavaScriptSerializer().Serialize(details);
+            }
+            return data;
+        }
         [WebMethod]
         public static string LoadStudentData(int Stu_ID)
         {
@@ -165,6 +257,8 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             JavaScriptSerializer serialize = new JavaScriptSerializer();
             var record = serialize.Deserialize<MasterList>(AllItemDetail);
+            GL_Account accounts = new GL_Account();
+            int accountID = 0;
 
             if (btnsave == "Update")
             {
@@ -181,7 +275,6 @@ namespace PMS
                 lstItem.Father_Name = record.Father_Name;
                 lstItem.Guardian_Name = record.Guard_Name;
                 lstItem.Current_Adress = record.Cust_Address;
-                lstItem.Account_id = record.Gl_code;
                 lstItem.Student_Contact_No = record.StdCntct_No;
                 lstItem.Father_Contact_No = record.Fcntc_No;
                 lstItem.Permanent_Address = record.Per_Address;
@@ -201,6 +294,16 @@ namespace PMS
                 lstItem.Class = record.ddlClass;
                 lstItem.Sesion = record.txtSession;
                 lstItem.Is_Active = Convert.ToBoolean(record.Is_Active);
+                if (record.hdfAccount_ID != "")
+                {
+                    accountID = Convert.ToInt32(record.hdfAccount_ID);
+                    accounts = (from tbl in db.GL_Accounts
+                                where tbl.Account_ID == accountID
+                                select tbl).FirstOrDefault();
+                    accounts.Account_Name = record.fullname;
+                    db.SubmitChanges();
+                }
+
                 db.SubmitChanges();
                 studentRegId = lstItem.Student_Id.ToString();
 
@@ -214,7 +317,6 @@ namespace PMS
                 stud.Guardian_Name = record.Guard_Name;
                 stud.Current_Adress = record.Cust_Address;
                 stud.Student_Contact_No = record.StdCntct_No;
-                stud.Account_id = record.Gl_code;
                 stud.Father_Contact_No = record.Fcntc_No;
                 stud.Permanent_Address = record.Per_Address;
                 stud.Email_Adress = record.EmailAdrr;
@@ -235,6 +337,22 @@ namespace PMS
                 stud.Is_Active = Convert.ToBoolean(record.Is_Active);
                 stud.CreatedBy = AppConfig.UserID;
                 stud.CreatedTime = DateTime.Now;
+                if (record.hdfParent_Code == "")
+                {
+                    return "";
+                }
+                accounts.Account_Name = record.fullname;
+                accounts.Account_Code = record.hdfAccount_Code;
+                accounts.Parent_Code = Convert.ToInt32(record.hdfParent_Code);
+                accounts.Levels = Convert.ToInt32(record.hdfLevel);
+                accounts.Account_Serial = record.hdfAccount_Serial;
+                accounts.Active = true;
+                accounts.Book_ID = AppConfig.Book_ID;
+                db.GL_Accounts.InsertOnSubmit(accounts);
+                db.SubmitChanges();
+                accountID = accounts.Account_ID;
+                stud.Account_id = accountID;
+
                 db.Reg_Students.InsertOnSubmit(stud);
                 db.SubmitChanges();
                 studentRegId = stud.Student_Id.ToString();
@@ -272,6 +390,11 @@ namespace PMS
             public string txtSession { get; set; }
             public int Gl_code { get; set; }
             public bool Is_Active { get; set; }
+            public string hdfAccount_ID { get; set; }
+            public string hdfParent_Code { get; set; }
+            public string hdfAccount_Serial { get; set; }
+            public string hdfLevel { get; set; }
+            public string hdfAccount_Code { get; set; }
         }
     }
 }

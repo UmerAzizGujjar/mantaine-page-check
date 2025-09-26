@@ -63,7 +63,7 @@ namespace PMS.Account
                                 Rest.IsLockedOut = false;
                                 db.SubmitChanges();
 
-                                ShowAlertWithRedirect("Success!", "Password changed successfully!", "success", "Login.aspx");
+                                ShowAlertWithRedirect("Success!", "Password changed successfully!", "success", "~/Login.aspx");
                             }
                         }
                         else

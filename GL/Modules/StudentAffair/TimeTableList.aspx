@@ -145,11 +145,6 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-   <div class="row">
-        <div class="col-md-3" style="margin-bottom:2%">
-            <input type="button" class="btn-primry" onclick="FormOpen()" id="NewForm"  value="New" />
-        </div>
-    </div>
     <table id="example" class="table table-striped table-bordered display" >
         <thead>
             <tr>

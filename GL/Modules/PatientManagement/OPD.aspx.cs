@@ -9,27 +9,112 @@ using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Text.RegularExpressions;
 
 namespace PMS.Modules.PatientManagement
 {
     public partial class OPD : System.Web.UI.Page
     {
-
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+               
+                string token = Guid.NewGuid().ToString();
+                Session["AntiForgeryToken"] = token;
+                hfAntiForgery.Value = token; 
+            }
         }
+
+        private static string SanitizeInput(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+
+            return Regex.Replace(input.Trim(), @"<[^>]*>", "", RegexOptions.IgnoreCase);
+        }
+
+        public static class ValidationHelper
+        {
+            public static bool IsValidMobile(string mobile)
+            {
+                return !string.IsNullOrWhiteSpace(mobile) &&
+                       Regex.IsMatch(mobile, @"^\+92[0-9]{10}$");
+            }
+            public static bool IsValidCNIC(string cnic)
+            {
+                return string.IsNullOrWhiteSpace(cnic) || 
+                       Regex.IsMatch(cnic, @"^\d{5}-\d{7}-\d$");
+            }
+            public static bool IsValidName(string name)
+            {
+                return !string.IsNullOrWhiteSpace(name) &&
+                       name.Length <= 100 &&
+                       Regex.IsMatch(name, @"^[a-zA-Z\s\.\-]+$");
+            }
+            public static bool IsValidAddress(string address)
+            {
+                return !string.IsNullOrWhiteSpace(address) && address.Length <= 500;
+            }
+            public static bool IsValidAge(string ageStr)
+            {
+                if (string.IsNullOrWhiteSpace(ageStr)) return false;
+                if (!int.TryParse(ageStr, out int age)) return false;
+                return age >= 0 && age <= 150;
+            }
+            public static bool IsValidPositiveDecimal(decimal value)
+            {
+                return value >= 0;
+            }
+        }
+
+        // ========= HELPER: Mask Mobile & CNIC =========
+        private static string MaskMobile(string mobile)
+        {
+            if (string.IsNullOrEmpty(mobile) || mobile.Length < 8) return mobile;
+            return mobile.Length > 7
+                ? mobile.Substring(0, 5) + new string('*', mobile.Length - 7) + mobile.Substring(mobile.Length - 2)
+                : mobile;
+        }
+        private static string MaskCNIC(string cnic)
+        {
+            if (string.IsNullOrEmpty(cnic)) return "";
+            if (cnic.Length >= 13)
+                return "*****-" + cnic.Substring(6, 7) + "-*";
+            return "*****-*******-*";
+        }
+        public class SafeOPDPatientData
+        {
+            public string Name { get; set; }
+            public string FatherName { get; set; }
+            public string Relation { get; set; }
+            public string Gender_text { get; set; }
+            public string Age { get; set; }
+            public string MaritalStatus_text { get; set; }
+            public string Mr_No { get; set; }
+            public string pat_no { get; set; }
+            public string Address { get; set; }
+            public string Mobile { get; set; }
+            public string CNIC_Masked { get; set; }
+            public string HouseNo { get; set; }
+            public string Area { get; set; }
+            public string StreetNo { get; set; }
+            public string City { get; set; }
+            public string ValArea { get; set; }
+            public string ValCity { get; set; }
+            public int Reg_PatientID { get; set; }
+            public int opdCount { get; set; }
+        }
+
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static Dictionary<string, bool> GetCompanyOPDPermissions()
         {
             try
             {
-                int companyId = AppConfig.Company_ID; // Make sure this is accessible
-
-                if (companyId == 0 || companyId == null)
+                int companyId = AppConfig.Company_ID;
+                if (companyId == 0)
                     return new Dictionary<string, bool>();
-
                 using (var db = new DataBaseDataContext())
                 {
                     var permissions = db.company_opd_policies
@@ -38,16 +123,15 @@ namespace PMS.Modules.PatientManagement
                                            p => p.field_name.Trim(),
                                            p => p.is_enabled
                                        );
-
                     return permissions;
                 }
             }
             catch
             {
-                // Return empty to avoid crashing
                 return new Dictionary<string, bool>();
             }
         }
+
         [WebMethod]
         public static string approvepatient(string pat_id, string Pat_Category)
         {
@@ -56,12 +140,10 @@ namespace PMS.Modules.PatientManagement
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
-
         [WebMethod]
         public static string ModePresentation()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -77,11 +159,11 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string GetClinics()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -97,31 +179,30 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string GetServices()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.INV_Items
                               where dv.Services == true
                               && dv.Active == true
-
                               select new
                               {
-                                  DataValue_Name =dv.Item_ID,
+                                  DataValue_Name = dv.Item_ID,
                                   DataValue_Description = dv.Description
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
             return data;
         }
+
         [WebMethod]
         public static string PatientType()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -137,11 +218,11 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string GetGender()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -157,11 +238,11 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string GetMartailStatus()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -177,11 +258,11 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string GetCashier()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -198,18 +279,15 @@ namespace PMS.Modules.PatientManagement
             return data;
         }
 
-
         [WebMethod]
         public static string GetUserAccount()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var userAccount = (from u in db.aspnet_Users
                                    where u.UserId == AppConfig.UserID
                                    select u.Gl_Account).FirstOrDefault();
-
                 if (userAccount != null)
                 {
                     var result = (from gl in db.GL_Accounts
@@ -219,27 +297,23 @@ namespace PMS.Modules.PatientManagement
                                       gl.Account_ID,
                                       gl.Account_Name
                                   }).ToList();
-
                     data = new JavaScriptSerializer().Serialize(result);
                 }
             }
             return data;
         }
 
-
         [WebMethod]
         public static string Getpanel()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from pnl in db.Panels
-
                               select new
                               {
                                   DataValue_Name = pnl.Panel_ID,
-                                  DataValue_Description= pnl.Company_Name
+                                  DataValue_Description = pnl.Company_Name
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
@@ -250,12 +324,10 @@ namespace PMS.Modules.PatientManagement
         public static string GetRollNo()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from pnl in db.Reg_Students
                               where pnl.Is_Active == false
-
                               select new
                               {
                                   DataValue_Name = pnl.Student_Id,
@@ -270,18 +342,16 @@ namespace PMS.Modules.PatientManagement
         public static string GetGLAccounts()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from account in db.GL_Accounts
                               where account.Parent_Code == 244
                               select new
                               {
-                                  DataValue_Name= account.Account_ID,
+                                  DataValue_Name = account.Account_ID,
                                   DataValue_Description = account.Account_Name,
                                   account.Parent_Code,
                               }).ToList();
-
                 data = new JavaScriptSerializer().Serialize(result);
             }
             return data;
@@ -291,7 +361,6 @@ namespace PMS.Modules.PatientManagement
         public static string GetEmployee()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from emp in db.HR_Employees
@@ -305,11 +374,11 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string GetDoctor()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from emp in db.HR_Employees
@@ -323,19 +392,20 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string LoadDoctor(string dpt)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var inPatmedicineList = (from emp in db.HR_Employees
-
                                          where emp.Department == dpt && emp.Resign_Date == null && emp.IsDoctor == true
                                          select new { emp.Emp_ID, emp.Emp_Name }).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
             return "";
         }
+
         [WebMethod]
         public static string LoadDepartment(string Doc)
         {
@@ -351,6 +421,7 @@ namespace PMS.Modules.PatientManagement
             }
             return "";
         }
+
         [WebMethod]
         public static string GetFees(string Department_id)
         {
@@ -358,8 +429,6 @@ namespace PMS.Modules.PatientManagement
             {
                 var today = DateTime.Today.Date;
                 string formattedDate = DateTime.Today.ToString("yyyy-MM-dd");
-
-
                 var fee = (from tbl in db.Policy_Department_Assignments
                            where tbl.Department_ID == Department_id
                                  && tbl.IsActive == true
@@ -375,42 +444,50 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-
-
         [WebMethod]
         public static string loadRegistrationFees(string Doc)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-
             int? policyId = (from emp in db.HR_Employees
                              where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
                              select emp.Policy_id).FirstOrDefault();
-
             if (policyId == null)
                 return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy found." });
-
             DateTime today = DateTime.Now;
             TimeSpan currentTime = today.TimeOfDay;
-
-            // Get all policy details for the policy
             var policyDetails = (
                 from pd in db.Policy_Details
                 where pd.Policy_ID == policyId
                 orderby pd.Policy_Detail_ID descending
-                select new { pd.Start_Time, pd.End_Time, pd.Fees,pd.Hospital_Share,pd.Doctor_Share,pd.Expiry_Date }
+                select new
+                {
+                    pd.Start_Time,
+                    pd.End_Time,
+                    pd.Fees,
+                    pd.Hospital_Share,
+                    pd.Doctor_Share,
+                    pd.Expiry_Date,
+                    pd.IsTime,
+                    pd.Discount_Percentage,
+                }
             ).ToList();
-
             if (policyDetails.Count == 0)
                 return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy details found." });
-          
+
             var matchingPolicy = policyDetails.FirstOrDefault(pd =>
-                (pd.Start_Time <= pd.End_Time && 
-                 currentTime >= pd.Start_Time && currentTime <= pd.End_Time)
-                ||
-                (pd.Start_Time > pd.End_Time &&
-                 (currentTime >= pd.Start_Time || currentTime <= pd.End_Time)
-                 && today <= pd.Expiry_Date
-                 )
+                pd.IsTime == true
+                ? (
+                    (
+                        pd.Start_Time <= pd.End_Time &&
+                        currentTime >= pd.Start_Time && currentTime <= pd.End_Time
+                    )
+                    ||
+                    (
+                        pd.Start_Time > pd.End_Time &&
+                        (currentTime >= pd.Start_Time || currentTime <= pd.End_Time)
+                    )
+                  ) && today <= pd.Expiry_Date
+                : today <= pd.Expiry_Date
             );
 
             if (matchingPolicy == null)
@@ -418,13 +495,14 @@ namespace PMS.Modules.PatientManagement
                 return (new JavaScriptSerializer()).Serialize(new
                 {
                     success = false,
-                    message = "You cannot register at this time."
+                    message = "You cannot register at this time or policy has expired."
                 });
             }
             return (new JavaScriptSerializer()).Serialize(new
             {
                 success = true,
                 fee = matchingPolicy.Fees,
+                discount_percentage = matchingPolicy.Discount_Percentage,
                 Hospital_Share = matchingPolicy.Hospital_Share,
                 Doctor_Share = matchingPolicy.Doctor_Share
             });
@@ -434,7 +512,6 @@ namespace PMS.Modules.PatientManagement
         public static string LoadEmplData(string employeeid)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-
             var doc = (from emp in db.HR_Employees
                        where emp.Emp_ID == Convert.ToInt32(employeeid)
                        select new
@@ -442,16 +519,14 @@ namespace PMS.Modules.PatientManagement
                            Name = emp.Emp_Name,
                            Dependent = emp.Dependent
                        }).FirstOrDefault();
-
             return (new JavaScriptSerializer()).Serialize(doc);
         }
+
         [WebMethod]
         public static string GetCount()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-
             var totpatients = db.Patients.Where(p => p.Created_Time.Value.Year == DateTime.Now.Year && p.Created_Time.Value.Month == DateTime.Now.Month && p.Created_Time.Value.Day == DateTime.Now.Day).Count();
-
             return (new JavaScriptSerializer()).Serialize(totpatients);
         }
 
@@ -459,7 +534,6 @@ namespace PMS.Modules.PatientManagement
         public static string GetCountry()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -480,7 +554,6 @@ namespace PMS.Modules.PatientManagement
         public static string GetProvince()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -496,20 +569,20 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string LoadPanelInfo(string panelid)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-
             var doc = (from emp in db.Panels
                        where emp.Panel_ID == Convert.ToInt32(panelid)
                        select new
                        {
                            Fees = emp.Panel_Rate
                        }).FirstOrDefault();
-
             return (new JavaScriptSerializer()).Serialize(doc);
         }
+
         [WebMethod]
         public static string Getmr()
         {
@@ -517,50 +590,57 @@ namespace PMS.Modules.PatientManagement
             Reg_patient pat = null;
             int? maxPatNo = db.Reg_patients.Max(p => (int?)p.Patient_No);
             int newPatNo = (maxPatNo.HasValue ? maxPatNo.Value : 0) + 1;
-
             return newPatNo.ToString();
         }
+
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age, string houseno, string stno, string city, string area, string city_val, string area_val, string Province, string Country)
+        public static string SavePatientDetail(
+            string Full_Name, string RelationType, string Relation, string Gender,
+            string Mobile, string Date_Of_Birth, string CNIC, string Address,
+            string PatientID, string martail_status, string Age,
+            string houseno, string stno, string city, string area,
+            string city_val, string area_val, string Province, string Country)
         {
+            Full_Name = SanitizeInput(Full_Name);
+            Relation = SanitizeInput(Relation);
+            Address = SanitizeInput(Address);
+            houseno = SanitizeInput(houseno);
+            stno = SanitizeInput(stno);
+            city = SanitizeInput(city);
+            area = SanitizeInput(area);
+
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
             if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
             {
-                pat = db.Reg_patients.Where(w => w.pat_id == Convert.ToInt32(PatientID)).FirstOrDefault();
-
+                pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == Convert.ToInt32(PatientID));
                 if (pat != null)
                 {
                     pat.Relation_prefix = RelationType;
                     pat.Full_Name = Full_Name;
-
                     pat.Father_Name = Relation;
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
-
                     pat.DOB = Convert.ToDateTime(Date_Of_Birth);
                     pat.NIC = CNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
-                    pat.Permanent_Address = houseno;
+                    pat.House_No = houseno;
                     pat.stno_mno = stno;
                     pat.city = city;
                     pat.area = area;
-
                     pat.val_city = city_val;
                     pat.val_area = area_val;
                     pat.Country = Country;
                     pat.Province = Province;
-
-
                     db.SubmitChanges();
                 }
             }
             else
             {
                 pat = new Reg_patient();
-                string PatientNumber = (DBClass.getMaxEntry_No("Reg_patient", "Patient_No")).ToString();
+                string PatientNumber = DBClass.getMaxEntry_No("Reg_patient", "Patient_No").ToString();
                 pat.Patient_No = Convert.ToInt32(PatientNumber);
                 pat.Full_Name = Full_Name;
                 pat.walkin = false;
@@ -572,229 +652,208 @@ namespace PMS.Modules.PatientManagement
                 pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                 pat.NIC = CNIC;
                 pat.Permanent_Address = Address;
-                pat.Created_time = DateTime.Now;
-                pat.Created_by = AppConfig.UserID;
-                pat.iscancel = false;
-                pat.Martial_Status = martail_status;
-                pat.Permanent_Address = houseno;
-
+                pat.House_No = houseno;
                 pat.stno_mno = stno;
                 pat.city = city;
                 pat.area = area;
                 pat.val_city = city_val;
                 pat.val_area = area_val;
-                var companyID = AppConfig.Company_ID;
-                var company = (from dt in db.sys_Companies
-                               where dt.Company_ID == companyID
-                               select dt).FirstOrDefault();
-                string companyCode = company.CompanyCode;
-                string MR_Sequence = companyCode + "-" + PatientNumber;
-                pat.mr_no_sequence = MR_Sequence;
+                pat.Created_time = DateTime.Now;
+                pat.Created_by = AppConfig.UserID;
+                pat.iscancel = false;
+                pat.Martial_Status = martail_status;
                 pat.Country = Country;
                 pat.Province = Province;
 
+                var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
+                string companyCode = company?.CompanyCode ?? "HOSP";
+                pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
 
                 db.Reg_patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
             }
-            return pat.pat_id.ToString();
+            return pat?.pat_id.ToString() ?? "0";
         }
-
         [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static string SaveOpdData(MasterList data, string opdid)
         {
-            DataBaseDataContext db = new DataBaseDataContext();
-            Patient pat = null;
+            if (HttpContext.Current.Session["UserID"] == null)
+                return "ERROR: Unauthorized Access. Please login.";
 
-            if (!string.IsNullOrEmpty(opdid) && opdid != "0" && opdid != "(New)")
+            string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
+            if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(data?.AntiForgeryToken))
+                return "ERROR: Invalid request. Possible CSRF attack.";
+
+            if (data != null)
             {
-                pat = db.Patients.Where(w => w.Patient_ID == Convert.ToInt32(opdid)).FirstOrDefault();
+                data.Full_Name = SanitizeInput(data.Full_Name);
+                data.StudentName = SanitizeInput(data.StudentName);
+                data.Father_name = SanitizeInput(data.Father_name);
+                data.Address = SanitizeInput(data.Address);
+                data.EmployeeName = SanitizeInput(data.EmployeeName);
+                data.EmployeeDept = SanitizeInput(data.EmployeeDept);
+                data.reffer_no = SanitizeInput(data.reffer_no);
+                data.dependent = SanitizeInput(data.dependent);
+            }
 
-                if (pat != null)
+            var errors = new List<string>();
+            if (string.IsNullOrWhiteSpace(data?.patient_no) || data.patient_no == "0")
+                errors.Add("Patient MR No is required.");
+            if (string.IsNullOrWhiteSpace(data?.pat_category) || data.pat_category == "0")
+                errors.Add("Patient category is required.");
+
+            var category = data?.pat_category;
+            if (category == "01" || category == "02" || category == "04" || category == "05")
+            {
+                if (string.IsNullOrWhiteSpace(data?.Department) || data.Department == "0")
+                    errors.Add("Department is required for this patient category.");
+            }
+            if (category == "02" || category == "03")
+            {
+                if (string.IsNullOrWhiteSpace(data?.doctor) || data.doctor == "0")
+                    errors.Add("Doctor is required for this patient category.");
+            }
+            if (category == "03")
+            {
+                if (string.IsNullOrWhiteSpace(data?.panel) || data.panel == "0")
+                    errors.Add("Panel company is required for this patient category.");
+            }
+            if (string.IsNullOrWhiteSpace(data?.accountid) || data.accountid == "0")
+                errors.Add("Cash In Hand account is required.");
+            if (!ValidationHelper.IsValidPositiveDecimal(data?.Fees ?? 0))
+                errors.Add("Fee amount must be zero or positive.");
+            if (!ValidationHelper.IsValidPositiveDecimal(data?.Actual_Fees ?? 0))
+                errors.Add("Actual fee must be zero or positive.");
+            if (!string.IsNullOrWhiteSpace(data?.discount))
+            {
+                if (!decimal.TryParse(data.discount, out decimal discountValue) || discountValue < 0)
                 {
-                    pat.Reg_PatId = data.regid;
+                    errors.Add("Discount must be a valid non-negative number.");
+                }
+            }
+
+            if (errors.Any())
+                return "ERROR: " + string.Join("; ", errors);
+
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    Patient pat = null;
+                    bool isNew = string.IsNullOrEmpty(opdid) || opdid == "0" || opdid == "(New)";
+
+                    if (!isNew)
+                    {
+                        int opdId = Convert.ToInt32(opdid);
+                        pat = db.Patients.FirstOrDefault(w => w.Patient_ID == opdId);
+                        if (pat == null)
+                            return "ERROR: OPD record not found.";
+                    }
+                    else
+                    {
+                        pat = new Patient();
+                        pat.Opd_No = DBClass.getMaxEntry_No("Patients", "Opd_No");
+                        pat.Reg_PatId = data.regid;
+                        if (!string.IsNullOrEmpty(data.appid))
+                            pat.appointment_id = Convert.ToInt32(data.appid);
+
+                        if (string.IsNullOrWhiteSpace(data.doctor) || data.doctor == "0")
+                        {
+                            pat.Doc_Token = 0;
+                            pat.tokenNo = db.Patients.Count(p =>
+                                p.Created_Time.HasValue &&
+                                p.Created_Time.Value.Date == DateTime.Now.Date &&
+                                p.Patient_Main_Category == data.pat_category) + 1;
+                        }
+                        else
+                        {
+                            pat.tokenNo = 0;
+                            pat.Doc_Token = db.Patients.Count(p =>
+                                p.Created_Time.HasValue &&
+                                p.Created_Time.Value.Date == DateTime.Now.Date &&
+                                p.Doctor_ID == data.doctor) + 1;
+                        }
+
+                        pat.Created_By = Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId) ? userId : Guid.Empty;
+                        pat.Created_Time = DateTime.Now;
+                        pat.Entry_Date = DateTime.Now;
+                        pat.Company_ID = AppConfig.Company_ID;
+                        pat.Book_ID = AppConfig.Book_ID;
+                        pat.isCancel = false;
+
+                        if (!string.IsNullOrEmpty(data.appid))
+                            DBClass.executeNonQueryWithoutBegin("UPDATE Appointment_Form SET Status='Visited' WHERE Appointment_ID=" + data.appid);
+                    }
+
                     pat.Full_Name = data.Full_Name;
+                    pat.Student_Name = data.StudentName;
                     pat.Age_years = data.Age;
                     pat.Mode_Of_Registration = data.modeof_presentation;
                     pat.Patient_Type = data.pat_category;
                     pat.Father_Name = data.Father_name;
-                    pat.Age_years = data.Age;
                     pat.Gender = data.Gender;
                     pat.NIC = data.NIC;
                     pat.Mobile1 = data.MobileNo;
                     pat.Permanent_Address = data.Address;
                     pat.Marital_Status = data.Martial_Status;
-                    pat.Patient_Main_Category = data.Department;
+                    pat.Patient_Main_Category = data.hdnDepartment ?? data.Department;
                     pat.Doctor_ID = data.doctor;
                     pat.filter_clinic = data.FilterClinic;
                     pat.Service_id = data.Services;
                     pat.mr_no_sequence = data.patient_no;
-                    pat.Actual_amount = data.Actual_Fees;
-                    pat.Updated_By = AppConfig.UserID;
-                    pat.Updated_Time = DateTime.Now;
+                    pat.Patient_No = Convert.ToInt32(data.pat_no);
+                    pat.Refference_No = data.reffer_no;
                     pat.Employee_Name = data.EmployeeName;
                     pat.Emp_Department = data.EmployeeDept;
+                    pat.Actual_amount = data.Actual_Fees;
+
+                    if (data.FreeCheck == true)
+                    {
+                        pat.Receipt_Amount = 0;
+                        pat.discount_amt = data.Actual_Fees;
+                    }
+                    else
+                    {
+                        pat.Receipt_Amount = data.Fees;
+                        pat.discount_amt = string.IsNullOrEmpty(data.discount) ? 0 : Convert.ToInt32(data.discount);
+                    }
+
+                    pat.PanelCompany = string.IsNullOrEmpty(data.panel) ? 0 : Convert.ToInt32(data.panel);
+                    pat.employee_ID = data.employee_id?.ToString();
+                    pat.Dependent = data.dependent;
+                    pat.RollNo = string.IsNullOrEmpty(data.rollno) ? 0 : Convert.ToInt32(data.rollno);
+                    pat.Class = string.IsNullOrEmpty(data.Class) ? 0 : Convert.ToInt32(data.Class);
+                    pat.Section = string.IsNullOrEmpty(data.section) ? 0 : Convert.ToInt32(data.section);
+                    pat.Casher = data.Cashier;
+                    pat.AccountID = string.IsNullOrEmpty(data.accountid) ? 0 : Convert.ToInt32(data.accountid);
+                    pat.Card_Issued = data.IssueCard ?? false;
+                    pat.free_check = data.FreeCheck ?? false;
+
+                    decimal netAmount = data.Fees;
+                    decimal hospitalSharePct = data.Hosp_share;
+                    decimal doctorSharePct = data.Doc_Share;
+                    pat.Hospital_share = Math.Round((netAmount * hospitalSharePct) / 100, 2);
+                    pat.doc_share = Math.Round((netAmount * doctorSharePct) / 100, 2).ToString("F2");
+                    pat.Share_Transfered = (category == "02");
+
+                    if (isNew)
+                        db.Patients.InsertOnSubmit(pat);
+
                     db.SubmitChanges();
+                    return pat.Patient_ID.ToString();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                pat = new Patient();
-                pat.Opd_No = DBClass.getMaxEntry_No("Patients", "Opd_No");
-                pat.Reg_PatId = data.regid;
-                if (data.appid == "")
-                {
-
-                }
-                else
-                {
-                    pat.appointment_id = Convert.ToInt32(data.appid);
-                }
-                //var opdfee = (from tbl in db.sys_Parms
-                //              where tbl.Name == "OPD Fee"
-                //              select tbl.Code).FirstOrDefault(); from system params 
-
-                var opdfee = data.Fees;
-                pat.Full_Name = data.Full_Name;
-                pat.Student_Name = data.StudentName;
-                pat.Age_years = data.Age;
-                pat.Mode_Of_Registration = data.modeof_presentation;
-                pat.Patient_Type = data.pat_category;
-                pat.Father_Name = data.Father_name;
-                pat.Age_years = data.Age;
-                pat.Gender = data.Gender;
-                pat.NIC = data.NIC;
-                pat.Mobile1 = data.MobileNo;
-                pat.filter_clinic = data.FilterClinic;
-                pat.Service_id = data.Services;
-                pat.Permanent_Address = data.Address;
-                pat.Marital_Status = data.Martial_Status;
-                pat.Patient_Main_Category = data.Department;
-                
-                pat.Doctor_ID = data.doctor;
-                pat.mr_no_sequence = data.patient_no;
-                pat.Patient_No = Convert.ToInt32(data.pat_no);
-                pat.Refference_No = data.reffer_no;
-                pat.Employee_Name = data.EmployeeName;
-                pat.Emp_Department = data.EmployeeDept;
-                pat.Patient_Main_Category = data.hdnDepartment;
-                pat.Actual_amount = data.Actual_Fees;
-
-                if (data.pat_category == "01" && data.discount == "")
-                {
-                    pat.Receipt_Amount = Convert.ToDecimal(opdfee);
-                }
-                else
-                {
-                    pat.Receipt_Amount = data.Fees;
-                }
-                if (data.discount == "")
-                {
-                    pat.discount_amt = 0;
-
-                }
-                else
-                {
-                    pat.discount_amt = Convert.ToInt32(data.discount);
-                }
-              
-
-
-                if (data.doctor == "0" || data.doctor == "")
-                {
-                    pat.Doc_Token = 0;
-
-                    pat.tokenNo = db.Patients.Where(p => p.Created_Time.Value.Year == DateTime.Now.Year
-                                && p.Created_Time.Value.Month == DateTime.Now.Month
-                                && p.Created_Time.Value.Day == DateTime.Now.Day
-                                && p.Patient_Main_Category == data.pat_category).Count() + 1;
-                }
-                else
-                {
-                    pat.tokenNo = 0;
-                    pat.Doc_Token = db.Patients.Where(p => p.Created_Time.Value.Year == DateTime.Now.Year
-                                  && p.Created_Time.Value.Month == DateTime.Now.Month
-                                  && p.Created_Time.Value.Day == DateTime.Now.Day
-                                  && p.Doctor_ID == data.doctor).Count() + 1;
-                }
-
-                //pat.Employee_Name = data.employee;
-                pat.PanelCompany = Convert.ToInt32(data.panel);
-                pat.employee_ID = Convert.ToString(data.employee_id);
-                pat.Designation = Convert.ToInt32(data.designation);
-                pat.Dependent = data.dependent;
-                pat.RollNo = Convert.ToInt32(data.rollno);
-                pat.Class = Convert.ToInt32(data.Class);
-                pat.Section = Convert.ToInt32(data.section);
-                pat.Casher = data.Cashier;
-                pat.AccountID = Convert.ToInt32(data.accountid);
-                pat.Card_Issued = data.IssueCard;
-                pat.free_check = data.FreeCheck;
-                pat.Created_By = AppConfig.UserID;
-                pat.Created_Time = DateTime.Now;
-                pat.Entry_Date = DateTime.Now;
-                pat.Company_ID = AppConfig.Company_ID;
-                pat.Book_ID = AppConfig.Book_ID;
-                pat.isCancel = false;
-                if (data.appid == "")
-                {
-
-                }
-                else
-                {
-                    DBClass.executeNonQueryWithoutBegin("update Appointment_Form set Status='Visited' where Appointment_ID=" + data.appid);
-                }
-
-
-                decimal opdfees = data.Fees; // This is already discounted final fee (receipt amount)
-
-                // Percentages from DB
-                decimal hospital_share = data.Hosp_share;   // e.g. 60
-                decimal doctor_share = data.Doc_Share;      // e.g. 40
-
-                // No need to calculate discount again, just use opdfees directly
-                decimal Net_Amount = opdfees;
-
-                // Save discount % just for reference
-                decimal disc = 0;
-                if (!string.IsNullOrEmpty(data.discount))
-                {
-                    disc = Convert.ToDecimal(data.discount);
-                }
-                pat.discount_amt = disc;
-
-                // Calculate shares
-                decimal Hospital_Amount = Math.Round((Net_Amount * hospital_share) / 100, 2);
-                decimal Doctor_Amount = Math.Round((Net_Amount * doctor_share) / 100, 2);
-
-                // Assign
-                pat.Hospital_share = Hospital_Amount;
-                pat.doc_share = Doctor_Amount.ToString("F2");
-
-
-
-
-
-                if (data.pat_category == "02")
-                {
-                    pat.Share_Transfered = true;
-                }
-                else if (data.pat_category == "01")
-                {
-                    pat.Share_Transfered = false;
-                }
-
-                db.Patients.InsertOnSubmit(pat);
-                db.SubmitChanges();
+                return "ERROR: Failed to save OPD record. Please try again.";
             }
-            return pat.Patient_ID.ToString();
         }
 
         [WebMethod]
         public static string GetArea()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -810,11 +869,11 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string GetCity()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -835,7 +894,6 @@ namespace PMS.Modules.PatientManagement
         public static string GetDepartment()
         {
             string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from dv in db.DataValues
@@ -851,6 +909,7 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+
         [WebMethod]
         public static string checlkeditRights()
         {
@@ -858,279 +917,300 @@ namespace PMS.Modules.PatientManagement
             var ups = (from St in db.aspnet_Users
                        where St.UserName == AppConfig.UserName
                        select St.AllowPatientEdit).FirstOrDefault();
-
             return (new JavaScriptSerializer()).Serialize(ups);
         }
 
         [WebMethod]
         public static string GetBasicInfo(int reg_id)
         {
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            var query = (from rg in db.Reg_patients
-                         where rg.pat_id == reg_id
-                         select new
-                         {
-
-                             Name = rg.Full_Name,
-                             FatherName = rg.Father_Name,
-                             Relation = rg.Relation_prefix,
-                             Gender = rg.Gender,
-                             DOB = rg.DOB,
-                             Age = rg.Age_years,
-                             MaritalStatus = rg.Martial_Status,
-                             MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
-                             Gender_text = db.GetDataValueName("Gender", rg.Gender),
-                             Mr_No = rg.mr_no_sequence,
-                             pat_no = rg.Patient_No,
-                             Address = rg.Permanent_Address /*"H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city*/,
-                             Mobile = rg.Mobile1,
-                             CNIC = rg.NIC,
-                             HouseNo = rg.House_No,
-                             Area = rg.area,
-                             StreetNo = rg.stno_mno,
-                             City = rg.city,
-                             ValArea = rg.val_area,
-                             ValCity = rg.val_city,
-                             Reg_PatientID = rg.pat_id,
-                             opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id)
-
-                         }).FirstOrDefault();
-            return (new JavaScriptSerializer()).Serialize(query);
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var patientRecord = db.Reg_patients.FirstOrDefault(x => x.pat_id == reg_id);
+                if (patientRecord == null)
+                {
+                    return new JavaScriptSerializer().Serialize(null);
+                }
+                if (patientRecord.DOB.HasValue)
+                {
+                    DateTime dob = patientRecord.DOB.Value;
+                    DateTime today = DateTime.Today;
+                    int calculatedAge = today.Year - dob.Year;
+                    if (dob > today.AddYears(-calculatedAge))
+                        calculatedAge--;
+                    string currentAgeStr = calculatedAge.ToString();
+                    if (patientRecord.Age_years != currentAgeStr)
+                    {
+                        patientRecord.Age_years = currentAgeStr;
+                        db.SubmitChanges();
+                    }
+                }
+                int numberOfDaysLatest = 0;
+                int numberOfDaysSecondLatest = 0;
+                var opd_time = (from pt in db.Patients
+                                where pt.Reg_PatId == reg_id
+                                orderby pt.Patient_ID descending
+                                select pt.Created_Time).FirstOrDefault();
+                if (opd_time != null)
+                {
+                    numberOfDaysLatest = (int)(DateTime.Now.Date - opd_time.Value.Date).TotalDays;
+                }
+                var opd_time2 = (from pt in db.Patients
+                                 where pt.Reg_PatId == reg_id
+                                 orderby pt.Patient_ID descending
+                                 select pt.Created_Time)
+                                 .Skip(1)
+                                 .FirstOrDefault();
+                if (opd_time2 != null)
+                {
+                    numberOfDaysSecondLatest = (int)(DateTime.Now.Date - opd_time2.Value.Date).TotalDays;
+                }
+                var query = (from rg in db.Reg_patients
+                             where rg.pat_id == reg_id
+                             select new
+                             {
+                                 Name = HttpUtility.HtmlEncode(rg.Full_Name),
+                                 FatherName = HttpUtility.HtmlEncode(rg.Father_Name),
+                                 Relation = HttpUtility.HtmlEncode(rg.Relation_prefix),
+                                 Gender = rg.Gender,
+                                 DOB = rg.DOB,
+                                 Age = rg.Age_years,
+                                 MaritalStatus = rg.Martial_Status,
+                                 MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", rg.Martial_Status)),
+                                 Gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", rg.Gender)),
+                                 Mr_No = HttpUtility.HtmlEncode(rg.mr_no_sequence),
+                                 pat_no = rg.Patient_No,
+                                 Address = HttpUtility.HtmlEncode(rg.Permanent_Address),
+                                 Mobile = HttpUtility.HtmlEncode(rg.Mobile1),
+                                 CNIC_Masked = MaskCNIC(rg.NIC),
+                                 HouseNo = HttpUtility.HtmlEncode(rg.House_No),
+                                 Area = HttpUtility.HtmlEncode(rg.area),
+                                 StreetNo = HttpUtility.HtmlEncode(rg.stno_mno),
+                                 City = HttpUtility.HtmlEncode(rg.city),
+                                 ValArea = HttpUtility.HtmlEncode(rg.val_area),
+                                 ValCity = HttpUtility.HtmlEncode(rg.val_city),
+                                 Reg_PatientID = rg.pat_id,
+                                 opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id),
+                                 DaysSinceLatestVisit = numberOfDaysLatest,
+                                 DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
+                             }).FirstOrDefault();
+                return new JavaScriptSerializer().Serialize(query);
+            }
         }
-        //[WebMethod]
-        //public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-
-        //    var query = (from rg in db.Reg_patients
-        //                 where rg.pat_id == reg_id
-        //                 select new
-        //                 {
-
-        //                     Name = rg.Full_Name,
-        //                     FatherName = rg.Father_Name,
-        //                     Relation = rg.Relation_prefix,
-        //                     Gender = rg.Gender,
-        //                     DOB = rg.DOB,
-        //                     Age = rg.Age_years,
-        //                     MaritalStatus = rg.Martial_Status,
-        //                     Mr_No = rg.mr_no_sequence,
-        //                     pat_no = rg.Patient_No,
-        //                     Address = "H# " + rg.House_No + " " + rg.stno_mno + " " + rg.area + " " + rg.city,
-        //                     PermanentAdrress = rg.Permanent_Address,
-        //                     Mobile = rg.Mobile1,
-        //                     CNIC = rg.NIC,
-        //                     HouseNo = rg.House_No,
-        //                     Area = rg.area,
-        //                     StreetNo = rg.stno_mno,
-        //                     City = rg.city,
-        //                     MaritalStatus_text = db.GetDataValueName("Marital Status", rg.Martial_Status),
-        //                     Gender_text = db.GetDataValueName("Gender", rg.Gender),
-        //                     pat_type_Val = "02",
-        //                     pat_type_text = db.GetDataValueName("Patient Type", "02"),
-        //                     ValArea = rg.val_area,
-        //                     ValCity = rg.val_city,
-        //                     Reg_PatientID = rg.pat_id,
-        //                     doctorId = (from appointment in db.Appointment_Forms
-        //                                 where appointment.Appointment_ID == apt_Id
-        //                                 select appointment.Consultant_ID),
-        //                     doctor_Text= (from hr in db.HR_Employees join ap in db.Appointment_Forms
-        //                                   on hr.Emp_ID  equals ap.Consultant_ID
-        //                                   select new { hr.Emp_Name }).FirstOrDefault(),
-        //                     departmentid = (from appointment in db.Appointment_Forms
-        //                                     where appointment.Appointment_ID == apt_Id
-        //                                     select appointment.Sub_Department)
-
-        //                 }).FirstOrDefault();
-        //    return (new JavaScriptSerializer()).Serialize(query);
-        //}
 
         [WebMethod]
         public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
         {
-            DataBaseDataContext db = new DataBaseDataContext();
-
-            var patient = (from rg in db.Reg_patients
-                           where rg.pat_id == reg_id
-                           select new
-                           {
-                               rg.Full_Name,
-                               rg.Father_Name,
-                               rg.Relation_prefix,
-                               rg.Gender,
-                               rg.DOB,
-                               rg.Age_years,
-                               rg.Martial_Status,
-                               rg.mr_no_sequence,
-                               rg.Patient_No,
-                               rg.House_No,
-                               rg.stno_mno,
-                               rg.area,
-                               rg.city,
-                               rg.Permanent_Address,
-                               rg.Mobile1,
-                               rg.NIC,
-                               rg.val_area,
-                               rg.val_city,
-                               rg.pat_id
-                           }).FirstOrDefault();
-
-            if (patient == null)
-                return new JavaScriptSerializer().Serialize(null);
-
-            string pat_type_Val = "02";
-            string pat_type_text = db.GetDataValueName("Patient Type", pat_type_Val);
-            string maritalStatus_text = db.GetDataValueName("Marital Status", patient.Martial_Status);
-            string gender_text = db.GetDataValueName("Gender", patient.Gender);
-
-            var doctorId = db.Appointment_Forms
-                             .Where(a => a.Appointment_ID == apt_Id)
-                             .Select(a => a.Consultant_ID)
-                             .FirstOrDefault();
-
-            string DoctorName = db.HR_Employees
-                             .Where(a => a.Emp_ID ==Convert.ToInt32( doctorId))
-                             .Select(a => a.Emp_Name)
-                             .FirstOrDefault();
-
-            var departmentid = db.Appointment_Forms
-                                 .Where(a => a.Appointment_ID == apt_Id)
-                                 .Select(a => a.Sub_Department)
-                                 .FirstOrDefault();
-            string department_Text = db.GetDataValueName("Patient Main Category", departmentid);
-
-            var result = new
+            using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                Name = patient.Full_Name,
-                FatherName = patient.Father_Name,
-                Relation = patient.Relation_prefix,
-                Gender = patient.Gender,
-                DOB = patient.DOB,
-                Age = patient.Age_years,
-                MaritalStatus = patient.Martial_Status,
-                Mr_No = patient.mr_no_sequence,
-                pat_no = patient.Patient_No,
-                Address = $"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}",
-                PermanentAdrress = patient.Permanent_Address,
-                Mobile = patient.Mobile1,
-                CNIC = patient.NIC,
-                HouseNo = patient.House_No,
-                Area = patient.area,
-                StreetNo = patient.stno_mno,
-                City = patient.city,
-                MaritalStatus_text = maritalStatus_text,
-                Gender_text = gender_text,
-                pat_type_Val = pat_type_Val,
-                pat_type_text = pat_type_text,
-                ValArea = patient.val_area,
-                ValCity = patient.val_city,
-                Reg_PatientID = patient.pat_id,
-                doctorId = doctorId,
-                DoctorName= DoctorName,
-                departmentid = departmentid,
-                department_Text = department_Text
-            };
+                var patient = (from rg in db.Reg_patients
+                               where rg.pat_id == reg_id
+                               select new
+                               {
+                                   Full_Name = rg.Full_Name,
+                                   Father_Name = rg.Father_Name,
+                                   Relation_prefix = rg.Relation_prefix,
+                                   Gender = rg.Gender,
+                                   Age_years = rg.Age_years,
+                                   Martial_Status = rg.Martial_Status,
+                                   mr_no_sequence = rg.mr_no_sequence,
+                                   Patient_No = rg.Patient_No,
+                                   House_No = rg.House_No,
+                                   stno_mno = rg.stno_mno,
+                                   area = rg.area,
+                                   city = rg.city,
+                                   Permanent_Address = rg.Permanent_Address,
+                                   Mobile1 = rg.Mobile1,
+                                   NIC = rg.NIC,
+                                   val_area = rg.val_area,
+                                   val_city = rg.val_city,
+                                   pat_id = rg.pat_id
+                               }).FirstOrDefault();
+                if (patient == null)
+                    return new JavaScriptSerializer().Serialize(null);
 
-            return new JavaScriptSerializer().Serialize(result);
+                string pat_type_Val = "02";
+                string pat_type_text = HttpUtility.HtmlEncode(db.GetDataValueName("Patient Type", pat_type_Val));
+                string maritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patient.Martial_Status));
+                string gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", patient.Gender));
+
+                var doctorId = db.Appointment_Forms
+                                 .Where(a => a.Appointment_ID == apt_Id)
+                                 .Select(a => a.Consultant_ID)
+                                 .FirstOrDefault();
+                string DoctorName = "";
+                if (!string.IsNullOrEmpty(doctorId) && int.TryParse(doctorId, out int docId))
+                {
+                    DoctorName = db.HR_Employees
+                                   .Where(e => e.Emp_ID == docId)
+                                   .Select(e => e.Emp_Name)
+                                   .FirstOrDefault() ?? "";
+                    DoctorName = HttpUtility.HtmlEncode(DoctorName);
+                }
+
+                var departmentid = db.Appointment_Forms
+                                     .Where(a => a.Appointment_ID == apt_Id)
+                                     .Select(a => a.Sub_Department)
+                                     .FirstOrDefault();
+                string department_Text = HttpUtility.HtmlEncode(db.GetDataValueName("Patient Main Category", departmentid));
+
+                int numberOfDaysLatest = 0;
+                int numberOfDaysSecondLatest = 0;
+                var opd_time = (from pt in db.Patients
+                                where pt.Reg_PatId == patient.pat_id
+                                orderby pt.Patient_ID descending
+                                select pt.Created_Time).FirstOrDefault();
+                if (opd_time != null)
+                {
+                    numberOfDaysLatest = (int)(DateTime.Now.Date - opd_time.Value.Date).TotalDays;
+                }
+                var opd_time2 = (from pt in db.Patients
+                                 where pt.Reg_PatId == patient.pat_id
+                                 orderby pt.Patient_ID descending
+                                 select pt.Created_Time)
+                                 .Skip(1)
+                                 .FirstOrDefault();
+                if (opd_time2 != null)
+                {
+                    numberOfDaysSecondLatest = (int)(DateTime.Now.Date - opd_time2.Value.Date).TotalDays;
+                }
+
+                var result = new
+                {
+                    Name = HttpUtility.HtmlEncode(patient.Full_Name),
+                    FatherName = HttpUtility.HtmlEncode(patient.Father_Name),
+                    Relation = HttpUtility.HtmlEncode(patient.Relation_prefix),
+                    Gender_text = gender_text,
+                    Age = patient.Age_years,
+                    MaritalStatus_text = maritalStatus_text,
+                    Mr_No = HttpUtility.HtmlEncode(patient.mr_no_sequence),
+                    pat_no = patient.Patient_No,
+                    Address = HttpUtility.HtmlEncode($"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}"),
+                    PermanentAdrress = HttpUtility.HtmlEncode(patient.Permanent_Address),
+                    Mobile = HttpUtility.HtmlEncode(patient.Mobile1),
+                    CNIC_Masked = MaskCNIC(patient.NIC),
+                    HouseNo = HttpUtility.HtmlEncode(patient.House_No),
+                    Area = HttpUtility.HtmlEncode(patient.area),
+                    StreetNo = HttpUtility.HtmlEncode(patient.stno_mno),
+                    City = HttpUtility.HtmlEncode(patient.city),
+                    ValArea = HttpUtility.HtmlEncode(patient.val_area),
+                    ValCity = HttpUtility.HtmlEncode(patient.val_city),
+                    Reg_PatientID = patient.pat_id,
+                    doctorId = doctorId,
+                    DoctorName = DoctorName,
+                    departmentid = departmentid,
+                    department_Text = department_Text,
+                    pat_type_Val = pat_type_Val,
+                    pat_type_text = pat_type_text,
+                    DaysSinceLatestVisit = numberOfDaysLatest,
+                    DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
+                };
+                return new JavaScriptSerializer().Serialize(result);
+            }
         }
-
 
         [WebMethod]
         public static string GetPatientDetail(int OPDID)
         {
-            DataBaseDataContext db = new DataBaseDataContext();
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var patient = db.Patients.FirstOrDefault(p => p.Patient_ID == OPDID);
+                if (patient == null) return "null";
 
-            var query = (from p in db.Patients
-                         where p.Patient_ID == OPDID
-                         select new
-                         {
+                string Encode(string input) => string.IsNullOrEmpty(input) ? "" : HttpUtility.HtmlEncode(input);
 
-                             mr_no_sequence = p.mr_no_sequence,
-                             Opd_No = p.Opd_No,
-                             Name = p.Full_Name,
-                             StudentName = p.Student_Name,
-                             Father_Name = p.Father_Name,
-                             Mode_Of_Registration = p.Mode_Of_Registration,
-                             Patient_Type = p.Patient_Type,
-                             Age_years = p.Age_years,
-                             Gender = p.Gender,
-                             NIC = p.NIC,
-                             Mobile1 = p.Mobile1,
-                             Marital_Status = p.Marital_Status,
-                             MaritalStatus_text = db.GetDataValueName("Marital Status", p.Marital_Status),
-                             Gender_text = db.GetDataValueName("Gender", p.Gender),
-                             Permanent_Address = p.Permanent_Address,
-                             Receipt_Amount = p.Receipt_Amount,
-                             Actual_amount = p.Actual_amount,
-                             Patient_Main_Category = p.Patient_Main_Category,
-                             Type_text = db.GetDataValueName("Patient Type", p.Patient_Type),
-                             Category_text = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
-                             Doctor_ID = p.Doctor_ID,
-                             Doc_text = (from a in db.HR_Employees where a.Emp_ID == Convert.ToInt32(p.Doctor_ID) select a.Emp_Name),
-                             PanelCompany = p.PanelCompany,
-                             PanelCompany_text = (from a in db.Panels where a.Panel_ID == Convert.ToInt32(p.PanelCompany) select a.Company_Name),
-                             employee_ID = p.employee_ID,
-                             employee_text = (from a in db.HR_Employees where a.Emp_ID == Convert.ToInt32(p.employee_ID) select a.Emp_Name),
-                             Refference_No = p.Refference_No,
-                             Employee_Name = p.Employee_Name,
-                             discount_amt = p.discount_amt,
-                             Dependent = p.Dependent,
-                             RollNo = p.RollNo,
-                             Class = p.Class,
-                             Section = p.Section,
-                             Casher = p.Casher,
-                             Card_Issued = p.Card_Issued,
-                             free_check = p.free_check,
-                             opdid = p.Patient_ID,
-                             status = p.Status,
-                             account_id = p.AccountID,
-                             FilterClinic = p.filter_clinic,
-                             EmployeeDept = p.Emp_Department,
-                             Clinic_text = db.GetDataValueName("Filter Clinic", p.filter_clinic),
-                             Service_id = p.Service_id,
-                             Service_text = (from a in db.INV_Items where a.Item_ID == p.Service_id select a.Description)
-
-
-                         }).FirstOrDefault();
-            return (new JavaScriptSerializer()).Serialize(query);
+                var result = new
+                {
+                    mr_no_sequence = Encode(patient.mr_no_sequence),
+                    Opd_No = patient.Opd_No,
+                    Name = Encode(patient.Full_Name),
+                    StudentName = Encode(patient.Student_Name),
+                    Father_Name = Encode(patient.Father_Name),
+                    Mode_Of_Registration = Encode(patient.Mode_Of_Registration),
+                    Patient_Type = Encode(patient.Patient_Type),
+                    Age_years = patient.Age_years,
+                    Gender_text = Encode(db.GetDataValueName("Gender", patient.Gender)),
+                    Mobile1 = MaskMobile(patient.Mobile1),
+                    CNIC_Masked = MaskCNIC(patient.NIC),
+                    MaritalStatus_text = Encode(db.GetDataValueName("Marital Status", patient.Marital_Status)),
+                    Permanent_Address = Encode(patient.Permanent_Address),
+                    Receipt_Amount = patient.Receipt_Amount,
+                    Actual_amount = patient.Actual_amount,
+                    Category_text = Encode(db.GetDataValueName("Patient Main Category", patient.Patient_Main_Category)),
+                    Type_text = Encode(db.GetDataValueName("Patient Type", patient.Patient_Type)),
+                    Doc_text = Encode(
+                        patient.Doctor_ID == null || !int.TryParse(patient.Doctor_ID.ToString(), out _)
+                            ? ""
+                            : db.HR_Employees
+                                .Where(e => e.Emp_ID == Convert.ToInt32(patient.Doctor_ID))
+                                .Select(e => e.Emp_Name)
+                                .FirstOrDefault() ?? ""
+                    ),
+                    PanelCompany_text = Encode(
+                        db.Panels
+                            .Where(p => p.Panel_ID == patient.PanelCompany)
+                            .Select(p => p.Company_Name)
+                            .FirstOrDefault() ?? ""
+                    ),
+                    employee_text = Encode(
+                        patient.employee_ID == null || !int.TryParse(patient.employee_ID.ToString(), out _)
+                            ? ""
+                            : db.HR_Employees
+                                .Where(e => e.Emp_ID == Convert.ToInt32(patient.employee_ID))
+                                .Select(e => e.Emp_Name)
+                                .FirstOrDefault() ?? ""
+                    ),
+                    Refference_No = Encode(patient.Refference_No),
+                    Employee_Name = Encode(patient.Employee_Name),
+                    discount_amt = patient.discount_amt,
+                    Dependent = Encode(patient.Dependent),
+                    RollNo = patient.RollNo,
+                    Class = patient.Class,
+                    Section = patient.Section,
+                    Casher = Encode(patient.Casher),
+                    Card_Issued = patient.Card_Issued,
+                    free_check = patient.free_check,
+                    opdid = patient.Patient_ID,
+                    status = Encode(patient.Status),
+                    account_id = patient.AccountID,
+                    Clinic_text = Encode(db.GetDataValueName("Filter Clinic", patient.filter_clinic)),
+                    Service_text = Encode(
+                        db.INV_Items
+                            .Where(i => i.Item_ID == patient.Service_id)
+                            .Select(i => i.Description)
+                            .FirstOrDefault() ?? ""
+                    )
+                };
+                return new JavaScriptSerializer().Serialize(result);
+            }
         }
+
         [WebMethod]
         public static List<PatientsResult> SearchPatients(string SearchString)
         {
-
             string SearchSql = "";
-
-            if (SearchString == "")
-
+            if (string.IsNullOrEmpty(SearchString))
                 SearchSql = "SELECT top 10 pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 order by pat_id desc";
             else
                 SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
 
             DataTable dt = DBClass.getDataTable(SearchSql);
-
             List<PatientsResult> list = new List<PatientsResult>();
-
             foreach (DataRow dr in dt.Rows)
             {
                 PatientsResult rslt = new PatientsResult()
                 {
-                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : (string)dr[0].ToString(),
-                    Patient_No = dr[1] == DBNull.Value ? "" : (string)dr[1].ToString(),
-                    Full_Name = dr[2] == DBNull.Value ? "" : (string)dr[2],
-                    NIC = dr[3] == DBNull.Value ? "" : (string)dr[3],
-                    Mobile1 = dr[4] == DBNull.Value ? "" : (string)dr[4],
-                    Father_Name = dr[5] == DBNull.Value ? "" : (string)dr[5],
+                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : dr[0].ToString(),
+                    Patient_No = dr[1] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[1].ToString()),
+                    Full_Name = dr[2] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[2].ToString()),
+                    NIC = dr[3] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[3].ToString()),
+                    Mobile1 = dr[4] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[4].ToString()),
+                    Father_Name = dr[5] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[5].ToString()),
                 };
                 list.Add(rslt);
-
-                int number;
-                string value = "Hello";
-                bool result = Int32.TryParse(value, out number);
-
             }
             return list;
         }
+
         public class PatientsResult
         {
             public string Full_Name;
@@ -1140,118 +1220,100 @@ namespace PMS.Modules.PatientManagement
             public string Patient_No;
             public string Mobile1;
             public string Father_Name;
-
         }
+
         [WebMethod]
         public static List<Search_App> SearchAppointment(string SearchString)
         {
-
             string SearchSql = "";
-
-            if (SearchString == "")
-
+            if (string.IsNullOrEmpty(SearchString))
                 SearchSql = "SELECT Appointment_ID, isnull(Appointment_No,'')Appointment_No,isnull(Patient_Name,'')Patient_Name,isnull(Consultant_ID,'')Consultant_ID,isnull(Age,'')Age,isnull(Phone,'') Phone, (select top 1 emp_name from HR_Employees where Emp_ID=Consultant_ID ) Emp_name,rg.pat_id FROM Appointment_Form app inner join Reg_patient rg on rg.pat_id = app.Reg_id  where(1=1) and Appointment_No<>0 and Appointment_No is not null and Status = 'Booked' order by Appointment_ID desc";
             else
                 SearchSql = "SELECT Appointment_ID,isnull(Appointment_No,'')Appointment_No,isnull(Patient_Name,'')Patient_Name,isnull(Consultant_ID,'')Consultant_ID,isnull(Age,'') Age,isnull(Phone,'')Phone, (select top 1 emp_name from HR_Employees where Emp_ID=Consultant_ID ) Emp_name,Reg_id FROM Appointment_Form where(1=1) and Appointment_No<>0 and Appointment_No is not null and Status = 'Booked' and (LTRIM(RTRIM(Appointment_No)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(Patient_Name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(Consultant_ID))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(Age))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(Phone)) like '%" + SearchString.Trim() + "%' or Consultant_ID = isnull((select top 1 Emp_ID from HR_Employees where Emp_Name like '%" + SearchString.Trim() + "%'),'0'))";
 
-
-
-
             DataTable dt = DBClass.getDataTable(SearchSql);
-
             List<Search_App> list = new List<Search_App>();
-
             foreach (DataRow dr in dt.Rows)
             {
                 Search_App rsslt = new Search_App()
                 {
-                    Appointment_ID = dr[0] == DBNull.Value ? "" : (string)dr[0].ToString(),
-                    Appointment_No = dr[1] == DBNull.Value ? "" : (string)dr[1].ToString(),
-                    Patient_Name = dr[2] == DBNull.Value ? "" : (string)dr[2],
-                    Consultant_ID = dr[3] == DBNull.Value ? "" : (string)dr[3],
-                    Age = dr[4] == DBNull.Value ? "" : (string)dr[4],
-                    Phone = dr[5] == DBNull.Value ? "" : (string)dr[5],
-                    Emp_name = dr[6] == DBNull.Value ? "" : (string)dr[6],
-                    pat_id = dr[7] == DBNull.Value ? "" : (string)dr[7].ToString(),
-
+                    Appointment_ID = dr[0] == DBNull.Value ? "" : dr[0].ToString(),
+                    Appointment_No = dr[1] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[1].ToString()),
+                    Patient_Name = dr[2] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[2].ToString()),
+                    Consultant_ID = dr[3] == DBNull.Value ? "" : dr[3].ToString(),
+                    Age = dr[4] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[4].ToString()),
+                    Phone = dr[5] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[5].ToString()),
+                    Emp_name = dr[6] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[6].ToString()),
+                    pat_id = dr[7] == DBNull.Value ? "" : dr[7].ToString(),
                 };
                 list.Add(rsslt);
-
-                int number;
-                string value = "Hello";
-                bool result = Int32.TryParse(value, out number);
-
             }
             return list;
         }
+
         [WebMethod]
         public static List<EmergencyResult> SearchEmergencyPatients(string SearchString)
         {
             string SearchSql = "";
-
             if (string.IsNullOrEmpty(SearchString))
             {
                 SearchSql = @"SELECT TOP 10  
-                            r.pat_id, 
-                            ISNULL(r.mr_no_sequence,'') AS Patient_No,
-                            ISNULL(r.Full_Name,'') AS Full_Name,
-                            ISNULL(r.NIC,'') AS NIC,
-                            ISNULL(r.Mobile1,'') AS ContactNo,
-                            ISNULL(r.Father_Name,'') AS Father_Name,
-                            e.Patient_ID, 
-                            ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
-                          FROM Reg_Patient r 
-                          INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
-                          WHERE r.Patient_No <> 0  
-                            AND r.Patient_No IS NOT NULL 
-                            AND ISNULL(r.isCancel,0) != 1   
-                            AND ISNULL(e.Refer_To_OPD,0) = 1 
-                          ORDER BY r.pat_id DESC";
+                    r.pat_id, 
+                    ISNULL(r.mr_no_sequence,'') AS Patient_No,
+                    ISNULL(r.Full_Name,'') AS Full_Name,
+                    ISNULL(r.NIC,'') AS NIC,
+                    ISNULL(r.Mobile1,'') AS ContactNo,
+                    ISNULL(r.Father_Name,'') AS Father_Name,
+                    e.Patient_ID, 
+                    ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
+                  FROM Reg_Patient r 
+                  INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
+                  WHERE r.Patient_No <> 0  
+                    AND r.Patient_No IS NOT NULL 
+                    AND ISNULL(r.isCancel,0) != 1   
+                    AND ISNULL(e.Refer_To_OPD,0) = 1 
+                  ORDER BY r.pat_id DESC";
             }
             else
             {
                 SearchSql = @"SELECT 
-                            r.pat_id,
-                            ISNULL(r.mr_no_sequence,'') AS Patient_No,
-                            ISNULL(r.Full_Name,'') AS Full_Name,
-                            ISNULL(r.NIC,'') AS NIC, 
-                            ISNULL(r.Mobile1,'') AS ContactNo,
-                            ISNULL(r.Father_Name,'') AS Father_Name,
-                            e.Patient_ID,
-                            ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
-                          FROM Reg_Patient r 
-                          INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
-                          WHERE r.Patient_No <> 0 
-                            AND r.Patient_No IS NOT NULL 
-                            AND ISNULL(r.isCancel,0) != 1
-                            AND ISNULL(e.Refer_To_OPD,0) = 1 
-                            AND (LTRIM(RTRIM(r.patient_no)) LIKE '%" + SearchString.Trim() + @"%' 
-                                 OR LTRIM(RTRIM(r.full_name)) LIKE '%" + SearchString.Trim() + @"%' 
-                                 OR LTRIM(RTRIM(r.mobile1)) LIKE '%" + SearchString.Trim() + @"%' 
-                                 OR LTRIM(RTRIM(r.nic)) LIKE '%" + SearchString.Trim() + @"%')
-                          ORDER BY r.pat_id DESC";
+                    r.pat_id,
+                    ISNULL(r.mr_no_sequence,'') AS Patient_No,
+                    ISNULL(r.Full_Name,'') AS Full_Name,
+                    ISNULL(r.NIC,'') AS NIC, 
+                    ISNULL(r.Mobile1,'') AS ContactNo,
+                    ISNULL(r.Father_Name,'') AS Father_Name,
+                    e.Patient_ID,
+                    ISNULL(e.Refer_To_OPD,0) AS Refer_To_OPD
+                  FROM Reg_Patient r 
+                  INNER JOIN Emergency_Patient e ON r.pat_id = e.Patient_ID
+                  WHERE r.Patient_No <> 0 
+                    AND r.Patient_No IS NOT NULL 
+                    AND ISNULL(r.isCancel,0) != 1
+                    AND ISNULL(e.Refer_To_OPD,0) = 1 
+                    AND (LTRIM(RTRIM(r.patient_no)) LIKE '%" + SearchString.Trim() + @"%' 
+                         OR LTRIM(RTRIM(r.full_name)) LIKE '%" + SearchString.Trim() + @"%' 
+                         OR LTRIM(RTRIM(r.mobile1)) LIKE '%" + SearchString.Trim() + @"%' 
+                         OR LTRIM(RTRIM(r.nic)) LIKE '%" + SearchString.Trim() + @"%')
+                  ORDER BY r.pat_id DESC";
             }
-
             DataTable dt = DBClass.getDataTable(SearchSql);
-
             List<EmergencyResult> list = new List<EmergencyResult>();
-
             foreach (DataRow dr in dt.Rows)
             {
                 EmergencyResult rslt = new EmergencyResult()
                 {
                     Reg_Patient_ID = dr["pat_id"] == DBNull.Value ? "" : dr["pat_id"].ToString(),
-                    Patient_No = dr["Patient_No"] == DBNull.Value ? "" : dr["Patient_No"].ToString(),
-                    Full_Name = dr["Full_Name"] == DBNull.Value ? "" : dr["Full_Name"].ToString(),
-                    NIC = dr["NIC"] == DBNull.Value ? "" : dr["NIC"].ToString(),
-                    Mobile1 = dr["ContactNo"] == DBNull.Value ? "" : dr["ContactNo"].ToString(),
-                    Father_Name = dr["Father_Name"] == DBNull.Value ? "" : dr["Father_Name"].ToString(),
+                    Patient_No = dr["Patient_No"] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr["Patient_No"].ToString()),
+                    Full_Name = dr["Full_Name"] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr["Full_Name"].ToString()),
+                    NIC = dr["NIC"] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr["NIC"].ToString()),
+                    Mobile1 = dr["ContactNo"] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr["ContactNo"].ToString()),
+                    Father_Name = dr["Father_Name"] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr["Father_Name"].ToString()),
                     Emergency_ID = dr["Patient_ID"] == DBNull.Value ? "" : dr["Patient_ID"].ToString(),
                     Refer_To_OPD = dr["Refer_To_OPD"] == DBNull.Value ? "0" : dr["Refer_To_OPD"].ToString()
                 };
                 list.Add(rslt);
             }
-
             return list;
         }
 
@@ -1266,12 +1328,11 @@ namespace PMS.Modules.PatientManagement
             public string Emergency_ID { get; set; }
             public string Refer_To_OPD { get; set; }
         }
-    
-    [WebMethod]
+
+        [WebMethod]
         public static bool CardFee(string PatID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-
             SqlTransaction tranObj = null;
             SqlConnection con = new SqlConnection(DBClass.ConnectionString());
             con.Open();
@@ -1293,7 +1354,6 @@ namespace PMS.Modules.PatientManagement
                 var reprint = (from itm in db.Patients
                                where (itm.Patient_ID == int.Parse(PatID))
                                select itm.cardReprint).FirstOrDefault();
-
                 var totalRec = (Convert.ToInt32(sysParm) + Convert.ToInt32(receiptamount));
                 var rep = Convert.ToInt32(reprint) + 1;
                 if (bio_id != 0)
@@ -1318,9 +1378,9 @@ namespace PMS.Modules.PatientManagement
                     return false;
                 }
             }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
+#pragma warning disable CS0168
             catch (Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+#pragma warning restore CS0168
             {
                 if (tranObj != null)
                     tranObj.Rollback();
@@ -1328,6 +1388,7 @@ namespace PMS.Modules.PatientManagement
             }
             return true;
         }
+
         public class Search_App
         {
             public string Patient_Name;
@@ -1340,13 +1401,12 @@ namespace PMS.Modules.PatientManagement
             public string Emp_name;
             public string Status;
             public string pat_id;
-
         }
 
         public class MasterList
         {
             public int regid { get; set; }
-            public int employee_id { get; set; }
+            public int? employee_id { get; set; }
             public string appid { get; set; }
             public string Full_Name { get; set; }
             public string StudentName { get; set; }
@@ -1369,7 +1429,7 @@ namespace PMS.Modules.PatientManagement
             public string reffer_no { get; set; }
             public string discount { get; set; }
             public string employee_name { get; set; }
-            public string designation { get; set; }
+            public int? designation { get; set; }
             public string dependent { get; set; }
             public string rollno { get; set; }
             public string Class { get; set; }
@@ -1382,12 +1442,11 @@ namespace PMS.Modules.PatientManagement
             public string FilterClinic { get; set; }
             public string EmployeeName { get; set; }
             public string EmployeeDept { get; set; }
-
-            public Boolean IssueCard { get; set; }
-            public Boolean FreeCheck { get; set; }
+            public string AntiForgeryToken { get; set; }
+            public bool? IssueCard { get; set; }
+            public bool? FreeCheck { get; set; }
             public int Fees { get; set; }
             public int Actual_Fees { get; set; }
-
         }
     }
 }
