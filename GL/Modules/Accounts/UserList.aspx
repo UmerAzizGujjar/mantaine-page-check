@@ -16,7 +16,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Are you sure?',
-                text: 'This action will delete the user permanently!',
+                text: 'This action will Reset the Password!',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
