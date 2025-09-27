@@ -149,6 +149,8 @@
                     '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()"  style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + length + '" name="txtDisAmount"  ></input></td>' +
                     '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="duplicate ddlSTAX" ><option value="0">0</option></select></td>' +
                     '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly"  id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+                    '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
+                    '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
                     '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option>' + optionsList + '</select></td>' +
                     '<td style="padding-top: 7px!important;display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;  id="txtFedAmount' + length + '" name="txtFedAmount" style="width:50px !important;"></input></td>' +
                     '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
@@ -633,7 +635,15 @@
 
             }
         }
-
+        function populateAdvanceTaxddl(rowId) {
+            PageMethods.getAdvanceTaxType(function (response) {
+                var options = '<option value="0">0</option>';
+                $.each(JSON.parse(response), function (key, value) {
+                    options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+                });
+                $('#ddlAdvanceTax' + rowId).html(options);
+            });
+        }
         function CulculateAmonut() {
             debugger;
             var amtwithdis = 0;
@@ -1294,6 +1304,8 @@
                     <th style="width: 69px;">Dis Amount</th>
                     <th style="width: 63px;">S.Tax %</th>
                     <th style="width: 66px;">ST Amount</th>
+                    <th style="width: 63px;">A.Tax %</th>
+                    <th style="width: 66px;">Adv Amount</th>
                     <th style="width: 58px; display: none;">Fed%</th>
                     <th style="width: 70px; display: none;">Fed Amount</th>
                     <th style="width: 75px;">Total</th>
