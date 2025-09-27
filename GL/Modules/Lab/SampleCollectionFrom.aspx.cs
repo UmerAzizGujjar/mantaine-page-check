@@ -150,7 +150,17 @@ namespace PMS
 
 
         }
-
+        [WebMethod]
+        public static string GetAcknowlagmentCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Acknowlagment For Lab"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
         [WebMethod]
         public static String SaveTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type, /*DateTime ResultDate,*/ int PatientID, string[][] SaveCheckedTest, int EmployeeID, string[][] rem)
         {

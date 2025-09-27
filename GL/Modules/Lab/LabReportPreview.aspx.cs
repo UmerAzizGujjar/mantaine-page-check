@@ -958,24 +958,24 @@ namespace PMS
             {
                 Test TestObj = new Test()
                 {
-                    
+
                     Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
                     Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(),
                     Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
                     Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
                     Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
-                    Bill_Details_ID = item[5] == DBNull.Value ? "" : item[5].ToString(),
-                    Is_Result = Convert.ToBoolean(item[9] == DBNull.Value ? "" : item[9]),
-                    Rejected_Reason = item[6] == DBNull.Value ? "" : item[6].ToString(),
-                    Service_Date = item[7] == DBNull.Value ? "" : item[7].ToString(),
-                    Is_Approve = Convert.ToBoolean(item[8] == DBNull.Value ? "" : item[8]),
-                    patient_ID = item[10] == DBNull.Value ? "" : item[10].ToString(),
-                    Test_Main_Department = item[11] == DBNull.Value ? "" : item[11].ToString(),
-                    Test_Performed_By = item[12] == DBNull.Value ? "" : item[12].ToString(),
-                     Result_Time = item[13] == DBNull.Value ? "" : Convert.ToDateTime(item[13]).ToString(),
-                     Approved_Time = item[14] == DBNull.Value ? "" : Convert.ToDateTime(item[14]).ToString(),
-                     Approved_By = item[15] == DBNull.Value ? "" : item[15].ToString(),
-            };
+                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
+                    Is_Result = Convert.ToBoolean(item[13] == DBNull.Value ? "" : item[13]),
+                    Rejected_Reason = item[10] == DBNull.Value ? "" : item[10].ToString(),
+                    Service_Date = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[12] == DBNull.Value ? "" : item[12]),
+                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
+                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
+                    Test_Performed_By = item[5] == DBNull.Value ? "" : item[5].ToString(),
+                    Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
+                    Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
+                    Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
+                };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
 
@@ -1127,17 +1127,18 @@ namespace PMS
                     Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
                     Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
                     Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
-                    Bill_Details_ID = item[5] == DBNull.Value ? "" : item[5].ToString(),
-                    Is_Result = Convert.ToBoolean(item[6] == DBNull.Value ? "" : item[6]),
-                    Rejected_Reason = item[7] == DBNull.Value ? "" : item[7].ToString(),
-                    Service_Date = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    Is_Approve = Convert.ToBoolean(item[9] == DBNull.Value ? "" : item[9]),
-                    patient_ID = item[10] == DBNull.Value ? "" : item[10].ToString(),
-                    Test_Main_Department = item[11] == DBNull.Value ? "" : item[11].ToString(),
-                    Test_Performed_By = item[12] == DBNull.Value ? "" : item[12].ToString(),
-                    Result_Time = item[13] == DBNull.Value ? "" : Convert.ToDateTime(item[13]).ToString(),
-                    Approved_Time = item[14] == DBNull.Value ? "" : Convert.ToDateTime(item[14]).ToString(),
-                    Approved_By = item[15] == DBNull.Value ? "" : item[15].ToString(),
+                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
+                    Is_Result = Convert.ToBoolean(item[10] == DBNull.Value ? "" : item[10]),
+                    Rejected_Reason = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Service_Date = item[12] == DBNull.Value ? "" : item[12].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[13] == DBNull.Value ? "" : item[13]),
+                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
+                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
+                    Test_Performed_By = item[5] == DBNull.Value ? "" : item[5].ToString(),
+                    Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
+                    Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
+                   
+                    Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
 
 
             };

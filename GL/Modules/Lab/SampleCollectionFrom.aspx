@@ -13,6 +13,7 @@
             loadRangeType();
             FillOutSource();
             FillSampleStatus();
+            GetacknowlagmentCondition();
             $('#btnDetail').on('click', function () {
                 debugger;
                 if (localStorage.IsBill == 0) {
@@ -81,7 +82,25 @@
                      }
                  }
              });
-         });
+        });
+        var acknowlagment;
+        function GetacknowlagmentCondition() {
+
+            $.ajax({
+                type: "POST",
+                url: "SampleCollectionFrom.aspx/GetAcknowlagmentCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    acknowlagment = JSON.parse(response.d);                   
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
         function FillTokenInputForMRNoQ() {
             debugger;
             var PatientID = '<%= Request.QueryString["ID"]%>';
@@ -1109,7 +1128,7 @@
                  $('#txtCollectionDate' + df).val(date);
             }
             debugger;
-            if (outSource == '002') {
+            if (acknowlagment == '01') {
                 SavelabTest(id)
             }
              
