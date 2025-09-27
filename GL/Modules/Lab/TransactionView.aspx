@@ -212,7 +212,7 @@
                                 $("#ctl00_lbl2").text("Sample View");
                                 $("#ctl00_lbl1").text("Transaction View");
                                 $("#ShowHideSampleRowHeader").hide();
-                                columnsName += '<tr><th style="display:none">' + parse[0].replace(/_/g, ' ') + '</th><th>' + parse[1].replace(/_/g, ' ') + '</th><th>' + parse[2].replace(/_/g, ' ') + '</th><th>' + parse[4].replace(/_/g, ' ') + '</th><th>' + parse[5].replace(/_/g, ' ') + '</th><th>Action</th></tr>';
+                                columnsName += '<tr><th>' + parse[0].replace(/_/g, ' ') + '</th><th>' + parse[1].replace(/_/g, ' ') + '</th><th>' + parse[2].replace(/_/g, ' ') + '</th><th>' + parse[4].replace(/_/g, ' ') + '</th><th>' + parse[5].replace(/_/g, ' ') + '</th><th>Action</th></tr>';
                             }
                             else if (tag == "Expense") {
                                 $("#ctl00_lbl2").text("Expense");
@@ -289,7 +289,7 @@
                             $("#ctl00_lbl2").text("Sample View");
                             $("#ctl00_lbl1").text("Transaction View");
                             for (var i = 0; i < length; i++) {
-                                rows += '<tr><td style="display:none">' + parse[i].Sample_ID + '</td><td>' + parse[i].Sample_No + '</td><td>' + parse[i].Sample_Collected_Date + '</td><td>' + parse[i].MR_No + '</td><td>' + parse[i].Full_Name + '</td><td><a style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;" href="SampleCollectionFrom.aspx?SampleId=' + parse[i].Sample_ID + '&SampleNo=' + parse[i].Sample_No + '">Edit</a> | <a style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;" href="#" onclick="PrintSample(' + parse[i].Sample_ID + ')">Print</a></td></tr>';
+                                rows += '<tr><td>' + parse[i].Sample_ID + '</td><td>' + parse[i].Sample_No + '</td><td>' + parse[i].Sample_Collected_Date + '</td><td>' + parse[i].MR_No + '</td><td>' + parse[i].Full_Name + '</td><td><a style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;" href="SampleCollectionFrom.aspx?SampleId=' + parse[i].Sample_ID + '&SampleNo=' + parse[i].Sample_No + '">Edit</a> | <a style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;" href="#" onclick="PrintSample(' + parse[i].Sample_ID + ')">Print</a></td></tr>';
                                 
                             }
                         }
@@ -514,7 +514,7 @@
         <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow:scroll; height:auto;">
             <thead id="ihead">
                <tr id="ShowHideSampleRowHeader">
-                   <th style="display:none">Sample ID</th>
+                   <th>Sample ID</th>
                    <th>Sample No</th>
                    <th>Sample Collected Date</th>
                    <th>MR No</th>

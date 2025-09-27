@@ -159,6 +159,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.HiddenField hdnPatient_ID;
 
         /// <summary>
+        /// lblSampleNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSampleNo;
+
+        /// <summary>
+        /// txtSampleNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSampleNo;
+
+        /// <summary>
         /// lblContactNo control.
         /// </summary>
         /// <remarks>

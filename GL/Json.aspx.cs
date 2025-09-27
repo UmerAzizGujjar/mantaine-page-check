@@ -704,7 +704,7 @@ namespace PMS
                     }
                     Response.Write("[" + result + "]");
                 }
-
+              
                 else if (Request.QueryString["Table"] == "LabResultPatient")
                 {
                     string sqlQuery;
@@ -718,6 +718,32 @@ namespace PMS
                     {
                         result += (result == "") ? "" : ",";
                         result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
+                    }
+                    Response.Write("[" + result + "]");
+                }
+
+                else if (Request.QueryString["Table"] == "SampleNo")
+                {
+                    string sqlQuery;
+                    if (Request.QueryString["q"] != null)
+                    {
+                        string q = Request.QueryString["q"].ToString().Replace("'", "''");
+                        sqlQuery = @" SELECT TOP 1 sm.Sample_No,sm.Patient_ID, p.Patient_No, p.Full_Name
+                       FROM Sample_Master sm INNER JOIN Reg_patient p ON sm.Patient_ID = p.pat_id WHERE sm.Sample_No = '" + q + @"' ORDER BY sm.Created_Time DESC";
+                    }
+                    else
+                    {
+                        sqlQuery = @" SELECT DISTINCT TOP 20 sm.Sample_No, sm.Patient_ID, p.Patient_No, p.Full_Name
+                      FROM Sample_Master sm INNER JOIN Reg_patient p ON sm.Patient_ID = p.pat_id ORDER BY sm.Created_Time DESC";
+                    }
+
+                    string result = "";
+                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        if (result != "") result += ",";
+                        result += @"{""id"":""" + dr["Sample_No"].ToString() + @""",""name"":""" + dr["Sample_No"].ToString() + " - " + dr["Full_Name"].ToString() + @""",
+                        ""patient_id"":""" + dr["Patient_ID"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
                 }
