@@ -872,7 +872,7 @@
 
 
             }
-            
+
             var hdFile_ID = $("#hdnPatient_ID").val();
             debugger;
             if (hdFile_ID != "(New)") {
@@ -885,7 +885,7 @@
 
                 loadtokenInputsDefault();
             }
-       
+
             var hdFile_ID = $("#hdnLab_Test_ID").val();
             if (hdFile_ID != "(New)") {
                 var Lab_Test_ID = $("#hdnLab_Test_ID").val();
@@ -920,15 +920,21 @@
                     try {
                         $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
                         $('#ctl00_MainContent_txtBilling').tokenInput('clear');
+
                         $("#hdnPatient_ID").val(item.patient_id);
-                        loadPatientData();
+
+                        if (item.bill_id && item.bill_id !== "") {
+                            $("#hdBill_id").val(item.bill_id);
+                            $("#hdnBill_No").val(item.name);
+                            loadPatientDataUsingBillId();
+                        } else {
+                            alert("No billing record found for this sample.");
+                        }
                     } catch (err) {
-                        alert(err.message);
+                        alert("Error: " + err.message);
                     }
                 }
             });
-
-            
         }
 
             
