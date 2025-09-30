@@ -848,6 +848,48 @@ namespace PMS
                     ddlPatientType.DataBind();
                     SetDepartent();
                     
+                }           // latest insert 
+                else if (this.PageTitle == "Lab_Test_Wise_Summary")
+                {
+                    string x = "Lab Test Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    dpROw.Visible = true;
+                    lblDepartment.Visible = true;
+                    ddlDepartments.Visible = true;
+                    tr_Summary.Visible = true;
+                    tr_Export.Visible = true;
+                    AllowPatientRecord = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests");
+                    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+
+                    foreach (DataRow dr in TestCategories.Rows)
+                    {
+                        DataRow newdr = Tests.NewRow();
+                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                        Tests.Rows.Add(newdr);
+                        Tests.AcceptChanges();
+                    }
+                    trTestResult1.Visible = true;
+                    ddlTestName.DataSource = Tests;
+                    ddlTestName.DataTextField = "Test_Name";
+                    ddlTestName.DataValueField = "Test_ID";
+                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    ddlTestName.DataBind();
+                   
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    ddlPatientType.DataBind();
+                    SetDepartent();
+                    
                 }
                 else if (this.PageTitle == "PharmacySaleReport")
                 {
@@ -2041,28 +2083,41 @@ namespace PMS
                     //lblMultiSelect.Visible = true;
                     SetDepartent();
                 }
-                else if (this.PageTitle == "TestWiseMonthlyLabTestDepartment")
-                {
-                    ddlDepartments.Visible = true;
-                    dpROw.Visible = true;
-                    tr1MedicalSubsidy.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    lblPatientType.Visible = false;
-                    Time_Row.Visible = false;
-                    tr_Summary.Visible = false;
-                    optRw.Visible = false;
-                    AllowPatientRecord = false;
-                    ddlPatientType.Visible = false;
-                    object valusets;
-                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
-                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
-                    ddlDepartments.DataSource = valusets;
-                    ddlDepartments.DataTextField = "DataValue_Description";
-                    ddlDepartments.DataValueField = "DataValue_Name";
-                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlDepartments.DataBind();
-                    ddlMedicalSubsidy.Items.Clear();
-                }
+                //else if (this.PageTitle == "TestWiseMonthlyLabTestDepartment")
+                //{
+                //    ddlDepartments.Visible = true;
+                //    dptROw.Visible = true;
+                //    trMedicalSubsidy.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    TimeRow.Visible = false;
+                //    trSummary.Visible = false;
+                //    //oprtRw.Visible = false;
+                //    AllowPatientRecord = false;
+                //    ddlPatientType.Visible = false;
+
+                //    txtStart_Date.Visible = true;
+                //    txtEnd_Date.Visible = true;
+                //    ddlDepartments.Visible = true;
+                //    dpROw.Visible = true;
+                //    tr1MedicalSubsidy.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    Time_Row.Visible = false;
+                //    tr_Summary.Visible = false;
+                //    optRw.Visible = false;
+                //    AllowPatientRecord = false;
+                //    ddlPatientType.Visible = false;
+                //    object valusets;
+                //    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+                //    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                //    ddlDepartments.DataSource = valusets;
+                //    ddlDepartments.DataTextField = "DataValue_Description";
+                //    ddlDepartments.DataValueField = "DataValue_Name";
+                //    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //    ddlDepartments.DataBind();
+                //    ddlMedicalSubsidy.Items.Clear();
+                //}
                 else if (PageTitle == "Blood_Bank_Cash_Collection")
                 {
                     dpROw.Visible = false;
@@ -2375,53 +2430,114 @@ namespace PMS
                     AllowPatientRecord = false;
                 }
 
-                else if (this.PageTitle == "Lab_Test_Wise_Summary")
-                {
-                    string x = "Lab Test Wise Summary";
-                    Master.Label2.Text = x;
-                    Master.GetMenuName();
-                    dpROw.Visible = false;
-                    ddlPatientType.Visible = false;
+                //else if (this.PageTitle == "Lab_Test_Wise_Summary")
+                //{
+                //    string x = "Lab Test Wise Summary";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    dpROw.Visible = false;
+                //    ddlPatientType.Visible = false;
 
-                    tr_Summary.Visible = false;
-                    
-                    AllowPatientRecord = false;
+                //    tr_Summary.Visible = false;
 
-                    DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests");
-                    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+                //    AllowPatientRecord = false;
 
-                    foreach (DataRow dr in TestCategories.Rows)
-                    {
-                        DataRow newdr = Tests.NewRow();
-                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
-                        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
-                        Tests.Rows.Add(newdr);
-                        Tests.AcceptChanges();
-                    }
+                //    DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests");
+                //    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
 
-                    ddlTestName.DataSource = Tests;
-                    ddlTestName.DataTextField = "Test_Name";
-                    ddlTestName.DataValueField = "Test_ID";
-                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    ddlTestName.DataBind();
-                    ddlTestName.Visible = true;
-                    lblTestName.Visible = true;
+                //    foreach (DataRow dr in TestCategories.Rows)
+                //    {
+                //        DataRow newdr = Tests.NewRow();
+                //        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                //        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                //        Tests.Rows.Add(newdr);
+                //        Tests.AcceptChanges();
+                //    }
 
-                    //lblMainDepartment.Visible = true;
-                    //ddlDepartments.Visible = true;
-                    object valusets;
-                    //object valusets;
-                    valusets = DBClass.GetValueSet("Patient Type");
-                    lblMultiSelect.DataSource = valusets;
-                    lblMultiSelect.DataTextField = "DataValue_Description";
-                    lblMultiSelect.DataValueField = "DataValue_Name";
-                    lblMultiSelect.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    lblMultiSelect.DataBind();
+                //    ddlTestName.DataSource = Tests;
+                //    ddlTestName.DataTextField = "Test_Name";
+                //    ddlTestName.DataValueField = "Test_ID";
+                //    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                //    ddlTestName.DataBind();
+                //    ddlTestName.Visible = true;
+                //    lblTestName.Visible = true;
 
-                    //lblPatientType.Visible = true;
-                    //lblMultiSelect.Visible = true;
-                    SetDepartent();
-                }
+                //    //lblMainDepartment.Visible = true;
+                //    //ddlDepartments.Visible = true;
+                //    object valusets;
+                //    //object valusets;
+                //    valusets = DBClass.GetValueSet("Patient Type");
+                //    lblMultiSelect.DataSource = valusets;
+                //    lblMultiSelect.DataTextField = "DataValue_Description";
+                //    lblMultiSelect.DataValueField = "DataValue_Name";
+                //    lblMultiSelect.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                //    lblMultiSelect.DataBind();
+
+                //    //lblPatientType.Visible = true;
+                //    //lblMultiSelect.Visible = true;
+                //    SetDepartent();
+                //}
+
+
+                //else if (this.PageTitle == "Lab_Test_Wise_Summary")
+                //{
+                //    dptROw.Visible = false;
+                //    ddlPatientType.Visible = false;
+
+                //    trSummary.Visible = false;
+                //    trAllPatients.Visible = false;
+                //    AllowPatientRecord = false;
+
+                //    DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests");
+                //    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+
+                //    foreach (DataRow dr in TestCategories.Rows)
+                //    {
+                //        DataRow newdr = Tests.NewRow();
+                //        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                //        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                //        Tests.Rows.Add(newdr);
+                //        Tests.AcceptChanges();
+                //    }
+
+                //    ddlTestName.DataSource = Tests;
+                //    ddlTestName.DataTextField = "Test_Name";
+                //    ddlTestName.DataValueField = "Test_ID";
+                //    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                //    ddlTestName.DataBind();
+                //    ddlTestName.Visible = true;
+                //    lblTestName.Visible = true;
+                //    object valusets;
+                //    trProcedure.Visible = true;
+                //    lblProcedure.InnerText = "Test Departments";
+                //    oprtRw.Visible = false;
+
+                //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                //    valusets = from d in db.DataValues
+                //               where d.ValueSet_ID == 67
+                //               select new { d.DataValue_Name, d.DataValue_Description };
+                //    ddlProcedure.Items.Clear();
+                //    ddlProcedure.DataSource = valusets;
+                //    ddlProcedure.DataTextField = "DataValue_Description";
+                //    ddlProcedure.DataValueField = "DataValue_Name";
+                //    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //    ddlProcedure.DataBind();
+
+                //    //lblMainDepartment.Visible = true;
+                //    //ddlDepartments.Visible = true;
+
+                //    //object valusets;
+                //    valusets = DBClass.GetValueSet("Patient Type");
+                //    lblMultiSelect.DataSource = valusets;
+                //    lblMultiSelect.DataTextField = "DataValue_Description";
+                //    lblMultiSelect.DataValueField = "DataValue_Name";
+                //    lblMultiSelect.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                //    lblMultiSelect.DataBind();
+
+                //    //lblPatientType.Visible = true;
+                //    //lblMultiSelect.Visible = true;
+                //    SetDepartent();
+                //}
 
                 else if (this.PageTitle == "Lab_Department_Wise_Summary")
                 {
@@ -3195,6 +3311,76 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     lblPatientType.Visible = true;
                     ddlPatientType.Visible = true;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    
+                    lblMainDepartment.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    object valusets;
+                    dpROw.Visible = true;
+                    tr_Export.Visible = true;
+                    ddlDepartments.Visible = true;
+
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlPatientType.DataBind();
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in db.DataValues where p.ValueSet_ID == 9 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();
+                }
+                if (this.PageTitle == "ReportVoucher")
+                {
+                    string x = "Advance Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;   // turned it into false 
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    
+                    lblMainDepartment.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    object valusets;
+                    dpROw.Visible = true;
+                    tr_Export.Visible = true;
+                    ddlDepartments.Visible = true;
+
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlPatientType.DataBind();
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in db.DataValues where p.ValueSet_ID == 9 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();
+                }
+                if (this.PageTitle == "TestWiseMonthlyLabTestDepartment")
+                {
+                    string x = "Advance Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;   // turned it into false 
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     
