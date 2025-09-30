@@ -74,3 +74,132 @@
     .detail {
         margin-top: 3%;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .responstable {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+        .responstable th,
+        .responstable td {
+            padding: 12px 10px;
+            text-align: left;
+            vertical-align: top;
+            border: 1px solid #ddd;
+        }
+
+        .responstable th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+
+    /* Fix Growth/Non Growth column layout */
+    #tblsingleTest #ddlGrowth,
+    #tblsingleTest #ddlOrganism {
+        width: 100% !important;
+        max-width: 297px;
+        margin-bottom: 8px;
+    }
+
+    #tblsingleTest input[type="button"].btn {
+        width: 90px !important;
+        margin: 8px 0;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    #tblsingleTest textarea {
+        width: 100% !important;
+        max-width: 297px;
+        min-height: 80px;
+        margin-top: 8px !important;
+        box-sizing: border-box;
+    }
+
+    #tblsingleTest select.arrow-togglable,
+    #tblsingleTest input.arrow-togglable {
+        width: 100%;
+        max-width: 297px;
+        margin-top: 8px !important;
+        box-sizing: border-box;
+    }
+
+    /* Organism table */
+    #tblOrganism {
+        width: 100%;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+    }
+
+        #tblOrganism th,
+        #tblOrganism td {
+            padding: 6px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+
+            #tblOrganism th[contenteditable],
+            #tblOrganism td[contenteditable] {
+                min-width: 100px;
+            }
+
+    /* File upload */
+    #container {
+        margin-top: 10px;
+        min-height: 50px;
+    }
+
+    /* Responsive: Stack columns on small screens */
+    @media screen and (max-width: 768px) {
+        .responstable,
+        .responstable thead,
+        .responstable tbody,
+        .responstable th,
+        .responstable td,
+        .responstable tr {
+            display: block;
+        }
+
+            .responstable thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            .responstable tr {
+                border: 1px solid #ccc;
+                margin-bottom: 15px;
+                padding: 10px 0;
+            }
+
+            .responstable td {
+                border: none;
+                position: relative;
+                padding-left: 50% !important;
+                text-align: left;
+            }
+
+                .responstable td:before {
+                    content: attr(data-label);
+                    position: absolute;
+                    left: 10px;
+                    width: 45%;
+                    font-weight: bold;
+                    text-align: left;
+                }
