@@ -817,7 +817,6 @@ namespace PMS
             public string Result_Time { get; set; }
             public string Approved_By { get; set; }
             public string Approved_Time { get; set; }
-            public string TestDepartment { get; set; }
         }
 
         [WebMethod]
@@ -862,7 +861,6 @@ namespace PMS
                             GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
                             Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
                             Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
-                            TestDepartment = (db.GetDataValueName("Test Departments", tdef.Group_Department) == null ? "" : db.GetDataValueName("Test Departments", tdef.Group_Department)),
                             tdef.Value_Type,
                             Status = ltd.Status == null ? false : true,
                             ltd.Image_path,
@@ -897,7 +895,7 @@ namespace PMS
                 test.Test_Name = item.Test_Name;
                 test.DepartmentName = item.DepartmentName;
                 test.Group_Category = item.Group_Category;
-                test.GroupName = item.GroupName;                
+                test.GroupName = item.GroupName;
                 if (item.Is_Result != null)
                 {
                     test.Is_Result = (bool)item.Is_Result;
@@ -926,7 +924,6 @@ namespace PMS
                 test.Rotation_ID = item.Rotation_ID;
                 test.Rotation = item.Rotation;
                 test.Unit_Name = item.Unit_Name;
-                test.TestDepartment = item.TestDepartment;
                 test.ValueType = item.Value_Type;
                 test.Status = (bool)item.Status;
                 test.Parent_Transaction_Type = item.Parent_Transaction_Type;
@@ -954,71 +951,36 @@ namespace PMS
             }
 
             AlltestListRefined = AlltestList;
-
-            DataTable GroupTest = DBClass.getDataTable(@"
-    SELECT 
-        MIN(ld.Lab_Test_ID) AS Lab_Test_ID,
-        dv.Segment2,
-        dv.Datavalue_ID AS Test_ID,
-        lt.Group_Category,
-        dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
-        MIN(ld.Test_Performed_By) AS Test_Performed_By,
-        MIN(ld.Test_Ready_On) AS Test_Ready_On,
-        MIN(ld.Approved_Time) AS Approved_Time,
-        (SELECT TOP 1 UserName 
-         FROM aspnet_Users u 
-         WHERE u.UserId = ld.Approved_By) AS Approved_By,
-        MIN(bd.Bill_Details_ID) AS Bill_Details_ID,
-        MIN(ld.Rejected_Reason) AS Rejected_Reason,
-        MIN(bd.Service_Date) AS Service_Date,
-        CAST(MAX(CAST(ISNULL(ld.isApproved, 0) AS INT)) AS BIT) AS IsApproved,
-        CAST(MAX(CAST(ISNULL(ld.Is_Result, 0) AS INT)) AS BIT) AS Is_Result,
-        MIN(ltm.Patient_ID) AS Patient_ID,
-        MIN(bd.Test_Main_Department) AS Test_Main_Department,
-        dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
-    FROM Lab_Test_Detail ld
-    JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
-    JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
-    JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
-    JOIN Ar_Billings ar ON ar.Bill_ID = bd.Bill_ID
-    LEFT JOIN Datavalues dv 
-           ON dv.Datavalue_Name = lt.Group_Category 
-          AND dv.ValueSet_ID = 70
-    WHERE ISNULL(bd.Is_Group_Category, 0) = 1 
-      AND ld.Patient_ID = " + Patient_ID + @" 
-      AND ar.Bill_ID = " + Bill_ID + @"
-    GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department
-");
+          
+            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], ld.Test_Performed_By,ld.Test_Ready_On,ld.Approved_Time,(select top 1 UserName from aspnet_Users where UserId = ld.Approved_By) as Approved_By, bd.Bill_Details_ID,ld.Rejected_Reason,bd.Service_Date,isnull(ld.isApproved,'') as IsApproved,isnull(ld.Is_Result,'') as [Is_Result],ltm.patient_ID,bd.Test_Main_Department from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Ar_Billings ar where bd.Bill_Details_ID = ld.Bill_Details_ID and ar.Bill_ID=bd.Bill_ID and bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = (case when " + Patient_ID + " = 0 then ld.Patient_ID else " + Patient_ID + " end) and lt.Test_ID = ld.Test_ID /*and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID and ar.Bill_ID = (case when " + Bill_ID + " = 0 then ar.Bill_ID else " + Bill_ID + " end)");
 
             foreach (DataRow item in GroupTest.Rows)
             {
                 Test TestObj = new Test()
                 {
-                    Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),  
-                    Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(), 
-                    Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),     
+
+                    Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
+                    Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(),
+                    Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
                     Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
                     Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
+                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
+                    Is_Result = Convert.ToBoolean(item[13] == DBNull.Value ? "" : item[13]),
+                    Rejected_Reason = item[10] == DBNull.Value ? "" : item[10].ToString(),
+                    Service_Date = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[12] == DBNull.Value ? "" : item[12]),
+                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
+                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
                     Test_Performed_By = item[5] == DBNull.Value ? "" : item[5].ToString(),
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
-                    Rejected_Reason = item[10] == DBNull.Value ? "" : item[10].ToString(),
-                    Service_Date = item[11] == DBNull.Value ? "" : item[11].ToString(),
-                    Is_Approve = item[12] != DBNull.Value && Convert.ToBoolean(item[12]),
-                    Is_Result = item[13] != DBNull.Value && Convert.ToBoolean(item[13]),
-                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
-                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
                 };
 
-                TestObj.ListOfTestIDs = DBClass.getField(
-                    "select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')"
-                );
+                TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
+
                 AlltestListRefined.Add(TestObj);
             }
-
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
         }
 
@@ -1064,7 +1026,6 @@ namespace PMS
                             GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
                             Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
                             Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
-                            TestDepartment = (db.GetDataValueName("Test Departments", tdef.Group_Department) == null ? "" : db.GetDataValueName("Test Departments", tdef.Group_Department)),
                             tdef.Value_Type,
                             Status = ltd.Status == null ? false : true,
                             ltd.Image_path,
@@ -1119,7 +1080,6 @@ namespace PMS
                 test.Rotation = item.Rotation;
                
                 test.Unit_Name = item.Unit_Name;
-                test.TestDepartment = item.TestDepartment;
                 test.ValueType = item.Value_Type;
                 test.Status = (bool)item.Status;
                
@@ -1150,74 +1110,43 @@ namespace PMS
                 test.Result_Time = item.Test_Ready_On?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
-               // test.Test_Department = item.TestDepartment;
                 AlltestList.Add(test);
             }
 
             AlltestListRefined = AlltestList;
-            DataTable GroupTest = DBClass.getDataTable(@"
-    SELECT 
-        MIN(ld.Lab_Test_ID) AS Lab_Test_ID,
-        dv.Segment2,
-        dv.Datavalue_ID AS Test_ID,
-        lt.Group_Category,
-        dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
-        MIN(ld.Test_Performed_By) AS Test_Performed_By,
-        MIN(ld.Test_Ready_On) AS Test_Ready_On,
-        MIN(ld.Approved_Time) AS Approved_Time,
-        (SELECT TOP 1 UserName 
-         FROM aspnet_Users u 
-         WHERE u.UserId = ld.Approved_By) AS Approved_By,
-        MIN(bd.Bill_Details_ID) AS Bill_Details_ID,
-        CAST(MAX(CAST(ISNULL(ld.Is_Result, 0) AS INT)) AS BIT) AS Is_Result,
-        MIN(ld.Rejected_Reason) AS Rejected_Reason,
-        MIN(bd.Service_Date) AS Service_Date,
-        CAST(MAX(CAST(ISNULL(ld.isApproved, 0) AS INT)) AS BIT) AS IsApproved,
-        MIN(ltm.Patient_ID) AS patient_id,
-        MIN(ISNULL(bd.Test_Main_Department, '')) AS Test_Main_Department,
-        dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
-    FROM Lab_Test_Detail ld
-    JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
-    JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
-    JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
-    JOIN Reg_patient pat ON ld.Patient_ID = pat.pat_id
-    LEFT JOIN Datavalues dv 
-           ON dv.Datavalue_Name = lt.Group_Category 
-          AND dv.ValueSet_ID = 70
-    WHERE ISNULL(bd.Is_Group_Category, 0) = 1
-      AND pat.Patient_No = (CASE WHEN " + patientNo + @" = 0 THEN pat.Patient_No ELSE " + patientNo + @" END)
-    GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department
-");
+            DataTable GroupTest = DBClass.getDataTable("Select Distinct ld.Lab_Test_ID,(select Segment2 from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Segment2] ,(select Datavalue_ID from Datavalues where Datavalue_Name = (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) and ValueSet_ID = 70) as [Test_ID], (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID) as [Group_Category], dbo.GetDataValueName('Test Groups', (Select Group_Category from Lab_TEsts where TEst_ID = ld.Test_ID)) as [Group_Test_Name], ld.Test_Performed_By,ld.Test_Ready_On, ld.Approved_Time,(select top 1 UserName from aspnet_Users where UserId = ld.Approved_By) as Approved_By,bd.Bill_Details_ID,ld.Is_Result,ld.Rejected_Reason,bd.Service_Date,isnull(ld.isApproved,'') as IsApproved,ltm.patient_id,isnull(bd.Test_Main_Department,'') Test_Main_Department from Lab_Test_Detail ld, Lab_Tests lt, Laboratory_Test ltm, AR_Billing_Details bd, Reg_patient pat where bd.Bill_Details_ID = ld.Bill_Details_ID and isnull(bd.Is_Group_Category,0) = 1 and ld.Patient_ID = pat.pat_id  and pat.Patient_No = (case when " + patientNo + " = 0 then pat.Patient_No else " + patientNo + " end) and lt.Test_ID = ld.Test_ID /* and lt.Group_Category <> ''*/ and ltm.Lab_Test_ID = ld.Lab_Test_ID");
+
 
             foreach (DataRow item in GroupTest.Rows)
             {
                 Test TestObj = new Test()
                 {
+                   
                     Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
                     Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(),
                     Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
                     Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
                     Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
+                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
+                    Is_Result = Convert.ToBoolean(item[10] == DBNull.Value ? "" : item[10]),
+                    Rejected_Reason = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Service_Date = item[12] == DBNull.Value ? "" : item[12].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[13] == DBNull.Value ? "" : item[13]),
+                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
+                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
                     Test_Performed_By = item[5] == DBNull.Value ? "" : item[5].ToString(),
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
+                   
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
-                    Is_Result = item[10] != DBNull.Value && Convert.ToBoolean(item[10]),
-                    Rejected_Reason = item[11] == DBNull.Value ? "" : item[11].ToString(),
-                    Service_Date = item[12] == DBNull.Value ? "" : item[12].ToString(),
-                    Is_Approve = item[13] != DBNull.Value && Convert.ToBoolean(item[13]),
-                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
-                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
-                };
 
-                TestObj.ListOfTestIDs = DBClass.getField(
-                    "select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')"
-                );
+
+            };
+
+                TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
+                
                 AlltestListRefined.Add(TestObj);
             }
-
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
         }
 
