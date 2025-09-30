@@ -312,7 +312,7 @@
                         debugger;
                         var parse = JSON.parse(response.d);
                         var length = parse.length;
-                        $("#txtSample_ID").val(parse[0].Sample_ID);
+
                         $("#txtSample_No").val(parse[0].Sample_No);
                         $("#hdSample_ID").val(parse[0].Sample_ID);
                         $("#txtSampleCollected_Date").val(parse[0].Sample_Collected_Date);
@@ -1129,6 +1129,7 @@
             }
             debugger;
             if (acknowlagment == '01') {
+                debugger;
                 SavelabTest(id)
             }
              
