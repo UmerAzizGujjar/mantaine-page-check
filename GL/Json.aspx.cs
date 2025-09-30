@@ -754,22 +754,35 @@ namespace PMS
                     if (!string.IsNullOrEmpty(Request.QueryString["q"]))
                     {
                         string q = Request.QueryString["q"].Replace("'", "''");
-                        sqlQuery = @"  SELECT TOP 1 sm.Sample_No,  sm.Patient_ID, p.Patient_No,
-                               p.Full_Name,ISNULL(b.Bill_ID, '') AS Bill_ID  FROM Sample_Master sm  INNER JOIN Reg_patient p ON sm.Patient_ID = p.pat_id
-                          LEFT JOIN (  SELECT Bill_ID, Patient_ID, ROW_NUMBER() OVER (PARTITION BY Patient_ID ORDER BY Bill_Date DESC) AS rn FROM Ar_Billings
-                           ) b ON sm.Patient_ID = b.Patient_ID AND b.rn = 1  WHERE sm.Sample_No = '" + q + @"'  ORDER BY sm.Sample_No"; 
-                        }
+                        sqlQuery = @"
+            SELECT TOP 1 
+                sm.Sample_No,
+                sm.Patient_ID,
+                p.Patient_No,
+                p.Full_Name,
+                ISNULL(b.Bill_ID, '') AS Bill_ID
+            FROM Sample_Master sm
+            INNER JOIN Reg_patient p ON sm.Patient_ID = p.pat_id
+            INNER JOIN Sample_Detail sd ON sm.Sample_ID = sd.Sample_ID
+            INNER JOIN Ar_Billing_Details bd ON sd.Bill_Detail_ID = bd.Bill_Details_ID
+            INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
+            WHERE sm.Sample_No = '" + q + @"'";
+                    }
                     else
                     {
-                        sqlQuery = @"  SELECT DISTINCT TOP 20  sm.Sample_No, sm.Patient_ID,
-                       p.Patient_No,  p.Full_Name, ISNULL(b.Bill_ID, '') AS Bill_ID FROM Sample_Master sm 
-                    INNER JOIN Reg_patient p ON sm.Patient_ID = p.pat_id
-                     LEFT JOIN (
-                       SELECT Bill_ID, Patient_ID,
-                       ROW_NUMBER() OVER (PARTITION BY Patient_ID ORDER BY Bill_Date DESC) AS rn
-                         FROM Ar_Billings
-                         ) b ON sm.Patient_ID = b.Patient_ID AND b.rn = 1
-                           ORDER BY sm.Sample_No DESC"; 
+                        sqlQuery = @"
+            SELECT DISTINCT TOP 20
+                sm.Sample_No,
+                sm.Patient_ID,
+                p.Patient_No,
+                p.Full_Name,
+                ISNULL(b.Bill_ID, '') AS Bill_ID
+            FROM Sample_Master sm
+            INNER JOIN Reg_patient p ON sm.Patient_ID = p.pat_id
+            INNER JOIN Sample_Detail sd ON sm.Sample_ID = sd.Sample_ID
+            INNER JOIN Ar_Billing_Details bd ON sd.Bill_Detail_ID = bd.Bill_Details_ID
+            INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
+            ORDER BY sm.Sample_No DESC";
                     }
 
                     string result = "";
