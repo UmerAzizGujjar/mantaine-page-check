@@ -1121,42 +1121,78 @@
 
         }
         debugger;
+        //function PreviewReport($this) {
+        //    debugger;
+        //    var tbl = $($($this).parents('tr')[0]);
+        //    // var Patient_ID = $('#hdnPatient_ID').val();
+        //    var hdn_Patient_ID = tbl.find("td").find("input[id=Patient_Id]").val();
+        //    var ChkLetterHead = true;
+        //    var ListOfTestIDs = '';
+        //    var ListTransID = '';
+        //    var Report_Column = '';
+        //    var LabTestDetailsID = '';
+
+        //    Report_Column = tbl.find('td').find('input[name=Report_Colum]').val();
+        //    ListOfTestIDs = tbl.find('td').find('input[name=List_Of_Test_IDs]').val();
+        //    test_wise_ids = tbl.find('td').find('input[name=test_wise_id]').val();
+        //    //ListTransID = tbl.find('td:eq(0)').text();
+        //    ListTransID = tbl.find('td:eq(1)').text();
+        //    //LabTestDetailsID = tbl.find('td:eq(2)').text();
+        //    LabTestDetailsID = tbl.find('td:eq(2)').text();
+        //    var billdetailid = tbl.find('td:eq(14) #Bill_Details_ID').val()
+        //    var testIds = tbl.find('td:eq(10) #ListOfTestIDs').val();
+        //    if (testIds == "null" || testIds == '') {
+        //        debugger;
+        //        //testIds = tbl.find('td:eq(1) #labtestDID').val();
+        //        testIds = tbl.find('td:eq(1) #labtestDID').val();
+        //        //testIds = tbl.find('td:eq(1)').find('input').attr('labid')
+        //        ListOfTestIDs = testIds;
+        //    }
+        //    else {
+        //        //ListOfTestIDs += ', ' + tbl.find('#labtestDID').val();
+        //    }
+
+        //    ListBillDetailID = billdetailid.replace(', ', '');
+        //    window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&test_wise_ids=' + test_wise_ids + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);
+
+        //    /*  window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&Patient_ID=' + hdn_Patient_ID + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);*/
+
+        //}
+
         function PreviewReport($this) {
             debugger;
-            var tbl = $($($this).parents('tr')[0]);
-            // var Patient_ID = $('#hdnPatient_ID').val();
-            var hdn_Patient_ID = tbl.find("td").find("input[id=Patient_Id]").val();
+            var $row = $($this).closest('tr'); 
+
             var ChkLetterHead = true;
-            var ListOfTestIDs = '';
-            var ListTransID = '';
-            var Report_Column = '';
-            var LabTestDetailsID = '';
 
-            Report_Column = tbl.find('td').find('input[name=Report_Colum]').val();
-            ListOfTestIDs = tbl.find('td').find('input[name=List_Of_Test_IDs]').val();
-            test_wise_ids = tbl.find('td').find('input[name=test_wise_id]').val();
-            //ListTransID = tbl.find('td:eq(0)').text();
-            ListTransID = tbl.find('td:eq(1)').text();
-            //LabTestDetailsID = tbl.find('td:eq(2)').text();
-            LabTestDetailsID = tbl.find('td:eq(2)').text();
-            var billdetailid = tbl.find('td:eq(14) #Bill_Details_ID').val()
-            var testIds = tbl.find('td:eq(10) #ListOfTestIDs').val();
-            if (testIds == "null" || testIds == '') {
-                debugger;
-                //testIds = tbl.find('td:eq(1) #labtestDID').val();
-                testIds = tbl.find('td:eq(1) #labtestDID').val();
-                //testIds = tbl.find('td:eq(1)').find('input').attr('labid')
-                ListOfTestIDs = testIds;
-            }
-            else {
-                //ListOfTestIDs += ', ' + tbl.find('#labtestDID').val();
+            var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
+            var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
+            var Report_Column = $row.find('input[name="Report_Colum"]').val() || '';
+            var LabTestDetailsID = $row.find('td:eq(2)').text();
+            var ListTransID = $row.find('td').eq(1).contents().filter(function () {
+                return this.nodeType === 3; 
+            }).text().trim();
+
+            var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
+
+            if (!ListOfTestIDs || ListOfTestIDs === "null") {
+                var labTestDID = $row.find('input[name="labtestDID"]').val();
+                ListOfTestIDs = labTestDID || '';
             }
 
-            ListBillDetailID = billdetailid.replace(', ', '');
-            window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&test_wise_ids=' + test_wise_ids + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);
+            var ListBillDetailID = (billdetailid || '').replace(', ', '');
 
-            /*  window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&Patient_ID=' + hdn_Patient_ID + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);*/
-
+            window.open(
+                '../../ReportViewer.aspx?ReportName=TestResultQ' +
+                '&ReportTitle=Department Of Pathalogy' +
+                '&Test_IDs=' + encodeURIComponent(ListOfTestIDs) +
+                '&test_wise_ids=' + encodeURIComponent(test_wise_ids) +
+                '&TransID=' + encodeURIComponent(ListTransID) +
+                '&labTDetailsID=' + encodeURIComponent(LabTestDetailsID) +
+                '&BillDetailID=' + encodeURIComponent(ListBillDetailID) +
+                '&ReportColumn=' + encodeURIComponent(Report_Column) +
+                '&ChkLetterHead=' + ChkLetterHead
+            );
         }
 
      
