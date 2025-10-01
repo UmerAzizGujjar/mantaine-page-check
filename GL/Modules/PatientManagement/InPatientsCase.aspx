@@ -114,8 +114,8 @@
         localStorage.IsDischarge = 0;
         $(document).ready(function () {
             debugger;
-
-           /* fillDoctors();*/
+          
+           
 
             $('#ctl00_MainContent_ctl00_MainContent_txtEOR').on('focus click', function () {
                 $(this)[0].setSelectionRange(0, 0);

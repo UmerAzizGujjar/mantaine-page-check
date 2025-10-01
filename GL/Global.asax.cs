@@ -205,6 +205,7 @@ namespace PMS
         }
 
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)
+        
         {
             if (HttpContext.Current?.User != null)
             {

@@ -872,7 +872,7 @@
 
 
             }
-            
+
             var hdFile_ID = $("#hdnPatient_ID").val();
             debugger;
             if (hdFile_ID != "(New)") {
@@ -885,7 +885,7 @@
 
                 loadtokenInputsDefault();
             }
-       
+
             var hdFile_ID = $("#hdnLab_Test_ID").val();
             if (hdFile_ID != "(New)") {
                 var Lab_Test_ID = $("#hdnLab_Test_ID").val();
@@ -935,8 +935,6 @@
                     }
                 }
             });
-
-            
         }
 
             
@@ -1123,42 +1121,78 @@
 
         }
         debugger;
+        //function PreviewReport($this) {
+        //    debugger;
+        //    var tbl = $($($this).parents('tr')[0]);
+        //    // var Patient_ID = $('#hdnPatient_ID').val();
+        //    var hdn_Patient_ID = tbl.find("td").find("input[id=Patient_Id]").val();
+        //    var ChkLetterHead = true;
+        //    var ListOfTestIDs = '';
+        //    var ListTransID = '';
+        //    var Report_Column = '';
+        //    var LabTestDetailsID = '';
+
+        //    Report_Column = tbl.find('td').find('input[name=Report_Colum]').val();
+        //    ListOfTestIDs = tbl.find('td').find('input[name=List_Of_Test_IDs]').val();
+        //    test_wise_ids = tbl.find('td').find('input[name=test_wise_id]').val();
+        //    //ListTransID = tbl.find('td:eq(0)').text();
+        //    ListTransID = tbl.find('td:eq(1)').text();
+        //    //LabTestDetailsID = tbl.find('td:eq(2)').text();
+        //    LabTestDetailsID = tbl.find('td:eq(2)').text();
+        //    var billdetailid = tbl.find('td:eq(14) #Bill_Details_ID').val()
+        //    var testIds = tbl.find('td:eq(10) #ListOfTestIDs').val();
+        //    if (testIds == "null" || testIds == '') {
+        //        debugger;
+        //        //testIds = tbl.find('td:eq(1) #labtestDID').val();
+        //        testIds = tbl.find('td:eq(1) #labtestDID').val();
+        //        //testIds = tbl.find('td:eq(1)').find('input').attr('labid')
+        //        ListOfTestIDs = testIds;
+        //    }
+        //    else {
+        //        //ListOfTestIDs += ', ' + tbl.find('#labtestDID').val();
+        //    }
+
+        //    ListBillDetailID = billdetailid.replace(', ', '');
+        //    window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&test_wise_ids=' + test_wise_ids + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);
+
+        //    /*  window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&Patient_ID=' + hdn_Patient_ID + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);*/
+
+        //}
+
         function PreviewReport($this) {
             debugger;
-            var tbl = $($($this).parents('tr')[0]);
-            // var Patient_ID = $('#hdnPatient_ID').val();
-            var hdn_Patient_ID = tbl.find("td").find("input[id=Patient_Id]").val();
+            var $row = $($this).closest('tr'); 
+
             var ChkLetterHead = true;
-            var ListOfTestIDs = '';
-            var ListTransID = '';
-            var Report_Column = '';
-            var LabTestDetailsID = '';
 
-            Report_Column = tbl.find('td').find('input[name=Report_Colum]').val();
-            ListOfTestIDs = tbl.find('td').find('input[name=List_Of_Test_IDs]').val();
-            test_wise_ids = tbl.find('td').find('input[name=test_wise_id]').val();
-            //ListTransID = tbl.find('td:eq(0)').text();
-            ListTransID = tbl.find('td:eq(1)').text();
-            //LabTestDetailsID = tbl.find('td:eq(2)').text();
-            LabTestDetailsID = tbl.find('td:eq(2)').text();
-            var billdetailid = tbl.find('td:eq(14) #Bill_Details_ID').val()
-            var testIds = tbl.find('td:eq(10) #ListOfTestIDs').val();
-            if (testIds == "null" || testIds == '') {
-                debugger;
-                //testIds = tbl.find('td:eq(1) #labtestDID').val();
-                testIds = tbl.find('td:eq(1) #labtestDID').val();
-                //testIds = tbl.find('td:eq(1)').find('input').attr('labid')
-                ListOfTestIDs = testIds;
-            }
-            else {
-                //ListOfTestIDs += ', ' + tbl.find('#labtestDID').val();
+            var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
+            var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
+            var Report_Column = $row.find('input[name="Report_Colum"]').val() || '';
+            var LabTestDetailsID = $row.find('td:eq(2)').text();
+            var ListTransID = $row.find('td').eq(1).contents().filter(function () {
+                return this.nodeType === 3; 
+            }).text().trim();
+
+            var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
+
+            if (!ListOfTestIDs || ListOfTestIDs === "null") {
+                var labTestDID = $row.find('input[name="labtestDID"]').val();
+                ListOfTestIDs = labTestDID || '';
             }
 
-            ListBillDetailID = billdetailid.replace(', ', '');
-            window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&test_wise_ids=' + test_wise_ids + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);
+            var ListBillDetailID = (billdetailid || '').replace(', ', '');
 
-            /*  window.open('../../ReportViewer.aspx?ReportName=TestResultQ&ReportTitle=Department Of Pathalogy&Test_IDs=' + ListOfTestIDs + '&Patient_ID=' + hdn_Patient_ID + '&TransID=' + ListTransID + '&labTDetailsID=' + LabTestDetailsID + '&BillDetailID=' + ListBillDetailID + '&ReportColumn=' + Report_Column + '&ChkLetterHead=' + ChkLetterHead);*/
-
+            window.open(
+                '../../ReportViewer.aspx?ReportName=TestResultQ' +
+                '&ReportTitle=Department Of Pathalogy' +
+                '&Test_IDs=' + encodeURIComponent(ListOfTestIDs) +
+                '&test_wise_ids=' + encodeURIComponent(test_wise_ids) +
+                '&TransID=' + encodeURIComponent(ListTransID) +
+                '&labTDetailsID=' + encodeURIComponent(LabTestDetailsID) +
+                '&BillDetailID=' + encodeURIComponent(ListBillDetailID) +
+                '&ReportColumn=' + encodeURIComponent(Report_Column) +
+                '&ChkLetterHead=' + ChkLetterHead
+            );
         }
 
      
@@ -2255,7 +2289,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                                    <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-6">
@@ -2451,65 +2485,69 @@
                 <p id="pTestName" style="margin-left: 29px; font-size: 20px; color: blue;"></p>
             </div>
             <div class="modal-body">
-                <table class="test-table responstable" id="tblsingleTest">
-                    <tr>
-                        <th>Fixed Type</th>
-                        <th>Patient Result</th>
-                        <th>Reference Ranges</th>
-                        <th>List Type</th>
-                        <th>Growth/Non Growth</th>
-                        <th>Organism Detected</th>
-                        <th>Image Upload</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <textarea id="txtfixedType"  name="txtfixedType"></textarea>
-                            <div style="margin-top: 25px;">
-                                <select id="chkUltraSound_level" class="wgtmsr"></select>
-                            </div>
-                        </td>
-                        <td>
-                            <input type="text" id="txtvaluetype" class="arrow-togglable" style="margin-left: 15px;" />
-                        </td>
-                        <td>
-                            <input type="text" id="ranges" class="arrow-togglable" style="margin-left: 15px;" readonly />
-                        </td>
-                        <td>
-                            <select id="ddllistType" class="arrow-togglable" style="margin-left: 15px;"></select>
-                        </td>
-                        <td>
-                            <select id="ddlGrowth" style="margin-top: 167px;"></select>
-                            <input type="button" id="btnGrowth" name="AddGrowth" value="Add" class="arrow-togglable" style="margin-left: 192px; margin-top: -54px;" />
-                            <textarea rows="4" cols="50" id="txtAreaGrowth" style="width: 297px; margin-top: 35px;"></textarea>
-                            <select id="growthInfor" style="margin-top: 50px;"></select>
-                            <input type="button" id="btnGrowthInfo" name="AddGrowthInfo" value="Add" class="arrow-togglable" style="margin-left: 192px; margin-top: -54px;" />
-                            <textarea rows="4" cols="50" id="txtAreaGrowthInfo" style="width: 297px; margin-top: 35px;"></textarea>
-                        </td>
-                        <td>
-                            <select id="ddlOrganism" class="limitedNumbChosen" style="margin-top: 167px;"></select>
-                            <input type="button" id="btnOrganism" name="AddOrganism" value="Add" class="arrow-togglable" style="margin-left: 192px; margin-top: -54px;" />
-                            <table id="tblOrganism" class="responstable">
-                                <thead>
-                                    <tr>
-                                        <th contenteditable>Org Name</th>
-                                        <th contenteditable></th>
-                                        <th contenteditable></th>
-                                        <th contenteditable></th>
-                                        <th contenteditable>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </td>
-                        <td>
-                            <asp:FileUpload runat="server" ID="fileUploadMultiple" AllowMultiple="true" CssClass="image" onchange="readIMGsingle(this)" />
-                            <div id="container" style="width: 150px;"></div>
-                        </td>
-                        <td style="display: none;">
-                            <input type="hidden" id="hdtestdetailid" />
-                        </td>
-                    </tr>
+               <table class="test-table responstable" id="tblsingleTest">
+    <thead>
+        <tr>
+            <th>Fixed Type</th>
+            <th>Patient Result</th>
+            <th>Reference Ranges</th>
+            <th>List Type</th>
+            <th>Growth/Non Growth</th>
+            <th>Organism Detected</th>
+            <th>Image Upload</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td data-label="Fixed Type">
+                <textarea id="txtfixedType" name="txtfixedType"></textarea>
+                <div style="margin-top: 25px;">
+                    <select id="chkUltraSound_level" class="wgtmsr"></select>
+                </div>
+            </td>
+            <td data-label="Patient Result">
+                <input type="text" id="txtvaluetype" class="arrow-togglable" style="margin-left: 0; width: 100%; max-width: 297px;" />
+            </td>
+            <td data-label="Reference Ranges">
+                <input type="text" id="ranges" class="arrow-togglable" style="margin-left: 0; width: 100%; max-width: 297px;" readonly />
+            </td>
+            <td data-label="List Type">
+                <select id="ddllistType" class="arrow-togglable" style="margin-left: 0; width: 100%; max-width: 297px;"></select>
+            </td>
+            <td data-label="Growth/Non Growth">
+                <select id="ddlGrowth" style="width:100% !important; max-width:297px;"></select>
+                <input type="button" id="btnGrowth" name="AddGrowth" value="Add" class="btn btn-primry" />
+                <textarea rows="4" cols="50" id="txtAreaGrowth" style="width: 100%; max-width: 297px; margin-top: 8px;"></textarea>
+                <select id="growthInfor" style="margin-top: 15px; width:100% !important; max-width:297px;"></select>
+                <input type="button" id="btnGrowthInfo" name="AddGrowthInfo" value="Add" class="btn btn-primry" style="margin-top: 8px;" />
+                <textarea rows="4" cols="50" id="txtAreaGrowthInfo" style="width: 100%; max-width: 297px; margin-top: 8px;"></textarea>
+            </td>
+            <td data-label="Organism Detected">
+                <select id="ddlOrganism" class="limitedNumbChosen" style="width:100% !important; max-width:297px;"></select>
+                <input type="button" id="btnOrganism" name="AddOrganism" value="Add" class="btn btn-primry" style="margin-top: 8px;" />
+                <table id="tblOrganism" class="responstable">
+                    <thead>
+                        <tr>
+                            <th contenteditable>Org Name</th>
+                            <th contenteditable></th>
+                            <th contenteditable></th>
+                            <th contenteditable></th>
+                            <th contenteditable>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
                 </table>
+            </td>
+            <td data-label="Image Upload">
+                <asp:FileUpload runat="server" ID="fileUploadMultiple" AllowMultiple="true" CssClass="image" onchange="readIMGsingle(this)" />
+                <div id="container" style="width: 150px; margin-top: 10px;"></div>
+            </td>
+            <td style="display: none;" data-label="">
+                <input type="hidden" id="hdtestdetailid" />
+            </td>
+        </tr>
+    </tbody>
+</table>
                 <table id="tblgroupTestlist" class="table">
                     <thead>
                         <tr>

@@ -817,7 +817,6 @@ namespace PMS
             public string Result_Time { get; set; }
             public string Approved_By { get; set; }
             public string Approved_Time { get; set; }
-            public string TestDepartment { get; set; }
         }
 
         [WebMethod]
@@ -862,7 +861,6 @@ namespace PMS
                             GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
                             Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
                             Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
-                            TestDepartment = (db.GetDataValueName("Test Departments", tdef.Group_Department) == null ? "" : db.GetDataValueName("Test Departments", tdef.Group_Department)),
                             tdef.Value_Type,
                             Status = ltd.Status == null ? false : true,
                             ltd.Image_path,
@@ -897,7 +895,7 @@ namespace PMS
                 test.Test_Name = item.Test_Name;
                 test.DepartmentName = item.DepartmentName;
                 test.Group_Category = item.Group_Category;
-                test.GroupName = item.GroupName;                
+                test.GroupName = item.GroupName;
                 if (item.Is_Result != null)
                 {
                     test.Is_Result = (bool)item.Is_Result;
@@ -926,7 +924,6 @@ namespace PMS
                 test.Rotation_ID = item.Rotation_ID;
                 test.Rotation = item.Rotation;
                 test.Unit_Name = item.Unit_Name;
-                test.TestDepartment = item.TestDepartment;
                 test.ValueType = item.Value_Type;
                 test.Status = (bool)item.Status;
                 test.Parent_Transaction_Type = item.Parent_Transaction_Type;
@@ -994,31 +991,29 @@ namespace PMS
             {
                 Test TestObj = new Test()
                 {
-                    Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),  
-                    Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(), 
-                    Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),     
+
+                    Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
+                    Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(),
+                    Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
                     Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
                     Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
+                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
+                    Is_Result = Convert.ToBoolean(item[13] == DBNull.Value ? "" : item[13]),
+                    Rejected_Reason = item[10] == DBNull.Value ? "" : item[10].ToString(),
+                    Service_Date = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[12] == DBNull.Value ? "" : item[12]),
+                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
+                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
                     Test_Performed_By = item[5] == DBNull.Value ? "" : item[5].ToString(),
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
-                    Rejected_Reason = item[10] == DBNull.Value ? "" : item[10].ToString(),
-                    Service_Date = item[11] == DBNull.Value ? "" : item[11].ToString(),
-                    Is_Approve = item[12] != DBNull.Value && Convert.ToBoolean(item[12]),
-                    Is_Result = item[13] != DBNull.Value && Convert.ToBoolean(item[13]),
-                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
-                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
                 };
 
-                TestObj.ListOfTestIDs = DBClass.getField(
-                    "select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')"
-                );
+                TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
+
                 AlltestListRefined.Add(TestObj);
             }
-
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
         }
 
@@ -1064,7 +1059,6 @@ namespace PMS
                             GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
                             Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
                             Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
-                            TestDepartment = (db.GetDataValueName("Test Departments", tdef.Group_Department) == null ? "" : db.GetDataValueName("Test Departments", tdef.Group_Department)),
                             tdef.Value_Type,
                             Status = ltd.Status == null ? false : true,
                             ltd.Image_path,
@@ -1119,7 +1113,6 @@ namespace PMS
                 test.Rotation = item.Rotation;
                
                 test.Unit_Name = item.Unit_Name;
-                test.TestDepartment = item.TestDepartment;
                 test.ValueType = item.Value_Type;
                 test.Status = (bool)item.Status;
                
@@ -1150,7 +1143,6 @@ namespace PMS
                 test.Result_Time = item.Test_Ready_On?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
-               // test.Test_Department = item.TestDepartment;
                 AlltestList.Add(test);
             }
 
@@ -1193,31 +1185,32 @@ namespace PMS
             {
                 Test TestObj = new Test()
                 {
+                   
                     Lab_Test_ID = item[0] == DBNull.Value ? "" : item[0].ToString(),
                     Report_Colum = item[1] == DBNull.Value ? "" : item[1].ToString(),
                     Test_ID = item[2] == DBNull.Value ? "" : item[2].ToString(),
                     Group_Category = item[3] == DBNull.Value ? "" : item[3].ToString(),
                     Test_Name = item[4] == DBNull.Value ? "" : item[4].ToString(),
+                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
+                    Is_Result = Convert.ToBoolean(item[10] == DBNull.Value ? "" : item[10]),
+                    Rejected_Reason = item[11] == DBNull.Value ? "" : item[11].ToString(),
+                    Service_Date = item[12] == DBNull.Value ? "" : item[12].ToString(),
+                    Is_Approve = Convert.ToBoolean(item[13] == DBNull.Value ? "" : item[13]),
+                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
+                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
                     Test_Performed_By = item[5] == DBNull.Value ? "" : item[5].ToString(),
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
+                   
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    Bill_Details_ID = item[9] == DBNull.Value ? "" : item[9].ToString(),
-                    Is_Result = item[10] != DBNull.Value && Convert.ToBoolean(item[10]),
-                    Rejected_Reason = item[11] == DBNull.Value ? "" : item[11].ToString(),
-                    Service_Date = item[12] == DBNull.Value ? "" : item[12].ToString(),
-                    Is_Approve = item[13] != DBNull.Value && Convert.ToBoolean(item[13]),
-                    patient_ID = item[14] == DBNull.Value ? "" : item[14].ToString(),
-                    Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
-                };
 
-                TestObj.ListOfTestIDs = DBClass.getField(
-                    "select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')"
-                );
+
+            };
+
+                TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
+                
                 AlltestListRefined.Add(TestObj);
             }
-
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
         }
 
