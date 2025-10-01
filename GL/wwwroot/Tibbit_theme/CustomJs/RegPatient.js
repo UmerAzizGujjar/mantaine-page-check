@@ -33,6 +33,48 @@
         $element.off('select2:open').on('select2:open', function () {
             fillDropdown($element, item.method);
         });
+        $element.off('select2:select').on('select2:select', function () {
+            setTimeout(() => {
+                var $currentSelection = $(this).siblings('.select2').find('.select2-selection');
+                var $tabbable = $(':input:visible:enabled, .select2-selection:visible')
+                    .not('[type="hidden"]')
+                    .not(':disabled');
+
+                var currentIndex = $tabbable.index($currentSelection);
+                var $next = $tabbable.eq(currentIndex + 1);
+
+                if ($next.length) {
+                    if ($next.hasClass('select2-selection')) {
+                        $next.attr('tabindex', '0').focus();
+                    } else {
+                        $next.focus();
+                    }
+                }
+            }, 50);
+        });
+    });
+
+    const staticDropdowns = ['#ddl_name', '#ddlRelation', '#PrefixAge'];
+    staticDropdowns.forEach(id => {
+        const $el = $(id);
+        $el.select2();
+        $el.off('select2:select').on('select2:select', function () {
+            setTimeout(() => {
+                var $currentSelection = $(this).siblings('.select2').find('.select2-selection');
+                var $tabbable = $(':input:visible:enabled, .select2-selection:visible')
+                    .not('[type="hidden"]')
+                    .not(':disabled');
+                var idx = $tabbable.index($currentSelection);
+                var $next = $tabbable.eq(idx + 1);
+                if ($next.length) {
+                    if ($next.hasClass('select2-selection')) {
+                        $next.attr('tabindex', '0').focus();
+                    } else {
+                        $next.focus();
+                    }
+                }
+            }, 50);
+        });
     });
  
 });

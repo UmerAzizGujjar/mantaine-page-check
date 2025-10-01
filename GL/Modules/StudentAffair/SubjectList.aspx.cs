@@ -30,8 +30,8 @@ namespace PMS
                               select new
                               {
                                   subject_Id = S.subject_Id,
-                                  Program = _dbContext.GetDataValueName("Student Class", S.Program),
-                                  Class = _dbContext.GetDataValueName("Admission Category", S.Class),
+                                  Program = _dbContext.GetDataValueName("Admission Category", S.Program),
+                                  Class = _dbContext.GetDataValueName("Student Class", S.Class),
                               };
 
 
