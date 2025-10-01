@@ -817,6 +817,7 @@ namespace PMS
             public string Result_Time { get; set; }
             public string Approved_By { get; set; }
             public string Approved_Time { get; set; }
+            public string TestDepartment { get; set; }
         }
 
         [WebMethod]
@@ -861,6 +862,7 @@ namespace PMS
                             GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
                             Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
                             Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
+                            TestDepartment = (db.GetDataValueName("Test Departments", tdef.Group_Department) == null ? "" : db.GetDataValueName("Test Departments", tdef.Group_Department)),
                             tdef.Value_Type,
                             Status = ltd.Status == null ? false : true,
                             ltd.Image_path,
@@ -895,6 +897,7 @@ namespace PMS
                 test.Test_Name = item.Test_Name;
                 test.DepartmentName = item.DepartmentName;
                 test.Group_Category = item.Group_Category;
+                test.TestDepartment = item.TestDepartment;
                 test.GroupName = item.GroupName;
                 if (item.Is_Result != null)
                 {
@@ -982,7 +985,7 @@ namespace PMS
           ON dv.Datavalue_Name = lt.Group_Category 
           AND dv.ValueSet_ID = 70
     WHERE ISNULL(bd.Is_Group_Category, 0) = 1 
-      AND ld.Patient_ID = " + Patient_ID + @" 
+     
       AND ar.Bill_ID = " + Bill_ID + @"
     GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department
 ");
@@ -1008,6 +1011,7 @@ namespace PMS
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
+                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
                 };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
@@ -1059,6 +1063,7 @@ namespace PMS
                             GroupName = (db.GetDataValueName("Test Groups", tdef.Group_Category) == null ? "" : db.GetDataValueName("Test Groups", tdef.Group_Category)),
                             Rotation = db.GetDataValueName("Test XRay Rotations", ltd.Rotation_ID),
                             Unit_Name = (db.GetDataValueName("Test Units", tdef.Unit) == null ? "" : db.GetDataValueName("Test Units", tdef.Unit)),
+                            TestDepartment = (db.GetDataValueName("Test Departments", tdef.Group_Department) == null ? "" : db.GetDataValueName("Test Departments", tdef.Group_Department)),
                             tdef.Value_Type,
                             Status = ltd.Status == null ? false : true,
                             ltd.Image_path,
@@ -1091,6 +1096,7 @@ namespace PMS
                 test.Test_Name = item.Test_Name;
                 test.DepartmentName = item.DepartmentName;
                 test.Group_Category = item.Group_Category;
+                test.TestDepartment = item.TestDepartment;
                 test.GroupName = item.GroupName;
                 if (item.Is_Result != null)
                 {
@@ -1200,12 +1206,12 @@ namespace PMS
                     Test_Main_Department = item[15] == DBNull.Value ? "" : item[15].ToString(),
                     Test_Performed_By = item[5] == DBNull.Value ? "" : item[5].ToString(),
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
-                    Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
-                   
+                    Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),                  
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
+                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
 
 
-            };
+                };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
                 
@@ -1239,6 +1245,7 @@ namespace PMS
             public string Parent_Transaction_Type { get; set; }
             public int Parent_Transaction_Type_ID { get; set; }
             public bool Is_Result { get; set; }
+
         }
         [WebMethod]
         public static string fillGrowthTypes()
