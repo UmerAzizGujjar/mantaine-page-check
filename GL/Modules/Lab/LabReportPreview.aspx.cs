@@ -976,13 +976,13 @@ namespace PMS
         MIN(ltm.Patient_ID) AS Patient_ID,
         MIN(bd.Test_Main_Department) AS Test_Main_Department,
         dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
-    FROM Lab_Test_Detail ld
-    JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
-    JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
-    JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
-    JOIN Ar_Billings ar ON ar.Bill_ID = bd.Bill_ID
-    LEFT JOIN Datavalues dv 
-           ON dv.Datavalue_Name = lt.Group_Category 
+        FROM Lab_Test_Detail ld
+        JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
+        JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
+        JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
+        JOIN Ar_Billings ar ON ar.Bill_ID = bd.Bill_ID
+        LEFT JOIN Datavalues dv 
+          ON dv.Datavalue_Name = lt.Group_Category 
           AND dv.ValueSet_ID = 70
     WHERE ISNULL(bd.Is_Group_Category, 0) = 1 
       AND ld.Patient_ID = " + Patient_ID + @" 
@@ -1176,17 +1176,17 @@ namespace PMS
         MIN(ltm.Patient_ID) AS patient_id,
         MIN(ISNULL(bd.Test_Main_Department, '')) AS Test_Main_Department,
         dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
-    FROM Lab_Test_Detail ld
-    JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
-    JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
-    JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
-    JOIN Reg_patient pat ON ld.Patient_ID = pat.pat_id
-    LEFT JOIN Datavalues dv 
-           ON dv.Datavalue_Name = lt.Group_Category 
-          AND dv.ValueSet_ID = 70
-    WHERE ISNULL(bd.Is_Group_Category, 0) = 1
-      AND pat.Patient_No = (CASE WHEN " + patientNo + @" = 0 THEN pat.Patient_No ELSE " + patientNo + @" END)
-    GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department
+        FROM Lab_Test_Detail ld
+        JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
+        JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
+        JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
+        JOIN Reg_patient pat ON ld.Patient_ID = pat.pat_id
+        LEFT JOIN Datavalues dv 
+              ON dv.Datavalue_Name = lt.Group_Category 
+              AND dv.ValueSet_ID = 70
+        WHERE ISNULL(bd.Is_Group_Category, 0) = 1
+          AND pat.Patient_No = (CASE WHEN " + patientNo + @" = 0 THEN pat.Patient_No ELSE " + patientNo + @" END)
+        GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department
 ");
 
             foreach (DataRow item in GroupTest.Rows)
