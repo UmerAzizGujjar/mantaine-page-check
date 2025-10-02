@@ -789,8 +789,7 @@ function SavePatient() {
     var Age = $('#txt_dob').val();
     var Date_Of_Birth = $('#txtAge_yearss').val();
     var CNIC = $('#txt_cnic').val();
-    var Address = $('#txt_Address').val();
-    var houseno = $('#txt_house').val();
+    var Address = $('#txt_house').val();
     var stno = $('#txtstrm').val();
     var city = $('#txtcity :selected').text();
     var area = $('#txtarea :selected').text();
@@ -826,7 +825,6 @@ function SavePatient() {
         Date_Of_Birth: Date_Of_Birth,
         CNIC: CNIC,
         Address: Address,
-        houseno: houseno,
         stno: stno,
         city: city,
         city_val: city_val,

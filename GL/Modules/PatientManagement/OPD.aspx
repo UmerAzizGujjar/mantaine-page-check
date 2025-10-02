@@ -427,7 +427,9 @@
         }
         function PrintPatientBackCard() {
             $('#ctl00_MainContent_chckPatientCard').attr('disabled', true);
-            Patient_ID =  '<%= Request.QueryString["OPDID"]%>';                    var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;                    window.open(url);
+            Patient_ID =  '<%= Request.QueryString["OPDID"]%>';
+                    var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;
+                    window.open(url);
                 }
 
 
@@ -1114,7 +1116,7 @@
                     <div class="form-group row" style="display: none;">
                         <label for="txt_Address" class="col-sm-3 col-form-label">Address<span style="color: red;">*</span></label>
                         <div class="col-sm-9">
-                            <input type="text" id="txt_Address" class="form-control" />
+                            <input type="text" id="" class="form-control" />
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-6" style="display: none">
                             <label for="txtstrm">St#/Mh#/Rd#/<span style="color: red;">*</span></label>
