@@ -598,13 +598,13 @@ namespace PMS.Modules.PatientManagement
             string Full_Name, string RelationType, string Relation, string Gender,
             string Mobile, string Date_Of_Birth, string CNIC, string Address,
             string PatientID, string martail_status, string Age,
-            string houseno, string stno, string city, string area,
+           string stno, string city, string area,
             string city_val, string area_val, string Province, string Country)
         {
             Full_Name = SanitizeInput(Full_Name);
             Relation = SanitizeInput(Relation);
-            Address = SanitizeInput(Address);
-            houseno = SanitizeInput(houseno);
+         
+          
             stno = SanitizeInput(stno);
             city = SanitizeInput(city);
             area = SanitizeInput(area);
@@ -626,7 +626,7 @@ namespace PMS.Modules.PatientManagement
                     pat.NIC = CNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
-                    pat.House_No = houseno;
+                   
                     pat.stno_mno = stno;
                     pat.city = city;
                     pat.area = area;
@@ -652,7 +652,7 @@ namespace PMS.Modules.PatientManagement
                 pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                 pat.NIC = CNIC;
                 pat.Permanent_Address = Address;
-                pat.House_No = houseno;
+              
                 pat.stno_mno = stno;
                 pat.city = city;
                 pat.area = area;

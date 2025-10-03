@@ -13,7 +13,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div style="margin: 0px 0px 0px 0px;">
-     
         <script type="text/javascript">
             var DiscountAMt = 0;
             var is_Patient_Temp = false;

@@ -789,8 +789,7 @@ function SavePatient() {
     var Age = $('#txt_dob').val();
     var Date_Of_Birth = $('#txtAge_yearss').val();
     var CNIC = $('#txt_cnic').val();
-    var Address = $('#txt_Address').val();
-    var houseno = $('#txt_house').val();
+    var Address = $('#txt_house').val();
     var stno = $('#txtstrm').val();
     var city = $('#txtcity :selected').text();
     var area = $('#txtarea :selected').text();
@@ -800,7 +799,7 @@ function SavePatient() {
     var Country = $('#ddlCountry :selected').val();
     var Province = $('#ddl_Province :selected').val();
 
-    if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || houseno == "" || city_val == "0" || area_val == "0")) {
+    if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || city_val == "0" || area_val == "0")) {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -826,7 +825,6 @@ function SavePatient() {
         Date_Of_Birth: Date_Of_Birth,
         CNIC: CNIC,
         Address: Address,
-        houseno: houseno,
         stno: stno,
         city: city,
         city_val: city_val,
