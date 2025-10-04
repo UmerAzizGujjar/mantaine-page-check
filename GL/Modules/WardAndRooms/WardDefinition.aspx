@@ -109,7 +109,18 @@
                 success: function (response) {
                     var result = response.d;
                     if (result === "Success") {
-                        $('#lblMessage').text("Data saved successfully!").css("color", "green");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data saved successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                         setTimeout(() => window.location.href = "WardDefinitionView.aspx", 1000);
                     } else {
                         $('#lblMessage').text(result).css("color", "red");

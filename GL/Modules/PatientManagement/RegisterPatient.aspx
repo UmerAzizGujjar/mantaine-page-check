@@ -160,12 +160,14 @@
             <label for="txtcity">City</label>
             <select id="txtcity"  tabindex="15" class="form-control">
                 <option value="0">Select City</option>
+                <option value="0002" selected>Kasur</option>               
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtarea">Area</label>
             <select id="txtarea" tabindex="16" class="form-control">
                 <option value="0">Select Area</option>
+                <option value="04" selected>Dina Nath</option>  
             </select>
         </div>
         <div class="col-lg-6 col-md-8 col-sm-10">

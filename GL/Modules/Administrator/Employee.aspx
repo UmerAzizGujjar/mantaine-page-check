@@ -403,10 +403,7 @@
                   "CustomerJSON": CustomerJSON
 
               };
-              console.log("Button value:", $('#btnSave').val());
-              console.log("Employee ID:", $('#txtEmployeeID').val());
               var data = JSON.stringify({ dataa: dataObj });
-              console.log(data);
 
               debugger;
               $.ajax({
