@@ -1085,12 +1085,14 @@
                             <label>Country</label>
                             <select id="ddlCountry" class="form-control">
                                   <option value="0">Select Country</option>
+                                <option value="01" selected>Pakistan</option>
                             </select>
                         </div>
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label>Province</label>
                             <select id="ddl_Province" class="form-control">
                                   <option value="0">Select Province</option>
+                                <option value="01" selected>Punjab</option>
                             </select>
                         </div>
                     </div>

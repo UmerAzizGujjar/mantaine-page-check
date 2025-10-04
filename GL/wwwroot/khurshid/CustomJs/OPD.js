@@ -117,7 +117,69 @@ $(document).ready(function () {
             $element.off('select2:open');
         }
 
+        $element.select2({
+            minimumResultsForSearch: -1,
+            width: '100%'
+        });
 
+        if (item.id !== '#ddl_Gender' &&
+            item.id !== '#ddlPatient_Type' &&
+            item.id !== '#ddlDepartment' &&
+            item.id !== '#ddldoctor') {
+
+            $element.off('select2:select').on('select2:select', function () {
+                setTimeout(() => {
+                    var $currentSelection = $(this).siblings('.select2').find('.select2-selection');
+                    var $tabbable = $(':input:visible:enabled, .select2-selection:visible')
+                        .not('[type="hidden"]')
+                        .not(':disabled');
+
+                    var currentIndex = $tabbable.index($currentSelection);
+                    var $next = $tabbable.eq(currentIndex + 1);
+
+                    if ($next.length) {
+                        if ($next.hasClass('select2-selection')) {
+                            $next.attr('tabindex', '0').focus();
+                        } else {
+                            $next.focus();
+                        }
+                    }
+                }, 50);
+            });
+        }
+
+
+
+    });
+
+    $('#txt_mobile').on('focus', function () {
+        var input = this;
+        setTimeout(function () {
+            if (input.setSelectionRange) {
+                input.setSelectionRange(3, 3);
+            } else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', 3);
+                range.moveStart('character', 3);
+                range.select();
+            }
+        }, 0);
+    });
+
+    $('#txt_cnic').on('focus', function () {
+        var input = this;
+        setTimeout(function () {
+            if (input.setSelectionRange) {
+                input.setSelectionRange(0, 0);
+            } else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', 0);
+                range.moveStart('character', 0);
+                range.select();
+            }
+        }, 0);
     });
 
     showhide();

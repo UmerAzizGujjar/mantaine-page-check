@@ -144,6 +144,7 @@
             <label>Country</label>
             <select id="ddlCountry" tabindex="13" class="form-control">
                  <option value="0">Select Country</option>
+                <option value="01" selected>Pakistan</option>
             </select>
         </div>
     </div>
@@ -152,6 +153,7 @@
             <label for="ddlstate">Province</label>
             <select id="ddlstate" tabindex="14" class="form-control">
                  <option value="0">Select Province</option>
+                <option value="01" selected>Punjab</option>
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">

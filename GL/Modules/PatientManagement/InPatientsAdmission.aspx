@@ -11753,7 +11753,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
+                            <input type="text" tabindex="1" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
                         </div>
 
 
@@ -11764,7 +11764,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select id="ddl_Gender" style="width: 197px;">
+                            <select id="ddl_Gender" tabindex="5" style="width: 197px;">
                             </select>
                         </div>
                     </div>
@@ -11775,7 +11775,7 @@
                         </div>
 
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop1 fcux" name="name" id="ddl_name">
+                            <select class="impo-drop1 fcux" tabindex="3" name="name" id="ddl_name">
                                 <option value="Mr.">Mr.</option>
                                 <option value="Mrs.">Mrs.</option>
                                 <option value="Ms.">Ms.</option>
@@ -11785,7 +11785,7 @@
 
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input name="dob"  type="text" id="txt_name" tabindex="1" style="margin-left: -12px !important" />
+                            <input name="dob"  type="text" id="txt_name" tabindex="4" style="margin-left: -12px !important" />
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
@@ -11793,7 +11793,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select  tabindex="2" id="ddl_status" style="width: 197px;">
+                            <select  tabindex="6" id="ddl_status" style="width: 197px;">
                                 <option></option>
                             </select>
                         </div>
@@ -11804,14 +11804,14 @@
                             <label>Relation<span style="color:red;">*</span></label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop fcux" tabindex="3" name="name" id="ddlRelation">
+                            <select class="impo-drop fcux" tabindex="7" name="name" id="ddlRelation">
                                 <option value="S/O">S/O</option>
                                 <option value="W/O">W/O</option>
                                 <option value="D/O">D/O</option>
                             </select>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_relation" tabindex="4" style="margin-left: -12px !important" />
+                            <input type="text" id="txt_relation" tabindex="8" style="margin-left: -12px !important" />
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4"></div>
@@ -11819,7 +11819,7 @@
                             <label>Mobile<span style="color:red;">*</span></label>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" tabindex="5" id="txt_mobile" style="width: 197px !important;" />
+                            <input type="text" tabindex="9" id="txt_mobile" style="width: 197px !important;" />
                         </div>
                     </div>
 
@@ -11829,7 +11829,7 @@
                             <label>Age/DOB<span style="color:red;">*</span></label>
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select name="name" tabindex="6" id="PrefixAge" >
+                            <select name="name" tabindex="10" id="PrefixAge" >
                                 <option value="Year">Year</option>
                                 <option value="Month">Month</option>
                                 <option value="Day">Day</option>
@@ -11837,7 +11837,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_dob" tabindex="7" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
+                            <input type="text" id="txt_dob" tabindex="11" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
                             <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
                         </div>
 
@@ -11847,7 +11847,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input tabindex="8"  type="text" id="txt_cnic" style="width: 200px !important" />
+                            <input tabindex="12"  type="text" id="txt_cnic" style="width: 200px !important" />
                         </div>
                     </div>
 
@@ -11858,7 +11858,7 @@
                         </div>
 
                         <div class="col-lg-6 col-md-3 col-sm-4">
-                            <input type="text"  tabindex="9" id="txt_Address"  />
+                            <input type="text"  tabindex="13" id="txt_Address"  />
                         </div>
                     </div>
                 </div>
