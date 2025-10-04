@@ -84,6 +84,19 @@ $(document).ready(function () {
         });
     });
 
+    const defaults = {
+        '#ddlCountry': { value: '01', text: 'Pakistan' },
+        '#ddlstate': { value: '01', text: 'Punjab' },
+        '#txtcity': { value: '0002', text: 'Kasur' },
+        '#txtarea': { value: '04', text: 'Dina Nath' }
+    };
+
+    $.each(defaults, function (id, data) {
+        const $el = $(id);
+        $el.html(`<option value="${data.value}" selected>${data.text}</option>`);
+    });
+
+
     const staticDropdowns = ['#ddl_name', '#ddlRelation', '#PrefixAge'];
     staticDropdowns.forEach(id => {
         const $el = $(id);

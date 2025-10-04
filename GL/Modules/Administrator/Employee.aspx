@@ -291,9 +291,8 @@
 
 
           }
-          function saveData() {
-
-              debugger;
+          function saveData() {             
+              debugger;          
               var hdfAccount_ID = $('#hdfAccount_ID').val();
               var buttonVal = $('#btnSave').val();
               var txtEmployeeID = $('#txtEmployeeID').val();
@@ -347,9 +346,41 @@
               var txtGovt_Hospital = $('#txtGovt_Hospital').val();
               var hdnEmp = $('#hdnEmp').val();
               var lblMessage = $('#lblMessage').val();
-              var CustomerJSON = $('#CustomerJSON').val()||'';
+              var CustomerJSON = $('#CustomerJSON').val() || '';
 
+              if (!txtEmployee_Date_of_Birth || txtEmployee_Date_of_Birth.trim() === '') {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Please select Date of birth',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      customClass: {
+                          popup: 'swal-big-popup',
+                          title: 'swal-big-title',
+                          htmlContainer: 'swal-big-text'
+                      }
+                  });
+                  return;
+              }
 
+              if (!txtEmployee_DOJ || txtEmployee_DOJ.trim() === '') {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Please select Date of Joining',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      customClass: {
+                          popup: 'swal-big-popup',
+                          title: 'swal-big-title',
+                          htmlContainer: 'swal-big-text'
+                      }
+                  });
+                  return;
+              }
+
+              
               var dataObj = {
                   "buttonVal": buttonVal,
                   "txtEmployeeID": txtEmployeeID,
@@ -403,7 +434,10 @@
                   "CustomerJSON": CustomerJSON
 
               };
+
+
               var data = JSON.stringify({ dataa: dataObj });
+
 
               debugger;
               $.ajax({
