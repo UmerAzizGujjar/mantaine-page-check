@@ -78,120 +78,69 @@ $(document).ready(function () {
         { id: '#ddlpanel', method: 'GetPanel' }
 
     ];
-
     dropdowns.forEach(item => {
-
         const $element = $(item.id);
-        $element.select2();
-        $element.off('select2:open').on('select2:open', function () {
-            fillDropdown($element, item.method);
-        });
 
+        const isInsideModal = $element.closest('#PatientModel').length > 0;
 
+        if (!isInsideModal) {
+            // Non-modal: use Select2 as before
+            $element.select2();
+            $element.off('select2:open').on('select2:open', function () {
+                fillDropdown($element, item.method);
+            });
+        } else {
+            // ✅ MODAL: Use native 'focus' to load data ONCE
+            $element.off('focus.fill').on('focus.fill', function () {
+                if (!$element.data('filled')) {
+                    fillDropdown($element, item.method);
+                }
+            });
+        }
+
+        // 👇 Keep ALL your existing logic exactly as before
         if (item.id === '#ddlPatient_Type') {
             $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
+            // Since modal uses native select, bind to 'change', not 'select2:select'
+            const changeHandler = function () {
                 loaddata();
                 $(this).prop('disabled', true);
-            });
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', changeHandler);
+            } else {
+                $element.off('change').on('change', changeHandler);
+            }
         }
 
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
+            const deptHandler = function () {
                 loaddoctor();
-            });
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', deptHandler);
+            } else {
+                $element.off('change').on('change', deptHandler);
+            }
         }
 
         if (item.id === '#ddldoctor') {
-
-            $element.off('select2:select');
-
-            $element.on('select2:select', function (e) {
+            const doctorHandler = function (e) {
                 var selectedVal = $(this).val();
                 if (selectedVal) {
                     loadFee();
                 }
-            });
-
-            $element.off('select2:open');
-        }
-
-        $element.select2({
-            minimumResultsForSearch: -1,
-            width: '100%'
-        });
-
-        if (item.id !== '#ddl_Gender' &&
-            item.id !== '#ddlPatient_Type' &&
-            item.id !== '#ddlDepartment' &&
-            item.id !== '#ddldoctor') {
-
-            $element.off('select2:select').on('select2:select', function () {
-                setTimeout(() => {
-                    var $currentSelection = $(this).siblings('.select2').find('.select2-selection');
-                    var $tabbable = $(':input:visible:enabled, .select2-selection:visible')
-                        .not('[type="hidden"]')
-                        .not(':disabled');
-
-                    var currentIndex = $tabbable.index($currentSelection);
-                    var $next = $tabbable.eq(currentIndex + 1);
-
-                    if ($next.length) {
-                        if ($next.hasClass('select2-selection')) {
-                            $next.attr('tabindex', '0').focus();
-                        } else {
-                            $next.focus();
-                        }
-                    }
-                }, 50);
-            });
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', doctorHandler);
+                $element.off('select2:open');
+            } else {
+                $element.off('change').on('change', doctorHandler);
+            }
         }
 
 
-
-    });
-
-    const defaults = {
-        '#ddlCountry': { value: '01', text: 'Pakistan' },
-        '#ddl_Province': { value: '01', text: 'Punjab' },
-        '#txtcity': { value: '0002', text: 'Kasur' },
-        '#txtarea': { value: '04', text: 'Dina Nath' }
-    };
-
-    $.each(defaults, function (id, data) {
-        const $el = $(id);
-        $el.html(`<option value="${data.value}" selected>${data.text}</option>`);
-    });
-
-    $('#txt_mobile').on('focus', function () {
-        var input = this;
-        setTimeout(function () {
-            if (input.setSelectionRange) {
-                input.setSelectionRange(3, 3);
-            } else if (input.createTextRange) {
-                var range = input.createTextRange();
-                range.collapse(true);
-                range.moveEnd('character', 3);
-                range.moveStart('character', 3);
-                range.select();
-            }
-        }, 0);
-    });
-
-    $('#txt_cnic').on('focus', function () {
-        var input = this;
-        setTimeout(function () {
-            if (input.setSelectionRange) {
-                input.setSelectionRange(0, 0);
-            } else if (input.createTextRange) {
-                var range = input.createTextRange();
-                range.collapse(true);
-                range.moveEnd('character', 0);
-                range.moveStart('character', 0);
-                range.select();
-            }
-        }, 0);
     });
 
     showhide();
