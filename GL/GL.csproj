@@ -230,6 +230,7 @@
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
+    <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
@@ -25828,6 +25829,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\BillingSection.aspx.designer.cs">
       <DependentUpon>BillingSection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\CEODashboardNew.aspx.cs">
+      <DependentUpon>CEODashboardNew.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\CEODashboardNew.aspx.designer.cs">
+      <DependentUpon>CEODashboardNew.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\CEODashBorad.aspx.cs">
       <DependentUpon>CEODashBorad.aspx</DependentUpon>
