@@ -3777,6 +3777,7 @@
     <Content Include="wwwroot\ASsiratTheme\Scripts\gridmvc.min.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.min.js" />
+    <Content Include="upload\UploadEmergency.ashx" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -28070,6 +28071,9 @@
     </Compile>
     <Compile Include="Modules\Administrator\TokenListWithOutSiteMaster.aspx.designer.cs">
       <DependentUpon>TokenListWithOutSiteMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\UploadEmergency.ashx.cs">
+      <DependentUpon>UploadEmergency.ashx</DependentUpon>
     </Compile>
     <Compile Include="upload\UploadPaymentFiles.ashx.cs">
       <DependentUpon>UploadPaymentFiles.ashx</DependentUpon>

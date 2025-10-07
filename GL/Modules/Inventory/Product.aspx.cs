@@ -363,6 +363,8 @@ namespace PMS.Inventory
                     obj.Services = Convert.ToBoolean(IsService);
                     obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
                     obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal sehatRate) ? sehatRate : 0;
+                    obj.Created_By = AppConfig.UserID;
+                    obj.Created_Time = DateTime.Now;
 
                     bool itemExists = db.INV_Items.Any(x => x.Item_Code == obj.Item_Code);
                     if (itemExists)
@@ -393,6 +395,8 @@ namespace PMS.Inventory
                     obj.Item_Type = ItemType;
                     obj.Item_Category = ItemCategory;
                     obj.Financial_Integration = FianceIntegration;
+                    obj.Updated_By = AppConfig.UserID;
+                    obj.Updated_Time = DateTime.Now;
                     obj.Item_Account_category = int.TryParse(FianceIntegration, out int finCat) ? finCat : 0;
                     obj.UOM_Qty = decimal.TryParse(UomQty, out decimal uomQty) ? uomQty : 0;
                     obj.Length = decimal.TryParse(Lenght, out decimal length) ? length : 0;

@@ -4600,13 +4600,6 @@ namespace PMS
             return ((ISingleResult<sp_GetInPatientDetailResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetEmergencyPatientDetail")]
-        public ISingleResult<sp_GetEmergencyPatientDetailResult> sp_GetEmergencyPatientDetail([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Emergency_ID", DbType = "Int")] System.Nullable<int> emergency_ID)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), emergency_ID);
-            return ((ISingleResult<sp_GetEmergencyPatientDetailResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spPharmacyitem")]
         public ISingleResult<spPharmacyitemResult> spPharmacyitem([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemName", DbType = "NVarChar(500)")] string itemName)
         {
@@ -4717,6 +4710,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
             return ((ISingleResult<sp_GetDoctorCountForCEODashboardResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetEmergencyPatientDetail")]
+        public ISingleResult<sp_GetEmergencyPatientDetailResult> sp_GetEmergencyPatientDetail([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Emergency_ID", DbType = "Int")] System.Nullable<int> emergency_ID)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), emergency_ID);
+            return ((ISingleResult<sp_GetEmergencyPatientDetailResult>)(result.ReturnValue));
         }
     }
 
@@ -193515,6 +193515,1034 @@ namespace PMS
         }
     }
 
+    public partial class spPharmacyitemResult
+    {
+
+        private int _Item_ID;
+
+        private string _Item_Code;
+
+        private string _Description;
+
+        private string _Generic_Name;
+
+        public spPharmacyitemResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
+        public int Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this._Item_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
+        public string Item_Code
+        {
+            get
+            {
+                return this._Item_Code;
+            }
+            set
+            {
+                if ((this._Item_Code != value))
+                {
+                    this._Item_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this._Description = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Generic_Name", DbType = "VarChar(250)")]
+        public string Generic_Name
+        {
+            get
+            {
+                return this._Generic_Name;
+            }
+            set
+            {
+                if ((this._Generic_Name != value))
+                {
+                    this._Generic_Name = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_LoadPRNumResult
+    {
+
+        private int _PR_Id;
+
+        private System.Nullable<int> _PR_Num;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_LoadPRNumResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
+        public int PR_Id
+        {
+            get
+            {
+                return this._PR_Id;
+            }
+            set
+            {
+                if ((this._PR_Id != value))
+                {
+                    this._PR_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
+        public System.Nullable<int> PR_Num
+        {
+            get
+            {
+                return this._PR_Num;
+            }
+            set
+            {
+                if ((this._PR_Num != value))
+                {
+                    this._PR_Num = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_LoadPRNumByWarehouseResult
+    {
+
+        private int _PR_Id;
+
+        private System.Nullable<int> _PR_Num;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_LoadPRNumByWarehouseResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
+        public int PR_Id
+        {
+            get
+            {
+                return this._PR_Id;
+            }
+            set
+            {
+                if ((this._PR_Id != value))
+                {
+                    this._PR_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
+        public System.Nullable<int> PR_Num
+        {
+            get
+            {
+                return this._PR_Num;
+            }
+            set
+            {
+                if ((this._PR_Num != value))
+                {
+                    this._PR_Num = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPatientCountsByDateResult
+    {
+
+        private System.Nullable<int> _TotalPatients;
+
+        private System.Nullable<int> _Filter_Clinic;
+
+        private System.Nullable<int> _Patient_Main_Category;
+
+        public sp_GetPatientCountsByDateResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPatients", DbType = "Int")]
+        public System.Nullable<int> TotalPatients
+        {
+            get
+            {
+                return this._TotalPatients;
+            }
+            set
+            {
+                if ((this._TotalPatients != value))
+                {
+                    this._TotalPatients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Filter_Clinic", DbType = "Int")]
+        public System.Nullable<int> Filter_Clinic
+        {
+            get
+            {
+                return this._Filter_Clinic;
+            }
+            set
+            {
+                if ((this._Filter_Clinic != value))
+                {
+                    this._Filter_Clinic = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Main_Category", DbType = "Int")]
+        public System.Nullable<int> Patient_Main_Category
+        {
+            get
+            {
+                return this._Patient_Main_Category;
+            }
+            set
+            {
+                if ((this._Patient_Main_Category != value))
+                {
+                    this._Patient_Main_Category = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_AreaWisePatientCountResult
+    {
+
+        private string _Area_Name;
+
+        private System.Nullable<int> _Counts;
+
+        public sp_AreaWisePatientCountResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Area_Name", DbType = "VarChar(30) NOT NULL", CanBeNull = false)]
+        public string Area_Name
+        {
+            get
+            {
+                return this._Area_Name;
+            }
+            set
+            {
+                if ((this._Area_Name != value))
+                {
+                    this._Area_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Counts", DbType = "Int")]
+        public System.Nullable<int> Counts
+        {
+            get
+            {
+                return this._Counts;
+            }
+            set
+            {
+                if ((this._Counts != value))
+                {
+                    this._Counts = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetTodayPatientCountsResult
+    {
+
+        private System.Nullable<int> _TotalPatients;
+
+        private int _Filter_Clinic;
+
+        private int _Patient_Main_Category;
+
+        public sp_GetTodayPatientCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPatients", DbType = "Int")]
+        public System.Nullable<int> TotalPatients
+        {
+            get
+            {
+                return this._TotalPatients;
+            }
+            set
+            {
+                if ((this._TotalPatients != value))
+                {
+                    this._TotalPatients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Filter_Clinic", DbType = "Int NOT NULL")]
+        public int Filter_Clinic
+        {
+            get
+            {
+                return this._Filter_Clinic;
+            }
+            set
+            {
+                if ((this._Filter_Clinic != value))
+                {
+                    this._Filter_Clinic = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Main_Category", DbType = "Int NOT NULL")]
+        public int Patient_Main_Category
+        {
+            get
+            {
+                return this._Patient_Main_Category;
+            }
+            set
+            {
+                if ((this._Patient_Main_Category != value))
+                {
+                    this._Patient_Main_Category = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetDialysisPatientCountsResult
+    {
+
+        private System.Nullable<int> _performed;
+
+        private System.Nullable<int> _Active;
+
+        public sp_GetDialysisPatientCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_performed", DbType = "Int")]
+        public System.Nullable<int> performed
+        {
+            get
+            {
+                return this._performed;
+            }
+            set
+            {
+                if ((this._performed != value))
+                {
+                    this._performed = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Active", DbType = "Int")]
+        public System.Nullable<int> Active
+        {
+            get
+            {
+                return this._Active;
+            }
+            set
+            {
+                if ((this._Active != value))
+                {
+                    this._Active = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetProcedureCountsResult
+    {
+
+        private string _Item_Name;
+
+        private System.Nullable<int> _TotalCount;
+
+        public sp_GetProcedureCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
+        public string Item_Name
+        {
+            get
+            {
+                return this._Item_Name;
+            }
+            set
+            {
+                if ((this._Item_Name != value))
+                {
+                    this._Item_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int")]
+        public System.Nullable<int> TotalCount
+        {
+            get
+            {
+                return this._TotalCount;
+            }
+            set
+            {
+                if ((this._TotalCount != value))
+                {
+                    this._TotalCount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPharmacyCountsResult
+    {
+
+        private string _CustomerType;
+
+        private int _TotalCount;
+
+        private decimal _TotalReceivedAmount;
+
+        public sp_GetPharmacyCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CustomerType", DbType = "VarChar(16) NOT NULL", CanBeNull = false)]
+        public string CustomerType
+        {
+            get
+            {
+                return this._CustomerType;
+            }
+            set
+            {
+                if ((this._CustomerType != value))
+                {
+                    this._CustomerType = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int NOT NULL")]
+        public int TotalCount
+        {
+            get
+            {
+                return this._TotalCount;
+            }
+            set
+            {
+                if ((this._TotalCount != value))
+                {
+                    this._TotalCount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalReceivedAmount", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal TotalReceivedAmount
+        {
+            get
+            {
+                return this._TotalReceivedAmount;
+            }
+            set
+            {
+                if ((this._TotalReceivedAmount != value))
+                {
+                    this._TotalReceivedAmount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetInvestigationCountsResult
+    {
+
+        private string _Department;
+
+        private System.Nullable<int> _TotalBillCount;
+
+        private System.Nullable<int> _TotalPerformCount;
+
+        private decimal _TotalBillAmount;
+
+        public sp_GetInvestigationCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(10) NOT NULL", CanBeNull = false)]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this._Department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalBillCount", DbType = "Int")]
+        public System.Nullable<int> TotalBillCount
+        {
+            get
+            {
+                return this._TotalBillCount;
+            }
+            set
+            {
+                if ((this._TotalBillCount != value))
+                {
+                    this._TotalBillCount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPerformCount", DbType = "Int")]
+        public System.Nullable<int> TotalPerformCount
+        {
+            get
+            {
+                return this._TotalPerformCount;
+            }
+            set
+            {
+                if ((this._TotalPerformCount != value))
+                {
+                    this._TotalPerformCount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalBillAmount", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal TotalBillAmount
+        {
+            get
+            {
+                return this._TotalBillAmount;
+            }
+            set
+            {
+                if ((this._TotalBillAmount != value))
+                {
+                    this._TotalBillAmount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetReferCountResult
+    {
+
+        private System.Nullable<int> _TotalCount;
+
+        private System.Nullable<int> _ReferCount;
+
+        public sp_GetReferCountResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int")]
+        public System.Nullable<int> TotalCount
+        {
+            get
+            {
+                return this._TotalCount;
+            }
+            set
+            {
+                if ((this._TotalCount != value))
+                {
+                    this._TotalCount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ReferCount", DbType = "Int")]
+        public System.Nullable<int> ReferCount
+        {
+            get
+            {
+                return this._ReferCount;
+            }
+            set
+            {
+                if ((this._ReferCount != value))
+                {
+                    this._ReferCount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetTop5TestsByDepartmentResult
+    {
+
+        private string _Department;
+
+        private string _Test_Name;
+
+        private System.Nullable<decimal> _TotalAmount;
+
+        private System.Nullable<int> _TestCount;
+
+        private System.Nullable<long> _DeptRank;
+
+        private System.Nullable<decimal> _DeptTotalAmount;
+
+        private System.Nullable<int> _DeptTotalCount;
+
+        public sp_GetTop5TestsByDepartmentResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(61)")]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this._Department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_Name", DbType = "VarChar(200)")]
+        public string Test_Name
+        {
+            get
+            {
+                return this._Test_Name;
+            }
+            set
+            {
+                if ((this._Test_Name != value))
+                {
+                    this._Test_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> TotalAmount
+        {
+            get
+            {
+                return this._TotalAmount;
+            }
+            set
+            {
+                if ((this._TotalAmount != value))
+                {
+                    this._TotalAmount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TestCount", DbType = "Int")]
+        public System.Nullable<int> TestCount
+        {
+            get
+            {
+                return this._TestCount;
+            }
+            set
+            {
+                if ((this._TestCount != value))
+                {
+                    this._TestCount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptRank", DbType = "BigInt")]
+        public System.Nullable<long> DeptRank
+        {
+            get
+            {
+                return this._DeptRank;
+            }
+            set
+            {
+                if ((this._DeptRank != value))
+                {
+                    this._DeptRank = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptTotalAmount", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> DeptTotalAmount
+        {
+            get
+            {
+                return this._DeptTotalAmount;
+            }
+            set
+            {
+                if ((this._DeptTotalAmount != value))
+                {
+                    this._DeptTotalAmount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptTotalCount", DbType = "Int")]
+        public System.Nullable<int> DeptTotalCount
+        {
+            get
+            {
+                return this._DeptTotalCount;
+            }
+            set
+            {
+                if ((this._DeptTotalCount != value))
+                {
+                    this._DeptTotalCount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPatientCountsAndNetAmountByDateResult
+    {
+
+        private string _Category;
+
+        private System.Nullable<int> _Total_Count;
+
+        private decimal _Card_Receipt_Amount;
+
+        private decimal _Receipt_Amount;
+
+        public sp_GetPatientCountsAndNetAmountByDateResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string Category
+        {
+            get
+            {
+                return this._Category;
+            }
+            set
+            {
+                if ((this._Category != value))
+                {
+                    this._Category = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
+        public System.Nullable<int> Total_Count
+        {
+            get
+            {
+                return this._Total_Count;
+            }
+            set
+            {
+                if ((this._Total_Count != value))
+                {
+                    this._Total_Count = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Card_Receipt_Amount", DbType = "Decimal(38,2) NOT NULL")]
+        public decimal Card_Receipt_Amount
+        {
+            get
+            {
+                return this._Card_Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Card_Receipt_Amount != value))
+                {
+                    this._Card_Receipt_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
+        public decimal Receipt_Amount
+        {
+            get
+            {
+                return this._Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Receipt_Amount != value))
+                {
+                    this._Receipt_Amount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetOPDVitalCountsResult
+    {
+
+        private System.Nullable<int> _VitalCount;
+
+        public sp_GetOPDVitalCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VitalCount", DbType = "Int")]
+        public System.Nullable<int> VitalCount
+        {
+            get
+            {
+                return this._VitalCount;
+            }
+            set
+            {
+                if ((this._VitalCount != value))
+                {
+                    this._VitalCount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetOverallSatisfactionAverageResult
+    {
+
+        private System.Nullable<int> _NumberOfSurveys;
+
+        private System.Nullable<int> _SumOfAllScores;
+
+        private System.Nullable<int> _TotalQuestionsAnswered;
+
+        private System.Nullable<decimal> _OverallAverageSatisfaction;
+
+        public sp_GetOverallSatisfactionAverageResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NumberOfSurveys", DbType = "Int")]
+        public System.Nullable<int> NumberOfSurveys
+        {
+            get
+            {
+                return this._NumberOfSurveys;
+            }
+            set
+            {
+                if ((this._NumberOfSurveys != value))
+                {
+                    this._NumberOfSurveys = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SumOfAllScores", DbType = "Int")]
+        public System.Nullable<int> SumOfAllScores
+        {
+            get
+            {
+                return this._SumOfAllScores;
+            }
+            set
+            {
+                if ((this._SumOfAllScores != value))
+                {
+                    this._SumOfAllScores = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalQuestionsAnswered", DbType = "Int")]
+        public System.Nullable<int> TotalQuestionsAnswered
+        {
+            get
+            {
+                return this._TotalQuestionsAnswered;
+            }
+            set
+            {
+                if ((this._TotalQuestionsAnswered != value))
+                {
+                    this._TotalQuestionsAnswered = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OverallAverageSatisfaction", DbType = "Decimal(24,12)")]
+        public System.Nullable<decimal> OverallAverageSatisfaction
+        {
+            get
+            {
+                return this._OverallAverageSatisfaction;
+            }
+            set
+            {
+                if ((this._OverallAverageSatisfaction != value))
+                {
+                    this._OverallAverageSatisfaction = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetDoctorCountForCEODashboardResult
+    {
+
+        private string _Doctor_Name;
+
+        private System.Nullable<int> _Total_Count;
+
+        private decimal _Receipt_Amount;
+
+        public sp_GetDoctorCountForCEODashboardResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Name", DbType = "VarChar(150)")]
+        public string Doctor_Name
+        {
+            get
+            {
+                return this._Doctor_Name;
+            }
+            set
+            {
+                if ((this._Doctor_Name != value))
+                {
+                    this._Doctor_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
+        public System.Nullable<int> Total_Count
+        {
+            get
+            {
+                return this._Total_Count;
+            }
+            set
+            {
+                if ((this._Total_Count != value))
+                {
+                    this._Total_Count = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
+        public decimal Receipt_Amount
+        {
+            get
+            {
+                return this._Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Receipt_Amount != value))
+                {
+                    this._Receipt_Amount = value;
+                }
+            }
+        }
+    }
+
     public partial class sp_GetEmergencyPatientDetailResult
     {
 
@@ -193697,6 +194725,10 @@ namespace PMS
         private string _Referring_Doctor;
 
         private string _Recommended_Diet;
+
+        private string _remarks;
+
+        private string _emergecny_pat_file;
 
         private string _Provisional_Diagnosis;
 
@@ -195756,6 +196788,38 @@ namespace PMS
                 if ((this._Recommended_Diet != value))
                 {
                     this._Recommended_Diet = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_remarks", DbType = "NVarChar(500)")]
+        public string remarks
+        {
+            get
+            {
+                return this._remarks;
+            }
+            set
+            {
+                if ((this._remarks != value))
+                {
+                    this._remarks = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_emergecny_pat_file", DbType = "NVarChar(200)")]
+        public string emergecny_pat_file
+        {
+            get
+            {
+                return this._emergecny_pat_file;
+            }
+            set
+            {
+                if ((this._emergecny_pat_file != value))
+                {
+                    this._emergecny_pat_file = value;
                 }
             }
         }
@@ -200700,1034 +201764,6 @@ namespace PMS
                 if ((this._Refer_To_OPD != value))
                 {
                     this._Refer_To_OPD = value;
-                }
-            }
-        }
-    }
-
-    public partial class spPharmacyitemResult
-    {
-
-        private int _Item_ID;
-
-        private string _Item_Code;
-
-        private string _Description;
-
-        private string _Generic_Name;
-
-        public spPharmacyitemResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
-        public int Item_ID
-        {
-            get
-            {
-                return this._Item_ID;
-            }
-            set
-            {
-                if ((this._Item_ID != value))
-                {
-                    this._Item_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
-        public string Item_Code
-        {
-            get
-            {
-                return this._Item_Code;
-            }
-            set
-            {
-                if ((this._Item_Code != value))
-                {
-                    this._Item_Code = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
-        public string Description
-        {
-            get
-            {
-                return this._Description;
-            }
-            set
-            {
-                if ((this._Description != value))
-                {
-                    this._Description = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Generic_Name", DbType = "VarChar(250)")]
-        public string Generic_Name
-        {
-            get
-            {
-                return this._Generic_Name;
-            }
-            set
-            {
-                if ((this._Generic_Name != value))
-                {
-                    this._Generic_Name = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_LoadPRNumResult
-    {
-
-        private int _PR_Id;
-
-        private System.Nullable<int> _PR_Num;
-
-        private System.Nullable<decimal> _Qty;
-
-        public sp_LoadPRNumResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
-        public int PR_Id
-        {
-            get
-            {
-                return this._PR_Id;
-            }
-            set
-            {
-                if ((this._PR_Id != value))
-                {
-                    this._PR_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
-        public System.Nullable<int> PR_Num
-        {
-            get
-            {
-                return this._PR_Num;
-            }
-            set
-            {
-                if ((this._PR_Num != value))
-                {
-                    this._PR_Num = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_LoadPRNumByWarehouseResult
-    {
-
-        private int _PR_Id;
-
-        private System.Nullable<int> _PR_Num;
-
-        private System.Nullable<decimal> _Qty;
-
-        public sp_LoadPRNumByWarehouseResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
-        public int PR_Id
-        {
-            get
-            {
-                return this._PR_Id;
-            }
-            set
-            {
-                if ((this._PR_Id != value))
-                {
-                    this._PR_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
-        public System.Nullable<int> PR_Num
-        {
-            get
-            {
-                return this._PR_Num;
-            }
-            set
-            {
-                if ((this._PR_Num != value))
-                {
-                    this._PR_Num = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetPatientCountsByDateResult
-    {
-
-        private System.Nullable<int> _TotalPatients;
-
-        private System.Nullable<int> _Filter_Clinic;
-
-        private System.Nullable<int> _Patient_Main_Category;
-
-        public sp_GetPatientCountsByDateResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPatients", DbType = "Int")]
-        public System.Nullable<int> TotalPatients
-        {
-            get
-            {
-                return this._TotalPatients;
-            }
-            set
-            {
-                if ((this._TotalPatients != value))
-                {
-                    this._TotalPatients = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Filter_Clinic", DbType = "Int")]
-        public System.Nullable<int> Filter_Clinic
-        {
-            get
-            {
-                return this._Filter_Clinic;
-            }
-            set
-            {
-                if ((this._Filter_Clinic != value))
-                {
-                    this._Filter_Clinic = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Main_Category", DbType = "Int")]
-        public System.Nullable<int> Patient_Main_Category
-        {
-            get
-            {
-                return this._Patient_Main_Category;
-            }
-            set
-            {
-                if ((this._Patient_Main_Category != value))
-                {
-                    this._Patient_Main_Category = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_AreaWisePatientCountResult
-    {
-
-        private string _Area_Name;
-
-        private System.Nullable<int> _Counts;
-
-        public sp_AreaWisePatientCountResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Area_Name", DbType = "VarChar(30) NOT NULL", CanBeNull = false)]
-        public string Area_Name
-        {
-            get
-            {
-                return this._Area_Name;
-            }
-            set
-            {
-                if ((this._Area_Name != value))
-                {
-                    this._Area_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Counts", DbType = "Int")]
-        public System.Nullable<int> Counts
-        {
-            get
-            {
-                return this._Counts;
-            }
-            set
-            {
-                if ((this._Counts != value))
-                {
-                    this._Counts = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetTodayPatientCountsResult
-    {
-
-        private System.Nullable<int> _TotalPatients;
-
-        private int _Filter_Clinic;
-
-        private int _Patient_Main_Category;
-
-        public sp_GetTodayPatientCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPatients", DbType = "Int")]
-        public System.Nullable<int> TotalPatients
-        {
-            get
-            {
-                return this._TotalPatients;
-            }
-            set
-            {
-                if ((this._TotalPatients != value))
-                {
-                    this._TotalPatients = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Filter_Clinic", DbType = "Int NOT NULL")]
-        public int Filter_Clinic
-        {
-            get
-            {
-                return this._Filter_Clinic;
-            }
-            set
-            {
-                if ((this._Filter_Clinic != value))
-                {
-                    this._Filter_Clinic = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Main_Category", DbType = "Int NOT NULL")]
-        public int Patient_Main_Category
-        {
-            get
-            {
-                return this._Patient_Main_Category;
-            }
-            set
-            {
-                if ((this._Patient_Main_Category != value))
-                {
-                    this._Patient_Main_Category = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetDialysisPatientCountsResult
-    {
-
-        private System.Nullable<int> _performed;
-
-        private System.Nullable<int> _Active;
-
-        public sp_GetDialysisPatientCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_performed", DbType = "Int")]
-        public System.Nullable<int> performed
-        {
-            get
-            {
-                return this._performed;
-            }
-            set
-            {
-                if ((this._performed != value))
-                {
-                    this._performed = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Active", DbType = "Int")]
-        public System.Nullable<int> Active
-        {
-            get
-            {
-                return this._Active;
-            }
-            set
-            {
-                if ((this._Active != value))
-                {
-                    this._Active = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetProcedureCountsResult
-    {
-
-        private string _Item_Name;
-
-        private System.Nullable<int> _TotalCount;
-
-        public sp_GetProcedureCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
-        public string Item_Name
-        {
-            get
-            {
-                return this._Item_Name;
-            }
-            set
-            {
-                if ((this._Item_Name != value))
-                {
-                    this._Item_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int")]
-        public System.Nullable<int> TotalCount
-        {
-            get
-            {
-                return this._TotalCount;
-            }
-            set
-            {
-                if ((this._TotalCount != value))
-                {
-                    this._TotalCount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetPharmacyCountsResult
-    {
-
-        private string _CustomerType;
-
-        private int _TotalCount;
-
-        private decimal _TotalReceivedAmount;
-
-        public sp_GetPharmacyCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CustomerType", DbType = "VarChar(16) NOT NULL", CanBeNull = false)]
-        public string CustomerType
-        {
-            get
-            {
-                return this._CustomerType;
-            }
-            set
-            {
-                if ((this._CustomerType != value))
-                {
-                    this._CustomerType = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int NOT NULL")]
-        public int TotalCount
-        {
-            get
-            {
-                return this._TotalCount;
-            }
-            set
-            {
-                if ((this._TotalCount != value))
-                {
-                    this._TotalCount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalReceivedAmount", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal TotalReceivedAmount
-        {
-            get
-            {
-                return this._TotalReceivedAmount;
-            }
-            set
-            {
-                if ((this._TotalReceivedAmount != value))
-                {
-                    this._TotalReceivedAmount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetInvestigationCountsResult
-    {
-
-        private string _Department;
-
-        private System.Nullable<int> _TotalBillCount;
-
-        private System.Nullable<int> _TotalPerformCount;
-
-        private decimal _TotalBillAmount;
-
-        public sp_GetInvestigationCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(10) NOT NULL", CanBeNull = false)]
-        public string Department
-        {
-            get
-            {
-                return this._Department;
-            }
-            set
-            {
-                if ((this._Department != value))
-                {
-                    this._Department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalBillCount", DbType = "Int")]
-        public System.Nullable<int> TotalBillCount
-        {
-            get
-            {
-                return this._TotalBillCount;
-            }
-            set
-            {
-                if ((this._TotalBillCount != value))
-                {
-                    this._TotalBillCount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPerformCount", DbType = "Int")]
-        public System.Nullable<int> TotalPerformCount
-        {
-            get
-            {
-                return this._TotalPerformCount;
-            }
-            set
-            {
-                if ((this._TotalPerformCount != value))
-                {
-                    this._TotalPerformCount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalBillAmount", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal TotalBillAmount
-        {
-            get
-            {
-                return this._TotalBillAmount;
-            }
-            set
-            {
-                if ((this._TotalBillAmount != value))
-                {
-                    this._TotalBillAmount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetReferCountResult
-    {
-
-        private System.Nullable<int> _TotalCount;
-
-        private System.Nullable<int> _ReferCount;
-
-        public sp_GetReferCountResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int")]
-        public System.Nullable<int> TotalCount
-        {
-            get
-            {
-                return this._TotalCount;
-            }
-            set
-            {
-                if ((this._TotalCount != value))
-                {
-                    this._TotalCount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ReferCount", DbType = "Int")]
-        public System.Nullable<int> ReferCount
-        {
-            get
-            {
-                return this._ReferCount;
-            }
-            set
-            {
-                if ((this._ReferCount != value))
-                {
-                    this._ReferCount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetTop5TestsByDepartmentResult
-    {
-
-        private string _Department;
-
-        private string _Test_Name;
-
-        private System.Nullable<decimal> _TotalAmount;
-
-        private System.Nullable<int> _TestCount;
-
-        private System.Nullable<long> _DeptRank;
-
-        private System.Nullable<decimal> _DeptTotalAmount;
-
-        private System.Nullable<int> _DeptTotalCount;
-
-        public sp_GetTop5TestsByDepartmentResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(61)")]
-        public string Department
-        {
-            get
-            {
-                return this._Department;
-            }
-            set
-            {
-                if ((this._Department != value))
-                {
-                    this._Department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_Name", DbType = "VarChar(200)")]
-        public string Test_Name
-        {
-            get
-            {
-                return this._Test_Name;
-            }
-            set
-            {
-                if ((this._Test_Name != value))
-                {
-                    this._Test_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> TotalAmount
-        {
-            get
-            {
-                return this._TotalAmount;
-            }
-            set
-            {
-                if ((this._TotalAmount != value))
-                {
-                    this._TotalAmount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TestCount", DbType = "Int")]
-        public System.Nullable<int> TestCount
-        {
-            get
-            {
-                return this._TestCount;
-            }
-            set
-            {
-                if ((this._TestCount != value))
-                {
-                    this._TestCount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptRank", DbType = "BigInt")]
-        public System.Nullable<long> DeptRank
-        {
-            get
-            {
-                return this._DeptRank;
-            }
-            set
-            {
-                if ((this._DeptRank != value))
-                {
-                    this._DeptRank = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptTotalAmount", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> DeptTotalAmount
-        {
-            get
-            {
-                return this._DeptTotalAmount;
-            }
-            set
-            {
-                if ((this._DeptTotalAmount != value))
-                {
-                    this._DeptTotalAmount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeptTotalCount", DbType = "Int")]
-        public System.Nullable<int> DeptTotalCount
-        {
-            get
-            {
-                return this._DeptTotalCount;
-            }
-            set
-            {
-                if ((this._DeptTotalCount != value))
-                {
-                    this._DeptTotalCount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetPatientCountsAndNetAmountByDateResult
-    {
-
-        private string _Category;
-
-        private System.Nullable<int> _Total_Count;
-
-        private decimal _Card_Receipt_Amount;
-
-        private decimal _Receipt_Amount;
-
-        public sp_GetPatientCountsAndNetAmountByDateResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
-        public string Category
-        {
-            get
-            {
-                return this._Category;
-            }
-            set
-            {
-                if ((this._Category != value))
-                {
-                    this._Category = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
-        public System.Nullable<int> Total_Count
-        {
-            get
-            {
-                return this._Total_Count;
-            }
-            set
-            {
-                if ((this._Total_Count != value))
-                {
-                    this._Total_Count = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Card_Receipt_Amount", DbType = "Decimal(38,2) NOT NULL")]
-        public decimal Card_Receipt_Amount
-        {
-            get
-            {
-                return this._Card_Receipt_Amount;
-            }
-            set
-            {
-                if ((this._Card_Receipt_Amount != value))
-                {
-                    this._Card_Receipt_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
-        public decimal Receipt_Amount
-        {
-            get
-            {
-                return this._Receipt_Amount;
-            }
-            set
-            {
-                if ((this._Receipt_Amount != value))
-                {
-                    this._Receipt_Amount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetOPDVitalCountsResult
-    {
-
-        private System.Nullable<int> _VitalCount;
-
-        public sp_GetOPDVitalCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VitalCount", DbType = "Int")]
-        public System.Nullable<int> VitalCount
-        {
-            get
-            {
-                return this._VitalCount;
-            }
-            set
-            {
-                if ((this._VitalCount != value))
-                {
-                    this._VitalCount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetOverallSatisfactionAverageResult
-    {
-
-        private System.Nullable<int> _NumberOfSurveys;
-
-        private System.Nullable<int> _SumOfAllScores;
-
-        private System.Nullable<int> _TotalQuestionsAnswered;
-
-        private System.Nullable<decimal> _OverallAverageSatisfaction;
-
-        public sp_GetOverallSatisfactionAverageResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NumberOfSurveys", DbType = "Int")]
-        public System.Nullable<int> NumberOfSurveys
-        {
-            get
-            {
-                return this._NumberOfSurveys;
-            }
-            set
-            {
-                if ((this._NumberOfSurveys != value))
-                {
-                    this._NumberOfSurveys = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SumOfAllScores", DbType = "Int")]
-        public System.Nullable<int> SumOfAllScores
-        {
-            get
-            {
-                return this._SumOfAllScores;
-            }
-            set
-            {
-                if ((this._SumOfAllScores != value))
-                {
-                    this._SumOfAllScores = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalQuestionsAnswered", DbType = "Int")]
-        public System.Nullable<int> TotalQuestionsAnswered
-        {
-            get
-            {
-                return this._TotalQuestionsAnswered;
-            }
-            set
-            {
-                if ((this._TotalQuestionsAnswered != value))
-                {
-                    this._TotalQuestionsAnswered = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OverallAverageSatisfaction", DbType = "Decimal(24,12)")]
-        public System.Nullable<decimal> OverallAverageSatisfaction
-        {
-            get
-            {
-                return this._OverallAverageSatisfaction;
-            }
-            set
-            {
-                if ((this._OverallAverageSatisfaction != value))
-                {
-                    this._OverallAverageSatisfaction = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetDoctorCountForCEODashboardResult
-    {
-
-        private string _Doctor_Name;
-
-        private System.Nullable<int> _Total_Count;
-
-        private decimal _Receipt_Amount;
-
-        public sp_GetDoctorCountForCEODashboardResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Name", DbType = "VarChar(150)")]
-        public string Doctor_Name
-        {
-            get
-            {
-                return this._Doctor_Name;
-            }
-            set
-            {
-                if ((this._Doctor_Name != value))
-                {
-                    this._Doctor_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
-        public System.Nullable<int> Total_Count
-        {
-            get
-            {
-                return this._Total_Count;
-            }
-            set
-            {
-                if ((this._Total_Count != value))
-                {
-                    this._Total_Count = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
-        public decimal Receipt_Amount
-        {
-            get
-            {
-                return this._Receipt_Amount;
-            }
-            set
-            {
-                if ((this._Receipt_Amount != value))
-                {
-                    this._Receipt_Amount = value;
                 }
             }
         }

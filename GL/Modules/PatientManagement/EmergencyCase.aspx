@@ -4,6 +4,15 @@
   
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Emergency.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+        <style type="text/css">
+    .file-upload-wrapper {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+</style>
+  
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
@@ -66,7 +75,8 @@
             if (Emergency_id != "") {
                 AllowEmergencyEdit();
             }
-          
+
+            AllowDiscountEdit();
             fillmartial();
             fillgender();
             AllowEMRGTabs();
@@ -216,7 +226,25 @@
 
                 }
             });
+            setTimeout(function () {
+                var er_id = '<%= Request.QueryString["ID"]%>';
+                debugger;
+                if (er_id !== "") {
+                    debugger;
 
+              <% if (PatientDischargeStatus == true)
+              { %>
+
+                    $("#btnDischargeSummary").removeAttr("disabled");
+                    $("#btnBasePrintPrint").removeAttr("disabled");
+                    $("#btnSave").attr("disabled", true);
+
+                 <% } %>
+
+
+                }
+            }, 1500);
+           
         });
 
         var tabsEmr;
@@ -1136,6 +1164,39 @@
 
         }
 
+
+
+
+        var editdiscount;
+        function AllowDiscountEdit() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/CheckDiscountRights",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    editdiscount = data.d;
+
+                    if (editdiscount == "true") {
+
+                        $('#ctl00_MainContent_txtDiscount').attr('disabled', false);
+                    }
+                    else {
+                        $('#ctl00_MainContent_txtDiscount').attr('disabled', true);
+                    }
+
+                },
+                failure: function () {
+                    alert("Error");
+                }
+            });
+
+
+        }
         function LoadDischargeMedicinesrpt(PatientID) {
             ID = $('#<%=txtPatient_ID.ClientID%>').val();
             oUTID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
@@ -1670,6 +1731,12 @@
                 txtNext_Visit = null;
             var txtAdvice = $('#ctl00_MainContent_txtPrevention_Precaution').val();
             var chkdischarge = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+
+
+            if (ReferToOPD === true  && chkdischarge === false) {
+                alert("Discharge Patient First If want to Reffer");
+                return;
+            }
             var RateBeats = $("#ctl00_MainContent_txtRateBeats").val();
             var Saturation = $("#ctl00_MainContent_txtSaturation").val();
             var OthersRN = $("#ctl00_MainContent_txtOthersRcvNote").val();
@@ -1793,7 +1860,7 @@
             var ShiftingDullness = $("input[name='ctl00$MainContent$ShiftingDullness']:checked").val();
             if (typeof ShiftingDullness === 'undefined') ShiftingDullness = null;
             else ShiftingDullness = (JSON.parse(ShiftingDullness.toLowerCase()));
-            debugger;
+         
             var EpigastriaDiscomfort = $("input[name='ctl00$MainContent$EpigastriaDiscomfort']:checked").val();
             if (typeof EpigastriaDiscomfort === 'undefined') EpigastriaDiscomfort = null;
             else EpigastriaDiscomfort = (JSON.parse(EpigastriaDiscomfort.toLowerCase()));
@@ -1852,37 +1919,46 @@
             var Receiving_DateDesc = $('#ctl00_MainContent_txttxtReceiving_DateDesc').val();
             var remrks_call_to_doc = $('#ctl00_MainContent_txtCallToDoctor').val();
             var discount = $('#ctl00_MainContent_txtDiscount').val();
-            debugger;
+            var Remarks = $('#ctl00_MainContent_txt_remarks').val();
+            
 
             var ID = '<%= Request.QueryString["ID"]%>';
-            PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, ddlCallToDoctor, txtHealth_Complaints, ddlIssuance_Of, ddlWard_No, txtBed_No, RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
-                txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
-                DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane,
-                DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, ddlPatientCondition, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, TreatmentTime, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD, discount,
+            PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, ddlCallToDoctor, txtHealth_Complaints, ddlIssuance_Of, ddlWard_No, txtBed_No, RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory, txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb, DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, ddlPatientCondition, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, TreatmentTime, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD, discount, Remarks,
                 function (response) {
+                    debugger;
 
-
-                    var btn = btnVal;
-
-                    if (btn == 'btnSave') {
-
-
-                        alert('Data Successfully Save');
-
+                    if (btnVal == 'btnSave') {
+                        debugger;
+                        sendFileEmer(response);
+                        alert('Data Successfully Saved');
                         window.location = "EmergencyCase.aspx?ID=" + response;
-                        //window.open('../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + response);
                         $('#btnSave').val("Update");
                     }
-                    else if (btn == 'btnsaveprint') {
-
-
+                    else if (btnVal == 'btnsaveprint') {
                         PrintAdmisionDetails(response);
                         $('#btnSave').val("Update");
-
+                    }
+                   
+                });
+        }
+        function sendFileEmer(ID) {
+            var data = new FormData();
+            data.append('file', $('#ctl00_MainContent_file_upload')[0].files[0]);
+            data.append('ID', ID);
+            $.ajax({
+                type: 'POST',
+                 url: '<%= ResolveUrl("~/upload/UploadEmergency.ashx") %>',  // ✅ FIXED HERE
+                 data: data,
+                 processData: false,
+                 contentType: false,
+                    success: function (status) {
+                        console.log("Upload Successful:", status);
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error: " + xhr.status + " - " + error);
                     }
                 });
         }
-
 
         function ShowDermaModel() {
             $('#myModalDerma').modal({
@@ -4457,17 +4533,10 @@
             var btnsave = $("#btnSave").val();
 
             var chk = '<%= Request.QueryString["ID"]%>';
-
+            debugger;
             if (chk !== "") {
 
-                <% if (PatientDischargeStatus == true)
-        { %>
-
-                $("#btnDischargeSummary").removeAttr("disabled");
-                $("#btnBasePrintPrint").removeAttr("disabled");
-                $("#btnSave").attr("disabled", true);
-
-                   <% } %>
+              
 
                 chkIssuance_Of_Select();
                 chkrefer_Of_Select();
@@ -6286,7 +6355,20 @@
                     <asp:Label ID="lbldiscount" runat="server" Text="Discount %"></asp:Label>
                     <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server" ></asp:TextBox>
                  </div>
-           
+            <div class="col-lg-1 col-md-4 col-sm-6"></div>
+             <div class="col-lg-2 col-md-4 col-sm-6">
+                 <asp:Label ID="lblremarks" runat="server" Text="Remarks"></asp:Label>
+                 <asp:TextBox ID="txt_remarks"  runat="server" ></asp:TextBox>
+            </div>
+             <div class="col-lg-1 col-md-4 col-sm-6"></div>
+     <div class="file-upload-wrapper">
+    <asp:FileUpload ID="file_upload" runat="server" CssClass="form-control form-control-sm" style="flex: 1; min-width: 120px;" />
+    <asp:HyperLink ID="hlExistingFile" runat="server" 
+        Text="View Attached File" 
+        Target="_blank" 
+        Visible="false" 
+        CssClass="btn btn-sm btn-outline-secondary" />
+</div>
         </div>
         <div class="row">
       <div class="col-lg-9 col-md-12 col-sm-2">

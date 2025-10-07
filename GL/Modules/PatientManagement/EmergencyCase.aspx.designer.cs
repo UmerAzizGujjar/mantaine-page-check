@@ -483,6 +483,42 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtDiscount;
 
         /// <summary>
+        /// lblremarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblremarks;
+
+        /// <summary>
+        /// txt_remarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txt_remarks;
+
+        /// <summary>
+        /// file_upload control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload file_upload;
+
+        /// <summary>
+        /// hlExistingFile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hlExistingFile;
+
+        /// <summary>
         /// lblRateBeats control.
         /// </summary>
         /// <remarks>

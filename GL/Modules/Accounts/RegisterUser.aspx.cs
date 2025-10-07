@@ -80,7 +80,8 @@ namespace PMS.Modules.Accounts
                              IsAnonymous = p.IsAnonymous,
                              EditEmergency = p.EditEmergency,
                              Allow_bill_edit = p.Allow_bill_edit,
-                             Emergency_adm_dis = p.Emergency_adm_dis,   
+                             Emergency_adm_dis = p.Emergency_adm_dis,
+                             Allow_emer_disc = p.Allow_emer_disc,   
                              EmpCode=p.Emp_Code
                          }).FirstOrDefault();
             string data = string.Empty;
@@ -159,6 +160,7 @@ namespace PMS.Modules.Accounts
                     user.EditEmergency = data.EditEmergency;
                     user.Emergency_adm_dis = data.AllowEmergency_adm_dis;
                     user.Allow_bill_edit = data.AllowBillUpdate;
+                    user.Allow_emer_disc = data.AllowemergencyDiscount;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -225,6 +227,7 @@ namespace PMS.Modules.Accounts
                 newuser.EditEmergency = data.EditEmergency;
                 newuser.Allow_bill_edit = data.AllowBillUpdate;
                 newuser.Emergency_adm_dis = data.AllowEmergency_adm_dis;
+                newuser.Allow_emer_disc = data.AllowemergencyDiscount;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
 
@@ -328,6 +331,7 @@ namespace PMS.Modules.Accounts
             public bool AllowEmergency_adm_dis { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
+            public bool AllowemergencyDiscount { get; set; }
         }
 
     }
