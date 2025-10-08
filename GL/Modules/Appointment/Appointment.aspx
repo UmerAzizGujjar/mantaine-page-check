@@ -995,13 +995,18 @@
                     $("#ctl00_MainContent_ddlPrefixDrp option:contains(" + patientTitle[0] + ")").attr("selected", true);
                 }
                 debugger;
-                console.log(data);
-                //$('#ddl_colstnt').html(
-                //    $('<option>', {
-                //        value: data.Consultant_ID,
-                //        text: data.doctor_name
-                //    })
-                //).attr('disabled', true);
+
+                $('#ddl_colstnt')
+                    .empty()
+                    .append($('<option>', {
+                        value: data.Consultant_ID,
+                        text: data.doctor_name
+                    }))
+                    .val(data.Consultant_ID)
+                    .prop('disabled', true)
+                    .trigger('change')
+                    .select2();
+
                 $('#txt_ID').val(data.Appointment_ID);
                 $('#txt_pt_name').val(patientTitle[patientTitle.length - 1]);
                 $("#ctl00_MainContent_ddlPrefixDrp")
@@ -1023,17 +1028,20 @@
                 date = moment(date).format('LL');
                 $("#txt_date").val(date);
 
-            
-                //$('#ddlsubdepartment').html(
-                //    $('<option>', {
-                //        value: data.Sub_Department,
-                //        text: data.Department_name
-                //    })
-                //).attr('disabled', true);
+                $('#ddlsubdepartment')
+                    .empty()
+                    .append($('<option>', {
+                        value: data.Sub_Department,
+                        text: data.Department_name
+                    }))
+                    .val(data.Sub_Department)
+                    .prop('disabled', true)
+                    .trigger('change')
+                    .select2();
 
                     $('#ddlServices').val(data.Item_Id).change();
 
-                
+
 
             },
 
@@ -1042,6 +1050,7 @@
                 });
         }
 
+       
 
         function loadapptEdit(App_id) {
 

@@ -19,14 +19,45 @@ namespace PMS.Modules.Dashboards
         [WebMethod]
         public static string GetPatientsCount(string txt_sdate, string txt_edate)
         {
-            string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.sp_GetPatientCountsByDate(txt_sdate, txt_edate).FirstOrDefault();
-                result = (new JavaScriptSerializer()).Serialize(query);
+                var results = db.ExecuteQuery<PatientCountResult>(
+                    "EXEC sp_GetPatientCountsByDate {0}, {1}",
+                    txt_sdate, txt_edate
+                ).ToList();
+
+                var resultObj = results.FirstOrDefault() ?? new PatientCountResult();
+                return new JavaScriptSerializer().Serialize(resultObj);
             }
-            return result;
         }
+
+        public class PatientCountResult
+        {
+            public int TotalPatients { get; set; }
+            public int NewOPD { get; set; }
+            public int RevisitOPD { get; set; }
+        }
+
+        [WebMethod]
+        public static string GetEmergencyCounts(string txt_sdate, string txt_edate)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetEmergencyCountsByDate(txt_sdate, txt_edate).FirstOrDefault();
+                return new JavaScriptSerializer().Serialize(query);
+            }
+        }
+
+        [WebMethod]
+        public static string GetIPDAdmitDischarge(string txt_sdate, string txt_edate)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetIPDAdmitDischargeByDate(txt_sdate, txt_edate).FirstOrDefault();
+                return new JavaScriptSerializer().Serialize(query);
+            }
+        }
+
         [WebMethod]
         public static string GetAppointmentsOPDCount(string txt_sdate, string txt_edate)
         {
@@ -177,6 +208,7 @@ namespace PMS.Modules.Dashboards
                     Department = "Total",
                     TotalBillCount = query.Sum(x => x.TotalBillCount ?? 0),
                     TotalPerformCount = query.Sum(x => x.TotalPerformCount ?? 0),
+                    TotalDiscount = query.Sum(x => x.TotalDiscount),
                     TotalBillAmount = totalNetAmount
                 };
 
@@ -298,6 +330,7 @@ namespace PMS.Modules.Dashboards
                     Category = "Total",
                     Total_Count = query.Sum(x => x.Total_Count ?? 0),
                     Card_Receipt_Amount = query.Sum(x => x.Card_Receipt_Amount),
+                    Discount_Amount = query.Sum(x => x.Discount_Amount),
                     Receipt_Amount = totalNetAmount
                 };
 

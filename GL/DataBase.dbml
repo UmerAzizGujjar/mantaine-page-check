@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="PakredLatest" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -10095,15 +10095,6 @@
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetPatientCountsByDate" Method="sp_GetPatientCountsByDate">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetPatientCountsByDateResult">
-      <Column Name="TotalPatients" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Filter_Clinic" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_Main_Category" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_AreaWisePatientCount" Method="sp_AreaWisePatientCount">
     <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
     <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
@@ -10144,16 +10135,6 @@
       <Column Name="TotalReceivedAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetInvestigationCounts" Method="sp_GetInvestigationCounts">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetInvestigationCountsResult">
-      <Column Name="Department" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="TotalBillCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="TotalPerformCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="TotalBillAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetReferCount" Method="sp_GetReferCount">
     <Parameter Name="StartDate" Parameter="startDate" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="EndDate" Parameter="endDate" Type="System.DateTime" DbType="DateTime" />
@@ -10173,16 +10154,6 @@
       <Column Name="DeptRank" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
       <Column Name="DeptTotalAmount" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
       <Column Name="DeptTotalCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetPatientCountsAndNetAmountByDate" Method="sp_GetPatientCountsAndNetAmountByDate">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetPatientCountsAndNetAmountByDateResult">
-      <Column Name="Category" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
-      <Column Name="Total_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Card_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_GetOPDVitalCounts" Method="sp_GetOPDVitalCounts">
@@ -10615,6 +10586,54 @@
       <Column Name="Verbal_Response" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="remarks_call_to_doctor" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Refer_To_OPD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetPatientCountsByDate" Method="sp_GetPatientCountsByDate">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetPatientCountsByDateResult">
+      <Column Name="TotalPatients" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NewOPD" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RevisitOPD" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetEmergencyCountsByDate" Method="sp_GetEmergencyCountsByDate">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetEmergencyCountsByDateResult">
+      <Column Name="TotalEmergency" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NewEmergency" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RevisitEmergency" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetIPDAdmitDischargeByDate" Method="sp_GetIPDAdmitDischargeByDate">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetIPDAdmitDischargeByDateResult">
+      <Column Name="Admitted" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discharged" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetInvestigationCounts" Method="sp_GetInvestigationCounts">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetInvestigationCountsResult">
+      <Column Name="Department" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="TotalBillCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TotalPerformCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TotalBillAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="TotalDiscount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetPatientCountsAndNetAmountByDate" Method="sp_GetPatientCountsAndNetAmountByDate">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetPatientCountsAndNetAmountByDateResult">
+      <Column Name="Category" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="Total_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Card_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

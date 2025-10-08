@@ -437,23 +437,23 @@ on DM.Rouster_id equals DD.Rouster_id
         }
 
 
-        //[WebMethod]
+        [WebMethod]
 
-        //public static string loadAppData(int appID)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var Details = db.sp_loadAppointment(appID).FirstOrDefault();
-        //    return (new JavaScriptSerializer()).Serialize(Details);
-        //}
+        public static string loadAppData(int appID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_loadAppointment(appID).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
 
-        //[WebMethod]
+        [WebMethod]
 
-        //public static string loadAppData_edit(int App_id)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var Details = db.sp_loadAppointment(App_id).FirstOrDefault();
-        //    return (new JavaScriptSerializer()).Serialize(Details);
-        //}
+        public static string loadAppData_edit(int App_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_loadAppointment(App_id).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
         [WebMethod]
         public static string GetSubDepartmentByDoctor(string doctor_Id)
         {

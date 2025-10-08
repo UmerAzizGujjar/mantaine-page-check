@@ -142,6 +142,10 @@
             LoadProcedureCount(date, date)
             ChartfDocPatientCount(date, date)
             LoadOverallSatisfaction(date, date)
+            LoadEmergencyCounts(date, date)
+            var date = moment('<%= DateTime.Now%>').format('LL');
+            LoadIPDAdmitDischarge(date, date);
+
 
         });
         function search() {
@@ -162,6 +166,8 @@
             ChartfDocPatientCount(dt, dts);
             ChartAppointmentCountByDoctor(dt, dts);
             LoadOverallSatisfaction(dt, dts);
+            LoadEmergencyCounts(dt, dts);
+            LoadIPDAdmitDischarge(dt, dts);
 
         }
 
@@ -170,7 +176,7 @@
             var txt_edate = Enddate;
             $.ajax({
                 type: "POST",
-                url: "CEODashBorad.aspx/GetPatientsCount",
+                url: "CEODashBoardNew.aspx/GetPatientsCount",
                 data: JSON.stringify({
                     'txt_sdate': txt_sdate,
                     'txt_edate': txt_edate,
@@ -181,23 +187,15 @@
                 success: function (data) {
                     var parsedData = JSON.parse(data.d);
                     var total = parsedData.TotalPatients || 0;
+                    var newOPD = parsedData.NewOPD || 0;
+                    var revisitOPD = parsedData.RevisitOPD || 0;
 
                     $('#lblTotalPatient').text(total);
-
-                    var filterCount = parsedData.Filter_Clinic || 0;
-                    var deptCount = parsedData.Patient_Main_Category || 0;
-
-                    var filterPercent = total > 0 ? ((filterCount / total) * 100).toFixed(2) : 0;
-                    var deptPercent = total > 0 ? ((deptCount / total) * 100).toFixed(2) : 0;
-
-                    $('#lblFilterPatient').text(filterCount + ' (' + filterPercent + '%)');
-                    $('#lblDepartmentPatient').text(deptCount + ' (' + deptPercent + '%)');
-
-                    
-
+                    $('#lblFilterPatient').text(newOPD + ' (' + (total > 0 ? ((newOPD / total) * 100).toFixed(2) : 0) + '%)');
+                    $('#lblDepartmentPatient').text(revisitOPD + ' (' + (total > 0 ? ((revisitOPD / total) * 100).toFixed(2) : 0) + '%)');
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error occurred: " + status + " " + error);
+                    console.error("Error in LoadPatientsCount: " + error);
                 }
             });
         }
@@ -206,7 +204,7 @@
             var txt_edate = Enddate;
             $.ajax({
                 type: "POST",
-                url: "CEODashBorad.aspx/GetAppointmentsOPDCount",
+                url: "CEODashBoardNew.aspx/GetAppointmentsOPDCount",
                 data: JSON.stringify({
                     'txt_sdate': txt_sdate,
                     'txt_edate': txt_edate,
@@ -246,7 +244,7 @@
             var txt_edate = Enddate;
             $.ajax({
                 type: "POST",
-                url: "CEODashBorad.aspx/GetReferCount",
+                url: "CEODashBoardNew.aspx/GetReferCount",
                 data: JSON.stringify({
                     'txt_sdate': txt_sdate,
                     'txt_edate': txt_edate,
@@ -278,7 +276,7 @@
             var txt_edate = Enddate;
             $.ajax({
                 type: "POST",
-                url: "CEODashBorad.aspx/GetFootfallCount",
+                url: "CEODashBoardNew.aspx/GetFootfallCount",
                 data: JSON.stringify({
                     'txt_sdate': txt_sdate,
                     'txt_edate': txt_edate,
@@ -316,7 +314,7 @@
             var txt_edate = Enddate;
             $.ajax({
                 type: "POST",
-                url: "CEODashBorad.aspx/GetDialysisPatientsCount",
+                url: "CEODashBoardNew.aspx/GetDialysisPatientsCount",
                 data: JSON.stringify({
                     'txt_sdate': txt_sdate,
                     'txt_edate': txt_edate,
@@ -346,17 +344,21 @@
                 $('#tabInvestigation tbody').empty();
 
                 $.each(Investigations, function (key, value) {
-                    // For Physiotherapy: Ordered == Performed
                     if (value.Department === "Physiotherapy") {
                         value.TotalPerformCount = value.TotalBillCount;
                     }
 
-                    rows += '<tr>'
-                        + '<td>' + value.Department + '</td>'
-                        + '<td>' + value.TotalBillCount + '</td>'
-                        + '<td>' + value.TotalPerformCount + '</td>'
-                        + '<td>' + value.TotalBillAmount + '</td>'
-                        + '</tr>';
+                    var netAmount = parseFloat(value.TotalBillAmount) || 0;
+                    var discount = parseFloat(value.TotalDiscount) || 0;
+
+                    rows += '<tr>' +
+                        '<td>' + value.Department + '</td>' +
+                        '<td>' + (value.TotalBillCount || 0) + '</td>' +
+                        '<td>' + (value.TotalPerformCount || 0) + '</td>' +
+                        '<td>' + discount.toFixed(2) + '</td>' +
+                        '<td>' + netAmount.toFixed(2) + '</td>' +
+
+                        '</tr>';
                 });
 
                 $('#tabInvestigation tbody').append(rows);
@@ -411,7 +413,7 @@
             var txt_edate = Enddate;
             $.ajax({
                 type: "POST",
-                url: "CEODashBorad.aspx/GetVitalCount",
+                url: "CEODashBoardNew.aspx/GetVitalCount",
                 data: JSON.stringify({
                     'txt_sdate': txt_sdate,
                     'txt_edate': txt_edate,
@@ -432,7 +434,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "CEODashBorad.aspx/GetTodayPatientsCount",
+                url: "CEODashBoardNew.aspx/GetTodayPatientsCount",
                 data: JSON.stringify({
                 }),
                 contentType: "application/json; charset=utf-8",
@@ -992,7 +994,7 @@
                 $('#tabPatientCount tbody').empty();
                 $.each(Investigations, function (key, value) {
                     debugger;
-                    rows += '<tr> <td>' + value.Category + ' </td><td> ' + value.Total_Count + ' </td><td> ' + value.Card_Receipt_Amount + ' </td><td> ' + value.Receipt_Amount + ' </td></tr>';
+                    rows += '<tr> <td>' + value.Category + ' </td><td> ' + value.Total_Count + ' </td><td> ' + value.Card_Receipt_Amount + ' </td><td> ' + value.Discount_Amount + ' </td><td> ' + value.Receipt_Amount + ' </td></tr>';
                 });
                 $('#tabPatientCount tbody').append(rows);
             })
@@ -1098,7 +1100,64 @@
         }
 
 
+        function LoadEmergencyCounts(startdate, Enddate) {
+            var txt_sdate = startdate;
+            var txt_edate = Enddate;
+            $.ajax({
+                type: "POST",
+                url: "CEODashBoardNew.aspx/GetEmergencyCounts",
+                data: JSON.stringify({
+                    'txt_sdate': txt_sdate,
+                    'txt_edate': txt_edate,
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    var parsedData = JSON.parse(data.d);
+                    var newEmer = parsedData.NewEmergency || 0;
+                    var revisitEmer = parsedData.RevisitEmergency || 0;
 
+                    var totalEmerVisits = newEmer + revisitEmer;
+                    var newPct = totalEmerVisits > 0 ? ((newEmer / totalEmerVisits) * 100).toFixed(2) : 0;
+                    var revisitPct = totalEmerVisits > 0 ? ((revisitEmer / totalEmerVisits) * 100).toFixed(2) : 0;
+
+                    $('#lblNewEmergency').text(newEmer + ' (' + newPct + '%)');
+                    $('#lblRevisitEmergency').text(revisitEmer + ' (' + revisitPct + '%)');
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in LoadEmergencyCounts: " + error);
+                }
+            });
+        }
+
+
+        function LoadIPDAdmitDischarge(startdate, Enddate) {
+            var txt_sdate = startdate;
+            var txt_edate = Enddate;
+            $.ajax({
+                type: "POST",
+                url: "CEODashBoardNew.aspx/GetIPDAdmitDischarge",
+                data: JSON.stringify({
+                    'txt_sdate': txt_sdate,
+                    'txt_edate': txt_edate,
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    var parsedData = JSON.parse(data.d);
+                    var admitted = parsedData.Admitted || 0;
+                    var discharged = parsedData.Discharged || 0;
+
+                    $('#lblIPDAdmitted').text(admitted);
+                    $('#lblIPDDischarged').text(discharged);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in LoadIPDAdmitDischarge: " + error);
+                }
+            });
+        }
 
 
     </script>
@@ -1139,7 +1198,7 @@
                             <span id="lblFilterPatient" style="color: #0f008e"></span>
                         </div>
                         <div class="row">
-                            <label style="color: #0f008e">F C</label>
+                            <label style="color: #0f008e">New OPD</label>
                         </div>
                     </div>
                     <div class="col-lg-4 styling border">
@@ -1147,7 +1206,50 @@
                             <span id="lblDepartmentPatient" style="color: #5f008e"></span>
                         </div>
                         <div class="row">
-                            <label style="color: #5f008e">CC</label>
+                            <label style="color: #5f008e">Revists</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="Emergency_Count_Row">
+                    <div class="col-lg-4 styling">
+                        <div class="row">
+                            <span id="lblTotalEmergency" style="color: #8e0016"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border border-right">
+                        <div class="row">
+                            <span id="lblNewEmergency" style="color: #0f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #0f008e">New Emergency</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border">
+                        <div class="row">
+                            <span id="lblRevisitEmergency" style="color: #5f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #5f008e">Revisit</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="IPD_AdmitDischarge_Row">
+                    <div class="col-lg-4 styling">
+                    </div>
+                    <div class="col-lg-4 styling border border-right">
+                        <div class="row">
+                            <span id="lblIPDAdmitted" style="color: #0f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #0f008e">Admitted</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border">
+                        <div class="row">
+                            <span id="lblIPDDischarged" style="color: #5f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #5f008e">Discharged</label>
                         </div>
                     </div>
                 </div>
@@ -1199,6 +1301,7 @@
                                 <th>Department</th>
                                 <th>Ordered</th>
                                 <th>Performed</th>
+                                <th>Discount</th>
                                 <th>Net Amount</th>
                             </tr>
                         </thead>
@@ -1215,6 +1318,7 @@
                                 <th>Department</th>
                                 <th>Total Patient</th>
                                 <th>Card Fee</th>
+                                <th>Discount</th>
                                 <th>Total Amount</th>
                             </tr>
                         </thead>
@@ -1248,7 +1352,7 @@
 
             <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-lg-2">
+                    <div class="col-lg-2" style="display:none">
                         <div class="card l-bg-green-dark text-white" id="Box1">
                             <div class="card-header" style="height: 30px; text-align: center;">
                                 <h3 id="Vitals" style="padding: 5px;">OPD Visits</h3>
@@ -1264,7 +1368,7 @@
 
                         </div>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-2" style="display:none">
                         <div class="card l-bg-green-dark text-white" id="Box4">
                             <div class="card-header" style="height: 30px; text-align: center;">
                                 <h3 id="" style="padding: 5px;">Total Footfall</h3>
@@ -1280,7 +1384,7 @@
 
                         </div>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-2" style="display:none">
     <div class="card l-bg-green-dark text-white" id="Box5">
         <div class="card-header" style="height: 30px; text-align: center;">
             <h3 id="" style="padding: 5px;">Referral Rate</h3>
@@ -1296,7 +1400,7 @@
 
     </div>
 </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" style="display:none">
                         <div class="card l-bg-orange-dark text-white" id="Box2">
                             <div class="card-header" style="height: 30px; text-align: center;">
                                 <h3 id="Dialysis" style="padding: 5px;">Dialysis Sessions</h3>
@@ -1317,7 +1421,7 @@
 
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" style="display:none">
                         <div class="card l-bg-blue-dark text-white" id="Box3">
                             <div class="card-header" style="height: 30px; text-align: center;">
                                 <h3 id="Dpt2" style="padding: 5px;">Today Status</h3>
@@ -1383,3 +1487,4 @@
     </div>
 
 </asp:Content>
+
