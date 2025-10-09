@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CEODashboardNew.aspx.cs" Inherits="PMS.Modules.Dashboards.CEODashboardNew" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
 
     <style type="text/css">
        #topTestsChartsContainer .card {
@@ -45,7 +44,6 @@
         }
 
         input {
-            width: 105px !important;
             border-radius: 10px !important;
         }
 
@@ -165,6 +163,7 @@
             LoadPharmacyCount(dt, dts);
             ChartfDocPatientCount(dt, dts);
             ChartAppointmentCountByDoctor(dt, dts);
+            ChartfDeptPatientCount(dt, dts);
             LoadOverallSatisfaction(dt, dts);
             LoadEmergencyCounts(dt, dts);
             LoadIPDAdmitDischarge(dt, dts);
@@ -1159,6 +1158,56 @@
             });
         }
 
+        let DeptChart;
+        function ChartfDeptPatientCount(startdate, Enddate) {
+            PageMethods.GetDepartmentPatientCount(startdate, Enddate, function (resp) {
+                debugger;
+                var parsedData = JSON.parse(resp);
+
+                var series = parsedData.map(item => item.Total_Count);
+                var labels = parsedData.map(item => item.Department_Name);
+
+                var options = {
+                    series: series,
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    labels: labels,
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }],
+                    title: {
+                        text: 'Patients by Department',
+                        align: 'center'
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val, opts) {
+                                return val + " patients";
+                            }
+                        }
+                    }
+                };
+
+                if (DeptChart) {
+                    DeptChart.destroy();
+                }
+                DeptChart = new ApexCharts(document.querySelector("#chartGetDeptPatientCount"), options);
+                DeptChart.render();
+            }, function (error) {
+                console.error("Error loading department chart:", error);
+            });
+        }
+
 
     </script>
 
@@ -1181,7 +1230,7 @@
                         <input type="text" id="EndDate" />
                     </div>
                     <div class="col-lg-4">
-                        <input type="button" id="txtSearch" value=" Search" onclick="search()" />
+                        <input type="button" id="txtSearch" class="btn btn-primry" value=" Search" onclick="search()" />
                     </div>
                 </div>
                 <div class="row" id="Paitent_Count_Row">
@@ -1328,17 +1377,17 @@
                 </div>
                 <div class="row">
                     <h4>Pharmacy</h4>
-                   <table class="table table-hover table-striped table-bordered" id="tabPharmacy">
-    <thead id="ipharmacyhead">
-        <tr>
-            <th>Customer Type</th>
-            <th>Ordered</th>
-            <th>Net Amount</th>
-            <th>%</th>
-        </tr>
-    </thead>
-    <tbody id="ipharmacybody"></tbody>
-</table>
+                    <table class="table table-hover table-striped table-bordered" id="tabPharmacy">
+                        <thead id="ipharmacyhead">
+                            <tr>
+                                <th>Customer Type</th>
+                                <th>Ordered</th>
+                                <th>Net Amount</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ipharmacybody"></tbody>
+                    </table>
 
                 </div>
                 <div class="row">
@@ -1451,6 +1500,12 @@
                     <div class="col-lg-6" style="text-align: center">
                         <h4>Appointment Statistics</h4>
                         <div id="chartGetDocAppointmentsCount"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>Department Statistics</h4>
+                        <div id="chartGetDeptPatientCount"></div>
                     </div>
                 </div>
                  <div class="row mb-3">

@@ -4649,13 +4649,6 @@ namespace PMS
             return ((ISingleResult<sp_GetProcedureCountsResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPharmacyCounts")]
-        public ISingleResult<sp_GetPharmacyCountsResult> sp_GetPharmacyCounts([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
-            return ((ISingleResult<sp_GetPharmacyCountsResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetReferCount")]
         public ISingleResult<sp_GetReferCountResult> sp_GetReferCount([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "DateTime")] System.Nullable<System.DateTime> startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "DateTime")] System.Nullable<System.DateTime> endDate)
         {
@@ -4731,6 +4724,20 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
             return ((ISingleResult<sp_GetPatientCountsAndNetAmountByDateResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetDepartmentPatientCountForCEODashboard")]
+        public ISingleResult<sp_GetDepartmentPatientCountForCEODashboardResult> sp_GetDepartmentPatientCountForCEODashboard([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
+            return ((ISingleResult<sp_GetDepartmentPatientCountForCEODashboardResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPharmacyCounts")]
+        public ISingleResult<sp_GetPharmacyCountsResult> sp_GetPharmacyCounts([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
+            return ((ISingleResult<sp_GetPharmacyCountsResult>)(result.ReturnValue));
         }
     }
 
@@ -193927,68 +193934,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetPharmacyCountsResult
-    {
-
-        private string _CustomerType;
-
-        private int _TotalCount;
-
-        private decimal _TotalReceivedAmount;
-
-        public sp_GetPharmacyCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CustomerType", DbType = "VarChar(16) NOT NULL", CanBeNull = false)]
-        public string CustomerType
-        {
-            get
-            {
-                return this._CustomerType;
-            }
-            set
-            {
-                if ((this._CustomerType != value))
-                {
-                    this._CustomerType = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int NOT NULL")]
-        public int TotalCount
-        {
-            get
-            {
-                return this._TotalCount;
-            }
-            set
-            {
-                if ((this._TotalCount != value))
-                {
-                    this._TotalCount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalReceivedAmount", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal TotalReceivedAmount
-        {
-            get
-            {
-                return this._TotalReceivedAmount;
-            }
-            set
-            {
-                if ((this._TotalReceivedAmount != value))
-                {
-                    this._TotalReceivedAmount = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetReferCountResult
     {
 
@@ -201920,6 +201865,130 @@ namespace PMS
                 if ((this._Receipt_Amount != value))
                 {
                     this._Receipt_Amount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetDepartmentPatientCountForCEODashboardResult
+    {
+
+        private string _Department_Name;
+
+        private System.Nullable<int> _Total_Count;
+
+        private decimal _Receipt_Amount;
+
+        public sp_GetDepartmentPatientCountForCEODashboardResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department_Name", DbType = "VarChar(3000) NOT NULL", CanBeNull = false)]
+        public string Department_Name
+        {
+            get
+            {
+                return this._Department_Name;
+            }
+            set
+            {
+                if ((this._Department_Name != value))
+                {
+                    this._Department_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
+        public System.Nullable<int> Total_Count
+        {
+            get
+            {
+                return this._Total_Count;
+            }
+            set
+            {
+                if ((this._Total_Count != value))
+                {
+                    this._Total_Count = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
+        public decimal Receipt_Amount
+        {
+            get
+            {
+                return this._Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Receipt_Amount != value))
+                {
+                    this._Receipt_Amount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPharmacyCountsResult
+    {
+
+        private string _Category;
+
+        private int _TotalCount;
+
+        private decimal _TotalReceivedAmount;
+
+        public sp_GetPharmacyCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "VarChar(16) NOT NULL", CanBeNull = false)]
+        public string Category
+        {
+            get
+            {
+                return this._Category;
+            }
+            set
+            {
+                if ((this._Category != value))
+                {
+                    this._Category = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int NOT NULL")]
+        public int TotalCount
+        {
+            get
+            {
+                return this._TotalCount;
+            }
+            set
+            {
+                if ((this._TotalCount != value))
+                {
+                    this._TotalCount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalReceivedAmount", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal TotalReceivedAmount
+        {
+            get
+            {
+                return this._TotalReceivedAmount;
+            }
+            set
+            {
+                if ((this._TotalReceivedAmount != value))
+                {
+                    this._TotalReceivedAmount = value;
                 }
             }
         }

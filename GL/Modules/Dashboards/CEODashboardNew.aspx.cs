@@ -168,27 +168,33 @@ namespace PMS.Modules.Dashboards
             }
             return result;
         }
+        
+
         [WebMethod]
         public static string GetPharmacyCount(string txt_sdate, string txt_edate)
         {
-            string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = db.sp_GetPharmacyCounts(txt_sdate, txt_edate).ToList();
 
-                decimal totalNetAmount = query.Sum(x => x.TotalReceivedAmount);
-                var totalRow = new
+                var normalizedData = query.Select(r => new {
+                    CustomerType = r.Category,  
+                    TotalCount = r.TotalCount,
+                    TotalReceivedAmount = r.TotalReceivedAmount
+                }).ToList();
+
+                var totalCount = normalizedData.Sum(x => x.TotalCount);
+                var totalAmount = normalizedData.Sum(x => x.TotalReceivedAmount);
+
+                normalizedData.Add(new
                 {
                     CustomerType = "Total",
-                    TotalCount = query.Sum(x => x.TotalCount),
-                    TotalReceivedAmount = totalNetAmount
-                };
-                var resultList = query.Cast<object>().ToList();
-                resultList.Add(totalRow);
+                    TotalCount = totalCount,
+                    TotalReceivedAmount = totalAmount
+                });
 
-                result = (new JavaScriptSerializer()).Serialize(resultList);
+                return new JavaScriptSerializer().Serialize(normalizedData);
             }
-            return result;
         }
 
 
@@ -375,6 +381,19 @@ namespace PMS.Modules.Dashboards
             }
             return result;
         }
+
+        [WebMethod]
+        public static string GetDepartmentPatientCount(string txt_sdate, string txt_edate)
+        {
+            string result = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetDepartmentPatientCountForCEODashboard((txt_sdate),( txt_edate)).ToList();
+                result = new JavaScriptSerializer().Serialize(query);
+            }
+            return result;
+        }
+
         [WebMethod]
         public static string GetAppointmentCountByDoctor(string txt_sdate, string txt_edate)
         {
