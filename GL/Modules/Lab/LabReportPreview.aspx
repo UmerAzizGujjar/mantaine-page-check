@@ -82,11 +82,12 @@
 
         var index = 0;
         function ShowReport() {
+            debugger;
             var textInput = [];
             // debugger;td:eq(10) #Report_Colum
             var ChkLetterHead = $("#ChkIs_latterhead").prop('checked');
             var CheckUnApprove = 0;
-            $("#tblLabTest tr").find('td:eq(10) #Report_Colum').map(function () {
+            $("#tblLabTest tr").find('td:eq(15) #Report_Colum').map(function () {
                 debugger;
 
                 if (textInput.indexOf(this.value) === -1) {
@@ -104,7 +105,7 @@
                 var Checked = $(this).find('td:eq(0) input[name=chkReport]').prop('checked');
 
                 if (Checked == true) {
-                    Chk_IsApprove = $(this).find('td:eq(8) #isApprove').attr('value');
+                    Chk_IsApprove = $(this).find('td:eq(13) #isApprove').attr('value');
 
                     if (Chk_IsApprove == false || typeof Chk_IsApprove === 'undefined' || Chk_IsApprove == 'false' || Chk_IsApprove == "False") {
                         CheckUnApprove += 1;
@@ -149,9 +150,9 @@
                         var Checked = $(this).find('td:eq(0) input[name=chkReport]').prop('checked');
                         if (Checked == true) {
 
-                            Report_Column = $(this).find('td:eq(10) #Report_Colum').val();
+                            Report_Column = $(this).find('td:eq(15) #Report_Colum').val();
                             //$(this).find('td:eq(11) #Report_Column').val();
-                            Chk_IsApprove = $(this).find('td:eq(8) #isApprove').attr('value');
+                            Chk_IsApprove = $(this).find('td:eq(13) #isApprove').attr('value');
                             if (Report_Column == "null" || Report_Column == '') {
                                 Swal.fire({
                                     icon: 'error',
