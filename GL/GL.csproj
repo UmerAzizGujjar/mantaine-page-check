@@ -230,6 +230,7 @@
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
+    <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
@@ -3776,6 +3777,7 @@
     <Content Include="wwwroot\ASsiratTheme\Scripts\gridmvc.min.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.min.js" />
+    <Content Include="upload\UploadEmergency.ashx" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -25829,6 +25831,13 @@
     <Compile Include="Modules\Dashboards\BillingSection.aspx.designer.cs">
       <DependentUpon>BillingSection.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Dashboards\CEODashboardNew.aspx.cs">
+      <DependentUpon>CEODashboardNew.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\CEODashboardNew.aspx.designer.cs">
+      <DependentUpon>CEODashboardNew.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Dashboards\CEODashBorad.aspx.cs">
       <DependentUpon>CEODashBorad.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -28062,6 +28071,9 @@
     </Compile>
     <Compile Include="Modules\Administrator\TokenListWithOutSiteMaster.aspx.designer.cs">
       <DependentUpon>TokenListWithOutSiteMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\UploadEmergency.ashx.cs">
+      <DependentUpon>UploadEmergency.ashx</DependentUpon>
     </Compile>
     <Compile Include="upload\UploadPaymentFiles.ashx.cs">
       <DependentUpon>UploadPaymentFiles.ashx</DependentUpon>

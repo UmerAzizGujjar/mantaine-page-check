@@ -282,6 +282,37 @@
                 fillTokenInput(PatientID);
             }
             bindControls();
+            $('#ddlTestDepartment').change(function (e) {
+                debugger;
+                //var CheckAll = $('#chkTodayAll').checked;
+
+                var Dept = $("#ddlTestDepartment option:selected").text();
+
+                var tbl = document.getElementById('tblLabTest');
+                if (Dept != "Select Department") {
+                    if (Dept.trim() != '') {
+
+                        for (var i = 1; i < tbl.rows.length; i++) {
+                            if (tbl.rows[i].cells[7].innerText != Dept) {
+                                var row = tbl.rows[i];
+                                row.style.display = 'none';
+                            }
+                            else {
+                                var row = tbl.rows[i];
+                                row.style.display = '';
+                            }
+                        }
+                    }
+                }
+
+                else {
+                    for (var i = 1; i < tbl.rows.length; i++) {
+                        var row = tbl.rows[i];
+                        row.style.display = '';
+                    }
+
+                }
+            });
             // GetPendingList();   //  21-01-2021
             $('#btnGrowth').click(function () {
 
@@ -678,7 +709,18 @@
             FillGrowthType();
             FillOrganismType();
             FillGrowthInfo();
+            GetTestDepartment();
         });
+        function GetTestDepartment() {
+            var options = '<option value="">Select Department</option>';
+            PageMethods.FillTestDepartment(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlTestDepartment').html(options);
+            });
+            return options;
+        }
         function readIMG(input) {
 
             var img_index = 0;
@@ -2401,6 +2443,14 @@
                     </div>
                 </div>
             </div>
+        <div class="row">
+           <div class="col-lg-2 col-md-3 col-sm-4">
+                <label>Test Department</label>
+  <select id="ddlTestDepartment">
+     <option></option>
+ </select>
+           </div>
+        </div>
         <div class="row">
             <div class="table-responsive-lg table-responsive-md">
                 <table style="padding: 20px; height: 200px; float: left;">                   

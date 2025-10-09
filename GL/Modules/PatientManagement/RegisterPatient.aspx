@@ -157,7 +157,7 @@
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtcity">City</label>
             <select id="txtcity"  tabindex="15" class="form-control">
-                <option value="0">Select City</option>
+                <option value="0">Select City</option>             
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">

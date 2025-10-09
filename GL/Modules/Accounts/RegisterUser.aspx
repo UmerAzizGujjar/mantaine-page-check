@@ -64,6 +64,7 @@
                     $('#AllowBillUpdate').prop('checked', data.Allow_bill_edit);
                     $('#AllowEmergency_adm_dis').prop('checked', data.Emergency_adm_dis);
                     $('#BlockUser').prop('checked', data.BlockUser);
+                    $('#AllowemergencyDiscount').prop('checked', data.Allow_emer_disc);
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -107,6 +108,7 @@
             var AllowEmergency_adm_dis = $('#AllowEmergency_adm_dis').prop('checked');
             var AllowBillUpdate = $('#AllowBillUpdate').prop('checked');
             var BlockUser = $('#BlockUser').prop('checked');
+            var AllowemergencyDiscount = $('#AllowemergencyDiscount').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var hasMinLength = Password.length >= 6;
             var hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(Password);
@@ -171,7 +173,7 @@
                 Valid = false;
             }
 
-                if (!Accounts || Accounts === "0") {
+            if (!Accounts || Accounts === "0") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -221,7 +223,8 @@
                 "EditEmergency": EditEmergency,
                 "AllowEmergency_adm_dis": AllowEmergency_adm_dis,
                 "AllowBillUpdate": AllowBillUpdate,
-                "BlockUser": BlockUser
+                "BlockUser": BlockUser,
+                "AllowemergencyDiscount": AllowemergencyDiscount
 
             };
 
@@ -284,27 +287,27 @@
 
         }
 
-    function fillCashInHand() {
-    var options = '<option value="0">Please Select</option>';
-    $.ajax({
-        url: 'RegisterUser.aspx/GetGLAccounts',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
-            var data = response.d ? JSON.parse(response.d) : response;
-            $.each(data, function (key, value) {
-                options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
+        function fillCashInHand() {
+            var options = '<option value="0">Please Select</option>';
+            $.ajax({
+                url: 'RegisterUser.aspx/GetGLAccounts',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
+                    });
+                    $('#ddlCashInHand').html(options);
+                    $('#ddlCashInHand').select2({
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
             });
-            $('#ddlCashInHand').html(options);
-            $('#ddlCashInHand').select2({
-            });
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
         }
-    });
-}
 
 
     </script>
@@ -435,9 +438,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowCardio" name="AllowCardio" />
                                                     </div>
-                                                     <div class="form-check">
+                                                    <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowBillUpdate" name="AllowBillUpdate" />
-                                                    </div> 
+                                                    </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowEmergency_adm_dis" name="AllowEmergency_adm_dis" />
                                                     </div>
@@ -482,7 +485,7 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowCardio">Allow Bill Update</label>
-                                                    </div> 
+                                                    </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowAdmissionDischarge">Emergency Adm_Dis </label>
                                                     </div>
@@ -522,10 +525,13 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="IsAnonymous" name="RateBox" />
-                                                    </div> 
+                                                    </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowEditEmergency" name="EditEmergency" />
                                                     </div>
+                                                     <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="AllowemergencyDiscount" name="AllowemergencyDiscount" />
+                                                     </div>
                                                     <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
                                                     </div>
@@ -566,8 +572,11 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="IsAnonymous">IsAnonymous</label>
                                                     </div>
-                                                     <div class="form-check">
+                                                    <div class="form-check">
                                                         <label class="form-check-label" for="AllowEditEmergency">Edit Emergency</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowemergencyDiscount">Discount Emergency</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="EmpCode">Employee Code</label>

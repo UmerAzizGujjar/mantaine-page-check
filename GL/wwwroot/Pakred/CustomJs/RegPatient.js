@@ -17,6 +17,36 @@ $(document).ready(function () {
 
     });
 
+    $('#txt_mobile').on('focus', function () {
+        var input = this;
+        setTimeout(function () {
+            if (input.setSelectionRange) {
+                input.setSelectionRange(3, 3);
+            } else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', 3);
+                range.moveStart('character', 3);
+                range.select();
+            }
+        }, 0);
+    });
+
+    $('#txt_cnic').on('focus', function () {
+        var input = this;
+        setTimeout(function () {
+            if (input.setSelectionRange) {
+                input.setSelectionRange(0, 0);
+            } else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', 0);
+                range.moveStart('character', 0);
+                range.select();
+            }
+        }, 0);
+    });
+
     var dropdowns = [
         { id: '#ddl_Gender', method: 'GetGender' },
         { id: '#ddlCountry', method: 'GetCountry' },
@@ -53,6 +83,19 @@ $(document).ready(function () {
             }, 50);
         });
     });
+
+    const defaults = {
+        '#ddlCountry': { value: '01', text: 'Pakistan' },
+        '#ddlstate': { value: '01', text: 'Punjab' },
+        '#txtcity': { value: '0002', text: 'Kasur' },
+        '#txtarea': { value: '04', text: 'Dina Nath' }
+    };
+
+    $.each(defaults, function (id, data) {
+        const $el = $(id);
+        $el.html(`<option value="${data.value}" selected>${data.text}</option>`);
+    });
+
 
     const staticDropdowns = ['#ddl_name', '#ddlRelation', '#PrefixAge'];
     staticDropdowns.forEach(id => {

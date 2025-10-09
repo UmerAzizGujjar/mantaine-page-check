@@ -78,43 +78,66 @@ $(document).ready(function () {
         { id: '#ddlpanel', method: 'GetPanel' }
 
     ];
-
     dropdowns.forEach(item => {
-
         const $element = $(item.id);
-        $element.select2();
-        $element.off('select2:open').on('select2:open', function () {
-            fillDropdown($element, item.method);
-        });
 
+        const isInsideModal = $element.closest('#PatientModel').length > 0;
 
+        if (!isInsideModal) {
+            // Non-modal: use Select2 as before
+            $element.select2();
+            $element.off('select2:open').on('select2:open', function () {
+                fillDropdown($element, item.method);
+            });
+        } else {
+            // ✅ MODAL: Use native 'focus' to load data ONCE
+            $element.off('focus.fill').on('focus.fill', function () {
+                if (!$element.data('filled')) {
+                    fillDropdown($element, item.method);
+                }
+            });
+        }
+
+        // 👇 Keep ALL your existing logic exactly as before
         if (item.id === '#ddlPatient_Type') {
             $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
+            // Since modal uses native select, bind to 'change', not 'select2:select'
+            const changeHandler = function () {
                 loaddata();
                 $(this).prop('disabled', true);
-            });
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', changeHandler);
+            } else {
+                $element.off('change').on('change', changeHandler);
+            }
         }
 
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
+            const deptHandler = function () {
                 loaddoctor();
-            });
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', deptHandler);
+            } else {
+                $element.off('change').on('change', deptHandler);
+            }
         }
 
         if (item.id === '#ddldoctor') {
-
-            $element.off('select2:select');
-
-            $element.on('select2:select', function (e) {
+            const doctorHandler = function (e) {
                 var selectedVal = $(this).val();
                 if (selectedVal) {
                     loadFee();
                 }
-            });
-
-            $element.off('select2:open');
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', doctorHandler);
+                $element.off('select2:open');
+            } else {
+                $element.off('change').on('change', doctorHandler);
+            }
         }
 
 

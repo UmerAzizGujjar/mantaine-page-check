@@ -1099,13 +1099,13 @@
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
                             <select id="txtcity" class="form-control">
-                                  <option value="0">Select City</option>
+                                  <option value="0">Select City</option> 
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txtarea">Area</label>
                             <select id="txtarea" class="form-control">
-                                 <option value="0">Select Area</option>
+                                 <option value="0">Select Area</option>  
                             </select>
                         </div>
                         <div class="col-lg-5 col-md-4 col-sm-6">

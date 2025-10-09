@@ -4846,9 +4846,11 @@
                     $("#ddl_ctgry").val(data.d.Patient_Type).change();
                     $("#ddl_Doc").val(data.d.DocID).change();
                     $('#ddl_pnl_cpy').hide();
+                 
                     if (data.d.DOB != null) {
                         stDate = new Date(parseInt(data.d.DOB.substr(6)));
                         stDate = moment(stDate).format('L');
+                        $('#txtAge_yearss').val(stDate);
                     }
 
                     $("#ddltest_main_dpt").val(data.d.department).change();

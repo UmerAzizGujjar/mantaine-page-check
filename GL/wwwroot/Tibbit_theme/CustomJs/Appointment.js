@@ -1,11 +1,11 @@
 $(document).ready(function () {
     debugger;
 
-    filldepartment();
-    fillProvince();
-    fillCity();
-    fillCountry();
-    fillArea();
+    //filldepartment();
+   // fillProvince();
+   // fillCity();
+   // fillCountry();
+   // fillArea();
 
     $('#ddlsubdepartment').select2();
     $('#btnSave').on('click', function () {
@@ -72,9 +72,9 @@ $(document).ready(function () {
   
 
 
-    fillgender();
-    fillmartial();
-    fillType();
+  //  fillgender();
+  //  fillmartial();
+  //  fillType();
 
 
     debugger;

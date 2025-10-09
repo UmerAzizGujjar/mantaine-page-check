@@ -841,6 +841,7 @@
 
             debugger;
             if (collectedDate != "" && mrNo != "") {
+                debugger;
                 if (length == 0) {
                     Swal.fire({
                         icon: 'error',
@@ -868,7 +869,6 @@
                                 "sampleStatus": sampleStatus,
                                 "PatientID": mrNo,
                                 "SaveCheckedTest": saveCheckedTest,
-                      
                                 "EmployeeID": employeeID,
                                 "rem": rem,
                                 "ddlPat_type": ddlPat_type
@@ -932,6 +932,7 @@
                             success: function (response) {
                                 debugger;
                                 if (response.d == "Update") {
+                                    TestDetail(sampleID);
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success!',
@@ -946,7 +947,7 @@
                                     });
 
                                     debugger;
-                                    window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+                                    window.location = "SampleCollectionFrom.aspx?sampleID=" + SampleId;
 
                                     $("#txtMR_No").tokenInput("clear");
                                     $('#CollectedSample tbody tr').remove();
