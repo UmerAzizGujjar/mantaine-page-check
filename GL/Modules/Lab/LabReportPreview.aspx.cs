@@ -819,7 +819,26 @@ namespace PMS
             public string Approved_Time { get; set; }
             public string TestDepartment { get; set; }
         }
+        [WebMethod]
+        public static string FillTestDepartment()
+        {
+            string data = string.Empty;
 
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Test Departments"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string GetLabDetailByBill_id(string Patient_ID, int Bill_ID)
         {
