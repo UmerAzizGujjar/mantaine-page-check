@@ -819,7 +819,26 @@ namespace PMS
             public string Approved_Time { get; set; }
             public string TestDepartment { get; set; }
         }
+        [WebMethod]
+        public static string FillTestDepartment()
+        {
+            string data = string.Empty;
 
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Test Departments"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string GetLabDetailByBill_id(string Patient_ID, int Bill_ID)
         {
@@ -1154,37 +1173,38 @@ namespace PMS
 
             AlltestListRefined = AlltestList;
             DataTable GroupTest = DBClass.getDataTable(@"
-    SELECT 
-        MIN(ld.Lab_Test_ID) AS Lab_Test_ID,
-        dv.Segment2,
-        dv.Datavalue_ID AS Test_ID,
-        lt.Group_Category,
-        dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
-        MIN(ld.Test_Performed_By) AS Test_Performed_By,
-        MIN(ld.Test_Ready_On) AS Test_Ready_On,
-        MIN(ld.Approved_Time) AS Approved_Time,
-        (SELECT TOP 1 UserName 
-         FROM aspnet_Users u 
-         WHERE u.UserId = ld.Approved_By) AS Approved_By,
-        MIN(bd.Bill_Details_ID) AS Bill_Details_ID,
-        CAST(MAX(CAST(ISNULL(ld.Is_Result, 0) AS INT)) AS BIT) AS Is_Result,
-        MIN(ld.Rejected_Reason) AS Rejected_Reason,
-        MIN(bd.Service_Date) AS Service_Date,
-        CAST(MAX(CAST(ISNULL(ld.isApproved, 0) AS INT)) AS BIT) AS IsApproved,
-        MIN(ltm.Patient_ID) AS patient_id,
-        MIN(ISNULL(bd.Test_Main_Department, '')) AS Test_Main_Department,
-        dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
-        FROM Lab_Test_Detail ld
-        JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
-        JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
-        JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
-        JOIN Reg_patient pat ON ld.Patient_ID = pat.pat_id
-        LEFT JOIN Datavalues dv 
-              ON dv.Datavalue_Name = lt.Group_Category 
-              AND dv.ValueSet_ID = 70
-        WHERE ISNULL(bd.Is_Group_Category, 0) = 1
+   SELECT 
+    Distinct (ld.Lab_Test_ID) AS Lab_Test_ID,
+    dv.Segment2,
+    dv.Datavalue_ID AS Test_ID,
+    lt.Group_Category,
+    dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
+    (ld.Test_Performed_By) AS Test_Performed_By,
+    (ld.Test_Ready_On) AS Test_Ready_On,
+    CONVERT(varchar(5), ld.Approved_Time, 108) AS Approved_Time,
+
+    (SELECT TOP 1 UserName 
+     FROM aspnet_Users u 
+     WHERE u.UserId = ld.Approved_By) AS Approved_By,
+    (bd.Bill_Details_ID) AS Bill_Details_ID,
+    CAST((CAST(ISNULL(ld.Is_Result, 0) AS INT)) AS BIT) AS Is_Result,
+    (ld.Rejected_Reason) AS Rejected_Reason,
+    (bd.Service_Date) AS Service_Date,
+    CAST((CAST(ISNULL(ld.isApproved, 0) AS INT)) AS BIT) AS IsApproved,
+    (ltm.Patient_ID) AS patient_id,
+    (ISNULL(bd.Test_Main_Department, '')) AS Test_Main_Department,
+    dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
+    FROM Lab_Test_Detail ld
+    JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
+    JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
+    JOIN AR_Billing_Details bd ON bd.Bill_Details_ID = ld.Bill_Details_ID
+    JOIN Reg_patient pat ON ld.Patient_ID = pat.pat_id
+    LEFT JOIN Datavalues dv 
+          ON dv.Datavalue_Name = lt.Group_Category 
+          AND dv.ValueSet_ID = 70
+    WHERE ISNULL(bd.Is_Group_Category, 0) = 1
           AND pat.Patient_No = (CASE WHEN " + patientNo + @" = 0 THEN pat.Patient_No ELSE " + patientNo + @" END)
-        GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department
+       
 ");
 
             foreach (DataRow item in GroupTest.Rows)

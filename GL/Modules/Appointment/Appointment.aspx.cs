@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
@@ -435,23 +437,23 @@ on DM.Rouster_id equals DD.Rouster_id
         }
 
 
-        //[WebMethod]
+        [WebMethod]
 
-        //public static string loadAppData(int appID)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var Details = db.sp_loadAppointment(appID).FirstOrDefault();
-        //    return (new JavaScriptSerializer()).Serialize(Details);
-        //}
+        public static string loadAppData(int appID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_loadAppointment(appID).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
 
-        //[WebMethod]
+        [WebMethod]
 
-        //public static string loadAppData_edit(int App_id)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var Details = db.sp_loadAppointment(App_id).FirstOrDefault();
-        //    return (new JavaScriptSerializer()).Serialize(Details);
-        //}
+        public static string loadAppData_edit(int App_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_loadAppointment(App_id).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
         [WebMethod]
         public static string GetSubDepartmentByDoctor(string doctor_Id)
         {
@@ -610,6 +612,32 @@ on DM.Rouster_id equals DD.Rouster_id
                 Obj.created_by = AppConfig.UserID;
                 db.Appointment_Forms.InsertOnSubmit(Obj);
                 db.SubmitChanges();
+                // After db.SubmitChanges();
+
+                // Format patient phone for WhatsApp (international, no +)
+                //string patientPhone = record.txt_phone_no;
+                //if (!string.IsNullOrEmpty(patientPhone))
+                //{
+                //    // Clean phone: remove non-digits
+                //    patientPhone = new string(patientPhone.Where(char.IsDigit).ToArray());
+
+                //    // Convert to 92 format if needed
+                //    if (patientPhone.Length == 11 && patientPhone.StartsWith("0"))
+                //        patientPhone = "92" + patientPhone.Substring(1);
+                //    else if (patientPhone.Length == 10 && patientPhone.StartsWith("3"))
+                //        patientPhone = "92" + patientPhone;
+
+                //    // Only send if valid
+                //    if (patientPhone.Length == 12 && patientPhone.StartsWith("92"))
+                //    {
+                //        string doctorName = DBClass.getField($"select dbo.GetDoctorName({record.ddl_colstnt})");
+                //        string appDate = Convert.ToDateTime(record.txt_date).ToString("dd MMM yyyy");
+                //        string appTime = DateTime.Today.Add(record.txt_time).ToString("hh:mm tt");
+
+                //        // Send WhatsApp via API
+                //        SendWhatsAppToPatient(patientPhone, record.txt_pt_name, doctorName, appDate, appTime);
+                //    }
+                
             }
 
 
@@ -832,7 +860,52 @@ on DM.Rouster_id equals DD.Rouster_id
             public int reg_id { get; set; }
 
         }
+        //[WebMethod]
+        //public static string SendWhatsAppToPatient(string to, string patientName, string doctorName, string date, string time)
+        //{
+        //    try
+        //    {
+        //        // === Replace with your real credentials from Meta Dashboard ===
+        //        string WHATSAPP_TOKEN = "EAAUgSr2OlMwBPqfHyPL6RJ1AHn8Oz9QyH9ci49qCrBMSYXPco266qHGwcWomD3nuFnaK2ZASsdpK1biEUEl2EvAA9HUhAYoSVOuHNaJfDZC4SMHs0EUZAHOuiRa0B3ZB3b3oXEP3pwz8ZAwf5wp1lwR3bWwLEVhkWme0ZBQsekheg1Gu6WmVO3zRp7whWAXTdocZCy1LuzhcjZAcsCCA6bCPfxZC8muM2IPCKu3gzJCtLuTBRJQZDZD"; // ← Get this from Meta Developer Dashboard
+        //        string PHONE_NUMBER_ID = "03174836373"; 
 
+        //        string url = $"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages";
+
+        //        // Build JSON for template message
+        //        string json = $@"{{
+        //    ""messaging_product"": ""whatsapp"",
+        //    ""to"": ""{to}"",
+        //    ""type"": ""template"",
+        //    ""template"": {{
+        //        ""name"": ""appointment_confirmation"",
+        //        ""language"": {{ ""code"": ""en"" }},
+        //        ""components"": [{{
+        //            ""type"": ""body"",
+        //            ""parameters"": [
+        //                {{ ""type"": ""text"", ""text"": ""{patientName}"" }},
+        //                {{ ""type"": ""text"", ""text"": ""{doctorName}"" }},
+        //                {{ ""type"": ""text"", ""text"": ""{date}"" }},
+        //                {{ ""type"": ""text"", ""text"": ""{time}"" }}
+        //            ]
+        //        }}]
+        //    }}
+        //}}";
+
+        //        using (var client = new HttpClient())
+        //        {
+        //            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {WHATSAPP_TOKEN}");
+        //            var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //            var response = client.PostAsync(url, content).Result;
+
+        //            return response.IsSuccessStatusCode ? "sent" : "failed: " + response.ReasonPhrase;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "error: " + ex.Message;
+        //    }
+        //}
 
     }
+
 }

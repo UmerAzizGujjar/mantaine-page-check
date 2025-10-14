@@ -995,13 +995,18 @@
                     $("#ctl00_MainContent_ddlPrefixDrp option:contains(" + patientTitle[0] + ")").attr("selected", true);
                 }
                 debugger;
-                console.log(data);
-                //$('#ddl_colstnt').html(
-                //    $('<option>', {
-                //        value: data.Consultant_ID,
-                //        text: data.doctor_name
-                //    })
-                //).attr('disabled', true);
+
+                $('#ddl_colstnt')
+                    .empty()
+                    .append($('<option>', {
+                        value: data.Consultant_ID,
+                        text: data.doctor_name
+                    }))
+                    .val(data.Consultant_ID)
+                    .prop('disabled', true)
+                    .trigger('change')
+                    .select2();
+
                 $('#txt_ID').val(data.Appointment_ID);
                 $('#txt_pt_name').val(patientTitle[patientTitle.length - 1]);
                 $("#ctl00_MainContent_ddlPrefixDrp")
@@ -1023,17 +1028,20 @@
                 date = moment(date).format('LL');
                 $("#txt_date").val(date);
 
-            
-                //$('#ddlsubdepartment').html(
-                //    $('<option>', {
-                //        value: data.Sub_Department,
-                //        text: data.Department_name
-                //    })
-                //).attr('disabled', true);
+                $('#ddlsubdepartment')
+                    .empty()
+                    .append($('<option>', {
+                        value: data.Sub_Department,
+                        text: data.Department_name
+                    }))
+                    .val(data.Sub_Department)
+                    .prop('disabled', true)
+                    .trigger('change')
+                    .select2();
 
                     $('#ddlServices').val(data.Item_Id).change();
 
-                
+
 
             },
 
@@ -1042,6 +1050,7 @@
                 });
         }
 
+       
 
         function loadapptEdit(App_id) {
 
@@ -1567,24 +1576,62 @@
                     };
 
                     PageMethods.SaveAppointment(btnsave, JSON.stringify(AllItemDetail), editmode_ID, function (res) {
-                        debugger;
                         Swal.fire({
                             icon: 'success',
-                            title: 'Success!',
-                            text: 'Your appointment has been saved successfully.',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
+                            title: 'Appointment Saved!',
+                            text: 'A WhatsApp confirmation has been sent automatically.',
+                            confirmButtonText: 'OK'
                         }).then(() => {
                             window.location = "Appointment.aspx";
                         });
-
                     });
+                    //for whatsapp integration\
 
+
+
+                    //PageMethods.SaveAppointment(btnsave, JSON.stringify(AllItemDetail), editmode_ID, function (res) {
+                    //    debugger;
+
+                    //    // Get patient phone and format it for WhatsApp
+                    //    var phone = $('#txt_phone_no').val().replace(/-/g, '').replace(/_/g, '');
+                    //    var doctorName = $('#ddl_colstnt option:selected').text();
+                    //    var appointmentDate = $('#txt_date').val();
+                    //    var appointmentTime = $('#txt_time').val();
+
+                    //    // Format phone for Pakistan (add 92 if needed)
+                    //    if (phone.length === 11 && phone.startsWith('0')) {
+                    //        phone = '92' + phone.substring(1); // 03001234567 → 923001234567
+                    //    } else if (phone.length === 10 && phone.startsWith('3')) {
+                    //        phone = '92' + phone; // 3001234567 → 923001234567
+                    //    }
+
+                    //    // Build WhatsApp message
+                    //    var message = "Dear Patient,\n\nYour appointment is confirmed with Dr. " +
+                    //        doctorName + " on " + appointmentDate + " at " + appointmentTime +
+                    //        ".\n\nThank you!";
+
+                    //    var whatsappUrl = "https://wa.me/  " + phone + "?text=" + encodeURIComponent(message);
+
+                    //    // Show success + WhatsApp option
+                    //    Swal.fire({
+                    //        icon: 'success',
+                    //        title: 'Appointment Saved!',
+                    //        html: phone ? 'Click below to send WhatsApp confirmation to <strong>' + phone + '</strong>' : 'Phone number missing.',
+                    //        showCancelButton: true,
+                    //        confirmButtonText: 'Open WhatsApp',
+                    //        cancelButtonText: 'Close',
+                    //        customClass: {
+                    //            popup: 'swal-big-popup',
+                    //            title: 'swal-big-title',
+                    //            htmlContainer: 'swal-big-text'
+                    //        }
+                    //    }).then((result) => {
+                    //        if (result.isConfirmed) {
+                    //            window.open(whatsappUrl, '_blank');
+                    //        }
+                    //        window.location = "Appointment.aspx";
+                    //    });
+                    //});
                 }
 
             });
