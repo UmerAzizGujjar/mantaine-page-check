@@ -1,7 +1,35 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Ledger.aspx.cs" Inherits="PMS.Ledger" Theme="Default_Theme" %><asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server"></asp:Content><asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">    <script type="text/javascript" src="wwwroot/Scripts/jquery.tokeninput.js"></script>    <script type="text/javascript">        $(function () {            $("#ctl00_MainContent_txtStart_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());            $("#ctl00_MainContent_txtEnd_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());        });        $(document).ready(function () {            loadtokenInputsByAccount_ID();        });        function loadtokenInputsByAccount_ID() {            $("#ctl00_MainContent_txtAccount_ID").tokenInput("../../json.aspx", {                tokenLimit: 1            });            $("#ctl00_MainContent_txtAccount_IDlvl3").tokenInput("../../json.aspx", {                tokenLimit: 1            });        }    </script>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Ledger.aspx.cs" Inherits="PMS.Ledger" Theme="Default_Theme" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript" src="wwwroot/Scripts/jquery.tokeninput.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $("#ctl00_MainContent_txtStart_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());
+            $("#ctl00_MainContent_txtEnd_Date").datepicker({ dateFormat: "dd M yy" }).datepicker("setDate", new Date());
+
+        });
+
+        $(document).ready(function () {
+            loadtokenInputsByAccount_ID();
+        });
+        function loadtokenInputsByAccount_ID() {
+            $("#ctl00_MainContent_txtAccount_ID").tokenInput("../../json.aspx", {
+                tokenLimit: 1
+            });
+            $("#ctl00_MainContent_txtAccount_IDlvl3").tokenInput("../../json.aspx", {
+                tokenLimit: 1
+            });
+        }
+    </script>
     <style>
-        .row{            margin-left: 50px !important;
-            margin-right: 150px !important;        }
+        .row{
+            margin-left: 50px !important;
+            margin-right: 150px !important;
+        }
     </style>
     <div class="container mt-4">
         <div class="row mb-3">
@@ -46,3 +74,5 @@
         </div>
     </div>
 </asp:Content>
+
+
