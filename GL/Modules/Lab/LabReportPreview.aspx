@@ -182,7 +182,7 @@
                                 var groupCategory = $(this).find('#GroupCategory').val();
                                 if (groupCategory != "") {
 
-                                    var testIds = $(this).find('td:eq(10) #ListOfTestIDs').val();
+                                    var testIds = $(this).find('td:eq(15) #ListOfTestIDs').val();
 
                                     if (testIds == "null" || testIds == '') {
                                         testIds = $(this).find('td:eq(1) #labtestDID').val();
