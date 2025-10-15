@@ -661,6 +661,7 @@
                     }
                     else if (rptTitle == "OPD_Detail_Report") {
                         debugger;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=OPDDetailReport&ReportTitle=OPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
                         window.open(url, '_blank');
                     }
