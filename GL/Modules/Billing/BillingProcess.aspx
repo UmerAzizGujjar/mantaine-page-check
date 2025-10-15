@@ -4165,9 +4165,13 @@
 
                     var id = '<%= Request.QueryString["Bill_ID"]%>';
 
-                    if (data.d.Patient_Type == null) {
+                    if (data.d.Patient_Type == null && data.d.In_Patient_Type == null) {
 
                         $('#lblPatientCategory').val('General');
+                        
+                    }
+                    else if (data.d.In_Patient_Type != null) {
+                        $('#lblPatientCategory').val(ReplaceNullWith_Space(data.d.In_Patient_Type));
                     }
                     else {
                         $('#lblPatientCategory').val(ReplaceNullWith_Space(data.d.Patient_Type));

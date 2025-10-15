@@ -155,6 +155,7 @@ namespace PMS
                 rd.SetParameterValue("@Item_Id", itemId);
                 rd.SetParameterValue("@Item_Category", ItemCategory);
             }
+
             else if (reportName == "SIN_summary")
             {
                 if (Request.QueryString["sDate"] != null && Request.QueryString["eDate"] != null)
@@ -672,6 +673,27 @@ namespace PMS
                     rd.SetParameterValue("@endDate", newEnddate);
                 }
             }
+            else if (reportName == "Pharmacy_Profit_and_Loss_Report")
+            {
+                if (Request.QueryString["StartDateTime"] != null && Request.QueryString["EndDateTime"] != null)
+                {
+                    reportPath += "Pharmacy/rptPharmacyProfitandLoss.rpt";
+                    rd.Load(reportPath);
+                    rd.SummaryInfo.ReportTitle = reportTitle;
+
+                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                    string stDate = Request.QueryString["StartDateTime"].ToString();
+                    string endDate = Request.QueryString["EndDateTime"].ToString();
+                    var edate = Convert.ToDateTime(endDate);
+                    var newEnddate = new DateTime(edate.Year, edate.Month, edate.Day, edate.Hour, edate.Minute, 59);
+
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    //rd.SetParameterValue("Address", companyAddress);
+                    rd.SetParameterValue("ReportTitle", reportTitle);
+                    rd.SetParameterValue("@StartDate", stDate);
+                    rd.SetParameterValue("@endDate", newEnddate);
+                }
+            }
 
             else if (reportName == "Appointment_Patient_Print")
             {
@@ -882,11 +904,35 @@ namespace PMS
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SummaryInfo.ReportTitle = reportTitle;
-                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
-                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
                 rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
             }
-            else if (reportName == "VendorPerson")
+            else if (reportName == "Vendor_Wise_Transaction_Detail")
+            {
+                string rptFileName = "Inventory/rptVendorWiseTransactionDetail.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("ReportTitle", reportTitle);
+                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+            }
+            else if (reportName == "Vendor_Wise_Payment_Summary")
+            {
+                string rptFileName = "Inventory/rptVendorWisePaymentSummary.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("ReportTitle", reportTitle);
+                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+            }
+            else if (reportName == "VendorPerson") 
             {
                 if (Request.QueryString["ID"] != null)
                 {
@@ -996,6 +1042,24 @@ namespace PMS
                     reportPath += "Pharmacy/rptPharmacyStock.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@Stock", stock);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", companyAddress);
+                }
+            }
+            else if (reportName == "Stock_Consumption_Details")
+            {
+                if (Request.QueryString["Stock"] != null)
+                {
+                    var stock = Request.QueryString["Stock"];
+                    string stDate = Request.QueryString["startDate"].ToString();
+                    string endDate = Request.QueryString["endDate"].ToString();
+                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                    reportPath += "Pharmacy/rptStockConsumptionDetail.rpt";
+                    rd.Load(reportPath);
+                    rd.SetParameterValue("@Stock", stock);
+                    rd.SetParameterValue("@FromDate", stDate);
+                    rd.SetParameterValue("@ToDate", endDate);
+                    rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
                 }
@@ -1116,6 +1180,27 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Patient_Type", PatType);
             }
+            else if (reportName == "Service_Wise_Summary_Report")
+            {
+                string rptFileName = "Patients/rptServiceWiseSummary.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+                rd.SetParameterValue("@FromDate", parameterStDate);
+                rd.SetParameterValue("@ToDate", parameterEndDate);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("ReportTitle", "Service Wise Summary");
+            }
             else if (reportName == "Lab_Test_Investigation_Delay")
             {
                 string rptFileName = "TransactionalDetails/rpt_lab_Result_Investigation_Delay.rpt";
@@ -1147,6 +1232,36 @@ namespace PMS
             }
 
             //replica of Lab cash Collection
+            else if (reportName == "Operator_Wise_Billing_Report")
+            {
+                string rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report.rpt";
+                //if (Convert.ToBoolean(Request.QueryString["Summary"].ToString()))
+                //    rptFileName = "TransactionalDetails/rptLabCashCollection _Summary.rpt";
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+                string Operator = Request.QueryString["Operator"].ToString();
+                string PatType = Request.QueryString["Patient_Type"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "Operator Wise Billing");
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Patient_Type", PatType);
+            }
             else if (reportName == "Operator_Wise_Billing_Report")
             {
                 string rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report.rpt";
@@ -1617,6 +1732,32 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 //rd.SetParameterValue("@PatientType", patType);
             }
+            else if (reportName == "Stock_In_Hand_Detail")
+            {
+                string rptFileName = "Inventory/rptStockinHandDetail.rpt";
+                string StartDateTime = Request.QueryString["sDate"].ToString();
+                string EndDateTime = Request.QueryString["eDate"].ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+
+                string stTime = Request.QueryString["StartTime"].ToString();
+                string endTime = Request.QueryString["EndTime"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(StartDateTime, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(EndDateTime, endTime, out parameterEndDate);
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("@FromDate", parameterStDate);
+                rd.SetParameterValue("@ToDate", parameterEndDate);
+                string departmentID = Request.QueryString["Department"].ToString();
+                rd.SetParameterValue("@Department", departmentID); 
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+            }
             else if (reportName == "AdmissionDetail")
             {
                 string operatorID = "0";
@@ -1780,6 +1921,32 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@stDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
+            }
+            else if (reportName == "Head_Wise_Discount_Report")
+            {
+                string rptFileName = "TransactionalDetails/rptHeadWiseDiscountReport.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("ReportTitle", reportTitle);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+            }
+            else if (reportName == "TimeAndMotion")
+            {
+                string rptFileName = "Patients/rptServicesTime&Motion.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("ReportTitle", reportTitle);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
             }
             else if (reportName == "PCR")
             {
@@ -2834,7 +3001,33 @@ namespace PMS
 
                 }
             }
-                     
+
+        /*    else if (reportName == "Time_And_Motion_Report")
+            {
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string endDate = Request.QueryString["EndDate"].ToString();
+                reportPath += "rptServicesTime&Motion.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("ReportTitle", reportTitle);
+                rd.SetParameterValue("@StartDate", stDate);
+                rd.SetParameterValue("@EndDate", endDate);
+            }
+
+
+            else if (reportName == "Head_Wise_Discount_Report")
+            {
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string endDate = Request.QueryString["EndDate"].ToString();
+                reportPath += "rptHeadWiseDiscountReport.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("ReportTitle", reportTitle);
+                rd.SetParameterValue("@StartDate", stDate);
+                rd.SetParameterValue("@EndDate", endDate);
+            }    
+                   */
+
             else if (reportName == "BloodIssuance")
             {
                 string rptFileName = "rptBloodIssuance.rpt";

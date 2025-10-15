@@ -2030,7 +2030,19 @@ namespace PMS
                     pt.Department = "";
                 }
 
-
+                var inpatient_ids = DBClass.getField(
+                    "select top 1 In_Patient_ID from In_Patient " +
+                    "where Patient_ID = " + PatientID +
+                    " and isNull(Discharge,0) = 0 " +
+                    "order by In_Patient_ID desc"
+                );
+                if (inpatient_ids != null || inpatient_ids != "" || inpatient_ids != "There is no row at position 0.")
+                {
+                    string type  = DBClass.getField("SELECT TOP 1 Patient_Discount_Type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+                    pt.In_Patient_Type = db.GetDataValueName("Patient Type", type);
+                }
+       
+             
 
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 var Patientno = pat.Patient_No.ToString();
