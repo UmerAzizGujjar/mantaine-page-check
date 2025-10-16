@@ -881,8 +881,9 @@
 
                     else if (rptTitle == 'Admission_Detail') {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var Patient_Type = ((typeof ($("#ctl00_MainContent_ddlProcedureoption:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlProcedure option:selected").text() : "0");
-                        var url = 'ReportViewer.aspx?AdmissionDetail&ReportName=AdmissionDetail&ReportTitle=Admission Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Patient_Type=' + Patient_Type + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        var url = 'ReportViewer.aspx?AdmissionDetail&ReportName=AdmissionDetail&ReportTitle=Admission Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&ExportPDF=' + exporttopdf + '&Patient_Type=' + Patient_Type + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'Advance_Detail') {

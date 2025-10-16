@@ -362,7 +362,8 @@ namespace PMS
             }
             else if (reportName == "DischargePrint")
             {
-               
+                
+
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 reportPath +=  "InPatient/rptDischargeSlip.rpt";
                 rd.Load(reportPath);
@@ -1780,8 +1781,16 @@ namespace PMS
             {
                 string operatorID = "0";
                 string rptFileName = "GeneralPatientsReport/rptIPD_Detail.rpt";
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "GeneralPatientsReport/rptIPD_Detail_Summary.rpt";
+                    reportTitle = "Admission Detail Summary From " + Request.QueryString["StartDate"].ToString() + "to" + Request.QueryString["EndDate"].ToString();
+                }
+
                 reportPath += rptFileName;
                 rd.Load(reportPath);
+
 
                 string stDate = Request.QueryString["StartDate"].ToString();
                 string stTime = Request.QueryString["StartTime"].ToString();

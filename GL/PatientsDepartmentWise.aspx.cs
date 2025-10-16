@@ -3658,7 +3658,7 @@ namespace PMS
                     trProcedure1.Visible = true;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    tr_Summary.Visible = false;
+                    tr_Summary.Visible = true;
                     tr_Export.Visible = true;
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
