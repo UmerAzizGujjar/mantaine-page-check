@@ -659,14 +659,60 @@
                         var url = 'ReportViewer.aspx?ReportName=DepartmentWiseCashSummary&ReportTitle=Department Wise Cash Summary from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect option:selected").text() : "0");
                         window.open(url, '_blank');
                     }
+                    <%--else if (rptTitle == "OPD_Detail_Report") {
+                        debugger;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=OPDDetailReport&ReportTitle=OPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Summary=' + summary + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                        window.open(url, '_blank');
+                    }--%>
                     else if (rptTitle == "OPD_Detail_Report") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=OPDDetailReport&ReportTitle=OPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        // Combine date + time into single strings (as your backend expects)
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=OPDDetailReport' +
+                            '&ReportTitle=OPD Detail Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) +
+                            '&Summary=' + summary +
+                            '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+
                         window.open(url, '_blank');
                     }
+ <%--                   else if (rptTitle == "IPD_Detail_Report") {
+                        debugger;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=IPDDetailReport&ReportTitle=IPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                        window.open(url, '_blank');
+                    }--%>
                     else if (rptTitle == "IPD_Detail_Report") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=IPDDetailReport&ReportTitle=IPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        // Combine date + time into single strings (as your backend expects)
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=IPDDetailReport' +
+                            '&ReportTitle=IPD Detail Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) +
+                            '&Summary=' + summary +
+                            '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Emer_Detail_Report") {
@@ -835,8 +881,9 @@
 
                     else if (rptTitle == 'Admission_Detail') {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var Patient_Type = ((typeof ($("#ctl00_MainContent_ddlProcedureoption:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlProcedure option:selected").text() : "0");
-                        var url = 'ReportViewer.aspx?AdmissionDetail&ReportName=AdmissionDetail&ReportTitle=Admission Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Patient_Type=' + Patient_Type + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        var url = 'ReportViewer.aspx?AdmissionDetail&ReportName=AdmissionDetail&ReportTitle=Admission Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&ExportPDF=' + exporttopdf + '&Patient_Type=' + Patient_Type + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'Advance_Detail') {
