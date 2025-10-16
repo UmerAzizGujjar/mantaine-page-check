@@ -66,21 +66,21 @@
                 },
                 "columns": [
                     { "data": "Item_ID", "visible": false, "width": "0%" },
-                    { "data": "ItemCode", "name": "ItemCode", "orderable": true },
-                    { "data": "ItemName", "name": "ItemName", "orderable": false },
-                    { "data": "UOM", "name": "UOM", "orderable": true },
-                    { "data": "WareHouse", "name": "WareHouse", "orderable": false },
-                    { "data": "ItemCategory", "name": "ItemCategory", "orderable": false },
-                { "data": "AccountCategory", "name": "AccountCategory", "orderable": false },
-                { "data": "ItemType", "name": "ItemType", "orderable": false },                  
-                    { "data": "SaleRate", "name": "SaleRate", "orderable": false },
-                    { "data": "StockTotal", "name": "StockTotal", "orderable": false }, 
+                    { "data": "ItemCode", "name": "ItemCode", "orderable": true,"width": "5%" },
+                    { "data": "ItemName", "name": "ItemName", "orderable": false, "width": "18%" },
+                    { "data": "UOM", "name": "UOM", "orderable": true, "width": "5%" },
+                    { "data": "WareHouse", "name": "WareHouse", "orderable": false, "width": "5%" },
+                    { "data": "ItemCategory", "name": "ItemCategory", "orderable": false, "width": "7%" },
+                    { "data": "AccountCategory", "name": "AccountCategory", "orderable": false, "width": "12%" },
+                    { "data": "ItemType", "name": "ItemType", "orderable": false, "width": "5%" },                  
+                    { "data": "SaleRate", "name": "SaleRate", "orderable": false, "width": "5%" },
+                    { "data": "StockTotal", "name": "StockTotal", "orderable": false, "width": "5%" }, 
                     {
                         "data": "Active",
                         "name": "Active",
                         "render": function (data, type, full) {
                             return data ? 'Active' : 'InActive'; 
-                        }, "orderable": false
+                        }, "orderable": false, "width": "6%"
                     },
                                     
                     {
@@ -91,7 +91,7 @@
                             var result;
                             result = res  + print;
                             return result;
-                        }, "orderable": false
+                        }, "orderable": false, "width": "7%"
                     }
                 ],
                 "initComplete": function (settings, json) {

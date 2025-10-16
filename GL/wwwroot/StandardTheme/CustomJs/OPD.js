@@ -801,9 +801,26 @@ function AllowOPdEdit() {
 debugger;
 function CalculateDateOfBirth() {
     debugger;
+
     var now = moment();
-    var year = $('#txt_dob').val();
-    var calculateDate = now.subtract(year, 'years');
+    var value = $('#txt_dob').val();
+    var type = $('#PrefixAge').val();
+
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
+
+    var calculateDate;
+
+    if (type === "Year") {
+        calculateDate = now.clone().subtract(value, 'years');
+    } else if (type === "Month") {
+        calculateDate = now.clone().subtract(value, 'months');
+    } else if (type === "Day") {
+        calculateDate = now.clone().subtract(value, 'days');
+    }
+
     var finalDate = calculateDate.format("DD/MM/YYYY");
     var $datepicker = $('#txtAge_yearss');
 
@@ -814,9 +831,8 @@ function CalculateDateOfBirth() {
         dateFormat: "dd/mm/yy"
     });
 
-    $('#txtAge_yearss').unmask("99/99/9999");
     $datepicker.datepicker('setDate', finalDate);
-    $('#txtAge_yearss').unmask("99/99/9999");
+
     $("#txtAge_yearss").mask("99/99/9999");
 }
 function fillmrno() {
