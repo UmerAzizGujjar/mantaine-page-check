@@ -129,7 +129,7 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
                     trDoctor.Visible = false;                  
-                    tr_Summary.Visible = false;
+                    tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
                     object valusets;
@@ -161,7 +161,7 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
                     trDoctor.Visible = false;
-                    tr_Summary.Visible = false;
+                    tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
                     object valusets;

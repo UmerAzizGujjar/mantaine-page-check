@@ -467,18 +467,28 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Request.QueryString["Operator"]);
                 //rd.SetParameterValue("@PatientType", Request.QueryString["Patient_Type"]);
             }
+
             else if (reportName == "OPDDetailReport")
             {
-               
+
+                string rptFileName = "Patients/OPDDetailReport.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                string rptFileName =  "Patients/OPDDetailReport.rpt";
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "Patients/OPDDetailReport_Summary.rpt";
+                    reportTitle = "OPD Detail Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
+                }
+
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
-                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");               
-                string departmentID = Request.QueryString["Department"].ToString();               
-                if(departmentID == "0")
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+
+                string departmentID = Request.QueryString["Department"].ToString();
+                if (departmentID == "0")
                 {
                     departmentID = "All";
                 }
@@ -492,14 +502,22 @@ namespace PMS
                 rd.SetParameterValue("@FromDate", sqlStartDateTime);
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
                 rd.SetParameterValue("@Operator", Operator);
-                rd.SetParameterValue("@Department", departmentID);             
+                rd.SetParameterValue("@Department", departmentID);
             }
+
+
             else if (reportName == "IPDDetailReport")
             {
 
+                string rptFileName = "InPatient/IPD_Detail_Report.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                string rptFileName = "InPatient/IPD_Detail_Report.rpt";
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "InPatient/IPD_Detail_Report_Summary.rpt";
+                    reportTitle = "IPD Detail Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
+                }
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
