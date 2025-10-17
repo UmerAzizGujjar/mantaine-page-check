@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="pakred1" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7101,17 +7101,6 @@
       <Column Name="Left_Eye" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_OutSourceTestList" Method="sp_OutSourceTestList">
-    <Parameter Name="patient_No" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_OutSourceTestListResult">
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
-      <Column Name="[Expected Result Date]" Member="Expected_Result_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_OutSourceTestList2" Method="sp_OutSourceTestList2">
     <ElementType Name="sp_OutSourceTestList2Result">
       <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -10666,6 +10655,17 @@
       <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
       <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
       <Column Name="Gross_Amount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_OutSourceTestList" Method="sp_OutSourceTestList">
+    <Parameter Name="patient_No" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_OutSourceTestListResult">
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="[Expected Result Date]" Member="Expected_Result_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

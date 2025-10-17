@@ -107,7 +107,7 @@
                                    $("#ctl00_lbl2").text("Sample View");
                                    $("#ctl00_lbl1").text("Transaction View");
                                    for (var i = 0; i < length; i++) {
-                                       columnsName += '<tr><td style="display:none">' + parse[i].Sample_ID + '</td><td>' + parse[i].Sample_No + '</td><td>' + parse[i].Sample_Collected_Date + '</td><td>' + parse[i].Patient_No + '</td><td>' + parse[i].Full_Name + '</td><td><a class="editListBtn" style="border-radius: 4px;color: black; padding: 4px 11px 4px 11px;" href="SampleCollectionFrom.aspx?SampleId=' + parse[i].Sample_ID + '&SampleNo=' + parse[i].Sample_No + '">Edit</a> | <a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
+                                       columnsName += '<tr><td >' + parse[i].Sample_ID + '</td><td>' + parse[i].Sample_No + '</td><td>' + parse[i].Sample_Collected_Date + '</td><td>' + parse[i].Patient_No + '</td><td>' + parse[i].Full_Name + '</td><td><a class="editListBtn" style="border-radius: 4px;color: black; padding: 4px 11px 4px 11px;" href="SampleCollectionFrom.aspx?SampleId=' + parse[i].Sample_ID + '&SampleNo=' + parse[i].Sample_No + '">Edit</a> | <a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a></td></tr>';
                                    }
                                }
 
