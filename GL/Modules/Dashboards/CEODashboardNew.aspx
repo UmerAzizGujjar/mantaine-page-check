@@ -2,127 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
-
-    <style type="text/css">
-        #topTestsChartsContainer .card {
-            border: none;
-            border-radius: 10px;
-        }
-
-        #topTestsChartsContainer .card-header {
-            border-radius: 10px 10px 0 0 !important;
-            padding: 10px;
-            background-color: #EFA63E !important;
-            font-weight: bold !important
-        }
-
-        #topTestsChartsContainer .card-body {
-            padding: 5px;
-        }
-
-        .apexcharts-data-labels text {
-            font-weight: bold !important;
-            font-size: 10px !important;
-        }
-
-        .apexcharts-xaxis text {
-            font-size: 9px !important;
-        }
-
-        .apexcharts-yaxis text {
-            font-size: 9px !important;
-        }
-
-        #ctl00_sidebar, .page-header {
-            display: none !important
-        }
-
-        .container {
-            width: 100% !important
-        }
-
-        h3 {
-            color: dodgerblue;
-        }
-
-        input {
-            border-radius: 10px !important;
-        }
-
-            input[type="button"] {
-                margin-top: 27px !important
-            }
-
-        #Box1 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box2 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box3 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box4 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box5 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-            #Box1 h3, #Box2 h3, #Box3 h3, #Box4 h3, #Box5 h3 {
-                color: #eee;
-            }
-
-        .l-bg-orange-dark {
-            background: linear-gradient(to right, #8e0b4d, #9f10abf2) !important;
-            color: #fff;
-        }
-
-        .l-bg-green-dark {
-            background: linear-gradient(to right, #888, #555) !important;
-            color: #fff;
-        }
-
-        .l-bg-blue-dark {
-            background: linear-gradient(to right, #710d2b,#a2070f) !important;
-            color: #fff;
-        }
-
-        #Paitent_Count_Row {
-            height: 80px;
-            margin-top: 20px;
-        }
-
-        .styling {
-            text-align: center;
-            font-size: 25px;
-        }
-
-        .border-right {
-            border-left: 1px solid #0033ff;
-        }
-
-        .border {
-            border-bottom: 1px solid #0b5398;
-        }
-
-        .headercolor {
-             background: #EFA63E !important;
-             width: fit-content; padding: 2px 10px;
-             color: white; border-radius: 6px;
-             margin-bottom: 20px
-        }
-
-    </style>
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/CEODashboardNew.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             var date = '<%= DateTime.Now%>';
@@ -207,6 +87,8 @@
                     $('#lblTotalPatient').text(total);
                     $('#lblFilterPatient').text(newOPD + ' (' + (total > 0 ? ((newOPD / total) * 100).toFixed(2) : 0) + '%)');
                     $('#lblDepartmentPatient').text(revisitOPD + ' (' + (total > 0 ? ((revisitOPD / total) * 100).toFixed(2) : 0) + '%)');
+
+                    renderOPDSummaryChart(total, newOPD, revisitOPD);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error in LoadPatientsCount: " + error);
@@ -1116,6 +998,8 @@
 
                     $('#lblNewEmergency').text(newEmer + ' (' + newPct + '%)');
                     $('#lblRevisitEmergency').text(revisitEmer + ' (' + revisitPct + '%)');
+
+                    renderEmergencySummaryChart(totalEmer, newEmer, revisitEmer);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error in LoadEmergencyCounts: " + error);
@@ -1148,6 +1032,8 @@
                     $('#lblIPDAdmitted').text(admitted);
                     $('#lblIPDDischarged').text(discharged);
                     $('#lblIPDStillAdmitted').text(stillAdmitted);
+
+                    renderIPDSummaryChart(stillAdmitted, admitted, discharged);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error in LoadIPDAdmitDischarge: " + error);
@@ -1267,7 +1153,7 @@
             PageMethods.GetOPDDepartmentWise(startdate, enddate, function (resp) {
                 var parsedData = JSON.parse(resp);
 
-                var series = parsedData.map(item => parseFloat(item.Net_Amount) || 0);
+                var series = parsedData.map(item => parseFloat(item.OPD_Count) || 0);
                 var labels = parsedData.map(item => item.Department_Name);
 
                 var options = {
@@ -1295,7 +1181,7 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                return 'Rs. ' + val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                return '' + val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                             }
                         }
                     },
@@ -1313,6 +1199,192 @@
                 console.error("Error loading OPD department chart:", error);
             });
         }
+
+        let chartOPDSummary, chartEmergencySummary,chartIPDSummary;
+
+        function renderOPDSummaryChart(total, newOPD, revisitOPD) {
+            const options = {
+                series: [newOPD, revisitOPD],
+                chart: { type: 'donut', height: 300 },
+                labels: ['New OPD', 'Revisits'],
+                colors: ['#00C49F', '#0088FE'],
+                legend: {
+                    position: 'bottom',
+                    fontSize: '13px',
+                    labels: { colors: '#444' }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontSize: '14px',
+                                    color: '#555'
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '18px',
+                                    fontWeight: 'bold',
+                                    color: '#111'
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total OPD',
+                                    color: '#8e0016',
+                                    formatter: function () {
+                                        return total;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                title: {
+                    text: '',
+                    align: 'center'
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: { width: 250 },
+                        legend: { position: 'bottom' }
+                    }
+                }]
+            };
+
+            if (chartOPDSummary) chartOPDSummary.destroy();
+            chartOPDSummary = new ApexCharts(document.querySelector("#chartOPDSummary"), options);
+            chartOPDSummary.render();
+        }
+
+
+
+
+        function renderEmergencySummaryChart(total, newEmer, revisitEmer) {
+            const options = {
+                series: [newEmer, revisitEmer],
+                chart: { type: 'donut', height: 300 },
+                labels: ['New Emergency', 'Revisit'],
+                colors: ['#FF4C4C', '#FFB84C'],
+                legend: {
+                    position: 'bottom',
+                    fontSize: '13px',
+                    labels: { colors: '#444' }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontSize: '14px',
+                                    color: '#555'
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '18px',
+                                    fontWeight: 'bold',
+                                    color: '#111'
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total Emergency',
+                                    color: '#8e0016',
+                                    formatter: function () {
+                                        return total;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: { width: 250 },
+                        legend: { position: 'bottom' }
+                    }
+                }]
+            };
+
+            if (chartEmergencySummary) chartEmergencySummary.destroy();
+            chartEmergencySummary = new ApexCharts(document.querySelector("#chartEmergencySummary"), options);
+            chartEmergencySummary.render();
+        }
+
+
+
+        function renderIPDSummaryChart(stillAdmitted, admitted, discharged) {
+            const total = stillAdmitted + admitted + discharged;
+
+            const options = {
+                series: [stillAdmitted, admitted, discharged],
+                chart: { type: 'donut', height: 320 },
+                labels: ['Still Admitted', 'Admitted', 'Discharged'],
+                colors: ['#0078D7', '#00B894', '#8E44AD'],
+                legend: {
+                    position: 'bottom',
+                    fontSize: '13px',
+                    labels: { colors: '#444' }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontSize: '14px',
+                                    color: '#555'
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '18px',
+                                    fontWeight: 'bold',
+                                    color: '#111'
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total IPD',
+                                    color: '#8e0016',
+                                    formatter: function () {
+                                        return total;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: { width: 250 },
+                        legend: { position: 'bottom' }
+                    }
+                }]
+            };
+
+            if (chartIPDSummary) chartIPDSummary.destroy();
+            chartIPDSummary = new ApexCharts(document.querySelector("#chartIPDSummary"), options);
+            chartIPDSummary.render();
+        }
+
+
 
     </script>
 
@@ -1459,6 +1531,23 @@
                     </div>
                 </div>
                 <div class="row">
+                    <h4>Patients Count</h4>
+                    <table class="table table-hover table-striped table-bordered" id="tabPatientCount">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Total Patient</th>
+                                <th>Discount</th>
+                                <th>Total Amount</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pbody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
                     <h4>Investigation</h4>
                     <table class="table table-hover table-striped table-bordered" id="tabInvestigation">
                         <thead id="ihead">
@@ -1472,23 +1561,6 @@
                             </tr>
                         </thead>
                         <tbody id="ibody">
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="row">
-                    <h4>Patients Count</h4>
-                    <table class="table table-hover table-striped table-bordered" id="tabPatientCount">
-                        <thead>
-                            <tr>
-                                <th>Department</th>
-                                <th>Total Patient</th>
-                                <th>Discount</th>
-                                <th>Total Amount</th>
-                                <th>Net Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pbody">
                         </tbody>
                     </table>
                 </div>
@@ -1610,9 +1682,38 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-lg-4">
+                        <h4>OPD Patient Distribution</h4>
+                        <div id="chartOPDSummary" style="height: 250px;">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <h4>Emergency Visit Distribution</h4>
+                        <div id="chartEmergencySummary" style="height: 250px;"></div>
+                    </div>
+                    <div class="col-lg-4">
+                        <h4>IPD Status Overview</h4>
+                        <div id="chartIPDSummary" style="height: 250px;"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6"></div>
+                </div>
+
+                <div class="row">                   
                     <div class="col-lg-6" style="text-align: center">
-                        <h4>OPD Net Amount by Department</h4>
+                        <h4>OPD By Department</h4>
                         <div id="chartOPDDepartmentWise"></div>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>Appointment Statistics</h4>
+                        <div id="chartGetDocAppointmentsCount"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>Doctor Statistics</h4>
+                        <div id="chartGetDocPatientCount"></div>
                     </div>
                     <div class="col-lg-6" style="text-align: center">
                         <h4>Ward Bed Occupancy</h4>
@@ -1623,16 +1724,6 @@
                     <div class="col-lg-6" style="text-align: center">
                         <h4>Department Statistics</h4>
                         <div id="chartGetDeptPatientCount"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6" style="text-align: center">
-                        <h4>Doctor Statistics</h4>
-                        <div id="chartGetDocPatientCount"></div>
-                    </div>
-                    <div class="col-lg-6" style="text-align: center">
-                        <h4>Appointment Statistics</h4>
-                        <div id="chartGetDocAppointmentsCount"></div>
                     </div>
                 </div>
                 <div class="row mb-3">

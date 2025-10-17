@@ -268,7 +268,7 @@ namespace PMS
             ddlWard_No.Items.Add(new ListItem("Please Select", "0"));
             ddlWard_No.DataBind();
             ddlwards.DataSource = wards;
-            ddlwards.DataTextField = "Ward_No";
+            ddlwards.DataTextField = "Ward_Type";
             ddlwards.DataValueField = "Ward_ID";
             ddlwards.Items.Add(new ListItem("Please Select", "0"));
             ddlwards.DataBind();
@@ -5036,6 +5036,11 @@ namespace PMS
             if (WardID > 0)
             {
                 DataBaseDataContext db = new DataBaseDataContext();
+                string wardName = db.Ward_Definitions
+                            .Where(w => w.Ward_ID == WardID)
+                            .Select(w => w.Ward_Type)
+                            .FirstOrDefault();
+
                 int Beds = (int)(from bds in db.Ward_Definitions
                                  where bds.Ward_ID == WardID
                                  select bds.No_Of_Beds

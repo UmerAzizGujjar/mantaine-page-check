@@ -3538,7 +3538,7 @@ namespace PMS
                 }
                 if (this.PageTitle == "ReportVoucher")
                 {
-                    string x = "Advance Detail";
+                    string x = "Report Voucher Detail";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     lblMultiSelect.Visible = false;
