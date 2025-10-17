@@ -872,7 +872,15 @@ namespace PMS
                     OPD.Admission_Fees = int.Parse(fee);
                     OPD.Admission_Date = Convert.ToDateTime(txtAdmission_Date);
                     OPD.Department = ddlDepartment;
-                    OPD.Discount = Convert.ToDecimal(Discount);
+                    //OPD.Discount = Convert.ToDecimal(Discount);
+                    decimal discountValue = 0;
+                    if (!decimal.TryParse(Discount, out discountValue))
+                    {
+                        discountValue = 0;
+                    }
+                    OPD.Discount = discountValue;
+
+
                     if (ddlIssuance_Of == "001")
                     {
                         OPD.Ward_ID = Convert.ToInt32(ddlWard_No);
