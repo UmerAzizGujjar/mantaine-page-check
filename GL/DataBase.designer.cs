@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Pakred_Live")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "pakred1")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -891,6 +891,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -3349,13 +3350,6 @@ namespace PMS
             return ((ISingleResult<sp_Out_Patient_Eye_HistoryResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_OutSourceTestList")]
-        public ISingleResult<sp_OutSourceTestListResult> sp_OutSourceTestList([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> patient_No)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), patient_No);
-            return ((ISingleResult<sp_OutSourceTestListResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_OutSourceTestList2")]
         public ISingleResult<sp_OutSourceTestList2Result> sp_OutSourceTestList2()
         {
@@ -4752,6 +4746,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
             return ((ISingleResult<sp_GetPatientCountsAndNetAmountByDateResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_OutSourceTestList")]
+        public ISingleResult<sp_OutSourceTestListResult> sp_OutSourceTestList([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> patient_No)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), patient_No);
+            return ((ISingleResult<sp_OutSourceTestListResult>)(result.ReturnValue));
         }
     }
 
@@ -156092,122 +156093,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_OutSourceTestListResult
-    {
-
-        private long _Sample_ID;
-
-        private System.Nullable<long> _Sample_No;
-
-        private string _Sample_Collected_Date;
-
-        private System.Nullable<System.DateTime> _Expected_Result_Date;
-
-        private System.Nullable<int> _Patient_No;
-
-        private string _Full_Name;
-
-        public sp_OutSourceTestListResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_ID", DbType = "BigInt NOT NULL")]
-        public long Sample_ID
-        {
-            get
-            {
-                return this._Sample_ID;
-            }
-            set
-            {
-                if ((this._Sample_ID != value))
-                {
-                    this._Sample_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_No", DbType = "BigInt")]
-        public System.Nullable<long> Sample_No
-        {
-            get
-            {
-                return this._Sample_No;
-            }
-            set
-            {
-                if ((this._Sample_No != value))
-                {
-                    this._Sample_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_Collected_Date", DbType = "VarChar(8000)")]
-        public string Sample_Collected_Date
-        {
-            get
-            {
-                return this._Sample_Collected_Date;
-            }
-            set
-            {
-                if ((this._Sample_Collected_Date != value))
-                {
-                    this._Sample_Collected_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Name = "[Expected Result Date]", Storage = "_Expected_Result_Date", DbType = "Date")]
-        public System.Nullable<System.DateTime> Expected_Result_Date
-        {
-            get
-            {
-                return this._Expected_Result_Date;
-            }
-            set
-            {
-                if ((this._Expected_Result_Date != value))
-                {
-                    this._Expected_Result_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_No", DbType = "Int")]
-        public System.Nullable<int> Patient_No
-        {
-            get
-            {
-                return this._Patient_No;
-            }
-            set
-            {
-                if ((this._Patient_No != value))
-                {
-                    this._Patient_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(60)")]
-        public string Full_Name
-        {
-            get
-            {
-                return this._Full_Name;
-            }
-            set
-            {
-                if ((this._Full_Name != value))
-                {
-                    this._Full_Name = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_OutSourceTestList2Result
     {
 
@@ -202217,6 +202102,122 @@ namespace PMS
                 if ((this._Gross_Amount != value))
                 {
                     this._Gross_Amount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_OutSourceTestListResult
+    {
+
+        private long _Sample_ID;
+
+        private System.Nullable<long> _Sample_No;
+
+        private string _Sample_Collected_Date;
+
+        private System.Nullable<System.DateTime> _Expected_Result_Date;
+
+        private System.Nullable<int> _Patient_No;
+
+        private string _Full_Name;
+
+        public sp_OutSourceTestListResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_ID", DbType = "BigInt NOT NULL")]
+        public long Sample_ID
+        {
+            get
+            {
+                return this._Sample_ID;
+            }
+            set
+            {
+                if ((this._Sample_ID != value))
+                {
+                    this._Sample_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_No", DbType = "BigInt")]
+        public System.Nullable<long> Sample_No
+        {
+            get
+            {
+                return this._Sample_No;
+            }
+            set
+            {
+                if ((this._Sample_No != value))
+                {
+                    this._Sample_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_Collected_Date", DbType = "VarChar(8000)")]
+        public string Sample_Collected_Date
+        {
+            get
+            {
+                return this._Sample_Collected_Date;
+            }
+            set
+            {
+                if ((this._Sample_Collected_Date != value))
+                {
+                    this._Sample_Collected_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Name = "[Expected Result Date]", Storage = "_Expected_Result_Date", DbType = "Date")]
+        public System.Nullable<System.DateTime> Expected_Result_Date
+        {
+            get
+            {
+                return this._Expected_Result_Date;
+            }
+            set
+            {
+                if ((this._Expected_Result_Date != value))
+                {
+                    this._Expected_Result_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_No", DbType = "Int")]
+        public System.Nullable<int> Patient_No
+        {
+            get
+            {
+                return this._Patient_No;
+            }
+            set
+            {
+                if ((this._Patient_No != value))
+                {
+                    this._Patient_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(100)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
                 }
             }
         }

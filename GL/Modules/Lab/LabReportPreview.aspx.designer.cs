@@ -132,6 +132,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label vLbl_Gender;
 
         /// <summary>
+        /// lblLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLocation;
+
+        /// <summary>
+        /// vLbl_Location control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label vLbl_Location;
+
+        /// <summary>
         /// lblPatien_ID control.
         /// </summary>
         /// <remarks>
@@ -240,13 +258,13 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblAdress;
 
         /// <summary>
-        /// vLbl_Adress control.
+        /// vLbl_Department control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label vLbl_Adress;
+        protected global::System.Web.UI.WebControls.Label vLbl_Department;
 
         /// <summary>
         /// lblMessage control.

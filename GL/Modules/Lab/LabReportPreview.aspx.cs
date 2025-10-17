@@ -89,6 +89,7 @@ namespace PMS
                 DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                 foreach (var item in TesttDetails)
                 {
+                    var testPerformby = (from asp in db.aspnet_Users where asp.UserId == AppConfig.UserID select asp.UserName).FirstOrDefault();
                     Lab_Test_Detail labtest = (from t in db.Lab_Test_Details
                                                where t.Lab_Test_Detail_ID == int.Parse(item.lab_test_Detail_id)
                                                && t.Bill_Details_ID == Convert.ToInt32(item.BillDetailID)
@@ -101,6 +102,7 @@ namespace PMS
                     labtest.Master_Remarks = item.Master_Remarks;
                     labtest.Is_Result = true;
                     labtest.Created_Time = DateTime.Now;
+                    labtest.Test_Performed_By = testPerformby;
                     labtest.Test_Status = "Created";
                     db.SubmitChanges();
                 }
@@ -147,7 +149,7 @@ namespace PMS
             test.Test_Status = "Created";
             test.Levels = Levels;
             test.Created_Time = DateTime.Now;
-            test.Test_Collected_By = AppConfig.UserName;
+            test.Test_Performed_By = AppConfig.UserName;
             db.SubmitChanges();
 
             return "Successfull";
@@ -771,8 +773,39 @@ namespace PMS
                     pt.Entry_Date = pat.Created_time.ToString();
                
                 pt.Mobile = pat.Mobile1;
-               
-                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+
+
+                var isIPD = (from ipd in db.In_Patients
+                             where ipd.Patient_ID == pat.pat_id && (ipd.Discharge == null || ipd.Discharge == false)
+                             orderby ipd.In_Patient_ID descending
+                             select ipd.In_Patient_ID).FirstOrDefault();
+                var isEmergency = (from ipd in db.Emergency_Patients
+                                   where ipd.Patient_ID == pat.pat_id && (ipd.Discharge == null || ipd.Discharge == false)
+                                   orderby ipd.Emergency_ID descending
+                                   select ipd.Emergency_ID).FirstOrDefault();
+                if (isIPD != 0)
+                {
+                    var Locations = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
+                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', ipd.Department) AS Department from In_Patient ipd  where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
+                    pt.Location =  Locations;
+                    pt.Patient_Category = "IPD";
+                    pt.Department = Department;
+                }
+                else if (isEmergency != 0)
+                {
+                    pt.Location = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + isEmergency + "order by ipd.Emergency_ID desc");
+                    pt.Patient_Category = "Emergency";
+                    pt.Department = "";
+                }
+                else
+                {
+                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', p.Patient_Main_Category) AS Department from Patients p  where p.Reg_PatId =" + pat.pat_id + "order by p.Patient_ID desc");
+                    pt.Location = "";
+                    pt.Department = Department;
+                    pt.Patient_Category = "OPD";
+                }
+
+                    pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 return pt;
             }
             else
@@ -895,7 +928,7 @@ namespace PMS
                             lt.Patient_ID,
                             bd.Test_Main_Department,
                             ltd.Test_Performed_By,
-                            ltd.Test_Ready_On,
+                            ltd.Created_Time,
                             ltd.Approved_Time,
                             Approved_By = (from asp in db.aspnet_Users
                                            where asp.UserId == ltd.Approved_By
@@ -957,7 +990,7 @@ namespace PMS
              
                 test.patient_ID = Convert.ToString(item.Patient_ID);
                 test.Test_Performed_By = item.Test_Performed_By ?? "";
-                test.Result_Time = item.Test_Ready_On?.ToString() ?? "";
+                test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
                 if (item.Test_Main_Department == null)
@@ -982,7 +1015,7 @@ namespace PMS
         lt.Group_Category,
         dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
         MIN(ld.Test_Performed_By) AS Test_Performed_By,
-        MIN(ld.Test_Ready_On) AS Test_Ready_On,
+        MIN(ld.Created_Time) AS Test_Ready_On,
         MIN(ld.Approved_Time) AS Approved_Time,
         (SELECT TOP 1 UserName 
          FROM aspnet_Users u 
@@ -1095,7 +1128,7 @@ namespace PMS
                             lt.Patient_ID,
                             bd.Test_Main_Department,
                             ltd.Test_Performed_By,
-                            ltd.Test_Ready_On,    
+                            ltd.Created_Time,    
                             ltd.Approved_Time,
                             Approved_By = (from asp in db.aspnet_Users
                                            where asp.UserId == ltd.Approved_By
@@ -1165,7 +1198,7 @@ namespace PMS
                 }          
                 test.patient_ID = Convert.ToString(item.Patient_ID);
                 test.Test_Performed_By = item.Test_Performed_By ?? "";
-                test.Result_Time = item.Test_Ready_On?.ToString() ?? "";
+                test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
                 AlltestList.Add(test);
@@ -1180,7 +1213,7 @@ namespace PMS
     lt.Group_Category,
     dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
     (ld.Test_Performed_By) AS Test_Performed_By,
-    (ld.Test_Ready_On) AS Test_Ready_On,
+    (ld.Created_Time) AS Test_Ready_On,
     CONVERT(varchar(5), ld.Approved_Time, 108) AS Approved_Time,
 
     (SELECT TOP 1 UserName 
@@ -1333,7 +1366,35 @@ namespace PMS
                     pt.Entry_Date = pat.Created_time.ToString();
                
                 pt.Mobile = pat.Mobile1;
-            
+                var isIPD = (from ipd in db.In_Patients
+                             where ipd.Patient_ID == pat.pat_id && (ipd.Discharge == null || ipd.Discharge == false)
+                             orderby ipd.In_Patient_ID descending
+                             select ipd.In_Patient_ID).FirstOrDefault();
+                var isEmergency = (from ipd in db.Emergency_Patients
+                                   where ipd.Patient_ID == pat.pat_id && (ipd.Discharge == null || ipd.Discharge == false)
+                                   orderby ipd.Emergency_ID descending
+                                   select ipd.Emergency_ID).FirstOrDefault();
+                if (isIPD != 0)
+                {
+                    var Locations = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
+                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', ipd.Department) AS Department from In_Patient ipd  where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
+                    pt.Location = Locations;
+                    pt.Patient_Category = "IPD";
+                    pt.Department = Department;
+                }
+                else if (isEmergency != 0)
+                {
+                    pt.Location = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + isEmergency + "order by ipd.Emergency_ID desc");
+                    pt.Patient_Category = "Emergency";
+                    pt.Department = "";
+                }
+                else
+                {
+                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', p.Patient_Main_Category) AS Department from Patients p  where p.Reg_PatId =" + pat.pat_id + "order by p.Patient_ID desc");
+                    pt.Location = "";
+                    pt.Department = Department;
+                    pt.Patient_Category = "OPD";
+                }
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 return pt;
             }
@@ -1365,7 +1426,35 @@ namespace PMS
                     pt.Entry_Date = pat.Created_time.ToString();
                
                 pt.Mobile = pat.Mobile1;
-           
+                var isIPD = (from ipd in db.In_Patients
+                             where ipd.Patient_ID == pat.pat_id && (ipd.Discharge == null || ipd.Discharge == false)
+                             orderby ipd.In_Patient_ID descending
+                             select ipd.In_Patient_ID).FirstOrDefault();
+                var isEmergency = (from ipd in db.Emergency_Patients
+                                   where ipd.Patient_ID == pat.pat_id && (ipd.Discharge == null || ipd.Discharge == false)
+                                   orderby ipd.Emergency_ID descending
+                                   select ipd.Emergency_ID).FirstOrDefault();
+                if (isIPD != 0)
+                {
+                    var Locations = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
+                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', ipd.Department) AS Department from In_Patient ipd  where ipd.In_Patient_ID =" + isIPD + "order by ipd.In_Patient_ID desc");
+                    pt.Location = Locations;
+                    pt.Patient_Category = "IPD";
+                    pt.Department = Department;
+                }
+                else if (isEmergency != 0)
+                {
+                    pt.Location = DBClass.getField("Select Concat (wd.Ward_Type,' / ',ipd.Bed_No) from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + isEmergency + "order by ipd.Emergency_ID desc");
+                    pt.Patient_Category = "Emergency";
+                    pt.Department = "";
+                }
+                else
+                {
+                    var Department = DBClass.getField("Select dbo.GetDataValueName('Patient Main Category', p.Patient_Main_Category) AS Department from Patients p  where p.Reg_PatId =" + pat.pat_id + "order by p.Patient_ID desc");
+                    pt.Location = "";
+                    pt.Department = Department;
+                    pt.Patient_Category = "OPD";
+                }
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 return pt;
             }
@@ -1383,6 +1472,8 @@ namespace PMS
             public string Entry_Date;
             public string Patient_Category;
             public string Patient_No;
+            public string Location;
+            public string Department;
         }
        
 
