@@ -144,6 +144,36 @@ $(document).ready(function () {
 
     });
 
+    $('#txt_mobile').on('focus', function () {
+        var input = this;
+        setTimeout(function () {
+            if (input.setSelectionRange) {
+                input.setSelectionRange(3, 3);
+            } else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', 3);
+                range.moveStart('character', 3);
+                range.select();
+            }
+        }, 0);
+    });
+
+    $('#txt_cnic').on('focus', function () {
+        var input = this;
+        setTimeout(function () {
+            if (input.setSelectionRange) {
+                input.setSelectionRange(0, 0);
+            } else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', 0);
+                range.moveStart('character', 0);
+                range.select();
+            }
+        }, 0);
+    });
+
     showhide();
     FillModePresentation();
     get_totalpatient();
@@ -763,9 +793,26 @@ function AllowOPdEdit() {
 debugger;
 function CalculateDateOfBirth() {
     debugger;
+
     var now = moment();
-    var year = $('#txt_dob').val();
-    var calculateDate = now.subtract(year, 'years');
+    var value = $('#txt_dob').val(); 
+    var type = $('#PrefixAge').val();
+
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
+
+    var calculateDate;
+
+    if (type === "Year") {
+        calculateDate = now.clone().subtract(value, 'years');
+    } else if (type === "Month") {
+        calculateDate = now.clone().subtract(value, 'months');
+    } else if (type === "Day") {
+        calculateDate = now.clone().subtract(value, 'days');
+    }
+
     var finalDate = calculateDate.format("DD/MM/YYYY");
     var $datepicker = $('#txtAge_yearss');
 
@@ -776,11 +823,11 @@ function CalculateDateOfBirth() {
         dateFormat: "dd/mm/yy"
     });
 
-    $('#txtAge_yearss').unmask("99/99/9999");
     $datepicker.datepicker('setDate', finalDate);
-    $('#txtAge_yearss').unmask("99/99/9999");
+
     $("#txtAge_yearss").mask("99/99/9999");
 }
+
 function fillmrno() {
     var data = {};
 
