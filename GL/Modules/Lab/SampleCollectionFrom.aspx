@@ -859,7 +859,7 @@
                 }
                 else {
                     debugger;
-                    if ($('#btSnave').val() == 'Save') {
+                    if ($('#btSnave').val() == 'Save & Print') {
                         debugger;
                         $.ajax({
                             type: "POST",
@@ -898,7 +898,8 @@
 
                                     debugger;
                                     TestDetail(id)
-                                    window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+                                    window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
+                                    window.location = "SampleCollectionFrom.aspx?sampleID=" + id;                                   
                                 }
                                 else {
                                     alert(response.d);
@@ -1343,7 +1344,7 @@
                 <div class="col-lg-8">
                     <div class="row">
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input id="btSnave" class="btn btn-primry" type="button" value="Save" onclick="SaveTest()" />
+                    <input id="btSnave" class="btn btn-primry" type="button" value="Save & Print" onclick="SaveTest()" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnList" class="btn-gray" type="button" value="View" onclick="ListView()" />
