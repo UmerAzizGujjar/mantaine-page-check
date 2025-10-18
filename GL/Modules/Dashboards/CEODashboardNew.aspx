@@ -5,6 +5,11 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/CEODashboardNew.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#loader").show();
+            setTimeout(function () {
+                $("#loader").fadeOut();
+            }, 4000);
+
             var date = '<%= DateTime.Now%>';
             $("#startDate").datepicker({
                 dateFormat: 'MM d,yy',
@@ -1504,6 +1509,11 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+<div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:9999; display:flex; justify-content:center; align-items:center;">
+    <div class="circle-loader">
+        <div class="inner-dot"></div>
+    </div>
+</div>
 
     <div class="container">
         <div class="row">

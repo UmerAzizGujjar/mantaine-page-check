@@ -6,7 +6,7 @@
 #topTestsChartsContainer .card-header {
     border-radius: 10px 10px 0 0 !important;
     padding: 10px;
-    background-color: #EFA63E !important;
+    background-color: #438eb9 !important;
     font-weight: bold !important
 }
 
@@ -110,10 +110,58 @@ input {
 }
 
 .headercolor {
-    background: #EFA63E !important;
+    background: #438eb9 !important;
     width: fit-content;
     padding: 2px 10px;
     color: white;
     border-radius: 6px;
     margin-bottom: 20px
+}
+
+
+
+.circle-loader {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient( from 0deg, #438eb9 0deg, #8dc6e8 120deg, rgba(67, 142, 185, 0.1) 360deg );
+    animation: rotate 1.4s linear infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 0 25px rgba(67, 142, 185, 0.3) !important;
+}
+
+.inner-dot {
+    width: 40px;
+    height: 40px;
+    background-color: #438eb9 !important;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(67, 142, 185, 0.5) !important;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(67, 142, 185, 0.4);
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+        box-shadow: 0 0 30px rgba(67, 142, 185, 0.8);
+    }
 }
