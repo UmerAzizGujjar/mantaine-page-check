@@ -1015,7 +1015,7 @@ namespace PMS
         lt.Group_Category,
         dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
         MIN(ld.Test_Performed_By) AS Test_Performed_By,
-        MIN(ld.Created_Time) AS Test_Ready_On,
+        MINCONVERT(varchar(16), ld.Created_Time, 120) AS Test_Ready_On,
         MIN(ld.Approved_Time) AS Approved_Time,
         (SELECT TOP 1 UserName 
          FROM aspnet_Users u 
@@ -1213,7 +1213,7 @@ namespace PMS
     lt.Group_Category,
     dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
     (ld.Test_Performed_By) AS Test_Performed_By,
-    (ld.Created_Time) AS Test_Ready_On,
+    CONVERT(varchar(16), ld.Created_Time, 120) AS Test_Ready_On,
     CONVERT(varchar(5), ld.Approved_Time, 108) AS Approved_Time,
 
     (SELECT TOP 1 UserName 
