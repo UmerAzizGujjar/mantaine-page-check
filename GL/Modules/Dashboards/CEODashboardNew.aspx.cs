@@ -219,7 +219,7 @@ namespace PMS.Modules.Dashboards
                 var query = db.sp_GetPharmacyCounts(txt_sdate, txt_edate).ToList();
 
                 var normalizedData = query.Select(r => new {
-                    CustomerType = r.Category,  
+                    CustomerType = r.CustomerType,  
                     TotalCount = r.TotalCount,
                     TotalReceivedAmount = r.TotalReceivedAmount
                 }).ToList();
@@ -432,12 +432,22 @@ namespace PMS.Modules.Dashboards
         }
 
         [WebMethod]
-        public static string GetWardBedOccupancy(string txt_sdate, string txt_edate)
+        public static string GetIPDPatientCountsAndNetAmount(string txt_sdate, string txt_edate)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.sp_GetWardBedOccupancy(txt_sdate, txt_edate).ToList();
+                var query = db.sp_GetIPDPatientCountsAndNetAmountByDate(txt_sdate, txt_edate).ToList();
                 return new JavaScriptSerializer().Serialize(query);
+            }
+        }
+
+        [WebMethod]
+        public static string GetWardBedOccupancy(string txt_sdate, string txt_edate)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var result = db.sp_GetWardBedOccupancy(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(result);
             }
         }
 
@@ -450,6 +460,17 @@ namespace PMS.Modules.Dashboards
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
+
+        [WebMethod]
+        public static string GetEmergencyWardBedOccupancy(string txt_sdate, string txt_edate)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var result = db.sp_GetEmergencyWardBedOccupancy(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
 
         [WebMethod]
         public static string GetAppointmentCountByDoctor(string txt_sdate, string txt_edate)
