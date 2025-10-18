@@ -36,6 +36,7 @@
             LoadIPDAdmitDischarge(date, date);
             ChartWardBedOccupancy(date, date);
             LoadOPDDepartmentWise(date, date);
+            LoadEmergencyPatientCountsAndNetAmount(date, date);
 
 
         });
@@ -62,6 +63,7 @@
             LoadIPDAdmitDischarge(dt, dts);
             ChartWardBedOccupancy(dt, dts);
             LoadOPDDepartmentWise(dt, dts);
+            LoadEmergencyPatientCountsAndNetAmount(dt, dts);
 
         }
 
@@ -1384,7 +1386,23 @@
             chartIPDSummary.render();
         }
 
-
+        function LoadEmergencyPatientCountsAndNetAmount(startdate, enddate) {
+            PageMethods.GetEmergencyPatientCountsAndNetAmount(startdate, enddate, function (res) {
+                var data = JSON.parse(res);
+                var rows = '';
+                $('#tabEmergencyPatientCount tbody').empty();
+                $.each(data, function (key, value) {
+                    rows += '<tr>' +
+                        '<td>' + value.Category + '</td>' +
+                        '<td>' + value.Total_Count + '</td>' +
+                        '<td>' + value.Discount_Amount + '</td>' +
+                        '<td>' + value.Receipt_Amount + '</td>' +
+                        '<td>' + value.Gross_Amount + '</td>' +
+                        '</tr>';
+                });
+                $('#tabEmergencyPatientCount tbody').append(rows);
+            });
+        }
 
     </script>
 
@@ -1548,6 +1566,23 @@
                 </div>
 
                 <div class="row">
+                    <h4>Emergency Patients Count</h4>
+                    <table class="table table-hover table-striped table-bordered" id="tabEmergencyPatientCount">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Total Patient</th>
+                                <th>Discount</th>
+                                <th>Total Amount</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
                     <h4>Investigation</h4>
                     <table class="table table-hover table-striped table-bordered" id="tabInvestigation">
                         <thead id="ihead">
@@ -1704,11 +1739,7 @@
                     <div class="col-lg-6" style="text-align: center">
                         <h4>OPD By Department</h4>
                         <div id="chartOPDDepartmentWise"></div>
-                    </div>
-                    <div class="col-lg-6" style="text-align: center">
-                        <h4>Appointment Statistics</h4>
-                        <div id="chartGetDocAppointmentsCount"></div>
-                    </div>
+                    </div>                  
                 </div>
                 <div class="row">
                     <div class="col-lg-6" style="text-align: center">
@@ -1724,6 +1755,10 @@
                     <div class="col-lg-6" style="text-align: center">
                         <h4>Department Statistics</h4>
                         <div id="chartGetDeptPatientCount"></div>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>Appointment Statistics</h4>
+                        <div id="chartGetDocAppointmentsCount"></div>
                     </div>
                 </div>
                 <div class="row mb-3">

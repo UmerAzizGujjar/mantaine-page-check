@@ -373,6 +373,17 @@ namespace PMS.Modules.Dashboards
                 return new JavaScriptSerializer().Serialize(query);
             }
         }
+
+        [WebMethod]
+        public static string GetEmergencyPatientCountsAndNetAmount(string txt_sdate, string txt_edate)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetEmergencyPatientCountsAndNetAmountByDate(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(query);
+            }
+        }
+
         [WebMethod]
         public static string GetVitalCount(string txt_sdate, string txt_edate)
         {
