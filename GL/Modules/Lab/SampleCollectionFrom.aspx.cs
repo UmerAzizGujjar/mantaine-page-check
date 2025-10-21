@@ -670,7 +670,7 @@ namespace PMS
                         ltd.Test_Collected_By = test.TestCollectedBy;
                         ltd.Test_Ready_On = Convert.ToDateTime(test.TestReadyOn);
                         ltd.Test_Collected_On = Convert.ToDateTime(test.TestCollectedOn);
-                        ltd.Test_Performed_By = test.TestPerformedBy;
+                       // ltd.Test_Performed_By = test.TestPerformedBy;
                         ltd.Area_Of_Interest = test.Area;
                         ltd.Rotation_ID = test.RotationID;
                         ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
@@ -701,7 +701,7 @@ namespace PMS
                                     item.Bill_Details_ID = test.Bill_Details_ID;
                                     item.Test_Ready_On = Convert.ToDateTime(test.TestReadyOn);
                                     item.Test_Collected_On = Convert.ToDateTime(test.TestCollectedOn);
-                                    item.Test_Performed_By = test.TestPerformedBy;
+                                  //  item.Test_Performed_By = test.TestPerformedBy;
                                     item.Area_Of_Interest = test.Area;
                                     item.Rotation_ID = test.RotationID;
                                     item.L_R_Rotation_ID = test.L_R_Rotation_ID;
@@ -753,7 +753,7 @@ namespace PMS
                     ltd.Bill_Details_ID = test.Bill_Details_ID;
                     ltd.Test_Ready_On = Convert.ToDateTime(test.TestReadyOn);
                     ltd.Test_Collected_On = Convert.ToDateTime(test.TestCollectedOn);
-                    ltd.Test_Performed_By = test.TestPerformedBy;
+                   // ltd.Test_Performed_By = test.TestPerformedBy;
                     ltd.Area_Of_Interest = test.Area;
                     ltd.Rotation_ID = test.RotationID;
                     ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
@@ -783,7 +783,7 @@ namespace PMS
                                 item.Bill_Details_ID = test.Bill_Details_ID;
                                 item.Test_Ready_On = Convert.ToDateTime(test.TestReadyOn);
                                 item.Test_Collected_On = Convert.ToDateTime(test.TestCollectedOn);
-                                item.Test_Performed_By = test.TestPerformedBy;
+                               // item.Test_Performed_By = test.TestPerformedBy;
                                 item.Area_Of_Interest = test.Area;
                                 item.Rotation_ID = test.RotationID;
                                 item.L_R_Rotation_ID = test.L_R_Rotation_ID;

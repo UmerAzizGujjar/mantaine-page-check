@@ -285,27 +285,11 @@ namespace PMS.Modules.Dashboards
         [WebMethod]
         public static string GetPatientCountsAndNetAmount(string txt_sdate, string txt_edate)
         {
-            string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = db.sp_GetPatientCountsAndNetAmountByDate(txt_sdate, txt_edate).ToList();
-
-                decimal totalNetAmount = query.Sum(x => x.Receipt_Amount);
-
-                var totalRow = new
-                {
-                    Category = "Total",
-                    Total_Count = query.Sum(x => x.Total_Count ?? 0),
-                    Card_Receipt_Amount = query.Sum(x => x.Card_Receipt_Amount),
-                    Receipt_Amount = totalNetAmount
-                };
-
-                var resultList = query.Cast<object>().ToList();
-                resultList.Add(totalRow);
-
-                result = (new JavaScriptSerializer()).Serialize(resultList);
+                return new JavaScriptSerializer().Serialize(query);
             }
-            return result;
         }
         [WebMethod]
         public static string GetVitalCount(string txt_sdate, string txt_edate)

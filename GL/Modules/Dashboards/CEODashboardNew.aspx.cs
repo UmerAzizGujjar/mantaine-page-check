@@ -61,8 +61,6 @@ namespace PMS.Modules.Dashboards
         [WebMethod]
         public static string GetAppointmentsOPDCount(string txt_sdate, string txt_edate)
         {
-            string result = string.Empty;
-
             try
             {
                 DateTime startDate = DateTime.Parse(txt_sdate);
@@ -70,22 +68,65 @@ namespace PMS.Modules.Dashboards
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    int count = db.Patients
-                                  .Where(dt => dt.Created_Time >= startDate &&
-                                               dt.Created_Time <= endDate &&
-                                               dt.appointment_id.HasValue &&
-                                               dt.appointment_id != 0)
-                                  .Count();
+                    var appointmentsInRange = db.Appointment_Forms
+                        .Where(a => a.App_Date >= startDate && a.App_Date <= endDate && a.Reg_id.HasValue)
+                        .ToList();
 
-                    result = (new JavaScriptSerializer()).Serialize(new { AppointmentsOPDCount = count });
+                    if (!appointmentsInRange.Any())
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            NewAppointments = 0,
+                            Revisits = 0
+                        });
+                    }
+
+                    var regIds = appointmentsInRange.Select(a => a.Reg_id.Value).ToList();
+
+                    var firstAppointmentPerPatient = db.Appointment_Forms
+                        .Where(a => regIds.Contains(a.Reg_id.Value))
+                        .GroupBy(a => a.Reg_id.Value)
+                        .Select(g => new
+                        {
+                            Reg_id = g.Key,
+                            FirstAppointmentID = g.Min(x => x.Appointment_ID)
+                        })
+                        .ToDictionary(x => x.Reg_id, x => x.FirstAppointmentID);
+
+                    int newCount = 0;
+                    int revisitCount = 0;
+
+                    foreach (var appt in appointmentsInRange)
+                    {
+                        if (appt.Reg_id.HasValue &&
+                            firstAppointmentPerPatient.TryGetValue(appt.Reg_id.Value, out int firstID))
+                        {
+                            if (appt.Appointment_ID == firstID)
+                            {
+                                newCount++;
+                            }
+                            else
+                            {
+                                revisitCount++;
+                            }
+                        }
+                        else
+                        {
+                            newCount++;
+                        }
+                    }
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        NewAppointments = newCount,
+                        Revisits = revisitCount
+                    });
                 }
             }
             catch (Exception ex)
             {
-                result = (new JavaScriptSerializer()).Serialize(new { Error = ex.Message });
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
             }
-
-            return result;
         }
 
         [WebMethod]
@@ -178,7 +219,7 @@ namespace PMS.Modules.Dashboards
                 var query = db.sp_GetPharmacyCounts(txt_sdate, txt_edate).ToList();
 
                 var normalizedData = query.Select(r => new {
-                    CustomerType = r.Category,  
+                    CustomerType = r.CustomerType,  
                     TotalCount = r.TotalCount,
                     TotalReceivedAmount = r.TotalReceivedAmount
                 }).ToList();
@@ -207,7 +248,8 @@ namespace PMS.Modules.Dashboards
                 var query = db.sp_GetInvestigationCounts(txt_sdate, txt_edate).ToList();
 
                 decimal? totalNetAmount = query.Sum(x => x.TotalBillAmount);
-
+                decimal? totalDiscount = query.Sum(x => x.TotalDiscount);
+                decimal? totalAmount = totalNetAmount + totalDiscount;
 
                 var totalRow = new
                 {
@@ -215,7 +257,8 @@ namespace PMS.Modules.Dashboards
                     TotalBillCount = query.Sum(x => x.TotalBillCount ?? 0),
                     TotalPerformCount = query.Sum(x => x.TotalPerformCount ?? 0),
                     TotalDiscount = query.Sum(x => x.TotalDiscount),
-                    TotalBillAmount = totalNetAmount
+                    TotalBillAmount = totalNetAmount,
+                    TotalAmount = totalAmount
                 };
 
                 var resultList = query.Cast<object>().ToList();
@@ -324,29 +367,23 @@ namespace PMS.Modules.Dashboards
         [WebMethod]
         public static string GetPatientCountsAndNetAmount(string txt_sdate, string txt_edate)
         {
-            string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = db.sp_GetPatientCountsAndNetAmountByDate(txt_sdate, txt_edate).ToList();
-
-                decimal totalNetAmount = query.Sum(x => x.Receipt_Amount);
-
-                var totalRow = new
-                {
-                    Category = "Total",
-                    Total_Count = query.Sum(x => x.Total_Count ?? 0),
-                    Card_Receipt_Amount = query.Sum(x => x.Card_Receipt_Amount),
-                    Discount_Amount = query.Sum(x => x.Discount_Amount),
-                    Receipt_Amount = totalNetAmount
-                };
-
-                var resultList = query.Cast<object>().ToList();
-                resultList.Add(totalRow);
-
-                result = (new JavaScriptSerializer()).Serialize(resultList);
+                return new JavaScriptSerializer().Serialize(query);
             }
-            return result;
         }
+
+        [WebMethod]
+        public static string GetEmergencyPatientCountsAndNetAmount(string txt_sdate, string txt_edate)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetEmergencyPatientCountsAndNetAmountByDate(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(query);
+            }
+        }
+
         [WebMethod]
         public static string GetVitalCount(string txt_sdate, string txt_edate)
         {
@@ -393,6 +430,47 @@ namespace PMS.Modules.Dashboards
             }
             return result;
         }
+
+        [WebMethod]
+        public static string GetIPDPatientCountsAndNetAmount(string txt_sdate, string txt_edate)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetIPDPatientCountsAndNetAmountByDate(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(query);
+            }
+        }
+
+        [WebMethod]
+        public static string GetWardBedOccupancy(string txt_sdate, string txt_edate)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var result = db.sp_GetWardBedOccupancy(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetOPDDepartmentWise(string txt_sdate, string txt_edate)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var result = db.sp_OPDDepartmentWise(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetEmergencyWardBedOccupancy(string txt_sdate, string txt_edate)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var result = db.sp_GetEmergencyWardBedOccupancy(txt_sdate, txt_edate).ToList();
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
 
         [WebMethod]
         public static string GetAppointmentCountByDoctor(string txt_sdate, string txt_edate)

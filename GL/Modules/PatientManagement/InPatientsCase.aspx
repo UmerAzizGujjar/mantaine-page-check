@@ -6719,7 +6719,7 @@
                         <li><a href="#Tab-12">Refer</a></li>
                         <li><a href="#Tab-15">Vitals Discharge </a></li> 
                         <li><a href="#Tab-3" style="display: none">Operations</a></li>
-                        <li><a href="#Tab-11">Death Details</a></li>                                                                   
+                        <li><a href="#Tab-11">Death Details</a></li>  
                                    </ul>
 
                     <div id="Tab-19">

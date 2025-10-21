@@ -8,6 +8,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web.Data.Extensions;
 
 namespace PMS
 {
@@ -31,6 +32,8 @@ namespace PMS
                     var vouchersQuery = from a in _dbContext.GL_Vouchers
                                         where (a.Voucher_No.ToString().Contains(searchValue)
                                         || a.Remarks.Contains(searchValue)
+                                        || a.Ref_Num.Contains(searchValue)
+                                        || a.Total_Debit.ToString().Contains(searchValue)
                                         || a.Ref_Num.Contains(searchValue)
                                         || a.Pay_To_Name.Contains(searchValue))
                                         && a.Voucher_Type == vouchertype

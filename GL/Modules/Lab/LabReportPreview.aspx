@@ -1446,9 +1446,10 @@
                 $('#<%= vLbl_Age.ClientID %>').text(data.d.Age);
                 $('#<%= vLbl_Gender.ClientID %>').text(data.d.Gender);
                 $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
-                $('#<%= vLbl_Adress.ClientID %>').text(data.d.Address);
+                $('#<%= vLbl_Department.ClientID %>').text(data.d.Department);
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
+                $('#<%= vLbl_Location.ClientID %>').text(data.d.Location);
 
                 //GetLabDetailUsingLabID();
                 GetLabDetailAgainstBill();
@@ -2216,9 +2217,10 @@
                 $('#<%= vLbl_Age.ClientID %>').text(data.d.Age);
                 $('#<%= vLbl_Gender.ClientID %>').text(data.d.Gender);
                 $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
-                $('#<%= vLbl_Adress.ClientID %>').text(data.d.Address);
+                $('#<%= vLbl_Department.ClientID %>').text(data.d.Department);
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
+                $('#<%= vLbl_Location.ClientID %>').text(data.d.Location);
                 if ($("#ctl00_MainContent_txtBilling").val() != "") { }
                 else {
                     GetLabDetail();
@@ -2235,9 +2237,10 @@
                 $('#<%= vLbl_Age.ClientID %>').text(data.d.Age);
                 $('#<%= vLbl_Gender.ClientID %>').text(data.d.Gender);
                 $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
-                $('#<%= vLbl_Adress.ClientID %>').text(data.d.Address);
+                $('#<%= vLbl_Department.ClientID %>').text(data.d.Department);
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
+                $('#<%= vLbl_Location.ClientID %>').text(data.d.Location);
 
                 if (localStorage.billid == 0) {
                     GetLabDetail();
@@ -2379,6 +2382,15 @@
                                        <asp:Label ID="vLbl_Gender" runat="server"></asp:Label>
                                     </div>
                                 </div>
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                        <asp:Label ID="lblLocation" runat="server" Text="Ward/Bed :"></asp:Label>
+                                    </div>
+                                    <div class="col-lg-7 col-md-7 col-sm-6 detail">
+                                       <asp:Label ID="vLbl_Location" runat="server"></asp:Label>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -2433,10 +2445,10 @@
                         </div>
                         <div class="row mb-3 mtt">
                             <div class="col-lg-4 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="lblAdress" runat="server" Text="Address :"></asp:Label>
+                                <asp:Label ID="lblAdress" runat="server" Text="Department :"></asp:Label>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-6 top">
-                                 <asp:Label ID="vLbl_Adress" runat="server"></asp:Label>
+                                 <asp:Label ID="vLbl_Department" runat="server"></asp:Label>
                             </div>
                         </div>
                     </div>
