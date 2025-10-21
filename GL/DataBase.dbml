@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="pakred1" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -10595,15 +10595,6 @@
       <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetPharmacyCounts" Method="sp_GetPharmacyCounts">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetPharmacyCountsResult">
-      <Column Name="Category" Type="System.String" DbType="VarChar(16) NOT NULL" CanBeNull="false" />
-      <Column Name="TotalCount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="TotalReceivedAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetIPDAdmitDischargeByDate" Method="sp_GetIPDAdmitDischargeByDate">
     <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
     <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
@@ -10623,18 +10614,6 @@
       <Column Name="TotalDiscount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
       <Column Name="TotalBillAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
       <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetWardBedOccupancy" Method="sp_GetWardBedOccupancy">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetWardBedOccupancyResult">
-      <Column Name="Ward_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Ward_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Ward_Type" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="TotalBeds" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="OccupiedBeds" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="OccupancyPercent" Type="System.Decimal" DbType="Decimal(8,2)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_OPDDepartmentWise" Method="sp_OPDDepartmentWise">
@@ -10666,6 +10645,59 @@
       <Column Name="[Expected Result Date]" Member="Expected_Result_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetEmergencyPatientCountsAndNetAmountByDate" Method="sp_GetEmergencyPatientCountsAndNetAmountByDate">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetEmergencyPatientCountsAndNetAmountByDateResult">
+      <Column Name="Category" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
+      <Column Name="Total_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Receipt_Amount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Gross_Amount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetIPDPatientCountsAndNetAmountByDate" Method="sp_GetIPDPatientCountsAndNetAmountByDate">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetIPDPatientCountsAndNetAmountByDateResult">
+      <Column Name="Category" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
+      <Column Name="Total_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Receipt_Amount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Gross_Amount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetEmergencyWardBedOccupancy" Method="sp_GetEmergencyWardBedOccupancy">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetEmergencyWardBedOccupancyResult">
+      <Column Name="Ward_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TotalBeds" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="OccupiedBeds" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OccupancyPercent" Type="System.Decimal" DbType="Decimal(8,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetWardBedOccupancy" Method="sp_GetWardBedOccupancy">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetWardBedOccupancyResult">
+      <Column Name="Ward_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TotalBeds" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="OccupiedBeds" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OccupancyPercent" Type="System.Decimal" DbType="Decimal(8,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetPharmacyCounts" Method="sp_GetPharmacyCounts">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetPharmacyCountsResult">
+      <Column Name="CustomerType" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="TotalCount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TotalReceivedAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
