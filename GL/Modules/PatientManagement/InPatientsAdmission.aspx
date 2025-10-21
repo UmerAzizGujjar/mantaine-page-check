@@ -2254,6 +2254,7 @@
 
         function FillWardBeds() {
             PageMethods.FillWardBeds($('#ctl00_MainContent_ddlWard_No').find('option:selected')[0].value, function (res) {
+                $('#ctl00_MainContent_txtBed_No').val("");
                 var WardBeds = JSON.parse(res);
                 var rows = '';
                 $.each(WardBeds, function (key, value) {

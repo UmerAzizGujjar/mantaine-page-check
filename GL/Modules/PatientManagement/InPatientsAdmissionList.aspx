@@ -76,6 +76,7 @@
                     { "data": "Father_Name", "width": "20%", "orderable": false },
                     { "data": "Department", "width": "10%", "orderable": false },
                     { "data": "Discharge_ON", "width": "10%", "orderable": false },
+                    { "data": "AdmitDays", "width": "10%", "orderable": false },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -91,6 +92,15 @@
                     }
 
                 ],
+                "createdRow": function (row, data, dataIndex) {
+                    if (data.AdmitDays >= 10 && (data.Discharge_ON == null || data.Discharge_ON === "")) {
+                        $(row).css({
+                            "background-color": "#f8d7da",
+                            "color": "#721c24",            
+                            "font-weight": "bold"
+                        });
+                    }
+                },
                 "initComplete": function (settings, json) {
                     var lengthContainer = document.querySelector('#tblResult_length');
                     var lengthDropdown = document.querySelector('#tblResult_length select');
@@ -161,6 +171,7 @@
                     <th>Father/Husband Name</th> 
                     <th>Dept.</th>
                     <th>Discharge Date</th>                             
+                    <th>Days Occupied</th>                             
                     <th>Actions</th>
                 </tr>
             </thead>

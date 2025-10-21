@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Linq.SqlClient;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -136,6 +137,7 @@ namespace PMS
                                             Father_Name = P.Father_Name,
                                             Department = _dbContext.GetDataValueName("Patient Main Category", IP.Department),
                                             Discharge_ON = IP.Discharge_On,
+                                            AdmitDays = SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now)
                                         };
 
                     var FilteredCount = IN_Monitoring.Count();
