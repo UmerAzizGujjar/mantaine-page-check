@@ -1936,7 +1936,12 @@ namespace PMS
                     "WHERE Patient_ID = " + PatientID + " " +
                     "ORDER BY In_Patient_ID DESC"
                 )?.ToString() ?? "";
-
+                var ipdAcc = DBClass.getField(
+                    "SELECT TOP 1 isNull(ispackagebilling,0) " +
+                    "FROM In_Patient " +
+                    "WHERE Patient_ID = " + PatientID + " " +
+                    "ORDER BY In_Patient_ID DESC"
+                )?.ToString() ?? "";
                 // Flag: was discharge done today?
                 bool isdischargetoday = false;
 
@@ -1957,7 +1962,7 @@ namespace PMS
 
                 pt.pkg_typefordetails = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
                 // Main condition: if NOT discharged OR discharged TODAY → show package data
-                if (pt.checkdischarge == "false" || pt.checkdischarge == "0" || isdischargetoday)
+                if (pt.checkdischarge == "false" || pt.checkdischarge == "0" || ipdAcc == "1"|| ipdAcc == "true")
                 {
                     // Patient is either still admitted OR was discharged today
                     pt.pkg_name = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";

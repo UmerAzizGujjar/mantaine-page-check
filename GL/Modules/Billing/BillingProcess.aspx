@@ -5232,7 +5232,7 @@
                 <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Category</label>
-                        <select id="txtMaindepartment" disabled="disabled" class="form-select">
+                        <select id="txtMaindepartment"  class="form-select">
                             <option></option>
                         </select>
                     </div>
