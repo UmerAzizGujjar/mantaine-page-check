@@ -170,7 +170,7 @@ namespace PMS
                     var Receipts = from r in _dbContext.Receipts
                                    join u in _dbContext.aspnet_Users on r.Created_By equals u.UserId
                                    join p in _dbContext.Reg_patients on r.Patient_ID equals p.pat_id
-                                   where (r.isCancel == null || r.isCancel == false) &&
+                                   where
                                  (r.Receipt_ID.ToString().Contains(searchValue) || r.Receipt_No.ToString().Contains(searchValue) || p.mr_no_sequence.ToString().Contains(searchValue) || p.Full_Name.Contains(searchValue) || u.UserName.Contains(searchValue))
                                    select new
                                 {
@@ -183,8 +183,10 @@ namespace PMS
                                     Full_Name = p.Full_Name,
                                     Creation_Date = r.Creation_Date,
                                     UserName = u.UserName,
+                                    Cancel_Remarks = r.CancelRemarks,
+                                    isCancel = r.isCancel,
 
-                                };
+                                   };
 
                     var FilteredCount = Receipts.Count();
                     switch (sortColumn)

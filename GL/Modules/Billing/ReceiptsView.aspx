@@ -2,6 +2,15 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .cancelled-row {
+    background-color: #ff6242 !important; 
+    color: #cc0000;
+    color:black !important;
+}
+    </style>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -53,7 +62,7 @@
                 },
                 "columns": [
                     { "data": "Receipt_ID", "visible": false, "width": "0%" },
-                    { "data": "Receipt_No", "name": "Receipt_No", "width": "7%", "orderable": true },
+                    { "data": "Receipt_No", "name": "Receipt_No", "width": "6%", "orderable": true },
                     {
                         "data": "Receipt_Date", "name": "Receipt_Date",
                         "render": function (data, type, full) {
@@ -63,11 +72,11 @@
                             return date;
                         }, "width": "8%", "orderable": true
                     },
-                    { "data": "Remarks", "width": "16%", "orderable": false },
+                    { "data": "Remarks", "width": "17%", "orderable": false },
                     { "data": "Receipt_Amount", "width": "8%", "orderable": false },
 
-                    { "data": "mr_no_sequence", "width": "12%", "orderable": false },
-                    { "data": "Full_Name", "width": "14%", "orderable": false },            
+                    { "data": "mr_no_sequence", "width": "10%", "orderable": false },
+                    { "data": "Full_Name", "width": "12%", "orderable": false },            
                     {
                         "data": "Creation_Date", "name": "Creation_Date",
                         "render": function (data, type, full) {
@@ -80,17 +89,30 @@
 
                     { "data": "UserName", "width": "10%", "orderable": false },
                     {
+                        "data": "Cancel_Remarks",
+                        "width": "8%",
+                        "orderable": false,
+                        "render": function (data, type, full) {
+                            if (full.isCancel === true || full.isCancel === 1) {
+                                if (data && data.trim() !== '') {
+                                    return data;
+                                }
+                                return 'Cancelled';
+                            }
+                            return data || '';
+                        }
+                    },
+                    { "data": "isCancel", "visible": false, "orderable": false },
+                    {
                         render: function (data, type, full) {
-                            debugger;
-                            var res = '<a href="#"  class="editListBtn" onclick="editOpen(' + full.Receipt_ID + ')" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
+                            var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Receipt_ID + ')" style="border-radius: 4px;color: white; padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
-                            var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px;" onclick="cancelPatient(' + full.Receipt_ID + ', \'' + full.Receipt_No + '\')"><i class="fa fa-trash"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Receipt_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            var result;
-                            result = res + Del + print;
-                            return result;
-                        }, "width": "8%", "orderable": false
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="PrintTest(' + full.Receipt_ID + ')"><i class="fa fa-print"></i></a>';
+
+                            return res + Del + print;
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],
@@ -114,6 +136,13 @@
                     } else {
                         console.log("Length dropdown, label, or container not found");
                     }
+                },
+                createdRow: function (row, data, dataIndex) {
+                    if (data.isCancel == 1) {
+                        $(row).addClass('cancelled-row');
+                    } else {
+                        $(row).removeClass('cancelled-row');
+                    }
                 }
             });
         }
@@ -135,34 +164,30 @@
             cell.innerHTML = '<span class="show" style="width:100px;"><input type="text" id="txtCancel" onchange="cancelPatient(this)"/></span>';
 
         }
-        function cancelPatient(anchorTag) {
-            debugger;
-
-            var row = $(anchorTag).parents('tr')[0];
-            var Receipt_ID = $($(row).find('td')[0]).text();
-            var Receipt_No = $($(row).find('td')[1]).text();
-            var reason = $(row).find($("input[type=text]")).val();
-            if (confirm('Are you sure want to Cancel this Receipt:- ' + Receipt_No)) {
-                PageMethods.CancelPatient(Receipt_ID, function (msg) {
-                    if (msg == "Allowdlt") {
-                        alert('You have no right to Cancel. ')
-
-                    }
-                    else if (msg == "success") {
-
-                        row.remove();
-                    }
-                    else {
-                        alert('Error in Cancel Reciept')
-                    }
-
-                },
-
-                    OnFail);
+        function cancelPatient(Receipt_ID, Receipt_No) {
+            if (!confirm('Are you sure you want to Cancel this Receipt: ' + Receipt_No)) {
+                return;
             }
 
-            window.location.href = "ReceiptsView.aspx";
+            var reason = prompt("Enter reason for cancellation (optional):");
+
+            PageMethods.CancelPatient(Receipt_ID, reason, function (msg) {
+                if (msg === "Allowdlt") {
+                    alert('You have no right to Cancel.');
+                } else if (msg === "success") {
+                    var table = $('#tblResult').DataTable();
+                    table.rows(function (idx, data, node) {
+                        return data.Receipt_ID == Receipt_ID;
+                    }).remove().draw(false);
+                } else {
+                    alert('Error in Cancel Receipt: ' + msg);
+                }
+            }, function (error) {
+                console.error("Cancel failed:", error);
+                alert('An error occurred while canceling the receipt.');
+            });
         }
+       
         function deleteConfirm(anchorTag) {
             var row = $(anchorTag).parents('tr')[0];
             var ID = $($(row).find('td')[0]).text();
@@ -197,6 +222,8 @@
                             <th>Patient Name</th>
                             <th>Creation Date</th>
                             <th>Operator Name</th>
+                            <th>Cancel Remarks</th>
+                            <th style="display:none">Cancel</th>
                             <th>Actions</th>                                                      
                         </tr>
                     </thead>

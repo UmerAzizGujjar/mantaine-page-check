@@ -3442,7 +3442,7 @@ namespace PMS
         public static string CheckReceipts(int Bill_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            List<Receipt> rcpts = db.Receipts.Where(r => r.Bill_ID == Bill_ID).ToList();
+            List<Receipt> rcpts = db.Receipts.Where(r => r.Bill_ID == Bill_ID && (r.isCancel == false || r.isCancel == null)).ToList();
             StringBuilder noList = new StringBuilder();
             if (rcpts.Count > 0)
             {
