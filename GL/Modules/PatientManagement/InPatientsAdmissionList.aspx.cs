@@ -127,7 +127,8 @@ namespace PMS
                                         join IP in _dbContext.In_Patients on P.pat_id equals IP.Patient_ID
                                         where IP.Discharge_On == null && (IP.is_cancel ?? false) == false
                                         &&
-                                         ((IP.In_Patient_ID.ToString().Contains(searchValue) || P.mr_no_sequence.Contains(searchValue) || P.Full_Name.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", IP.Department).Contains(searchValue)))
+                                         ((IP.In_Patient_ID.ToString().Contains(searchValue) || P.mr_no_sequence.Contains(searchValue) || P.Full_Name.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", IP.Department).Contains(searchValue) || _dbContext.GetDataValueName("Patient Type", IP.Patient_Discount_Type).Contains(searchValue) || SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now)
+                                          .ToString().Contains(searchValue)))
                                         select new
                                         {
                                             In_Patient_ID = IP.In_Patient_ID,
@@ -136,6 +137,7 @@ namespace PMS
                                             Full_Name = P.Full_Name,
                                             Father_Name = P.Father_Name,
                                             Department = _dbContext.GetDataValueName("Patient Main Category", IP.Department),
+                                            Patient_Type = _dbContext.GetDataValueName("Patient Type", IP.Patient_Discount_Type),
                                             Discharge_ON = IP.Discharge_On,
                                             AdmitDays = SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now)
                                         };
@@ -148,6 +150,15 @@ namespace PMS
                             break;
                         case "mr_no_sequence":
                             IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(b => b.mr_no_sequence) : IN_Monitoring.OrderByDescending(a => a.mr_no_sequence);
+                            break;
+                        case "Department":
+                            IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(b => b.Department) : IN_Monitoring.OrderByDescending(a => a.Department);
+                            break;
+                        case "Patient_Type":
+                            IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(b => b.Patient_Type) : IN_Monitoring.OrderByDescending(a => a.Patient_Type);
+                            break;
+                        case "AdmitDays":
+                            IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(b => b.AdmitDays) : IN_Monitoring.OrderByDescending(a => a.AdmitDays);
                             break;
                         case "Admission_Date":
                             IN_Monitoring = sortColumnDirection == "asc" ? IN_Monitoring.OrderBy(b => b.Admission_Date) : IN_Monitoring.OrderByDescending(a => a.Admission_Date);

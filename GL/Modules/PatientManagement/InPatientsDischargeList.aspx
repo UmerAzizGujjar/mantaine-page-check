@@ -74,10 +74,11 @@
                             return date;
                         }, "width": "10%", "orderable": false
                     },
-                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
-                    { "data": "Full_Name", "width": "20%", "orderable": false },
-                    { "data": "Father_Name", "width": "20%","orderable": false },
-                    { "data": "Department", "width": "15%", "orderable": false },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%", "orderable": true },
+                    { "data": "Full_Name", "width": "15%", "orderable": false },
+                    { "data": "Father_Name", "width": "15%", "orderable": false },
+                    { "data": "Patient_Type", "name": "Patient_Type", "width": "12%", "orderable": true },
+                    { "data": "Department", "name": "Department", "width": "12%", "orderable": true },
                     
                     {
                         "data": "Discharge_On", "name": "Discharge_On",
@@ -86,9 +87,9 @@
                             var date = full.Discharge_On;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "20%", "orderable": true
+                        }, "width": "10%", "orderable": true
                     },
-
+                    { "data": "AdmitDays", "name": "AdmitDays", "width": "8%", "orderable": true },
                     
                     {
                         render: function (data, type, full) {
@@ -101,7 +102,7 @@
                             var result;
                             result = res + print;
                             return result;
-                        }, "width": "30%", "orderable": false
+                        }, "width": "10%", "orderable": false
                     }
 
                 ],
@@ -167,8 +168,10 @@
                         <th>MR No #</th>
                         <th>Patient Name</th>
                         <th>Father / Husband Name</th>
+                        <th>Patient Category</th>
                         <th>Department.</th>
                         <th>Discharge Date</th>
+                        <th>Days Occupied</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
