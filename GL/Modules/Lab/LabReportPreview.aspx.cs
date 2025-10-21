@@ -1015,7 +1015,7 @@ namespace PMS
         lt.Group_Category,
         dbo.GetDataValueName('Test Groups', lt.Group_Category) AS Group_Test_Name,
         MIN(ld.Test_Performed_By) AS Test_Performed_By,
-        MINCONVERT(varchar(16), ld.Created_Time, 120) AS Test_Ready_On,
+        CONVERT(varchar(16), ld.Created_Time, 120) AS Test_Ready_On,
         MIN(ld.Approved_Time) AS Approved_Time,
         (SELECT TOP 1 UserName 
          FROM aspnet_Users u 
@@ -1039,7 +1039,7 @@ namespace PMS
     WHERE ISNULL(bd.Is_Group_Category, 0) = 1 
      
       AND ar.Bill_ID = " + Bill_ID + @"
-    GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department
+    GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department,CONVERT(varchar(16), ld.Created_Time, 120)
 ");
 
             foreach (DataRow item in GroupTest.Rows)
