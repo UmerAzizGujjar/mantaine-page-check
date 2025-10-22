@@ -44,6 +44,7 @@
             LoadIPDPatientCountsAndNetAmount(date, date);
             LoadEmergencyWardBedOccupancy(date, date);
             LoadIPDWardBedOccupancy(date, date);
+            LoadOPDDepartmentWiseWithCounts(date, date);
 
 
         });
@@ -73,6 +74,7 @@
             LoadIPDPatientCountsAndNetAmount(dt, dts);
             LoadEmergencyWardBedOccupancy(dt, dts);
             LoadIPDWardBedOccupancy(dt, dts);
+            LoadOPDDepartmentWiseWithCounts(dt, dts);
 
         }
 
@@ -1176,6 +1178,9 @@
             });
         }
 
+
+
+
         let chartOPDSummary, chartEmergencySummary,chartIPDSummary;
 
         function renderOPDSummaryChart(total, newOPD, revisitOPD) {
@@ -1504,6 +1509,83 @@
             });
         }
 
+
+        let OPDDepartmentChartWithCounts;
+
+        function LoadOPDDepartmentWiseWithCounts(startdate, enddate) {
+            PageMethods.GetOPDDepartmentWise(startdate, enddate, function (resp) {
+                var parsedData = JSON.parse(resp);
+
+                var series = parsedData.map(item => parseFloat(item.OPD_Count) || 0);
+                var labels = parsedData.map(item => item.Department_Name);
+
+                var options = {
+                    series: series,
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    labels: labels,
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }],
+                    title: {
+                        text: '',
+                        align: 'center'
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val.toLocaleString('en-IN');
+                            }
+                        }
+                    },
+                    fill: {
+                        colors: ['#2E93fA', '#66DA26', '#FF9800', '#FF4560', '#546E7A', '#00E396', '#FEB019']
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val, opts) {
+                            return parsedData[opts.seriesIndex].OPD_Count; 
+                        },
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            colors: ['#fff']
+                        },
+                        offset: 10
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
+                                    show: false 
+                                }
+                            }
+                        }
+                    }
+                };
+
+                if (OPDDepartmentChartWithCounts) {
+                    OPDDepartmentChartWithCounts.destroy();
+                }
+                OPDDepartmentChartWithCounts = new ApexCharts(
+                    document.querySelector("#chartOPDDepartmentWiseWithCounts"),
+                    options
+                );
+                OPDDepartmentChartWithCounts.render();
+            }, function (error) {
+                console.error("Error loading OPD department chart with counts:", error);
+            });
+        }
 
     </script>
 
@@ -1869,7 +1951,11 @@
                     <div class="col-lg-6" style="text-align: center">
                         <h4>OPD By Department</h4>
                         <div id="chartOPDDepartmentWise"></div>
-                    </div>                  
+                    </div>
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>OPD By Department (With Counts)</h4>
+                        <div id="chartOPDDepartmentWiseWithCounts"></div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="row">
@@ -1888,11 +1974,11 @@
                         <h4>Department Statistics</h4>
                         <div id="chartGetDeptPatientCount"></div>
                     </div>
-                    <div class="col-lg-6" style="text-align: center">
+                    <div class="col-lg-6" style="text-align: center;display:none">
                         <h4>Appointment Statistics</h4>
                         <div id="chartGetDocAppointmentsCount"></div>
                     </div>
-                    <div class="col-lg-6" style="text-align: center">
+                    <div class="col-lg-6" style="text-align: center;display:none">
                         <h4>Doctor Statistics</h4>
                         <div id="chartGetDocPatientCount"></div>
                     </div>
