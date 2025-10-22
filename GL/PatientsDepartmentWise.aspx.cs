@@ -193,7 +193,7 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = false;
                     trDoctor.Visible = false;
-                    tr_Summary.Visible = false;
+                    tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
 
