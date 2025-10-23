@@ -741,3 +741,29 @@ input[type="checkbox"] {
 .Medicene-row + .Medicene-details {
     margin-top: -5px;
 }
+
+
+
+scrollable-modal .modal-body {
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    padding-right: 10px !important;
+}
+
+.scrollable-modal .modal-body::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.scrollable-modal .modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.scrollable-modal .modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+    .scrollable-modal .modal-body::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
