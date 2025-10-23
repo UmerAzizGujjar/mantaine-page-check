@@ -45,6 +45,8 @@
             LoadEmergencyWardBedOccupancy(date, date);
             LoadIPDWardBedOccupancy(date, date);
             LoadOPDDepartmentWiseWithCounts(date, date);
+            LoadEmergencyWardBedCounts(date, date);
+            LoadIPDWardBedCounts(date, date);
 
 
         });
@@ -75,6 +77,8 @@
             LoadEmergencyWardBedOccupancy(dt, dts);
             LoadIPDWardBedOccupancy(dt, dts);
             LoadOPDDepartmentWiseWithCounts(dt, dts);
+            LoadEmergencyWardBedCounts(dt, dts);
+            LoadIPDWardBedCounts(dt, dts);
 
         }
 
@@ -468,7 +472,7 @@
 
                     data.forEach((deptData, index) => {
                         const col = document.createElement('div');
-                        col.className = 'col-xl-2 col-lg-4 col-md-6 col-sm-12 mb-4';
+                        col.className = 'col-xl-2 col-lg-3 col-md-6 col-sm-12 mb-4';
 
                         const card = document.createElement('div');
                         card.className = 'card h-100 shadow-sm';
@@ -1587,6 +1591,160 @@
             });
         }
 
+        let EmergencyWardChartCounts;
+
+        function LoadEmergencyWardBedCounts(startdate, enddate) {
+            PageMethods.GetEmergencyWardBedOccupancy(startdate, enddate, function (resp) {
+                var parsedData = JSON.parse(resp);
+
+                var series = parsedData.map(item => parseFloat(item.OccupiedBeds) || 0);
+                var labels = parsedData.map(item => item.Ward_Name);
+
+                var options = {
+                    series: series,
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    labels: labels,
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }],
+                    title: {
+                        text: '',
+                        align: 'center'
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val.toLocaleString('en-IN') + ' beds';
+                            }
+                        }
+                    },
+                    fill: {
+                        colors: ['#FF4560', '#00E396', '#FEB019', '#2E93fA', '#66DA26', '#546E7A', '#FF9800']
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val, opts) {
+                            return Math.round(series[opts.seriesIndex]); 
+                        },
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            colors: ['#fff']
+                        },
+                        offset: 10
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
+                                    show: false
+                                }
+                            }
+                        }
+                    }
+                };
+
+                if (EmergencyWardChartCounts) {
+                    EmergencyWardChartCounts.destroy();
+                }
+                EmergencyWardChartCounts = new ApexCharts(
+                    document.querySelector("#chartEmergencyWardCounts"),
+                    options
+                );
+                EmergencyWardChartCounts.render();
+            }, function (error) {
+                console.error("Error loading Emergency Ward counts chart:", error);
+            });
+        }
+
+        let IPDWardChartCounts;
+
+        function LoadIPDWardBedCounts(startdate, enddate) {
+            PageMethods.GetWardBedOccupancy(startdate, enddate, function (resp) {
+                var parsedData = JSON.parse(resp);
+
+                var series = parsedData.map(item => parseFloat(item.OccupiedBeds) || 0);
+                var labels = parsedData.map(item => item.Ward_Name);
+
+                var options = {
+                    series: series,
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    labels: labels,
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }],
+                    title: {
+                        text: '',
+                        align: 'center'
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val.toLocaleString('en-IN') + ' occupied beds';
+                            }
+                        }
+                    },
+                    fill: {
+                        colors: ['#00E396', '#FF4560', '#FEB019', '#2E93fA', '#66DA26', '#546E7A', '#FF9800']
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val, opts) {
+                            return Math.round(series[opts.seriesIndex]);
+                        },
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            colors: ['#fff']
+                        },
+                        offset: 10 
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
+                                    show: false
+                                }
+                            }
+                        }
+                    }
+                };
+
+                if (IPDWardChartCounts) {
+                    IPDWardChartCounts.destroy();
+                }
+                IPDWardChartCounts = new ApexCharts(
+                    document.querySelector("#chartIPDWardCounts"),
+                    options
+                );
+                IPDWardChartCounts.render();
+            }, function (error) {
+                console.error("Error loading IPD Ward counts chart:", error);
+            });
+        }
+
     </script>
 
 </asp:Content>
@@ -1743,7 +1901,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <h4>OPD Patients Count</h4>
+                    <h2>OPD Patients Count</h2>
                     <table class="table table-hover table-striped table-bordered" id="tabPatientCount">
                         <thead>
                             <tr>
@@ -1758,11 +1916,11 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row" style="height: 200px !important">                  
+                <div class="row" style="height: 220px !important">                  
                 </div>
 
                 <div class="row">
-                    <h4>Emergency Patients Count</h4>
+                    <h2>Emergency Patients Count</h2>
                     <table class="table table-hover table-striped table-bordered" id="tabEmergencyPatientCount">
                         <thead>
                             <tr>
@@ -1777,10 +1935,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row" style="height: 200px !important">                   
+                <div class="row" style="height: 230px !important">                   
                 </div>         
                 <div class="row">
-                    <h4>IPD Patients Count</h4>
+                    <h2>IPD Patients Count</h2>
                     <table class="table table-hover table-striped table-bordered" id="tabIPDPatientCount">
                         <thead>
                             <tr>
@@ -1798,7 +1956,7 @@
                 <div class="row" style="height: 200px !important">
                 </div>
                 <div class="row">
-                    <h4>Investigation</h4>
+                    <h2>Investigation</h2>
                     <table class="table table-hover table-striped table-bordered" id="tabInvestigation">
                         <thead id="ihead">
                             <tr>
@@ -1815,7 +1973,7 @@
                     </table>
                 </div>
                 <div class="row">
-                    <h4>Pharmacy</h4>
+                    <h2>Pharmacy</h2>
                     <table class="table table-hover table-striped table-bordered" id="tabPharmacy">
                         <thead id="ipharmacyhead">
                             <tr>
@@ -1829,8 +1987,8 @@
                     </table>
 
                 </div>
-                <div class="row">
-                    <div class="col-lg-12">
+                <div class="row" style="display:none;">
+                    <div class="col-lg-12" >
                         <h4>Over All Customer Satisfaction</h4>
                         <div id="chartOverallSatisfaction" style="height: 420px; width: 100%;"></div>
                     </div>
@@ -1946,7 +2104,7 @@
                         <div id="chartIPDSummary" style="height: 250px;"></div>
                     </div>
                 </div>
-              
+              <div class="row" style="height:90px !important;"></div>
                 <div class="row">                   
                     <div class="col-lg-6" style="text-align: center">
                         <h4>OPD By Department</h4>
@@ -1963,14 +2121,22 @@
                             <h4>Emergency Ward Bed Occupancy</h4>
                             <div id="chartEmergencyWard"></div>
                         </div>
+                        <div class="col-lg-6" style="text-align: center">
+                            <h4>Emergency Ward Bed Counts</h4>
+                            <div id="chartEmergencyWardCounts"></div>
+                        </div>
                     </div>
                         <div class="col-lg-6" style="text-align: center">
                             <h4>IPD Ward Bed Occupancy</h4>
                             <div id="chartIPDWard"></div>
                         </div>
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>IPD Ward Bed Counts</h4>
+                        <div id="chartIPDWardCounts"></div>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-6" style="text-align: center">
+                    <div class="col-lg-6" style="text-align: center;display:none">
                         <h4>Department Statistics</h4>
                         <div id="chartGetDeptPatientCount"></div>
                     </div>
@@ -1982,20 +2148,7 @@
                         <h4>Doctor Statistics</h4>
                         <div id="chartGetDocPatientCount"></div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="card shadow">
-                            <div class="card-header d-flex justify-content-center align-items-center  headercolor">
-                                <h4 class="card-title mb-0 fw-bold text-white">Top 5 Tests by Department
-                                </h4>
-                            </div>
-                            <div class="card-body">
-                                <div id="topTestsChartsContainer"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </div>           
                 <div class="row" style="display:none">
                     <div class="col-lg-12">
                         <div id="chartAreaWiseStatistics" style="height: 420px; width: 100%;"></div>
@@ -2004,6 +2157,19 @@
                 <div class="row" style="display:none">
                     <div class="col-lg-12">
                         <div id="chartProcdureStatistics" style="height: 420px; width: 100%;"></div>
+                    </div>
+                </div>            
+            </div>         
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header d-flex justify-content-center align-items-center  headercolor">
+                        <h4 class="card-title mb-0 fw-bold text-white">Top 5 Tests by Department
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="topTestsChartsContainer"></div>
                     </div>
                 </div>
             </div>
