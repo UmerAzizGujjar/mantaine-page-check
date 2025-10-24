@@ -3156,6 +3156,7 @@ namespace PMS
             public int PatientNo { get; set; }
             public int BedNo { get; set; }
             public string Full_Name { get; set; }
+            public DateTime? AdmissionDate { get; set; }
         }
         [WebMethod]
         public static string FillWardBeds(int WardID)
@@ -3186,11 +3187,15 @@ namespace PMS
                     {
                         b.PatientNo = (int)patient.Patient_No;
                         b.Full_Name = patient.Full_Name;
+                        b.AdmissionDate = (from ip in db.In_Patients
+                                           where ip.Patient_ID == patient.Patient_ID
+                                           select (DateTime?)ip.Admission_Date).FirstOrDefault();
                     }
                     else
                     {
                         b.PatientNo = 0;
-                        b.Full_Name = ""; 
+                        b.Full_Name = "";
+                        b.AdmissionDate = null;
                     }
 
                     bdsList.Add(b);

@@ -2401,18 +2401,37 @@
             PageMethods.FillWardBeds($('#ctl00_MainContent_ddlWard_No').find('option:selected')[0].value, function (res) {
                 var WardBeds = JSON.parse(res);
                 var rows = '';
+                debugger;
                 $.each(WardBeds, function (key, value) {
+                    let blinkClass = "";
+                    let admDate = ParseDate(value.AdmissionDate);
+
+                    if (admDate) {
+                        let hoursDiff = (new Date() - admDate) / (1000 * 60 * 60);
+                        if (hoursDiff > 8) {
+                            blinkClass = "blink";
+                        }
+                    }
+
                     if (value.PatientNo == 0) {
                         rows += '<tr> <td> ' + value.PatientNo + ' </td><td> <a href="#" onclick="SelectBed(' + value.WardID + ',' + value.BedNo + ')" style="color:Green"> ' + value.BedNo + ' </a> </td></tr>';
                     }
                     else {
-                        rows += '<tr> <td> ' + value.PatientNo + ' </td><td ><font color="red"> ' + value.BedNo + '</font></td></tr>';
+                        rows += '<tr> <td class="' + blinkClass + '">' + value.PatientNo + ' </td><td class="' + blinkClass + '"><font color="red"> ' + value.BedNo + '</font></td></tr>';
                     }
                 });
                 $('#tblWards tbody tr').remove();
                 $('#tblWards tbody').html(rows);
             });
         }
+
+        function ParseDate(dateString) {
+            if (dateString && dateString.startsWith("/Date(")) {
+                return new Date(parseInt(dateString.substr(6)));
+            }
+            return null;
+        }
+
 
         function FillWardBedsRefer_0() {
             PageMethods.FillWardBeds($('#ctl00_MainContent_ddlwards').find('option:selected')[0].value, function (res) {

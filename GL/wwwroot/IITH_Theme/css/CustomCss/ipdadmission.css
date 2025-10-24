@@ -99,7 +99,7 @@
 
 
     #tabs ul li a {
-        background-color: #438eb9  !important;
+        background-color: #438eb9 !important;
         color: white;
         background: none;
         border: none;
@@ -179,4 +179,15 @@
 
         .no-scrollbar::-webkit-scrollbar {
             display: none;
+        }
+
+
+        .blink {
+            animation: blink-animation 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
         }
