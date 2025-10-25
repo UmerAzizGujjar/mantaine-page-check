@@ -10700,4 +10700,9 @@
       <Column Name="TotalReceivedAmount" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_GetTotalIPDAdmitted" Method="sp_GetTotalIPDAdmitted">
+    <ElementType Name="sp_GetTotalIPDAdmittedResult">
+      <Column Name="Total_Admitted" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

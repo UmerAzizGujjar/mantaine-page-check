@@ -792,10 +792,10 @@ function AllowOPdEdit() {
 
 debugger;
 function CalculateDateOfBirth() {
-    var unit = $('#PrefixAge').val(); 
-    var amount = $('#txt_dob').val();
+    var Numbers = $('#PrefixAge').val(); 
+    var CalDob = $('#txt_dob').val();
 
-    if (!amount || isNaN(amount) || amount <= 0) {
+    if (!CalDob || isNaN(CalDob) || CalDob <= 0) {
         $('#txtAge_yearss').val('');
         return;
     }
@@ -803,12 +803,12 @@ function CalculateDateOfBirth() {
     var now = moment();
     var dob;
 
-    if (unit === "Year") {
-        dob = now.subtract(amount, 'years');
-    } else if (unit === "Month") {
-        dob = now.subtract(amount, 'months');
-    } else if (unit === "Day") {
-        dob = now.subtract(amount, 'days');
+    if (Numbers === "Year") {
+        dob = now.subtract(CalDob, 'years');
+    } else if (Numbers === "Month") {
+        dob = now.subtract(CalDob, 'months');
+    } else if (Numbers === "Day") {
+        dob = now.subtract(CalDob, 'days');
     } else {
         $('#txtAge_yearss').val('');
         return;

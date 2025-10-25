@@ -59,6 +59,16 @@ namespace PMS.Modules.Dashboards
         }
 
         [WebMethod]
+        public static string GetTotalIPDAdmitted()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = db.sp_GetTotalIPDAdmitted().FirstOrDefault();
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
         public static string GetAppointmentsOPDCount(string txt_sdate, string txt_edate)
         {
             try

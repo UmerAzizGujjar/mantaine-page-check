@@ -47,6 +47,7 @@
             LoadOPDDepartmentWiseWithCounts(date, date);
             LoadEmergencyWardBedCounts(date, date);
             LoadIPDWardBedCounts(date, date);
+            LoadTotalIPDAdmitted();
 
 
         });
@@ -1043,14 +1044,12 @@
 
 
         function LoadIPDAdmitDischarge(startdate, Enddate) {
-            var txt_sdate = startdate;
-            var txt_edate = Enddate;
             $.ajax({
                 type: "POST",
                 url: "CEODashBoardNew.aspx/GetIPDAdmitDischarge",
                 data: JSON.stringify({
-                    'txt_sdate': txt_sdate,
-                    'txt_edate': txt_edate,
+                    'txt_sdate': startdate,
+                    'txt_edate': Enddate
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -1058,15 +1057,13 @@
                 success: function (data) {
                     var parsedData = JSON.parse(data.d);
 
-                    var admitted = parsedData.Total_Admitted || 0;
+                    var admitted = parsedData.Still_Admitted || 0;
                     var discharged = parsedData.Discharged || 0;
-                    var stillAdmitted = parsedData.Still_Admitted || 0;
 
                     $('#lblIPDAdmitted').text(admitted);
-                    $('#lblIPDDischarged').text(discharged);
-                    $('#lblIPDStillAdmitted').text(stillAdmitted);
+                    $('#lblIPDDischarged').text(discharged); 
 
-                    renderIPDSummaryChart(stillAdmitted, admitted, discharged);
+                    renderIPDSummaryChart(admitted, discharged);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error in LoadIPDAdmitDischarge: " + error);
@@ -1074,7 +1071,22 @@
             });
         }
 
-
+        function LoadTotalIPDAdmitted() {
+            $.ajax({
+                type: "POST",
+                url: "CEODashBoardNew.aspx/GetTotalIPDAdmitted",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var parsedData = JSON.parse(data.d);
+                    var totalAdmitted = parsedData.Total_Admitted || 0;
+                    $('#lblIPDAdmittedTotal').text(totalAdmitted); 
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in LoadTotalIPDAdmitted: " + error);
+                }
+            });
+        }
 
         let DeptChart;
         function ChartfDeptPatientCount(startdate, Enddate) {
@@ -1310,14 +1322,14 @@
 
 
 
-        function renderIPDSummaryChart(stillAdmitted, admitted, discharged) {
-            const total = stillAdmitted + admitted + discharged;
+        function renderIPDSummaryChart(admitted, discharged) {
+            const total = admitted + discharged;
 
             const options = {
-                series: [stillAdmitted, admitted, discharged],
+                series: [admitted, discharged],
                 chart: { type: 'donut', height: 320 },
-                labels: ['Still Admitted', 'Admitted', 'Discharged'],
-                colors: ['#0078D7', '#00B894', '#8E44AD'],
+                labels: ['Admitted', 'Discharged'],
+                colors: ['#00B894', '#8E44AD'],
                 legend: {
                     position: 'bottom',
                     fontSize: '13px',
@@ -1830,7 +1842,7 @@
                 <div class="row" id="IPD_AdmitDischarge_Row">
                     <div class="col-lg-4 styling">
                         <div class="row">
-                            <span id="lblIPDStillAdmitted" style="color: #8e0016"></span>
+                            <span id="lblIPDAdmittedTotal" style="color: #8e0016"></span>
                         </div>
                         <div class="row">
                             <label style="color: #8e0016">Total Admitted</label>
