@@ -72,86 +72,97 @@
                 }
             });
         }
-        function formatDate(day, month, year) {
-            const formattedDay = day < 10 ? '0' + day : day;
-            const formattedMonth = month < 10 ? '0' + month : month;
-            return `${year}-${formattedMonth}-${formattedDay}`;
-        }
+      
         function generateRoster() {
-            const monthYearText = $('#Month_id option:selected').text(); 
-            const [monthText, yearText] = monthYearText.split('-'); 
-            const month = new Date(`${monthText} 1, 2000`).getMonth() + 1;          
-            const year = parseInt(yearText.trim()); 
+            const monthYearText = $('#Month_id option:selected').text();
+            const [monthText, yearText] = monthYearText.split('-');
+            const month = new Date(`${monthText} 1, 2000`).getMonth() + 1;
+            const year = parseInt(yearText.trim());
+
             function daysInMonth(month, year) {
                 return new Date(year, month, 0).getDate();
             }
+
             const daysInMonthCount = daysInMonth(month, year);
             const firstDayOfMonth = new Date(year, month - 1, 1);
             const firstDayWeekday = firstDayOfMonth.getDay();
             const daysInWeek = 7;
+
             const tbody = $('#dtShifts tbody');
             tbody.empty();
+
+    //        const $applyRow = $(`
+    //    <tr class="apply-all-row">
+    //        <td colspan="7" style="background:#f8f9fa; padding:8px;">
+    //            <strong>Apply to All Days:</strong> &nbsp;
+    //            <label>Time In:</label>
+    //            <input type="time" id="InTimeAll" style="width:120px; margin-right:10px;">
+    //            <label>Time Out:</label>
+    //            <input type="time" id="OutTimeAll" style="width:120px; margin-right:10px;">
+    //            <label>Slot:</label>
+    //            <input type="number" id="SlotAll" min="1" max="60" style="width:80px; margin-right:10px;">
+    //            <button type="button" id="btnApplyAll" class="btn btn-sm btn-primary">Apply to All</button>
+    //        </td>
+    //    </tr>
+    //`);
+
+    //        tbody.append($applyRow);
+
             let $currentRow = $('<tr>');
             for (let i = 0; i < firstDayWeekday; i++) {
                 $currentRow.append('<td></td>');
             }
+
             for (let day = 1; day <= daysInMonthCount; day++) {
+                const formattedDate = formatDate(day, month, year);
                 const Time_In_Id = 'Time_In' + day;
-                const Time_In_Name = 'Time_In' + day;
-                const dayLabels = 'Day' + day;
-                const formattedDate = formatDate(day, month, year);                
-                const dayLabel = $('<label>').attr('for', dayLabels).text(day);
-                const hiddenDate = $('<input>').attr({
-                    type: 'hidden',
-                    id: 'Date_' + day,
-                    name: 'Date_' + day,
-                    value: formattedDate
-                });
-                const Time_InLab = $('<label>').attr('for', Time_In_Id).text("Time In");
-                const Time_In = $('<input>').attr({
-                    type: 'time',
-                    id: Time_In_Id,
-                    name: Time_In_Name,
-                    style: 'width: 100%;'
-                });
                 const Time_Out_Id = 'Time_Out' + day;
-                const Time_Out_Name = 'Time_Out' + day;
-                const Time_OutLab = $('<label>').attr('for', Time_Out_Id).text("Time Out");
-                const Time_Out = $('<input>').attr({
-                    type: 'time',
-                    id: Time_Out_Id,
-                    name: Time_Out_Name,
-                    style: 'width: 100%;'
-                });
                 const Slot_Id = 'Slot' + day;
-                const Slot_Name = 'Slot' + day;
-                const Slot_Label = $('<label>').attr('for', Slot_Id).text("Slot");
-                const Slot = $('<input>').attr({
-                    type: 'number',
-                    id: Slot_Id,
-                    name: Slot_Name,
-                    min: 1,
-                    max: 60,
-                    style: 'width: 100%;'
-                });
+
                 const $cell = $('<td>');
-                $cell.append(hiddenDate);
-                $cell.append(dayLabel);
-                $cell.append($('<br>'));
-                $cell.append(Time_InLab).append($('<br>')).append(Time_In);
-                $cell.append($('<br>'));
-                $cell.append(Time_OutLab).append($('<br>')).append(Time_Out);
-                $cell.append($('<br>'));
-                $cell.append(Slot_Label).append($('<br>')).append(Slot);
+                $cell.append(`<input type="hidden" id="Date_${day}" name="Date_${day}" value="${formattedDate}">`);
+                $cell.append(`<label>${day}</label><br>`);
+                $cell.append(`<label>Time In</label><br><input type="time" id="${Time_In_Id}" style="width:100%;"><br>`);
+                $cell.append(`<label>Time Out</label><br><input type="time" id="${Time_Out_Id}" style="width:100%;"><br>`);
+                $cell.append(`<label>Slot</label><br><input type="number" id="${Slot_Id}" min="1" max="60" style="width:100%;">`);
+
                 $currentRow.append($cell);
+
                 if ((day + firstDayWeekday) % daysInWeek === 0 || day === daysInMonthCount) {
                     tbody.append($currentRow);
                     $currentRow = $('<tr>');
                 }
             }
+
             if ($currentRow.children().length > 0) {
                 tbody.append($currentRow);
             }
+
+            $(document).off('click', '#btnApplyAll').on('click', '#btnApplyAll', function () {
+                const inTimeAll = $('#InTimeAll').val();
+                const outTimeAll = $('#OutTimeAll').val();
+                const slotAll = $('#SlotAll').val();
+
+                for (let day = 1; day <= daysInMonthCount; day++) {
+                    if (inTimeAll) $('#Time_In' + day).val(inTimeAll);
+                    if (outTimeAll) $('#Time_Out' + day).val(outTimeAll);
+                    if (slotAll) $('#Slot' + day).val(slotAll);
+                }
+            });
+        }
+
+        function formatDate(day, month, year) {
+            const d = String(day).padStart(2, '0');
+            const m = String(month).padStart(2, '0');
+            return `${year}-${m}-${d}`;
+        }
+
+
+
+        function formatDate(day, month, year) {
+            const d = String(day).padStart(2, '0');
+            const m = String(month).padStart(2, '0');
+            return `${year}-${m}-${d}`;
         }
 
         function MonthChage() {
@@ -294,6 +305,31 @@
                                     <Select  id="ddlDoctor" name="ddlDoctor">
                                     </Select>
                                 </div>
+                            </div>
+                           
+                         <div class="col-lg-2 col-md-4 cols-m-6">
+                                <label  class="control-label">Time In</label>
+                                <div class="md-form md-outline form-sm">
+                               <input type="time" id="InTimeAll" />
+                                </div>
+                            </div>
+                           
+                            <div class="col-lg-2 col-md-4 cols-m-6">
+                                <label  class="control-label">Time Out</label>
+                                <div class="md-form md-outline form-sm">
+                               <input type="time" id="OutTimeAll" />
+                                </div>
+                            </div>
+                           
+                            <div class="col-lg-2 col-md-4 cols-m-6">
+                                <label  class="control-label">Slot</label>
+                                <div class="md-form md-outline form-sm">
+                               <input type="number" id="SlotAll" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6">
+                                <label></label>
+                                <input type="button" class="btn btn-primry" value="Apply to All"  id="btnApplyAll" />
                             </div>
                         </div>
                           <div id="roster" class="roster"></div>

@@ -106,7 +106,7 @@
                 },
                 "columns": [
                     { "data": "Voucher_ID", visible: false },
-                    { "data": "Voucher_No", "name": "Voucher_No", width: "12%" },
+                    { "data": "Voucher_No", "name": "Voucher_No", width: "7%" },
                     {
                         "data": "Voucher_Date",
                         "render": function (data, type, full) {
@@ -117,11 +117,11 @@
                         "data": "Creation_Time",
                         "render": function (data, type, full) {
                             return moment(full.Creation_Time).format('D-MMM-YYYY');
-                        }, width: "17%"
+                        }, width: "10%"
                     },
                     { "data": "Ref_Num", width: "13%" },
                     { "data": "Remarks", width: "25%" },
-                    { "data": "TotalDebtAmt", width: "13%" },
+                    { "data": "TotalDebtAmt", width: "11%" },
                     { "data": "Voucher_Status", width: "10%" },
                     { "data": "Created_By", width: "10%" },
                     { "data": "Approved_By", width: "10%" },
@@ -140,7 +140,7 @@
                             var result;
                             result = actionButtons;
                             return result;;
-                        }, width: "15%"
+                        }, width: "30%"
                     }
                 ],
                 "initComplete": function (settings, json) {

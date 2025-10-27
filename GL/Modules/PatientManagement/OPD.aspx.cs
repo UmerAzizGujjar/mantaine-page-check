@@ -764,7 +764,7 @@ namespace PMS.Modules.PatientManagement
                             pat.tokenNo = db.Patients.Count(p =>
                                 p.Created_Time.HasValue &&
                                 p.Created_Time.Value.Date == DateTime.Now.Date &&
-                                p.Patient_Main_Category == data.pat_category) + 1;
+                                p.Patient_Main_Category == data.Department) + 1;
                         }
                         else
                         {
