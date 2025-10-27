@@ -61,7 +61,9 @@
                 });
             }
             else {
-                LoadDetailDoctor();
+                //LoadDetailDoctor();
+                
+
             }
             
 
@@ -142,7 +144,20 @@
                 loadapptEdit(App_id);
 
             }
+            if (App_id == "") {
+                filldepartment();
+                $('#ddlsubdepartment').on('change', function () {
+                    debugger;
+                    var dep = $('#ddlsubdepartment').val();
+                    LoadDetailDoctor(dep)
+                    setTimeout(function () {
+                        $('#ddlServices').focus();
+                    }, 5);
 
+
+
+                });
+            }
 
           
 
@@ -159,7 +174,7 @@
                     GetAppNoByDoctor();
                 }
 
-                GetSubDepartmentByDoctor(doctor_id);
+                //GetSubDepartmentByDoctor(doctor_id);
                 LoadPage();
 
                 setTimeout(function () {
@@ -180,17 +195,7 @@
 
 
             });
-            $('#ddlsubdepartment').on('change', function () {
-                debugger;
 
-
-                setTimeout(function () {
-                    $('#ddlServices').focus();
-                }, 5);
-
-
-
-            });
             $('#ddlServices').on('change', function () {
                 debugger;
 
@@ -367,19 +372,19 @@
             });
         }
 
-        function GetSubDepartmentByDoctor(doctor_Id) {
-            PageMethods.GetSubDepartmentByDoctor(doctor_Id, function (data) {
-                var options = '';
-                $.each(JSON.parse(data), function (key, value) {
-                    options += '<option value="' + value.Department + '" >' + value.Departments + '</option>';
-                });
-                $('#ddlsubdepartment').html(options);
-                $('#ddlsubdepartment').select2();
-            },
-                function (error) {
-                    alert(error.get_message());
-                });
-        }
+        //function GetSubDepartmentByDoctor(doctor_Id) {
+        //    PageMethods.GetSubDepartmentByDoctor(doctor_Id, function (data) {
+        //        var options = '';
+        //        $.each(JSON.parse(data), function (key, value) {
+        //            options += '<option value="' + value.Department + '" >' + value.Departments + '</option>';
+        //        });
+        //        $('#ddlsubdepartment').html(options);
+        //        $('#ddlsubdepartment').select2();
+        //    },
+        //        function (error) {
+        //            alert(error.get_message());
+        //        });
+        //}
         //Print
         function appointmentPatient_Print() {
             debugger;
@@ -1003,7 +1008,6 @@
                         text: data.doctor_name
                     }))
                     .val(data.Consultant_ID)
-                    .prop('disabled', true)
                     .trigger('change')
                     .select2();
 
@@ -1035,9 +1039,11 @@
                         text: data.Department_name
                     }))
                     .val(data.Sub_Department)
-                    .prop('disabled', true)
+                    .prop('disabled', false)
                     .trigger('change')
                     .select2();
+
+               // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
 
                     $('#ddlServices').val(data.Item_Id).change();
 
@@ -1068,7 +1074,7 @@
                         value: data.Consultant_ID,
                         text: data.doctor_name
                     })
-                ).attr('disabled', true);
+                ).attr('disabled', false);
               //  $('#ddl_colstnt').val(data.Consultant_ID).change();
                 $('#txt_ID').val(data.Appointment_ID);
                 $('#txt_pt_name').val(data.Patient_Name);
@@ -1086,12 +1092,13 @@
                 date = moment(data.app_date).format('LL');
                 $('#txt_date').val(date);
                 $('#txt_date').attr('readonly', true);
+               // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
                 $('#ddlsubdepartment').html(
                     $('<option>', {
                         value: data.Sub_Department,
                         text: data.Department_name
                     })
-                ).attr('disabled', true);
+                ).attr('disabled', false);
                 setTimeout(function () {
                    // $('#ddlsubdepartment').val(data.Sub_Department).change();
                     $('#ddlServices').val(data.Item_Id).change();
@@ -1332,10 +1339,10 @@
         }
 
 
-        function LoadDetailDoctor() {
+        function LoadDetailDoctor(dep) {
             debugger;
             var options = '<option value="0">Select Doctor</option>';
-            PageMethods.GetDoctors(function (data) {
+            PageMethods.GetDoctors(dep ,function (data) {
                 $.each(JSON.parse(data), function (key, value) {
 
                     if (key >= 0) {
@@ -1770,13 +1777,13 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <label>Consultant</label>
-                    <select class="ddldoc form-control" id="ddl_colstnt" disabled>
+                    <select class="ddldoc form-control" id="ddl_colstnt" >
                         <option></option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <label style="">Department</label>
-                    <select style="border-radius: 5px; height: 29px;" class="form-control ddldoc" id="ddlsubdepartment" disabled>
+                    <select style="border-radius: 5px; height: 29px;" class="form-control ddldoc" id="ddlsubdepartment" >
                         <option></option>
                     </select>
                 </div>
