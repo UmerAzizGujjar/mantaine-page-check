@@ -66,7 +66,6 @@
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%" },
                     { "data": "Full_Name", "width": "18%", "orderable": false },
                     { "data": "Father_Name", "width": "18%", "orderable": false },
-                    { "data": "Department", "width": "18%", "orderable": false },
                     {
                         "data": "Admission_Date", "name": "Admission_Date",
                         "render": function (data, type, full) {
@@ -90,6 +89,7 @@
                         "width": "10%"
                     },
 
+                    { "data": "AdmitDays", "width": "18%", "orderable": false },
 
                     {
                         render: function (data, type, full) {
@@ -170,9 +170,9 @@
                                     <th>MR No.</th>
                                     <th>Patient Name</th>
                                     <th>Father/Husband Name</th>
-                                    <th>Department</th>
                                     <th>Admission Date</th>
                                     <th>Discharge Date</th>
+                                    <th>No Of Days</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

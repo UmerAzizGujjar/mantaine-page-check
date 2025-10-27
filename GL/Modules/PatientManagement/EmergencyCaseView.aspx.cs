@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Linq.SqlClient;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -114,7 +115,8 @@ namespace PMS
                                       Father_Name = p.Father_Name,
                                       Department =  EP.Department,
                                       Discharge_On = EP.Discharge_On,
-                                  };
+                                      AdmitDays = SqlMethods.DateDiffDay(EP.Admission_Date, DateTime.Now)
+                                        };
 
                     var FilteredCount = EmergencyCase.Count();
                     switch (sortColumn)
