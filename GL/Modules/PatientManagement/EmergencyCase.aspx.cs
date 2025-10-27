@@ -4408,6 +4408,8 @@ namespace PMS
             public int WardID { get; set; }
             public int PatientNo { get; set; }
             public int BedNo { get; set; }
+
+            public DateTime? AdmissionDate { get; set; }
         }
         [WebMethod]
         public static string FillWardBeds(int WardID)
@@ -4426,6 +4428,26 @@ namespace PMS
                     var patID = (from p in db.Ward_Allocations
                                  where p.Bed_No_Assigned == (int)(i) && p.Ward_ID == WardID && p.IsDischarge == false
                                  select p.Patient_ID).FirstOrDefault();
+
+                    DateTime? admDate = null;
+
+                    if (patID != null)
+                    {
+                        admDate = db.Emergency_Patients
+                                   .Where(e => e.Patient_ID == patID)
+                                   .Select(e => e.Admission_Date)
+                                   .FirstOrDefault();
+
+                        if (admDate == null)
+                        {
+                            admDate = db.Reg_patients
+                                       .Where(r => r.pat_id == patID)
+                                       .Select(r => r.Created_time)  
+                                       .FirstOrDefault();
+                        }
+                    }
+
+
                     if (patID == null)
                     {
                         patID = 0;
@@ -4445,6 +4467,7 @@ namespace PMS
                     b.BedNo = i;
                     b.PatientNo = (int)patID;
                     b.WardID = WardID;
+                    b.AdmissionDate = admDate;
                     bdsList.Add(b);
                 }
             }

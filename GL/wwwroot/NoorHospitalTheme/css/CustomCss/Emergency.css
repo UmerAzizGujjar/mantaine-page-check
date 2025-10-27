@@ -406,3 +406,15 @@ div.token-input-dropdown {
 
 
 
+
+
+
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}

@@ -2401,18 +2401,37 @@
             PageMethods.FillWardBeds($('#ctl00_MainContent_ddlWard_No').find('option:selected')[0].value, function (res) {
                 var WardBeds = JSON.parse(res);
                 var rows = '';
+                debugger;
                 $.each(WardBeds, function (key, value) {
+                    let blinkClass = "";
+                    let admDate = ParseDate(value.AdmissionDate);
+
+                    if (admDate) {
+                        let hoursDiff = (new Date() - admDate) / (1000 * 60 * 60);
+                        if (hoursDiff > 8) {
+                            blinkClass = "blink";
+                        }
+                    }
+
                     if (value.PatientNo == 0) {
                         rows += '<tr> <td> ' + value.PatientNo + ' </td><td> <a href="#" onclick="SelectBed(' + value.WardID + ',' + value.BedNo + ')" style="color:Green"> ' + value.BedNo + ' </a> </td></tr>';
                     }
                     else {
-                        rows += '<tr> <td> ' + value.PatientNo + ' </td><td ><font color="red"> ' + value.BedNo + '</font></td></tr>';
+                        rows += '<tr> <td class="' + blinkClass + '">' + value.PatientNo + ' </td><td class="' + blinkClass + '"><font color="red"> ' + value.BedNo + '</font></td></tr>';
                     }
                 });
                 $('#tblWards tbody tr').remove();
                 $('#tblWards tbody').html(rows);
             });
         }
+
+        function ParseDate(dateString) {
+            if (dateString && dateString.startsWith("/Date(")) {
+                return new Date(parseInt(dateString.substr(6)));
+            }
+            return null;
+        }
+
 
         function FillWardBedsRefer_0() {
             PageMethods.FillWardBeds($('#ctl00_MainContent_ddlwards').find('option:selected')[0].value, function (res) {
@@ -3429,7 +3448,10 @@
                alert("An error occurred while checking patient status.");
            }
        });
-   }
+        }
+
+        
+
         debugger;
         function PrintoutPatient() {
             debugger;
@@ -3437,11 +3459,59 @@
             var url = '../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + Emergency_ID;
             window.open(url,'_blank');
         }
-        function SaveInPatientAllRecord() {
+        function SaveInPatientAllRecord() { 
+
+            if (!ValidateDiscountFields()) {
+                return false;
+            }
 
             $('#loadingimage').show();
             $("#btnSave").attr("disabled", "disabled");
             CheckExistInOutPatient();
+
+            
+
+        }
+
+        function ValidateDiscountFields() {
+            var discount = $('#ctl00_MainContent_txtDiscount').val().trim();
+            var remarks = $('#ctl00_MainContent_txt_remarks').val().trim();
+            var fileUpload = $('#ctl00_MainContent_file_upload')[0].files.length;
+
+            if (discount !== "" && parseFloat(discount) > 0) {
+                if (remarks === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please enter Remarks because Discount is applied.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    $('#ctl00_MainContent_txt_remarks').focus();
+                    return false;
+                }
+                if (fileUpload === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please attach a file because Discount is applied.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
+            }
+            return true;
         }
 
         function LoadHistory() {
@@ -6466,14 +6536,14 @@
                  <asp:TextBox ID="txt_remarks"  runat="server" ></asp:TextBox>
             </div>
              <div class="col-lg-1 col-md-4 col-sm-6"></div>
-     <div class="file-upload-wrapper">
-    <asp:FileUpload ID="file_upload" runat="server" CssClass="form-control form-control-sm" style="flex: 1; min-width: 120px;" />
-    <asp:HyperLink ID="hlExistingFile" runat="server" 
-        Text="View Attached File" 
-        Target="_blank" 
-        Visible="false" 
-        CssClass="btn btn-sm btn-outline-secondary" />
-</div>
+            <div class="file-upload-wrapper">
+                <asp:FileUpload ID="file_upload" runat="server" CssClass="form-control form-control-sm" Style="flex: 1; min-width: 120px;" />
+                <asp:HyperLink ID="hlExistingFile" runat="server"
+                    Text="View Attached File"
+                    Target="_blank"
+                    Visible="false"
+                    CssClass="btn btn-sm btn-outline-secondary" />
+            </div>
         </div>
         <div class="row">
       <div class="col-lg-9 col-md-12 col-sm-2">

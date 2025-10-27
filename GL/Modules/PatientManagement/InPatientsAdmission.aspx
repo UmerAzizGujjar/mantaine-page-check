@@ -2258,11 +2258,20 @@
                 var WardBeds = JSON.parse(res);
                 var rows = '';
                 $.each(WardBeds, function (key, value) {
+                    let blinkClass = "";
+
+                    if (value.AdmissionDate) {
+                        let admDate = new Date(parseInt(value.AdmissionDate.replace('/Date(', '').replace(')/', '')));
+                        let diffHours = (new Date() - admDate) / (1000 * 60 * 60);
+                        if (diffHours > 240) {
+                            blinkClass = "blink";
+                        }
+                    }
                     if (value.PatientNo == 0) {
                         rows += '<tr> <td> ' + value.PatientNo + ' </td><td> <a  onclick="SelectBed(' + value.WardID + ',' + value.BedNo + ')" style="color:Green"> ' + value.BedNo + ' </a> </td></tr>';
                     }
                     else {
-                        rows += '<tr> <td>' + value.PatientNo + ' - ' + value.Full_Name + '</td><td><font color="red">' + value.BedNo + '</font></td></tr>';
+                        rows += '<tr> <td class="' + blinkClass + '">' + value.PatientNo + ' - ' + value.Full_Name + '</td><td class="' + blinkClass + '"><font color="red">' + value.BedNo + '</font></td></tr>';
                     }
                 });
                 $('#tblWards tbody tr').remove();

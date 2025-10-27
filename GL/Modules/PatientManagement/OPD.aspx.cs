@@ -934,16 +934,59 @@ namespace PMS.Modules.PatientManagement
                 {
                     DateTime dob = patientRecord.DOB.Value;
                     DateTime today = DateTime.Today;
-                    int calculatedAge = today.Year - dob.Year;
-                    if (dob > today.AddYears(-calculatedAge))
-                        calculatedAge--;
-                    string currentAgeStr = calculatedAge.ToString();
-                    if (patientRecord.Age_years != currentAgeStr)
+
+                    int years = today.Year - dob.Year;
+                    int months = today.Month - dob.Month;
+                    int days = today.Day - dob.Day;
+                    if (days < 0)
                     {
-                        patientRecord.Age_years = currentAgeStr;
+                        months--;
+                        days += DateTime.DaysInMonth(today.Year, (today.Month == 1 ? 12 : today.Month - 1));
+                    }
+                    if (months < 0)
+                    {
+                        years--;
+                        months += 12;
+                    }
+                    string formattedAge = "";
+                    if (years > 0)
+                    {
+                        formattedAge = $"{years}Y";
+                        if (months > 0) formattedAge += $" {months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else if (months > 0)
+                    {
+                        formattedAge = $"{months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else
+                    {
+                        formattedAge = $"{days}D";
+                    }
+
+                    if (patientRecord.Age_years != formattedAge)
+                    {
+                        patientRecord.Age_years = formattedAge;
                         db.SubmitChanges();
                     }
                 }
+
+                //Old Code for DOB
+                //if (patientRecord.DOB.HasValue)
+                //{
+                //    DateTime dob = patientRecord.DOB.Value;
+                //    DateTime today = DateTime.Today;
+                //    int calculatedAge = today.Year - dob.Year;
+                //    if (dob > today.AddYears(-calculatedAge))
+                //        calculatedAge--;
+                //    string currentAgeStr = calculatedAge.ToString();
+                //    if (patientRecord.Age_years != currentAgeStr)
+                //    {
+                //        patientRecord.Age_years = currentAgeStr;
+                //        db.SubmitChanges();
+                //    }
+                //}
                 int numberOfDaysLatest = 0;
                 int numberOfDaysSecondLatest = 0;
                 var opd_time = (from pt in db.Patients

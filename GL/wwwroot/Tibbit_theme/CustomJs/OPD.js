@@ -792,40 +792,42 @@ function AllowOPdEdit() {
 
 debugger;
 function CalculateDateOfBirth() {
-    debugger;
+    var Numbers = $('#PrefixAge').val(); 
+    var CalDob = $('#txt_dob').val();
 
-    var now = moment();
-    var value = $('#txt_dob').val(); 
-    var type = $('#PrefixAge').val();
-
-    if (!value || isNaN(value)) {
-        alert("Please enter a valid number.");
+    if (!CalDob || isNaN(CalDob) || CalDob <= 0) {
+        $('#txtAge_yearss').val('');
         return;
     }
 
-    var calculateDate;
+    var now = moment();
+    var dob;
 
-    if (type === "Year") {
-        calculateDate = now.clone().subtract(value, 'years');
-    } else if (type === "Month") {
-        calculateDate = now.clone().subtract(value, 'months');
-    } else if (type === "Day") {
-        calculateDate = now.clone().subtract(value, 'days');
+    if (Numbers === "Year") {
+        dob = now.subtract(CalDob, 'years');
+    } else if (Numbers === "Month") {
+        dob = now.subtract(CalDob, 'months');
+    } else if (Numbers === "Day") {
+        dob = now.subtract(CalDob, 'days');
+    } else {
+        $('#txtAge_yearss').val('');
+        return;
     }
 
-    var finalDate = calculateDate.format("DD/MM/YYYY");
+    var finalDate = dob.format("DD/MM/YYYY");
+
     var $datepicker = $('#txtAge_yearss');
+    if (!$datepicker.hasClass('hasDatepicker')) {
+        $datepicker.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0",
+            dateFormat: "dd/mm/yy"
+        });
+    }
 
-    $datepicker.datepicker({
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-50:+50",
-        dateFormat: "dd/mm/yy"
-    });
+    $datepicker.datepicker('setDate', dob.toDate());
 
-    $datepicker.datepicker('setDate', finalDate);
-
-    $("#txtAge_yearss").mask("99/99/9999");
 }
 
 function fillmrno() {

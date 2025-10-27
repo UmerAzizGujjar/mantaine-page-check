@@ -4774,6 +4774,13 @@ namespace PMS
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
             return ((ISingleResult<sp_GetPharmacyCountsResult>)(result.ReturnValue));
         }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetTotalIPDAdmitted")]
+        public ISingleResult<sp_GetTotalIPDAdmittedResult> sp_GetTotalIPDAdmitted()
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+            return ((ISingleResult<sp_GetTotalIPDAdmittedResult>)(result.ReturnValue));
+        }
     }
 
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Ar_Customers")]
@@ -202514,6 +202521,32 @@ namespace PMS
                 if ((this._TotalReceivedAmount != value))
                 {
                     this._TotalReceivedAmount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetTotalIPDAdmittedResult
+    {
+
+        private System.Nullable<int> _Total_Admitted;
+
+        public sp_GetTotalIPDAdmittedResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Admitted", DbType = "Int")]
+        public System.Nullable<int> Total_Admitted
+        {
+            get
+            {
+                return this._Total_Admitted;
+            }
+            set
+            {
+                if ((this._Total_Admitted != value))
+                {
+                    this._Total_Admitted = value;
                 }
             }
         }
