@@ -143,8 +143,13 @@
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#ctl00_MainContent_txtAdustment_date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#ctl00_MainContent_txtExpiredate").datepicker({dateFormat: 'dd M yy',readOnly: true});
-           
+           // $("#ctl00_MainContent_txtExpiredate").datepicker({dateFormat: 'dd M yy',readOnly: true});
+            $("#ctl00_MainContent_txtExpiredate").datepicker({
+                dateFormat: 'dd M yy',
+                changeMonth: true,   // Enables month dropdown
+                changeYear: true,    // Enables year dropdown
+                yearRange: "1900:2100" // (optional) restricts the range of years
+            });
             window.onunload = refreshParent;
             function refreshParent() {
             }
@@ -386,9 +391,9 @@
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <asp:Label Text="Expire Date" runat="server" ID="Label1" />
-                <asp:TextBox runat="server" ID="txtExpiredate" />
+                <asp:TextBox runat="server" ID="txtExpiredate" readonly/>
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ErrorMessage="Date is required."
-                    ControlToValidate="txtExpiredate" runat="server" SetFocusOnError="true" Display="Dynamic" InitialValue="0" />
+                    ControlToValidate="txtExpiredate" runat="server" SetFocusOnError="true"  Display="Dynamic" InitialValue="0" />
             </div>
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <asp:Label Text="Quantity" runat="server" ID="Label4" />
