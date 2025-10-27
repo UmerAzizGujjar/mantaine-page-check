@@ -807,46 +807,178 @@
             window.location.href = "SampleCollectionFrom.aspx";
         }
         function SaveTest() {
-            debugger;
-            var cbEmployee = document.getElementById("Emp_Name");
-            var employeeID = cbEmployee.options[cbEmployee.selectedIndex].value;
-            debugger;
-            var collectedDate = $("#txtSampleCollected_Date").val();
-            var sampleStatus = $("#ddlSample_Status   option:selected").val();
-            var ddlPat_type = $("#ddlPat_type").val();
 
-            if (ddlPat_type == 0 || ddlPat_type == "0" || ddlPat_type == '0' || ddlPat_type == null) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please Select Patient Type',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-
-                return;
-            }
-
-            var mrNo = $("#hdPatientID").val();
-            mrNo = mrNo.trim();
-            var length = CheckedTest.length;
-            var saveCheckedTest = CheckedTest;
-            var rem = CollectedSampleRemarksArray();
-
-
-            debugger;
-            if (collectedDate != "" && mrNo != "") {
+            var val = document.getElementById("hdnDuplicateCheck").value;
+            var returnVal = false;
+            if (val == "0")//no duplicate
+            {
+                document.getElementById("hdnDuplicateCheck").value = "1";
+                var cbEmployee = document.getElementById("Emp_Name");
+                var employeeID = cbEmployee.options[cbEmployee.selectedIndex].value;
                 debugger;
-                if (length == 0) {
+                var collectedDate = $("#txtSampleCollected_Date").val();
+                var sampleStatus = $("#ddlSample_Status   option:selected").val();
+                var ddlPat_type = $("#ddlPat_type").val();
+
+                if (ddlPat_type == 0 || ddlPat_type == "0" || ddlPat_type == '0' || ddlPat_type == null) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: 'Select at least one test',
+                        text: 'Please Select Patient Type',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    return;
+                }
+
+                var mrNo = $("#hdPatientID").val();
+                mrNo = mrNo.trim();
+                var length = CheckedTest.length;
+                var saveCheckedTest = CheckedTest;
+                var rem = CollectedSampleRemarksArray();
+
+
+                debugger;
+                if (collectedDate != "" && mrNo != "") {
+                    debugger;
+                    if (length == 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Select at least one test',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                    }
+                    else {
+                        debugger;
+                        if ($('#btSnave').val() == 'Save & Print') {
+                            debugger;
+                            $.ajax({
+                                type: "POST",
+                                url: "SampleCollectionFrom.aspx/SaveTest",
+                                data: JSON.stringify({
+                                    "CollectedDate": collectedDate,
+                                    "sampleStatus": sampleStatus,
+                                    "PatientID": mrNo,
+                                    "SaveCheckedTest": saveCheckedTest,
+                                    "EmployeeID": employeeID,
+                                    "rem": rem,
+                                    "ddlPat_type": ddlPat_type
+
+
+                                }),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+
+                                success: function (response) {
+                                    debugger;
+                                    var splitted = response.d.split('-')[0];
+                                    var id = response.d.split('-')[1];
+                                    if (splitted == "Save") {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success!',
+                                            text: 'Save successfully',
+                                            showConfirmButton: false,
+                                            timer: 2500,
+                                            customClass: {
+                                                popup: 'swal-big-popup',
+                                                title: 'swal-big-title',
+                                                htmlContainer: 'swal-big-text'
+                                            }
+                                        });
+
+                                        debugger;
+                                        TestDetail(id)
+                                        window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
+                                        window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+                                    }
+                                    else {
+                                        alert(response.d);
+                                    }
+                                },
+                                failure: function (response) {
+                                    debugger;
+                                    alert("In failure method");
+                                }
+                            });
+                        }
+                        if ($('#btSnave').val() == 'Update') {
+                            debugger;
+                            var sampleID = $("#hdSample_ID").val();
+                            $.ajax({
+                                type: "POST",
+                                url: "SampleCollectionFrom.aspx/UpdateTest",
+                                data: JSON.stringify({
+                                    "CollectedDate": collectedDate,
+                                    "sampleStatus": sampleStatus,
+
+                                    "SaveCheckedTest": saveCheckedTest,
+                                    "EmployeeID": employeeID,
+                                    "SampleID": sampleID,
+                                    "rem": rem,
+                                    "ddlPat_type": ddlPat_type
+                                }),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+
+                                success: function (response) {
+                                    debugger;
+                                    if (response.d == "Update") {
+                                        TestDetail(sampleID);
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success!',
+                                            text: 'Updated successfully',
+                                            showConfirmButton: false,
+                                            timer: 2500,
+                                            customClass: {
+                                                popup: 'swal-big-popup',
+                                                title: 'swal-big-title',
+                                                htmlContainer: 'swal-big-text'
+                                            }
+                                        });
+
+                                        debugger;
+                                        window.location = "SampleCollectionFrom.aspx?sampleID=" + SampleId;
+
+                                        $("#txtMR_No").tokenInput("clear");
+                                        $('#CollectedSample tbody tr').remove();
+                                        CheckedTest = [];
+                                        GetNextSampleNo();
+                                        GetNextSampleSequence();
+                                    }
+                                    else {
+                                        alert(response.d);
+                                    }
+                                },
+                                failure: function (response) {
+                                    debugger;
+                                    alert("In failure method");
+                                }
+                            });
+                        }
+                    }
+
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'MR No. missing',
                         showConfirmButton: false,
                         timer: 2000,
                         customClass: {
@@ -857,131 +989,10 @@
                     });
 
                 }
-                else {
-                    debugger;
-                    if ($('#btSnave').val() == 'Save & Print') {
-                        debugger;
-                        $.ajax({
-                            type: "POST",
-                            url: "SampleCollectionFrom.aspx/SaveTest",
-                            data: JSON.stringify({
-                                "CollectedDate": collectedDate,
-                                "sampleStatus": sampleStatus,
-                                "PatientID": mrNo,
-                                "SaveCheckedTest": saveCheckedTest,
-                                "EmployeeID": employeeID,
-                                "rem": rem,
-                                "ddlPat_type": ddlPat_type
-
-
-                            }),
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-
-                            success: function (response) {
-                                debugger;
-                                var splitted = response.d.split('-')[0];
-                                var id = response.d.split('-')[1];
-                                if (splitted == "Save") {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Success!',
-                                        text: 'Save successfully',
-                                        showConfirmButton: false,
-                                        timer: 2500,
-                                        customClass: {
-                                            popup: 'swal-big-popup',
-                                            title: 'swal-big-title',
-                                            htmlContainer: 'swal-big-text'
-                                        }
-                                    });
-
-                                    debugger;
-                                    TestDetail(id)
-                                    window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
-                                    window.location = "SampleCollectionFrom.aspx?sampleID=" + id;                                   
-                                }
-                                else {
-                                    alert(response.d);
-                                }
-                            },
-                            failure: function (response) {
-                                debugger;
-                                alert("In failure method");
-                            }
-                        });
-                    }
-                    if ($('#btSnave').val() == 'Update') {
-                        debugger;
-                        var sampleID = $("#hdSample_ID").val();
-                        $.ajax({
-                            type: "POST",
-                            url: "SampleCollectionFrom.aspx/UpdateTest",
-                            data: JSON.stringify({
-                                "CollectedDate": collectedDate,
-                                "sampleStatus": sampleStatus,
-
-                                "SaveCheckedTest": saveCheckedTest,
-                                "EmployeeID": employeeID,
-                                "SampleID": sampleID,
-                                "rem": rem,
-                                "ddlPat_type": ddlPat_type
-                            }),
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-
-                            success: function (response) {
-                                debugger;
-                                if (response.d == "Update") {
-                                    TestDetail(sampleID);
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Success!',
-                                        text: 'Updated successfully',
-                                        showConfirmButton: false,
-                                        timer: 2500,
-                                        customClass: {
-                                            popup: 'swal-big-popup',
-                                            title: 'swal-big-title',
-                                            htmlContainer: 'swal-big-text'
-                                        }
-                                    });
-
-                                    debugger;
-                                    window.location = "SampleCollectionFrom.aspx?sampleID=" + SampleId;
-
-                                    $("#txtMR_No").tokenInput("clear");
-                                    $('#CollectedSample tbody tr').remove();
-                                    CheckedTest = [];
-                                    GetNextSampleNo();
-                                    GetNextSampleSequence();
-                                }
-                                else {
-                                    alert(response.d);
-                                }
-                            },
-                            failure: function (response) {
-                                debugger;
-                                alert("In failure method");
-                            }
-                        });
-                    }
-                }
             }
             else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'MR No. missing',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-
+                alert("Processing Please Wait");
+                returnVal = false;
             }
         }
         function TestDetail(id) {
@@ -1345,6 +1356,7 @@
                     <div class="row">
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btSnave" class="btn btn-primry" type="button" value="Save & Print" onclick="SaveTest()" />
+                    <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnList" class="btn-gray" type="button" value="View" onclick="ListView()" />
