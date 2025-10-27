@@ -493,11 +493,12 @@ on DM.Rouster_id equals DD.Rouster_id
         }
 
         [WebMethod]
-        public static string GetDoctors()
+        public static string GetDoctors(string dep)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             List<HR_Employee> emps = (from emp in db.HR_Employees
                                       where emp.IsDoctor == true
+                                      && emp.Department == dep
                                       select emp).ToList();
 
             return (new JavaScriptSerializer()).Serialize(emps);
