@@ -18,7 +18,7 @@
          }
 
         function LoadPage() {
-            $("#tblResult").DataTable({
+            var table = $("#tblResult").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
@@ -31,7 +31,7 @@
                             window.location = 'EmergencyCase.aspx';
                         }
                     },
-                    'copy', 'excel', 'pdf',
+                    'copy', 'excel', 'pdf',                 
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
@@ -44,7 +44,8 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            filterStatus: $('#filterStatus').val()
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -66,7 +67,6 @@
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%" },
                     { "data": "Full_Name", "width": "18%", "orderable": false },
                     { "data": "Father_Name", "width": "18%", "orderable": false },
-                    { "data": "Department", "width": "18%", "orderable": false },
                     {
                         "data": "Admission_Date", "name": "Admission_Date",
                         "render": function (data, type, full) {
@@ -90,7 +90,20 @@
                         "width": "10%"
                     },
 
-
+                    { "data": "AdmitDays", "width": "10%", "orderable": false },
+                    {
+                        "data": "Patinet_Condition","width": "10%", "orderable": false, "render": function (data, type, full) {
+                            if (data === "Urgent") {
+                                return "Short Stay";
+                            }
+                            else if (data === "Non Urgent") {
+                                return "OPD";
+                            }
+                            else {
+                                return data;
+                            }
+                        }
+                    },
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -106,6 +119,15 @@
                     }
 
                 ],
+                "createdRow": function (row, data, dataIndex) {
+                    if (data.AdmitDays >= 1 && (data.Discharge_ON == null || data.Discharge_ON === "")) {
+                        $(row).css({
+                            "background-color": "#f8d7da",
+                           // "color": "#721c24",
+                            "font-weight": "bold"
+                        });
+                    }
+                },
                 "initComplete": function (settings, json) {
                     var lengthContainer = document.querySelector('#tblResult_length');
                     var lengthDropdown = document.querySelector('#tblResult_length select');
@@ -127,6 +149,10 @@
                         console.log("Length dropdown, label, or container not found");
                     }
                 }
+
+            });
+            $('#filterStatus').on('change', function () {
+                table.ajax.reload();
             });
         }
 
@@ -158,6 +184,17 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="row">
+        <div class="col-lg-1 col-md-4 col-sm-6">
+    <select id="filterStatus" class="form-control" >
+        <option value="">All</option>
+        <option value="Admitted">Admitted</option>
+        <option value="Discharged">Discharged</option>
+    </select>
+            </div>
+        </div>
+    <div class="row">
+         <div class="col-lg-12 col-md-12 col-sm-12">
     <table style="width: 100%;">
         <tr>
             <td>
@@ -170,9 +207,10 @@
                                     <th>MR No.</th>
                                     <th>Patient Name</th>
                                     <th>Father/Husband Name</th>
-                                    <th>Department</th>
                                     <th>Admission Date</th>
                                     <th>Discharge Date</th>
+                                    <th>No Of Days</th>
+                                    <th>Patient Type</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -184,4 +222,6 @@
             </td>
         </tr>
     </table>
+        </div>
+        </div>
 </asp:Content>

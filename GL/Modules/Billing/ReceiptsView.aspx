@@ -165,28 +165,104 @@
 
         }
         function cancelPatient(Receipt_ID, Receipt_No) {
-            if (!confirm('Are you sure you want to Cancel this Receipt: ' + Receipt_No)) {
-                return;
-            }
-
-            var reason = prompt("Enter reason for cancellation (optional):");
-
-            PageMethods.CancelPatient(Receipt_ID, reason, function (msg) {
-                if (msg === "Allowdlt") {
-                    alert('You have no right to Cancel.');
-                } else if (msg === "success") {
-                    var table = $('#tblResult').DataTable();
-                    table.rows(function (idx, data, node) {
-                        return data.Receipt_ID == Receipt_ID;
-                    }).remove().draw(false);
-                } else {
-                    alert('Error in Cancel Receipt: ' + msg);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'Do you want to cancel this Receipt: ' + Receipt_No + ' ?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Cancel',
+                cancelButtonText: 'No',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
                 }
-            }, function (error) {
-                console.error("Cancel failed:", error);
-                alert('An error occurred while canceling the receipt.');
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Swal.fire({
+                        title: 'Enter Reason (optional)',
+                        input: 'text',
+                        inputPlaceholder: 'Enter reason...',
+                        showCancelButton: true,
+                        confirmButtonText: 'Submit',
+                        cancelButtonText: 'Skip',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    }).then((reasonResult) => {
+
+                        var reason = reasonResult.isDismissed ? "" : (reasonResult.value || "");
+
+                        PageMethods.CancelPatient(Receipt_ID, reason, function (msg) {
+                            if (msg === "Allowdlt") {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'You have no right to Cancel.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            } else if (msg === "success") {
+                                var table = $('#tblResult').DataTable();
+                                table.rows(function (idx, data, node) {
+                                    return data.Receipt_ID == Receipt_ID;
+                                }).remove().draw(false);
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Receipt cancelled successfully.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Error in Cancel Receipt: ' + msg,
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            }
+                        }, function (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'An error occurred while canceling the receipt.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        });
+                    });
+                }
             });
         }
+
+
+
        
         function deleteConfirm(anchorTag) {
             var row = $(anchorTag).parents('tr')[0];
