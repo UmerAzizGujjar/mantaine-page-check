@@ -93,7 +93,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string filterStatus)
         {
             try
             {
@@ -115,8 +115,18 @@ namespace PMS
                                       Father_Name = p.Father_Name,
                                       Department =  EP.Department,
                                       Discharge_On = EP.Discharge_On,
+                                      Patinet_Condition = _dbContext.GetDataValueName("Patient Condition", EP.Emergency_Pat_Condition),
                                       AdmitDays = SqlMethods.DateDiffDay(EP.Admission_Date, DateTime.Now)
                                         };
+
+                    if (filterStatus == "Admitted")
+                    {
+                        EmergencyCase = EmergencyCase.Where(x => x.Discharge_On == null);
+                    }
+                    else if (filterStatus == "Discharged")
+                    {
+                        EmergencyCase = EmergencyCase.Where(x => x.Discharge_On != null);
+                    }
 
                     var FilteredCount = EmergencyCase.Count();
                     switch (sortColumn)
@@ -131,7 +141,7 @@ namespace PMS
                             EmergencyCase = sortColumnDirection == "asc" ? EmergencyCase.OrderBy(a => a.Discharge_On) : EmergencyCase.OrderByDescending(a => a.Discharge_On);
                             break;
                         default:
-                            EmergencyCase = EmergencyCase.OrderBy(a => a.Emergency_ID);
+                            EmergencyCase = EmergencyCase.OrderByDescending(a => a.Emergency_ID);
                             break;
                     }
 
