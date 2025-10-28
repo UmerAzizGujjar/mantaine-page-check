@@ -1478,6 +1478,36 @@ namespace PMS
                 //rd.SetParameterValue("Patient_Type", PatType);
 
             }
+            else if (reportName == "Lab_Test_Patient_Wise")
+            {
+                string rptFileName = "LabRadiology/rptLabTestPatientsWise.rpt";                  
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "LabRadiology/rptLabTestPatientsWise.rpt";
+                }
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@TestName", TestName);
+                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "Lab Cash Collection");
+
+            }
             else if (reportName == "IPDStatus")
             {
                 try
@@ -1723,6 +1753,28 @@ namespace PMS
                 rd.SetParameterValue("Company_Name", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 //rd.SetParameterValue("@PatientType", patType);
+            }
+            else if (reportName == "Patient_Count_Department_Wise")
+            {
+                string rptFileName = "TransactionalDetails/rptLabTestPatientsCategoryWise.rpt";
+                string StartDateTime = Request.QueryString["sDate"].ToString();
+                string EndDateTime = Request.QueryString["eDate"].ToString();
+
+                string stTime = Request.QueryString["StartTime"].ToString();
+                string endTime = Request.QueryString["EndTime"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(StartDateTime, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(EndDateTime, endTime, out parameterEndDate);
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("@StartDate", parameterStDate);
+                rd.SetParameterValue("@EndDate", parameterEndDate);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
             }
             else if (reportName == "TestWiseMonthlyLabTestDepartment")
             {

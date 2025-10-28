@@ -13990,3 +13990,118 @@ Source: System.Web
 URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
 User: visionplus
 
+[ERROR:2ca81e5f 28-Oct-25 12:19:26 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\user\AppData\Local\Temp\Temporary ASP.NET Files\vs\cda070e0\39bb2e34\App_Web_reportviewer.aspx.cdcab7d2.pjfeutfx.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Patients Wise Test Detail From 01 Oct 2025 to 28 Oct 2025&sDate=01 Oct 2025&eDate=28 Oct 2025&STime=11:00 PM&ETime=11:00 PM&Department=All
+User: visionplus
+
+[ERROR:3c9eee11 28-Oct-25 12:27:42 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\user\AppData\Local\Temp\Temporary ASP.NET Files\vs\cda070e0\39bb2e34\App_Web_reportviewer.aspx.cdcab7d2.zbj3_aod.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Lab Tests Patient Wise from 01 Oct 2025 to 28 Oct 2025&sDate=01 Oct 2025&eDate=28 Oct 2025&STime=11:00 PM&ETime=11:00 PM&Summary=false&Department=All&testName=All&Patient_Type=All&ExportPDF=false
+User: visionplus
+
+[ERROR:1fd27a32 28-Oct-25 12:29:40 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\user\AppData\Local\Temp\Temporary ASP.NET Files\vs\cda070e0\39bb2e34\App_Web_reportviewer.aspx.cdcab7d2.zbj3_aod.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Lab Tests Patient Wise from 01 Oct 2025 to 28 Oct 2025&sDate=01 Oct 2025&eDate=28 Oct 2025&STime=11:00 PM&ETime=11:00 PM&Summary=false&Department=All&testName=All&Patient_Type=All&ExportPDF=false
+User: visionplus
+
+[ERROR:1c36e363 28-Oct-25 12:29:53 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\user\AppData\Local\Temp\Temporary ASP.NET Files\vs\cda070e0\39bb2e34\App_Web_reportviewer.aspx.cdcab7d2.zbj3_aod.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Lab Tests Patient Wise from 01 Oct 2025 to 28 Oct 2025&sDate=01 Oct 2025&eDate=28 Oct 2025&STime=11:00 PM&ETime=11:00 PM&Summary=false&Department=All&testName=All&Patient_Type=All&ExportPDF=false
+User: visionplus
+
+[ERROR:94043b99 28-Oct-25 12:34:27 PM]
+Type: NullReferenceException
+Message: Object reference not set to an instance of an object.
+Stack Trace:    at PMS.ReportViewer.Page_Unload(Object sender, EventArgs e) in F:\Standard Source\NomiButtVp\Standard_Hospital\GL\ReportViewer.aspx.cs:line 25
+   at System.Web.UI.Control.OnUnload(EventArgs e)
+   at System.Web.UI.Control.UnloadRecursive(Boolean dispose)
+   at System.Web.UI.Page.UnloadRecursive(Boolean dispose)
+   at System.Web.UI.Page.ProcessRequestCleanup()
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\user\AppData\Local\Temp\Temporary ASP.NET Files\vs\cda070e0\39bb2e34\App_Web_reportviewer.aspx.cdcab7d2.izszr6ub.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: PMS
+URL: http://localhost:28402/ReportViewer.aspx
+User: 
+
+[ERROR:720d3940 28-Oct-25 12:35:11 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\user\AppData\Local\Temp\Temporary ASP.NET Files\vs\cda070e0\39bb2e34\App_Web_reportviewer.aspx.cdcab7d2.izszr6ub.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Lab Tests Patient Wise from 01 Oct 2025 to 28 Oct 2025&sDate=01 Oct 2025&eDate=28 Oct 2025&STime=11:00 PM&ETime=11:00 PM&Summary=false&Department=All&testName=All&ExportPDF=false
+User: visionplus
+
+[ERROR:a5525fcd 28-Oct-25 12:36:57 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\user\AppData\Local\Temp\Temporary ASP.NET Files\vs\cda070e0\39bb2e34\App_Web_reportviewer.aspx.cdcab7d2.ypnxbvbv.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Lab Tests Patient Wise from 28 Oct 2025 to 28 Oct 2025&sDate=28 Oct 2025&eDate=28 Oct 2025&STime=11:00 PM&ETime=11:00 PM&Summary=false&Department=All&testName=All&ExportPDF=false
+User: visionplus
+
