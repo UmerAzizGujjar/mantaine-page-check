@@ -489,6 +489,66 @@ namespace PMS
                 lblMessage.Text = ex.Message;
             }
         }
+
+        [WebMethod]
+        public static List<PatientsResult> GetReferredPatients(string SearchString)
+        {
+            if (string.IsNullOrWhiteSpace(SearchString))
+            {
+                SearchString = "";
+            }
+            else
+            {
+                SearchString = SearchString.Replace("'", "''").Trim();
+            }
+
+            string baseSql = @"
+                SELECT TOP 10  
+                    rg.pat_id,
+                    ISNULL(rg.mr_no_sequence, '') AS Patient_No,
+                    ISNULL(rg.Full_Name, '') AS Full_Name,
+                    ISNULL(rg.NIC, '') AS NIC,
+                    ISNULL(rg.Mobile1, '') AS ContactNo,
+                    ISNULL(rg.Father_Name, '') AS Father_Name 
+                FROM reg_patient rg
+                INNER JOIN Emergency_Patient Em ON rg.pat_id = Em.Patient_ID
+                WHERE 
+                    rg.Patient_No <> 0 
+                    AND rg.Patient_No IS NOT NULL 
+                    AND ISNULL(rg.isCancel, 0) != 1 
+                    AND Em.ReferredTo = '001'";
+
+            string whereClause = "";
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                whereClause = $@" AND (
+            LTRIM(RTRIM(rg.mr_no_sequence)) LIKE '%{SearchString}%' OR
+            LTRIM(RTRIM(rg.Full_Name)) LIKE '%{SearchString}%' OR
+            LTRIM(RTRIM(rg.NIC)) LIKE '%{SearchString}%' OR
+            LTRIM(RTRIM(rg.Mobile1)) LIKE '%{SearchString}%'
+              )";
+            }
+
+            string sql = baseSql + whereClause + " ORDER BY rg.pat_id DESC";
+
+            DataTable dt = DBClass.getDataTable(sql);
+
+            List<PatientsResult> list = new List<PatientsResult>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                list.Add(new PatientsResult
+                {
+                    Reg_Patient_ID = dr["pat_id"]?.ToString() ?? "",
+                    Patient_No = dr["Patient_No"]?.ToString() ?? "",
+                    Full_Name = dr["Full_Name"]?.ToString() ?? "",
+                    NIC = dr["NIC"]?.ToString() ?? "",
+                    Mobile1 = dr["ContactNo"]?.ToString() ?? "",
+                    Father_Name = dr["Father_Name"]?.ToString() ?? ""
+                });
+            }
+
+            return list;
+        }     
         private void ddlpacakagetype_SelectedIndexChanged()
         {
             try
@@ -805,6 +865,7 @@ namespace PMS
                     return (new JavaScriptSerializer().Serialize("Not Exist"));
             }
         }
+
 
         [WebMethod]
         public static string SaveAllRecord(int Patient_ID, string btnsave, string txtAdmission_Date,string patient_name, string patient_age,string patient_number, string ddlDepartment, string ddlDoctor, string txtHealth_Complaints, DateTime txtExpected_Discharge_Date, string ddlIssuance_Of, string ddlWard_No, string txtBed_No, string ddlRoom_No, string txtRoom_Type, string PatientDiscountType, string panelCompany, string admissionType, string sehatCardNo, string visitId, string CardHolderName, string InsuranceCardNo, string PolicyHolderName ,string Sehat_Holder, string main_department, string packagetype, string packagename, string packagetypename, string packagenamess, string ipdProcedures, string proc_name,string panelcompanys, string CardNo,string Cardholdername,string CompanyName,string Approvelimit,string Roomlimit,string Cardlimit,
