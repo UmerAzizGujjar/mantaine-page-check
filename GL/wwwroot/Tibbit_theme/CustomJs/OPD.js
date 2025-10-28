@@ -910,7 +910,6 @@ function SavePatient() {
         "Province": Province,
     };
 
-    console.log(data);
 
     $.ajax({
         type: "POST",
