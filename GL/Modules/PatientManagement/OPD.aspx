@@ -697,8 +697,12 @@
 
                                 var fee = res.fee;
                                 var disper = res.discount_percentage
-                                var afterdiscountfee = (fee * disper) / 100
-
+                                if (disper > 0.00) {
+                                    var afterdiscountfee = (fee * disper) / 100
+                                }
+                                else {
+                                    var afterdiscountfee = fee
+                                }
                                 $('#txtfees').val(afterdiscountfee);
                                 $('#txtactualfee').val(res.fee);
                                 $('#txtdiscount').val(res.discount_percentage);

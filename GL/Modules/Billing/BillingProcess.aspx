@@ -559,6 +559,7 @@
             var Special = 0;
             debugger;
             function AddLabTest(maindpt) {
+                debugger;
                 localStorage.Disc_Zero = 0;
                 localStorage.OnlyPercentage = 0;
                 var pat_id = $('#txtMRNo').val();
@@ -899,7 +900,7 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
-
+                                debugger;
                                 if (response.d != 0) {
                                     globalTestRate = response.d;
                                 }
