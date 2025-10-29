@@ -900,9 +900,9 @@
                 $.each(data, function (key, value) {
                     rows += '<tr>' +
                         '<td>' + value.Category + '</td>' +
-                        '<td>' + value.Total_Count + '</td>' +
-                        '<td>' + value.Discount_Amount + '</td>' +
+                        '<td>' + value.Total_Count + '</td>' +                       
                         '<td>' + value.Receipt_Amount + '</td>' +
+                        '<td>' + value.Discount_Amount + '</td>' +
                         '<td>' + value.Gross_Amount + '</td>' +  
                         '</tr>';
                 });
@@ -1853,7 +1853,7 @@
                             <span id="lblIPDAdmitted" style="color: #0f008e"></span>
                         </div>
                         <div class="row">
-                            <label style="color: #0f008e">Admitted</label>
+                            <label style="color: #0f008e">Today Admission</label>
                         </div>
                     </div>
                     <div class="col-lg-4 styling border">
@@ -1861,7 +1861,7 @@
                             <span id="lblIPDDischarged" style="color: #5f008e"></span>
                         </div>
                         <div class="row">
-                            <label style="color: #5f008e">Discharged</label>
+                            <label style="color: #5f008e">Today Discharged</label>
                         </div>
                     </div>
                 </div>
@@ -1918,9 +1918,9 @@
                         <thead>
                             <tr>
                                 <th>Department</th>
-                                <th>Total Patient</th>
-                                <th>Discount</th>
+                                <th>Total Patient</th>                              
                                 <th>Total Amount</th>
+                                <th>Discount</th>
                                 <th>Net Amount</th>
                             </tr>
                         </thead>
@@ -1928,7 +1928,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row" style="height: 220px !important">                  
+                <div class="row" style="height: 270px !important">                  
                 </div>
 
                 <div class="row">
@@ -1947,7 +1947,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row" style="height: 230px !important">                   
+                <div class="row" style="height: 270px !important">                   
                 </div>         
                 <div class="row">
                     <h2>IPD Patients Count</h2>
@@ -1965,7 +1965,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row" style="height: 200px !important">
+
+                <div class="row" style="height: 270px !important">
                 </div>
                 <div class="row">
                     <h2>Investigation</h2>
@@ -1984,7 +1985,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row">
+                <div class="row" style="display:none">
                     <h2>Pharmacy</h2>
                     <table class="table table-hover table-striped table-bordered" id="tabPharmacy">
                         <thead id="ipharmacyhead">
@@ -2101,32 +2102,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" style="height:100px !important"></div>
                 <div class="row">
                     <div class="col-lg-4">
-                        <h4>OPD Patient Distribution</h4>
+                        <h4 style="text-align:center">OPD</h4>
                         <div id="chartOPDSummary" style="height: 250px;">
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <h4>Emergency Visit Distribution</h4>
+                        <h4 style="text-align:center">Emergency</h4>
                         <div id="chartEmergencySummary" style="height: 250px;"></div>
                     </div>
                     <div class="col-lg-4">
-                        <h4>IPD Status Overview</h4>
+                        <h4 style="text-align:center">IPD</h4>
                         <div id="chartIPDSummary" style="height: 250px;"></div>
                     </div>
                 </div>
-              <div class="row" style="height:90px !important;"></div>
+              <div class="row" style="height:50px !important;"></div>
                 <div class="row">                   
-                    <div class="col-lg-6" style="text-align: center">
-                        <h4>OPD By Department</h4>
+                    <div class="col-lg-6">
+                        <h4 style="text-align: center">OPD Department Wise(Percentage)</h4>
                         <div id="chartOPDDepartmentWise"></div>
                     </div>
                     <div class="col-lg-6" style="text-align: center">
-                        <h4>OPD By Department (With Counts)</h4>
+                        <h4>OPD Department Wise (With Counts)</h4>
                         <div id="chartOPDDepartmentWiseWithCounts"></div>
                     </div>
                 </div>
+                <div class="row" style="height:30px !important"></div>
                 <div class="row">
                     <div class="row">
                         <div class="col-lg-6" style="text-align: center">
@@ -2138,6 +2141,7 @@
                             <div id="chartEmergencyWardCounts"></div>
                         </div>
                     </div>
+                    <div class="row" style="height:30px;"></div>
                         <div class="col-lg-6" style="text-align: center">
                             <h4>IPD Ward Bed Occupancy</h4>
                             <div id="chartIPDWard"></div>
@@ -2146,7 +2150,19 @@
                         <h4>IPD Ward Bed Counts</h4>
                         <div id="chartIPDWardCounts"></div>
                     </div>
-                </div>
+                    </div>
+                <div class="row" style="height:50px !important"></div>
+                    <div class="row">
+                            <div class="card shadow" style="margin-left:25px !important">
+                                <div class="card-header d-flex justify-content-center align-items-center  headercolor">
+                                    <h4 class="card-title mb-0 fw-bold text-white">Top 5 Tests by Department
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="topTestsChartsContainer"></div>
+                                </div>
+                            </div>
+                    </div>
                 <div class="row">
                     <div class="col-lg-6" style="text-align: center;display:none">
                         <h4>Department Statistics</h4>
@@ -2174,17 +2190,7 @@
             </div>         
         </div>
         <div class="row mb-3">
-            <div class="col-12">
-                <div class="card shadow">
-                    <div class="card-header d-flex justify-content-center align-items-center  headercolor">
-                        <h4 class="card-title mb-0 fw-bold text-white">Top 5 Tests by Department
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        <div id="topTestsChartsContainer"></div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 

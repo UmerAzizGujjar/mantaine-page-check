@@ -609,26 +609,38 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "LabTestResult.aspx/SaveTestDetail",
+                        url: "RadiologyTestResult.aspx/SaveTestDetail",
                         data: data,
                         contentType: "application/json; charset=utf-8",
-                        dataType: "json",
+                        dataType: "json",                       
                         success: function (data) {
-
                             if (data.d == 'Successfull') {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success!',
                                     text: 'Saved',
                                     showConfirmButton: false,
-                                    timer: 2500,
+                                    timer: 1500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                }).then(() => {
+                                    window.location.href = 'RadiologyTestResult.aspx';
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Failed!',
+                                    text: 'Save failed. Please try again.',
+                                    showConfirmButton: true,
                                     customClass: {
                                         popup: 'swal-big-popup',
                                         title: 'swal-big-title',
                                         htmlContainer: 'swal-big-text'
                                     }
                                 });
-
                             }
                             setTimeout(function () { $('#myModal').modal('hide'); }, 3000);
                         },
@@ -684,7 +696,7 @@
                     var data = JSON.stringify({ TestDetailID: testID, TestValue: testvalue, Template: template, Diagnosis: diagnosis, Notes: notes, });
                     $.ajax({
                         type: "POST",
-                        url: "LabTestResult.aspx/ApproveTestDetail",
+                        url: "RadiologyTestResult.aspx/ApproveTestDetail",
                         data: data,
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -709,7 +721,7 @@
             FillOrganismType();
             FillGrowthInfo();
             GetTestDepartment();
-           AllRadiologyTestDetail();
+          //  AllRadiologyTestDetail();
         });
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
@@ -1573,7 +1585,7 @@
             $("#ctl00_MainContent_txtPatient_ID").val("");
             $.ajax({
                 type: "POST",
-                url: "LabTestResult.aspx/GetDetailUsingBillID",
+                url: "RadiologyTestResult.aspx/GetDetailUsingBillID",
                 data: "{'Bill_ID':" + Bill_ID + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -1605,7 +1617,7 @@
             var imageURL = $($(imageURL)[0]).attr('src');
             $.ajax({
                 type: "POST",
-                url: "LabTestResult.aspx/DeleteImage",
+                url: "RadiologyTestResult.aspx/DeleteImage",
                 data: JSON.stringify({ "imagSrc": imageURL }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -2164,7 +2176,7 @@
             $.ajax(options);
             $.ajax({
                 type: "POST",
-                url: "LabTestResult.aspx/SaveGroupTest",
+                url: "RadiologyTestResult.aspx/SaveGroupTest",
                 data: JSON.stringify({
                     "lab_test_Detail_id": lab_test_Detail_id,
                     "fixed_values": fixed_values,
@@ -2305,7 +2317,7 @@
                 var rows = '';
                 $.each(parsedData, function (key, value) {
                     var retdate = moment(value.Bill_Date).format('DD-MMM-YYYY hh:mm A');
-                    rows += '<tr id="row' + key + '"><input type="hidden" name="Bill_ID" value="' + value.Bill_ID + '"/><input type="hidden" name="pat_id" value="' + value.pat_id + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><td><input type="hidden"  name="Bill_Date" value="' + retdate + '"/>' + retdate + '</td> <td> <input type="hidden"  name="Bill_No" value="' + value.Bill_No + '"/>' + value.Bill_No + ' </td> <td><input type="hidden"  name="Full_Name" value="' + value.Full_Name + '"/>' + value.Full_Name + '</td><td><input type="hidden" name="Item_Name" value="' + value.Item_Name + '"/>' + value.Item_Name + '</td><td> <a href="#" onclick=loadPatientDataUsingBillIdForRadiology(' + value.Bill_ID + ')>Select</a> </td> </tr>';
+                    rows += '<tr id="row' + key + '"><input type="hidden" name="Bill_ID" value="' + value.Bill_ID + '"/><input type="hidden" name="pat_id" value="' + value.pat_id + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><td><input type="hidden"  name="Bill_Date" value="' + retdate + '"/>' + retdate + '</td> <td> <input type="hidden"  name="Bill_No" value="' + value.Bill_No + '"/>' + value.Bill_No + ' </td> <td><input type="hidden"  name="Full_Name" value="' + value.Full_Name + '"/>' + value.Full_Name + '</td><td><input type="hidden" name="Item_Name" value="' + value.Item_Name + '"/>' + value.Item_Name + '</td><td> <a href="#" onclick=(' + value.Bill_ID + ')>Select</a> </td> </tr>';
                 });
                 $('#tblradilogy tbody').html(rows);
             },
@@ -2540,26 +2552,6 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-3 sm-6">
-                <h1>Radiology Patients List</h1>
-                <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
-                    <table class="table test-table" id="tblradilogy">
-                        <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
-                            <tr>
-                                <th>Bill Date</th>
-                                <th>Bill No</th>
-                                <th>Name</th>
-                                <th>Test Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbl_tbody_radiology">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div for="unofficial_work" style="margin-left: 1106px; margin-top: -1px; width: 341px; position: absolute; display: none;">
@@ -2570,8 +2562,27 @@
             <option>Rejected </option>
         </select>
     </div>
-
-
+        <div class="row">
+    <div class="col-lg-6 col-md-3 sm-6">
+        <h1>Radiology Patients List</h1>
+        <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+            <table class="table test-table" id="tblradilogy">
+                <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
+                    <tr>
+                        <th>Bill Date</th>
+                        <th>Bill No</th>
+                        <th>Name</th>
+                        <th>Test Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbl_tbody_radiology">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    
 
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">

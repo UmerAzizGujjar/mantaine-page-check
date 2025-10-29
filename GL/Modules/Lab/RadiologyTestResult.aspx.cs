@@ -871,6 +871,7 @@ namespace PMS.Modules.Lab
         public static string GetLabDetailByBill_id(string Patient_ID, int Bill_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.CommandTimeout = 180;
             var patientNo = (from p in db.Reg_patients where p.pat_id == Convert.ToInt32(Patient_ID) select p.Patient_No).FirstOrDefault();
             var patientIDs = (from p in db.Reg_patients where p.Patient_No == patientNo select p.pat_id).ToList();
             //Individual Tests
@@ -881,16 +882,18 @@ namespace PMS.Modules.Lab
                         on ltd.Test_ID equals tdef.Test_ID
                         join pa in db.Reg_patients
                         on lt.Patient_ID equals pa.pat_id
+
                         join bd in db.Ar_Billing_Details
-                        on ltd.Bill_Details_ID equals bd.Bill_Details_ID into bdJoin
-                        from bd in bdJoin.DefaultIfEmpty()
-                        join ar in db.Ar_Billings
-                        on bd.Bill_ID equals ar.Bill_ID into arJoin
-                        from ar in arJoin.DefaultIfEmpty()
-                        where
-                            (Bill_ID == 0 || ar.Bill_ID == Bill_ID)
-                            && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
-                            && (bd.Test_Main_Department != "001")
+
+                        on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                        join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID
+                        where ar.Bill_ID == (Bill_ID == 0 ? ar.Bill_ID : Bill_ID)
+
+
+                        && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
+                        && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
+
+                        && bd.Is_Group_Category == false
                         select new
                         {
                             lt.Parent_Transaction_Type,
@@ -1506,10 +1509,52 @@ namespace PMS.Modules.Lab
             Response.Redirect("~/Modules/Lab/RadiologyTestResult.aspx");
         }
 
+        //[WebMethod]
+        //public static string AllUltraSoundTest()
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    JavaScriptSerializer serl = new JavaScriptSerializer();
+        //    serl.MaxJsonLength = 2147483647;
+
+        //    DateTime startDate = System.DateTime.Now.AddMonths(-2);
+        //    DateTime endData = System.DateTime.Now.Date;
+
+        //    var testDetails_Billing_Sample = (
+        //        from pat in db.Patients
+        //        join bill in db.Ar_Billings on pat.Patient_ID equals bill.Patient_ID
+        //        join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+        //        join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+        //        join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+        //        where (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+        //        bill_details.Test_Main_Department != "001" &&
+        //              (bill.isCancel == false || bill.isCancel == null) &&
+        //              bill.Bill_Date >= startDate
+        //        orderby bill.Bill_Date descending
+        //        select new
+        //        {
+        //            bill.Bill_Date,
+        //            bill.Bill_No,
+        //            bill.Bill_ID,
+        //            bill_details.Category_ID,
+        //            bill_details.Item_Name,
+        //            pat.Patient_No,
+        //            pat.Created_Time,
+        //            pat.Patient_ID,
+        //            pat.Full_Name,
+        //            bill_details.Bill_Details_ID,
+        //            bill.Remarks,
+
+        //        }
+        //    ).ToList();
+
+        //    return serl.Serialize(testDetails_Billing_Sample);
+        //}
+
         [WebMethod]
         public static string AllUltraSoundTest()
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.CommandTimeout = 180;
             JavaScriptSerializer serl = new JavaScriptSerializer();
             serl.MaxJsonLength = 2147483647;
 
@@ -1517,13 +1562,13 @@ namespace PMS.Modules.Lab
             DateTime endData = System.DateTime.Now.Date;
 
             var testDetails_Billing_Sample = (
-                from pat in db.Patients
-                join bill in db.Ar_Billings on pat.Patient_ID equals bill.Patient_ID
+                from pat in db.Reg_patients
+                join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
                 join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
                 join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
                 join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
-                where (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
-                bill_details.Test_Main_Department != "001" &&
+                where  (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                 bill_details.Test_Main_Department != "001" &&
                       (bill.isCancel == false || bill.isCancel == null) &&
                       bill.Bill_Date >= startDate
                 orderby bill.Bill_Date descending
@@ -1535,8 +1580,8 @@ namespace PMS.Modules.Lab
                     bill_details.Category_ID,
                     bill_details.Item_Name,
                     pat.Patient_No,
-                    pat.Created_Time,
-                    pat.Patient_ID,
+                    pat.Created_time,
+                    pat.pat_id,
                     pat.Full_Name,
                     bill_details.Bill_Details_ID,
                     bill.Remarks,
@@ -1545,6 +1590,6 @@ namespace PMS.Modules.Lab
             ).ToList();
 
             return serl.Serialize(testDetails_Billing_Sample);
-        }      
+        }
     }
 }
