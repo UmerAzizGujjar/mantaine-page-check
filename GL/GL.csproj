@@ -242,6 +242,7 @@
     <Content Include="Modules\Inventory\PharmacyView.aspx" />
     <Content Include="Modules\Inventory\Service.aspx" />
     <Content Include="Modules\Inventory\ServiceView.aspx" />
+    <Content Include="Modules\Lab\RadiologyTestResult.aspx" />
     <Content Include="Modules\Lab\SampleView.aspx" />
     <Content Include="Modules\Others\About.aspx" />
     <Content Include="Modules\Others\CustomError.aspx" />
@@ -25921,6 +25922,13 @@
     </Compile>
     <Compile Include="Modules\Inventory\ServiceView.aspx.designer.cs">
       <DependentUpon>ServiceView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\RadiologyTestResult.aspx.cs">
+      <DependentUpon>RadiologyTestResult.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\RadiologyTestResult.aspx.designer.cs">
+      <DependentUpon>RadiologyTestResult.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Lab\SampleView.aspx.cs">
       <DependentUpon>SampleView.aspx</DependentUpon>

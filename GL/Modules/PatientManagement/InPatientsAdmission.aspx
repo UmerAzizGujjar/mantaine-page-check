@@ -5900,6 +5900,7 @@
             $('#CloseSearchModels').click();
             $("#SavePatient_Data").hide();
             $("#PatientsSearchModel").hide();
+            $("#ReferredPatientsModal").hide();
             $('#updatePatient_Data').show();
             $("#SavePatient_Data").hide();
             $('#RevistPat').show();
@@ -5963,6 +5964,68 @@
 
         }
 
+        function OpenReferredModal() {
+            $('#ReferredPatientsModal').modal({
+                backdrop: 'static'
+            });
+            FillReferredPatientsList();
+        }
+
+        function FillReferredPatientsList() {
+            var SearchString = $('#txtReferredSearch').val().trim();
+            $('#tblReferredPatients tbody').empty();
+            PageMethods.GetReferredPatients(SearchString, OnReferredPatientsSuccess, OnFailPatients);
+        }
+
+        function OnReferredPatientsSuccess(data) {
+            ClearReferredPatientResults();
+            for (var i = 0; i < data.length; i++) {
+                AddReferredPatientRow(
+                    data[i].Reg_Patient_ID,
+                    data[i].Patient_No,
+                    data[i].Full_Name,
+                    data[i].NIC,
+                    data[i].Mobile1,
+                    data[i].Father_Name
+                );
+            }
+        }
+
+        function ClearReferredPatientResults() {
+            $('#tblReferredPatients tbody').empty();
+        }
+
+        function AddReferredPatientRow(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
+            var row = document.getElementById('iReferredPatientsBody').insertRow(-1);
+            var cell;
+
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span>' + Reg_Patient_ID + '</span>';
+            cell.className = "hide";
+
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
+
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
+
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
+
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
+
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+
+            cell = row.insertCell(-1);
+            var actions = '';
+            actions += '<a style="color:#438eb9;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick="AddPatientDetail(' + Reg_Patient_ID + ')"><i class="fa fa-plus-circle"></i></a>&nbsp;|&nbsp;&nbsp;';
+            actions += '<a style="color:#FDC303;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick="EditPatientDetail(' + Reg_Patient_ID + ')"><i class="fa fa-pencil-square-o"></i></a>';
+            cell.innerHTML = actions;
+        }
+
+
     </script>
 
     <style type="text/css">
@@ -6000,12 +6063,51 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-
-           <div class="row">
-           <div class="col-md-2 text-end">
-            <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry"  />
+    <div class="col-lg-8 col-md-10 col-sm-12">
+        <div class="row">
+            <div class="col-md-2 text-end">
+                <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-3">
+                <input type="button" value="Refer Admissions" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" />
+            </div>
         </div>
-       </div>
+    </div>
+
+    <div id="ReferredPatientsModal" data-backdrop="static" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
+            <fieldset style="padding-top: 20px; padding-left: 14px;">
+                <div class="col-lg-3 col-md-4 col-sm-6">                           
+                    <label id="lblReferredSearch">Referred Patients:</label>
+                    <input type="text" id="txtReferredSearch" style="margin-left: 2px;"  autocomplete="off"
+                        placeholder="Search by MR No, Name, CNIC, or Contact..."  oninput="FillReferredPatientsList()" />
+                </div>
+            </fieldset>
+            <div style="overflow: scroll; height: 460px; padding: 10px;">
+                <table class="table table-hover table-striped table-bordered" id="tblReferredPatients" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="display: none;">Patient ID</th>
+                            <th>MR No</th>
+                            <th>Patient Name</th>
+                            <th>Father Name</th>
+                            <th>CNIC</th>
+                            <th>Contact No</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="iReferredPatientsBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" style="width:13% !important" class="btn-gray" value="Close" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+
 
    <div id="MedicationModel" class="modal fade" role="dialog">
         <div class="modal-dialog">

@@ -5953,7 +5953,7 @@
                     <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-3">
-                    <input type="button" value="Refer Admissions" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" />
+                    <input type="button" value="Refer Admissions" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" style="display:none" />
                 </div>
                 <div class="col-lg-1 col-md-3 col-sm-3"></div>
                 <div class="col-lg-4">
@@ -6020,7 +6020,7 @@
 </div>
 
 
-<div id="ReferredPatientsModal" data-backdrop="static" class="modal fade" role="dialog">
+<div id="ReferredPatientsModal" data-backdrop="static" class="modal fade" role="dialog" style="display:none" >
     <div class="modal-dialog">
         <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
             <fieldset style="padding-top: 20px; padding-left: 14px;">
