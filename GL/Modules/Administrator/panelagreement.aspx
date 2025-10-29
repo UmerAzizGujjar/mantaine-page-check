@@ -204,12 +204,12 @@
                     $("#txtCompanyName").val(parsed_Data.Company_Name);
                     $("#txtEmpNo").val(parsed_Data.No_Of_Employees);
                     $("#txtEmail").val(parsed_Data.Email);
-                    $('#ddlGlAccount').val(data.gl_account).trigger('change');
+                   
                     $("#txtContactNo").val(parsed_Data.Contact_No);
                     $("#txtAddress").val(parsed_Data.Address);
                     $("#txtDiscount").val(parsed_Data.Discount);
                     $("#txtpanelrate").val(parsed_Data.Panel_Rate);
-
+                    $('#ddlGlAccount').val(parsed_Data.gl_account).trigger('change');
                 }, error: function () { }
             });
         }

@@ -417,19 +417,21 @@
                 }
             });
             $('#btnReject').click(function () {
+                debugger;
                 localStorage.isSaved = 1;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
                 $.each(tbl, function (key, val) {
-
+                    debugger;
                     var name = $(val).find('input[name="testDepartment"]').attr('name');
                     if (name == "testDepartment") {
                     }
-                    //});
                     else {
                         var Ids = $(val).find('td:eq(0)').text();
                         //$(val).find('td[id=testDetailID]').text();
-                        test_list.push({ 'TestDID': Ids });
+                        if (Ids != null && Ids > 0 && Ids != "") {
+                            test_list.push({ 'TestDID': Ids });
+                        }
                     }
                 });
                 //For Single Tests
@@ -441,17 +443,15 @@
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
                 if (test_list.length > 0) {
                     PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
-
+                        debugger;
                         $("[id$='_btnRefresh']").trigger('click');
                         $('#myModal').modal('hide');
                         $("#myModal tbody").empty();
                         $("#tblsingleTest tbody").empty();
                     }, function (onfailure) {
-
                         alert(onfailure);
                     });
                 }
-
             });
 
             $('#saveTest').click(function () {
