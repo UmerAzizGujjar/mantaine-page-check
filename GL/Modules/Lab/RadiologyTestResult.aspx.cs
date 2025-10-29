@@ -881,18 +881,16 @@ namespace PMS.Modules.Lab
                         on ltd.Test_ID equals tdef.Test_ID
                         join pa in db.Reg_patients
                         on lt.Patient_ID equals pa.pat_id
-
                         join bd in db.Ar_Billing_Details
-
-                        on ltd.Bill_Details_ID equals bd.Bill_Details_ID
-                        join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID
-                        where ar.Bill_ID == (Bill_ID == 0 ? ar.Bill_ID : Bill_ID)
-
-
-                        && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
-                        && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
-
-                        && bd.Is_Group_Category == false
+                        on ltd.Bill_Details_ID equals bd.Bill_Details_ID into bdJoin
+                        from bd in bdJoin.DefaultIfEmpty()
+                        join ar in db.Ar_Billings
+                        on bd.Bill_ID equals ar.Bill_ID into arJoin
+                        from ar in arJoin.DefaultIfEmpty()
+                        where
+                            (Bill_ID == 0 || ar.Bill_ID == Bill_ID)
+                            && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
+                            && (bd.Test_Main_Department != "001")
                         select new
                         {
                             lt.Parent_Transaction_Type,

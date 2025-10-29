@@ -709,7 +709,7 @@
             FillOrganismType();
             FillGrowthInfo();
             GetTestDepartment();
-            AllRadiologyTestDetail();
+           AllRadiologyTestDetail();
         });
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
