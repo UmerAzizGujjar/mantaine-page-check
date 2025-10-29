@@ -2511,7 +2511,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     dpROw.Visible = true;
-                    tr_Summary.Visible = false;
+                    tr_Summary.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     lblMedical.Visible = false;
                     ddlMedicalSubsidy.Visible = false;
@@ -2548,11 +2548,9 @@ namespace PMS
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
-                    tr_Summary.Visible = false;
                     tr_Export.Visible = false;
                     ddlPatientType.Visible = true;
                     lblMultiSelect.Visible = false;
-                    tr_Summary.Visible = false;
                     GetLabTests();
                 }
 
