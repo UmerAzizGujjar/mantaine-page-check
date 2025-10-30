@@ -898,7 +898,6 @@ namespace PMS
 
                       
                         && bd.Is_Group_Category == false
-                        && bd.Test_Main_Department == "001"
                         select new
                         {
                             lt.Parent_Transaction_Type,
@@ -1100,7 +1099,6 @@ namespace PMS
 
                         
                         && bd.Is_Group_Category == false
-                        && bd.Test_Main_Department == "001"
                         select new
                         {
                             lt.Parent_Transaction_Type,
