@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="PakRed" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8868,20 +8868,6 @@
       <Column Name="status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_token_list" Method="sp_token_list">
-    <Parameter Name="Department" Parameter="department" Type="System.String" DbType="NVarChar(50)" />
-    <ElementType Name="sp_token_listResult">
-      <Column Name="tokenNo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="filter_clinic" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="filter_clinic1" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_token_doc_list" Method="sp_token_doc_list">
     <Parameter Name="doctor" Type="System.String" DbType="NVarChar(50)" />
     <ElementType Name="sp_token_doc_listResult">
@@ -10703,6 +10689,21 @@
   <Function Name="dbo.sp_GetTotalIPDAdmitted" Method="sp_GetTotalIPDAdmitted">
     <ElementType Name="sp_GetTotalIPDAdmittedResult">
       <Column Name="Total_Admitted" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_token_list" Method="sp_token_list">
+    <Parameter Name="Patient_Type" Parameter="patient_Type" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="Department" Parameter="department" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="sp_token_listResult">
+      <Column Name="tokenNo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="filter_clinic" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="filter_clinic1" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

@@ -21,6 +21,11 @@
         <div id="clinicTable">
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Patient Category</label>
+                    <select id="ddlPatientType" onchange="GetLatestToken();" class="widths"></select>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Department</label>
                     <select id="ddldepartment" onchange="GetLatestToken();" class="widths"></select>
                 </div>
 
@@ -66,6 +71,7 @@
     <script>
         $(document).ready(function () {
             FillPatientType();
+            FillDepartment();
             GetLatestToken();
             GetLatest_doc_Token();
             filldoctor();
@@ -121,6 +127,30 @@
                     $.each(data, function (key, value) {
                         options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
                     });
+                    $('#ddlPatientType').html(options);
+                    $('#ddlPatientType').select2();
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching area data:', error);
+                }
+            });
+
+            return options;
+        }
+        function FillDepartment() {
+            var options = '<option value="0">Please Select</option>';
+
+            $.ajax({
+                url: 'TokenList.aspx/GetDepartment',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
                     $('#ddldepartment').html(options);
                     $('#ddldepartment').select2();
 
@@ -133,13 +163,14 @@
             return options;
         }
         function GetLatestToken() {
+            var patientType = $('#ddlPatientType').val(); 
             var department = $('#ddldepartment').val(); 
             $.ajax({
                 url: 'TokenList.aspx/LoadTokenPatient',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ department: department }), 
+                data: JSON.stringify({ patientType: patientType, department: department}), 
                 success: function (_data) {
                     debugger;
                     _data = JSON.parse(_data.d);
@@ -204,7 +235,7 @@
         setInterval(function () {
             location.reload();
         }, 180000);
-</script>
+    </script>
 
 </body>
 <%--  <script type="text/javascript">
