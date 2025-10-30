@@ -91,23 +91,6 @@
             const tbody = $('#dtShifts tbody');
             tbody.empty();
 
-    //        const $applyRow = $(`
-    //    <tr class="apply-all-row">
-    //        <td colspan="7" style="background:#f8f9fa; padding:8px;">
-    //            <strong>Apply to All Days:</strong> &nbsp;
-    //            <label>Time In:</label>
-    //            <input type="time" id="InTimeAll" style="width:120px; margin-right:10px;">
-    //            <label>Time Out:</label>
-    //            <input type="time" id="OutTimeAll" style="width:120px; margin-right:10px;">
-    //            <label>Slot:</label>
-    //            <input type="number" id="SlotAll" min="1" max="60" style="width:80px; margin-right:10px;">
-    //            <button type="button" id="btnApplyAll" class="btn btn-sm btn-primary">Apply to All</button>
-    //        </td>
-    //    </tr>
-    //`);
-
-    //        tbody.append($applyRow);
-
             let $currentRow = $('<tr>');
             for (let i = 0; i < firstDayWeekday; i++) {
                 $currentRow.append('<td></td>');
@@ -120,11 +103,17 @@
                 const Slot_Id = 'Slot' + day;
 
                 const $cell = $('<td>');
+                //$cell.append(`<input type="hidden" id="Date_${day}" name="Date_${day}" value="${formattedDate}">`);
+                //$cell.append(`<label>${day}</label><br>`);
+                //$cell.append(`<label>Time In</label><br><input type="time" id="${Time_In_Id}" style="width:100%;"><br>`);
+                //$cell.append(`<label>Time Out</label><br><input type="time" id="${Time_Out_Id}" style="width:100%;"><br>`);
+                //$cell.append(`<label>Slot</label><br><input type="number" id="${Slot_Id}" min="1" max="60" style="width:100%;">`);
+                // $cell.append(`<label for="Day_${day}">${day}</label><br>`);
                 $cell.append(`<input type="hidden" id="Date_${day}" name="Date_${day}" value="${formattedDate}">`);
-                $cell.append(`<label>${day}</label><br>`);
-                $cell.append(`<label>Time In</label><br><input type="time" id="${Time_In_Id}" style="width:100%;"><br>`);
-                $cell.append(`<label>Time Out</label><br><input type="time" id="${Time_Out_Id}" style="width:100%;"><br>`);
-                $cell.append(`<label>Slot</label><br><input type="number" id="${Slot_Id}" min="1" max="60" style="width:100%;">`);
+                $cell.append(`<label for="Day_${day}">${day}</label><br>`);
+                $cell.append(`<label>Time In</label><br><input type="time" id="${Time_In_Id}" name="Time_In${day}" style="width:100%;"><br>`);
+                $cell.append(`<label>Time Out</label><br><input type="time" id="${Time_Out_Id}" name="Time_Out${day}" style="width:100%;"><br>`);
+                $cell.append(`<label>Slot</label><br><input type="number" id="${Slot_Id}" name="Slot${day}" min="1" max="60" style="width:100%;">`);
 
                 $currentRow.append($cell);
 
@@ -159,11 +148,11 @@
 
 
 
-        function formatDate(day, month, year) {
-            const d = String(day).padStart(2, '0');
-            const m = String(month).padStart(2, '0');
-            return `${year}-${m}-${d}`;
-        }
+        //function formatDate(day, month, year) {
+        //    const d = String(day).padStart(2, '0');
+        //    const m = String(month).padStart(2, '0');
+        //    return `${year}-${m}-${d}`;
+        //}
 
         function MonthChage() {
             setTimeout(function () { generateRoster(); })

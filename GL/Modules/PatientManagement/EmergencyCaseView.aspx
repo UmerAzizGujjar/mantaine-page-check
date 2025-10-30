@@ -72,7 +72,9 @@
                         "render": function (data, type, full) {
                             debugger;
                             var date = full.Admission_Date;
-                            date = moment(date).format('DD-MMM-YYYY');
+                            //date = moment(date).format('DD-MMM-YYYY');
+                            date = moment(date).format('DD-MMM-YYYY hh:mm:ss A');
+
                             return date;
                         }, "width": "15%", "orderable": false
                     },
@@ -84,7 +86,7 @@
                             if (!date) {
                                 return ""; 
                             }
-                            date = moment(date).format('DD-MMM-YYYY');
+                            date = moment(date).format('DD-MMM-YYYY hh:mm:ss A');
                             return date;
                         },
                         "width": "10%"
@@ -93,10 +95,10 @@
                     { "data": "AdmitDays", "width": "10%", "orderable": false },
                     {
                         "data": "Patinet_Condition","width": "10%", "orderable": false, "render": function (data, type, full) {
-                            if (data === "Urgent") {
+                            if (data === "Immediate") {
                                 return "Short Stay";
                             }
-                            else if (data === "Non Urgent") {
+                            else if (data === "OPD") {
                                 return "OPD";
                             }
                             else {
