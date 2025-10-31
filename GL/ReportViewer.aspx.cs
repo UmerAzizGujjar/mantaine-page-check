@@ -584,15 +584,15 @@ namespace PMS
                 string fileName = string.Empty;
                 if (reportType == "Weekly")
                 {
-                    fileName = "TransactionalDetails/rptWeeklyPatientRegistrations_WRT_Department.rpt";
+                    fileName = "GeneralPatientsReport/rptWeeklyPatientRegistrations_WRT_Department.rpt";
                 }
                 else if (reportType == "Monthly")
                 {
-                    fileName = "TransactionalDetails/rptDailyRegistrationsOfDepartmentMonthly.rpt";
+                    fileName = "GeneralPatientsReport/rptDailyRegistrationsOfDepartmentMonthly.rpt";
                 }
                 else if (reportType == "Annually")
                 {
-                    fileName = "TransactionalDetails/rptMonthlyRegistrationsOfDepartmentAnually.rpt";
+                    fileName = "GeneralPatientsReport/rptMonthlyRegistrationsOfDepartmentAnually.rpt";
                 }
                 reportPath += fileName;
                 rd.Load(reportPath);
