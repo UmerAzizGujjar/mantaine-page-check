@@ -573,7 +573,7 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             sys_Parm AccountPram = new sys_Parm();
             AccountPram = (from tbl in db.sys_Parms
-                           where tbl.Name == "Trade & Other Payables"
+                           where tbl.Name == "Consultant Payables"
 
                            select tbl).FirstOrDefault();
             if (AccountPram != null && AccountPram.Code != null)
