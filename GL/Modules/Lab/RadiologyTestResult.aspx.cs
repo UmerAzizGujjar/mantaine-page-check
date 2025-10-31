@@ -871,6 +871,7 @@ namespace PMS.Modules.Lab
         public static string GetLabDetailByBill_id(string Patient_ID, int Bill_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.CommandTimeout = 180;
             var patientNo = (from p in db.Reg_patients where p.pat_id == Convert.ToInt32(Patient_ID) select p.Patient_No).FirstOrDefault();
             var patientIDs = (from p in db.Reg_patients where p.Patient_No == patientNo select p.pat_id).ToList();
             //Individual Tests
@@ -1068,6 +1069,80 @@ namespace PMS.Modules.Lab
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
         }
 
+        [WebMethod]
+        public static string GetLabDetailByBillDetailId(int Bill_Details_ID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            db.CommandTimeout = 180;
+
+            var data = (from lt in db.Laboratory_Tests
+                        join ltd in db.Lab_Test_Details on lt.Lab_Test_ID equals ltd.Lab_Test_ID
+                        join tdef in db.Lab_Tests on ltd.Test_ID equals tdef.Test_ID
+                        join pa in db.Reg_patients on lt.Patient_ID equals pa.pat_id
+                        join bd in db.Ar_Billing_Details on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                        join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID
+                        where bd.Bill_Details_ID == Bill_Details_ID
+                          && (bd.Test_Main_Department == "002" || bd.Test_Main_Department == "003" || bd.Test_Main_Department == "004") // Radiology only
+                        select new
+                        {
+                            lt.Parent_Transaction_Type,
+                            lt.Parent_Transaction_Type_ID,
+                            lt.Lab_Test_ID,
+                            tdef.Test_ID,
+                            ltd.Lab_Test_Detail_ID,
+                            tdef.Test_Name,
+                            ltd.Emergancy,
+                            tdef.Group_Category,
+                            TestDepartment = db.GetDataValueName("Test Departments", tdef.Group_Department) ?? "",
+                            tdef.Value_Type,
+                            Status = ltd.Status ?? false,
+                            ltd.Is_Result,
+                            ltd.Bill_Details_ID,
+                            ltd.Rejected_Reason,
+                            tdef.Report_Colum,
+                            bd.Service_Date,
+                            ltd.isApproved,
+                            lt.Patient_ID,
+                            bd.Test_Main_Department,
+                            ltd.Test_Performed_By,
+                            ltd.Created_Time,
+                            ltd.Approved_Time,
+                            Approved_By = (from asp in db.aspnet_Users
+                                           where asp.UserId == ltd.Approved_By
+                                           select asp.UserName).FirstOrDefault(),
+                         //   LabNo = ar.Lab_No ?? ""
+                        }).ToList();
+
+            var refined = data.Select(item => new Test
+            {
+                Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString(),
+                Lab_Test_ID = item.Lab_Test_ID.ToString(),
+                Test_ID = item.Test_ID.ToString(),
+                Test_Name = item.Test_Name,
+                Group_Category = item.Group_Category ?? "",
+                TestDepartment = item.TestDepartment,
+                Is_Result = item.Is_Result ?? false,
+                Emergancy = item.Emergancy ?? false,
+                ValueType = item.Value_Type,
+                Status = item.Status,
+                Parent_Transaction_Type = item.Parent_Transaction_Type,
+                Parent_Transaction_Type_ID = Convert.ToInt32(item.Parent_Transaction_Type_ID),
+                Bill_Details_ID = item.Bill_Details_ID.ToString(),
+                Rejected_Reason = item.Rejected_Reason ?? "",
+                Report_Colum = item.Report_Colum ?? "",
+                Service_Date = item.Service_Date.ToString(),
+                Is_Approve = item.isApproved ?? false,
+                patient_ID = item.Patient_ID.ToString(),
+                Test_Main_Department = item.Test_Main_Department ?? "",
+                Test_Performed_By = item.Test_Performed_By ?? "",
+                Result_Time = item.Created_Time?.ToString() ?? "",
+                Approved_By = item.Approved_By ?? "",
+                Approved_Time = item.Approved_Time?.ToString() ?? "",
+               // LabNo = item.LabNo
+            }).ToList();
+
+            return new JavaScriptSerializer().Serialize(refined);
+        }
 
         [WebMethod]
         public static string GetLabDetail(string Patient_ID, int LabTestID)
@@ -1508,10 +1583,14 @@ namespace PMS.Modules.Lab
             Response.Redirect("~/Modules/Lab/RadiologyTestResult.aspx");
         }
 
+
+
+
         [WebMethod]
         public static string AllUltraSoundTest()
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            db.CommandTimeout = 180;
             JavaScriptSerializer serl = new JavaScriptSerializer();
             serl.MaxJsonLength = 2147483647;
 
@@ -1519,13 +1598,13 @@ namespace PMS.Modules.Lab
             DateTime endData = System.DateTime.Now.Date;
 
             var testDetails_Billing_Sample = (
-                from pat in db.Patients
-                join bill in db.Ar_Billings on pat.Patient_ID equals bill.Patient_ID
+                from pat in db.Reg_patients
+                join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
                 join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
                 join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
                 join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
-                where (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
-                bill_details.Test_Main_Department != "001" &&
+                where  (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                 bill_details.Test_Main_Department != "001" &&
                       (bill.isCancel == false || bill.isCancel == null) &&
                       bill.Bill_Date >= startDate
                 orderby bill.Bill_Date descending
@@ -1537,8 +1616,8 @@ namespace PMS.Modules.Lab
                     bill_details.Category_ID,
                     bill_details.Item_Name,
                     pat.Patient_No,
-                    pat.Created_Time,
-                    pat.Patient_ID,
+                    pat.Created_time,
+                    pat.pat_id,
                     pat.Full_Name,
                     bill_details.Bill_Details_ID,
                     bill.Remarks,
@@ -1547,6 +1626,6 @@ namespace PMS.Modules.Lab
             ).ToList();
 
             return serl.Serialize(testDetails_Billing_Sample);
-        }      
+        }
     }
 }

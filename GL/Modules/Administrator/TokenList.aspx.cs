@@ -16,11 +16,11 @@ namespace PMS
 
         }
         [WebMethod]
-        public static string LoadTokenPatient(string department)
+        public static string LoadTokenPatient(string patientType, string department)
         {
          
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_token_list(department);
+            var Details = db.sp_token_list(patientType, department);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         [WebMethod]
@@ -34,6 +34,26 @@ namespace PMS
                               join ds in db.ValueSets
                               on dv.ValueSet_ID equals ds.ValueSet_ID
                               where ds.ValueSet_Name == "Patient Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string GetDepartment()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Patient Main Category"
                               select new
                               {
                                   dv.DataValue_Name,
