@@ -213,6 +213,48 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
                 }
+
+                //else if (this.PageTitle == "OPD_Time_Line")
+                //{
+
+                //    dpROw.Visible = false;
+
+                //    tr1MedicalSubsidy.Visible = true;
+                //    lblMedical.Text = "Time Line";
+
+                //    lblMultiSelect.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    Time_Row.Visible = true;
+                //    tr_Summary.Visible = false;
+                //    optRw.Visible = true;
+                //    AllowPatientRecord = false;
+
+                //    ddlMedicalSubsidy.Items.Clear();
+                //    if (this.PageTitle == "OPD_Time_Line")
+                //    {
+                //        ddlMedicalSubsidy.Items.Add("Weekly");
+                //    }
+                //    ddlMedicalSubsidy.Items.Add("Monthly");
+                //    ddlMedicalSubsidy.Items.Add("Annually");
+
+                //    lblMainDepartment.Visible = false;
+                //    ddlDepartments.Visible = false;
+                //    tr1MedicalSubsidy.Visible = true;
+                //    lblMedical.Text = "Time Line";
+                //    ddlMedicalSubsidy.Items.Add("Weekly");
+                //    ddlMedicalSubsidy.Items.Add("Monthly");
+                //    ddlMedicalSubsidy.Items.Add("Annually");
+                //    lblPatientType.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    ddlPatientType.Visible = false;
+                //    optRw.Visible = false;
+                //    trDoctor.Visible = false;
+                //    tr_Summary.Visible = false;
+                //    ddlMedicalSubsidy.Items.Clear();
+                //    lblMainDepartment.Visible = false;
+                //    dpROw.Visible = false;
+                //    AllowPatientRecord = false;
+                //}
                 #endregion
                 #region Inventory
 
@@ -1788,23 +1830,30 @@ namespace PMS
 
                     lblMultiSelect.Visible = false;
                     lblPatientType.Visible = false;
-                    Time_Row.Visible = false;
+                    Time_Row.Visible = true;
                     tr_Summary.Visible = false;
                     optRw.Visible = false;
                     AllowPatientRecord = false;
+                    dpROw.Visible = false;
+
+                    lblMedical.Text = "Time Line";
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true; 
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
 
                     ddlMedicalSubsidy.Items.Clear();
-                    //if (this.PageTitle == "DepartmentWiseProcedureTimeLine")
-                    //{
-                    //    ddlMedicalSubsidy.Visible = false;
-                    //    lblMedical.Visible = false;
-                    //}
                     if (this.PageTitle == "OPD_Time_Line")
                     {
                         ddlMedicalSubsidy.Items.Add("Weekly");
                     }
                     ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
+
 
                     if (this.PageTitle == "AverageLengthOfStay")
                     {
@@ -2555,6 +2604,7 @@ namespace PMS
                 }
 
 
+
                 //else if (this.PageTitle == "Lab_Test_Detail")
                 //{
                 //    dpROw.Visible = false;
@@ -2609,6 +2659,7 @@ namespace PMS
                     dpROw.Visible = false;
                     AllowPatientRecord = false;
                 }
+
 
                 else if (this.PageTitle == "ComponentBloodStockLedger")
                 {

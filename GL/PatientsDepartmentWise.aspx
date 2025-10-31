@@ -1,9 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PatientsDepartmentWise.aspx.cs" Inherits="PMS.PatientsDepartmentWise" %>
+
 <%@ MasterType VirtualPath="~/Site.master" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-   
+
     <script type="text/javascript">
         function loaddoctor() {
             debugger;
@@ -27,7 +28,7 @@
             if (med_Name == "0" || med_Name == null || med_Name == "null") {
                 med_Name = "";
             }
-            
+
             var options = '<option value="0">All</option>';
 
             PageMethods.loadMedicine(med_Name, function (data) {
@@ -43,7 +44,7 @@
         var patid;
         function loadMRNo() {
             $("#ctl00_MainContent_txtMRNo").tokenInput("../../json.aspx?Table=PatientsByMr",
-             {
+                {
                     tokenLimit: 1,
                     onAdd: function (item) {
                         try {
@@ -115,7 +116,7 @@
 
 
         $(document).ready(function () {
-           
+
             debugger;
             var ReportTitle = '<%= Request.QueryString["rptTitle"]%>';
             //if (ReportTitle == "Lab_Cash_Collection") {
@@ -164,7 +165,7 @@
                 debugger;
                 var ary = [];
                 $('#ctl00_MainContent_lblMultiSelect').children().each(function () {
-                    ary.push($(this).val()); 
+                    ary.push($(this).val());
                 });
                 var Allvalues = ary;
                 var error = 0;
@@ -189,13 +190,13 @@
                         var url = 'ReportViewer.aspx?ReportName=DoctorWisePatients&ReportTitle=Doctor Wise Patient from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked;
                         window.open(url, '_blanks');
                     }
-                    else if (rptTitle == 'OPD_Time_Line') {
+<%--                    else if (rptTitle == 'OPD_Time_Line') {
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=OPDTimeLine&ReportTitle=OPD Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
-                    }
+                    }--%>
                     else if (rptTitle == "ComponentBloodBankStockLedger") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var Component = $("#ctl00_MainContent_ddlMainDepartment").val();
@@ -358,7 +359,7 @@
 
                     else if (rptTitle == "PatientsTypesDetails") {
                         debugger;
-                        
+
                        // var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         //Mohsin: 25 JULY WEDNESDAY, the report doesnot exists front and back end donot match.
                         //var url = 'ReportViewer.aspx?ReportName=PatientsTypesDetails&ReportTitle=Patients Category Wise OPD Summary from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_lblMultiSelect').val() + '&ALLValues=' + Allvalues + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
@@ -367,7 +368,7 @@
                         window.open(url, '_blanks');
                     }
 
-                   
+
                     else if (rptTitle == 'SehatSahulatWise') {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         debugger;
@@ -391,7 +392,7 @@
                         window.open(url, '_blanks');
                     }
 
-                    
+
 
 
                     else if (rptTitle == "Lab_Test_Investigation") {
@@ -526,7 +527,7 @@
                         var url = 'ReportViewer.aspx?ReportName=BloodIssuance&ReportTitle=BloodIssuanceReport from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
-                   
+
                     else if (rptTitle == "Lab_Test_Detail") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
@@ -548,13 +549,13 @@
                         var url = 'ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Lab Tests Patient Wise from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&testName=' + testname + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
-                    // new insertion
-                    //else if (rptTitle == "Lab_Test_Wise_Summary") {
-                    //    debugger;
-                    //    var testname = ((typeof ($("#ctl00_MainContent_ddlTestName option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlTestName option:selected").text() : "0")
-                    //    var oprators = ((typeof ($("#ctl00_MainContent_ddlProcedure").val()) != 'undefined') ? $("#ctl00_MainContent_ddlProcedure").val() : "0");
-                    //    window.location.href = 'ReportViewer.aspx?ReportName=Lab_Test_Wise_Summary&ReportTitle=LabCashCollection from ' + $('#ctl00_MainContent_txtsDate').val() + ' to ' + $('#ctl00_MainContent_txteDate').val() + '&sDate=' + $('#ctl00_MainContent_txtsDate').val() + '&eDate=' + $('#ctl00_MainContent_txteDate').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&testName=' + testname + '&Operator=' + oprators + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect option:selected").text() : "0")
-                    //}  // new insertion
+                        // new insertion
+                        //else if (rptTitle == "Lab_Test_Wise_Summary") {
+                        //    debugger;
+                        //    var testname = ((typeof ($("#ctl00_MainContent_ddlTestName option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlTestName option:selected").text() : "0")
+                        //    var oprators = ((typeof ($("#ctl00_MainContent_ddlProcedure").val()) != 'undefined') ? $("#ctl00_MainContent_ddlProcedure").val() : "0");
+                        //    window.location.href = 'ReportViewer.aspx?ReportName=Lab_Test_Wise_Summary&ReportTitle=LabCashCollection from ' + $('#ctl00_MainContent_txtsDate').val() + ' to ' + $('#ctl00_MainContent_txteDate').val() + '&sDate=' + $('#ctl00_MainContent_txtsDate').val() + '&eDate=' + $('#ctl00_MainContent_txteDate').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&testName=' + testname + '&Operator=' + oprators + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect option:selected").text() : "0")
+                        //}  // new insertion
 
                     <%--else if (rptTitle == "Lab_Test_Wise_Summary") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -606,7 +607,7 @@
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'Service_Charges_Detail') {
-       
+
                         var url = 'ReportViewer.aspx?ReportName=ServiceChargesDetail&ReportTitle=Service Charges Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&ServiceID=' + $('#ctl00_MainContent_ddlTestName').val() + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect option:selected").text() : "0") + '&Discount=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0");// + '&Summary=' + summary + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
@@ -727,6 +728,32 @@
                         var url = 'ReportViewer.aspx?ReportName=EmerDetailReport&ReportTitle=Emergency Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
                     }
+                    //else if (rpttitle == "opd_time_line") {
+                    //    debugger;
+                    //    var timeline = $('#ctl00_maincontent_ddlmedicalsubsidy').val();
+                    //    var url = 'reportviewer.aspx?reportname=opd_time_line&reporttitle=opd time line from ' + $('#ctl00_maincontent_txtstart_date').val() + ' ' + $('#ctl00_maincontent_txtstime').val() + ' to ' + $('#ctl00_maincontent_txtend_date').val() + ' ' + $('#ctl00_maincontent_txtetime').val() + '&report_type=' + timeline + '&startdatetime=' + $('#ctl00_maincontent_txtstart_date').val() + ' ' + $('#ctl00_maincontent_txtstime').val() + '&enddatetime=' + $('#ctl00_maincontent_txtend_date').val() + ' ' + $('#ctl00_maincontent_txtetime').val();
+                    //    window.open(url, '_blank');
+                    //}
+                    else if (rptTitle == "OPD_Time_Line") {
+                        debugger;
+                        var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=OPD_Time_Line' +
+                            '&ReportTitle=' + encodeURIComponent('OPD Time Line from ' + startDateTime + ' to ' + endDateTime) +
+                            '&Report_Type=' + encodeURIComponent(timeLine) +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime);
+
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "APL") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=ActivePatientList&ReportTitle=Active Patient List Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + $("#ctl00_MainContent_ddlDepartments option:selected").val() + '&FilterClinic=' + $("#ctl00_MainContent_ddlFilterClinic").val() + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val();
@@ -754,7 +781,7 @@
                     }
                     else if (rptTitle == 'RDW') {
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=RevenueDepartmentWise&ReportTitle=Revenue Department Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Cashier=' +  $("#ctl00_MainContent_ddlcashier").val()  + '&Patient_Type=' + $("#ctl00_MainContent_ddlDepartments option:selected").val();
+                        var url = 'ReportViewer.aspx?ReportName=RevenueDepartmentWise&ReportTitle=Revenue Department Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Cashier=' + $("#ctl00_MainContent_ddlcashier").val() + '&Patient_Type=' + $("#ctl00_MainContent_ddlDepartments option:selected").val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "RevenuseSummary") {
@@ -810,9 +837,9 @@
                     else if (rptTitle == "MER") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=MER&ReportTitle=Medicine Expiry Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val();
-                          window.open(url, '_blank');
+                        window.open(url, '_blank');
                     }
-                    
+
 
 
                     else if (rptTitle == 'Department_Conversion') {
@@ -844,7 +871,7 @@
                         window.open(url, '_blanks');
                     }
 
-                   
+
                     else if (rptTitle == "Blood_Bank_Cash_Collection") {
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -872,7 +899,7 @@
                         var url = 'ReportViewer.aspx?ReportName=PrivateAdmitionDetail&ReportTitle=Private Admition Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&ExportPDF=' + exporttopdf + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0");
                         window.open(url, '_blanks');
                     }
-                    
+
 
                     else if (rptTitle == "Discharge_Time_Line_Detail") {
                         debugger;
@@ -908,7 +935,7 @@
                     else if (rptTitle == 'Patient_Count_Department_Wise') {
                         debugger;
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=Patient_Count_Department_Wise&ReportTitle= Department Wise Patients Count From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf ;    // excluded:'&Patient_Type=' + $("#ctl00_MainContent_ddlPatientType").val() + 
+                        var url = 'ReportViewer.aspx?ReportName=Patient_Count_Department_Wise&ReportTitle= Department Wise Patients Count From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;    // excluded:'&Patient_Type=' + $("#ctl00_MainContent_ddlPatientType").val() + 
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'TestWiseMonthlyLabTestDepartment') {
@@ -921,7 +948,7 @@
                         debugger;
                         var stock = $("#ctl00_MainContent_ddlStock").val();     // stock new 
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=Stock_In_Hand_Detail&ReportTitle=Stock in Hand Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&ALLValues=' + Allvalues + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") +  '&stock=' + stock;    // excluded:'&Patient_Type=' + $("#ctl00_MainContent_ddlPatientType").val() + 
+                        var url = 'ReportViewer.aspx?ReportName=Stock_In_Hand_Detail&ReportTitle=Stock in Hand Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&ALLValues=' + Allvalues + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&stock=' + stock;    // excluded:'&Patient_Type=' + $("#ctl00_MainContent_ddlPatientType").val() + 
                         window.open(url, '_blanks');
                     }
 
@@ -932,7 +959,7 @@
                         var url = 'ReportViewer.aspx?ReportName=Discharge_Detail&ReportTitle=Discharge Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '' + '&Patient_Type=' + $("#ctl00_MainContent_lblMultiSelect").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&MedicalSubsidy=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0") + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val();
                         window.open(url, '_blank');
                     }
-                    
+
                     else if (rptTitle == "Patients_Cards") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
@@ -1041,217 +1068,217 @@
 
 
 
-        <div class="container mt-4">
-         <div class="row mb-3">
-             <div class="col-lg-3 col-md-4 col-sm-12" id="MRDiv" visible="false" runat="server">
-                 <asp:Label runat="server" ID="lblMRNo" Text="Mr No"></asp:Label>
-                 <asp:TextBox runat="server" ID="txtMRNo"></asp:TextBox>
-             </div>
-         </div>
-         <div class="row mb-3">
-             <div class="col-lg-3 col-md-4 col-sm-12" id="MainDeptDiv" visible="false" runat="server">
-                 <asp:Label runat="server" ID="lblMainDepartment" Text="Main Department"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlMainDepartment" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" id="trTestResult1" visible="false" runat="server">
-                 <asp:Label runat="server" ID="lblTestName" Text="Test Name"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlTestName" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3">
-             <div class="col-lg-1 col-md-4 col-sm-12" id="tr1ChkOPD" visible="false" runat="server">
-                 <div class="form-check" style="display: inline-flex; width: 26px;">
-                     <input runat="server" class="form-check-input" type="checkbox" value="" id="chkOPD"/>
-                     <label class="form-check-label" id="OPD" for="flexCheckDefault" style="margin-left: 8px;">OPD</label>
-                 </div>
-             </div>
-             <div class="col-lg-1 col-md-4 col-sm-12" runat="server" visible="false" id="tr1ChkIPD">
-                 <div class="form-check" style="display: inline-flex; width: 26px;">
-                     <input runat="server" class="form-check-input" type="checkbox" value="" id="chkIPD"/>
-                     <label class="form-check-label" id="IPD" for="flexCheckDefault" style="margin-left: 8px;">IPD</label>
-                 </div>
-             </div>
-             <div class="col-lg-1 col-md-4 col-sm-12" id="tr1ShowRate" visible="false" runat="server">
-                 <div class="form-check" style="display: inline-flex; width: 26px;">
-                     <input runat="server" class="form-check-input" type="checkbox" checked="checked" value="" id="chkShowRate"/>
-                     <label class="form-check-label" id="showRate" for="flexCheckDefault" style="margin-left: 8px;">Rate</label>
-                 </div>
-             </div>
-         </div>
-         <div class="row mb-3">
-             <div class="col-lg-3 col-md-4 col-sm-12" id="tr1MedicalSubsidy" visible="false" runat="server">
-                 <asp:Label ID="lblMedical" runat="server" Text="Medical Subsidy" CssClass="form-label"></asp:Label>
-                 <asp:DropDownList ID="ddlMedicalSubsidy" runat="server" AppendDataBoundItems="true" CssClass="form-control">
-                     <asp:ListItem Text="Both" Value="0"></asp:ListItem>
-                     <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
-                     <asp:ListItem Text="No" Value="2"></asp:ListItem>
-                 </asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" id="trServiceName" visible="false" runat="server">
-                 <asp:Label ID="lblService" runat="server" Text="Service Name" CssClass="form-label"></asp:Label>
-                 <asp:DropDownList ID="ddlTestResult" runat="server" AppendDataBoundItems="true" CssClass="form-control">
-                     <asp:ListItem Text="---Please Select---" Value="0"></asp:ListItem>
-                     <asp:ListItem Text="X-Ray" Value="003"></asp:ListItem>
-                     <asp:ListItem Text="Ultra Sound" Value="002"></asp:ListItem>
-                 </asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" runat="server">
-             <div class="col-lg-3 col-md-4 col-sm-12" id="trProcedure1" visible="false" runat="server">
-                 <asp:Label runat="server" ID="lbProcedure" Text="Procedure Name"></asp:Label>
-                   <asp:DropDownList runat="server" ID="ddlProcedure" AppendDataBoundItems="true">
-                    </asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" id="trSearch1" visible="false" runat="server">
-                 <asp:Label runat="server" ID="td11" Text="Item Name"></asp:Label>
-                   <asp:DropDownList runat="server" ID="ddlItemName" AppendDataBoundItems="true">
-                    </asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" id="dpROw" runat="server" visible="false">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lblDepartment" Text="Department"></asp:Label>
-                   <asp:DropDownList runat="server" ID="ddlDepartments" AppendDataBoundItems="true" onchange="loaddoctor();">
-                    </asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lblPatientType" Text="Patient Type"></asp:Label>
-                 <asp:ListBox runat="server" ID="lblMultiSelect" SelectionMode="multiple" Style="height: 61px !important"></asp:ListBox>
-                 <asp:DropDownList runat="server" ID="ddlPatientType" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-         </div>
-          <div class="row mb-3" id="optRw" runat="server" visible="false">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lboperator" Text="Operators"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddloprators" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lbShift" Text="Shift"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlShift" AppendDataBoundItems="true" onchange="changeshift(); DisableFilterClinic();"></asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" runat="server">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false" id="op_PanelCompany">
-                 <asp:Label runat="server" ID="lbPanelCompany" Text="Panel Company"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlPanelCompany" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false" id="op_FilterClinic">
-                 <asp:Label runat="server" ID="lbFilterClinic" Text="Filter Clinic"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlFilterClinic" AppendDataBoundItems="true" onchange="DisableDepartmentDoctor();"></asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" runat="server">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false"  id="CashierRow">
-                 <asp:Label runat="server" ID="lblCashier" Text="Cashier"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlcashier" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false" id="test_Cat">
-                 <asp:Label runat="server" ID="lblTestCategory" Text="Test Catagory"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlcatagory" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" runat="server" id="trDoctor" visible="false">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lblDoctor" Text="Doctor"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlDoctor" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lbservieType" visible="false" Text="Service Type"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlReportType" visible="false" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" runat="server" id="tr_Inv" visible="false"> 
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="Label1" Text="Inventory Form"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlInvForm" AppendDataBoundItems="true" onchange="LoadInvNo();"></asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lbnvNo" Text="Inventory No"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlInvNo" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" runat="server" id="Stock_Movement" visible="false">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lblWarehouse" Text="Ware House"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlwareHouse" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lbItemCategory" Text="Item Category"></asp:Label>
-                 <asp:DropDownList runat="server" ID="ddlItemCategory" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-              <div class="col-lg-3 col-md-4 col-sm-12" runat="server" >
-                 <asp:Label runat="server" ID="lblItemCode" visible="false" Text="Select Item Code"></asp:Label>
-                 <asp:TextBox runat="server" ID="txtItemCode" visible="false"></asp:TextBox>
-             </div>
-         </div>
-          <div class="row mb-3" runat="server" id="compDiv" visible="false">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lblCompanies" Text="Companies"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlCompdrop" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-         </div>
+    <div class="container mt-4">
+        <div class="row mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="MRDiv" visible="false" runat="server">
+                <asp:Label runat="server" ID="lblMRNo" Text="Mr No"></asp:Label>
+                <asp:TextBox runat="server" ID="txtMRNo"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="MainDeptDiv" visible="false" runat="server">
+                <asp:Label runat="server" ID="lblMainDepartment" Text="Main Department"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlMainDepartment" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trTestResult1" visible="false" runat="server">
+                <asp:Label runat="server" ID="lblTestName" Text="Test Name"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlTestName" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-1 col-md-4 col-sm-12" id="tr1ChkOPD" visible="false" runat="server">
+                <div class="form-check" style="display: inline-flex; width: 26px;">
+                    <input runat="server" class="form-check-input" type="checkbox" value="" id="chkOPD" />
+                    <label class="form-check-label" id="OPD" for="flexCheckDefault" style="margin-left: 8px;">OPD</label>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-4 col-sm-12" runat="server" visible="false" id="tr1ChkIPD">
+                <div class="form-check" style="display: inline-flex; width: 26px;">
+                    <input runat="server" class="form-check-input" type="checkbox" value="" id="chkIPD" />
+                    <label class="form-check-label" id="IPD" for="flexCheckDefault" style="margin-left: 8px;">IPD</label>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-4 col-sm-12" id="tr1ShowRate" visible="false" runat="server">
+                <div class="form-check" style="display: inline-flex; width: 26px;">
+                    <input runat="server" class="form-check-input" type="checkbox" checked="checked" value="" id="chkShowRate" />
+                    <label class="form-check-label" id="showRate" for="flexCheckDefault" style="margin-left: 8px;">Rate</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="tr1MedicalSubsidy" visible="false" runat="server">
+                <asp:Label ID="lblMedical" runat="server" Text="Medical Subsidy" CssClass="form-label"></asp:Label>
+                <asp:DropDownList ID="ddlMedicalSubsidy" runat="server" AppendDataBoundItems="true" CssClass="form-control">
+                    <asp:ListItem Text="Both" Value="0"></asp:ListItem>
+                    <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                    <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                </asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trServiceName" visible="false" runat="server">
+                <asp:Label ID="lblService" runat="server" Text="Service Name" CssClass="form-label"></asp:Label>
+                <asp:DropDownList ID="ddlTestResult" runat="server" AppendDataBoundItems="true" CssClass="form-control">
+                    <asp:ListItem Text="---Please Select---" Value="0"></asp:ListItem>
+                    <asp:ListItem Text="X-Ray" Value="003"></asp:ListItem>
+                    <asp:ListItem Text="Ultra Sound" Value="002"></asp:ListItem>
+                </asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trProcedure1" visible="false" runat="server">
+                <asp:Label runat="server" ID="lbProcedure" Text="Procedure Name"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlProcedure" AppendDataBoundItems="true">
+                </asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trSearch1" visible="false" runat="server">
+                <asp:Label runat="server" ID="td11" Text="Item Name"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlItemName" AppendDataBoundItems="true">
+                </asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" id="dpROw" runat="server" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblDepartment" Text="Department"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlDepartments" AppendDataBoundItems="true" onchange="loaddoctor();">
+                </asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblPatientType" Text="Patient Type"></asp:Label>
+                <asp:ListBox runat="server" ID="lblMultiSelect" SelectionMode="multiple" Style="height: 61px !important"></asp:ListBox>
+                <asp:DropDownList runat="server" ID="ddlPatientType" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" id="optRw" runat="server" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lboperator" Text="Operators"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddloprators" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lbShift" Text="Shift"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlShift" AppendDataBoundItems="true" onchange="changeshift(); DisableFilterClinic();"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false" id="op_PanelCompany">
+                <asp:Label runat="server" ID="lbPanelCompany" Text="Panel Company"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlPanelCompany" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false" id="op_FilterClinic">
+                <asp:Label runat="server" ID="lbFilterClinic" Text="Filter Clinic"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlFilterClinic" AppendDataBoundItems="true" onchange="DisableDepartmentDoctor();"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false" id="CashierRow">
+                <asp:Label runat="server" ID="lblCashier" Text="Cashier"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlcashier" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server" visible="false" id="test_Cat">
+                <asp:Label runat="server" ID="lblTestCategory" Text="Test Catagory"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlcatagory" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server" id="trDoctor" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblDoctor" Text="Doctor"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlDoctor" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lbservieType" Visible="false" Text="Service Type"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlReportType" Visible="false" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server" id="tr_Inv" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="Label1" Text="Inventory Form"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlInvForm" AppendDataBoundItems="true" onchange="LoadInvNo();"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lbnvNo" Text="Inventory No"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlInvNo" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server" id="Stock_Movement" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblWarehouse" Text="Ware House"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlwareHouse" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lbItemCategory" Text="Item Category"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlItemCategory" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblItemCode" Visible="false" Text="Select Item Code"></asp:Label>
+                <asp:TextBox runat="server" ID="txtItemCode" Visible="false"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server" id="compDiv" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblCompanies" Text="Companies"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlCompdrop" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
         <div class="row mb-3" runat="server" id="row_Vendor" visible="false">
-             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
-                 <asp:Label runat="server" ID="lblVendor" Text="Vendor"></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlVendor" AppendDataBoundItems="true"></asp:DropDownList>
-             </div>
-         </div>
-         <div class="row mb-3" id="DateDiv" runat="server" visible="false">
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <asp:Label ID="sttDate" runat="server" Text="Start Date" CssClass="form-label"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtStart_Date" CssClass="form-control datepicker"></asp:TextBox>
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblVendor" Text="Vendor"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlVendor" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" id="DateDiv" runat="server" visible="false">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <asp:Label ID="sttDate" runat="server" Text="Start Date" CssClass="form-label"></asp:Label>
+                <asp:TextBox runat="server" ID="txtStart_Date" CssClass="form-control datepicker"></asp:TextBox>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <asp:Label ID="endDate" runat="server" Text="End Date" CssClass="form-label"></asp:Label>
+                <asp:TextBox runat="server" ID="txtEnd_Date" CssClass="form-control datepicker"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mb-3" id="Time_Row" runat="server" visible="false">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <asp:Label ID="sttTime" runat="server" Text="Start Time" CssClass="form-label"></asp:Label>
+                <asp:TextBox runat="server" ID="txtSTime" CssClass="form-control"></asp:TextBox>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <asp:Label ID="endTime" runat="server" Text="End Time" CssClass="form-label"></asp:Label>
+                <asp:TextBox runat="server" ID="txtETime" CssClass="form-control"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="tr_Export" runat="server" visible="false">
+                <div class="form-check" style="display: inline-flex; width: 26px;">
+                    <input runat="server" class="form-check-input" type="checkbox" id="chkExportPDF" visible="true" />
+                    <label class="form-check-label" id="lblExport" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">Export to Excel</label>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <asp:Label ID="endDate" runat="server" Text="End Date" CssClass="form-label"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtEnd_Date" CssClass="form-control datepicker"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="tr_Summary" runat="server" visible="false">
+                <div class="form-check" style="display: inline-flex; width: 26px;">
+                    <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkSummary" name="chkSummary" />
+                    <label class="form-check-label" id="lblSummary" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">Summary</label>
                 </div>
-          </div>
-          <div class="row mb-3" id="Time_Row" runat="server" visible="false">
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <asp:Label ID="sttTime" runat="server" Text="Start Time" CssClass="form-label"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtSTime" CssClass="form-control"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="tr_AllPatientRecord" runat="server" visible="false">
+                <div class="form-check" style="display: inline-flex; width: 26px;">
+                    <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkAllPatientRecord" name="chkAllPatientRecord" />
+                    <label class="form-check-label" id="lblAllPatientRecord" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">All Patients Records</label>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <asp:Label ID="endTime" runat="server" Text="End Time" CssClass="form-label"></asp:Label>
-                    <asp:TextBox runat="server" ID="txtETime" CssClass="form-control"></asp:TextBox>
-                </div>
-          </div>
-          <div class="row mb-3">
-             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_Export" runat="server" visible="false">
-                 <div class="form-check" style="display: inline-flex; width: 26px;">
-                     <input runat="server" class="form-check-input" type="checkbox" id="chkExportPDF" visible="true"/>
-                     <label class="form-check-label" id="lblExport" for="flexCheckDefault" style="margin-left: 8px;white-space: nowrap;">Export to Excel</label>
-                 </div>
-             </div>
-         </div>
-         <div class="row mb-3">
-             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_Summary" runat="server" visible="false">
-                 <div class="form-check" style="display: inline-flex; width: 26px;">
-                     <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkSummary" name="chkSummary" />
-                     <label class="form-check-label" id="lblSummary" for="flexCheckDefault" style="margin-left: 8px;white-space: nowrap;">Summary</label>
-                 </div>
-             </div>
-         </div>
-         <div class="row mb-3">
-             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_AllPatientRecord" runat="server" visible="false">
-                 <div class="form-check" style="display: inline-flex; width: 26px;">
-                     <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkAllPatientRecord" name="chkAllPatientRecord" />
-                     <label class="form-check-label" id="lblAllPatientRecord" for="flexCheckDefault" style="margin-left: 8px;white-space: nowrap;">All Patients Records</label>
-                 </div>
-             </div>
-         </div>
-         &nbsp;&nbsp;
-         <div class="row">            
+            </div>
+        </div>
+        &nbsp;&nbsp;
+         <div class="row">
              <div class="col-lg-2">
-                 
-                <asp:Button Text="Preview" CssClass="btn btn-primry" ID="btnPreview" runat="server" OnClientClick="return false;" />
-              
+
+                 <asp:Button Text="Preview" CssClass="btn btn-primry" ID="btnPreview" runat="server" OnClientClick="return false;" />
+
              </div>
              <div class="col-lg-2">
                  <asp:Button Text="Reset" ID="btnReset" CssClass="btn btn-gray" runat="server" CausesValidation="false" />
              </div>
          </div>
-     </div>
+    </div>
 
-    
+
 </asp:Content>

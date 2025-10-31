@@ -506,7 +506,6 @@ namespace PMS
                 rd.SetParameterValue("@Department", departmentID);
             }
 
-
             else if (reportName == "IPDDetailReport")
             {
 
@@ -573,6 +572,40 @@ namespace PMS
                 rd.SetParameterValue("@FromDate", sqlStartDateTime);
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
                 rd.SetParameterValue("@Operator", Operator);
+            }
+            else if (reportName == "OPD_Time_Line")
+            {
+                string reportType = Request.QueryString["Report_Type"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string fileName = string.Empty;
+                if (reportType == "Weekly")
+                {
+                    fileName = "GeneralPatientsReport/rptWeeklyPatientRegistrations_WRT_Department.rpt";
+                }
+                else if (reportType == "Monthly")
+                {
+                    fileName = "GeneralPatientsReport/rptDailyRegistrationsOfDepartmentMonthly.rpt";
+                }
+                else if (reportType == "Annually")
+                {
+                    fileName = "GeneralPatientsReport/rptMonthlyRegistrationsOfDepartmentAnually.rpt";
+                }
+                reportPath += fileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+
+                rd.SetParameterValue("@stDate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", "0");
+                if (reportType == "Monthly" || reportType == "Annually")
+                {
+                    rd.SetParameterValue("@Trans_Type", "OPD");
+                }
             }
             else if (reportName == "PrintPatientCard")
             {

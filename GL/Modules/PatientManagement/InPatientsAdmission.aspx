@@ -16,6 +16,18 @@
 
                 $("#ctl00_MainContent_panelshow").hide();
             });
+            $('#ctl00_MainContent_ddlPatientType').change(function () {
+                debugger;
+                $('#ctl00_MainContent_ddlPatientType').attr('disabled', true)
+                var type = $('#ctl00_MainContent_ddlPatientType').val();
+                if (type == '10' || type == "10") {
+                    $('#ctl00_MainContent_txtadmissionfee').val('0')
+                    $('#ctl00_MainContent_txtDiscount').val('100')
+
+                }
+
+
+            });
             debugger;
             
             MaskedInput({
@@ -5173,7 +5185,7 @@
         function ChangePanel() {
             debugger;
             var type = $('#ctl00_MainContent_ddlPatientType').val();
-
+            
             $("#ctl00_MainContent_panelshow").hide();
 
             if (type === "10") {
