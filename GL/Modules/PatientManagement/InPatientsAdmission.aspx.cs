@@ -407,6 +407,7 @@ namespace PMS
                     
                     ddlIssuance_Of.SelectedValue = qry.Issuance_Of;
                     ddlPatientType.SelectedValue = qry.Patient_Discount_Type;
+                    ddlPatientType.Enabled = false;
 
 
                     if (ddlPatientType.SelectedValue == "03")

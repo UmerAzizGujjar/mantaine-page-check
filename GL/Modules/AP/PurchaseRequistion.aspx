@@ -529,7 +529,7 @@
             var dept = $('#ddldept').val();
 
 
-            if (warehouseCond != "01") {
+            if (warehouseCond == "01") {
                 if (Warehouse == '0') {
                     Swal.fire({
                         icon: 'error',
