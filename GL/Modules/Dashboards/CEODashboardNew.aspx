@@ -2129,7 +2129,7 @@
                         <div id="chartOPDDepartmentWiseWithCounts"></div>
                     </div>
                 </div>
-                <div class="row" style="height:30px !important"></div>
+                <div class="row" style="margin-top:80px !important">
                 <div class="row">
                     <div class="row">
                         <div class="col-lg-6" style="text-align: center">
@@ -2151,9 +2151,8 @@
                         <div id="chartIPDWardCounts"></div>
                     </div>
                     </div>
-                <div class="row" style="height:50px !important"></div>
                     <div class="row">
-                            <div class="card shadow" style="margin-left:25px !important">
+                            <div class="card shadow" style="margin-left:25px !important;margin-top:95px !important">
                                 <div class="card-header d-flex justify-content-center align-items-center  headercolor">
                                     <h4 class="card-title mb-0 fw-bold text-white">Top 5 Tests by Department
                                     </h4>

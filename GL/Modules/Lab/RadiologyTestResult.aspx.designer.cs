@@ -15,6 +15,15 @@ namespace PMS.Modules.Lab
     {
 
         /// <summary>
+        /// hdBillDetailId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdBillDetailId;
+
+        /// <summary>
         /// txtSearchBillNo control.
         /// </summary>
         /// <remarks>
