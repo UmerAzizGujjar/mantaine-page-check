@@ -35,14 +35,12 @@
              loadItemList();
              FillAccountCategory();
              $('#<%= btnPreview.ClientID %>').click(function () {
-                 debugger;
-
                  var urlParams = new URLSearchParams(window.location.search);
-                 var type = urlParams.get('Type');
-                 var type = '<% =Request.QueryString["Type"] %>';
+                 var reportVersion = urlParams.get('ReportVersion'); // "2" or null
 
-                 if (type == null || type == '')
-                 {
+                 var type = '<%= Request.QueryString["Type"] %>';
+
+                 if (type == null || type == '') {
                      var startDate = $('#txtsDate').val();
                      var endDate = $('#txteDate').val();
                      var startItemCode = $('#ddlStartItemCode').val();
@@ -50,9 +48,21 @@
                      var ddlWare = $('#ddlWareHouse').val();
                      var ddlinvOrg = $('#ctl00_MainContent_ddlInventoryOrg').val();
 
-                     var url = '../../ReportViewer.aspx?ReportName=StockLedgerWareHousewise&ReportTitle=Stock Ledger Ware House Wise&StartDate=' + startDate + '&EndDate=' + endDate + '&StartItemCode=' + startItemCode + '&EndItemCode=' + endItemCode + '&WareHouse=' + ddlWare + '&Inventory_Org=' + ddlinvOrg + '';
+                     // ✅ Choose report name dynamically
+                     var reportName = (reportVersion === '2')
+                         ? 'StockLedgerWareHousewise_2'
+                         : 'StockLedgerWareHousewise';
 
-                     window.open(url);
+                     var url = '../../ReportViewer.aspx?ReportName=' + encodeURIComponent(reportName) +
+                         '&ReportTitle=Stock Ledger Ware House Wise' +
+                         '&StartDate=' + encodeURIComponent(startDate) +
+                         '&EndDate=' + encodeURIComponent(endDate) +
+                         '&StartItemCode=' + encodeURIComponent(startItemCode) +
+                         '&EndItemCode=' + encodeURIComponent(endItemCode) +
+                         '&WareHouse=' + encodeURIComponent(ddlWare) +
+                         '&Inventory_Org=' + encodeURIComponent(ddlinvOrg);
+
+                     window.open(url, '_blank');
                  }
                  else
                  {
@@ -92,9 +102,22 @@
 
             });
          }
-         function FillAccountCategory() {             var options = '<option value="0">Please Select</option>';             PageMethods.getAccountCategory(function (data) {                 var testsData = JSON.parse(data);
-                 debugger;                 $.each(JSON.parse(data), function (key, value) {                     options += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';                 });                 $('#ctl00_MainContent_ddlInventoryOrg').html(options);
-             });             return options;         }
+         function FillAccountCategory() {
+
+             var options = '<option value="0">Please Select</option>';
+             PageMethods.getAccountCategory(function (data) {
+                 var testsData = JSON.parse(data);
+
+                 debugger;
+
+                 $.each(JSON.parse(data), function (key, value) {
+                     options += '<option value="' + value.Account_Category_Id + '" >' + value.CategoryName + '</option>';
+                 });
+                 $('#ctl00_MainContent_ddlInventoryOrg').html(options);
+
+             });
+             return options;
+         }
 
             function loadItemList(rowlength) {
                 debugger;
