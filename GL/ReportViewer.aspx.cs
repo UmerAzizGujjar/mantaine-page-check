@@ -213,6 +213,29 @@ namespace PMS
                 rd.SetParameterValue("@Ware_House", warehouse);
                 rd.SetParameterValue("@ItemCategory", itemCategory);
             }
+            else if (reportName == "StockLedgerWareHousewise_2")
+            {
+                string stitemcode = Request.QueryString["StartItemCode"].ToString();
+                string enditemcode = Request.QueryString["EndItemCode"].ToString();
+                string warehouse = Request.QueryString["WareHouse"].ToString();
+                string itemCategory = Request.QueryString["Inventory_Org"].ToString();
+
+                long sitemCode = Convert.ToInt64(stitemcode);
+                long eitemCode = Convert.ToInt64(enditemcode);
+
+                string stDate = Request.QueryString["StartDate"].ToString();
+                string endDate = Request.QueryString["EndDate"].ToString();
+                reportPath += "Inventory/rptStockLedgerWareHouseWise_2.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@stDate", stDate);
+                rd.SetParameterValue("@endDate", endDate);
+                rd.SetParameterValue("@stItemCode", sitemCode);
+                rd.SetParameterValue("@endItemCode", eitemCode);
+                rd.SetParameterValue("@Ware_House", warehouse);
+                rd.SetParameterValue("@ItemCategory", itemCategory);
+            }
             else if (reportName == "StockBalance")
             {
                 string CurrentUserName = DBClass.getField("select username from aspnet_users where userid='" + AppConfig.UserID + "'").ToString();
@@ -506,7 +529,6 @@ namespace PMS
                 rd.SetParameterValue("@Department", departmentID);
             }
 
-
             else if (reportName == "IPDDetailReport")
             {
 
@@ -573,6 +595,40 @@ namespace PMS
                 rd.SetParameterValue("@FromDate", sqlStartDateTime);
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
                 rd.SetParameterValue("@Operator", Operator);
+            }
+            else if (reportName == "OPD_Time_Line")
+            {
+                string reportType = Request.QueryString["Report_Type"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string fileName = string.Empty;
+                if (reportType == "Weekly")
+                {
+                    fileName = "GeneralPatientsReport/rptWeeklyPatientRegistrations_WRT_Department.rpt";
+                }
+                else if (reportType == "Monthly")
+                {
+                    fileName = "GeneralPatientsReport/rptDailyRegistrationsOfDepartmentMonthly.rpt";
+                }
+                else if (reportType == "Annually")
+                {
+                    fileName = "GeneralPatientsReport/rptMonthlyRegistrationsOfDepartmentAnually.rpt";
+                }
+                reportPath += fileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+
+                rd.SetParameterValue("@stDate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", "0");
+                if (reportType == "Monthly" || reportType == "Annually")
+                {
+                    rd.SetParameterValue("@Trans_Type", "OPD");
+                }
             }
             else if (reportName == "PrintPatientCard")
             {
