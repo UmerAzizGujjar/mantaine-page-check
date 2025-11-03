@@ -1804,7 +1804,7 @@
                    <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg"/>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn-primry" id="btnSave" value="Save" />
+                    <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'AppointmentView.aspx'" />
@@ -1813,7 +1813,7 @@
                     <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Appointment.aspx'" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn-primry" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
+                    <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
                 </div>
             </div>
         </div>

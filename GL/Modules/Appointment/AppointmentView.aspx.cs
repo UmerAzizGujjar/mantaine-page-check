@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Linq.SqlClient;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -32,7 +33,7 @@ namespace PMS
 
         }
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string doctorId = null,string deptId = null,string status = null,string appDate = null)
         {
             try
             {
@@ -47,22 +48,25 @@ namespace PMS
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "sp_get_appointment_view";
 
-                    // Add search value parameter
                     var searchParameter = cmd.CreateParameter();
                     searchParameter.ParameterName = "@searchValue";
                     searchParameter.Value = searchValue ?? (object)DBNull.Value;
                     cmd.Parameters.Add(searchParameter);
 
-                    // Add sorting parameters
                     var sortColumnParameter = cmd.CreateParameter();
                     sortColumnParameter.ParameterName = "@sortColumn";
-                    sortColumnParameter.Value = sortColumn ?? "Appointment_ID"; // Default column
+                    sortColumnParameter.Value = sortColumn ?? "Appointment_ID";
                     cmd.Parameters.Add(sortColumnParameter);
 
                     var sortDirectionParameter = cmd.CreateParameter();
                     sortDirectionParameter.ParameterName = "@sortDirection";
-                    sortDirectionParameter.Value = sortColumnDirection ?? "asc"; // Default direction
+                    sortDirectionParameter.Value = sortColumnDirection ?? "asc"; 
                     cmd.Parameters.Add(sortDirectionParameter);
+
+                    cmd.Parameters.Add(new SqlParameter("@doctorId", (object)doctorId ?? DBNull.Value));
+                    cmd.Parameters.Add(new SqlParameter("@deptId", (object)deptId ?? DBNull.Value));
+                    cmd.Parameters.Add(new SqlParameter("@status", (object)status ?? DBNull.Value));
+                    cmd.Parameters.Add(new SqlParameter("@appDate", (object)appDate ?? DBNull.Value));
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -84,14 +88,12 @@ namespace PMS
                                 Created_Time = reader["created_time"],
                                 Username = reader["username"],
                                 Status = reader["status"],
-                                //Referred = reader["referred"],
                             });
                         }
 
                         int Total_Records = AppointmentList.Count;
                         int FilteredCount = AppointmentList.Count;
 
-                        // Paginate the list
                         var paginatedList = AppointmentList.Skip(start).Take(length).ToList();
 
                         var jsonData = new
@@ -120,5 +122,57 @@ namespace PMS
             db.Appointment_Forms.DeleteAllOnSubmit(list);
             db.SubmitChanges();
         }
+        public class DoctorItem
+        {
+            public int Emp_ID { get; set; }
+            public string Emp_Name { get; set; }
+        }
+
+        [WebMethod]
+        public static List<DoctorItem> GetDoctors()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    return (from emp in db.HR_Employees
+                            where emp.IsDoctor == true
+                            orderby emp.Emp_Name
+                            select new DoctorItem
+                            {
+                                Emp_ID = emp.Emp_ID,
+                                Emp_Name = emp.Emp_Name
+                            }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching doctors", ex);
+            }
+        }
+        public class DeptDropdownItem
+        {
+            public string DeptId { get; set; }
+            public string DeptName { get; set; }
+        }
+
+        [WebMethod]
+        public static List<DeptDropdownItem> GetDepartments()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                              where vs.ValueSet_Name == "Patient Main Category"
+                              select new DeptDropdownItem
+                              {
+                                  DeptId = dv.DataValue_Name,          
+                                  DeptName = dv.DataValue_Description 
+                              }).ToList();
+
+                return result;
+            }
+        }
     }
+    
 }

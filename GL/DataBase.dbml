@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="PakRed" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8849,25 +8849,6 @@
     <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
     <Return Type="System.Decimal" />
   </Function>
-  <Function Name="dbo.sp_get_appointment_view" Method="sp_get_appointment_view">
-    <Parameter Name="searchValue" Type="System.String" DbType="NVarChar(255)" />
-    <Parameter Name="sortColumn" Type="System.String" DbType="NVarChar(50)" />
-    <Parameter Name="sortDirection" Type="System.String" DbType="NVarChar(4)" />
-    <ElementType Name="sp_get_appointment_viewResult">
-      <Column Name="Appointment_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Appointed_Doctor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="App_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Appointment_No" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Phone" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Patient_Name" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="Age" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="created_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="username" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_token_doc_list" Method="sp_token_doc_list">
     <Parameter Name="doctor" Type="System.String" DbType="NVarChar(50)" />
     <ElementType Name="sp_token_doc_listResult">
@@ -10704,6 +10685,29 @@
       <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_get_appointment_view" Method="sp_get_appointment_view">
+    <Parameter Name="searchValue" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="sortColumn" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="sortDirection" Type="System.String" DbType="NVarChar(4)" />
+    <Parameter Name="doctorId" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="deptId" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="status" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="appDate" Type="System.String" DbType="NVarChar(10)" />
+    <ElementType Name="sp_get_appointment_viewResult">
+      <Column Name="Appointment_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Appointed_Doctor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="App_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Appointment_No" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Patient_Name" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Age" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="created_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="username" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

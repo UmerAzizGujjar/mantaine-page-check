@@ -848,7 +848,7 @@
                     </div>
 
                     <div class="col-lg-12 col-md-12 col-sm-12" id="field_Address">
-                        <label>Address *</label>
+                        <label>Address</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
 
