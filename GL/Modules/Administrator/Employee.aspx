@@ -462,6 +462,8 @@
                           }
                       });
 
+                      window.location.href = "EmployeeView.aspx";
+
                   },
                   error: function (xhr, status, error) {
                       console.log("XHR:", xhr);
