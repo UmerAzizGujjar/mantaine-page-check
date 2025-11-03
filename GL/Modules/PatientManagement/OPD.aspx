@@ -821,7 +821,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Martial_Status">
                         <label>Martial Status</label>
-                        <select id="ddlmartialstatus">
+                        <select id="ddlmartialstatus" disabled>
                              <option value="0">Select Status</option>
                         </select>
                     </div>
@@ -831,7 +831,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Gender">
                         <label>Gender</label>
-                        <select id="ddlGender" >
+                        <select id="ddlGender" disabled >
                              <option value="0">Select Gender</option>
                         </select>
                     </div>
