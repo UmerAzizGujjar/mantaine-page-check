@@ -47,6 +47,17 @@
         }, 0);
     });
 
+    $('#txt_mobile, #txt_cnic').on('click', function (e) {
+        e.preventDefault();
+        this.setSelectionRange(0, 0);
+    });
+
+    $('#txt_mobile').on('click', function (e) {
+        e.preventDefault();
+        this.setSelectionRange(3, 3);
+    });
+
+
     var  dropdowns = [
         { id: '#ddl_Gender', method: 'GetGender' },
         { id: '#ddlCountry', method: 'GetCountry' },
