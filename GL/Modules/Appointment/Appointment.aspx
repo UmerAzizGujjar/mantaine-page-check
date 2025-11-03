@@ -4,8 +4,7 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Appointment.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="../../wwwroot/Tibbit_theme/CustomJs/Appointment.js"></script>
-    
-    <script type="text/javascript">
+     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
             var txt_apt_no = $('#txt_apt_no').val();
@@ -1741,8 +1740,279 @@
             $("#txtSearch").focus();
         }
         document.addEventListener("DOMContentLoaded", setFocus);
+        (function populateControls() {
+            var $month = $('#monthSelect');
+            var $year = $('#yearSelect');
+            var months = moment.months();
+            months.forEach(function (m, i) {
+                $month.append('<option value="' + i + '">' + m + '</option>');
+            });
 
-    </script>
+            var currentYear = moment().year();
+            for (var y = currentYear - 3; y <= currentYear + 3; y++) {
+                $year.append('<option value="' + y + '">' + y + '</option>');
+            }
+
+            // default to current month/year
+            $month.val(moment().month());
+            $year.val(currentYear);
+        })();
+
+         // Populate controls
+         (function populate() {
+             var $m = $('#monthSelect'), $y = $('#yearSelect');
+             var months = moment.months();
+             months.forEach(function (m, i) { $m.append('<option value="' + i + '">' + m + '</option>'); });
+             var now = moment();
+             var cy = now.year();
+             for (var yy = cy - 5; yy <= cy + 5; yy++) $y.append('<option value="' + yy + '">' + yy + '</option>');
+             $m.val(now.month()); $y.val(now.year());
+         })();
+
+         function toTitleCase(s) { if (!s) return ''; return s.replace(/\w\S*/g, function (t) { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase(); }); }
+
+         function mapAppointmentsByDate(arr) {
+             var map = {};
+             (arr || []).forEach(function (r) {
+                 var dt = null;
+                 if (r.App_Date) {
+                     dt = moment(r.App_Date, moment.ISO_8601, true);
+                     if (!dt.isValid()) dt = moment(r.App_Date);
+                 } else if (r.Time) dt = moment(r.Time);
+                 if (!dt || !dt.isValid()) return;
+                 var iso = dt.format('YYYY-MM-DD');
+                 if (!map[iso]) map[iso] = [];
+                 r.cancelAppointment = (r.cancelAppointment === true || r.cancelAppointment === "true" || r.cancelAppointment === "True") ? "true" : "false";
+                 map[iso].push(r);
+             });
+             return map;
+         }
+
+         function buildCalendar(year, month, appointmentsByDate) {
+             $('#calendar').find('.cal-day, .cal-day.empty').remove();
+             var firstOfMonth = moment([year, month, 1]);
+             var daysInMonth = firstOfMonth.daysInMonth();
+             var startDay = firstOfMonth.day();
+             $('#calendarHeader').text(firstOfMonth.format('MMMM YYYY'));
+
+             for (var i = 0; i < startDay; i++) $('#calendar').append('<div class="cal-day empty" aria-hidden="true"></div>');
+
+             for (var d = 1; d <= daysInMonth; d++) {
+                 var dayDate = moment([year, month, d]);
+                 var iso = dayDate.format('YYYY-MM-DD');
+                 var appts = appointmentsByDate[iso] || [];
+
+                 var $day = $('<div class="cal-day" data-date="' + iso + '" role="gridcell" tabindex="0"></div>');
+                 var $dateRow = $('<div class="date-row"></div>');
+                 var $circle = $('<div class="date-circle">' + d + '</div>');
+                 $dateRow.append($circle);
+                 $day.append($dateRow);
+
+                 if (appts.length) {
+                     var hasCancelled = appts.some(a => a.cancelAppointment === "true");
+                     var hasVisited = appts.some(a => a.Status === "Visited");
+                     var hasBooked = appts.some(a => a.Status === "Booked");
+
+                     if (hasCancelled) $day.addClass('status-Cancelled');
+                     else if (hasVisited) $day.addClass('status-Visited');
+                     else if (hasBooked) $day.addClass('status-Booked');
+
+                     var bookedCount = appts.filter(a => a.Status === "Booked" && a.cancelAppointment !== "true").length;
+                     var visitedCount = appts.filter(a => a.Status === "Visited").length;
+                     var cancelledCount = appts.filter(a => a.cancelAppointment === "true" || a.Status === "Cancelled").length;
+
+                     var $summary = $('<div class="summary" aria-hidden="true"></div>');
+                     if (bookedCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#fff8e6,#ffecd0);color:#4a3a00">B ' + bookedCount + '</div>');
+                     if (visitedCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#eaffec,#d7ffd5);color:#0b3f0b">V ' + visitedCount + '</div>');
+                     if (cancelledCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#ffd6d6,#ffbdbd);color:#670000">C ' + cancelledCount + '</div>');
+                     $day.append($summary);
+
+                     var $tooltip = $('<div class="tooltip" role="dialog" aria-label="Appointments for ' + iso + '"></div>');
+                     appts.forEach(function (a) {
+                         var status = (a.cancelAppointment === "true") ? "Cancelled" : (a.Status || "Unknown");
+                         var time = '';
+                         if (a.Time) {
+                             var mt = moment(a.Time, moment.ISO_8601, true);
+                             if (!mt.isValid()) mt = moment(a.Time);
+                             time = mt.isValid() ? mt.format('h:mm a') : a.Time;
+                         }
+                         var doctor = a.emp_name || '';
+                         var apptNo = a.Appointment_No || '';
+                         var patient = a.Patient_Name ? toTitleCase((a.Patient_Name + '').replace(/_/g, ' ')) : '';
+
+                         var $item = $('<div class="tt-item"></div>');
+                         $item.append('<div class="name">' + (patient || 'Unknown') + ' <small style="opacity:.75">(' + apptNo + ')</small></div>');
+                         var $meta = $('<div class="meta"></div>');
+                         $meta.append('<div>' + (time ? time : '') + (doctor ? ' — ' + doctor : '') + '</div>');
+                         var statusClass = (status === "Cancelled") ? 'status-cancel' : (status === "Visited" ? 'status-visited' : 'status-booked');
+                         $meta.append('<div class="status-pill ' + statusClass + '">' + status + '</div>');
+                         $item.append($meta);
+                         $tooltip.append($item);
+                     });
+                     $day.append($tooltip);
+
+                     $day.attr('aria-label', d + ' ' + firstOfMonth.format('MMMM YYYY') + '. ' + appts.length + ' appointments');
+                 } else {
+                     $day.append('<div class="no-appointments" aria-hidden="true">No appointments</div>');
+                     $day.attr('aria-label', d + ' ' + firstOfMonth.format('MMMM YYYY') + '. No appointments');
+                 }
+
+                 // Robust bbox-based hover handler — call this immediately after $day.append($tooltip);
+                 // Replace the handler inside buildCalendar with this version:
+                 (function ($day) {
+                     var $tooltip = $day.find('.tooltip');
+                     var SHOW_DELAY = 100;  // Slightly longer to debounce
+                     var HIDE_DELAY = 400;
+                     var showTimer = null, hideTimer = null;
+                     var isTracking = false;
+
+                     function pointInElem(x, y, $el) {
+                         if (!$el || !$el.length) return false;
+                         var r = $el[0].getBoundingClientRect();
+                         return (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom);
+                     }
+
+                     function onPointerMove(ev) {
+                         var x = ev.clientX, y = ev.clientY;
+                         var insideDay = pointInElem(x, y, $day);
+                         var insideTip = pointInElem(x, y, $tooltip);
+
+                         if (insideDay || insideTip) {
+                             clearTimeout(hideTimer);
+                             if (!$day.hasClass('show-tooltip')) {
+                                 clearTimeout(showTimer);
+                                 showTimer = setTimeout(function () {
+                                     $day.addClass('show-tooltip');
+                                 }, SHOW_DELAY);
+                             }
+                         } else {
+                             clearTimeout(showTimer);
+                             if ($day.hasClass('show-tooltip')) {
+                                 hideTimer = setTimeout(function () {
+                                     $day.removeClass('show-tooltip');
+                                 }, HIDE_DELAY);
+                             }
+                         }
+                     }
+
+                     function startTracking() {
+                         if (isTracking) return;
+                         isTracking = true;
+                         $(document).on('mousemove.cal' + iso, onPointerMove);
+                     }
+
+                     function stopTracking() {
+                         if (!isTracking) return;
+                         isTracking = false;
+                         $(document).off('mousemove.cal' + iso);
+                         clearTimeout(showTimer);
+                         clearTimeout(hideTimer);
+                     }
+
+                     var iso = $day.data('date');
+
+                     $day.on('mouseenter', function (ev) {
+                         startTracking();
+                         onPointerMove(ev);
+                     });
+
+                     $day.on('mouseleave', function (ev) {
+                         // Don't stop tracking immediately - let onPointerMove handle it
+                         setTimeout(function () {
+                             var x = ev.clientX, y = ev.clientY;
+                             if (!pointInElem(x, y, $day) && !pointInElem(x, y, $tooltip)) {
+                                 stopTracking();
+                             }
+                         }, 50);
+                     });
+
+                     if ($tooltip.length) {
+                         $tooltip.on('click', function (e) {
+                             e.stopPropagation();
+                         });
+                     }
+
+                     $day.on('click', function (e) {
+                         if ($tooltip.length && $(e.target).closest('.tooltip').length === 0) {
+                             if ($day.hasClass('show-tooltip')) {
+                                 $day.removeClass('show-tooltip');
+                                 stopTracking();
+                             } else {
+                                 $day.addClass('show-tooltip');
+                                 startTracking();
+                             }
+                         }
+                     });
+
+                 })($day);
+
+                 $('#calendar').append($day);
+             }
+         }
+
+         function loadCalendarForMonth(year, month) {
+             var start = moment([year, month, 1]).startOf('day').format('YYYY-MM-DD');
+             var end = moment([year, month, 1]).endOf('month').format('YYYY-MM-DD');
+             $('#calendarHeader').text('Loading appointments...');
+             if (typeof PageMethods !== 'undefined' && PageMethods.getlist) {
+                 PageMethods.getlist(start, end, function (data) {
+                     var parsed = [];
+                     if (!data || (Array.isArray(data) && data.length === 0)) parsed = [];
+                     else {
+                         try { parsed = (typeof data === 'string') ? JSON.parse(data) : data; } catch (e) { parsed = data || []; }
+                     }
+                     var mapped = mapAppointmentsByDate(parsed);
+                     buildCalendar(year, month, mapped);
+                 });
+             } else {
+                 console.warn('PageMethods.getlist not found. Using mock data.');
+                 var mock = generateMockDataForMonth(year, month);
+                 setTimeout(function () { buildCalendar(year, month, mapAppointmentsByDate(mock)); }, 180);
+             }
+         }
+
+         $('#goBtn').on('click', function () {
+             var month = parseInt($('#monthSelect').val(), 10);
+             var year = parseInt($('#yearSelect').val(), 10);
+             loadCalendarForMonth(year, month);
+         });
+         $('#todayBtn').on('click', function () {
+             var now = moment(); $('#monthSelect').val(now.month()); $('#yearSelect').val(now.year()); loadCalendarForMonth(now.year(), now.month());
+         });
+
+         $(function () { var now = moment(); loadCalendarForMonth(now.year(), now.month()); });
+         // toggle between calendar and list view
+         $(function () {
+             var $btn = $('#btntoggle');
+             var $calendar = $('.calendar');            // your calendar container (wrap with id="calendar")
+             var $listContainer = $('.table-container'); // your list container (table/list)
+
+             // optional: initialize state (show list, hide calendar)
+             // $calendar.hide();
+             // $listContainer.show();
+             // $btn.val('Show Calendar');
+
+             $btn.off('click').on('click', function (e) {
+                 e.preventDefault();
+
+                 // if calendar currently visible, hide it and show list
+                 if ($calendar.is(':visible')) {
+                     $calendar.slideUp(250, function () {
+                         $listContainer.slideDown(250);
+                     });
+                     $btn.val('Show Calendar'); // button should now cause calendar to show
+                 } else {
+                     // calendar is hidden -> show it and hide list
+                     $listContainer.slideUp(250, function () {
+                         $calendar.slideDown(250);
+                     });
+                     $btn.val('Show List'); // button should now cause list to show
+                 }
+             });
+         });
+
+
+     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -1754,7 +2024,7 @@
     </div>
     <div class="row">
 
-        <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="col-lg-9 col-md-9 col-sm-9">
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <input type="hidden" id="hdfreg_ini_id" />
@@ -1817,9 +2087,9 @@
                 </div>
             </div>
         </div>
-       <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="col-lg-3">
-                <div class="slot-container card" style="overflow: auto; width: 365px; height: 240px;">
+       <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="">
+                <div class="slot-container card" style="overflow: auto;height: 240px;">
                     <h5 class="timeslotheaders">Time Slots</h5>
                     <hr style="border: 1px solid #C4C4C4;">
                     <div id="slotsGrid" class="slots-grid">
@@ -1861,11 +2131,41 @@
             <label></label>
             <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
         </div>
+          <div class="col-lg-1 col-md-2 col-sm-3">
+    <label></label>
+    <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar"  value="Calendar View" />
+</div>
 
 
     </div>
+   <div class="wrap calendar" style="display:none" >
+    <div class="panel">
+     <%-- <div class="controls" aria-hidden="false">
+        <label for="monthSelect">Month</label>
+        <select id="monthSelect" aria-label="Month"></select>
 
-    <div class="row table-container">
+        <label for="yearSelect">Year</label>
+        <select id="yearSelect" aria-label="Year"></select>
+
+        <button id="goBtn">Show</button>
+        <button id="todayBtn" title="Jump to current month" class="muted-btn">Today</button>
+      </div>--%>
+
+      <div id="calendarHeader" aria-live="polite"></div>
+
+      <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
+        <div class="cal-header">Sun</div>
+        <div class="cal-header">Mon</div>
+        <div class="cal-header">Tue</div>
+        <div class="cal-header">Wed</div>
+        <div class="cal-header">Thu</div>
+        <div class="cal-header">Fri</div>
+        <div class="cal-header">Sat</div>
+        <!-- day cells will be injected here -->
+      </div>
+    </div>
+  </div>
+    <div class="row table-container list">
 
         <table class="table" id="table_res" style="margin-left:11px !important">
 

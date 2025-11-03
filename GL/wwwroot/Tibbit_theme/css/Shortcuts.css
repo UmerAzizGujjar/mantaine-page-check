@@ -2,28 +2,40 @@
     border: 1px solid #DFC303 !important;
     border-radius: 7px;
     transition: border-color 0.3s ease;
-    height: 185px !important;
+    height: 230px !important;
+    background-color: #EFA63E !important;
 }
 
     .shortcut:hover {
         border-color: #EFA63E   !important;
     }
 
-        .shortcut:hover .cocotxt {
+        .shortcut:hover .cocotxt   {
             font-weight: bold;
             color: #EFA63E   !important;
             text-decoration: underline;
             text-underline-offset: 6px;
         }
-
+        .shortcut:hover .img-fluid {
+            filter: none !important;
+        }
 
 .cocotxt {
     margin-top: 30px;
-    color: #484b4d !important;
+    color: white !important;
 }
-
+.img-fluid {
+    filter: brightness(0) invert(1);
+    transition: filter 0.3s ease;
+}
+.prefer {
+    filter: brightness(0) invert(0) !important;
+    transition: filter 0.3s ease;
+    color: black !important;
+}
 img {
     margin-top: 10px !important;
+    
 }
 
 .container .row .col-md-4,
