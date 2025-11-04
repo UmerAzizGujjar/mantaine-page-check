@@ -1756,145 +1756,137 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-        <div class="circle-loader">
-            <div class="inner-dot"></div>
-        </div>
+<div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:9999; display:flex; justify-content:center; align-items:center;">
+    <div class="circle-loader">
+        <div class="inner-dot"></div>
     </div>
+</div>
 
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header text-center">
-                        Patient & Admission Overview
+                <div class="row">
+                    <h3>CEO Dashborad</h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Start Date</label>
+                        <input type="text" id="startDate" />
                     </div>
-                    <div class="card-body">
+                    <div class="col-lg-4">
+                        <label>End Date</label>
+                        <input type="text" id="EndDate" />
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="button" id="txtSearch" class="btn btn-primry" value=" Search" onclick="search()" />
+                    </div>
+                </div>
+                <div class="row" id="Paitent_Count_Row">
+                    <div class="col-lg-4 styling">
                         <div class="row">
-                            <div class="col-lg-4">
-                                <label>Start Date</label>
-                                <input type="text" id="startDate" class="form-control" />
-                            </div>
-                            <div class="col-lg-4">
-                                <label>End Date</label>
-                                <input type="text" id="EndDate" class="form-control" />
-                            </div>
-                            <div class="col-lg-4 d-flex align-items-end">
-                                <input type="button" id="txtSearch" class="btn btn-primry" value="Search" onclick="search()" />
-                            </div>
+                            <span id="lblTotalPatient" style="color: #8e0016"></span>
                         </div>
-
-                        <div class="row" id="Paitent_Count_Row">
-                            <div class="col-lg-4 styling">
-                                <div class="row">
-                                    <span id="lblTotalPatient" style="color: #8e0016"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #8e0016">Total OPD</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border border-right">
-                                <div class="row">
-                                    <span id="lblFilterPatient" style="color: #0f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #0f008e">New OPD</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border">
-                                <div class="row">
-                                    <span id="lblDepartmentPatient" style="color: #5f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #5f008e">Revists</label>
-                                </div>
-                            </div>
+                        <div class="row">
+                            <label style="color: #8e0016">Total Patients</label>
                         </div>
-
-                        <div class="row" id="Emergency_Count_Row">
-                            <div class="col-lg-4 styling">
-                                <div class="row">
-                                    <span id="lblTotalEmergency" style="color: #8e0016"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #8e0016">Total Emergency</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border border-right">
-                                <div class="row">
-                                    <span id="lblNewEmergency" style="color: #0f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #0f008e">New Emergency</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border">
-                                <div class="row">
-                                    <span id="lblRevisitEmergency" style="color: #5f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #5f008e">Revisit</label>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="col-lg-4 styling border border-right">
+                        <div class="row">
+                            <span id="lblFilterPatient" style="color: #0f008e"></span>
                         </div>
-
-                        <div class="row" id="IPD_AdmitDischarge_Row">
-                            <div class="col-lg-4 styling">
-                                <div class="row">
-                                    <span id="lblIPDAdmittedTotal" style="color: #8e0016"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #8e0016">Total Admitted</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border border-right">
-                                <div class="row">
-                                    <span id="lblIPDAdmitted" style="color: #0f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #0f008e">Today Admission</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border">
-                                <div class="row">
-                                    <span id="lblIPDDischarged" style="color: #5f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #5f008e">Today Discharged</label>
-                                </div>
-                            </div>
+                        <div class="row">
+                            <label style="color: #0f008e">New OPD</label>
                         </div>
-
-                        <div class="row" id="Paitent_Count_Row2">
-                            <div class="col-lg-4 styling">
-                                <div class="row">
-                                    <span id="lblTotalAppointments" style="color: #8e0016"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #8e0016">Total Appointments</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border border-right">
-                                <div class="row">
-                                    <span id="lblAppPatient" style="color: #0f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #0f008e">New Appointments</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 styling border">
-                                <div class="row">
-                                    <span id="lblWalkInPatient" style="color: #5f008e"></span>
-                                </div>
-                                <div class="row">
-                                    <label style="color: #5f008e">Revisits</label>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="col-lg-4 styling border">
+                        <div class="row">
+                            <span id="lblDepartmentPatient" style="color: #5f008e"></span>
                         </div>
-
+                        <div class="row">
+                            <label style="color: #5f008e">Revists</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="Emergency_Count_Row">
+                    <div class="col-lg-4 styling">
+                        <div class="row">
+                            <span id="lblTotalEmergency" style="color: #8e0016"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #8e0016">Total Emergency</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border border-right">
+                        <div class="row">
+                            <span id="lblNewEmergency" style="color: #0f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #0f008e">New Emergency</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border">
+                        <div class="row">
+                            <span id="lblRevisitEmergency" style="color: #5f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #5f008e">Revisit</label>
+                        </div>
                     </div>
                 </div>
 
+                <div class="row" id="IPD_AdmitDischarge_Row">
+                    <div class="col-lg-4 styling">
+                        <div class="row">
+                            <span id="lblIPDAdmittedTotal" style="color: #8e0016"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #8e0016">Total Admitted</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border border-right">
+                        <div class="row">
+                            <span id="lblIPDAdmitted" style="color: #0f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #0f008e">Today Admission</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border">
+                        <div class="row">
+                            <span id="lblIPDDischarged" style="color: #5f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #5f008e">Today Discharged</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="Paitent_Count_Row2">
+                    <div class="col-lg-4 styling">
+                        <div class="row">
+                            <span id="lblTotalAppointments" style="color: #8e0016"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #8e0016">Total Appointments</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border border-right">
+                        <div class="row">
+                            <span id="lblAppPatient" style="color: #0f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #0f008e">New Appointments</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 styling border">
+                        <div class="row">
+                            <span id="lblWalkInPatient" style="color: #5f008e"></span>
+                        </div>
+                        <div class="row">
+                            <label style="color: #5f008e">Revisits</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="row" id="Paitent_Count_Row3" style="display: none">
                     <div class="col-lg-4 styling">
                     </div>
@@ -1916,100 +1908,79 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card shadow-sm OPDtable">
-                        <div class="card-header">
-                            OPD Patients Count
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered mb-0" id="tabPatientCount">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Department</th>
-                                            <th>Total Patient</th>
-                                            <th>Total Amount</th>
-                                            <th>Discount</th>
-                                            <th>Net Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="pbody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <h2>OPD Patients Count</h2>
+                    <table class="table table-hover table-striped table-bordered" id="tabPatientCount">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Total Patient</th>                              
+                                <th>Total Amount</th>
+                                <th>Discount</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row" style="height: 270px !important">                  
+                </div>
+
+                <div class="row">
+                    <h2>Emergency Patients Count</h2>
+                    <table class="table table-hover table-striped table-bordered" id="tabEmergencyPatientCount">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Total Patient</th>                               
+                                <th>Total Amount</th>
+                                <th>Discount</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row" style="height: 270px !important">                   
+                </div>         
+                <div class="row">
+                    <h2>IPD Patients Count</h2>
+                    <table class="table table-hover table-striped table-bordered" id="tabIPDPatientCount">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Total Patient</th>                              
+                                <th>Total Amount</th>
+                                <th>Discount</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row" style="height: 270px !important">
                 </div>
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card emergencytable">
-                            <div class="card-header">Emergency Patients Count</div>
-                            <div class="card-body">
-                                <table class="table table-hover table-striped table-bordered" id="tabEmergencyPatientCount">
-                                    <thead>
-                                        <tr>
-                                            <th>Department</th>
-                                            <th>Total Patient</th>
-                                            <th>Total Amount</th>
-                                            <th>Discount</th>
-                                            <th>Net Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <h2>Investigation</h2>
+                    <table class="table table-hover table-striped table-bordered" id="tabInvestigation">
+                        <thead id="ihead">
+                            <tr>
+                                <th>Department</th>
+                                <th>Ordered</th>
+                                <th>Performed</th>
+                                <th>Total Amount</th>
+                                <th>Discount</th>
+                                <th>Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ibody">
+                        </tbody>
+                    </table>
                 </div>
-
-                <div class="card IPDtable">
-                    <div class="card-header">
-                        IPD Patients Count
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped table-bordered" id="tabIPDPatientCount">
-                                <thead>
-                                    <tr>
-                                        <th>Department</th>
-                                        <th>Total Patient</th>
-                                        <th>Total Amount</th>
-                                        <th>Discount</th>
-                                        <th>Net Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        Investigation
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped table-bordered mb-0" id="tabInvestigation">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Department</th>
-                                        <th>Ordered</th>
-                                        <th>Performed</th>
-                                        <th>Total Amount</th>
-                                        <th>Discount</th>
-                                        <th>Net Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ibody">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row" style="display: none">
+                <div class="row" style="display:none">
                     <h2>Pharmacy</h2>
                     <table class="table table-hover table-striped table-bordered" id="tabPharmacy">
                         <thead id="ipharmacyhead">
@@ -2024,8 +1995,8 @@
                     </table>
 
                 </div>
-                <div class="row" style="display: none;">
-                    <div class="col-lg-12">
+                <div class="row" style="display:none;">
+                    <div class="col-lg-12" >
                         <h4>Over All Customer Satisfaction</h4>
                         <div id="chartOverallSatisfaction" style="height: 420px; width: 100%;"></div>
                     </div>
@@ -2126,129 +2097,97 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" style="height:100px !important"></div>
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                Hospital Summary Overview
-                            </div>
-                            <div class="card-body Hospitalchart">
-                                <div class="row text-center">
-                                    <div class="col-lg-4 col-md-12 mb-4">
-                                        <h3 class="fw-bold text-theme mb-3">OPD</h3>
-                                        <div id="chartOPDSummary"></div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12 mb-4">
-                                        <h3 class="fw-bold text-theme mb-3">Emergency</h3>
-                                        <div id="chartEmergencySummary"></div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12 mb-4">
-                                        <h3 class="fw-bold text-theme mb-3">IPD</h3>
-                                        <div id="chartIPDSummary"></div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-lg-4">
+                        <h4 style="text-align:center">OPD</h4>
+                        <div id="chartOPDSummary" style="height: 250px;">
                         </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <h4 style="text-align:center">Emergency</h4>
+                        <div id="chartEmergencySummary" style="height: 250px;"></div>
+                    </div>
+                    <div class="col-lg-4">
+                        <h4 style="text-align:center">IPD</h4>
+                        <div id="chartIPDSummary" style="height: 250px;"></div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="card shadow-sm">
-                        <div class="card-header opdtablemargin">
-                            OPD Department Statistics
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-12  text-center">
-                                    <h3 class="fw-bold text-secondary mb-3">OPD Department Wise (Percentage)</h3>
-                                    <div id="chartOPDDepartmentWise" ></div>
-                                </div>
-
-                                <div class="col-lg-6 col-md-12 text-center">
-                                    <h3 class="fw-bold text-secondary mb-3">OPD Department Wise (With Counts)</h3>
-                                    <div id="chartOPDDepartmentWiseWithCounts"></div>
-                                </div>
-                            </div>
-                        </div>
+              <div class="row" style="height:50px !important;"></div>
+                <div class="row">                   
+                    <div class="col-lg-6">
+                        <h4 style="text-align: center">OPD Department Wise(Percentage)</h4>
+                        <div id="chartOPDDepartmentWise"></div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="row">
-                        <div class="card">
-                            <div class="card-header emergencychart">
-                                Emergency Ward Statistics
-                            </div>
-                            <div class="card-body">
-                                <div class="row text-center">
-                                    <div class="col-lg-6 col-md-12 mb-4">
-                                        <h3 class="fw-bold text-secondary mb-3">Emergency Ward Bed Occupancy</h3>
-                                        <div id="chartEmergencyWard"></div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 mb-4">
-                                        <h3 class="fw-bold text-secondary mb-3">Emergency Ward Bed Counts</h3>
-                                        <div id="chartEmergencyWardCounts"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            IPD Ward Bed Details
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6 text-center">
-                                    <h4>IPD Ward Bed Occupancy</h4>
-                                    <div id="chartIPDWard"></div>
-                                </div>
-                                <div class="col-lg-6 text-center">
-                                    <h4>IPD Ward Bed Counts</h4>
-                                    <div id="chartIPDWardCounts"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="card shadow" style="margin-left: 25px !important;">
-                            <div class="card-header d-flex justify-content-center align-items-center  headercolor">
-                                <h4 class="card-title mb-0 fw-bold text-white">Top 5 Tests by Department
-                                </h4>
-                            </div>
-                            <div class="card-body">
-                                <div id="topTestsChartsContainer"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6" style="text-align: center; display: none">
-                            <h4>Department Statistics</h4>
-                            <div id="chartGetDeptPatientCount"></div>
-                        </div>
-                        <div class="col-lg-6" style="text-align: center; display: none">
-                            <h4>Appointment Statistics</h4>
-                            <div id="chartGetDocAppointmentsCount"></div>
-                        </div>
-                        <div class="col-lg-6" style="text-align: center; display: none">
-                            <h4>Doctor Statistics</h4>
-                            <div id="chartGetDocPatientCount"></div>
-                        </div>
-                    </div>
-                    <div class="row" style="display: none">
-                        <div class="col-lg-12">
-                            <div id="chartAreaWiseStatistics" style="height: 420px; width: 100%;"></div>
-                        </div>
-                    </div>
-                    <div class="row" style="display: none">
-                        <div class="col-lg-12">
-                            <div id="chartProcdureStatistics" style="height: 420px; width: 100%;"></div>
-                        </div>
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>OPD Department Wise (With Counts)</h4>
+                        <div id="chartOPDDepartmentWiseWithCounts"></div>
                     </div>
                 </div>
-            </div>
+                <div class="row" style="margin-top:80px !important">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-lg-6" style="text-align: center">
+                            <h4>Emergency Ward Bed Occupancy</h4>
+                            <div id="chartEmergencyWard"></div>
+                        </div>
+                        <div class="col-lg-6" style="text-align: center">
+                            <h4>Emergency Ward Bed Counts</h4>
+                            <div id="chartEmergencyWardCounts"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="height:30px;"></div>
+                        <div class="col-lg-6" style="text-align: center">
+                            <h4>IPD Ward Bed Occupancy</h4>
+                            <div id="chartIPDWard"></div>
+                        </div>
+                    <div class="col-lg-6" style="text-align: center">
+                        <h4>IPD Ward Bed Counts</h4>
+                        <div id="chartIPDWardCounts"></div>
+                    </div>
+                    </div>
+                    <div class="row">
+                            <div class="card shadow" style="margin-left:25px !important;margin-top:95px !important">
+                                <div class="card-header d-flex justify-content-center align-items-center  headercolor">
+                                    <h4 class="card-title mb-0 fw-bold text-white">Top 5 Tests by Department
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="topTestsChartsContainer"></div>
+                                </div>
+                            </div>
+                    </div>
+                <div class="row">
+                    <div class="col-lg-6" style="text-align: center;display:none">
+                        <h4>Department Statistics</h4>
+                        <div id="chartGetDeptPatientCount"></div>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center;display:none">
+                        <h4>Appointment Statistics</h4>
+                        <div id="chartGetDocAppointmentsCount"></div>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center;display:none">
+                        <h4>Doctor Statistics</h4>
+                        <div id="chartGetDocPatientCount"></div>
+                    </div>
+                </div>           
+                <div class="row" style="display:none">
+                    <div class="col-lg-12">
+                        <div id="chartAreaWiseStatistics" style="height: 420px; width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="row" style="display:none">
+                    <div class="col-lg-12">
+                        <div id="chartProcdureStatistics" style="height: 420px; width: 100%;"></div>
+                    </div>
+                </div>            
+            </div>         
+        </div>
+        <div class="row mb-3">
+            
         </div>
     </div>
+
 </asp:Content>
+
 
