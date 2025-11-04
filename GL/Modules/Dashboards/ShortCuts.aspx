@@ -226,56 +226,56 @@
     <div class="container">
     <div class="row text-center" id="shortcuts-container">
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Billing-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/BillingSection.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/BillingSection.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cash-machine.png" alt="Billing" />
                 <h5 class="cocotxt">Billing</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Patient-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/PatientSection.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medical.png" alt="Patients" style="object-fit: contain;" />
-                <h5 class="cocotxt">Patients</h5>
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/PatientSection.aspx" style="width: 95%;">
+                <img class="img-fluid prefer" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medical.png" alt="Patients" style="object-fit: contain;" />
+                <h5 class="cocotxt prefer">Patients</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Lab-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/LabSection.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/microscope.png" alt="Lab/Radiology" style="object-fit: contain;" />
-                <h5 class="cocotxt">Lab/Radiology</h5>
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/LabSection.aspx" style="width: 95%;">
+                <img class="img-fluid prefer" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/microscope.png" alt="Lab/Radiology" style="object-fit: contain;" />
+                <h5 class="cocotxt prefer">Lab/Radiology</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Pharmacy-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/PharmacySection.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/PharmacySection.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/pharmacy.png" alt="Pharmacy" style="object-fit: contain;" />
                 <h5 class="cocotxt">Pharmacy</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Inventory-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/InventorySection.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/InventorySection.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/shopping-cart.png" alt="Inventory" style="object-fit: contain;" />
                 <h5 class="cocotxt">Inventory</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Purchase-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/PurchaseSection.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/PurchaseSection.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/shopping-basket.png" alt="Purchase" style="object-fit: contain;" />
                 <h5 class="cocotxt">Purchase</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Account-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/AccountSection.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/AccountSection.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/budget.png" alt="Accounts" style="object-fit: contain;" />
                 <h5 class="cocotxt">Accounts</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Admin-Section">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/AdminSection.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/AdminSection.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/administrator.png" alt="Administration" style="object-fit: contain;" />
                 <h5 class="cocotxt">Administration</h5>
             </a>
