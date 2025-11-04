@@ -1196,6 +1196,40 @@ namespace PMS
                        ).ToList();
             return (new JavaScriptSerializer()).Serialize(data);
         }
+        [WebMethod]
+        public static string PendingAdmisionPatients(string searchValue = "")
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var data = (from op in db.In_Patients
+                        join p in db.Reg_patients
+                        on op.Patient_ID equals p.pat_id
+                        where
+                            Convert.ToDateTime(op.Created_Time).Month == DateTime.Now.Month &&
+                            Convert.ToDateTime(op.Created_Time).Year == DateTime.Now.Year &&
+                            Convert.ToDateTime(op.Created_Time).Day == DateTime.Now.Day
+                        select new
+                        {
+                            p.pat_id,
+                            p.Patient_No,
+                            p.Full_Name,
+                            p.NIC,
+                            Department = db.GetDataValueName("Patient Main Category", op.Department),
+                            Gender = db.GetDataValueName("Gender", p.Gender),
+                            p.Created_time,
+                        }
+                       ).ToList();
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+                data = data.Where(x =>
+                    (x.Patient_No != null && x.Patient_No.ToString().ToLower().Contains(searchValue)) ||
+                    (x.Department != null && x.Department.ToLower().Contains(searchValue))
+                ).ToList();
+            }
+
+            return (new JavaScriptSerializer()).Serialize(data);
+        }
 
         [WebMethod]
         public static string FillDosageDropDown()

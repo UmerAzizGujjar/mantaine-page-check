@@ -5055,24 +5055,24 @@
             }
         }
         function PendingAdmisionPatients() {
-
-            PageMethods.PendingAdmisionPatients(function (res) {
-
+            var search = $('#txtSearchAdmission').val() || '';
+            PageMethods.PendingAdmisionPatients(search, function (res) {
                 var patients = JSON.parse(res);
 
                 if (patients != "") {
                     var rows = '';
                     $.each(patients, function (key, value) {
-
-                        rows = '<tr><td><input type="hidden" name="Patient_ID" value="' + value.pat_id + '"/><a  href="javascript:void(0)" style="color:blue" onclick=selectPatient(' + value.pat_id + ')>' + value.Patient_No + '</a> </td><td>' + value.Department + '</td></tr>';
-
-
+                        rows += '<tr><td><input type="hidden" name="Patient_ID" value="' + value.pat_id + '"/>' +
+                            '<a href="javascript:void(0)" style="color:blue" onclick=selectPatient(' + value.pat_id + ')>' + value.Patient_No + '</a></td>' +
+                            '<td>' + value.Department + '</td></tr>';
                     });
                     $('#tblAdmisionPatientbody').html(rows);
+                } else {
+                    $('#tblAdmisionPatientbody').html('<tr><td colspan="2">No record found</td></tr>');
                 }
-
             });
         }
+
         function selectPatient(Patient_ID) {
             debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
@@ -6491,8 +6491,9 @@
                                  </div>
                                 </div>
                                 </div>
-                                 <div class="col-lg-3 co-md-4 col-sm-6" style="margin-top:-4%" >
+                                 <div class="col-lg-3 co-md-4 col-sm-6" style="margin-top:-4%" >                                                                       
                                     <h2> Today Admission : </h2>
+                                     <input type="text" id="txtSearchAdmission"  placeholder="Search MR No or Department" onkeyup="PendingAdmisionPatients()" />
                                     <div style="overflow: scroll; height: 190px;">
                                     <table id="tblAdmisionPatient" class="table">
                                         <thead>
@@ -6506,36 +6507,38 @@
                                     </table>
                                     </div>
                                 </div>
-                                
 
 
 
-                              <div class="row">
-                                <div class="col-lg-3 co-md-4 col-sm-6" style="overflow: scroll; height: 197px;margin-top:3%;">
-                                        <table id="tblWards" class="table">
-                                            <thead>
-                                                <tr style="position: sticky; top: 0; z-index: 10;">
-                                                    <th>MR No. / Name</th>
-                                                    <th>Ward No</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
 
-                                    <table id="tblRooms" class="table">
-                                    <thead>
-                                        <tr style="position: sticky; top: 0; z-index: 10;">
-                                            <th>MR No. / Name</th>
-                                            <th>Room No</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-
+                                <div class="row">
+                                    <div class="col-lg-3 co-md-4 col-sm-6">
+                                        <h2>Ward/Room</h2>
+                                        <div style="max-height: 190px; overflow-y: auto;">
+                                            <table id="tblWards" class="table">
+                                                <thead>
+                                                    <tr style="position: sticky; top: 0; z-index: 10; background: white;">
+                                                        <th>MR No. / Name</th>
+                                                        <th>Ward No</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <div style="max-height: 190px; overflow-y: auto; margin-top: 10px;">
+                                            <table id="tblRooms" class="table">
+                                                <thead>
+                                                    <tr style="position: sticky; top: 0; z-index: 10; background: white;">
+                                                        <th>MR No. / Name</th>
+                                                        <th>Room No</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                            </div>
+                                </div>
+
                         
                             </div>
                              
