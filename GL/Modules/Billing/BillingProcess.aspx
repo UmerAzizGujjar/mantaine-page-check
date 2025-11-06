@@ -1173,6 +1173,8 @@
                         rowIndex++;
                     });
                     $('#btnSave').val('Update');
+                    $('#btnPrint').show();
+
                 },
                     function (error) {
                         alert(error.get_message());
@@ -4972,7 +4974,7 @@
                 if (Bill_ID != "") {
                     AllowBillEdit();
                 }
-
+                $("#btnPrint").hide();
                 debugger;
                 fillCasher();
 
@@ -5250,7 +5252,7 @@
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn3">
                         <label>Discharge Date</label>
-                        <input type="text" id="txtdischargedate" disable="disabled" class="form-control" />
+                        <input type="text" id="txtdischargedate" disabled="disabled" class="form-control" />
                     </div>
                 <div class="row mb-3">
                     <div class="col-lg-3 col-md-5 col-sm-6 formrgn2">
@@ -5306,7 +5308,7 @@
         </div>        
         <div class="col-lg-2">
 
-            <label>Procedure discription:</label>
+            <label>Procedure Description:</label>
             <asp:DropDownList ID="ddlpro_dis" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
             <%--a--%>
         </div>
@@ -5362,7 +5364,7 @@
             </div>
         </div>
             <div class="row">
-                <div class="col-lg-10 table-container" style="overflow-y:scroll;height:300px">
+                <div class="col-lg-9 table-container" style="overflow-y:scroll;height:300px">
                     <table class="table blank"  id="tblDetails">
                     <thead>
                         <tr>
@@ -5383,6 +5385,137 @@
                     <tbody>
                     </tbody>
                 </table>
+                </div>
+                <div class="col-lg-3">
+                        <div class="row" >
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Total Amount</label>
+            </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+             <input type="text" id="txtTotalAmount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+            </div>
+    </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Previous Amount</label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtprevious_Amount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Previous Paid</label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtprevious_paid" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Previous Balance</label>
+        </div>
+            <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txt_balance" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+        </div>
+        </div>
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Total Payable: </label>
+            </div>
+
+          <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtTotalPayable" style="height: 30px;text-align: right; font-size: 22px;"  disabled="disabled" />
+         </div>
+   </div>
+     <div class="row">
+          <div class="col-lg-5 col-md-4 col-sm-6">
+             <label>Over and Above </label>
+             </div>
+         <div class="col-lg-6 col-md-4 col-sm-6">
+             <input type="text" id="txtOver_and_Above " style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+        </div>
+         </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label class="summary-label">Discount :</label>
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-12 discount-section">
+            <input type="text" id="txtDisPer" class="summary-input" style="width: 30% !important;height: 30px; text-align: right; font-size: 22px;" onkeyup="CalculateSummariesMaster(false)" />
+            
+            <input type="text" id="txtDisAmt" class="summary-input" style="width: 33% !important;height: 30px; text-align: right; font-size: 22px;" onkeyup="CalculateSummariesMaster(true)" />
+            <label>%</label>
+        </div>
+        </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Net Payable:  </label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtNetPayable" style="height: 30px; text-align: right; font-size: 22px; color: red !important;" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>C. In Hand</label>
+            </div>
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <select id="ddlCashInHand" class="form-control">
+                <option value="0">Select</option>
+            </select>
+            </div>
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <input type="text" value="0" id="txtcashinhand" style="height: 30px;  text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()"/>
+            </div>
+    </div>
+
+     <div class="row">
+          <div class="col-lg-5 col-md-4 col-sm-6">
+             <label>Bank Amt</label>
+             </div>
+         <div class="col-lg-3 col-md-4 col-sm-6">
+             <select id="ddl_Bank" class="form-control" >
+               
+             </select>
+             </div>
+         <div class="col-lg-3 col-md-4 col-sm-6">
+             <input type="text" id="txtbankcash" value="0" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()" />
+             </div>
+         </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Amount Received:</label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtAmountReceived" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="CountBalance()" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Advance Amount</label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtadvance_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="row">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Balance:  </label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtBalances" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
+            <input type="hidden" id="txtPreviousBlnc" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
+        </div>
+    </div>
                 </div>
 
                          </div>
@@ -5407,148 +5540,7 @@
             </div>
         </div>
 
-        <div class="row" >
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Total Amount</label>
-                </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                 <input type="text" id="txtTotalAmount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-                </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Previous Amount</label>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtprevious_Amount" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Previous Paid</label>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtprevious_paid" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Previous Balance</label>
-            </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txt_balance" style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-            </div>
-            </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Total Payable: </label>
-                </div>
-
-              <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtTotalPayable" style="height: 30px;text-align: right; font-size: 22px;"  disabled="disabled" />
-             </div>
-       </div>
-         <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-             <div class="col-lg-2 col-md-4 col-sm-6">
-                 <label>Over and Above </label>
-                 </div>
-             <div class="col-lg-2 col-md-4 col-sm-6">
-                 <input type="text" id="txtOver_and_Above " style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-            </div>
-             </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label class="summary-label">Discount :</label>
-            </div>
-            <div class="col-lg-3 col-md-8 col-sm-12 discount-section">
-                <input type="text" id="txtDisPer" class="summary-input" style="width: 30% !important;height: 30px; text-align: right; font-size: 22px;" onkeyup="CalculateSummariesMaster(false)" />
-                
-                <input type="text" id="txtDisAmt" class="summary-input" style="width: 33% !important;height: 30px; text-align: right; font-size: 22px;" onkeyup="CalculateSummariesMaster(true)" />
-                <label>%</label>
-            </div>
-            </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Net Payable:  </label>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtNetPayable" style="height: 30px; text-align: right; font-size: 22px; color: red !important;" disabled="disabled" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>C. In Hand</label>
-                </div>
-            <div class="col-lg-1 col-md-3 col-sm-4">
-                <select id="ddlCashInHand" class="form-control">
-                    <option value="0">Select</option>
-                </select>
-                </div>
-            <div class="col-lg-1 col-md-3 col-sm-4">
-                <input type="text" value="0" id="txtcashinhand" style="height: 30px;  text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()"/>
-                </div>
-        </div>
-
-         <div class="row">
-             <div class="col-lg-6 col-md-8 col-sm-9"></div>
-             <div class="col-lg-2 col-md-4 col-sm-6">
-                 <label>Bank Amt</label>
-                 </div>
-             <div class="col-lg-1 col-md-4 col-sm-6">
-                 <select id="ddl_Bank" class="form-control" >
-                   
-                 </select>
-                 </div>
-             <div class="col-lg-1 col-md-4 col-sm-6">
-                 <input type="text" id="txtbankcash" value="0" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="SumTotalAmountrecived()" />
-                 </div>
-             </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Amount Received:</label>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtAmountReceived" style="height: 30px; text-align: right; font-size: 22px;" onkeyup="CountBalance()" disabled="disabled" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Advance Amount</label>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtadvance_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-9"></div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>Balance:  </label>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txtBalances" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
-                <input type="hidden" id="txtPreviousBlnc" style="height: 30px; text-align: right; font-size: 22px; color: red;" disabled="disabled" />
-            </div>
-        </div>
+    
             </div>
    
                     <div class="col-lg-6 table-container" style="overflow-y: scroll; height: 300px; display: none;">
@@ -5576,8 +5568,8 @@
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'BillingProcess.aspx'" />
                     </div>
-                    <div class="col-lg-2">
-                        <input type="button" class="btn-primry" value="Print" name="name" onclick="PrintCRV();" style="width: 100px;" />
+                    <div class="col-lg-2" id="btnPrint">
+                        <input type="button" class="btn-primry" value="Print" name="name" onclick="PrintCRV();"  style="width: 100px;" />
                     </div>
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />

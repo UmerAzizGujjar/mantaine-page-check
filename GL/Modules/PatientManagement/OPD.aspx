@@ -732,7 +732,7 @@
     <input type="text" id="hdn_emer_reffered" style="display: none;" />
     <input type="text" id="hdn_dep_id" style="display: none;" />
     <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
+        <%--<div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
             <div class="col-lg-3 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
                 <div class="icon-text">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="32" height="32">
@@ -757,8 +757,83 @@
                     <span><a class="anchorOnOPD">Emergency Refer Patient</a></span>
                 </div>
             </div>
+        </div>--%>
+
+
+
+
+        <div class="col-lg-9 col-md-9 col-sm-12" style="width: 73%; margin-left: 13px;">
+    <!-- Quick Actions row: four equal, high-contrast cards -->
+    <div class="row" style="margin: 8px;">
+        <!-- Card 1 -->
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+            <div id="card-register" role="button" tabindex="0"
+                 onclick="addfunc()"
+                 onkeypress="if(event.key==='Enter'){ addfunc(); }"
+                 class="d-flex flex-column justify-content-center align-items-start"
+                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                <div class="d-flex align-items-center">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="48" height="48" style="margin-right:10px;">
+                    <div>
+                        <div style="font-weight:700; font-size:1.5rem;">Register a new patient</div>
+                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Create a new patient record</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- Card 2 -->
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+            <div id="card-search-appointment" role="button" tabindex="0"
+                 onclick="SearchPop_App()"
+                 onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
+                 class="d-flex flex-column justify-content-center align-items-start"
+                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                <div class="d-flex align-items-center">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right:10px;">
+                    <div>
+                        <div style="font-weight:700; font-size:1.5rem;">Search in appointment</div>
+                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Find patient appointments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+            <div id="btnsearchpatlist" role="button" tabindex="0"
+                 onclick="/* add search patient function here, e.g. openPatientSearch() */"
+                 onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
+                 class="d-flex flex-column justify-content-center align-items-start"
+                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                <div class="d-flex align-items-center">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right:10px;">
+                    <div>
+                        <div style="font-weight:700; font-size:1.5rem;">Search an existing patient</div>
+                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Lookup patient details</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+            <div id="btnsearchEmergencylist" role="button" tabindex="0"
+                 onclick="/* add emergency refer function here, e.g. referToEmergency() */"
+                 onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
+                 class="d-flex flex-column justify-content-center align-items-start"
+                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                <div class="d-flex align-items-center">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right:10px;">
+                    <div>
+                        <div style="font-weight:700; font-size:1.5rem;">Emergency Refer Patient</div>
+                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Refer patient to emergency</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         <div class="col-lg-3 col-md-3 col-sm-4">
             <div class="card3">
                 <span style="font-size: 15px;">Total OPD</span>
