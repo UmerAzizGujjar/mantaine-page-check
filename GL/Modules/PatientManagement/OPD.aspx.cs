@@ -135,8 +135,9 @@ namespace PMS.Modules.PatientManagement
         [WebMethod]
         public static string approvepatient(string pat_id, string Pat_Category)
         {
+            var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.SpApproveOPD(Convert.ToInt32(pat_id), Pat_Category);
+            var Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
