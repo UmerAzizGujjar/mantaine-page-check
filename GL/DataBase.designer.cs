@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Pakred_Live")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "pakred")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -4775,11 +4775,11 @@ namespace PMS
             return ((ISingleResult<sp_token_listResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_get_appointment_view")]
-        public ISingleResult<sp_get_appointment_viewResult> sp_get_appointment_view([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(255)")] string searchValue, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(50)")] string sortColumn, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(4)")] string sortDirection, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(50)")] string doctorId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(50)")] string deptId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(50)")] string status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(10)")] string appDate)
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPD")]
+        public ISingleResult<SpApprove_OPDResult> SpApprove_OPD([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Category", DbType = "NVarChar(150)")] string pat_Category, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
         {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), searchValue, sortColumn, sortDirection, doctorId, deptId, status, appDate);
-            return ((ISingleResult<sp_get_appointment_viewResult>)(result.ReturnValue));
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, pat_Category, user_id);
+            return ((ISingleResult<SpApprove_OPDResult>)(result.ReturnValue));
         }
     }
 
@@ -202328,225 +202328,27 @@ namespace PMS
         }
     }
 
-    public partial class sp_get_appointment_viewResult
+    public partial class SpApprove_OPDResult
     {
 
-        private int _Appointment_ID;
+        private string _Message;
 
-        private string _Department;
-
-        private string _Appointed_Doctor;
-
-        private System.Nullable<System.DateTime> _App_Date;
-
-        private System.Nullable<System.TimeSpan> _Start_Time;
-
-        private string _Appointment_No;
-
-        private string _Phone;
-
-        private string _Patient_Name;
-
-        private string _Age;
-
-        private System.Nullable<System.DateTime> _created_time;
-
-        private string _username;
-
-        private string _status;
-
-        public sp_get_appointment_viewResult()
+        public SpApprove_OPDResult()
         {
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Appointment_ID", DbType = "Int NOT NULL")]
-        public int Appointment_ID
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
         {
             get
             {
-                return this._Appointment_ID;
+                return this._Message;
             }
             set
             {
-                if ((this._Appointment_ID != value))
+                if ((this._Message != value))
                 {
-                    this._Appointment_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(150)")]
-        public string Department
-        {
-            get
-            {
-                return this._Department;
-            }
-            set
-            {
-                if ((this._Department != value))
-                {
-                    this._Department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Appointed_Doctor", DbType = "VarChar(50)")]
-        public string Appointed_Doctor
-        {
-            get
-            {
-                return this._Appointed_Doctor;
-            }
-            set
-            {
-                if ((this._Appointed_Doctor != value))
-                {
-                    this._Appointed_Doctor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_App_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> App_Date
-        {
-            get
-            {
-                return this._App_Date;
-            }
-            set
-            {
-                if ((this._App_Date != value))
-                {
-                    this._App_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Start_Time", DbType = "Time")]
-        public System.Nullable<System.TimeSpan> Start_Time
-        {
-            get
-            {
-                return this._Start_Time;
-            }
-            set
-            {
-                if ((this._Start_Time != value))
-                {
-                    this._Start_Time = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Appointment_No", DbType = "VarChar(255)")]
-        public string Appointment_No
-        {
-            get
-            {
-                return this._Appointment_No;
-            }
-            set
-            {
-                if ((this._Appointment_No != value))
-                {
-                    this._Appointment_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Phone", DbType = "VarChar(255)")]
-        public string Phone
-        {
-            get
-            {
-                return this._Phone;
-            }
-            set
-            {
-                if ((this._Phone != value))
-                {
-                    this._Phone = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Name", DbType = "VarChar(255)")]
-        public string Patient_Name
-        {
-            get
-            {
-                return this._Patient_Name;
-            }
-            set
-            {
-                if ((this._Patient_Name != value))
-                {
-                    this._Patient_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Age", DbType = "VarChar(50)")]
-        public string Age
-        {
-            get
-            {
-                return this._Age;
-            }
-            set
-            {
-                if ((this._Age != value))
-                {
-                    this._Age = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_created_time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> created_time
-        {
-            get
-            {
-                return this._created_time;
-            }
-            set
-            {
-                if ((this._created_time != value))
-                {
-                    this._created_time = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_username", DbType = "VarChar(1000)")]
-        public string username
-        {
-            get
-            {
-                return this._username;
-            }
-            set
-            {
-                if ((this._username != value))
-                {
-                    this._username = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_status", DbType = "VarChar(100)")]
-        public string status
-        {
-            get
-            {
-                return this._status;
-            }
-            set
-            {
-                if ((this._status != value))
-                {
-                    this._status = value;
+                    this._Message = value;
                 }
             }
         }

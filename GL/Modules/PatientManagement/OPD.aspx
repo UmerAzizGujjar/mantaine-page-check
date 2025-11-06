@@ -315,8 +315,8 @@
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
+                        icon: 'success',
+                        title: 'Success!',
                         text: message[0].Message,
                         showConfirmButton: false,
                         timer: 2000,
@@ -1066,7 +1066,7 @@
                     <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" style="display: none;" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
-                    <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" style="display: none;" />
+                    <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" />
                 </div>
             </div>
         </div>
