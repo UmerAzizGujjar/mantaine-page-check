@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
         <style>
+
         .modern-loading-overlay {
     position: fixed;
     top: 0;
@@ -67,7 +68,7 @@
     .spinner-ring:nth-child(3) {
         border-top-color: rgba(239, 166, 62, 0.4);
         animation-duration: 2s;
-        width: 60%;
+        width: 95%;
         height: 60%;
         top: 20%;
         left: 20%;
@@ -225,52 +226,53 @@
     <div class="container">
     <div class="row text-center" id="patient-shortcuts-container">
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Reg-Patient">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/RegisterPatient.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/RegisterPatient.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/add.png" alt="Patient" style="object-fit: contain;" />
-                <h5 class="cocotxt">Reg Patient</h5>
+                <h3 class="cocotxt1">Register Patient</h3>
+                <h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Appointment">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Appointment/Appointment.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Appointment/Appointment.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medical-appointment.png" alt="Appointment" style="object-fit: contain;" />
-                <h5 class="cocotxt">Appointment</h5>
+                <h3 class="cocotxt1">Appointment</h3><h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-OPD">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/OPD.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/OPD.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/opd.png" alt="OPD" style="object-fit: contain;" />
-                <h5 class="cocotxt">OPD</h5>
+                <h3 class="cocotxt1">OPD</h3><h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-OPD-Prescription">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/NewOutPatient.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/NewOutPatient.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medical-record.png" alt="Prescription" style="object-fit: contain;" />
-                <h5 class="cocotxt">OPD Prescription</h5>
+                <h3 class="cocotxt1">OPD Prescription</h3><h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Emergency">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/EmergencyCase.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/EmergencyCase.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/first-aid-box.png" alt="Emergency" style="object-fit: contain;" />
-                <h5 class="cocotxt">Emergency</h5>
+                <h3 class="cocotxt1">Emergency</h3><h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-IPD-Admission">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientsAdmission.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientsAdmission.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/inpatienta.png" alt="Purchase" style="object-fit: contain;" />
-                <h5 class="cocotxt">IPD Admission</h5>
+                <h3 class="cocotxt1">IPD Admission</h3><h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Admitted-Patient">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientsCase.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientsCase.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/inpatient.png" alt="Accounts" style="object-fit: contain;" />
-                <h5 class="cocotxt">Admitted Patient</h5>
+                <h3 class="cocotxt1">Admitted Patient</h3><h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Nursing">
-            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientMonitoring.aspx" style="width: 60%;">
+            <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/PatientManagement/InPatientMonitoring.aspx" style="width: 95%;">
                 <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/nurse.png" alt="Administration" style="object-fit: contain;" />
-                <h5 class="cocotxt">Nursing</h5>
+                <h3  class="cocotxt1">Nursing</h3><h5 style="color:white">Enter Patient Details</h5>
             </a>
         </div>
     </div>

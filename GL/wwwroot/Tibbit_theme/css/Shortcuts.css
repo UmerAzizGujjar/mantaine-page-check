@@ -19,11 +19,15 @@
         .shortcut:hover .img-fluid {
             filter: none !important;
         }
-
+.cocotxt1 {
+    margin-top: 16px;
+    color: white !important;
+}
 .cocotxt {
     margin-top: 30px;
     color: white !important;
 }
+
 .img-fluid {
     filter: brightness(0) invert(1);
     transition: filter 0.3s ease;
