@@ -13,7 +13,7 @@
 
             var dropdowns = [
                 { id: '#program', method: 'GetProgram' },
-                { id: '#ddlWeek', method: 'GetWeek' },
+             
                 { id: '#ddlBatch', method: 'StudentBatch' },
                 { id: '#ddlGroup', method: 'StudentGroup' },
                 { id: '#Class', method: 'GetClass' },
@@ -98,13 +98,13 @@
                 classs = $('#Class').val();
                 week = $('#ddlWeek').val();
                 date = $('#ddldate').val();
+              
                 GetSubject();
 
             });
 
 
-
-
+      
 
             $('#Subject').on("change", function () {
                 debugger;
@@ -138,6 +138,24 @@
                 } else {
                     $('#ddlBlock').html('<option value="">Select Week First</option>').trigger('change.select2');
                     $('#ddlModule').html('<option value="">Select Week First</option>').trigger('change.select2');
+                }
+            });
+            $('#Class').on("change", function () {
+                const selectedClas = $(this).val();
+                const selectedProgram = $('#program').val();
+
+                if (selectedClas && selectedClas !== "0") {
+                    fillDropdown(
+                        $('#ddlWeek'),
+                        'GetWeekByClass',
+                        null,
+                        {
+                            std_Class: selectedClas,   // ✅ must match WebMethod param name
+                            std_program: selectedProgram  // ✅ must match WebMethod param name
+                        }
+                    );
+                } else {
+                    $('#ddlWeek').html('<option value="">Select Week First</option>').trigger('change.select2');
                 }
             });
 
@@ -396,15 +414,46 @@
                 }
             });
         }
+        var GetStudentweek;
+        function Get_Week() {
+            var std_program = $('#program').val();
+            var std_Class = $('#Class').val();
+           
+            
+            debugger;
+            GetStudentweek = '';
+            $.ajax({
+                url: 'StudentAttendance.aspx/GetWeeks',
+                data: JSON.stringify({
+                    "std_program": std_program,
+                    "std_Class": std_Class
+                   
+                }),
+                type: 'post',
+                contentType: 'application/json;charset=utf-8',
+                dataType: 'json',
+                async: true,
 
-        
+                success: function (data) {
+                    GetStudentweek = '<option value="0">Please Select</option>';
+                    debugger;
+                    $.each(JSON.parse(data.d), function (key, value) {
+                        debugger;
+                        GetStudentweek += '<option value="' + value.Weeks + '" >' + value.Week_text + '</option>';
+                    });
+                    $('#ddlWeek').html(GetStudentweek).trigger('change.select2');
+                },
+            });
+        }
+       
 
         var classs;
         var program;
         var GetStudentSubject;
         var date;
         function GetSubject() {
-
+            var block = $('#ddlBlock').val();
+            var module = $('#ddlModule').val();
             var dt = new Date(parseInt(date.substr(6)));
             dt = moment(dt).format('L');
             debugger;
@@ -415,6 +464,8 @@
                     "program": program,
                     "classs": classs,
                     "week": week,
+                    "block": block,
+                    "module": module,
                     "date": dt
                 }),
                 type: 'post',
@@ -462,9 +513,13 @@
 
         var Subj;
         var Prac;
+        var block;
+        var Module;
         function GetTime() {
             var getTime = '';
             var dat = $('#ddldate').val();
+            var block = $('#ddlBlock').val();
+            var Module = $('#ddlModule').val();
             var dt = new Date(parseInt(dat.substr(6)));
             dt = moment(dt).format('L');
             debugger;
@@ -475,7 +530,10 @@
                     "practical": Prac,
                     "classs": classs,
                     "week": week,
+                    "block": block,
+                    "Module": Module,
                     "date": dt,
+                    
                 }),
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
