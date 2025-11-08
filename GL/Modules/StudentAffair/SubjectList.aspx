@@ -54,7 +54,9 @@
                             }
                         },
                         { "data": "Program", "name": "Program", "width": "15%", "orderable": true },
-                        { "data": "Class", "name": "Class", "width": "55%", "orderable": false },                                           
+                        { "data": "Class", "name": "Class", "width": "15%", "orderable": false },                                           
+                        { "data": "Block", "name": "Class", "width": "15%", "orderable": false },                                           
+                        { "data": "Module", "name": "Class", "width": "15%", "orderable": false },                                           
                         {
                             render: function (data, type, full) {
                                 debugger;
@@ -65,7 +67,7 @@
                                 var result;
                                 result = res + Del;
                                 return result;
-                            }, "width": "100%", "orderable": false
+                            }, "width": "15%", "orderable": false
                         }
                     ],
                     "initComplete": function (settings, json) {
@@ -138,6 +140,8 @@
                      <th>Sr#</th>
                     <th>Program</th>
                     <th>Class</th>
+                    <th>Block</th>
+                    <th>Module</th>
                     <th>Actions</th>
             </tr>
         </thead>

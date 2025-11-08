@@ -26,12 +26,14 @@ namespace PMS
                    
                     var Total_Subject = _dbContext.Subject_Definitions.Count();
                     var Subject = from S in _dbContext.Subject_Definitions
-                              where ((S.subject_Id.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Student Class", S.Program).Contains(searchValue) || _dbContext.GetDataValueName("Admission Category", S.Class).Contains(searchValue)))
-                              select new
-                              {
-                                  subject_Id = S.subject_Id,
-                                  Program = _dbContext.GetDataValueName("Admission Category", S.Program),
-                                  Class = _dbContext.GetDataValueName("Student Class", S.Class),
+                                  where ((S.subject_Id.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Student Class", S.Program).Contains(searchValue) || _dbContext.GetDataValueName("Admission Category", S.Class).Contains(searchValue)))
+                                  select new
+                                  {
+                                      subject_Id = S.subject_Id,
+                                      Program = _dbContext.GetDataValueName("Admission Category", S.Program),
+                                      Class = _dbContext.GetDataValueName("Student Class", S.Class),
+                                      Block = S.Block,
+                                      Module = S.Module, 
                               };
 
 

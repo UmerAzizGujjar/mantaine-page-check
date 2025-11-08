@@ -24,63 +24,95 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string ViewList(string Class, string Search, bool Isactive, bool Noactive, bool txt_WholeClass, string ddlGroup, string ddlBatch, string ddlProgram)
+        public static string ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue,string Class, bool Isactive, bool Noactive, string ddlProgram, string ddlBatch,
+    string ddlGroup, bool txt_WholeClass)
         {
-            if (Noactive == true)
+            try
             {
+                using (var db = new DataBaseDataContext())
+                {
+                    bool? isActiveFilter = null;
+                    if (Isactive) isActiveFilter = true;
+                    else if (Noactive) isActiveFilter = false;
+                    var allStudents = db.sp_Student_List(Class, isActiveFilter, txt_WholeClass, ddlProgram, ddlBatch, ddlGroup).ToList();
 
-                if (Search.Trim() == "")
-                {
-                    DataBaseDataContext db = new DataBaseDataContext();
-                    var Details = db.sp_Student_List(Class, false, txt_WholeClass, ddlProgram, ddlGroup, ddlBatch).ToList();
-                    return (new JavaScriptSerializer()).Serialize(Details);
-                }
-                else
-                {
-                    DataBaseDataContext db = new DataBaseDataContext();
-                    var Details = db.sp_Student_List(Class, false, txt_WholeClass, ddlProgram, ddlGroup, ddlBatch).ToList().Where(x => x.Full_Name.ToLower().Contains(Search.ToLower()) || x.Father_Name.ToLower().Contains(Search.ToLower()) || x.Student_CNIC.ToLower().Contains(Search.ToLower()) || x.Roll_No.Contains(Search) || x.Student_Contact_No.ToLower().Contains(Search.ToLower()) || x.Sesion.ToLower().Contains(Search.ToLower()));
-                    return (new JavaScriptSerializer()).Serialize(Details);
+                    if (!string.IsNullOrWhiteSpace(searchValue))
+                    {
+                        string searchTerm = searchValue.ToLower();
+                        allStudents = allStudents.Where(x =>
+                            (x.Full_Name != null && x.Full_Name.ToLower().Contains(searchTerm)) ||(x.Father_Name != null && x.Father_Name.ToLower().Contains(searchTerm)) || (x.Student_CNIC != null && x.Student_CNIC.ToLower().Contains(searchTerm)) || (x.Roll_No != null && x.Roll_No.Contains(searchTerm)) ||  (x.Student_Contact_No != null && x.Student_Contact_No.ToLower().Contains(searchTerm)) || (x.Sesion != null && x.Sesion.ToLower().Contains(searchTerm))
+                        ).ToList();
+                    }
+                    int recordsTotal = allStudents.Count;
+                    int recordsFiltered = allStudents.Count;
+                    switch (sortColumn)
+                    {
+                        case "Full_Name": allStudents = sortColumnDirection == "asc"  ? allStudents.OrderBy(s => s.Full_Name).ToList() : allStudents.OrderByDescending(s => s.Full_Name).ToList();
+                            break;
+                        case "Roll_No": allStudents = sortColumnDirection == "asc" ? allStudents.OrderBy(s => s.Roll_No).ToList(): allStudents.OrderByDescending(s => s.Roll_No).ToList();
+                            break;
+                        case "Class":allStudents = sortColumnDirection == "asc"  ? allStudents.OrderBy(s => s.Class).ToList() : allStudents.OrderByDescending(s => s.Class).ToList();
+                            break;
+                        case "AdmissionDate": allStudents = sortColumnDirection == "asc"  ? allStudents.OrderBy(s => s.CreatedTime).ToList() : allStudents.OrderByDescending(s => s.CreatedTime).ToList();
+                            break;
+                        case "Student_Id":
+                        default:
+                            allStudents = sortColumnDirection == "asc"  ? allStudents.OrderBy(s => s.Student_Id).ToList()  : allStudents.OrderByDescending(s => s.Student_Id).ToList();
+                            break;
+                    }
+
+                    var pagedData = allStudents.Skip(start).Take(length).ToList();
+
+                    var formattedData = pagedData.Select(s => new
+                    {
+                        Student_Id = s.Student_Id,
+                        AdmissionDate = s.CreatedTime,
+                        Class = s.Class ?? "",
+                        Full_Name = s.Full_Name ?? "",
+                        Father_Name = s.Father_Name ?? "",
+                        Student_CNIC = s.Student_CNIC ?? "",
+                        Student_Contact_No = s.Student_Contact_No ?? "",
+                        Batch = s.Batch ?? " ",
+                        Groups = s.Groups ?? " ",
+                        Sesion = s.Sesion ?? ""
+                    }).ToList();
+                    var result = pagedData.Select(s => new
+                    {
+                        Student_Id = s.Student_Id,
+                        AdmissionDate = s.CreatedTime,
+                        Roll_No = s.Roll_No ?? "",
+                        Class = s.Class ?? "",
+                        Full_Name = s.Full_Name ?? "",
+                        Father_Name = s.Father_Name ?? "",
+                        Student_CNIC = s.Student_CNIC ?? "",
+                        Student_Contact_No = s.Student_Contact_No ?? "",
+                        Batch = s.Batch ?? " ",
+                        Groups = s.Groups ?? " ",
+                        Sesion = s.Sesion ?? ""
+                    }).ToList();
+
+                    var jsonData = new
+                    {
+                        draw,
+                        recordsTotal,
+                        recordsFiltered,
+                        data = result
+                    };
+
+                    return new JavaScriptSerializer().Serialize(jsonData);
                 }
             }
-
-            else if (Isactive == true)
+            catch (Exception ex)
             {
-
-
-                if (Search.Trim() == "")
+                // Log error
+                return new JavaScriptSerializer().Serialize(new
                 {
-                    DataBaseDataContext db = new DataBaseDataContext();
-                    var Details = db.sp_Student_List(Class, true, txt_WholeClass, ddlProgram, ddlGroup, ddlBatch).ToList();
-                    return (new JavaScriptSerializer()).Serialize(Details);
-                }
-                else
-                {
-                    DataBaseDataContext db = new DataBaseDataContext();
-                    var Details = db.sp_Student_List(Class, true, txt_WholeClass, ddlProgram, ddlGroup, ddlBatch).ToList().Where(x => x.Full_Name.ToLower().Contains(Search.ToLower()) || x.Father_Name.ToLower().Contains(Search.ToLower()) || x.Student_CNIC.ToLower().Contains(Search.ToLower()) || x.Roll_No.Contains(Search) || x.Student_Contact_No.ToLower().Contains(Search.ToLower()) || x.Sesion.ToLower().Contains(Search.ToLower()));
-                    return (new JavaScriptSerializer()).Serialize(Details);
-                }
-
-
-
+                    draw,
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new object[0]
+                });
             }
-            else
-            {
-                if (Search.Trim() == "")
-                {
-                    DataBaseDataContext db = new DataBaseDataContext();
-                    var Details = db.sp_Student_List(Class, null, txt_WholeClass, ddlProgram, ddlGroup, ddlBatch).ToList();
-                    return (new JavaScriptSerializer()).Serialize(Details);
-                }
-                else
-                {
-                    DataBaseDataContext db = new DataBaseDataContext();
-                    var Details = db.sp_Student_List(Class, null, txt_WholeClass, ddlProgram, ddlGroup, ddlBatch).ToList().Where(x => x.Full_Name.ToLower().Contains(Search.ToLower()) || x.Father_Name.ToLower().Contains(Search.ToLower()) || x.Student_CNIC.ToLower().Contains(Search.ToLower()) || x.Roll_No.Contains(Search) || x.Student_Contact_No.ToLower().Contains(Search.ToLower()) || x.Sesion.ToLower().Contains(Search.ToLower()));
-                    return (new JavaScriptSerializer()).Serialize(Details);
-                }
-            }
-
-
-
         }
 
 
