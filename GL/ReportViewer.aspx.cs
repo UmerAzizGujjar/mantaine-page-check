@@ -1311,6 +1311,35 @@ namespace PMS
                 rd.SetParameterValue("Address", companyAddress);
                 rd.SetParameterValue("companyPhone", companyPhone);
             }
+            else if (reportName == "Radiology_Investigation_Delay")
+            {
+                string rptFileName = "TransactionalDetails/rpt_Radiology_Investigation_Delay.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+                 string Department = Request.QueryString["Department"].ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                string companyPhone = DBClass.getField("select Company_Phone1 from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("companyPhone", companyPhone);
+            }
 
             //replica of Lab cash Collection
             else if (reportName == "Operator_Wise_Billing_Report")
