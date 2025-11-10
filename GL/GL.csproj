@@ -226,6 +226,7 @@
     <Content Include="Modules\Administrator\Shift_Assign_Policy.aspx" />
     <Content Include="Modules\Administrator\Shift__Policy_View.aspx" />
     <Content Include="Modules\Administrator\SurveyForm.aspx" />
+    <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
@@ -25810,6 +25811,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\SurveyForm.aspx.designer.cs">
       <DependentUpon>SurveyForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Appointment\Derma_Appointment.aspx.cs">
+      <DependentUpon>Derma_Appointment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Appointment\Derma_Appointment.aspx.designer.cs">
+      <DependentUpon>Derma_Appointment.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\SaleReturnList.aspx.cs">
       <DependentUpon>SaleReturnList.aspx</DependentUpon>

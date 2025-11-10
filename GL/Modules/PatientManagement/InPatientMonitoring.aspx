@@ -13,6 +13,7 @@
         google.load("visualization", "1", { packages: ["corechart"] });
         
         function drawPulse() {
+            debugger;
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
             $('#ctl00_MainContent_chkTemp_C').attr('checked', false);
             $('#ctl00_MainContent_chkRespiration_Min').attr('checked', false);
@@ -22,8 +23,9 @@
 
             var chek = document.getElementById('ctl00_MainContent_chkPulse_Min').checked;
             if (chek === true) {
-                $('#chart_div').show();
 
+                $('#chart_div').show();
+                debugger;
                 if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
                     var id = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
                     $.ajax({
@@ -52,8 +54,9 @@
             }
 
         }
+        debugger;
         function drawchartPulse(dataValues) {
-
+            debugger;
             var data = new google.visualization.DataTable(dataValues);
 
             data.addColumn('string', 'Mon_Date');
@@ -96,7 +99,7 @@
                 });
         }
         function drawBP() {
-
+            debugger;
             $('#ctl00_MainContent_chkTemp_C').attr('checked', false);
             $('#ctl00_MainContent_chkRespiration_Min').attr('checked', false);
             $('#ctl00_MainContent_chkBlood').attr('checked', false);
@@ -184,6 +187,7 @@
 
 
         function drawchart(dataValues) {
+            debugger;
             var data = new google.visualization.DataTable(dataValues);
 
             data.addColumn('string', 'InPatient_Mon_Dtl_ID');
@@ -197,7 +201,7 @@
             for (var i = 0; i < dataValues.length; i++) {
                 data.addRow([dataValues[i].InPatient_Mon_Dtl_ID, dataValues[i].Pulse_Min, dataValues[i].BP_mm_Hg, dataValues[i].Temp_C, dataValues[i].Respiration_Min, dataValues[i].Weight_Kg, dataValues[i].Blood_Suger]);
             }
-
+            debugger;
             var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
 
             chart.draw(data,
@@ -209,6 +213,7 @@
                 });
         }
         function drawTemp() {
+            debugger;
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
 
             $('#ctl00_MainContent_chkRespiration_Min').attr('checked', false);
@@ -218,6 +223,7 @@
             $('#ctl00_MainContent_chkSaturation').attr('checked', false);
             var chek = document.getElementById('ctl00_MainContent_chkTemp_C').checked;
             if (chek === true) {
+                debugger;
                 $('#chart_div').show();
 
                 if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
@@ -285,6 +291,7 @@
                 });
         }
         function drawResp() {
+            debugger;
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
             $('#ctl00_MainContent_chkTemp_C').attr('checked', false);
 
@@ -294,6 +301,7 @@
             $('#ctl00_MainContent_chkSaturation').attr('checked', false);
             var chek = document.getElementById('ctl00_MainContent_chkRespiration_Min').checked;
             if (chek === true) {
+                debugger;
                 $('#chart_div').show();
 
                 if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
@@ -362,6 +370,7 @@
                 });
         }
         function drawBlood() {
+            debugger
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
             $('#ctl00_MainContent_chkTemp_C').attr('checked', false);
             $('#ctl00_MainContent_chkRespiration_Min').attr('checked', false);
@@ -371,6 +380,7 @@
             $('#ctl00_MainContent_chkSaturation').attr('checked', false);
             var chek = document.getElementById('ctl00_MainContent_chkBlood').checked;
             if (chek === true) {
+                debugger
                 $('#chart_div').show();
 
                 if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
@@ -1027,6 +1037,7 @@
             window.location = "InPatientMonitoring.aspx";
         }
         function showGraph() {
+            debugger;
             var chek = document.getElementById('ctl00_MainContent_chkGraph').checked;
             if (chek === true) {
                 $('#chart_div').show();

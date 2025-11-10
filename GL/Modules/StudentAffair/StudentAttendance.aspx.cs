@@ -6,6 +6,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static Telerik.Web.UI.ComboBox.ComboBoxStyles;
 
 namespace PMS
 {
@@ -41,7 +42,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string GetSubj(string program, string classs, string week, string date)
+        public static string GetSubj(string program, string classs, string week,string block, string module, string date)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -49,8 +50,8 @@ namespace PMS
             var listItems = (from s in db.Subject_Definitions
                              join sd in db.Subject_Definition_Lists
                              on s.subject_Id equals sd.Subject_ID
-                             where s.Program == program && s.Class == classs
-                        
+                             where s.Program == program && s.Class == classs && s.Block == block && s.Module == module
+
                              select new
                              {
                                  sd.Subject_Detail_ID,
@@ -102,6 +103,34 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+
+        [WebMethod]
+        public static string GetWeekByClass(string std_program, string std_Class)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var result = (from link in db.Student_Time_Tables
+                                  join dv in db.DataValues on link.Weeks equals dv.DataValue_Name
+                                  join ds in db.ValueSets on dv.ValueSet_ID equals ds.ValueSet_ID
+                                  where ds.ValueSet_Name == "Week"
+                                        && link.Program == std_program && link.Class== std_Class
+                                  select new
+                                  {
+                                      dv.DataValue_Name,
+                                      dv.DataValue_Description
+                                  }).Distinct().ToList();
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new List<object>());
+            }
+        }
+
 
         [WebMethod]
         public static string GetAcademicBlockByWeek(string week)
@@ -169,16 +198,18 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string GetTime(string sub, string practical, string classs, string week, string date)
+        public static string GetTime(string sub, string practical, string classs, string week, string block,string Module, string date)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var Time = (from stt in db.Student_Time_Tables
                         join std in db.Student_Time_Table_Details
                         on stt.St_id equals std.St_id
                         where std.Subjects == sub
-                       //&& std.Practical == practical
                        && stt.Class == classs && stt.Weeks == week
+                       && stt.Block == block
+                      && stt.Module == Module
                       && std.Date == DateTime.Parse(date)
+                      
                         select new
                         {
                             std.Std_Id,
