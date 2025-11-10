@@ -2045,18 +2045,19 @@
                 </div>
             </div>
             <div class="row">
+                 <div class="col-lg-3 col-md-3 col-sm-6">
+     <label style="">Department</label>
+     <select style="border-radius: 5px; height: 29px;" class="form-control ddldoc" id="ddlsubdepartment" >
+         <option></option>
+     </select>
+ </div> 
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <label>Consultant</label>
                     <select class="ddldoc form-control" id="ddl_colstnt" >
                         <option></option>
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-6">
-                    <label style="">Department</label>
-                    <select style="border-radius: 5px; height: 29px;" class="form-control ddldoc" id="ddlsubdepartment" >
-                        <option></option>
-                    </select>
-                </div>
+               
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <label>Date</label>
                     <input type="text" id="txt_date" class="form-control" onchange="GetAppNoByDoctor()" autocomplete="off" />

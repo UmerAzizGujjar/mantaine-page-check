@@ -13,7 +13,7 @@
         google.load("visualization", "1", { packages: ["corechart"] });
         
         function drawPulse() {
-            debugger;
+            
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
             $('#ctl00_MainContent_chkTemp_C').attr('checked', false);
             $('#ctl00_MainContent_chkRespiration_Min').attr('checked', false);
@@ -25,7 +25,7 @@
             if (chek === true) {
 
                 $('#chart_div').show();
-                debugger;
+                
                 if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
                     var id = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
                     $.ajax({
@@ -54,9 +54,9 @@
             }
 
         }
-        debugger;
+        
         function drawchartPulse(dataValues) {
-            debugger;
+            
             var data = new google.visualization.DataTable(dataValues);
 
             data.addColumn('string', 'Mon_Date');
@@ -99,7 +99,7 @@
                 });
         }
         function drawBP() {
-            debugger;
+            
             $('#ctl00_MainContent_chkTemp_C').attr('checked', false);
             $('#ctl00_MainContent_chkRespiration_Min').attr('checked', false);
             $('#ctl00_MainContent_chkBlood').attr('checked', false);
@@ -135,7 +135,7 @@
 
         }
         function drawchartBP(dataValues) {
-            debugger;
+            
             var data = new google.visualization.DataTable(dataValues);
             data.addColumn('string', 'Mon_Date');
             data.addColumn('number', 'Systolic ');
@@ -179,7 +179,7 @@
         }
 
         function AdPrint() {
-            debugger;
+            
             var In_Patient_ID = $('#ctl00_MainContent_txtInPatient_Mon_ID').val();
             var url = '../../ReportViewer.aspx?ReportName=InPatientMonitoring&ReportTitle=Clinical Summary Report' + '&In_Patient_ID=' + In_Patient_ID;
             window.open(url, '_blank');
@@ -187,7 +187,7 @@
 
 
         function drawchart(dataValues) {
-            debugger;
+            
             var data = new google.visualization.DataTable(dataValues);
 
             data.addColumn('string', 'InPatient_Mon_Dtl_ID');
@@ -201,7 +201,7 @@
             for (var i = 0; i < dataValues.length; i++) {
                 data.addRow([dataValues[i].InPatient_Mon_Dtl_ID, dataValues[i].Pulse_Min, dataValues[i].BP_mm_Hg, dataValues[i].Temp_C, dataValues[i].Respiration_Min, dataValues[i].Weight_Kg, dataValues[i].Blood_Suger]);
             }
-            debugger;
+            
             var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
 
             chart.draw(data,
@@ -213,7 +213,7 @@
                 });
         }
         function drawTemp() {
-            debugger;
+            
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
 
             $('#ctl00_MainContent_chkRespiration_Min').attr('checked', false);
@@ -223,7 +223,7 @@
             $('#ctl00_MainContent_chkSaturation').attr('checked', false);
             var chek = document.getElementById('ctl00_MainContent_chkTemp_C').checked;
             if (chek === true) {
-                debugger;
+                
                 $('#chart_div').show();
 
                 if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
@@ -291,7 +291,7 @@
                 });
         }
         function drawResp() {
-            debugger;
+            
             $('#ctl00_MainContent_chkBP_mm_Hg').attr('checked', false);
             $('#ctl00_MainContent_chkTemp_C').attr('checked', false);
 
@@ -301,7 +301,7 @@
             $('#ctl00_MainContent_chkSaturation').attr('checked', false);
             var chek = document.getElementById('ctl00_MainContent_chkRespiration_Min').checked;
             if (chek === true) {
-                debugger;
+                
                 $('#chart_div').show();
 
                 if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
@@ -443,7 +443,7 @@
 
             chart.draw(data,
                 {
-                    title: "Blood Suger Monitorting",
+                    title: "Blood Sugar Monitorting",
                     position: "top",
                     fontsize: "14px",
                     chartArea: { width: "90%" },
@@ -524,7 +524,7 @@
         }
 
         function drawchartSaturation(dataValues) {
-            debugger;
+            
             var data = new google.visualization.DataTable(dataValues);
             data.addColumn('string', 'Mon_Date');
             data.addColumn('number', 'Saturation');
@@ -695,7 +695,7 @@
             $('#txtRemarks').removeClass('todolist');
 
             $('#ddl_addtive').on('change', function () {
-                debugger;
+                
                 var name = $(this).find('option:selected').text();
                 var nameval = $(this).find('option:selected').val();
 
@@ -724,14 +724,14 @@
 
             });
             $(".todolist").keyup(function (event) {
-                debugger;
+                
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
                     var text = $('#' + event.currentTarget.id + '').val();
                     text += "• ";
                     $('#' + event.currentTarget.id + '').val(text);
                 }
-                debugger;
+                
                 var txtval = document.getElementById(event.currentTarget.id).value;
                 if (txtval.substr(txtval.length - 1) == '\n') {
                     document.getElementById(' + event.currentTarget.id + ').value = txtval.substring(0, txtval.length - 1);
@@ -740,13 +740,13 @@
 
 
             $("#ctl00_MainContent_txtSaturationRoom").focusin(function () {
-                debugger;
+                
                 var text = $(this).val().replace(" %", "");
                 $(this).val(text);
             });
 
             $("#ctl00_MainContent_txtSaturationRoom").focusout(function () {
-                debugger;
+                
                 if ($(this).val() == " %") {
                     $(this).val("");
                 }
@@ -756,14 +756,14 @@
             });
 
             $("#ctl00_MainContent_txtSaturation_Oxygen1").focusin(function () {
-                debugger;
+                
                 var textOxygen = $(this).val().replace(" L/Min", "");
                 $(this).val(textOxygen);
             });
 
 
             $("#ctl00_MainContent_txtSaturation_Oxygen1").focusout(function () {
-                debugger;
+                
                 if ($(this).val() == " L/Min") {
                     $(this).val("");
                 }
@@ -843,7 +843,7 @@
                 <%}%>
         $("#ctl00_MainContent_txtDate").datepicker({ dateFormat: 'mm/dd/yy' });
         $('#btnSaveMedicine').on("click", function () {
-            debugger;
+            
             var datetime = '<%= DateTime.Now%>';
             if ($('#btnSaveMedicine').val() == 'Add Medicine') {
                 var row = '<tr> <td> ' + datetime + ' </td><td> ' + $('#txtMedicineName').find('option:selected').text() + '</td> <td> ' + $('#txtDosage').val() + ' </td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + '</td><td> ' + $('#Routes').find('option:selected').text() + ' </td> <td> ' + $('#txtInjection').val() + '<td> ' + $('#AttendingParamedicalStaff').val() + ' </td>' + '<td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
@@ -864,7 +864,7 @@
         });
     });
         function editPlus(AnchorTag) {
-            debugger;
+            
             $('#btnAddPulse').val('Update');
             var row = $(AnchorTag).parents('tr')[0];
             $('#ctl00_MainContent_txtPulse_Min').val($($(row).find('td')[1]).text());
@@ -904,9 +904,9 @@
             row.remove();
         }
         function AddMonitering() {
-            debugger;
-            var chk = document.getElementById('ctl00_MainContent_chkTable').checked;
-            if (chk == true) {
+          
+        
+          
                 var datetime = '<%= DateTime.Now%>';
                 if ($('#btnAddPulse').val() == 'Add') {
                     var row = '<tr> <td> ' + datetime + ' </td><td> ' + $('#ctl00_MainContent_txtPulse_Min').val() + '</td> <td> ' + $('#ctl00_MainContent_txtBP_mm_Hg').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtTemp_C').val() + '</td><td> ' + $('#ctl00_MainContent_txtRespiration_Min').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtBlood').val() + '</td><td> ' + $('#ctl00_MainContent_txtWeight_Kg').val() + ' </td><td> ' + $('#ctl00_MainContent_txtSaturation').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturationRoom').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturation_Oxygen1').val() + ' </td>' + ' </td> <td> <a href="#" onclick="editPlus(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
@@ -921,7 +921,7 @@
                     $('#ctl00_MainContent_txtSaturation').val('');
                 }
                 else {
-                    debugger;
+                 
                     var tid = $('#tblMoinitring input[name=uurowid]').val();
                     var row = $('#tblMoinitring tbody tr').find('input[value=' + tid + ']').parents('tr')[0];
                     $(row).find('td')[1].innerText = $('#ctl00_MainContent_txtPulse_Min').val();
@@ -934,13 +934,10 @@
 
                     $('#btnAddPulse').val('Add')
                 }
-            }
-            else {
-                alert("Please Select Table...");
-            }
+           
         }
         function AddProgressNote() {
-            debugger;
+          
             var datetime = '<%= DateTime.Now%>';
             if ($('#btnAddProgress').val() == 'Add') {
                 var row = '<tr> <td> ' + $('#ctl00_MainContent_txtDate').val() + ' </td><td> ' + $('#ctl00_MainContent_txtNurseName').val() + '</td> <td> ' + $('#ctl00_MainContent_txtProgressNote').val() + '</td><td> ' + $('#ctl00_MainContent_txtInstruction').val() + ' </td> <td> <a href="#" onclick="editPlus(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
@@ -979,7 +976,7 @@
             $('#ctl00_MainContent_TextBox2').val('');
         }
         function AddIntake() {
-            debugger;
+            
 
             var intk = $('#ctl00_MainContent_ddlPerformed_By').find('option:selected').text();
             if (intk == 'Please Select' || intk == "Please Select") {
@@ -995,7 +992,7 @@
             $('#ctl00_MainContent_txtQty').val('');
         }
         function SaveMedicines() {
-            debugger;
+            
             var table = $('#tblMedicinesList');
             var MedicinesList = [];
             table.find('tbody tr').each(function (key, value) {
@@ -1017,15 +1014,15 @@
             localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
         }
         function SavemMaster() {
-            debugger;
+            
             var btnsave = $('#btnSave').val();
             var In_Mon_ID = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
             var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
             var Nursing_Plan = toHtml('#ctl00_MainContent_txt_Nursing_plan');
             var Nurse_Name_N = toHtml('#ctl00_MainContent_txt_Nurse_Name_Nursing');
-            debugger;
+            
             PageMethods.SavePatientMonitiring(btnsave, In_Mon_ID, Nursing_Plan, PatID, Nurse_Name_N, function (response) {
-                debugger;
+                
                 alert("Data Has been Successfully Saved");
                 $('#btnSave').val("Update");
                 window.location = "InPatientMonitoring.aspx?ID=" + response;
@@ -1037,7 +1034,7 @@
             window.location = "InPatientMonitoring.aspx";
         }
         function showGraph() {
-            debugger;
+            
             var chek = document.getElementById('ctl00_MainContent_chkGraph').checked;
             if (chek === true) {
                 $('#chart_div').show();
@@ -1047,7 +1044,7 @@
             }
         }
         function toHtml(element) {
-            debugger;
+            
             var separator = /(\r\n|\n|\r)/gm;
             if ($(element).val() == 'comma')
                 separator = /,/gm;
@@ -1080,11 +1077,11 @@
             }
         }
         function GetMonDetail() {
-            debugger;
+            
             if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
                 var id = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
                 PageMethods.GetMonitringDetail(id, function (res) {
-                    debugger;
+                    
                     var MonitringDetail = JSON.parse(res);
                     var rows = '';
                     $.each(MonitringDetail, function (key, value) {
@@ -1097,15 +1094,15 @@
             }
         }
         function GetInTake() {
-            debugger;
+            
             if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
                 var id = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
                 PageMethods.GetInTakeDetail(id, function (res) {
-                    debugger;
+                    
                     var InTakeDetail = JSON.parse(res);
                     var rows = '';
                     $.each(InTakeDetail, function (key, value) {
-                        debugger;
+                        
                         var timeStamp = parseInt(value.Intake_Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
                         if (value.Main_ItemName == null || value.Main_ItemName == "null" || value.Main_ItemName == 'null') {
@@ -1202,11 +1199,11 @@
             }
         }
         function GetProgressNotes() {
-            debugger;
+            
             if ($('#<%= txtInPatient_Mon_ID.ClientID%>').val() != '(New)') {
                 var id = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
                 PageMethods.GetProgressNotesDetail(id, function (res) {
-                    debugger;
+                    
                     var inPatOutputDetail = JSON.parse(res);
                     var rows = '';
                     $.each(inPatOutputDetail, function (key, value) {
@@ -1267,18 +1264,18 @@
         }
 
         function SaveInTake() {
-            debugger;
+            
             var table = $('#tblIntake');
             var IntakeList = [];
             table.find('tbody tr').each(function (key, value) {
-                debugger;
+                
                 IntakeList.push({ 'IntakeDate': $($(value).find('td')[0]).text(), 'Main_Item': $(value).find('td input[name=txtIntakeMain]').val(), 'Item': $(value).find('td input[name=txtIntakeItem]').val(), 'Qty': $($(value).find('td')[2]).text() });
 
             });
             var btnsave = $('#btnSave').val();
             var In_Mon_ID = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
             var PatID = $('#<%= txtPatient_ID.ClientID%>').val();
-            debugger;
+            
             var IntakeList = { InPatient_Mon_ID: In_Mon_ID == '(New)' ? 0 : In_Mon_ID, Patient_ID: PatID, IntakeListt: IntakeList }
 
             PageMethods.SaveIntakeDetail(btnsave, JSON.stringify(IntakeList), function (response) { SaveOutput(); });
@@ -1386,7 +1383,7 @@
             });
         }
         function OnSuccess(data) {
-            debugger;
+            
             if (data.d != '') {
                 var mydate = new Date(Date.parse(data.d.Created_time));
                 var dateR = mydate.toLocaleDateString();
@@ -1529,11 +1526,11 @@
         }
         function SaveInstructionDetail() {
 
-            debugger;
+            
             var table = $('#tblInstruction2');
             var InstructionList = [];
             table.find('tbody tr').each(function (key, value) {
-                debugger;
+                
                 InstructionList.push({ 'Instruction_Date': $($(value).find('td')[0]).text(), 'Doctor_Status': DocStatus[1], 'Doctor_ID': $(value).find('td input[name=txtDoctorValue]').val(), 'Doctor_Instruction': $($(value).find('td')[2]).text(), 'ChekInstruction': $(value).find('td input[name=chekInstruction]')[0].checked, 'Nurse_Name': $(value).find('td input[name=txtNurseName]').val(), 'Progress_Note': $(value).find('td input[name=txtprogress]').val(), });
 
             });
@@ -1544,7 +1541,7 @@
             var ipd = $('#ctl00_MainContent_hdnInpatient_id').val();
 
             var IntructionDetails = { Pat: PatID, InPatientID: ipd, ListIns: InstructionList, listDel: ArrDel }
-            debugger;
+            
             PageMethods.InsertInstuctionDetail(btnsave, JSON.stringify(IntructionDetails), function (response) {
                 SavemMaster();
 
@@ -1554,7 +1551,7 @@
 
         
         function select3(anchor) {
-            debugger;
+            
 
             var row = $(anchor).parents('tr')[0];
             var OPD = $($(row).find('td')[0]).val();
@@ -1575,7 +1572,7 @@
         var ArrDel = [];
         var DocStatus;
         function selectDoctorInstruction(anchor) {
-            debugger;
+            
             var row = $(anchor).parents('tr')[0];
             var Date = $($(row).find('td')[0]).text();
             var Doctor_name = $($(row).find('td')[1]).text();
@@ -1595,10 +1592,10 @@
             $(row).remove();
         }
         function LoadInstructionEdit() {
-            debugger;
+            
             if ($('#<%= txtPatient_ID.ClientID%>').val() != '') {
                 PageMethods.GetInstructionEdit($('#<%= txtPatient_ID.ClientID%>').val(), function (res) {
-                    debugger;
+                    
                     var Instruction = JSON.parse(res);
                     var rows = '';
                     $.each(Instruction, function (key, value) {
@@ -1608,7 +1605,7 @@
                         if (value.Doctor_Status == null)
                             value.Doctor_Status = "";
                         DocStatus = value.Doctor_Status;
-                        debugger;
+                        
                         if (value.Nurse_Name == null) value.Nurse_Name = '';
                         rows += '<tr> <td> ' + date + ' </td> <td><input type="hidden" name ="txtDoctorStatus" value="' + value.Doctor_Status + '">  ' + value.DoctorName + ',' + value.Doctor_Status
                             + '<input type="hidden" name ="txtDoctorValue" value="' + value.Doctor_ID + '"> </td>  <td><input type="hidden" name ="txtprogress" value="' + value.Progress_Note + '">' + value.Doctor_Instruction + '</td><td><input type="text" value="' + value.Nurse_Name + '" name="txtNurseName"  style="font - size: medium;"/></td><td><input type="checkbox" name="chekInstruction"  ' + (value.IsLatest ? 'checked' : '') + ' onclick="selectDoctorInstruction(this)" checked disabled style="width: 20px;" /></td> </tr>';
@@ -1618,10 +1615,10 @@
             }
         }
         function LoadInstruction() {
-            debugger;
+            
             if ($('#<%= txtPatient_ID.ClientID%>').val() != '') {
                 PageMethods.GetInstruction($('#<%= txtPatient_ID.ClientID%>').val(), function (res) {
-                    debugger;
+                    
                     var Instruction = JSON.parse(res);
                     var rows = '';
                     $.each(Instruction, function (key, value) {
@@ -1637,7 +1634,7 @@
                             if (value.RN_Special_Instruction == ' ,') {
                             }
                             else {
-                                debugger;
+                                
                                 if (value.Nurse_Name == null) value.Nurse_Name = '';
                                 rows += '<tr> <td> ' + date + ' </td> <td><input type="hidden" name ="txtDoctorNoteID" value="' + value.Doctor_Note_ID + '"><input type="hidden" name ="txtDoctorStatus" value="' + value.Doctor_Status + '">  ' + value.DoctorName
                                     + ',' + value.DoctorStatus
@@ -1682,7 +1679,7 @@
         }
 
         function loadServices() {
-            debugger;
+            
             $("#ctl00_MainContent_txtService").tokenInput("../../json.aspx?Table=INV_ItemsForBilling",
                 {
 
@@ -1690,7 +1687,7 @@
                     onAdd: function (item) {
 
                         try {
-                            debugger;
+                            
                             localStorage.SelectedItemID = item.id;
                             localStorage.SelectedItemType = item.Type;
                             localStorage.SelectedItemName = item.name;
@@ -1708,12 +1705,12 @@
 
         function LoadServices_Procedures(PatientId) {
 
-            debugger;
+            
             if ($("#ctl00_MainContent_hdnInpatient_id").val() !== "(New)") {
                 $('#ServicesHistoryHeader').html('<h2 class="hedingcolor">Loading Previous History Please Wait...</h2>');
                 PageMethods.LoadServicesDetail(PatientId, $('#ctl00_MainContent_hdnInpatient_id').val(), function (response) {
 
-                    debugger;
+                    
                     var Services = JSON.parse(response);
                     var rows = "";
                     var rowsHistory = "";
@@ -1750,7 +1747,7 @@
 
                     var rows = '';
                     $.each(Medicines, function (key, value) {
-                        debugger;
+                        
                         var timeStamp = parseInt(value.Create_Time.substr(6, 10));
 
                         var date = moment.unix(timeStamp).format('DD/MM/YYYY hh:mm:ss A');
@@ -1774,7 +1771,7 @@
         }
 
         function SaveServices_Procedures() {
-            debugger;
+            
             var table = $("#tblServices");
             var ProcedureList = [];
             var btnSave = $('#btnSave').val();
@@ -1791,7 +1788,7 @@
                 });
             });
 
-            debugger;
+            
 
             var patID = $('#<%= txtPatient_ID.ClientID%>').val();
 
@@ -1810,16 +1807,16 @@
 
 
         function AddInfusion() {
-            debugger;
+            
             var arr = [];
 
             $('#tblAdditive tbody tr:gt(0)').each(function () {
-                debugger;
+                
                 var text = $(this).find('td:eq(0)').text();
                 arr.push(text);
             });
             var arr_join = arr.join();
-            debugger;
+            
             var ddl_addtive = $('#ddl_addtive :selected').text();
             var ddl_InsFluid = $('#ddl_InsFluid :selected').text();
             var ddl_InsVol = $('#ddl_InsVol :selected').text();
@@ -1996,7 +1993,7 @@
         }
 
         function SaveInfusion() {
-            debugger;
+            
 
             var table = $('#table_res');
             var Infusion_List = [];
@@ -2008,7 +2005,7 @@
 
                 });
             });
-            debugger;
+            
             var Patien_ID = $('#<%= txtPatient_ID.ClientID%>').val();
             var InPatien_ID = $('#ctl00_MainContent_hdnInpatient_id').val();
             var InPatID = $('#ctl00_MainContent_hdnInpatient_id').val();
@@ -2312,7 +2309,7 @@
                                 <asp:Label ID="lblDiabetes" runat="server" Text="Pulse(/min)"></asp:Label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtPulse_Min" runat="server"></asp:TextBox>
-                                    <asp:CheckBox ID="chkPulse_Min" runat="server" onclick="drawPulse();" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox ID="chkPulse_Min" runat="server" onclick="drawPulse();" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
                             <div class="col-lg-1 col-md-3 col-sm-4"></div>
@@ -2321,7 +2318,7 @@
                                 <asp:Label ID="LblBP_mm_Hg" runat="server" Text="BP (Systolic / Diastolic)"></asp:Label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtBP_mm_Hg" runat="server"></asp:TextBox>
-                                    <asp:CheckBox ID="chkBP_mm_Hg" runat="server" onclick="drawBP();" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox ID="chkBP_mm_Hg" runat="server" onclick="drawBP();" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
                             <div class="col-lg-1 col-md-3 col-sm-4"></div>
@@ -2330,7 +2327,7 @@
                                 <asp:Label ID="LblTemp_C" runat="server" Text="Temp (oF)"></asp:Label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtTemp_C" runat="server"></asp:TextBox>
-                                    <asp:CheckBox ID="chkTemp_C" runat="server" onclick="drawTemp();" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox ID="chkTemp_C" runat="server" onclick="drawTemp();" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
                             <div class="col-lg-1 col-md-3 col-sm-4"></div>
@@ -2339,17 +2336,17 @@
                                 <asp:Label ID="LblRespiration_Min" runat="server" Text="Respiration (/min)"></asp:Label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtRespiration_Min" runat="server"></asp:TextBox>
-                                    <asp:CheckBox ID="chkRespiration_Min" runat="server" onclick="drawResp();" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox ID="chkRespiration_Min" runat="server" onclick="drawResp();" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-2 col-md-3 col-sm-4">
-                                <asp:Label ID="Label2" runat="server" Text="Blood Suger(mg/dl)"></asp:Label>
+                                <asp:Label ID="Label2" runat="server" Text="Blood Sugar(mg/dl)"></asp:Label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtBlood" runat="server"></asp:TextBox>
-                                    <asp:CheckBox ID="chkBlood" runat="server" onclick="drawBlood();" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox ID="chkBlood" runat="server" onclick="drawBlood();" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
                             <div class="col-lg-1 col-md-3 col-sm-4"></div>
@@ -2358,7 +2355,7 @@
                                 <asp:Label ID="LblWeight_Kg" runat="server" Text="Weight_Kg"></asp:Label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtWeight_Kg" runat="server"></asp:TextBox>
-                                    <asp:CheckBox ID="chkWeight_Kg" runat="server" onclick="drawWeight();" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox ID="chkWeight_Kg" runat="server" onclick="drawWeight();" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
 
@@ -2368,7 +2365,7 @@
                                 <label for="Saturation" id="Lbl_Sat">Saturation</label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtSaturation" runat="server"></asp:TextBox>
-                                    <asp:CheckBox ID="chkSaturation" runat="server" onclick="drawSaturation();" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox ID="chkSaturation" runat="server" onclick="drawSaturation();" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
 
@@ -2378,7 +2375,7 @@
                                 <label for="chk_WithOxygen">On Room Air</label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtSaturationRoom" runat="server" TabIndex="2"></asp:TextBox>
-                                    <asp:CheckBox runat="server" ID="chk_OnRoomAir" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox runat="server" ID="chk_OnRoomAir" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
                         </div>
@@ -2388,20 +2385,20 @@
                                 <label for="chk_WithOxygen">With Oxygen</label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtSaturation_Oxygen1" runat="server" TabIndex="2"></asp:TextBox>
-                                    <asp:CheckBox runat="server" ID="chk_WithOxygen" Style="margin-left: 10px;" />
+<%--                                    <asp:CheckBox runat="server" ID="chk_WithOxygen" Style="margin-left: 10px;" />--%>
                                 </div>
                             </div>
                             <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                            <div class="col-lg-1 col-md-4 col-sm-6" style="display: flex; align-items: center; margin-top: 1%;">
+                        <%--    <div class="col-lg-1 col-md-4 col-sm-6" style="display: flex; align-items: center; margin-top: 1%;">
                                 <asp:Label ID="Label10" runat="server" Text="Graph" Style="margin-right: 5px;"></asp:Label>
                                 <asp:CheckBox ID="chkGraph" runat="server" onclick="showGraph();" />
-                            </div>
+                            </div>--%>
 
-                            <div class="col-lg-1 col-md-4 col-sm-6" style="display: flex; align-items: center; margin-top: 1%;">
+<%--                            <div class="col-lg-1 col-md-4 col-sm-6" style="display: flex; align-items: center; margin-top: 1%;">
                                 <asp:Label ID="Label19" runat="server" Text="Table" Style="margin-right: 5px;"></asp:Label>
                                 <asp:CheckBox ID="chkTable" runat="server" onclick="showTable()" />
                             </div>
-                            <div class="col-lg-1 col-md-4 col-sm-6"></div>
+                            <div class="col-lg-1 col-md-4 col-sm-6"></div>--%>
                             <div class="col-lg-1 col-md-4 col-sm-6">
                                 <label></label>
                                 <input type="button" id="btnAddPulse" class="btn btn-primry" onclick="AddMonitering()" value="Add" />

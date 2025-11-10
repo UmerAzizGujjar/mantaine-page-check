@@ -411,15 +411,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtPulse_Min;
 
         /// <summary>
-        /// chkPulse_Min control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkPulse_Min;
-
-        /// <summary>
         /// LblBP_mm_Hg control.
         /// </summary>
         /// <remarks>
@@ -436,15 +427,6 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtBP_mm_Hg;
-
-        /// <summary>
-        /// chkBP_mm_Hg control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkBP_mm_Hg;
 
         /// <summary>
         /// LblTemp_C control.
@@ -465,15 +447,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtTemp_C;
 
         /// <summary>
-        /// chkTemp_C control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkTemp_C;
-
-        /// <summary>
         /// LblRespiration_Min control.
         /// </summary>
         /// <remarks>
@@ -490,15 +463,6 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRespiration_Min;
-
-        /// <summary>
-        /// chkRespiration_Min control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkRespiration_Min;
 
         /// <summary>
         /// Label2 control.
@@ -519,15 +483,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtBlood;
 
         /// <summary>
-        /// chkBlood control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkBlood;
-
-        /// <summary>
         /// LblWeight_Kg control.
         /// </summary>
         /// <remarks>
@@ -546,15 +501,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtWeight_Kg;
 
         /// <summary>
-        /// chkWeight_Kg control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkWeight_Kg;
-
-        /// <summary>
         /// txtSaturation control.
         /// </summary>
         /// <remarks>
@@ -562,15 +508,6 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSaturation;
-
-        /// <summary>
-        /// chkSaturation control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkSaturation;
 
         /// <summary>
         /// txtSaturationRoom control.
@@ -582,15 +519,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtSaturationRoom;
 
         /// <summary>
-        /// chk_OnRoomAir control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chk_OnRoomAir;
-
-        /// <summary>
         /// txtSaturation_Oxygen1 control.
         /// </summary>
         /// <remarks>
@@ -598,51 +526,6 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSaturation_Oxygen1;
-
-        /// <summary>
-        /// chk_WithOxygen control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chk_WithOxygen;
-
-        /// <summary>
-        /// Label10 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label10;
-
-        /// <summary>
-        /// chkGraph control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkGraph;
-
-        /// <summary>
-        /// Label19 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label19;
-
-        /// <summary>
-        /// chkTable control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkTable;
 
         /// <summary>
         /// Label3 control.

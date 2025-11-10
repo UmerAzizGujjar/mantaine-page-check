@@ -210,24 +210,35 @@ function fillmrno() {
 
 
 function CalculateDateOfBirth() {
-    
+  
+    var ageValue = $('#txt_dob').val();
+
+   
+    var unit = $('#PrefixAge').val();
+ 
     var now = moment();
-    var year = $('#txt_dob').val();
-    var calculateDate = now.subtract(year, 'years');
-    var finalDate = calculateDate.format("DD/MM/YYYY");
-    var $datepicker = $('#txtAge_yearss');
 
-    $datepicker.datepicker({
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-50:+50",
-        dateFormat: "dd/mm/yy"
-    });
+   
+    var momentUnit = unit.toLowerCase() + 's';  
 
-    $('#txtAge_yearss').unmask("99/99/9999");
-    $datepicker.datepicker('setDate', finalDate);
-    $('#txtAge_yearss').unmask("99/99/9999");
-    $("#txtAge_yearss").mask("99/99/9999");
+ 
+    if (ageValue && !isNaN(ageValue)) {
+        var calculatedDate = now.subtract(ageValue, momentUnit);
+        var finalDate = calculatedDate.format("DD/MM/YYYY");
+ 
+
+        var $datepicker = $('#txtAge_yearss');
+ 
+        $datepicker.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0", 
+            dateFormat: "dd/mm/yy"
+        });
+
+        
+        $datepicker.datepicker('setDate', finalDate);
+    }
 }
 
 
@@ -401,7 +412,7 @@ function Get_Pat_Info(reg_id) {
                 $('#txtcity').html($('<option>', { value: '', text: data.City_text }).prop('selected', true));
 
             $('#SavePatient_Data').val('Update');
-            $('#btnPrint').prop('disabled', false);
+            $('#btnPrint').show();
         },
         error: function (response) {
             alert("Error loading patient data.");

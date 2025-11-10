@@ -343,8 +343,11 @@
             });
         });
         function selectPatient(RegID) {
-            hideResults();
-            
+            var url = "NewEMR.aspx?RegID=" + RegID;
+
+             window.location.href = url;
+
+           
         }
     </script>
 </asp:Content>

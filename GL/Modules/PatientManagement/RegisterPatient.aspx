@@ -15,7 +15,7 @@
              $('#SavePatient_Data').val('Update');
          }
          else {
-             $('#btnPrint').prop('disabled', true);
+             $('#btnPrint').hide();
              fillmrno();
            
              $('#ddl_status').select2();
@@ -93,26 +93,27 @@
                 <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
-                <label for="PrefixAge">Age/DOB<span style="color: red;">*</span></label>
-                <select id="PrefixAge" tabindex="5" class="form-control">
-                    <option value="Year">Year</option>
-                    <option value="Month">Month</option>
-                    <option value="Day">Day</option>
-                </select>
+                <label for="PrefixAge">Calculate DOB<span style="color: red;">*</span></label>
+                <input type="text"  tabindex="6" id="txt_dob" class="form-control" placeholder="Enter Age" onchange="CalculateDateOfBirth();" />
+               
+            </div>
+            <div style="margin-top:6px" class="col-lg-1 col-md-3 col-sm-6">
+                <label></label>
+                     <select onchange="CalculateDateOfBirth();" id="PrefixAge" tabindex="5" class="form-control">
+         <option value="Year">Year</option>
+         <option value="Month">Month</option>
+         <option value="Day">Day</option>
+     </select>
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
-                <input type="text" style="margin-top: 7px" tabindex="6" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
-            </div>
-            <div class="col-lg-1 col-md-3 col-sm-6">
-                <label></label>
-                <input type="text" id="txtAge_yearss" tabindex="7" style="margin-top: 7px" class="form-control" placeholder="dd mmyy" />
+                <input disabled type="text" id="txtAge_yearss" tabindex="7" style="margin-top: 7px" class="form-control" placeholder="dd/mm/yy" />
                 <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
             </div>
         </div>
     <div class="row">
         <div class="col-lg-2 col-md-6 col-sm-9">
-    <label for="ddl_Gender">Gender</label>
+    <label for="ddl_Gender">Gender<span style="color: red;">*</span></label>
     <select id="ddl_Gender" tabindex="8" >
         <option value="0">Select Gender</option>
     </select>
@@ -120,24 +121,25 @@
   
 
         <div class="col-lg-2 col-md-4 col-sm-6">
-            <label for="ddl_status">Marital Status</label>
+            <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
             <select id="ddl_status" tabindex="9" class="form-control">
                 <option value="0">Select Martial Status</option>
             </select>
         </div>
+          <div class="col-lg-2 col-md-4 col-sm-6">
+      <label for="ddl_bloodGroup">Blood Group<span style="color: red;">*</span></label>
+      <select id="ddl_bloodGroup" tabindex="11" class="form-control">
+          <option value="0">Select Blood Group</option>
+      </select>
+  </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
             <input type="text" id="txt_mobile" tabindex="10" class="form-control" />
             <span id="mobile-error" class="span_txt" style="display: none;">Please Enter Phone Number</span>
         </div>
+      
         <div class="col-lg-2 col-md-4 col-sm-6">
-            <label for="ddl_bloodGroup">Blood Group</label>
-            <select id="ddl_bloodGroup" tabindex="11" class="form-control">
-                <option value="0">Select Blood Group</option>
-            </select>
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <label for="txt_cnic">CNIC</label>
+            <label for="txt_cnic">CNIC<span style="color: red;">*</span></label>
             <input type="text" id="txt_cnic" tabindex="12" class="form-control" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
