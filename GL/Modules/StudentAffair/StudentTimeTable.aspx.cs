@@ -190,7 +190,8 @@ namespace PMS
                 std.Class_Year = record.Class;
                 std.Class_Name = record.txtClass;
                 std.Date = record.dat;
-                std.Day_Name = record.day;
+                // std.Day_Name = record.day;
+                std.Day_Name = record.dat.ToString("ddd");
                 std.FromTime = record.FTimes;
                 std.ToTime = record.TTime;
                 std.Practical = record.ddlSubject;

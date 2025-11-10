@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.Modules.Appointment
+namespace PMS
 {
 
 

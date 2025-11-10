@@ -688,6 +688,11 @@
                     $('.teach').select2();
                     if (md.Whole_Class == true) {
                         $(`#whole${index}`).prop('checked', true);
+                        $(`#ddlbatchs${index}`).prop('disabled', true);
+                        $(`#ddlgroups${index}`).prop('disabled', true);
+                    } else {
+                        $(`#ddlbatchs${index}`).prop('disabled', false);
+                        $(`#ddlgroups${index}`).prop('disabled', false);
                     }
                     if (md.Holiday == true) {
                         $(`#chkhldy${index}`).prop('checked', true);
@@ -807,14 +812,22 @@
                     var Dte = Dates.split('-');
                     debugger;
                     Dated = Dte[0];
-                    debugger;
                     var today = Dated.trim();
                     var day = today.split('/');
                     var dat = new Date(parseInt(day[2]), parseInt(day[1]) - 1, parseInt(day[0]), null, null, null, null);
                     debugger;
-                    debugger;
+
                     DayName = Dte[1];
                     var day = DayName.trim();
+                    debugger;
+                    var TTime = $($(value).find('td input[name=TTime]')[0]).val();
+                    if (TTime == null || TTime == 0 || TTime == "") {
+                        TTime = time;
+                    }
+                    var FTimes = $($(value).find('td input[name=FTime]')[0]).val();
+                    if (FTimes == null || FTimes == 0 || FTimes == "") {
+                        FTimes = time;
+                    }  
 
 
 

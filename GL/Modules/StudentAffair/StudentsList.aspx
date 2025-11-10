@@ -4,137 +4,112 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
-            GetToClass();
             GetFromClass();
+            GetToClass();
             updatebill();
             GetBatch();
             GetGroup();
             GetStudentprogram();
-            debugger;
-            setTimeout(function () {
-                LoadData();
-            },2500);
-            $("#txt_WholeClass").prop("checked", true)
 
+            $("#txt_WholeClass").prop("checked", true);
 
-          
+            var table = $('#studentsTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "lengthChange": true,
+                "pageLength": 25,
+                "ajax": {
+                    "type": "POST",
+                    "url": "StudentsList.aspx/ViewList",
+                    "contentType": "application/json; charset=utf-8",
+                    "dataType": "json",
+                    "data": function (d) {
+                        return JSON.stringify({
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            sortColumn: d.columns[d.order[0].column].data || "Student_Id",
+                            sortColumnDirection: d.order[0].dir,
+                            searchValue: d.search.value,
 
-            $('#ddlBatch').on('change', function () {
-                debugger;
-                var subject1 = $(this).find(':selected').text();
-                if (subject1 != "") {
-                    debugger;
-                    $('#txt_WholeClass').attr('disabled', true);
-                    $('#ddlGroup').attr('disabled', true);
+                            Class: $('#ddlFromClass').find('option:selected').val() || "",
+                            Isactive: $('#Isactive').prop("checked"),
+                            Noactive: $('#Noactive').prop("checked"),
+                            ddlProgram: $("#ddlProgram").find('option:selected').val() || "",
+                            ddlBatch: $("#ddlBatch").find('option:selected').val() || "",
+                            ddlGroup: $("#ddlGroup").find('option:selected').val() || "",
+                            txt_WholeClass: $("#txt_WholeClass").prop("checked")
+                        });
+                    },
+                    "dataSrc": function (json) {
+                        var response = JSON.parse(json.d);
+                        $('#txtAllStudent').val(response.recordsTotal);
+                        return response.data;
+                    },
+                    "error": function (xhr, error, thrown) {
+                        console.error("DataTables AJAX error:", xhr.responseText);
+                    }
+                },
+                "columns": [
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "render": function () {
+                            return '<input type="checkbox" class="chcktbl" />';
+                        }
+                    },
+                    {
+                        data: "AdmissionDate",
+                        render: function (data) {
+                            return data ? moment(data).format('L') : '';
+                        }
+                    },
+                    { "data": "Roll_No" },
+                    { "data": "Class" },
+                    { "data": "Full_Name" },
+                    { "data": "Father_Name" },
+                    { "data": "Student_CNIC" },
+                    { "data": "Student_Contact_No" },
+                    { "data": "Batch" },
+                    { "data": "Groups" },
+                    { "data": "Sesion" },
+                    {
+                        "data": "Student_Id",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            return '<a class="HRlink" href="#" onclick="editOpen(' + data + ')">Edit</a> | ' +
+                                '<a href="#" onclick="deleteConfirm(this)" data-id="' + data + '">Delete</a>';
+                        }
+                    }
+                ],
+                "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#example_length');
+                    var lengthDropdown = document.querySelector('#example_length select');
+                    var label = document.querySelector('#example_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    } else {
+                        console.log("Length dropdown, label, or container not found");
+                    }
                 }
-
-            });
-            $('#ddlBatch').on('change', function () {
-                debugger;
-                var subject1 = $(this).find(':selected').text();
-                if (subject1 == "Select" || subject1 == 'Select') {
-                    debugger;
-                    $('#txt_WholeClass').attr('disabled', false);
-                    $('#ddlGroup').attr('disabled', false);
-                    $('#ddlBatch').attr('disabled', false)
-                }
-
-            });
-
-
-            $('#ddlGroup').on('change', function () {
-                debugger;
-                var subject1 = $(this).find(':selected').text();
-                if (subject1 != "") {
-                    debugger;
-                    $('#txt_WholeClass').attr('disabled', true);
-                    $('#ddlBatch').attr('disabled', true);
-                }
-            });
-
-
-            $('#ddlGroup').on('change', function () {
-                debugger;
-                var subject1 = $(this).find(':selected').text();
-                if (subject1 == "Select" || subject1 == 'Select') {
-                    debugger;
-                    $('#txt_WholeClass').attr('disabled', false);
-                    $('#ddlGroup').attr('disabled', false);
-                    $('#ddlBatch').attr('disabled', false)
-                }
-
-            });
-
-
-            $('#txt_WholeClass').on('change', function () {
-                debugger;
-
-                if ($('#txt_WholeClass').is(':checked')) {
-                    $('#ddlBatch').attr('disabled', true)
-                    $('#ddlGroup').attr('disabled', true);
-                }
-                else {
-                    $('#ddlBatch').attr('disabled', false)
-                    $('#ddlGroup').attr('disabled', false)
-                }
-            })
-
-
-
-
-            $('#txtSearch').on("keyup", function () {
-                debugger;
-                search = $('#txtSearch').val();
-                LoadData();
-            });
-
-
-
-
-            $('[id*=chckHead]').on('click', function () {
-
-
-                var isTrue = $('#chckHead').is(':checked');
-                if (isTrue) {
-                    $('.chcktbl').prop('checked', true);
-                    calculateSum();
-                }
-                else {
-                    $('.chcktbl').prop('checked', false);
-                    calculateSum();
-                }
-            });
-
-
-            $('#Isactive').on('click', function () {
-                debugger;
-                var isTrue = $('#Isactive').is(':checked');
-                if (isTrue) {
-                    debugger;
-                    $('#Isactive').prop('checked', true);
-                    $('#Noactive').prop('checked', false);
-                }
-                else {
-                    debugger;
-                    $('#Isactive').prop('checked', false);
-                }
-                LoadData();
             });
 
-            $('#Noactive').on('click', function () {
-                debugger;
-                var isTrue = $('#Noactive').is(':checked');
-                if (isTrue) {
-                    debugger;
-                    $('#Noactive').prop('checked', true);
-                    $('#Isactive').prop('checked', false);
-                }
-                else {
-                    debugger;
-                    $('#Noactive').prop('checked', false);
-                }
-                LoadData();
+            $('#ddlFromClass, #ddlProgram, #ddlBatch, #ddlGroup, #txt_WholeClass, #Isactive, #Noactive, #txtSearch')
+                .off('change keyup')
+                .on('change keyup', function () {
+                    table.ajax.reload();
             });
         });
         debugger;
@@ -371,120 +346,120 @@
             });
         }
         debugger;
-        function LoadData() {
+        //function LoadData() {
 
-            var Class = $('#ddlFromClass').find('option:selected').val();
-            var search = $('#txtSearch').val();
-            var Isactive = $('#Isactive').prop("checked");
-            var Noactive = $('#Noactive').prop("checked");
-            var ddlProgram = $("#ddlProgram").find('option:selected').val();
-            var ddlBatch = $("#ddlBatch").find('option:selected').val();
-            var ddlGroup = $("#ddlGroup").find('option:selected').val();
-            var txt_WholeClass = $("#txt_WholeClass").prop("checked");
+        //    var Class = $('#ddlFromClass').find('option:selected').val();
+        //    var search = $('#txtSearch').val();
+        //    var Isactive = $('#Isactive').prop("checked");
+        //    var Noactive = $('#Noactive').prop("checked");
+        //    var ddlProgram = $("#ddlProgram").find('option:selected').val();
+        //    var ddlBatch = $("#ddlBatch").find('option:selected').val();
+        //    var ddlGroup = $("#ddlGroup").find('option:selected').val();
+        //    var txt_WholeClass = $("#txt_WholeClass").prop("checked");
 
-            debugger;
-            $.ajax({
+        //    debugger;
+        //    $.ajax({
 
-                type: "POST",
-                url: "StudentsList.aspx/ViewList",
-                data: JSON.stringify({
-                    "Class": Class,
-                    "Search": search,
-                    "Isactive": Isactive,
-                    "Noactive": Noactive,
-                    "ddlProgram": ddlProgram,
-                    "ddlBatch": ddlBatch,
-                    "ddlGroup": ddlGroup,
-                    "txt_WholeClass": txt_WholeClass
+        //        type: "POST",
+        //        url: "StudentsList.aspx/ViewList",
+        //        data: JSON.stringify({
+        //            "Class": Class,
+        //            "Search": search,
+        //            "Isactive": Isactive,
+        //            "Noactive": Noactive,
+        //            "ddlProgram": ddlProgram,
+        //            "ddlBatch": ddlBatch,
+        //            "ddlGroup": ddlGroup,
+        //            "txt_WholeClass": txt_WholeClass
 
 
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
+        //        }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
 
-                success: function (newdata) {
+        //        success: function (newdata) {
                     
 
-                    var data = JSON.parse(newdata.d);
-                    var Count = 0;
-                    $('#tbl tr:gt(0)').remove();
-                    table = $('#tbody');
-                    table.empty();
-                    $.each(data, function (key, value) {
+        //            var data = JSON.parse(newdata.d);
+        //            var Count = 0;
+        //            $('#tbl tr:gt(0)').remove();
+        //            table = $('#tbody');
+        //            table.empty();
+        //            $.each(data, function (key, value) {
 
-                        Count = Count + value.Totalcount;
-
-
-                        if (value.Admission == "null" || value.Admission == null || value.Admission == "") {
-                            value.Admission = "";
-                        }
-
-                        if (value.Sesion == "null" || value.Sesion == null || value.Sesion == "") {
-                            value.Sesion = "";
-                        }
+        //                Count = Count + value.Totalcount;
 
 
-                        var AdmissionDate = value.Created_time;
-                        AdmissionDate = moment(AdmissionDate).format('L');
+        //                if (value.Admission == "null" || value.Admission == null || value.Admission == "") {
+        //                    value.Admission = "";
+        //                }
 
-                        if (AdmissionDate == "null" || AdmissionDate == "Invalid date" || AdmissionDate == null || AdmissionDate == 'null') {
-                            AdmissionDate = "";
-                        }
-
-                        var batch = value.Batch;
-                        var Groups = value.Groups;
+        //                if (value.Sesion == "null" || value.Sesion == null || value.Sesion == "") {
+        //                    value.Sesion = "";
+        //                }
 
 
+        //                var AdmissionDate = value.Created_time;
+        //                AdmissionDate = moment(AdmissionDate).format('L');
 
-                        if (batch == null) {
-                            batch = ' ';
-                        }
+        //                if (AdmissionDate == "null" || AdmissionDate == "Invalid date" || AdmissionDate == null || AdmissionDate == 'null') {
+        //                    AdmissionDate = "";
+        //                }
 
-                        if (Groups == null) {
-                            Groups = ' ';
-                        }
+        //                var batch = value.Batch;
+        //                var Groups = value.Groups;
+
+
+
+        //                if (batch == null) {
+        //                    batch = ' ';
+        //                }
+
+        //                if (Groups == null) {
+        //                    Groups = ' ';
+        //                }
 
                      
-                        $("#tbody").append(
-                            '<tr>' + '<td><input type="checkbox" class ="chcktbl" id = "chcktbl"  name="chkReport' + (key + 1) + '" value="false"/></td>' +
+        //                $("#tbody").append(
+        //                    '<tr>' + '<td><input type="checkbox" class ="chcktbl" id = "chcktbl"  name="chkReport' + (key + 1) + '" value="false"/></td>' +
 
-                            '<td style="display:none"><input type="hidden" id="txt_Student_Id' + (key + 1) + '" name="txt_Student_Id" value="' + value.Student_Id + '"/>' + value.Student_Id + '</td>' +
+        //                    '<td style="display:none"><input type="hidden" id="txt_Student_Id' + (key + 1) + '" name="txt_Student_Id" value="' + value.Student_Id + '"/>' + value.Student_Id + '</td>' +
 
-                            '<td><input type="hidden" id="txt_JoiningDate' + (key + 1) + '" name="txt_JoiningDate" value="' + AdmissionDate + '"/>' + AdmissionDate + '</td>' +
+        //                    '<td><input type="hidden" id="txt_JoiningDate' + (key + 1) + '" name="txt_JoiningDate" value="' + AdmissionDate + '"/>' + AdmissionDate + '</td>' +
 
-                            '<td ><input type="hidden" id="txt_RollNo' + (key + 1) + '" name="txt_RollNo" value="' + value.Student_Id + '"/>' + value.Roll_No + '</td>' +
+        //                    '<td ><input type="hidden" id="txt_RollNo' + (key + 1) + '" name="txt_RollNo" value="' + value.Student_Id + '"/>' + value.Roll_No + '</td>' +
 
-                            '<td><input type="hidden" id="txt_Class' + (key + 1) + '" name="txt_Class" value="' + value.Student_Id + '"/>' + value.Class + '</td>' +
+        //                    '<td><input type="hidden" id="txt_Class' + (key + 1) + '" name="txt_Class" value="' + value.Student_Id + '"/>' + value.Class + '</td>' +
 
-                            '<td><input type="hidden" id="txt_FullName' + (key + 1) + '" name="txt_FullName" value="' + value.Student_Id + '"/>' + value.Full_Name + '</td>' +
-
-
-                            '<td><input type="hidden" id="txt_FatherName' + (key + 1) + '" name="txt_FatherName" value="' + value.Student_Id + '"/>' + value.Father_Name + '</td>' +
+        //                    '<td><input type="hidden" id="txt_FullName' + (key + 1) + '" name="txt_FullName" value="' + value.Student_Id + '"/>' + value.Full_Name + '</td>' +
 
 
-                            '<td><input type="hidden" id="txt_CNIC' + (key + 1) + '" name="txt_CNIC" value="' + value.Student_Id + '"/>' + value.Student_CNIC + '</td>' +
+        //                    '<td><input type="hidden" id="txt_FatherName' + (key + 1) + '" name="txt_FatherName" value="' + value.Student_Id + '"/>' + value.Father_Name + '</td>' +
 
 
-                            '<td><input type="hidden" id="txtTelephone' + (key + 1) + '" name="txtTelephone" value="' + value.Student_Id + '"/>' + value.Student_Contact_No + '</td>' +
-
-                            '<td><input type="hidden" id="txtBatch' + (key + 1) + '" name="txtBatch" value="' + value.Student_Id + '"/>' + batch + '</td>' +
-
-                            '<td><input type="hidden" id="txtGroups' + (key + 1) + '" name="Groups" value="' + value.Student_Id + '"/>' + Groups + '</td>' +
-
-                            '<td><input type="hidden" id="txt_Sesion' + (key + 1) + '" name="txt_Sesion" value="' + value.Student_Id + '"/>' + value.Sesion + '</td>' +
-
-                            '<td>' + '<a class="HRlink" href="#" onclick=editOpen(' + value.Student_Id + ')>Edit</a>' +
-                            ' | <a href="#" onclick=deleteConfirm(this)>Delete</a>' + '</td>' +
-                            '</tr>');
-                        length++;
+        //                    '<td><input type="hidden" id="txt_CNIC' + (key + 1) + '" name="txt_CNIC" value="' + value.Student_Id + '"/>' + value.Student_CNIC + '</td>' +
 
 
-                        return true;
-                    });
-                    $('#txtAllStudent').val(Count);
-                }
-            });
-        }
+        //                    '<td><input type="hidden" id="txtTelephone' + (key + 1) + '" name="txtTelephone" value="' + value.Student_Id + '"/>' + value.Student_Contact_No + '</td>' +
+
+        //                    '<td><input type="hidden" id="txtBatch' + (key + 1) + '" name="txtBatch" value="' + value.Student_Id + '"/>' + batch + '</td>' +
+
+        //                    '<td><input type="hidden" id="txtGroups' + (key + 1) + '" name="Groups" value="' + value.Student_Id + '"/>' + Groups + '</td>' +
+
+        //                    '<td><input type="hidden" id="txt_Sesion' + (key + 1) + '" name="txt_Sesion" value="' + value.Student_Id + '"/>' + value.Sesion + '</td>' +
+
+        //                    '<td>' + '<a class="HRlink" href="#" onclick=editOpen(' + value.Student_Id + ')>Edit</a>' +
+        //                    ' | <a href="#" onclick=deleteConfirm(this)>Delete</a>' + '</td>' +
+        //                    '</tr>');
+        //                length++;
+
+
+        //                return true;
+        //            });
+        //            $('#txtAllStudent').val(Count);
+        //        }
+        //    });
+        //}
 
     </script>
 
@@ -561,26 +536,23 @@
 
 
     <div style="overflow: scroll; height: 500px;margin-top: 22px;">
-        <table class="table table-sm table-bordered table-hover table-striped" id="tblResult" style="overflow: scroll; height: auto;">
-            <thead id="ihead">
-                <tr>
-                    <th>
-                    <input type="checkbox" id="chckHead" name="chkReport" /></th>
-                    <th style="width: 101px;">Joining Date</th>
-                    <th style="width: 68px;">Roll No</th>
-                    <th style="width: 77px;">Class</th>
-                    <th>Full Name</th>
-                    <th style="width: 210px;">Father Name</th>
-                    <th>NIC Number</th>
-                    <th>Telephone</th>
-                    <th style="width: 71px;">Batch</th>
-                    <th style="width: 73px;">Group</th>
-                    <th style="width: 87px !important;">Session</th>
-                    <th style="width: 98px !important;">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
-            </tbody>
-        </table>
+        <table id="studentsTable" class="table table-sm table-bordered table-hover table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th><input type="checkbox" id="chckHead" /></th>
+            <th>Joining Date</th>
+            <th>Roll No</th>
+            <th>Class</th>
+            <th>Full Name</th>
+            <th>Father Name</th>
+            <th>NIC Number</th>
+            <th>Telephone</th>
+            <th>Batch</th>
+            <th>Group</th>
+            <th>Session</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+</table>
     </div>
 </asp:Content>

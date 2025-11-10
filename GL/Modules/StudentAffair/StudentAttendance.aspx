@@ -32,6 +32,7 @@
             $('#ddldate').select2();
             $('#Subject').select2();
             $('#Time').select2();
+            $('#ddlWeek').select2();
 
             dropdowns.forEach(item => {
                 const $element = $(item.id);
