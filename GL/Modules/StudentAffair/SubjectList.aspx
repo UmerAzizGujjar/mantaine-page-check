@@ -62,10 +62,10 @@
                                 debugger;
                                 var res = '<a  class="editListBtn" href="#" onclick="editOpen(' + full.subject_Id + ')" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
-                                var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.subject_Id + '" onclick="DeleteData( ' + full.subject_Id + ', \'' + full.subject_Id + '\')"><i class="fa fa-trash" ></i></a>';
+                                
 
                                 var result;
-                                result = res + Del;
+                                result = res;
                                 return result;
                             }, "width": "15%", "orderable": false
                         }

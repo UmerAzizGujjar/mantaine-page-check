@@ -1,6 +1,4 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentsList.aspx.cs" Inherits="PMS.StudentsList" %>
-
-
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
@@ -111,6 +109,27 @@
                 .on('change keyup', function () {
                     table.ajax.reload();
             });
+
+            $('#checkAll').on('click', function () {
+                var isChecked = $(this).prop('checked');
+                $('#studentsTable').find('input.chcktbl').prop('checked', isChecked);
+            });
+
+            $('#studentsTable').on('draw.dt', function () {
+                var headerChecked = $('#checkAll').prop('checked');
+                $('#studentsTable').find('input.chcktbl').prop('checked', headerChecked);
+            });
+
+            $('#studentsTable').on('change', 'input.chcktbl', function () {
+                if (!$(this).prop('checked')) {
+                    $('#checkAll').prop('checked', false);
+                } else {
+                    if ($('input.chcktbl:checked').length === $('input.chcktbl').length) {
+                        $('#checkAll').prop('checked', true);
+                    }
+                }
+            });
+
         });
         debugger;
         var userupdate;
@@ -539,7 +558,7 @@
         <table id="studentsTable" class="table table-sm table-bordered table-hover table-striped" style="width:100%">
     <thead>
         <tr>
-            <th><input type="checkbox" id="chckHead" /></th>
+             <th><input type="checkbox" id="checkAll" /></th>
             <th>Joining Date</th>
             <th>Roll No</th>
             <th>Class</th>
