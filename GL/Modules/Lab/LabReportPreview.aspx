@@ -783,7 +783,7 @@
             }
         }
         function readIMGsingle(input) {
-
+            debugger;
             var countFiles = $(input)[0].files.length;
             var imgPath = $(input)[0].value;
             var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();

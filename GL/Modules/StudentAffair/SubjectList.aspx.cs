@@ -32,9 +32,9 @@ namespace PMS
                                       subject_Id = S.subject_Id,
                                       Program = _dbContext.GetDataValueName("Admission Category", S.Program),
                                       Class = _dbContext.GetDataValueName("Student Class", S.Class),
-                                      Block = S.Block,
-                                      Module = S.Module, 
-                              };
+                                      Block = _dbContext.GetDataValueName("Academic Block", S.Block),
+                                      Module = _dbContext.GetDataValueName("Academic Module", S.Module),
+                                  };
 
 
 
