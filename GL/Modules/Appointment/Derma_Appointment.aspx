@@ -1,171 +1,167 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Derma_Appointment.aspx.cs" Inherits="PMS.Derma_Appointment" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Appointment.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="../../wwwroot/Tibbit_theme/CustomJs/Appointment.js"></script>
-     <script type="text/javascript">
-         $(document).ready(function () {
-             debugger;
-             var txt_apt_no = $('#txt_apt_no').val();
-             if (txt_apt_no && txt_apt_no > 0) {
-                 var dropdowns = [
-                     { id: '#ddlDepartment', method: 'GetDepartment' },
-                     { id: '#ddl_Province', method: 'GetProvince' },
-                     { id: '#txtcity', method: 'GetCity' },
-                     { id: '#ddlCountry', method: 'GetCountry' },
-                     { id: '#ddlArea', method: 'GetArea' },
-                     { id: '#ddl_Gender', method: 'GetGender' },
-                     { id: '#ddl_status', method: 'GetMartailStatus' },
-                     { id: '#ddlPatient_Type', method: 'PatientType' },
-                     { id: '#ddl_colstnt', method: 'GetDoctor' },
-                     { id: '#ddl_helper', method: 'GetHelper' }
-                 ];
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            var txt_apt_no = $('#txt_apt_no').val();
+            if (txt_apt_no && txt_apt_no > 0) {
+                var dropdowns = [
+              
+                    { id: '#ddl_Province', method: 'GetProvince' },
+                    { id: '#txtcity', method: 'GetCity' },
+                    { id: '#ddlCountry', method: 'GetCountry' },
+                    { id: '#ddlArea', method: 'GetArea' },
+                    { id: '#ddl_Gender', method: 'GetGender' },
+                    { id: '#ddl_status', method: 'GetMartailStatus' },
+                    { id: '#ddlPatient_Type', method: 'PatientType' },
+                    { id: '#ddl_colstnt', method: 'GetDoctor' },
+                    { id: '#ddl_helper', method: 'GetHelper' }
+                ];
 
-                 dropdowns.forEach(item => {
-                     debugger;
-                     const $element = $(item.id);
-                     $element.select2();
-                     $element.on('select2:open', function () {
-                         fillDropdown($element, item.method);
-                     });
-
-                     if (item.id === '#ddlPatient_Type') {
-                         $element.prop('disabled', false);
-                         $element.off('select2:select').on('select2:select', function () {
-                             loaddata();
-                             $(this).prop('disabled', true);
-                         });
-                     }
-
-                     if (item.id === '#ddlDepartment') {
-                         $element.prop('disabled', false);
-                         $element.off('select2:select').on('select2:select', function () {
-                             loaddoctor();
-                         });
-                     }
-
-                     if (item.id === '#ddl_colstnt') {
-                         $element.off('change').on('change', function () {
-                             var doctor_id = $(this).val();
-                             if (doctor_id) {
-                                 ConfigureAvailableDates(doctor_id);
-                                 GetAppNoByDoctor();
-                                 GetSubDepartmentByDoctor(doctor_id);
-                                 LoadPage();
-                             }
-                         });
-                     }
-
-
-                 });
-             }
-             else {
-                // LoadDetailDoctor();
-
-
-             }
-
-             LoadDetailDoctor();
-
-             $('#ddl_colstnt').select2();
-             $('#chk_status').select2();
-             $('#ddlsubdepartment').select2();
-             //
-             // Flag to prevent double-click or dual-button duplicate save
-             let isSaving = false;
-
-             function safeSaveAttempt() {
-                 if (isSaving) {
-                     console.warn("Save already in progress. Ignoring duplicate trigger.");
-                     return;
-                 }
-
-                 isSaving = true;
-                 $('#btnSave, #btnSaveMessage').prop('disabled', true).addClass('disabled');
-
-                 verifydoctoravail(function (result) {
-                     try {
-                         if (result === 'OnDay') {
-                             save = $('#btnSave').val();
-                             SaveAllRecord();
-                         }
-                     } finally {
-                         // Re-enable buttons after a short delay
-                         setTimeout(() => {
-                             isSaving = false;
-                             $('#btnSave, #btnSaveMessage').prop('disabled', false).removeClass('disabled');
-                         }, 1000);
-                     }
-                 });
-             }
-
-             // Attach both buttons to the same safe handler
-             $('#btnSave').off('click').on('click', safeSaveAttempt);
-             $('#btnSaveMessage').off('click').on('click', safeSaveAttempt);
-             debugger;
-             $("#txtSearch").keypress(function (event) {
-
-                 var SearchString = $('#txtSearch').val();
-                 if (event.which == 13) {
-                     {
-
-                         event.preventDefault();
-
-                         if (SearchString != '') {
-
-                             PageMethods.SearchPatients((Number(SearchString) ? parseInt(SearchString).toString() : SearchString), OnFilterPatients, OnFailPatients);
-                         }
-                     }
-                     if (SearchString === '') {
-                         FillPatientsList();
-                     }
-                 }
-
-             });
-             $("#txtSearch").keyup(function (event) {
-
-                 var SearchString = $('#txtSearch').val();
-                 event.preventDefault();
-                 if (SearchString === '')
-                     FillPatientsList();
-             });
-             $('#txt_date').change(function () {
-                 LoadPage();
-             });
-
-
-
-
-             debugger;
-             var App_id = '<%= Request.QueryString["APPID"]%>';
-            if (App_id != "") {
-
-                loadapptEdit(App_id);
-
-            }
-            if (App_id == "") {
-                filldepartment();
-                $('#ddlsubdepartment').on('change', function () {
+                dropdowns.forEach(item => {
                     debugger;
-                    var dep = $('#ddlsubdepartment').val();
-                  //  LoadDetailDoctor(dep)
-                    setTimeout(function () {
-                        $('#ddlServices').focus();
-                    }, 5);
+                    const $element = $(item.id);
+                    $element.select2();
+                    $element.on('select2:open', function () {
+                        fillDropdown($element, item.method);
+                    });
 
+                    if (item.id === '#ddlPatient_Type') {
+                        $element.prop('disabled', false);
+                        $element.off('select2:select').on('select2:select', function () {
+                            loaddata();
+                            $(this).prop('disabled', true);
+                        });
+                    }
+
+                   
+
+                    if (item.id === '#ddl_colstnt') {
+                        $element.off('change').on('change', function () {
+                            var doctor_id = $(this).val();
+                            if (doctor_id) {
+                                ConfigureAvailableDates(doctor_id);
+                                GetAppNoByDoctor();
+                                GetHelper(doctor_id);
+                                LoadPage();
+                            }
+                        });
+                    }
 
 
                 });
             }
+            else {
+                // LoadDetailDoctor();
+
+
+            }
+            GetServices();
+            LoadDetailDoctor();
+
+            $('#ddl_colstnt').select2();
+            $('#chk_status').select2();
+            $('#ddlsubdepartment').select2();
+            //
+            // Flag to prevent double-click or dual-button duplicate save
+            let isSaving = false;
+
+            function safeSaveAttempt() {
+                if (isSaving) {
+                    console.warn("Save already in progress. Ignoring duplicate trigger.");
+                    return;
+                }
+
+                isSaving = true;
+                $('#btnSave, #btnSaveMessage').prop('disabled', true).addClass('disabled');
+
+                verifydoctoravail(function (result) {
+                    try {
+                        if (result === 'OnDay') {
+                            save = $('#btnSave').val();
+                            SaveAllRecord();
+                        }
+                    } finally {
+                        // Re-enable buttons after a short delay
+                        setTimeout(() => {
+                            isSaving = false;
+                            $('#btnSave, #btnSaveMessage').prop('disabled', false).removeClass('disabled');
+                        }, 1000);
+                    }
+                });
+            }
+
+            // Attach both buttons to the same safe handler
+            $('#btnSave').off('click').on('click', safeSaveAttempt);
+            $('#btnSaveMessage').off('click').on('click', safeSaveAttempt);
+            debugger;
+            $("#txtSearch").keypress(function (event) {
+
+                var SearchString = $('#txtSearch').val();
+                if (event.which == 13) {
+                    {
+
+                        event.preventDefault();
+
+                        if (SearchString != '') {
+
+                            PageMethods.SearchPatients((Number(SearchString) ? parseInt(SearchString).toString() : SearchString), OnFilterPatients, OnFailPatients);
+                        }
+                    }
+                    if (SearchString === '') {
+                        FillPatientsList();
+                    }
+                }
+
+            });
+            $("#txtSearch").keyup(function (event) {
+
+                var SearchString = $('#txtSearch').val();
+                event.preventDefault();
+                if (SearchString === '')
+                    FillPatientsList();
+            });
+            $('#txt_date').change(function () {
+                LoadPage();
+            });
+
 
 
 
             debugger;
-            $('#ddl_colstnt').on('change', function () {
-                debugger;
-                var doctor_id = $('#ddl_colstnt').val();
-                ConfigureAvailableDates(doctor_id);
-                var aID = '<%= Request.QueryString["aID"]%>';
+            var App_id = '<%= Request.QueryString["APPID"]%>';
+             if (App_id != "") {
+
+                 loadapptEdit(App_id);
+
+             }
+             if (App_id == "") {
+                 filldepartment();
+                 $('#ddlsubdepartment').on('change', function () {
+                     debugger;
+                     var dep = $('#ddlsubdepartment').val();
+                     //  LoadDetailDoctor(dep)
+                     setTimeout(function () {
+                         $('#ddlServices').focus();
+                     }, 5);
+
+
+
+                 });
+             }
+
+
+
+             debugger;
+             $('#ddl_colstnt').on('change', function () {
+                 debugger;
+                 var doctor_id = $('#ddl_colstnt').val();
+                 ConfigureAvailableDates(doctor_id);
+                 var aID = '<%= Request.QueryString["aID"]%>';
                 if (aID != "") {
 
                 }
@@ -183,153 +179,153 @@
 
 
             });
-            $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
-                debugger;
+             $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
+                 debugger;
 
 
-                setTimeout(function () {
-                    $('#txt_pt_name').focus();
-                }, 5);
-
-
-
-            });
-
-            $('#ddlServices').on('change', function () {
-                debugger;
-
-
-                setTimeout(function () {
-                    $('#txtRemarks').focus();
-                }, 5);
+                 setTimeout(function () {
+                     $('#txt_pt_name').focus();
+                 }, 5);
 
 
 
-            });
-            MaskedInput({
-                elm: document.getElementById('txt_phone_no'),
-                format: '___________',
-                separator: '-'
+             });
 
-            });
+             $('#ddlServices').on('change', function () {
+                 debugger;
 
 
-            LoadPage();
-            getpage();
+                 setTimeout(function () {
+                     $('#txtRemarks').focus();
+                 }, 5);
 
 
 
+             });
+             MaskedInput({
+                 elm: document.getElementById('txt_phone_no'),
+                 format: '___________',
+                 separator: '-'
+
+             });
 
 
-            $('#chk_Doc').select2();
-
-            $('#txt_pt_name').attr('disabled', true);
-            $('#txt_phone_no').attr('disabled', true);
-            $('#txt_age').attr('disabled', true);
-
-
-            debugger;
-            var ids = '<%= Request.QueryString["aID"]%>';
-            var reg_pat = '<%= Request.QueryString["ID"]%>';
-            debugger;
-
-            if (ids == '' || ids == "") {
-                debugger;
-
-
-                $("#PatientsSearchModel").modal('show');
-
-
-                var App_ids = '<%= Request.QueryString["APPID"]%>';
-                if (App_ids != "") {
-                    $("#PatientsSearchModel").modal('hide');
-                }
-                FillPatientsList();
-                $('#srchpat').text("Search By Phone No");
-
-                jQuery(function ($) {
-                    MaskedInput({
-                        elm: document.getElementById('txtSearch'),
-                        format: '+92__________',
-                        separator: '-'
-                    });
-                    var phoneInput = document.getElementById('txtSearch');
-                    var cursorPosition = 3;
-                    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
-
-                });
-            }
-
-            if (ids !== "") {
-                var appID = '<%= Request.QueryString["aID"]%>';
-
-                loadappt(appID);
+             LoadPage();
+             getpage();
 
 
 
 
 
-            }
-            else {
-                GetAppNo();
-            }
+             $('#chk_Doc').select2();
 
-            var date = '<%= DateTime.Now%>';
-            $("#txt_date").datepicker({
-                dateFormat: 'MM d,yy',
-                minDate: 0
-            }).attr('readonly', 'readonly');
-
-            date = moment(date).format('LL');
-            $("#txt_date").val(date);
-
-            var date = '<%= DateTime.Now%>';
-            $("#txt_dateto").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $("#txt_dateto").val(date);
-
-            $("#txt_datefrom").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $("#txt_datefrom").val(date);
+             $('#txt_pt_name').attr('disabled', true);
+             $('#txt_phone_no').attr('disabled', true);
+             $('#txt_age').attr('disabled', true);
 
 
-            var checkeditmode_startdate = '<%= Request.QueryString["stDate"]%>';
+             debugger;
+             var ids = '<%= Request.QueryString["aID"]%>';
+             var reg_pat = '<%= Request.QueryString["ID"]%>';
+             debugger;
 
-            var checkeditmode_enddate = '<%= Request.QueryString["endDate"]%>';
-
-
-            if (checkeditmode_startdate != '') {
-
-                $('#txt_datefrom').val(checkeditmode_startdate);
-            }
-
-            if (checkeditmode_enddate != '') {
-
-                $('#txt_dateto').val(checkeditmode_enddate);
-            }
+             if (ids == '' || ids == "") {
+                 debugger;
 
 
-            $('#btnSearch').click(function () {
-                getpage();
+                 $("#PatientsSearchModel").modal('show');
 
 
-            });
+                 var App_ids = '<%= Request.QueryString["APPID"]%>';
+                 if (App_ids != "") {
+                     $("#PatientsSearchModel").modal('hide');
+                 }
+                 FillPatientsList();
+                 $('#srchpat').text("Search By Phone No");
+
+                 jQuery(function ($) {
+                     MaskedInput({
+                         elm: document.getElementById('txtSearch'),
+                         format: '+92__________',
+                         separator: '-'
+                     });
+                     var phoneInput = document.getElementById('txtSearch');
+                     var cursorPosition = 3;
+                     phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+
+                 });
+             }
+
+             if (ids !== "") {
+                 var appID = '<%= Request.QueryString["aID"]%>';
+
+                 loadappt(appID);
 
 
 
-            setTimeout(function () {
-                $('#ctl00_MainContent_ddlPrefixDrp').focus();
-            }, 5000);
-            debugger;
-            if (reg_pat != '' || reg_pat != "") {
-                debugger;
-                $('#ClosePatientsSearchModel').click();
-                $('#patmodalClose').click();
-                load_Initial_Pat_Data(reg_pat);
-                $('#ddl_colstnt').attr('disabled', false);
-                $('#ddlsubdepartment').attr('disabled', false);
-            }
-        });
+
+
+             }
+             else {
+                 GetAppNo();
+             }
+
+             var date = '<%= DateTime.Now%>';
+             $("#txt_date").datepicker({
+                 dateFormat: 'MM d,yy',
+                 minDate: 0
+             }).attr('readonly', 'readonly');
+
+             date = moment(date).format('LL');
+             $("#txt_date").val(date);
+
+             var date = '<%= DateTime.Now%>';
+             $("#txt_dateto").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
+             date = moment(date).format('L');
+             $("#txt_dateto").val(date);
+
+             $("#txt_datefrom").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
+             date = moment(date).format('L');
+             $("#txt_datefrom").val(date);
+
+
+             var checkeditmode_startdate = '<%= Request.QueryString["stDate"]%>';
+
+             var checkeditmode_enddate = '<%= Request.QueryString["endDate"]%>';
+
+
+             if (checkeditmode_startdate != '') {
+
+                 $('#txt_datefrom').val(checkeditmode_startdate);
+             }
+
+             if (checkeditmode_enddate != '') {
+
+                 $('#txt_dateto').val(checkeditmode_enddate);
+             }
+
+
+             $('#btnSearch').click(function () {
+                 getpage();
+
+
+             });
+
+
+
+             setTimeout(function () {
+                 $('#ctl00_MainContent_ddlPrefixDrp').focus();
+             }, 5000);
+             debugger;
+             if (reg_pat != '' || reg_pat != "") {
+                 debugger;
+                 $('#ClosePatientsSearchModel').click();
+                 $('#patmodalClose').click();
+                 load_Initial_Pat_Data(reg_pat);
+                 $('#ddl_colstnt').attr('disabled', false);
+                 $('#ddlsubdepartment').attr('disabled', false);
+             }
+         });
 
         function fillDropdown($dropdown, methodName) {
             if ($dropdown.data('filled')) return;
@@ -371,7 +367,7 @@
             });
         }
 
-     
+
         function appointmentPatient_Print() {
             debugger;
             var appointmentId = '<%= Request.QueryString["APPID"]%>';
@@ -398,7 +394,7 @@
                 success: function (response) {
                     var availableDates = JSON.parse(response.d);
 
-                    $("#txt_date").datepicker("destroy"); // Remove any previous config
+                    $("#txt_date").datepicker("destroy");
 
                     $("#txt_date").datepicker({
                         dateFormat: "yy-mm-dd", // format to match your returned data
@@ -434,18 +430,18 @@
             }
             else {
                 Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Please Enter Complete Mobile Number First',
-        showConfirmButton: false,
-        timer: 2000,
-        customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-        }
-        });
-               
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Complete Mobile Number First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
 
@@ -893,23 +889,23 @@
 
                         $('#table_res tbody:eq(1) tr').each(function (key, value) {
                             debugger;
-                            var $statusCell = $(this).find('td[name="statusCell"]'); 
+                            var $statusCell = $(this).find('td[name="statusCell"]');
                             var status = $statusCell.text();
-                            var app_date = $(this).find('td:eq(5)').text(); 
+                            var app_date = $(this).find('td:eq(5)').text();
                             var cancel = $(this).find('td[name="cancelAppointment"]').text();
                             var currentDate = moment().format('LL');
 
-                            
+
                             if (status === "Visited") {
-                                $statusCell.css('background-color', '#77f577'); 
+                                $statusCell.css('background-color', '#77f577');
                                 $(this).find('td:last a').hide();
                             } else if (status === "Booked") {
                                 $statusCell.css('background-color', '#ffdc86');
                             }
 
                             if (cancel === "true") {
-                                $statusCell.css('background-color', '#FF6060'); 
-                                $(this).find('td:last a').hide(); 
+                                $statusCell.css('background-color', '#FF6060');
+                                $(this).find('td:last a').hide();
                             }
                         });
                     }
@@ -930,39 +926,39 @@
                     dataType: "json",
                     success: function (response) {
                         Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Appointment cancelled successfully',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Appointment cancelled successfully',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
-                        
+
 
                         location.reload();
 
                     },
                     error: function (xhr, status, error) {
                         Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Failed to cancel the appointment. Please try again.',
-        showConfirmButton: false,
-        timer: 2000,
-        customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-        }
-        });
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to cancel the appointment. Please try again.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
 
-                       
+
                     }
                 });
             }
@@ -1029,9 +1025,9 @@
                     .trigger('change')
                     .select2();
 
-               // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
+                // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
 
-                    $('#ddlServices').val(data.Item_Id).change();
+                $('#ddlServices').val(data.Item_Id).change();
 
 
 
@@ -1042,7 +1038,7 @@
                 });
         }
 
-       
+
 
         function loadapptEdit(App_id) {
 
@@ -1061,7 +1057,7 @@
                         text: data.doctor_name
                     })
                 ).attr('disabled', false);
-              //  $('#ddl_colstnt').val(data.Consultant_ID).change();
+                //  $('#ddl_colstnt').val(data.Consultant_ID).change();
                 $('#txt_ID').val(data.Appointment_ID);
                 $('#txt_pt_name').val(data.Patient_Name);
 
@@ -1078,7 +1074,7 @@
                 date = moment(data.app_date).format('LL');
                 $('#txt_date').val(date);
                 $('#txt_date').attr('readonly', true);
-               // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
+                // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
                 $('#ddlsubdepartment').html(
                     $('<option>', {
                         value: data.Sub_Department,
@@ -1086,7 +1082,7 @@
                     })
                 ).attr('disabled', false);
                 setTimeout(function () {
-                   // $('#ddlsubdepartment').val(data.Sub_Department).change();
+                    // $('#ddlsubdepartment').val(data.Sub_Department).change();
                     $('#ddlServices').val(data.Item_Id).change();
                 }, 1500);
 
@@ -1190,8 +1186,8 @@
                         options += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
                     }
                 });
-                $('#ddlServices').html(options);
-                $('#ddlServices').select2();
+                $('#ddl_procedures').html(options);
+                $('#ddl_procedures').select2();
 
 
             });
@@ -1235,19 +1231,19 @@
             if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || houseno == "" || city_val == "0" || area_val == "0")) {
 
                 Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Please Enter compulsory Fields',
-        showConfirmButton: false,
-        timer: 2000,
-        customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-        }
-        });
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter compulsory Fields',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
-                
+
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
                 // }
@@ -1287,19 +1283,19 @@
                     debugger;
                     var ini_patientID = data.d;
                     Swal.fire({
-    icon: 'success',
-    title: 'Success!',
-    text: 'Your Record Save and Load Successfully.',
-    showConfirmButton: false,
-    timer: 2500,
-    customClass: {
-        popup: 'swal-big-popup',
-        title: 'swal-big-title',
-        htmlContainer: 'swal-big-text'
-    }
-});
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Your Record Save and Load Successfully.',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
-                   
+
                     $('#PatientModel').modal('hide');
 
                     get_pat_initial_info(ini_patientID);
@@ -1484,19 +1480,19 @@
             debugger;
             var subdepartment = $('#ddlsubdepartment').val();
             if (subdepartment == '' || subdepartment == '0' || subdepartment == null) {
-                
+
                 Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please Select Mandatory Fields.',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                        });
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Mandatory Fields.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
 
                 return true;
             }
@@ -1513,7 +1509,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                
+
                 return
             }
 
@@ -1530,7 +1526,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                
+
                 return
             }
             var aptid = '<%= Request.QueryString["aID"]%>';
@@ -1540,17 +1536,17 @@
 
                 if (res === "Doctor not Available") {
                     Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Doctor is not available, Please choose some other Day and time',
-        showConfirmButton: false,
-        timer: 2000,
-        customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-        }
-        });
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Doctor is not available, Please choose some other Day and time',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
 
 
                     return false;
@@ -1578,382 +1574,382 @@
                             window.location = "Appointment.aspx";
                         });
                     });
-                   
+
                 }
 
             });
 
-         }
-         debugger;
-         function convertTo24Hour(time) {
-             debugger;
-             var hours = parseInt(time.substr(0, 2));
-             var minutes = time.substr(3, 2);
-             var period = time.substr(6, 2).toUpperCase();
+        }
+        debugger;
+        function convertTo24Hour(time) {
+            debugger;
+            var hours = parseInt(time.substr(0, 2));
+            var minutes = time.substr(3, 2);
+            var period = time.substr(6, 2).toUpperCase();
 
-             if (period === 'PM' && hours < 12) {
-                 hours = hours + 12;
-             }
-             if (period === 'AM' && hours === 12) {
-                 hours = hours - 12;
-             }
+            if (period === 'PM' && hours < 12) {
+                hours = hours + 12;
+            }
+            if (period === 'AM' && hours === 12) {
+                hours = hours - 12;
+            }
 
-             var hoursStr = hours < 10 ? '0' + hours : hours; // Pad with zero if single digit
-             return hoursStr + ':' + minutes;
-         }
+            var hoursStr = hours < 10 ? '0' + hours : hours; // Pad with zero if single digit
+            return hoursStr + ':' + minutes;
+        }
 
-         debugger;
-         function verifydoctoravail(callback) {
-             debugger;
-             var ddl_colstnts = $('#ddl_colstnt').val();
-             var time_appointment = $('#txt_time').val();
-             var date = $('#txt_date').val();
+        debugger;
+        function verifydoctoravail(callback) {
+            debugger;
+            var ddl_colstnts = $('#ddl_colstnt').val();
+            var time_appointment = $('#txt_time').val();
+            var date = $('#txt_date').val();
 
-             $.ajax({
-                 type: "POST",
-                 url: "Derma_Appointment.aspx/CheckDays",
-                 data: JSON.stringify({
-                     'ddl_colstnts': ddl_colstnts,
-                     'date': date
-                 }),
-                 contentType: "application/json; charset=utf-8",
-                 dataType: "json",
-                 success: function (data) {
-                     debugger;
-                     var dataaa = JSON.parse(data.d);
-
-
+            $.ajax({
+                type: "POST",
+                url: "Derma_Appointment.aspx/CheckDays",
+                data: JSON.stringify({
+                    'ddl_colstnts': ddl_colstnts,
+                    'date': date
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    var dataaa = JSON.parse(data.d);
 
 
 
-                     debugger;
-                     if (dataaa && dataaa.Off_Days_Names && dataaa.Off_Days_Names.includes) {
-                         var dateObject = new Date(date);
-                         var options = { weekday: 'short' };
-                         var dayNameShort = dateObject.toLocaleDateString('en-US', options);
-
-                         if (dataaa.Off_Days_Names.includes(dayNameShort)) {
-
-                             Swal.fire({
-                                 icon: 'error',
-                                 title: 'Error!',
-                                 text: 'Doctor Not Available Today',
-                                 showConfirmButton: false,
-                                 timer: 2000,
-                                 customClass: {
-                                     popup: 'swal-big-popup',
-                                     title: 'swal-big-title',
-                                     htmlContainer: 'swal-big-text'
-                                 }
-                             });
-                             callback('OffDay');
-                         } else {
-                             callback('OnDay');
-                         }
-                     } else {
-                         callback('OnDay');
-                     }
-                 },
-                 error: function (x, e) {
-                     alert(e);
-                 }
-             });
-         }
 
 
-         function convertToMinutes(timeString) {
-             var [time, period] = timeString.split(' ');
-             var [hours, minutes] = time.split(':');
-             hours = parseInt(hours, 10);
-             minutes = parseInt(minutes, 10);
+                    debugger;
+                    if (dataaa && dataaa.Off_Days_Names && dataaa.Off_Days_Names.includes) {
+                        var dateObject = new Date(date);
+                        var options = { weekday: 'short' };
+                        var dayNameShort = dateObject.toLocaleDateString('en-US', options);
 
-             if (period === 'PM' && hours !== 12) {
-                 hours += 12;
-             } else if (period === 'AM' && hours === 12) {
-                 hours = 0;
-             }
+                        if (dataaa.Off_Days_Names.includes(dayNameShort)) {
 
-             return hours * 60 + minutes;
-         }
-
-         function setFocus() {
-             document.getElementById("txtSearch").focus();
-             $("#txtSearch").focus();
-         }
-         document.addEventListener("DOMContentLoaded", setFocus);
-         (function populateControls() {
-             var $month = $('#monthSelect');
-             var $year = $('#yearSelect');
-             var months = moment.months();
-             months.forEach(function (m, i) {
-                 $month.append('<option value="' + i + '">' + m + '</option>');
-             });
-
-             var currentYear = moment().year();
-             for (var y = currentYear - 3; y <= currentYear + 3; y++) {
-                 $year.append('<option value="' + y + '">' + y + '</option>');
-             }
-
-             // default to current month/year
-             $month.val(moment().month());
-             $year.val(currentYear);
-         })();
-
-         // Populate controls
-         (function populate() {
-             var $m = $('#monthSelect'), $y = $('#yearSelect');
-             var months = moment.months();
-             months.forEach(function (m, i) { $m.append('<option value="' + i + '">' + m + '</option>'); });
-             var now = moment();
-             var cy = now.year();
-             for (var yy = cy - 5; yy <= cy + 5; yy++) $y.append('<option value="' + yy + '">' + yy + '</option>');
-             $m.val(now.month()); $y.val(now.year());
-         })();
-
-         function toTitleCase(s) { if (!s) return ''; return s.replace(/\w\S*/g, function (t) { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase(); }); }
-
-         function mapAppointmentsByDate(arr) {
-             var map = {};
-             (arr || []).forEach(function (r) {
-                 var dt = null;
-                 if (r.App_Date) {
-                     dt = moment(r.App_Date, moment.ISO_8601, true);
-                     if (!dt.isValid()) dt = moment(r.App_Date);
-                 } else if (r.Time) dt = moment(r.Time);
-                 if (!dt || !dt.isValid()) return;
-                 var iso = dt.format('YYYY-MM-DD');
-                 if (!map[iso]) map[iso] = [];
-                 r.cancelAppointment = (r.cancelAppointment === true || r.cancelAppointment === "true" || r.cancelAppointment === "True") ? "true" : "false";
-                 map[iso].push(r);
-             });
-             return map;
-         }
-
-         function buildCalendar(year, month, appointmentsByDate) {
-             $('#calendar').find('.cal-day, .cal-day.empty').remove();
-             var firstOfMonth = moment([year, month, 1]);
-             var daysInMonth = firstOfMonth.daysInMonth();
-             var startDay = firstOfMonth.day();
-             $('#calendarHeader').text(firstOfMonth.format('MMMM YYYY'));
-
-             for (var i = 0; i < startDay; i++) $('#calendar').append('<div class="cal-day empty" aria-hidden="true"></div>');
-
-             for (var d = 1; d <= daysInMonth; d++) {
-                 var dayDate = moment([year, month, d]);
-                 var iso = dayDate.format('YYYY-MM-DD');
-                 var appts = appointmentsByDate[iso] || [];
-
-                 var $day = $('<div class="cal-day" data-date="' + iso + '" role="gridcell" tabindex="0"></div>');
-                 var $dateRow = $('<div class="date-row"></div>');
-                 var $circle = $('<div class="date-circle">' + d + '</div>');
-                 $dateRow.append($circle);
-                 $day.append($dateRow);
-
-                 if (appts.length) {
-                     var hasCancelled = appts.some(a => a.cancelAppointment === "true");
-                     var hasVisited = appts.some(a => a.Status === "Visited");
-                     var hasBooked = appts.some(a => a.Status === "Booked");
-
-                     if (hasCancelled) $day.addClass('status-Cancelled');
-                     else if (hasVisited) $day.addClass('status-Visited');
-                     else if (hasBooked) $day.addClass('status-Booked');
-
-                     var bookedCount = appts.filter(a => a.Status === "Booked" && a.cancelAppointment !== "true").length;
-                     var visitedCount = appts.filter(a => a.Status === "Visited").length;
-                     var cancelledCount = appts.filter(a => a.cancelAppointment === "true" || a.Status === "Cancelled").length;
-
-                     var $summary = $('<div class="summary" aria-hidden="true"></div>');
-                     if (bookedCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#fff8e6,#ffecd0);color:#4a3a00">B ' + bookedCount + '</div>');
-                     if (visitedCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#eaffec,#d7ffd5);color:#0b3f0b">V ' + visitedCount + '</div>');
-                     if (cancelledCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#ffd6d6,#ffbdbd);color:#670000">C ' + cancelledCount + '</div>');
-                     $day.append($summary);
-
-                     var $tooltip = $('<div class="tooltip" role="dialog" aria-label="Appointments for ' + iso + '"></div>');
-                     appts.forEach(function (a) {
-                         var status = (a.cancelAppointment === "true") ? "Cancelled" : (a.Status || "Unknown");
-                         var time = '';
-                         if (a.Time) {
-                             var mt = moment(a.Time, moment.ISO_8601, true);
-                             if (!mt.isValid()) mt = moment(a.Time);
-                             time = mt.isValid() ? mt.format('h:mm a') : a.Time;
-                         }
-                         var doctor = a.emp_name || '';
-                         var apptNo = a.Appointment_No || '';
-                         var patient = a.Patient_Name ? toTitleCase((a.Patient_Name + '').replace(/_/g, ' ')) : '';
-
-                         var $item = $('<div class="tt-item"></div>');
-                         $item.append('<div class="name">' + (patient || 'Unknown') + ' <small style="opacity:.75">(' + apptNo + ')</small></div>');
-                         var $meta = $('<div class="meta"></div>');
-                         $meta.append('<div>' + (time ? time : '') + (doctor ? ' — ' + doctor : '') + '</div>');
-                         var statusClass = (status === "Cancelled") ? 'status-cancel' : (status === "Visited" ? 'status-visited' : 'status-booked');
-                         $meta.append('<div class="status-pill ' + statusClass + '">' + status + '</div>');
-                         $item.append($meta);
-                         $tooltip.append($item);
-                     });
-                     $day.append($tooltip);
-
-                     $day.attr('aria-label', d + ' ' + firstOfMonth.format('MMMM YYYY') + '. ' + appts.length + ' appointments');
-                 } else {
-                     $day.append('<div class="no-appointments" aria-hidden="true">No appointments</div>');
-                     $day.attr('aria-label', d + ' ' + firstOfMonth.format('MMMM YYYY') + '. No appointments');
-                 }
-
-                 // Robust bbox-based hover handler — call this immediately after $day.append($tooltip);
-                 // Replace the handler inside buildCalendar with this version:
-                 (function ($day) {
-                     var $tooltip = $day.find('.tooltip');
-                     var SHOW_DELAY = 100;  // Slightly longer to debounce
-                     var HIDE_DELAY = 400;
-                     var showTimer = null, hideTimer = null;
-                     var isTracking = false;
-
-                     function pointInElem(x, y, $el) {
-                         if (!$el || !$el.length) return false;
-                         var r = $el[0].getBoundingClientRect();
-                         return (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom);
-                     }
-
-                     function onPointerMove(ev) {
-                         var x = ev.clientX, y = ev.clientY;
-                         var insideDay = pointInElem(x, y, $day);
-                         var insideTip = pointInElem(x, y, $tooltip);
-
-                         if (insideDay || insideTip) {
-                             clearTimeout(hideTimer);
-                             if (!$day.hasClass('show-tooltip')) {
-                                 clearTimeout(showTimer);
-                                 showTimer = setTimeout(function () {
-                                     $day.addClass('show-tooltip');
-                                 }, SHOW_DELAY);
-                             }
-                         } else {
-                             clearTimeout(showTimer);
-                             if ($day.hasClass('show-tooltip')) {
-                                 hideTimer = setTimeout(function () {
-                                     $day.removeClass('show-tooltip');
-                                 }, HIDE_DELAY);
-                             }
-                         }
-                     }
-
-                     function startTracking() {
-                         if (isTracking) return;
-                         isTracking = true;
-                         $(document).on('mousemove.cal' + iso, onPointerMove);
-                     }
-
-                     function stopTracking() {
-                         if (!isTracking) return;
-                         isTracking = false;
-                         $(document).off('mousemove.cal' + iso);
-                         clearTimeout(showTimer);
-                         clearTimeout(hideTimer);
-                     }
-
-                     var iso = $day.data('date');
-
-                     $day.on('mouseenter', function (ev) {
-                         startTracking();
-                         onPointerMove(ev);
-                     });
-
-                     $day.on('mouseleave', function (ev) {
-                         // Don't stop tracking immediately - let onPointerMove handle it
-                         setTimeout(function () {
-                             var x = ev.clientX, y = ev.clientY;
-                             if (!pointInElem(x, y, $day) && !pointInElem(x, y, $tooltip)) {
-                                 stopTracking();
-                             }
-                         }, 50);
-                     });
-
-                     if ($tooltip.length) {
-                         $tooltip.on('click', function (e) {
-                             e.stopPropagation();
-                         });
-                     }
-
-                     $day.on('click', function (e) {
-                         if ($tooltip.length && $(e.target).closest('.tooltip').length === 0) {
-                             if ($day.hasClass('show-tooltip')) {
-                                 $day.removeClass('show-tooltip');
-                                 stopTracking();
-                             } else {
-                                 $day.addClass('show-tooltip');
-                                 startTracking();
-                             }
-                         }
-                     });
-
-                 })($day);
-
-                 $('#calendar').append($day);
-             }
-         }
-
-         function loadCalendarForMonth(year, month) {
-             var start = moment([year, month, 1]).startOf('day').format('YYYY-MM-DD');
-             var end = moment([year, month, 1]).endOf('month').format('YYYY-MM-DD');
-             $('#calendarHeader').text('Loading appointments...');
-             if (typeof PageMethods !== 'undefined' && PageMethods.getlist) {
-                 PageMethods.getlist(start, end, function (data) {
-                     var parsed = [];
-                     if (!data || (Array.isArray(data) && data.length === 0)) parsed = [];
-                     else {
-                         try { parsed = (typeof data === 'string') ? JSON.parse(data) : data; } catch (e) { parsed = data || []; }
-                     }
-                     var mapped = mapAppointmentsByDate(parsed);
-                     buildCalendar(year, month, mapped);
-                 });
-             } else {
-                 console.warn('PageMethods.getlist not found. Using mock data.');
-                 var mock = generateMockDataForMonth(year, month);
-                 setTimeout(function () { buildCalendar(year, month, mapAppointmentsByDate(mock)); }, 180);
-             }
-         }
-
-         $('#goBtn').on('click', function () {
-             var month = parseInt($('#monthSelect').val(), 10);
-             var year = parseInt($('#yearSelect').val(), 10);
-             loadCalendarForMonth(year, month);
-         });
-         $('#todayBtn').on('click', function () {
-             var now = moment(); $('#monthSelect').val(now.month()); $('#yearSelect').val(now.year()); loadCalendarForMonth(now.year(), now.month());
-         });
-
-         $(function () { var now = moment(); loadCalendarForMonth(now.year(), now.month()); });
-         // toggle between calendar and list view
-         $(function () {
-             var $btn = $('#btntoggle');
-             var $calendar = $('.calendar');            // your calendar container (wrap with id="calendar")
-             var $listContainer = $('.table-container'); // your list container (table/list)
-
-             // optional: initialize state (show list, hide calendar)
-             // $calendar.hide();
-             // $listContainer.show();
-             // $btn.val('Show Calendar');
-
-             $btn.off('click').on('click', function (e) {
-                 e.preventDefault();
-
-                 // if calendar currently visible, hide it and show list
-                 if ($calendar.is(':visible')) {
-                     $calendar.slideUp(250, function () {
-                         $listContainer.slideDown(250);
-                     });
-                     $btn.val('Show Calendar'); // button should now cause calendar to show
-                 } else {
-                     // calendar is hidden -> show it and hide list
-                     $listContainer.slideUp(250, function () {
-                         $calendar.slideDown(250);
-                     });
-                     $btn.val('Show List'); // button should now cause list to show
-                 }
-             });
-         });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Doctor Not Available Today',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            callback('OffDay');
+                        } else {
+                            callback('OnDay');
+                        }
+                    } else {
+                        callback('OnDay');
+                    }
+                },
+                error: function (x, e) {
+                    alert(e);
+                }
+            });
+        }
 
 
-     </script>
+        function convertToMinutes(timeString) {
+            var [time, period] = timeString.split(' ');
+            var [hours, minutes] = time.split(':');
+            hours = parseInt(hours, 10);
+            minutes = parseInt(minutes, 10);
+
+            if (period === 'PM' && hours !== 12) {
+                hours += 12;
+            } else if (period === 'AM' && hours === 12) {
+                hours = 0;
+            }
+
+            return hours * 60 + minutes;
+        }
+
+        function setFocus() {
+            document.getElementById("txtSearch").focus();
+            $("#txtSearch").focus();
+        }
+        document.addEventListener("DOMContentLoaded", setFocus);
+        (function populateControls() {
+            var $month = $('#monthSelect');
+            var $year = $('#yearSelect');
+            var months = moment.months();
+            months.forEach(function (m, i) {
+                $month.append('<option value="' + i + '">' + m + '</option>');
+            });
+
+            var currentYear = moment().year();
+            for (var y = currentYear - 3; y <= currentYear + 3; y++) {
+                $year.append('<option value="' + y + '">' + y + '</option>');
+            }
+
+            // default to current month/year
+            $month.val(moment().month());
+            $year.val(currentYear);
+        })();
+
+        // Populate controls
+        (function populate() {
+            var $m = $('#monthSelect'), $y = $('#yearSelect');
+            var months = moment.months();
+            months.forEach(function (m, i) { $m.append('<option value="' + i + '">' + m + '</option>'); });
+            var now = moment();
+            var cy = now.year();
+            for (var yy = cy - 5; yy <= cy + 5; yy++) $y.append('<option value="' + yy + '">' + yy + '</option>');
+            $m.val(now.month()); $y.val(now.year());
+        })();
+
+        function toTitleCase(s) { if (!s) return ''; return s.replace(/\w\S*/g, function (t) { return t.charAt(0).toUpperCase() + t.substr(1).toLowerCase(); }); }
+
+        function mapAppointmentsByDate(arr) {
+            var map = {};
+            (arr || []).forEach(function (r) {
+                var dt = null;
+                if (r.App_Date) {
+                    dt = moment(r.App_Date, moment.ISO_8601, true);
+                    if (!dt.isValid()) dt = moment(r.App_Date);
+                } else if (r.Time) dt = moment(r.Time);
+                if (!dt || !dt.isValid()) return;
+                var iso = dt.format('YYYY-MM-DD');
+                if (!map[iso]) map[iso] = [];
+                r.cancelAppointment = (r.cancelAppointment === true || r.cancelAppointment === "true" || r.cancelAppointment === "True") ? "true" : "false";
+                map[iso].push(r);
+            });
+            return map;
+        }
+
+        function buildCalendar(year, month, appointmentsByDate) {
+            $('#calendar').find('.cal-day, .cal-day.empty').remove();
+            var firstOfMonth = moment([year, month, 1]);
+            var daysInMonth = firstOfMonth.daysInMonth();
+            var startDay = firstOfMonth.day();
+            $('#calendarHeader').text(firstOfMonth.format('MMMM YYYY'));
+
+            for (var i = 0; i < startDay; i++) $('#calendar').append('<div class="cal-day empty" aria-hidden="true"></div>');
+
+            for (var d = 1; d <= daysInMonth; d++) {
+                var dayDate = moment([year, month, d]);
+                var iso = dayDate.format('YYYY-MM-DD');
+                var appts = appointmentsByDate[iso] || [];
+
+                var $day = $('<div class="cal-day" data-date="' + iso + '" role="gridcell" tabindex="0"></div>');
+                var $dateRow = $('<div class="date-row"></div>');
+                var $circle = $('<div class="date-circle">' + d + '</div>');
+                $dateRow.append($circle);
+                $day.append($dateRow);
+
+                if (appts.length) {
+                    var hasCancelled = appts.some(a => a.cancelAppointment === "true");
+                    var hasVisited = appts.some(a => a.Status === "Visited");
+                    var hasBooked = appts.some(a => a.Status === "Booked");
+
+                    if (hasCancelled) $day.addClass('status-Cancelled');
+                    else if (hasVisited) $day.addClass('status-Visited');
+                    else if (hasBooked) $day.addClass('status-Booked');
+
+                    var bookedCount = appts.filter(a => a.Status === "Booked" && a.cancelAppointment !== "true").length;
+                    var visitedCount = appts.filter(a => a.Status === "Visited").length;
+                    var cancelledCount = appts.filter(a => a.cancelAppointment === "true" || a.Status === "Cancelled").length;
+
+                    var $summary = $('<div class="summary" aria-hidden="true"></div>');
+                    if (bookedCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#fff8e6,#ffecd0);color:#4a3a00">B ' + bookedCount + '</div>');
+                    if (visitedCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#eaffec,#d7ffd5);color:#0b3f0b">V ' + visitedCount + '</div>');
+                    if (cancelledCount) $summary.append('<div class="pill" style="background:linear-gradient(180deg,#ffd6d6,#ffbdbd);color:#670000">C ' + cancelledCount + '</div>');
+                    $day.append($summary);
+
+                    var $tooltip = $('<div class="tooltip" role="dialog" aria-label="Appointments for ' + iso + '"></div>');
+                    appts.forEach(function (a) {
+                        var status = (a.cancelAppointment === "true") ? "Cancelled" : (a.Status || "Unknown");
+                        var time = '';
+                        if (a.Time) {
+                            var mt = moment(a.Time, moment.ISO_8601, true);
+                            if (!mt.isValid()) mt = moment(a.Time);
+                            time = mt.isValid() ? mt.format('h:mm a') : a.Time;
+                        }
+                        var doctor = a.emp_name || '';
+                        var apptNo = a.Appointment_No || '';
+                        var patient = a.Patient_Name ? toTitleCase((a.Patient_Name + '').replace(/_/g, ' ')) : '';
+
+                        var $item = $('<div class="tt-item"></div>');
+                        $item.append('<div class="name">' + (patient || 'Unknown') + ' <small style="opacity:.75">(' + apptNo + ')</small></div>');
+                        var $meta = $('<div class="meta"></div>');
+                        $meta.append('<div>' + (time ? time : '') + (doctor ? ' — ' + doctor : '') + '</div>');
+                        var statusClass = (status === "Cancelled") ? 'status-cancel' : (status === "Visited" ? 'status-visited' : 'status-booked');
+                        $meta.append('<div class="status-pill ' + statusClass + '">' + status + '</div>');
+                        $item.append($meta);
+                        $tooltip.append($item);
+                    });
+                    $day.append($tooltip);
+
+                    $day.attr('aria-label', d + ' ' + firstOfMonth.format('MMMM YYYY') + '. ' + appts.length + ' appointments');
+                } else {
+                    $day.append('<div class="no-appointments" aria-hidden="true">No appointments</div>');
+                    $day.attr('aria-label', d + ' ' + firstOfMonth.format('MMMM YYYY') + '. No appointments');
+                }
+
+                // Robust bbox-based hover handler — call this immediately after $day.append($tooltip);
+                // Replace the handler inside buildCalendar with this version:
+                (function ($day) {
+                    var $tooltip = $day.find('.tooltip');
+                    var SHOW_DELAY = 100;  // Slightly longer to debounce
+                    var HIDE_DELAY = 400;
+                    var showTimer = null, hideTimer = null;
+                    var isTracking = false;
+
+                    function pointInElem(x, y, $el) {
+                        if (!$el || !$el.length) return false;
+                        var r = $el[0].getBoundingClientRect();
+                        return (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom);
+                    }
+
+                    function onPointerMove(ev) {
+                        var x = ev.clientX, y = ev.clientY;
+                        var insideDay = pointInElem(x, y, $day);
+                        var insideTip = pointInElem(x, y, $tooltip);
+
+                        if (insideDay || insideTip) {
+                            clearTimeout(hideTimer);
+                            if (!$day.hasClass('show-tooltip')) {
+                                clearTimeout(showTimer);
+                                showTimer = setTimeout(function () {
+                                    $day.addClass('show-tooltip');
+                                }, SHOW_DELAY);
+                            }
+                        } else {
+                            clearTimeout(showTimer);
+                            if ($day.hasClass('show-tooltip')) {
+                                hideTimer = setTimeout(function () {
+                                    $day.removeClass('show-tooltip');
+                                }, HIDE_DELAY);
+                            }
+                        }
+                    }
+
+                    function startTracking() {
+                        if (isTracking) return;
+                        isTracking = true;
+                        $(document).on('mousemove.cal' + iso, onPointerMove);
+                    }
+
+                    function stopTracking() {
+                        if (!isTracking) return;
+                        isTracking = false;
+                        $(document).off('mousemove.cal' + iso);
+                        clearTimeout(showTimer);
+                        clearTimeout(hideTimer);
+                    }
+
+                    var iso = $day.data('date');
+
+                    $day.on('mouseenter', function (ev) {
+                        startTracking();
+                        onPointerMove(ev);
+                    });
+
+                    $day.on('mouseleave', function (ev) {
+                        // Don't stop tracking immediately - let onPointerMove handle it
+                        setTimeout(function () {
+                            var x = ev.clientX, y = ev.clientY;
+                            if (!pointInElem(x, y, $day) && !pointInElem(x, y, $tooltip)) {
+                                stopTracking();
+                            }
+                        }, 50);
+                    });
+
+                    if ($tooltip.length) {
+                        $tooltip.on('click', function (e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    $day.on('click', function (e) {
+                        if ($tooltip.length && $(e.target).closest('.tooltip').length === 0) {
+                            if ($day.hasClass('show-tooltip')) {
+                                $day.removeClass('show-tooltip');
+                                stopTracking();
+                            } else {
+                                $day.addClass('show-tooltip');
+                                startTracking();
+                            }
+                        }
+                    });
+
+                })($day);
+
+                $('#calendar').append($day);
+            }
+        }
+
+        function loadCalendarForMonth(year, month) {
+            var start = moment([year, month, 1]).startOf('day').format('YYYY-MM-DD');
+            var end = moment([year, month, 1]).endOf('month').format('YYYY-MM-DD');
+            $('#calendarHeader').text('Loading appointments...');
+            if (typeof PageMethods !== 'undefined' && PageMethods.getlist) {
+                PageMethods.getlist(start, end, function (data) {
+                    var parsed = [];
+                    if (!data || (Array.isArray(data) && data.length === 0)) parsed = [];
+                    else {
+                        try { parsed = (typeof data === 'string') ? JSON.parse(data) : data; } catch (e) { parsed = data || []; }
+                    }
+                    var mapped = mapAppointmentsByDate(parsed);
+                    buildCalendar(year, month, mapped);
+                });
+            } else {
+                console.warn('PageMethods.getlist not found. Using mock data.');
+                var mock = generateMockDataForMonth(year, month);
+                setTimeout(function () { buildCalendar(year, month, mapAppointmentsByDate(mock)); }, 180);
+            }
+        }
+
+        $('#goBtn').on('click', function () {
+            var month = parseInt($('#monthSelect').val(), 10);
+            var year = parseInt($('#yearSelect').val(), 10);
+            loadCalendarForMonth(year, month);
+        });
+        $('#todayBtn').on('click', function () {
+            var now = moment(); $('#monthSelect').val(now.month()); $('#yearSelect').val(now.year()); loadCalendarForMonth(now.year(), now.month());
+        });
+
+        $(function () { var now = moment(); loadCalendarForMonth(now.year(), now.month()); });
+        // toggle between calendar and list view
+        $(function () {
+            var $btn = $('#btntoggle');
+            var $calendar = $('.calendar');            // your calendar container (wrap with id="calendar")
+            var $listContainer = $('.table-container'); // your list container (table/list)
+
+            // optional: initialize state (show list, hide calendar)
+            // $calendar.hide();
+            // $listContainer.show();
+            // $btn.val('Show Calendar');
+
+            $btn.off('click').on('click', function (e) {
+                e.preventDefault();
+
+                // if calendar currently visible, hide it and show list
+                if ($calendar.is(':visible')) {
+                    $calendar.slideUp(250, function () {
+                        $listContainer.slideDown(250);
+                    });
+                    $btn.val('Show Calendar'); // button should now cause calendar to show
+                } else {
+                    // calendar is hidden -> show it and hide list
+                    $listContainer.slideUp(250, function () {
+                        $calendar.slideDown(250);
+                    });
+                    $btn.val('Show List'); // button should now cause list to show
+                }
+            });
+        });
+
+
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
@@ -1963,77 +1959,104 @@
         <input type="text" id="txt_ID" readonly="readonly" />
     </div>
     <div class="row">
-            <div class="row">
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <input type="hidden" id="hdfreg_ini_id" />
-                    <label>Appointment Number</label>
-                    <input type="text" id="txt_apt_no" class="form-control" readonly="readonly" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Patient Name</label>
-                    <input type="text" id="txt_pt_name" class="form-control" style="text-transform: capitalize;" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Phone #</label>
-                    <input type="text" id="txt_phone_no" class="form-control" maxlength="11" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Age</label>
-                    <input type="text" id="txt_age" class="form-control" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Procedure</label>
-                    <input type="text" id="txt_Procedure" class="form-control" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Date</label>
-                    <input type="text" id="txt_date" class="form-control" onchange="GetAppNoByDoctor()" autocomplete="off" />
-                </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <input type="hidden" id="hdfreg_ini_id" />
+                <label>Appointment Number</label>
+                <input type="text" id="txt_apt_no" class="form-control" readonly="readonly" autocomplete="off" />
             </div>
-            <div class="row">
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Consultant</label>
-                    <select class="ddldoc form-control" id="ddl_colstnt" >
-                        <option></option>
-                    </select>
-                </div>
-                
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Helper</label>
-                    <select class="form-control" id="ddl_helper">
-                        <option></option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Machine</label>
-                    <input type="text" id="txt_Machine" class="form-control" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <label>Room</label>
-                    <input type="text" id="txt_Room" class="form-control" autocomplete="off" />
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Patient Name</label>
+                <input type="text" id="txt_pt_name" class="form-control" style="text-transform: capitalize;" autocomplete="off" />
             </div>
-     
-            <div class="row row_2" style="margin-top:1%">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                   <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg"/>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'AppointmentView.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Appointment.aspx'" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
-                </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Phone #</label>
+                <input type="text" id="txt_phone_no" class="form-control" maxlength="11" autocomplete="off" />
             </div>
-      
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Age</label>
+                <input type="text" id="txt_age" class="form-control" autocomplete="off" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Procedure</label>
+                <select class="form-control" id="ddl_procedures">
+                    <option></option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Date</label>
+                <input type="text" id="txt_date" class="form-control" onchange="GetAppNoByDoctor()" autocomplete="off" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Consultant</label>
+                <select class="ddldoc form-control" id="ddl_colstnt">
+                    <option></option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Helper</label>
+                <select class="form-control" id="ddl_helper">
+                    <option></option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Machine</label>
+                <input type="text" id="txt_Machine" class="form-control" autocomplete="off" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <label>Room</label>
+                <input type="text" id="txt_Room" class="form-control" autocomplete="off" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_stdoctime" />
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_enddoctime" />
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_sthelpertime" />
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_endhelpertime" />
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_stmachinetime" />
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_endmachinetime" />
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_roomStTime" />
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-6">
+                <input type="time" id="txt_roomendTime" />
+            </div>
+        </div>
+        <div class="row row_2" style="margin-top: 1%">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'AppointmentView.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Appointment.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
+            </div>
+        </div>
+
 
 
 
@@ -2054,7 +2077,7 @@
             <label style="margin-left: 15px!important">To</label>
             <input type="text" id="txt_dateto" />
         </div>
-      
+
         <div class="col-lg-2 col-md-3 col-sm-4 mg">
             <label></label>
             <select id="chk_status" onchange="testddlchange()">
@@ -2063,20 +2086,20 @@
                 <option>Booked</option>
             </select>
         </div>
-          <div class="col-lg-1 col-md-2 col-sm-3">
+        <div class="col-lg-1 col-md-2 col-sm-3">
             <label></label>
             <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
         </div>
-          <div class="col-lg-1 col-md-2 col-sm-3">
-    <label></label>
-    <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar"  value="Calendar View" />
-</div>
+        <div class="col-lg-1 col-md-2 col-sm-3">
+            <label></label>
+            <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar" value="Calendar View" />
+        </div>
 
 
     </div>
-   <div class="wrap calendar" style="display:none" >
-    <div class="panel">
-     <%-- <div class="controls" aria-hidden="false">
+    <div class="wrap calendar" style="display: none">
+        <div class="panel">
+            <%-- <div class="controls" aria-hidden="false">
         <label for="monthSelect">Month</label>
         <select id="monthSelect" aria-label="Month"></select>
 
@@ -2087,23 +2110,23 @@
         <button id="todayBtn" title="Jump to current month" class="muted-btn">Today</button>
       </div>--%>
 
-      <div id="calendarHeader" aria-live="polite"></div>
+            <div id="calendarHeader" aria-live="polite"></div>
 
-      <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
-        <div class="cal-header">Sun</div>
-        <div class="cal-header">Mon</div>
-        <div class="cal-header">Tue</div>
-        <div class="cal-header">Wed</div>
-        <div class="cal-header">Thu</div>
-        <div class="cal-header">Fri</div>
-        <div class="cal-header">Sat</div>
-        <!-- day cells will be injected here -->
-      </div>
+            <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
+                <div class="cal-header">Sun</div>
+                <div class="cal-header">Mon</div>
+                <div class="cal-header">Tue</div>
+                <div class="cal-header">Wed</div>
+                <div class="cal-header">Thu</div>
+                <div class="cal-header">Fri</div>
+                <div class="cal-header">Sat</div>
+                <!-- day cells will be injected here -->
+            </div>
+        </div>
     </div>
-  </div>
     <div class="row table-container list">
 
-        <table class="table" id="table_res" style="margin-left:11px !important">
+        <table class="table" id="table_res" style="margin-left: 11px !important">
 
             <tr id="row_sample">
                 <th>S No.</th>
@@ -2190,7 +2213,7 @@
                             </div>
                             <div class="col-lg-1 col-md-4 col-sm-6">
                                 <label for="ddl_name">Name<span style="color: red;">*</span></label>
-                                <select id="ddl_name" class="form-control" style="width:137%">
+                                <select id="ddl_name" class="form-control" style="width: 137%">
                                     <option value="Mr.">Mr.</option>
                                     <option value="Mrs.">Mrs.</option>
                                     <option value="Ms.">Ms.</option>
@@ -2225,7 +2248,7 @@
                             </div>
                             <div class="col-lg-1 col-md-4 col-sm-6">
                                 <label></label>
-                                <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" style="width:137% !important;margin-top: 8px;" />
+                                <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" style="width: 137% !important; margin-top: 8px;" />
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top: 7px;">
                                 <label></label>

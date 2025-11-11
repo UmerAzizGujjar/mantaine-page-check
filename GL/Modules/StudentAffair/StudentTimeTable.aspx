@@ -196,6 +196,8 @@
             var ClassName = $("#ddlClass option:selected").text();
             var ClassVal = $('#ddlClass').val();
             var ddlWeek = $('#ddlWeek').val();
+            var block = $('#ddlBlock').val();
+            var module = $('#ddlModule').val();
             GetSubject();
 
             var rows = '';
@@ -287,7 +289,22 @@
 
                 return;
             }
-        
+            if (ClassVal !== "04" && ClassVal !== "05" && (!block || !module)) {
+                debugger;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select Block or Module first.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
             $('#tblPerson').append(rows);
             var $newDropdown = $('#ddlstdsubj' + rowlength);
             GetSubject($newDropdown);
