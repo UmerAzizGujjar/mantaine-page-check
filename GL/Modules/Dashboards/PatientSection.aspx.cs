@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
@@ -16,7 +17,32 @@ namespace PMS
             // Optional: Clear cache or refresh session if needed
             // Session["UserAllowedMenus"] = null; // Uncomment during testing
         }
+        [WebMethod]
+        public static string GetPatients(string searchValue)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var patients = (from p in db.Reg_patients
+                                    where (p.Patient_No != null && p.Patient_No.ToString().Contains(searchValue))
+                                          || (p.Full_Name != null && p.Full_Name.Contains(searchValue))
+                                    select new
+                                    {
+                                        PatientNo = p.Patient_No,
+                                        FullName = p.Full_Name,
+                                        RegID = p.pat_id,
+                                    }).Take(5).ToList();
 
+                    return new JavaScriptSerializer().Serialize(patients);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                return new JavaScriptSerializer().Serialize(new { error = ex.Message });
+            }
+        }
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static List<string> GetUserAllowedMenus()
