@@ -4952,62 +4952,77 @@
             });
         }
 
-        function chkIssuance_Of_Select() {
-            $('#tblWards tbody tr').remove();
-            $('#tblRooms tbody tr').remove();
+       function chkIssuance_Of_Select() {
+    $('#tblWards tbody tr').remove();
+    $('#tblRooms tbody tr').remove();
 
-            var Issuance_Of = document.getElementById('<%= ddlIssuance_Of.ClientID%>').value;
-            if (Issuance_Of == 0) {
-                document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
-                document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
-                document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
+    var Issuance_Of = document.getElementById('<%= ddlIssuance_Of.ClientID%>').value;
 
+    var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
+    var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
+    var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
+    var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
 
-                document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
-                document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
-                document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
+    if (Issuance_Of == 0) {
+        document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
+        document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
 
+        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
+        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
 
-                document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
 
-                document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
+        document.getElementById('tblWards').style.display = "none";
+        document.getElementById('tblRooms').style.display = "none";
 
-                document.getElementById('tblWards').style.display = "none";
-                document.getElementById('tblRooms').style.display = "none";
+        wardDiv.style.display = "none";
+        bedDiv.style.display = "none";
+        roomDiv.style.display = "none";
+        roomTypeDiv.style.display = "none";
+    }
+    else if (Issuance_Of == '001') {
+        document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
 
+        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = false;
+        document.getElementById('<%= txtBed_No.ClientID%>').disabled = true;
+        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
 
-            }
-            else if (Issuance_Of == '001') {
+        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroudWhite";
 
-                document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
-                document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
-                document.getElementById('<%= ddlWard_No.ClientID%>').disabled = false;
-                document.getElementById('<%= txtBed_No.ClientID%>').disabled = true;
-                document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
-                document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
+        document.getElementById('tblWards').style.display = "table";
+        document.getElementById('tblRooms').style.display = "none";
 
-                document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+        wardDiv.style.display = "block";
+        bedDiv.style.display = "block";
+        roomDiv.style.display = "none";
+        roomTypeDiv.style.display = "none";
+    }
+    else {
+        document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
 
-                document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroudWhite";
+        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = false;
+        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
 
-                document.getElementById('tblWards').style.display = "table";
-                document.getElementById('tblRooms').style.display = "none";
-            }
-            else {
+        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroudWhite";
+        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
 
-                document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
+        document.getElementById('tblWards').style.display = "none";
+        document.getElementById('tblRooms').style.display = "table";
 
-                document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
+        wardDiv.style.display = "none";
+        bedDiv.style.display = "block";
+        roomDiv.style.display = "block";
+        roomTypeDiv.style.display = "block";
+    }
+}
 
-                document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = false;
-                document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
-                document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroudWhite";
-                document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
-
-                document.getElementById('tblWards').style.display = "none";
-                document.getElementById('tblRooms').style.display = "table";
-            }
-        }
         function chkrefer_Of_Select() {
             $('#tblBed tbody tr').remove();
             $('#tblRoom tbody tr').remove();
@@ -6469,27 +6484,43 @@
                                 
                             </div>
                                     <div class="row mt">
-                                         <div class="col-lg-3 col-md-4 col-sm-6">
-                                                      <asp:Label ID="lbladvamount" runat="server" Text="Advance Amount"></asp:Label>
-                                        <asp:TextBox ID="txtadvamount"  runat="server" Enabled="false"></asp:TextBox>
-                                               </div>
-                                          <div class="col-lg-3 col-md-4 col-sm-6">
-                                                        <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
-                                        <asp:TextBox ID="txtadmissionfee" runat="server" Enabled="false"></asp:TextBox>
-                                               </div>  
                                         <div class="col-lg-3 col-md-4 col-sm-6">
-                                                        <asp:Label ID="lbldiscount" runat="server" Text="Discount %"></asp:Label>
-                                        <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server" ></asp:TextBox>
-                                               </div>
-                                         <div class="col-lg-1 col-md-2 col-sm-2">
-                                                             <label></label>
-                                    <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
-                                               </div>
-                                         <div class="col-lg-3 col-md-4 col-sm-6" style="display:none">
-                                     <asp:Label ID="LblExpected_Discharge_Date" runat="server" Text="Expected Discharge Date"></asp:Label>
-                                      <asp:TextBox ID="txtExpected_Discharge_Date"  runat="server"></asp:TextBox>
-                                 </div>
-                                </div>
+                                            <asp:Label ID="lbladvamount" runat="server" Text="Advance Amount"></asp:Label>
+                                            <asp:TextBox ID="txtadvamount" runat="server" Enabled="false"></asp:TextBox>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
+                                            <asp:TextBox ID="txtadmissionfee" runat="server" Enabled="false"></asp:TextBox>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <asp:Label ID="lbldiscount" runat="server" Text="Discount %"></asp:Label>
+                                            <asp:TextBox ID="txtDiscount" onchange="Calc_Discount()" runat="server"></asp:TextBox>
+                                        </div>                                       
+                                        <div class="col-lg-3 col-md-4 col-sm-6" style="display: none">
+                                            <asp:Label ID="LblExpected_Discharge_Date" runat="server" Text="Expected Discharge Date"></asp:Label>
+                                            <asp:TextBox ID="txtExpected_Discharge_Date" runat="server"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:1%">
+                                        <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
+                                            <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-4 col-sm-6">
+                                            <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-4 col-sm-6">
+                                            <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-4 col-sm-6">
+                                            <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-4 col-sm-6">
+                                            <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2">
+                                            <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
+                                        </div>
+                                    </div>
                                 </div>
                                  <div class="col-lg-3 co-md-4 col-sm-6" style="margin-top:-4%" >                                                                       
                                     <h2> Today Admission : </h2>
@@ -9061,27 +9092,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="row" style="margin-top:1%">
-                        <div class=" col-lg-8">
-                            <div class="row">
-                                <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
-                                    <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
-                                </div>
-                                <div class="col-lg-2 col-md-4 col-sm-6">
-                                    <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
-                                </div>
-                                <div class="col-lg-2 col-md-4 col-sm-6">
-                                    <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
-                                </div>
-                                <div class="col-lg-2 col-md-4 col-sm-6">
-                                    <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
-                                </div>
-                                <div class="col-lg-2 col-md-4 col-sm-6">
-                                    <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <table>
                         <tr>
