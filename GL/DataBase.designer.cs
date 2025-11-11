@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "pakred")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "TIBIT")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -885,6 +885,9 @@ namespace PMS
         partial void InsertEmergency_Patient(Emergency_Patient instance);
         partial void UpdateEmergency_Patient(Emergency_Patient instance);
         partial void DeleteEmergency_Patient(Emergency_Patient instance);
+        partial void InsertHospitalDetail(HospitalDetail instance);
+        partial void UpdateHospitalDetail(HospitalDetail instance);
+        partial void DeleteHospitalDetail(HospitalDetail instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3224,6 +3227,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Emergency_Patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<HospitalDetail> HospitalDetails
+        {
+            get
+            {
+                return this.GetTable<HospitalDetail>();
             }
         }
 
@@ -154447,6 +154458,332 @@ namespace PMS
                     this._remarks = value;
                     this.SendPropertyChanged("remarks");
                     this.OnremarksChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.HospitalDetail")]
+    public partial class HospitalDetail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Id;
+
+        private string _HospitalName;
+
+        private string _ServerName;
+
+        private string _DatabaseName;
+
+        private string _UserID;
+
+        private string _Password;
+
+        private string _PasswordSalt;
+
+        private System.Nullable<bool> _IsActive;
+
+        private string _CreatedBy;
+
+        private System.Nullable<System.DateTime> _CreatedTime;
+
+        private string _UpdatedBy;
+
+        private System.Nullable<System.DateTime> _UpdatedTime;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIdChanging(int value);
+        partial void OnIdChanged();
+        partial void OnHospitalNameChanging(string value);
+        partial void OnHospitalNameChanged();
+        partial void OnServerNameChanging(string value);
+        partial void OnServerNameChanged();
+        partial void OnDatabaseNameChanging(string value);
+        partial void OnDatabaseNameChanged();
+        partial void OnUserIDChanging(string value);
+        partial void OnUserIDChanged();
+        partial void OnPasswordChanging(string value);
+        partial void OnPasswordChanged();
+        partial void OnPasswordSaltChanging(string value);
+        partial void OnPasswordSaltChanged();
+        partial void OnIsActiveChanging(System.Nullable<bool> value);
+        partial void OnIsActiveChanged();
+        partial void OnCreatedByChanging(string value);
+        partial void OnCreatedByChanged();
+        partial void OnCreatedTimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreatedTimeChanged();
+        partial void OnUpdatedByChanging(string value);
+        partial void OnUpdatedByChanged();
+        partial void OnUpdatedTimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdatedTimeChanged();
+        #endregion
+
+        public HospitalDetail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Id
+        {
+            get
+            {
+                return this._Id;
+            }
+            set
+            {
+                if ((this._Id != value))
+                {
+                    this.OnIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Id = value;
+                    this.SendPropertyChanged("Id");
+                    this.OnIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HospitalName", DbType = "NVarChar(255) NOT NULL", CanBeNull = false)]
+        public string HospitalName
+        {
+            get
+            {
+                return this._HospitalName;
+            }
+            set
+            {
+                if ((this._HospitalName != value))
+                {
+                    this.OnHospitalNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._HospitalName = value;
+                    this.SendPropertyChanged("HospitalName");
+                    this.OnHospitalNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ServerName", DbType = "NVarChar(255) NOT NULL", CanBeNull = false)]
+        public string ServerName
+        {
+            get
+            {
+                return this._ServerName;
+            }
+            set
+            {
+                if ((this._ServerName != value))
+                {
+                    this.OnServerNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._ServerName = value;
+                    this.SendPropertyChanged("ServerName");
+                    this.OnServerNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DatabaseName", DbType = "NVarChar(255) NOT NULL", CanBeNull = false)]
+        public string DatabaseName
+        {
+            get
+            {
+                return this._DatabaseName;
+            }
+            set
+            {
+                if ((this._DatabaseName != value))
+                {
+                    this.OnDatabaseNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._DatabaseName = value;
+                    this.SendPropertyChanged("DatabaseName");
+                    this.OnDatabaseNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UserID", DbType = "NVarChar(100) NOT NULL", CanBeNull = false)]
+        public string UserID
+        {
+            get
+            {
+                return this._UserID;
+            }
+            set
+            {
+                if ((this._UserID != value))
+                {
+                    this.OnUserIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._UserID = value;
+                    this.SendPropertyChanged("UserID");
+                    this.OnUserIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Password", DbType = "NVarChar(500) NOT NULL", CanBeNull = false)]
+        public string Password
+        {
+            get
+            {
+                return this._Password;
+            }
+            set
+            {
+                if ((this._Password != value))
+                {
+                    this.OnPasswordChanging(value);
+                    this.SendPropertyChanging();
+                    this._Password = value;
+                    this.SendPropertyChanged("Password");
+                    this.OnPasswordChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PasswordSalt", DbType = "NVarChar(100) NOT NULL", CanBeNull = false)]
+        public string PasswordSalt
+        {
+            get
+            {
+                return this._PasswordSalt;
+            }
+            set
+            {
+                if ((this._PasswordSalt != value))
+                {
+                    this.OnPasswordSaltChanging(value);
+                    this.SendPropertyChanging();
+                    this._PasswordSalt = value;
+                    this.SendPropertyChanged("PasswordSalt");
+                    this.OnPasswordSaltChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsActive", DbType = "Bit")]
+        public System.Nullable<bool> IsActive
+        {
+            get
+            {
+                return this._IsActive;
+            }
+            set
+            {
+                if ((this._IsActive != value))
+                {
+                    this.OnIsActiveChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsActive = value;
+                    this.SendPropertyChanged("IsActive");
+                    this.OnIsActiveChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "NVarChar(100)")]
+        public string CreatedBy
+        {
+            get
+            {
+                return this._CreatedBy;
+            }
+            set
+            {
+                if ((this._CreatedBy != value))
+                {
+                    this.OnCreatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedBy = value;
+                    this.SendPropertyChanged("CreatedBy");
+                    this.OnCreatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedTime", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> CreatedTime
+        {
+            get
+            {
+                return this._CreatedTime;
+            }
+            set
+            {
+                if ((this._CreatedTime != value))
+                {
+                    this.OnCreatedTimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedTime = value;
+                    this.SendPropertyChanged("CreatedTime");
+                    this.OnCreatedTimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "NVarChar(100)")]
+        public string UpdatedBy
+        {
+            get
+            {
+                return this._UpdatedBy;
+            }
+            set
+            {
+                if ((this._UpdatedBy != value))
+                {
+                    this.OnUpdatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._UpdatedBy = value;
+                    this.SendPropertyChanged("UpdatedBy");
+                    this.OnUpdatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedTime", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> UpdatedTime
+        {
+            get
+            {
+                return this._UpdatedTime;
+            }
+            set
+            {
+                if ((this._UpdatedTime != value))
+                {
+                    this.OnUpdatedTimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._UpdatedTime = value;
+                    this.SendPropertyChanged("UpdatedTime");
+                    this.OnUpdatedTimeChanged();
                 }
             }
         }
