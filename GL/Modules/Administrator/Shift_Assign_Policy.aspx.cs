@@ -73,7 +73,9 @@ namespace PMS.Modules.Administrator
                                          IsTime = p.IsTime ?? false,
                                          Start_Time = p.Start_Time.HasValue ? p.Start_Time.Value.ToString(@"hh\:mm") : "",
                                          End_Time = p.End_Time.HasValue ? p.End_Time.Value.ToString(@"hh\:mm") : "",
-                                         Next_Day = p.Next_Day ?? false
+                                         Next_Day = p.Next_Day ?? false,
+                                         St_Day = p.St_Day,
+                                         En_Day = p.En_Day,
                                      })
                                      .ToList();
 
@@ -116,6 +118,8 @@ namespace PMS.Modules.Administrator
                             existingPolicy.Start_Time = string.IsNullOrEmpty(item.Start_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.Start_Time);
                             existingPolicy.End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time);
                             existingPolicy.Next_Day = item.Next_Day;
+                            existingPolicy.St_Day = item.St_Day;
+                            existingPolicy.En_Day = item.En_Day;
                             existingPolicy.Updated_By = AppConfig.UserID;
                             existingPolicy.Updated_At = DateTime.Now;
                         }
@@ -137,6 +141,8 @@ namespace PMS.Modules.Administrator
                             End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time),
                             Next_Day = item.Next_Day,
                             Is_Cancel = false,
+                            St_Day = item.St_Day,
+                            En_Day = item.En_Day,
                             Created_By = AppConfig.UserID,
                             Created_At = DateTime.Now
                         };
@@ -171,6 +177,9 @@ namespace PMS.Modules.Administrator
             public string End_Time { get; set; }
             public bool Next_Day { get; set; }
             public bool Is_Cancel { get; set; }
+
+            public string St_Day { get; set; } 
+            public string En_Day { get; set; }
         }
 
     }
