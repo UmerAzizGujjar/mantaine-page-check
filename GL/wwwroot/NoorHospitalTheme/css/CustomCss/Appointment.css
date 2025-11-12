@@ -1,3 +1,347 @@
+﻿/* ---- Improved, polished minimal CSS ---- */
+:root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --muted: #7b8390;
+    --text: #0f1724;
+    --accent-booked: #ffdc86;
+    --accent-visited: #77f577;
+    --accent-cancel: #ff6060;
+    --glass: rgba(255,255,255,0.6);
+    --shadow-1: 0 6px 18px rgba(15,23,42,0.06);
+    --radius: 10px;
+    --gap: 12px;
+    --max-width: 980px;
+}
+
+
+
+.wrap {
+    max-width: var(--max-width);
+    margin: 26px auto;
+    padding: 20px
+}
+
+.panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--card));
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--shadow-1);
+    border: 1px solid rgba(15,23,42,0.03);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px
+}
+
+    .controls label {
+        font-size: 13px;
+        color: var(--muted);
+        margin-right: 6px
+    }
+
+    .controls select, .controls button {
+        appearance: none;
+        -webkit-appearance: none;
+        background: var(--glass);
+        border: 1px solid rgba(15,23,42,0.06);
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-size: 14px;
+        color: var(--text);
+        min-width: 92px;
+        box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+    }
+
+    .controls button {
+        cursor: pointer;
+        background: linear-gradient(180deg,#fff,var(--glass));
+        border-radius: 10px;
+        border: 1px solid rgba(15,23,42,0.06);
+    }
+
+    .controls .muted-btn {
+        background: transparent;
+        border: 0;
+        color: var(--muted);
+        padding: 6px 8px
+    }
+
+/* header text */
+#calendarHeader {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 8px 0 14px;
+    color: var(--text)
+}
+
+/* calendar grid */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7,1fr);
+    gap: var(--gap);
+    align-items: start;
+}
+
+.cal-header {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    padding-bottom: 6px;
+}
+
+/* day cell */
+.cal-day {
+    min-height: 92px;
+    background: transparent;
+    border-radius: 12px;
+    padding: 12px 10px;
+    position: relative;
+    transition: transform .12s ease, background .12s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid transparent;
+}
+
+    .cal-day.empty {
+        min-height: 64px
+    }
+
+    .cal-day:focus-within, .cal-day:hover {
+        transform: none !important; /* Critical: no transform on parent */
+        z-index: 3;
+        box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+    }
+
+/* date circle (center-left) */
+.date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%
+}
+
+.date-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    background: linear-gradient(180deg,rgba(255,255,255,0.9),rgba(250,250,250,0.9));
+    border: 1px solid rgba(15,23,42,0.04);
+    box-shadow: 0 6px 14px rgba(2,6,23,0.04);
+    transition: transform .14s ease, box-shadow .14s ease;
+}
+
+/* colorful fill states (priority) */
+.status-Cancelled .date-circle {
+    background: linear-gradient(180deg,#ff6b6b,#ff5252);
+    color: #fff;
+    box-shadow: 0 6px 22px rgba(255,96,96,0.18)
+}
+
+.status-Visited .date-circle {
+    background: linear-gradient(180deg,#aef99a,#66d94c);
+    color: #08370a;
+    box-shadow: 0 8px 26px rgba(119,245,119,0.14)
+}
+
+.status-Booked .date-circle {
+    background: linear-gradient(180deg,#fff2cf,#ffd86a);
+    color: #3c2b00;
+    box-shadow: 0 8px 22px rgba(255,220,134,0.12)
+}
+
+/* subtle text summary */
+.summary {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+    flex-wrap: wrap
+}
+
+    .summary .pill {
+        padding: 6px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+        background: rgba(0,0,0,0.03);
+    }
+
+/* tooltip (modern card) */
+.tooltip {
+    position: absolute;
+    pointer-events: auto;
+    left: 16px;
+    top: 64px;
+    z-index: 40;
+    min-width: 260px;
+    max-width: 420px;
+    background: linear-gradient(180deg,#0f1724,#07101a);
+    color: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(2,6,23,0.45);
+    display: none;
+    transform-origin: left top;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+    .tooltip::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: 26px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid rgba(15,23,36,0.98);
+    }
+/* Ensure parent does not use transform (avoid stacking context issues) */
+/* Ensure parent does not use transform (avoid stacking context issues) */
+.cal-day {
+    transform: none !important; /* Only apply to parent, not children */
+    will-change: auto !important;
+}
+
+    /* Subtle scale applied to inner .date-circle only */
+    .cal-day:hover .date-circle,
+    .cal-day:focus-within .date-circle {
+        transform: scale(1.04);
+    }
+
+    /* Position tooltip tight under circle and make clickable */
+    .cal-day .tooltip {
+        pointer-events: auto;
+        top: 52px; /* move closer so there's no gap; tweak +/− 4px if needed */
+        left: 12px; /* nudge to overlap a bit */
+        display: none;
+    }
+
+    /* Force visible when class applied, with high z-index */
+    /* Force visible when class applied, with high z-index */
+    .cal-day.show-tooltip .tooltip {
+        display: block !important;
+        pointer-events: auto !important;
+        z-index: 9999 !important;
+        animation: fadeUp .12s ease forwards;
+    }
+
+/* Optional: make tooltip appear using opacity (avoid animation issues with display) */
+/* If you want a smoother effect, switch to visibility/opacity toggling approach. */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.tt-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.04)
+}
+
+    .tt-item:last-child {
+        border-bottom: 0
+    }
+
+    .tt-item .name {
+        font-weight: 700
+    }
+
+    .tt-item .meta {
+        font-size: 13px;
+        color: rgba(255,255,255,0.75);
+        margin-top: 6px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap
+    }
+
+    .tt-item .status-pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 12px
+    }
+
+    .tt-item .status-booked {
+        background: rgba(255,220,134,0.18);
+        color: #3c2b00
+    }
+
+    .tt-item .status-visited {
+        background: rgba(119,245,119,0.12);
+        color: #063a06
+    }
+
+    .tt-item .status-cancel {
+        background: rgba(255,96,96,0.16);
+        color: #fff
+    }
+
+.no-appointments {
+    font-size: 13px;
+    color: var(--muted);
+    padding-top: 6px
+}
+
+/* responsive adjustments */
+@media (max-width:880px) {
+    .wrap {
+        padding: 12px
+    }
+
+    .date-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 14px
+    }
+
+    .tooltip {
+        left: 10px;
+        right: 10px;
+        min-width: unset;
+        max-width: unset;
+        top: 58px
+    }
+}
+
+@media (max-width:520px) {
+    .calendar {
+        gap: 8px
+    }
+
+    .cal-day {
+        min-height: 72px;
+        padding: 10px
+    }
+
+    .date-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 13px
+    }
+}
+
+
+
 #addNewbtn {
     margin-top: 26px;
 }
@@ -12,9 +356,9 @@
     .slots-grid h3 {
         grid-column: span 3;
         text-align: center;
-        white-space: nowrap; 
-        overflow: hidden; 
-        text-overflow: ellipsis; 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
 
@@ -42,7 +386,7 @@
     }
 
     .slot-btn.selected {
-        background-color: #c11718 ;
+        background-color: #438eb9;
         color: white;
     }
 
@@ -59,17 +403,18 @@
     background-color: #f9f9f9;
     border-radius: 10px;
     padding: 15px;
-  
-
 }
+
 .timeslotheaders {
     text-align: center;
     font-size: 25px;
-    color: #c11718 ;
+    color: #438eb9;
 }
+
 .mg {
     margin-top: 5px;
 }
+
 .tooltips {
     position: relative;
     display: inline-block;

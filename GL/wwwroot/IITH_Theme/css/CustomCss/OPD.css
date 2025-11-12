@@ -1,19 +1,30 @@
 .forcolor {
-    background-color: #438eb9  !important;
+    background-color: #438eb9 !important;
 }
 
-.mleft {
-    margin-left: 15px !important;
-}
-.col-lg-3, .col-md-6, .col-sm-12 {
-    height: 70px !important
-}
 .card {
     border: 1px solid #C4C4C4;
     background-color: #f9f9f9;
     border-radius: 10px;
     padding: 15px;
     height: 330px !important,
+}
+
+.col-lg-3, .col-md-6, .col-sm-12 {
+    height: 70px !important
+}
+
+.mleft {
+    margin-left: 15px !important;
+}
+
+.quick-actions {
+    background: #438eb9;
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    height: 70px;
+    cursor: pointer;
 }
 
 .tooltips {
@@ -73,18 +84,23 @@
     padding: 15px;
     margin-left: 15px;
 }
-#PatientModel{
-    margin-top:15px !important; 
+
+#PatientModel {
+    margin-top: 15px !important;
 }
+
 #PatientsSearchModel {
     margin-top: 15px !important;
 }
+
 #SearchModel_App {
     margin-top: 15px !important;
 }
-.mtop{
-    margin-top:20px;
+
+.mtop {
+    margin-top: 20px;
 }
+
 .d-flex {
     display: flex;
     align-items: center;
@@ -94,7 +110,6 @@
     margin-right: 10px;
     width: 20px;
     height: 20px;
-
 }
 
 /*.ml-2 {
@@ -103,7 +118,8 @@
 .wdth {
     width: 100%;
 }
-#follow_up{
-    font-size:20px;
-    margin-left:15px;
+
+#follow_up {
+    font-size: 20px;
+    margin-left: 15px;
 }

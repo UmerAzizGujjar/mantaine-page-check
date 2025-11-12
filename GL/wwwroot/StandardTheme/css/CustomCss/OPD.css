@@ -15,7 +15,14 @@
 .mleft {
     margin-left: 15px !important;
 }
-
+.quick-actions {
+    background: #438eb9;
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    height: 70px;
+    cursor: pointer;
+}
 .tooltips {
     position: relative;
     display: inline-block;
