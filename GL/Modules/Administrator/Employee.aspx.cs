@@ -117,6 +117,7 @@ namespace PMS
                     txtEmployeeCode = employee.Emp_No,
                     txtEmployee_Name = employee.Emp_Name,
                     txtdependent = employee.Dependent,
+                    txtdoc_qualification = employee.Doc_qualification,
                     txtFather_Name = employee.Father_Name,
                     txtEmployee_Date_of_Birth = employee.DOB.Value.ToString(AppConfig.DateFormat),
                     ddlDepartment = employee.Department,
@@ -427,6 +428,7 @@ namespace PMS
                 employee.Govt_Hospital = dataa.txtGovt_Hospital;
                 employee.Patient_Type = dataa.ddlPatientType;
                 employee.Dependent = dataa.txtdependent;
+                employee.Doc_qualification = dataa.txtdoc_qualification;
 
 
                 if (!string.IsNullOrEmpty(dataa.TxtTime_In))
@@ -667,6 +669,7 @@ namespace PMS
             public string txtRemarks { get; set; }
             public string ddluser { get; set; }
             public string txtdependent { get; set; }
+            public string txtdoc_qualification { get; set; }
             public bool isSun { get; set; }
             public bool isMon { get; set; }
             public bool isTue { get; set; }

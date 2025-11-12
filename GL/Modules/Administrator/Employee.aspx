@@ -169,6 +169,8 @@
                   $("#txtGovt_Hospital").val(empData.txtGovt_Hospital);
                   $("#ddluser").val(empData.user);
                   $("#txtdependent").val(empData.dependent);
+
+                  $("#txtdoc_qualification").val(empData.Doc_qualification);
                   $("#txtPanelAmount").val(empData.panelrate);
 
 
@@ -328,6 +330,7 @@
               var txtRemarks = $('#txtRemarks').val();
               var ddluser = $('#ddluser').val();
               var txtdependent = $('#txtdependent').val();
+              var txtdoc_qualification = $('#txtdoc_qualification').val();
               var isSun = $('#sun').prop('checked');
               var isMon = $('#mon').prop('checked');
               var isTue = $('#tue').prop('checked');
@@ -413,6 +416,7 @@
                   "txtRemarks": txtRemarks,
                   "ddluser": ddluser,
                   "txtdependent": txtdependent,
+                  "txtdoc_qualification": txtdoc_qualification,
                   "isSun": isSun,
                   "isMon": isMon,
                   "isTue": isTue,
@@ -773,6 +777,10 @@
         <div class="row">
         </div>
         <div class="row">
+              <div class="col-lg-2 col-md-4 col-sm-6">
+                  <label>Qualification</label>
+                   <input type="text" id="txtdoc_qualification" name="txtdoc_qualification" />
+              </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Dependent</label>
                  <input type="text" id="txtdependent" name="txtdependent" />
