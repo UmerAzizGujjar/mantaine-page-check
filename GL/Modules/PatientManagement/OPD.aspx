@@ -767,11 +767,11 @@
     <div class="row" style="margin: 8px;">
         <!-- Card 1 -->
         <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
-            <div id="card-register" role="button" tabindex="0"
+            <div class="quick-actions" id="card-register" role="button" tabindex="0"
                  onclick="addfunc()"
                  onkeypress="if(event.key==='Enter'){ addfunc(); }"
                  class="d-flex flex-column justify-content-center align-items-start"
-                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                 >
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="48" height="48" style="margin-right:10px;">
                     <div>
@@ -788,7 +788,7 @@
                  onclick="SearchPop_App()"
                  onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
                  class="d-flex flex-column justify-content-center align-items-start"
-                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                 >
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right:10px;">
                     <div>
@@ -805,7 +805,7 @@
                  onclick="/* add search patient function here, e.g. openPatientSearch() */"
                  onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
                  class="d-flex flex-column justify-content-center align-items-start"
-                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                 >
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right:10px;">
                     <div>
@@ -822,7 +822,7 @@
                  onclick="/* add emergency refer function here, e.g. referToEmergency() */"
                  onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
                  class="d-flex flex-column justify-content-center align-items-start"
-                 style="background:#EFA63E; color:#000; border-radius:8px; padding:12px; height:70px; cursor:pointer;">
+                 >
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right:10px;">
                     <div>
