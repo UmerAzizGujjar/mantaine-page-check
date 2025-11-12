@@ -15,7 +15,13 @@
                 }
             });
             var today = new Date();
-            $("#dateFilter").datepicker("setDate", today);
+            $("#dateFilter").datepicker({
+                dateFormat: 'yy-mm-dd',
+                onSelect: function () {
+                    $("#example").DataTable().ajax.reload();
+                }
+            });
+
         });
 
         function appointmentPatient_Print(Appointment_ID) {
