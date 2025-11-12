@@ -15,7 +15,14 @@
     padding: 15px;
     height: 330px !important,
 }
-
+.quick-actions {
+    background: #c11718;
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    height: 70px;
+    cursor: pointer;
+}
 .tooltips {
     position: relative;
     display: inline-block;
