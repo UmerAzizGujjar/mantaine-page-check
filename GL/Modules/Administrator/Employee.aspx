@@ -170,7 +170,7 @@
                   $("#ddluser").val(empData.user);
                   $("#txtdependent").val(empData.dependent);
 
-                  $("#txtdoc_qualification").val(empData.Doc_qualification);
+                  $("#txtdoc_qualification").val(empData.txtdoc_qualification);
                   $("#txtPanelAmount").val(empData.panelrate);
 
 
