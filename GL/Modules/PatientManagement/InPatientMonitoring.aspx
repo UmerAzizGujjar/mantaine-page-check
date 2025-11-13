@@ -904,9 +904,154 @@
             row.remove();
         }
         function AddMonitering() {
-          
+
+            var pulse = $('#ctl00_MainContent_txtPulse_Min').val();
+            var bp = $('#ctl00_MainContent_txtBP_mm_Hg').val();
+            var temp = $('#ctl00_MainContent_txtTemp_C').val();
+            var respiration = $('#ctl00_MainContent_txtRespiration_Min').val();
+            var blood = $('#ctl00_MainContent_txtBlood').val();
+            var weight = $('#ctl00_MainContent_txtWeight_Kg').val();
+            var saturation = $('#ctl00_MainContent_txtSaturation').val();
+            var saturationRoom = $('#ctl00_MainContent_txtSaturationRoom').val();
+            var saturationOxygen = $('#ctl00_MainContent_txtSaturation_Oxygen1').val();
         
-          
+            if (pulse === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Pulse (per minute).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (bp === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter BP (mm Hg).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (temp === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Temperature (°C).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (respiration === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Respiration (per minute).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (blood === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Blood Group or Blood Info.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (weight === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Weight (Kg).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (saturation === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Saturation (%).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (saturationRoom === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Saturation (Room).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+            if (saturationOxygen === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter Saturation (Oxygen).',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+
                 var datetime = '<%= DateTime.Now%>';
                 if ($('#btnAddPulse').val() == 'Add') {
                     var row = '<tr> <td> ' + datetime + ' </td><td> ' + $('#ctl00_MainContent_txtPulse_Min').val() + '</td> <td> ' + $('#ctl00_MainContent_txtBP_mm_Hg').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtTemp_C').val() + '</td><td> ' + $('#ctl00_MainContent_txtRespiration_Min').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtBlood').val() + '</td><td> ' + $('#ctl00_MainContent_txtWeight_Kg').val() + ' </td><td> ' + $('#ctl00_MainContent_txtSaturation').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturationRoom').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturation_Oxygen1').val() + ' </td>' + ' </td> <td> <a href="#" onclick="editPlus(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
@@ -2315,7 +2460,7 @@
                             <div class="col-lg-1 col-md-3 col-sm-4"></div>
 
                             <div class="col-lg-2 col-md-3 col-sm-4">
-                                <asp:Label ID="LblBP_mm_Hg" runat="server" Text="BP (Systolic / Diastolic)"></asp:Label>
+                                <asp:Label ID="LblBP_mm_Hg" runat="server" Text="BP(mmHg) (Systolic / Diastolic)"></asp:Label>
                                 <div class="marchk">
                                     <asp:TextBox ID="txtBP_mm_Hg" runat="server"></asp:TextBox>
 <%--                                    <asp:CheckBox ID="chkBP_mm_Hg" runat="server" onclick="drawBP();" Style="margin-left: 10px;" />--%>

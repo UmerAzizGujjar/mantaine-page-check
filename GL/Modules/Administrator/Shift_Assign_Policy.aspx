@@ -55,6 +55,8 @@
 
                 $row.find('[name="Start_Time"]').prop('disabled', !isChecked);
                 $row.find('[name="End_Time"]').prop('disabled', !isChecked);
+
+               
             });
         }
 
@@ -127,6 +129,9 @@
                         newRow.find('[name="End_Time"]').val(policy.End_Time);
                         newRow.find('[name="Next_Day"]').prop("checked", policy.Next_Day);
 
+                        newRow.find('[name="St_Day"]').val(policy.St_Day);
+                        newRow.find('[name="En_Day"]').val(policy.En_Day);
+
                         newRow.find('.expiryDate').datepicker({
                             dateFormat: 'dd M yy',
                             changeMonth: true,
@@ -182,27 +187,44 @@
         }
 
         function createRow() {
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const dayOptions = days.map(day => `<option value="${day}">${day}</option>`).join('');
+
             return `
-        <tr>
-            <td>
-                <select name="Policy_ID" class="form-select select2-policy">
-                    ${policyOptions || '<option value="">Loading...</option>'}
+    <tr>
+        <td>
+            <select name="Policy_ID" class="form-select select2-policy">
+                ${policyOptions || '<option value="">Loading...</option>'}
+            </select>
+        </td>
+        <td><input type="text" name="Fees" class="form-control" placeholder="Fees"></td>
+        <td><input type="text" name="Discount_Percentage" class="form-control" placeholder="Discount %"></td>
+        <td style="display:none;"><input type="hidden" name="Discount_Amount" class="form-control"></td>
+        <td><input type="number" name="Hospital_Share" class="form-control" placeholder="Hospital %" min="0" max="100"></td>
+        <td><input type="number" name="Doctor_Share" class="form-control" placeholder="Doctor %" min="0" max="100"></td>
+        <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
+                <td>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;">
+                <span>From</span>
+                <select name="St_Day" class="form-control form-select" style="width: auto; min-width: 70px; flex: none;">
+                    <option value="">Select</option>
+                    ${dayOptions}
                 </select>
-            </td>
-            <td><input type="text" name="Fees" class="form-control" placeholder="Fees"></td>
-            <td><input type="text" name="Discount_Percentage" class="form-control" placeholder="Discount %"></td>
-            <td style="display:none;"><input type="hidden" name="Discount_Amount" class="form-control"></td>
-            <td><input type="number" name="Hospital_Share" class="form-control" placeholder="Hospital %" min="0" max="100"></td>
-            <td><input type="number" name="Doctor_Share" class="form-control" placeholder="Doctor %" min="0" max="100"></td>
-            <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
-            <td><input type="checkbox" name="IsTime" class="isTimeCheck"></td>
-            <td><input type="time" name="Start_Time" class="form-control" disabled></td>
-            <td><input type="checkbox" name="Next_Day"></td>
-            <td><input type="time" name="End_Time" class="form-control" disabled></td>
-            <td>
-                <i class="fa fa-trash text-danger btnDeleteRow" style="cursor:pointer; font-size:18px;" title="Delete Row"></i>
-            </td>
-        </tr>`;
+                <span>To</span>               
+                <select name="En_Day" class="form-control form-select" style="width: auto; min-width: 70px; flex: none;">
+                    <option value="">Select</option>
+                    ${dayOptions}
+                </select>
+            </div>
+        </td>
+        <td><input type="checkbox" name="IsTime" class="isTimeCheck"></td>
+        <td><input type="time" name="Start_Time" class="form-control" disabled></td>
+        <td><input type="checkbox" name="Next_Day"></td>
+        <td><input type="time" name="End_Time" class="form-control" disabled></td>
+        <td>
+            <i class="fa fa-trash text-danger btnDeleteRow" style="cursor:pointer; font-size:18px;" title="Delete Row"></i>
+        </td>
+    </tr>`;
         }
 
 
@@ -282,6 +304,8 @@
                     IsTime: $row.find('[name="IsTime"]').is(":checked"),
                     Start_Time: $row.find('[name="Start_Time"]').val(),
                     End_Time: $row.find('[name="End_Time"]').val(),
+                    St_Day: $row.find('[name="St_Day"]').val(),  
+                    En_Day: $row.find('[name="En_Day"]').val(),
                     Next_Day: $row.find('[name="Next_Day"]').is(":checked")
                 });
             });
@@ -482,8 +506,9 @@
                 <th>Hospital Share</th>
                 <th>Doctor Share</th>
                 <th>Expiry Date</th>
+                 <th>Day Range</th>
                 <th>Time Check</th>
-                <th>Start Time</th>
+                <th>Start Time</th>              
                 <th>Next Day</th>
                 <th>End Time</th>
                 <th>Action</th>

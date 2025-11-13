@@ -206,6 +206,7 @@
     <Content Include="Modules\Administrator\AddDepartment_Packages.aspx" />
     <Content Include="Modules\Administrator\AddDoctorAgreement.aspx" />
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
+    <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
     <Content Include="Modules\Administrator\API.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciation.aspx" />
@@ -25671,6 +25672,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\AddDoctor_Packages.aspx.designer.cs">
       <DependentUpon>AddDoctor_Packages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\AddHospital.aspx.cs">
+      <DependentUpon>AddHospital.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\AddHospital.aspx.designer.cs">
+      <DependentUpon>AddHospital.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\AddPanel_Packages.aspx.cs">
       <DependentUpon>AddPanel_Packages.aspx</DependentUpon>

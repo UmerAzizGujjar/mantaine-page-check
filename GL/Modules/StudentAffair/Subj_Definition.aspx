@@ -261,6 +261,23 @@
                 });
                 return;
             }
+            debugger;
+            if (studentClass !== "04" && studentClass !== "05" && (!block || !module)) {
+                debugger;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select Block or Module first.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
 
 
 

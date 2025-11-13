@@ -196,6 +196,8 @@
             var ClassName = $("#ddlClass option:selected").text();
             var ClassVal = $('#ddlClass').val();
             var ddlWeek = $('#ddlWeek').val();
+            var block = $('#ddlBlock').val();
+            var module = $('#ddlModule').val();
             GetSubject();
 
             var rows = '';
@@ -287,7 +289,22 @@
 
                 return;
             }
-        
+            if (ClassVal !== "04" && ClassVal !== "05" && (!block || !module)) {
+                debugger;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please select Block or Module first.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
             $('#tblPerson').append(rows);
             var $newDropdown = $('#ddlstdsubj' + rowlength);
             GetSubject($newDropdown);
@@ -661,81 +678,153 @@
                     dt = moment(dt).format('DD/MM/YYYY');
                     var ab = md.Day_Name;
                     var da = index + 1;
+
                     mdTable.append(`
-                <tr class="rowtr">
-                    <td style="display:none; width: 78px !important;">
-                        <input style="display:none; width: 80px !important;" type="text" name="clas" id="clas" value="${md.Class_Year}"/>
-                    </td>
-                    <td>${md.classname}</td>
-                    <td><input type="text" style="width: 110px !important;font-size: 12px;height: 23px;" name="Date" id="txt_Date${da}" value="${dt} -${ab}" /></td>
-                    <td>
-                        From:<input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="FTime" id="FTime${index}" value="${time}" />
-                        To: <input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="TTime" id="Time${index}" value="${ttime}" />
-                    </td>
-                    <td><select style="font-size:12px;height:25px;" id="ddlstdsubj${index}" name="ddlGetStuSub">${GetStudentSubject}</select></td>
-                    <td><select style="font-size:12px;height:25px;" id="ddlitmeCode${index}" name="ddlSubject">${GlobSubj}</select></td>
-                    <td><select style="font-size:12px;height:25px;" id="ddlbatchs${index}" name="ddlBatch">${Getbatch}</select></td>
-                    <td><select style="font-size:12px;height:25px;" id="ddlgroups${index}" name="ddlGroup">${Getgrp}</select></td>
-                    <td><input style="margin-left: 12px !important; width: 31px !important;" type="checkbox" name="whlclass" id="whole${index}" value="${md.Whole_Class}" /></td>
-                    <td><input disabled type="text" name="Topic" id="Topic${index}" value="${md.Topic}" style="height: 25px;"/></td>
-                    <td><select style="font-size:12px;height:25px;" id="ddlTeacher${index}" name="ddlTeacher" class="teach">${GetTeacher}</select></td>
-                    <td><select style="font-size:12px;height:25px;" id="ddlVenue${index}" name="ddlVenue">${GetVenue}</select></td>
-                    <td><input style="margin-left: 15px !important;" type="checkbox" name="chkhldy" id="chkhldy${index}" value="${md.Holiday}" /></td>
-                    <td><input style="margin-left: 12px !important;" type="checkbox" name="chkbrk" id="chkbrks${index}" value="${md.Brea_k}" /></td>
-                    <td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative; margin-left: 12px !important;"></i></a></td>
-                </tr>
-            `);
+        <tr class="rowtr">
+            <td style="display:none; width: 78px !important;">
+                <input style="display:none; width: 80px !important;" type="text" name="clas" id="clas${index}" value="${md.Class_Year}"/>
+            </td>
+            <td>${md.classname}</td>
+            <td><input type="text" style="width: 110px !important;font-size: 12px;height: 23px;" name="Date" id="txt_Date${da}" value="${dt} -${ab}" /></td>
+            <td>
+                From:<input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="FTime" id="FTime${index}" value="${time}" />
+                To: <input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="TTime" id="Time${index}" value="${ttime}" />
+            </td>
+            <td><select style="font-size:12px;height:25px;" id="ddlstdsubj${index}" name="ddlGetStuSub">${GetStudentSubject}</select></td>
+            <td><select style="font-size:12px;height:25px;" id="ddlitmeCode${index}" name="ddlSubject">${GlobSubj}</select></td>
+            <td><select style="font-size:12px;height:25px;" id="ddlbatchs${index}" name="ddlBatch">${Getbatch}</select></td>
+            <td><select style="font-size:12px;height:25px;" id="ddlgroups${index}" name="ddlGroup">${Getgrp}</select></td>
+            <td><input style="margin-left: 12px !important; width: 31px !important;" type="checkbox" name="whlclass" id="whole${index}" value="${md.Whole_Class}" /></td>
+            <td><input disabled type="text" name="Topic" id="Topic${index}" value="${md.Topic}" style="height: 25px;"/></td>
+            <td><select style="font-size:12px;height:25px;" id="ddlTeacher${index}" name="ddlTeacher" class="teach">${GetTeacher}</select></td>
+            <td><select style="font-size:12px;height:25px;" id="ddlVenue${index}" name="ddlVenue">${GetVenue}</select></td>
+            <td><input style="margin-left: 15px !important;" type="checkbox" name="chkhldy" id="chkhldy${index}" value="${md.Holiday}" /></td>
+            <td><input style="margin-left: 12px !important;" type="checkbox" name="chkbrk" id="chkbrks${index}" value="${md.Brea_k}" /></td>
+            <td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative; margin-left: 12px !important;"></i></a></td>
+        </tr>
+    `);
+
                     $('.teach').select2();
-                    if (md.Whole_Class == true) {
-                        $(`#whole${index}`).prop('checked', true);
-                        $(`#ddlbatchs${index}`).prop('disabled', true);
-                        $(`#ddlgroups${index}`).prop('disabled', true);
+
+                    const isWhole = md.Whole_Class == true;
+                    const isHoliday = md.Holiday == true;
+                    const isBreak = md.Brea_k == true;
+
+                    $(`#whole${index}`).prop('checked', isWhole);
+                    $(`#chkhldy${index}`).prop('checked', isHoliday);
+                    $(`#chkbrks${index}`).prop('checked', isBreak);
+
+                    const disableAll = isHoliday || isBreak;
+
+                    if (disableAll) {
+                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index},
+                   #FTime${index}, #Time${index}, #ddlTeacher${index}, #ddlVenue${index}`)
+                            .prop('disabled', true);
+                        $(`#whole${index}`).prop('disabled', true);
                     } else {
-                        $(`#ddlbatchs${index}`).prop('disabled', false);
-                        $(`#ddlgroups${index}`).prop('disabled', false);
+                        $(`#whole${index}`).prop('disabled', false);
+
+                        if (isWhole) {
+                            $(`#ddlbatchs${index}`).prop('disabled', true);
+                            $(`#ddlgroups${index}`).prop('disabled', true);
+                        } else {
+                            const batchText = $(`#ddlbatchs${index} option[value="${md.Batch}"]`).text() || "";
+                            const groupText = $(`#ddlgroups${index} option[value="${md.Groups}"]`).text() || "";
+
+                            const isBatchSelected = batchText && batchText !== "Please Select";
+                            const isGroupSelected = groupText && groupText !== "Please Select";
+
+                            if (isBatchSelected) {
+                                $(`#whole${index}`).prop('disabled', true);
+                                $(`#ddlgroups${index}`).prop('disabled', true);
+                            } else if (isGroupSelected) {
+                                $(`#whole${index}`).prop('disabled', true);
+                                $(`#ddlbatchs${index}`).prop('disabled', true);
+                            } else {
+                                $(`#whole${index}`).prop('disabled', false);
+                                $(`#ddlbatchs${index}`).prop('disabled', false);
+                                $(`#ddlgroups${index}`).prop('disabled', false);
+                            }
+                        }
                     }
-                    if (md.Holiday == true) {
-                        $(`#chkhldy${index}`).prop('checked', true);
-                    }
-                    if (md.Brea_k == true) {
-                        $(`#chkbrks${index}`).prop('checked', true);
-                    }
-                    $(`#ddlitmeCode${index}`).val(md.Practical).trigger('change');
-                    $(`#ddlbatchs${index}`).val(md.Batch).trigger('change');
-                    $(`#ddlgroups${index}`).val(md.Groups).trigger('change');
-                    $(`#ddlTeacher${index}`).val(md.Teacher).trigger('change');
-                    $(`#ddlVenue${index}`).val(md.Venue).trigger('change');
+
+                    $(`#ddlitmeCode${index}`).val(md.Practical);
+                    $(`#ddlbatchs${index}`).val(md.Batch);
+                    $(`#ddlgroups${index}`).val(md.Groups);
+                    $(`#ddlTeacher${index}`).val(md.Teacher);
+                    $(`#ddlVenue${index}`).val(md.Venue);
 
                     var $subjectDropdown = $(`#ddlstdsubj${index}`);
                     await GetSubject($subjectDropdown);
                     await new Promise(resolve => setTimeout(resolve, 0));
                     if ($subjectDropdown.find(`option[value="${md.Subjects}"]`).length) {
-                        $subjectDropdown.val(md.Subjects).trigger('change');
+                        $subjectDropdown.val(md.Subjects);
                     } else {
                         console.warn(`Subject "${md.Subjects}" not available in dropdown for row ${index}`);
                         $subjectDropdown.val('0');
                     }
                     $(`#ddlTeacher${index}`).select2();
 
+                    if (isHoliday || isBreak) {
+                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index},
+                   #FTime${index}, #Time${index}, #ddlTeacher${index}, #ddlVenue${index}`)
+                            .prop('disabled', true);
+                        $(`#whole${index}`).prop('disabled', true);
+                    } else {
+                        if (isWhole) {
+                            $(`#ddlbatchs${index}`).prop('disabled', true);
+                            $(`#ddlgroups${index}`).prop('disabled', true);
+                            $(`#whole${index}`).prop('disabled', false);
+                        } else {
+                            const batchText = $(`#ddlbatchs${index} option:selected`).text() || "";
+                            const groupText = $(`#ddlgroups${index} option:selected`).text() || "";
+
+                            if (batchText && batchText !== "Please Select") {
+                                $(`#whole${index}`).prop('disabled', true);
+                                $(`#ddlgroups${index}`).prop('disabled', true);
+                            } else if (groupText && groupText !== "Please Select") {
+                                $(`#whole${index}`).prop('disabled', true);
+                                $(`#ddlbatchs${index}`).prop('disabled', true);
+                            } else {
+                                $(`#whole${index}`).prop('disabled', false);
+                                $(`#ddlbatchs${index}`).prop('disabled', false);
+                                $(`#ddlgroups${index}`).prop('disabled', false);
+                            }
+                        }
+                    }
+
+
                     $(`#ddlbatchs${index}`).on('change', function () {
-                        var subject1 = $(this).find(':selected').text();
-                        if (subject1 != "Please Select") {
+                        const selectedText = $(this).find(':selected').text();
+                        if (selectedText && selectedText !== "Please Select") {
                             $(`#whole${index}`).prop('disabled', true);
                             $(`#ddlgroups${index}`).prop('disabled', true);
                         } else {
-                            $(`#whole${index}`).prop('disabled', false);
-                            $(`#ddlgroups${index}`).prop('disabled', false);
+                            const groupText = $(`#ddlgroups${index} option:selected`).text() || "";
+                            if (groupText && groupText !== "Please Select") {
+                                $(`#whole${index}`).prop('disabled', true);
+                                $(`#ddlbatchs${index}`).prop('disabled', true);
+                            } else {
+                                $(`#whole${index}`).prop('disabled', false);
+                                $(`#ddlgroups${index}`).prop('disabled', false);
+                            }
                         }
                     });
 
                     $(`#ddlgroups${index}`).on('change', function () {
-                        var subject1 = $(this).find(':selected').text();
-                        if (subject1 != "Please Select") {
+                        const selectedText = $(this).find(':selected').text();
+                        if (selectedText && selectedText !== "Please Select") {
                             $(`#whole${index}`).prop('disabled', true);
                             $(`#ddlbatchs${index}`).prop('disabled', true);
                         } else {
-                            $(`#whole${index}`).prop('disabled', false);
-                            $(`#ddlbatchs${index}`).prop('disabled', false);
+                            const batchText = $(`#ddlbatchs${index} option:selected`).text() || "";
+                            if (batchText && batchText !== "Please Select") {
+                                $(`#whole${index}`).prop('disabled', true);
+                                $(`#ddlgroups${index}`).prop('disabled', true);
+                            } else {
+                                $(`#whole${index}`).prop('disabled', false);
+                                $(`#ddlbatchs${index}`).prop('disabled', false);
+                            }
                         }
                     });
 
@@ -744,30 +833,43 @@
                             $(`#ddlbatchs${index}`).prop('disabled', true);
                             $(`#ddlgroups${index}`).prop('disabled', true);
                         } else {
-                            $(`#ddlbatchs${index}`).prop('disabled', false);
-                            $(`#ddlgroups${index}`).prop('disabled', false);
+                            const batchText = $(`#ddlbatchs${index} option:selected`).text() || "";
+                            const groupText = $(`#ddlgroups${index} option:selected`).text() || "";
+
+                            if (batchText && batchText !== "Please Select") {
+                                $(`#ddlgroups${index}`).prop('disabled', true);
+                            } else if (groupText && groupText !== "Please Select") {
+                                $(`#ddlbatchs${index}`).prop('disabled', true);
+                            } else {
+                                $(`#ddlbatchs${index}`).prop('disabled', false);
+                                $(`#ddlgroups${index}`).prop('disabled', false);
+                            }
                         }
                     });
 
                     $(`#chkhldy${index}`).on('change', function () {
-                        var disabled = $(this).is(':checked');
-                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index}, #FTime${index}, #Time${index}, #ddlTeacher${index}, #ddlVenue${index}`)
+                        const disabled = $(this).is(':checked');
+                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index},
+                   #FTime${index}, #Time${index}, #ddlTeacher${index}, #ddlVenue${index}`)
                             .prop('disabled', disabled);
+                        $(`#whole${index}`).prop('disabled', disabled);
                     });
 
                     $(`#chkbrks${index}`).on('change', function () {
-                        var disabled = $(this).is(':checked');
-                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index}, #ddlTeacher${index}, #ddlVenue${index}`)
+                        const disabled = $(this).is(':checked');
+                        $(`#ddlbatchs${index}, #ddlgroups${index}, #ddlitmeCode${index}, #ddlstdsubj${index},
+                   #FTime${index}, #Time${index}, #ddlTeacher${index}, #ddlVenue${index}`)
                             .prop('disabled', disabled);
+                        $(`#whole${index}`).prop('disabled', disabled);
                     });
                 }
 
                 initializeDatePickers();
                 initializeTimePickers();
-
                 $("#btnSave").attr('disabled', false);
 
             } catch (error) {
+                console.error("Error in editDetail:", error);
                 alert("Data not transferred");
             }
         }
