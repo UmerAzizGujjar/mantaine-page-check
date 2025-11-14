@@ -4,7 +4,8 @@
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
-            
+            $("#lblProcedure_Time").hide();
+            $("#Procedure_Time").hide();
             var dropdowns = [
                 { id: '#ddlmanu', method: 'GetManufacturers' },
                 { id: '#ddlpack_unit', method: 'GetPackUnits' },
@@ -438,6 +439,7 @@
                 var minimumStock = $('#minimum_stock').val();
                 var reorderStock = $('#Reorder_Stock').val();
                 var maximumStock = $('#Maximum_Stock').val();
+                var Procedure_Time = $('#Procedure_Time').val();
                 var aTC = $('#ATC').val();
                 var genericName = $('#GenericName').val();
                 var controllerDrug = $('#controller_drug').prop('checked');
@@ -518,6 +520,7 @@
                         "MinimumStock": minimumStock,
                         "ReorderStock": reorderStock,
                         "MaximumStock": maximumStock,
+                        "Procedure_Time": Procedure_Time,
                         "ATC": aTC,
                         "GenericName": genericName,
                         "ControllerDrug": controllerDrug,
@@ -603,6 +606,18 @@
                     }
                 });
             }
+        }
+        function ShowProcTime() {
+            var proc = $('#Procedure').prop('checked');
+            if (proc == 'True' || proc == true) {
+                $("#lblProcedure_Time").show();
+                $("#Procedure_Time").show();
+            }
+            else {
+                $("#lblProcedure_Time").hide();
+                $("#Procedure_Time").hide();
+            }
+
         }
         function GetitemNum() {
             $.ajax({
@@ -727,6 +742,7 @@
                     $('#minimum_stock').val(parse.Mini_Stock);
                     $('#Reorder_Stock').val(parse.Reorder_Stock);
                     $('#Maximum_Stock').val(parse.Max_Stock);
+                    $('#Procedure_Time').val(parse.Procedure_Time);
                     $('#ATC').val(parse.ATC);
                     $('#GenericName').val(parse.Generic_Name);
                     $('#Note').val(parse.Notes);
@@ -778,6 +794,8 @@
                     }
                     if (parse.Procedure_Required == 1) {
                         $("#Procedure").prop('checked', true);
+                        $("#lblProcedure_Time").show();
+                        $("#Procedure_Time").show();
                     }
                     if (parse.Lense_Required == 1) {
                         $("#Lens_Required").prop('checked', true);
@@ -1293,12 +1311,14 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" id="Procedure" name="Procedure" />
+                        <input type="checkbox" id="Procedure" name="Procedure" onchange="ShowProcTime();" />
                     </td>
                     <td style="width: 84px;">Procedure</td>
                     <td style="width: 5px;">
                         <input type="checkbox" id="ckhBedServices" name="ckhBedServices" /></td>
                     <td style="width: 84px;">Bed Services</td>
+                    <td><label id="lblProcedure_Time" >Procedure Time</label></td>
+                    <td><input type="text" id="Procedure_Time"  /></td>
                 </tr>
                 <tr>
                     <td>
