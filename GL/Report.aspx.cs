@@ -441,8 +441,24 @@ namespace PMS
                     case "COA":
                         query = "ReportName=ChartOfAccount&ReportTitle=Chart Of Account &Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked;
                         break;
-                    case "DA":
-                        query = "ReportName=DailyActivity&ReportTitle=Day Activity " + Convert.ToDateTime(txtStart_Date.Text).ToString("MM-dd-yyyy") + "&ActivityDate=" + txtStart_Date.Text;
+                    //case "DailyActivity":
+                    //    query = "ReportName=DailyActivity&ReportTitle=Day Activity " + Convert.ToDateTime(txtStart_Date.Text).ToString("MM-dd-yyyy") + "&ActivityDate=" + txtStart_Date.Text + "&ExportPDF=" + Excel
+                    //    break;
+                    case "DailyActivity":
+                        // Use the SAME raw date string that works in other reports (e.g., AccountBalance)
+                        string rawActivityDate = txtStart_Date.Text.Trim();
+
+                        // Optional: Validate it's not empty
+                        if (string.IsNullOrEmpty(rawActivityDate))
+                        {
+                            ScriptManager.RegisterStartupScript(this, GetType(), "NoDate",
+                                "alert('Please enter a Start Date.');", true);
+                            return;
+                        }
+
+                        // Use the same date format as used in AccountBalance (no conversion!)
+                        query = "ReportName=DailyActivity&ReportTitle=Day Activity " + rawActivityDate +
+                                "&ActivityDate=" + Server.UrlEncode(rawActivityDate) + "&company_id=" + AppConfig.Company_ID;
                         break;
                     case "AB":
                         if (txtStart_Code.Text != "" && txtEnd_Code.Text != "")
