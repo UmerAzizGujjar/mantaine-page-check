@@ -2029,7 +2029,7 @@ namespace PMS
                 {
                     pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + Emergency_Id);
                     pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.In_Patient_ID =" + Emergency_Id);
+                    pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
                     pt.Bed_No = DBClass.getField("Select Bed_No from Emergency_Patient ipd where ipd.Emergency_ID =" + Emergency_Id);
                     pt.MainDepartment = "02";
                     pt.Department = "";
@@ -2185,6 +2185,7 @@ namespace PMS
             public string opdid { get; set; }
             public string pat_id { get; set; }
             public string Department { get; set; }
+
             public string Admission_Date { get; set; }
             public string Discharge_On { get; set; }
             public string IPD_Panel_ID { get; set; }

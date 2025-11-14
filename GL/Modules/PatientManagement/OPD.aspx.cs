@@ -449,63 +449,154 @@ namespace PMS.Modules.PatientManagement
         public static string loadRegistrationFees(string Doc)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            int docId;
+            if (!int.TryParse(Doc, out docId))
+            {
+                return new JavaScriptSerializer().Serialize(new { success = false, message = "Invalid doctor ID." });
+            }
+
             int? policyId = (from emp in db.HR_Employees
-                             where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+                             where emp.Emp_ID == docId && emp.IsDoctor == true
                              select emp.Policy_id).FirstOrDefault();
+
             if (policyId == null)
-                return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy found." });
-            DateTime today = DateTime.Now;
-            TimeSpan currentTime = today.TimeOfDay;
-            var policyDetails = (
+                return new JavaScriptSerializer().Serialize(new { success = false, message = "No policy found for this doctor." });
+
+            DateTime now = DateTime.Now;
+            DayOfWeek dow = now.DayOfWeek;
+
+            // 📅 Convert to 1=Mon ... 7=Sun
+            int currentDayNum;
+            switch (dow)
+            {
+                case DayOfWeek.Monday: currentDayNum = 1; break;
+                case DayOfWeek.Tuesday: currentDayNum = 2; break;
+                case DayOfWeek.Wednesday: currentDayNum = 3; break;
+                case DayOfWeek.Thursday: currentDayNum = 4; break;
+                case DayOfWeek.Friday: currentDayNum = 5; break;
+                case DayOfWeek.Saturday: currentDayNum = 6; break;
+                case DayOfWeek.Sunday: currentDayNum = 7; break;
+                default: currentDayNum = 0; break;
+            }
+
+            TimeSpan currentTime = now.TimeOfDay;
+
+            // 🔽 Fetch all policy details (run query once)
+            var policies = (
                 from pd in db.Policy_Details
                 where pd.Policy_ID == policyId
                 orderby pd.Policy_Detail_ID descending
                 select new
                 {
-                    pd.Start_Time,
-                    pd.End_Time,
+                    pd.Policy_Detail_ID,
                     pd.Fees,
                     pd.Hospital_Share,
                     pd.Doctor_Share,
                     pd.Expiry_Date,
                     pd.IsTime,
+                    pd.Start_Time,
+                    pd.End_Time,
                     pd.Discount_Percentage,
+                    pd.Day_Check,
+                    pd.St_Day,
+                    pd.En_Day
                 }
             ).ToList();
-            if (policyDetails.Count == 0)
-                return (new JavaScriptSerializer()).Serialize(new { success = false, message = "No policy details found." });
 
-            var matchingPolicy = policyDetails.FirstOrDefault(pd =>
-                pd.IsTime == true
-                ? (
-                    (
-                        pd.Start_Time <= pd.End_Time &&
-                        currentTime >= pd.Start_Time && currentTime <= pd.End_Time
-                    )
-                    ||
-                    (
-                        pd.Start_Time > pd.End_Time &&
-                        (currentTime >= pd.Start_Time || currentTime <= pd.End_Time)
-                    )
-                  ) && today <= pd.Expiry_Date
-                : today <= pd.Expiry_Date
-            );
+            if (policies.Count == 0)
+                return new JavaScriptSerializer().Serialize(new { success = false, message = "No policy details configured." });
 
-            if (matchingPolicy == null)
+            // 🔁 Helper: robust day name → number
+            int ParseDay(string dayStr)
             {
-                return (new JavaScriptSerializer()).Serialize(new
+                if (string.IsNullOrWhiteSpace(dayStr)) return -1;
+                string s = dayStr.Trim().ToLower();
+                if (s.StartsWith("mon")) return 1;
+                if (s.StartsWith("tue")) return 2;
+                if (s.StartsWith("wed")) return 3;
+                if (s.StartsWith("thu")) return 4;
+                if (s.StartsWith("fri")) return 5;
+                if (s.StartsWith("sat")) return 6;
+                if (s.StartsWith("sun")) return 7;
+                return -1;
+            }
+
+            // 🔍 Find FIRST matching policy
+            var matched = policies.FirstOrDefault(pd =>
+            {
+                // 1️⃣ Expiry check
+                if (!pd.Expiry_Date.HasValue || now.Date > pd.Expiry_Date.Value.Date)
+                    return false;
+
+                // 2️⃣ Day check (only if Day_Check is logically true)
+                bool dayCheckEnabled = false;
+                if (pd.Day_Check != null)
+                {
+                    string v = pd.Day_Check.ToString().Trim();
+                    dayCheckEnabled = v == "1" || v.Equals("true", StringComparison.OrdinalIgnoreCase);
+                }
+
+                bool dayOk = true;
+                if (dayCheckEnabled)
+                {
+                    int st = ParseDay(pd.St_Day);
+                    int en = ParseDay(pd.En_Day);
+                    if (st == -1 || en == -1) return false;
+
+                    if (st <= en)
+                        dayOk = currentDayNum >= st && currentDayNum <= en;
+                    else
+                        dayOk = currentDayNum >= st || currentDayNum <= en;
+
+                    if (!dayOk) return false;
+                }
+
+                // 3️⃣ Time check (only if IsTime is true AND times provided)
+                bool timeOk = true;
+                if (pd.IsTime == true && pd.Start_Time.HasValue && pd.End_Time.HasValue)
+                {
+                    TimeSpan start = pd.Start_Time.Value;
+                    TimeSpan end = pd.End_Time.Value;
+
+                    if (start <= end)
+                    {
+                        // Normal range (e.g., 10:00–23:00)
+                        timeOk = currentTime >= start && currentTime <= end;
+                    }
+                    else
+                    {
+                        // Overnight (e.g., 22:00–06:00)
+                        timeOk = currentTime >= start || currentTime <= end;
+                    }
+
+                    if (!timeOk) return false;
+                }
+
+                return true;
+            });
+
+            // ✅ If no policy matches → show clear error
+            if (matched == null)
+            {
+                // Optional: Log for admin/debug
+                // System.Diagnostics.Debug.WriteLine($"No policy matched for doctor {docId} at {now:yyyy-MM-dd HH:mm}");
+
+                return new JavaScriptSerializer().Serialize(new
                 {
                     success = false,
-                    message = "You cannot register at this time or policy has expired."
+                    message = "Doctor registration policy is not defined for the current day and time."
                 });
             }
-            return (new JavaScriptSerializer()).Serialize(new
+
+            // ✅ Return matched policy
+            return new JavaScriptSerializer().Serialize(new
             {
                 success = true,
-                fee = matchingPolicy.Fees,
-                discount_percentage = matchingPolicy.Discount_Percentage,
-                Hospital_Share = matchingPolicy.Hospital_Share,
-                Doctor_Share = matchingPolicy.Doctor_Share
+                fee = matched.Fees ?? 0m,
+                discount_percentage = matched.Discount_Percentage ?? 0,
+                Hospital_Share = matched.Hospital_Share ?? 0m,
+                Doctor_Share = matched.Doctor_Share ?? 0m
             });
         }
 
@@ -761,6 +852,7 @@ namespace PMS.Modules.PatientManagement
 
                         if (string.IsNullOrWhiteSpace(data.doctor) || data.doctor == "0")
                         {
+                            // Non-doctor registration → department-based token
                             pat.Doc_Token = 0;
                             pat.tokenNo = db.Patients.Count(p =>
                                 p.Created_Time.HasValue &&
@@ -770,10 +862,63 @@ namespace PMS.Modules.PatientManagement
                         else
                         {
                             pat.tokenNo = 0;
-                            pat.Doc_Token = db.Patients.Count(p =>
-                                p.Created_Time.HasValue &&
-                                p.Created_Time.Value.Date == DateTime.Now.Date &&
-                                p.Doctor_ID == data.doctor) + 1;
+
+                            // 🔹 Get CURRENT active slot (e.g., 10:00–12:00 and now is 11:30)
+                            var currentSlot = GetCurrentActivePolicySlot(data.doctor);
+
+                            // 🔹 If no slot is active now, get NEXT slot today (e.g., next is 13:00–15:00)
+                            if (currentSlot == null)
+                            {
+                                currentSlot = GetNextPolicySlotForToday(data.doctor);
+                            }
+
+                            // 🔹 Count tokens ONLY in this slot (reset per slot + per day)
+                            if (currentSlot != null)
+                            {
+                                DateTime now = DateTime.Now;
+                                DateTime today = now.Date;
+                                int count;
+
+                                if (currentSlot.Start_Time <= currentSlot.End_Time)
+                                {
+                                    // Normal slot: 10:00–12:00
+                                    count = db.Patients.Count(p =>
+                                        p.Doctor_ID == data.doctor &&
+                                        p.Created_Time.HasValue &&
+                                        p.Created_Time.Value.Date == today &&
+                                        p.Created_Time.Value.TimeOfDay >= currentSlot.Start_Time &&
+                                        p.Created_Time.Value.TimeOfDay < currentSlot.End_Time
+                                    );
+                                }
+                                else
+                                {
+                                    // Overnight slot: 22:00–02:00
+                                    DateTime slotStartDate = today;
+                                    if (now.TimeOfDay < currentSlot.End_Time)
+                                        slotStartDate = today.AddDays(-1);
+
+                                    count = db.Patients.Count(p =>
+                                        p.Doctor_ID == data.doctor &&
+                                        p.Created_Time.HasValue &&
+                                        (
+                                            (p.Created_Time.Value.Date == slotStartDate &&
+                                             p.Created_Time.Value.TimeOfDay >= currentSlot.Start_Time) ||
+                                            (p.Created_Time.Value.Date == slotStartDate.AddDays(1) &&
+                                             p.Created_Time.Value.TimeOfDay < currentSlot.End_Time)
+                                        )
+                                    );
+                                }
+
+                                pat.Doc_Token = count + 1;
+                            }
+                            else
+                            {
+                                // Fallback: no slot defined → daily count (but token resets per day)
+                                pat.Doc_Token = db.Patients.Count(p =>
+                                    p.Doctor_ID == data.doctor &&
+                                    p.Created_Time.HasValue &&
+                                    p.Created_Time.Value.Date == DateTime.Now.Date) + 1;
+                            }
                         }
 
                         pat.Created_By = Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId) ? userId : Guid.Empty;
@@ -787,6 +932,7 @@ namespace PMS.Modules.PatientManagement
                             DBClass.executeNonQueryWithoutBegin("UPDATE Appointment_Form SET Status='Visited' WHERE Appointment_ID=" + data.appid);
                     }
 
+                    // 🔹 Fill patient data
                     pat.Full_Name = data.Full_Name;
                     pat.Student_Name = data.StudentName;
                     pat.Age_years = data.Age;
@@ -847,10 +993,104 @@ namespace PMS.Modules.PatientManagement
             }
             catch (Exception ex)
             {
+                // 🔹 Optional: Log ex.Message for debugging
                 return "ERROR: Failed to save OPD record. Please try again.";
             }
         }
+        private static PolicySlot GetCurrentActivePolicySlot(string doctorIdStr)
+        {
+            if (string.IsNullOrWhiteSpace(doctorIdStr) || !int.TryParse(doctorIdStr, out int docId))
+                return null;
 
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var policyId = (from emp in db.HR_Employees
+                                where emp.Emp_ID == docId && emp.IsDoctor == true
+                                select emp.Policy_id).FirstOrDefault();
+
+                if (!policyId.HasValue) return null;
+
+                var now = DateTime.Now;
+                var currentTime = now.TimeOfDay;
+
+                var activeSlot = (
+                    from pd in db.Policy_Details
+                    where pd.Policy_ID == policyId &&
+                          pd.IsTime == true &&
+                          pd.Start_Time.HasValue && pd.End_Time.HasValue &&
+                          (!pd.Expiry_Date.HasValue || pd.Expiry_Date.Value.Date >= now.Date)
+                    let start = pd.Start_Time.Value
+                    let end = pd.End_Time.Value
+                    where
+                        (start <= end && currentTime >= start && currentTime < end) || // normal
+                        (start > end && (currentTime >= start || currentTime < end))   // overnight
+                    select new PolicySlot
+                    {
+                        Start_Time = start,
+                        End_Time = end
+                    }
+                ).FirstOrDefault();
+
+                return activeSlot;
+            }
+        }
+
+        // 🔹 Helper 2: Get next future slot today (if no active slot)
+        private static PolicySlot GetNextPolicySlotForToday(string doctorIdStr)
+        {
+            if (string.IsNullOrWhiteSpace(doctorIdStr) || !int.TryParse(doctorIdStr, out int docId))
+                return null;
+
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var policyId = (from emp in db.HR_Employees
+                                where emp.Emp_ID == docId && emp.IsDoctor == true
+                                select emp.Policy_id).FirstOrDefault();
+
+                if (!policyId.HasValue) return null;
+
+                var now = DateTime.Now;
+                var currentTime = now.TimeOfDay;
+                var today = now.Date;
+
+                var slots = (
+                    from pd in db.Policy_Details
+                    where pd.Policy_ID == policyId &&
+                          pd.IsTime == true &&
+                          pd.Start_Time.HasValue && pd.End_Time.HasValue &&
+                          (!pd.Expiry_Date.HasValue || pd.Expiry_Date.Value.Date >= today)
+                    select new
+                    {
+                        Start = pd.Start_Time.Value,
+                        End = pd.End_Time.Value
+                    }
+                ).ToList();
+
+                // Find the next slot that starts AFTER current time
+                var nextSlot = slots
+                    .Where(s => s.Start > currentTime)
+                    .OrderBy(s => s.Start)
+                    .FirstOrDefault();
+
+                if (nextSlot != null)
+                {
+                    return new PolicySlot
+                    {
+                        Start_Time = nextSlot.Start,
+                        End_Time = nextSlot.End
+                    };
+                }
+
+                return null; // No upcoming slot today
+            }
+        }
+        private class PolicySlot
+        {
+            public TimeSpan Start_Time { get; set; }
+            public TimeSpan End_Time { get; set; }
+        }
+
+    
         [WebMethod]
         public static string GetArea()
         {

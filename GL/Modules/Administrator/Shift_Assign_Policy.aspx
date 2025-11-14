@@ -58,6 +58,15 @@
 
                
             });
+            $(document).on('change', '[name="IsDay"]', function () {
+                const $row = $(this).closest('tr');
+                const isChecked = $(this).is(':checked');
+
+                $row.find('[name="St_Day"]').prop('disabled', !isChecked);
+                $row.find('[name="En_Day"]').prop('disabled', !isChecked);
+
+
+            });
         }
 
 
@@ -124,6 +133,11 @@
                         newRow.find('[name="IsTime"]').prop("checked", policy.IsTime);
                         newRow.find('[name="Start_Time"], [name="End_Time"]')
                             .prop("disabled", !policy.IsTime); // Clean and simple
+
+
+                        newRow.find('[name="IsDay"]').prop("checked", policy.Day_Check);
+                        newRow.find('[name="St_Day"], [name="En_Day"]')
+                            .prop("disabled", !policy.Day_Check); // Clean and simple
 
                         newRow.find('[name="Start_Time"]').val(policy.Start_Time);
                         newRow.find('[name="End_Time"]').val(policy.End_Time);
@@ -203,15 +217,16 @@
         <td><input type="number" name="Hospital_Share" class="form-control" placeholder="Hospital %" min="0" max="100"></td>
         <td><input type="number" name="Doctor_Share" class="form-control" placeholder="Doctor %" min="0" max="100"></td>
         <td><input type="text" name="Expiry_Date" class="form-control expiryDate" placeholder="Select Date" readonly></td>
+         <td><input type="checkbox" name="IsDay" class="isDayCheck"></td>
                 <td>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;">
                 <span>From</span>
-                <select name="St_Day" class="form-control form-select" style="width: auto; min-width: 70px; flex: none;">
+                <select name="St_Day" disabled class="form-control form-select" style="width: auto; min-width: 70px; flex: none;">
                     <option value="">Select</option>
                     ${dayOptions}
                 </select>
                 <span>To</span>               
-                <select name="En_Day" class="form-control form-select" style="width: auto; min-width: 70px; flex: none;">
+                <select name="En_Day" disabled class="form-control form-select" style="width: auto; min-width: 70px; flex: none;">
                     <option value="">Select</option>
                     ${dayOptions}
                 </select>
@@ -302,6 +317,7 @@
                     Doctor_Share: $row.find('[name="Doctor_Share"]').val().trim(),
                     Expiry_Date: $row.find('[name="Expiry_Date"]').val(),
                     IsTime: $row.find('[name="IsTime"]').is(":checked"),
+                    IsDay: $row.find('[name="IsDay"]').is(":checked"),
                     Start_Time: $row.find('[name="Start_Time"]').val(),
                     End_Time: $row.find('[name="End_Time"]').val(),
                     St_Day: $row.find('[name="St_Day"]').val(),  
@@ -390,6 +406,27 @@
                         });
                         hasInvalidTimeFields = true;
                         return false; 
+                    }
+                }
+                if ($row.find('[name="IsDay"]').is(":checked")) {
+                    const startday = $row.find('[name="St_Day"]').val();
+                    const endday = $row.find('[name="En_Day"]').val();
+
+                    if (!startday || !endday) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Start Day and End Day are required when "Is Day" is checked.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        hasInvalidTimeFields = true;
+                        return false;
                     }
                 }
             });
@@ -506,6 +543,7 @@
                 <th>Hospital Share</th>
                 <th>Doctor Share</th>
                 <th>Expiry Date</th>
+                <th>Day Check</th>
                  <th>Day Range</th>
                 <th>Time Check</th>
                 <th>Start Time</th>              
