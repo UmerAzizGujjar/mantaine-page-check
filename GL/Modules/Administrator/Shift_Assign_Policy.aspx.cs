@@ -71,6 +71,7 @@ namespace PMS.Modules.Administrator
                                          Doctor_Share = p.Doctor_Share ?? 0,
                                          Expiry_Date = p.Expiry_Date.HasValue ? p.Expiry_Date.Value.ToString("dd MMM yyyy") : "",
                                          IsTime = p.IsTime ?? false,
+                                         isDay = p.Day_Check ?? false,
                                          Start_Time = p.Start_Time.HasValue ? p.Start_Time.Value.ToString(@"hh\:mm") : "",
                                          End_Time = p.End_Time.HasValue ? p.End_Time.Value.ToString(@"hh\:mm") : "",
                                          Next_Day = p.Next_Day ?? false,
@@ -115,6 +116,7 @@ namespace PMS.Modules.Administrator
                             existingPolicy.Doctor_Share = item.Doctor_Share;
                             existingPolicy.Expiry_Date = item.Expiry_Date;
                             existingPolicy.IsTime = item.IsTime;
+                            existingPolicy.Day_Check = item.IsDay;
                             existingPolicy.Start_Time = string.IsNullOrEmpty(item.Start_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.Start_Time);
                             existingPolicy.End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time);
                             existingPolicy.Next_Day = item.Next_Day;
@@ -137,6 +139,7 @@ namespace PMS.Modules.Administrator
                             Doctor_Share = item.Doctor_Share,
                             Expiry_Date = item.Expiry_Date,
                             IsTime = item.IsTime,
+                            Day_Check = item.IsDay,
                             Start_Time = string.IsNullOrEmpty(item.Start_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.Start_Time),
                             End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time),
                             Next_Day = item.Next_Day,
@@ -173,6 +176,7 @@ namespace PMS.Modules.Administrator
             public int? Doctor_Share { get; set; }
             public DateTime? Expiry_Date { get; set; }
             public bool IsTime { get; set; }
+            public bool IsDay { get; set; }
             public string Start_Time { get; set; }
             public string End_Time { get; set; }
             public bool Next_Day { get; set; }

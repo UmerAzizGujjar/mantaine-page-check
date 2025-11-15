@@ -493,6 +493,27 @@ on DM.Rouster_id equals DD.Rouster_id
         }
 
         [WebMethod]
+        public static string GetMachine()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Machine"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
         public static string GetDoctors()
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -508,7 +529,17 @@ on DM.Rouster_id equals DD.Rouster_id
         {
             DataBaseDataContext db = new DataBaseDataContext();
             List<HR_Employee> emps = (from emp in db.HR_Employees
-                                      where emp.IsDoctor == false
+                                      where emp.is_Employee == true
+                                      select emp).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(emps);
+        }
+
+        [WebMethod]
+        public static string GetRooms()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            List<Room> emps = (from emp in db.Rooms                       
                                       select emp).ToList();
 
             return (new JavaScriptSerializer()).Serialize(emps);

@@ -18,8 +18,10 @@
                     { id: '#ddl_Gender', method: 'GetGender' },
                     { id: '#ddl_status', method: 'GetMartailStatus' },
                     { id: '#ddlPatient_Type', method: 'PatientType' },
-                    { id: '#ddl_colstnt', method: 'GetDoctor' },
-                    { id: '#ddl_helper', method: 'GetHelper' }
+                    { id: '#ddl_colstnt', method: 'GetDoctors' },
+                    { id: '#ddl_helper', method: 'GetHelper' },
+                    { id: '#ddlRoom', method: 'GetRooms' },
+                    { id: '#ddlMachine', method: 'GetMachine' }
                 ];
 
                 dropdowns.forEach(item => {
@@ -61,7 +63,7 @@
 
             }
             GetServices();
-            LoadDetailDoctor();
+            //LoadDetailDoctor();
 
             $('#ddl_colstnt').select2();
             $('#chk_status').select2();
@@ -2004,11 +2006,15 @@
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Machine</label>
-                <input type="text" id="txt_Machine" class="form-control" autocomplete="off" />
+                                <select class="form-control" id="ddlMachine">
+                    <option></option>
+                </select>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Room</label>
-                <input type="text" id="txt_Room" class="form-control" autocomplete="off" />
+                                <select class="form-control" id="ddlRoom">
+                    <option></option>
+                </select>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
             </div>

@@ -865,7 +865,7 @@
                 }
 
                 initializeDatePickers();
-                initializeTimePickers();
+                //initializeTimePickers();
                 $("#btnSave").attr('disabled', false);
 
             } catch (error) {
@@ -887,14 +887,14 @@
             });
         }
 
-        function initializeTimePickers() {
-            $('input[name="TTime"]').ptTimeSelect({
-                onClose: function () {
-                    $('input[name="TTime"]').focus();
-                }
-            });
-            $('input[name="FTime"]').ptTimeSelect({});
-        }
+        //function initializeTimePickers() {
+        //    $('input[name="TTime"]').ptTimeSelect({
+        //        onClose: function () {
+        //            $('input[name="TTime"]').focus();
+        //        }
+        //    });
+        //    $('input[name="FTime"]').ptTimeSelect({});
+        //}
         function Replicates() {
                 debugger;
                 var Subject_id = $('#Subject_id').val();

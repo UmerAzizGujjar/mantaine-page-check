@@ -288,7 +288,7 @@ namespace PMS.Inventory
     string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
     string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate,
     string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable,
-    string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock,
+    string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock,string Procedure_Time,
     string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
     string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
     string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue,
@@ -334,6 +334,7 @@ namespace PMS.Inventory
                     obj.Mini_Stock = MinimumStock;
                     obj.Reorder_Stock = ReorderStock;
                     obj.Max_Stock = MaximumStock;
+                    obj.Procedure_Time = Procedure_Time;
                     obj.ATC = ATC;
                     obj.Generic_Name = GenericName;
                     obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
@@ -417,6 +418,7 @@ namespace PMS.Inventory
                     obj.Mini_Stock = MinimumStock;
                     obj.Reorder_Stock = ReorderStock;
                     obj.Max_Stock = MaximumStock;
+                    obj.Procedure_Time = Procedure_Time;
                     obj.ATC = ATC;
                     obj.Generic_Name = GenericName;
                     obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
@@ -545,6 +547,7 @@ namespace PMS.Inventory
                                      obj.Mini_Stock,
                                      obj.Reorder_Stock,
                                      obj.Max_Stock,
+                                     obj.Procedure_Time,
                                      obj.ATC,
                                      obj.Generic_Name,
                                      obj.Controller_Drug,

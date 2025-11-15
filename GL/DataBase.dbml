@@ -6866,31 +6866,6 @@
       <Column Name="UpdatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Policy_Details" Member="Policy_Details">
-    <Type Name="Policy_Detail">
-      <Column Name="Policy_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Policy_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Policy_Name" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="Fees" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Hospital_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doctor_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Expiry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="IsTime" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Next_Day" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Is_Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="St_Day" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="En_Day" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.HR_Employees" Member="HR_Employees">
     <Type Name="HR_Employee">
       <Column Name="Emp_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6943,6 +6918,32 @@
       <Column Name="is_Employee" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Policy_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Doc_qualification" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Policy_Details" Member="Policy_Details">
+    <Type Name="Policy_Detail">
+      <Column Name="Policy_Detail_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Policy_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Policy_Name" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="Fees" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Hospital_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doctor_Share" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Expiry_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="IsTime" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Next_Day" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_At" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Is_Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="St_Day" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="En_Day" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Day_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
