@@ -138,8 +138,68 @@ namespace PMS
             return result;
         }
 
+        //[WebMethod]
+        //public static string GetAvailableDatesAndTimes(int doc_id, string txt_date , string procTimeSlot)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        DateTime selectedDate;
+        //        if (!DateTime.TryParse(txt_date, out selectedDate))
+        //            return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
+
+        //        // Step 1: Get doctor's off days
+        //        var doctor = (from hr in db.HR_Employees
+        //                      where hr.Emp_ID == doc_id && hr.IsDoctor == true
+        //                      select new
+        //                      {
+        //                          hr.Off_Days_Names, 
+        //                          hr.Timings_In,
+        //                          hr.Timings_Out
+        //                      }).FirstOrDefault();
+
+        //        if (doctor == null)
+        //            return new JavaScriptSerializer().Serialize(new { error = "Doctor not found" });
+
+        //        string dayName = selectedDate.ToString("ddd");
+        //        var offDays = doctor.Off_Days_Names?.Split(',') ?? new string[0];
+
+        //        if (offDays.Contains(dayName, StringComparer.OrdinalIgnoreCase))
+        //            return new JavaScriptSerializer().Serialize(new { error = "Doctor not available" });
+
+        //        var lastAppointmentEnd = (from ap in db.Derma_Appointments
+        //                                  where ap.Doctor_Id == Convert.ToString( doc_id)
+        //                                  && ap.Appointment_Date == selectedDate.Date
+        //                                  orderby ap.Doctor_End_Time descending
+        //                                  select ap.Doctor_End_Time).FirstOrDefault();
+
+        //        TimeSpan availableStart;
+        //        TimeSpan availableEnd;
+
+        //        if (lastAppointmentEnd.HasValue)
+        //        {
+        //            availableStart = lastAppointmentEnd.Value;
+        //        }
+        //        else
+        //        {
+        //            availableStart = doctor.Timings_In ?? TimeSpan.Zero;
+        //        }
+
+        //        availableEnd = availableStart.Add(new TimeSpan(0, 15, 0));
+
+        //        if (doctor.Timings_Out.HasValue && availableEnd > doctor.Timings_Out.Value)
+        //        {
+        //            availableEnd = doctor.Timings_Out.Value;
+        //        }
+
+        //        return new JavaScriptSerializer().Serialize(new
+        //        {
+        //            TimeIn = availableStart.ToString(@"hh\:mm"),
+        //            TimeOut = availableEnd.ToString(@"hh\:mm")
+        //        });
+        //    }
+        //}
         [WebMethod]
-        public static string GetAvailableDatesAndTimes(int doc_id, string txt_date)
+        public static string GetAvailableDatesAndTimes(int doc_id, string txt_date, string procTimeSlot)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
@@ -147,12 +207,11 @@ namespace PMS
                 if (!DateTime.TryParse(txt_date, out selectedDate))
                     return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
 
-                // Step 1: Get doctor's off days
                 var doctor = (from hr in db.HR_Employees
                               where hr.Emp_ID == doc_id && hr.IsDoctor == true
                               select new
                               {
-                                  hr.Off_Days_Names, 
+                                  hr.Off_Days_Names,
                                   hr.Timings_In,
                                   hr.Timings_Out
                               }).FirstOrDefault();
@@ -167,13 +226,12 @@ namespace PMS
                     return new JavaScriptSerializer().Serialize(new { error = "Doctor not available" });
 
                 var lastAppointmentEnd = (from ap in db.Derma_Appointments
-                                          where ap.Doctor_Id == Convert.ToString( doc_id)
+                                          where ap.Doctor_Id == Convert.ToString(doc_id)
                                           && ap.Appointment_Date == selectedDate.Date
                                           orderby ap.Doctor_End_Time descending
                                           select ap.Doctor_End_Time).FirstOrDefault();
 
                 TimeSpan availableStart;
-                TimeSpan availableEnd;
 
                 if (lastAppointmentEnd.HasValue)
                 {
@@ -184,7 +242,21 @@ namespace PMS
                     availableStart = doctor.Timings_In ?? TimeSpan.Zero;
                 }
 
-                availableEnd = availableStart.Add(new TimeSpan(0, 15, 0));
+                // -------------------------------
+                // NEW LOGIC: Apply procTimeSlot
+                // -------------------------------
+                int slotMinutes = 15; // default slot
+
+                if (!string.IsNullOrEmpty(procTimeSlot))
+                {
+                    int parsedSlot;
+                    if (int.TryParse(procTimeSlot, out parsedSlot) && parsedSlot > 0)
+                    {
+                        slotMinutes = parsedSlot;
+                    }
+                }
+
+                TimeSpan availableEnd = availableStart.Add(TimeSpan.FromMinutes(slotMinutes));
 
                 if (doctor.Timings_Out.HasValue && availableEnd > doctor.Timings_Out.Value)
                 {
@@ -227,6 +299,38 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(new
                 {
                     success = "Machine is Available"
+                });
+            }
+        }
+
+        [WebMethod]
+        public static string CheckRoomsAvailability(string Room_Id, string txt_date, TimeSpan RoomTimeIn, TimeSpan RoomTimeOut)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (!DateTime.TryParse(txt_date, out DateTime selectedDate))
+                    return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
+                var overlapping = (from ap in db.Derma_Appointments
+                                   where ap.Room_Id == Room_Id
+                                   && ap.Appointment_Date == selectedDate.Date
+                                   && (
+                                           (RoomTimeIn >= ap.Room_Start_Time && RoomTimeIn < ap.Room_End_Time) ||
+                                           (RoomTimeOut > ap.Room_Start_Time && RoomTimeOut <= ap.Room_End_Time) ||
+                                           (RoomTimeIn <= ap.Room_Start_Time && RoomTimeOut >= ap.Room_End_Time)
+                                       )
+                                   select ap).Any();
+
+                if (overlapping)
+                {
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        error = "Room already has an appointment in this time"
+                    });
+                }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    success = "Room is Available"
                 });
             }
         }
@@ -702,6 +806,17 @@ on DM.Rouster_id equals DD.Rouster_id
         }
 
         [WebMethod]
+        public static string GetProcedureTime(int procid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var record = (from tbl in db.INV_Items
+                          where tbl.Item_ID == procid
+                          select tbl.Procedure_Time).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(record);
+        }
+
+        [WebMethod]
         public static string CheckDoctorAvailability(string doctorId, DateTime appointmentDate, DateTime appointmentTime, string aptid)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -742,7 +857,7 @@ on DM.Rouster_id equals DD.Rouster_id
         public static int SaveAppointment(string btnsave, string AllItemDetail, string editmode_ID)
         {
             string AppID = "";
-            Appointment_Form Obj = new Appointment_Form();
+            Derma_Appointment Obj = new Derma_Appointment();
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             JavaScriptSerializer oJS = new JavaScriptSerializer();
             var record = oJS.Deserialize<MasterAppointment>(AllItemDetail);
@@ -752,79 +867,57 @@ on DM.Rouster_id equals DD.Rouster_id
             if (btnsave == "Update")
             // if (editmode_ID != "")
             {
-                var Items = (from t in db.Appointment_Forms
-                             where t.Appointment_ID == Convert.ToInt32(record.txt_ID)
+                var Items = (from t in db.Derma_Appointments
+                             where t.Derma_Appointment_Id == Convert.ToInt32(record.txt_ID)
                              select t).FirstOrDefault();
 
-                Items.Appointment_Code = Convert.ToInt32(record.txt_ID);
-                Items.Patient_Name = record.PatientTitle + record.txt_pt_name;
-                Items.Phone = record.txt_phone_no;
-                Items.Age = record.txt_age;
+                Items.Patient_Id = record.reg_id;
                 Items.Status = "Booked";
-                Items.Consultant_ID = record.ddl_colstnt;
-                Items.Appointment_No = record.txt_apt_no;
-                Items.App_Date = Convert.ToDateTime(record.txt_date);
-                Items.Time = record.txt_time;
-                Items.Sub_Department = record.subdepartment;
-                Items.Item_Id = record.item_id;
-                Items.Remarks = record.remarks;
-                Items.Reg_id = record.reg_id;
-                Items.pat_type = record.type;
-                Items.IS_CANCEL = false;
+                Items.Doctor_Id = record.ddl_colstnt;
+                Items.Room_Id = record.ddlRoom;
+                Items.Helper_Id = record.ddl_helper;
+                Items.Machine_Id = record.ddlMachine;
+                Items.Appointment_No = Convert.ToInt32(record.txt_apt_no);
+                Items.Appointment_Date = Convert.ToDateTime(record.txt_date);
+                Items.Doctor_Start_Time = record.Doc_Start_Time;
+                Items.Doctor_End_Time = record.Doc_End_Time;
+                Items.Helper_Start_Time = record.Helper_Start_Time;
+                Items.Helper_End_Time = record.Hepler_End_Time;
+                Items.Machine_Start_Time = record.Machine_Start_Time;
+                Items.Machine_End_Time = record.Machine_End_Time;
+                Items.Room_Start_Time = record.Room_Start_Time;
+                Items.Room_End_Time = record.Room_End_Time;
+                Items.Procedure_Id = record.item_id;
+
                 Items.Updated_By = AppConfig.UserID;
-                Items.Updated_Time = DateTime.Now;
+                Items.Updated_Date = DateTime.Now;
                 db.SubmitChanges();
-                AppID = Items.Appointment_ID.ToString();
+                AppID = Items.Derma_Appointment_Id.ToString();
 
             }
             else
             {
 
-                Obj.Appointment_Code = Convert.ToInt32(record.txt_ID);
-                Obj.Patient_Name = record.PatientTitle + record.txt_pt_name;
-                Obj.Phone = record.txt_phone_no;
-                Obj.pat_type = record.type;
-                Obj.Age = record.txt_age;
+                Obj.Patient_Id = record.reg_id;
                 Obj.Status = "Booked";
-                Obj.Consultant_ID = record.ddl_colstnt;
-                Obj.Appointment_No = record.txt_apt_no;
-                Obj.App_Date = Convert.ToDateTime(record.txt_date);
-                Obj.Time = record.txt_time;
-                AppID = Obj.Appointment_ID.ToString();
-                Obj.Sub_Department = record.subdepartment;
-                Obj.Remarks = record.remarks;
-                Obj.Reg_id = record.reg_id;
-                Obj.Item_Id = record.item_id;
-                Obj.IS_CANCEL = false;
-                Obj.created_time = DateTime.Now;
-                Obj.created_by = AppConfig.UserID;
-                db.Appointment_Forms.InsertOnSubmit(Obj);
+                Obj.Doctor_Id = record.ddl_colstnt;
+                Obj.Room_Id = record.ddlRoom;
+                Obj.Helper_Id = record.ddl_helper;
+                Obj.Machine_Id = record.ddlMachine;
+                Obj.Appointment_No = Convert.ToInt32(record.txt_apt_no);
+                Obj.Appointment_Date = Convert.ToDateTime(record.txt_date);
+                Obj.Doctor_Start_Time = record.Doc_Start_Time;
+                Obj.Doctor_End_Time = record.Doc_End_Time;
+                Obj.Helper_Start_Time = record.Helper_Start_Time;
+                Obj.Helper_End_Time = record.Hepler_End_Time;
+                Obj.Machine_Start_Time = record.Machine_Start_Time;
+                Obj.Machine_End_Time = record.Machine_End_Time;
+                Obj.Room_Start_Time = record.Room_Start_Time;
+                Obj.Room_End_Time = record.Room_End_Time;
+                Obj.Procedure_Id = record.item_id;
+                AppID = Obj.Derma_Appointment_Id.ToString();
+                db.Derma_Appointments.InsertOnSubmit(Obj);
                 db.SubmitChanges();
-                // After db.SubmitChanges();
-
-                // Format patient phone for WhatsApp (international, no +)
-                //string patientPhone = record.txt_phone_no;
-                //if (!string.IsNullOrEmpty(patientPhone))
-                //{
-                //    // Clean phone: remove non-digits
-                //    patientPhone = new string(patientPhone.Where(char.IsDigit).ToArray());
-
-                //    // Convert to 92 format if needed
-                //    if (patientPhone.Length == 11 && patientPhone.StartsWith("0"))
-                //        patientPhone = "92" + patientPhone.Substring(1);
-                //    else if (patientPhone.Length == 10 && patientPhone.StartsWith("3"))
-                //        patientPhone = "92" + patientPhone;
-
-                //    // Only send if valid
-                //    if (patientPhone.Length == 12 && patientPhone.StartsWith("92"))
-                //    {
-                //        string doctorName = DBClass.getField($"select dbo.GetDoctorName({record.ddl_colstnt})");
-                //        string appDate = Convert.ToDateTime(record.txt_date).ToString("dd MMM yyyy");
-                //        string appTime = DateTime.Today.Add(record.txt_time).ToString("hh:mm tt");
-
-                //        // Send WhatsApp via API
-                //        SendWhatsAppToPatient(patientPhone, record.txt_pt_name, doctorName, appDate, appTime);
-                //    }
 
             }
 
@@ -1037,10 +1130,21 @@ on DM.Rouster_id equals DD.Rouster_id
             public string txt_phone_no { get; set; }
             public string txt_age { get; set; }
             public string ddl_colstnt { get; set; }
+            public string ddl_helper { get; set; }
+            public string ddlMachine { get; set; }
+            public string ddlRoom { get; set; }
             public string txt_apt_no { get; set; }
             public string type { get; set; }
             public string txt_date { get; set; }
             public TimeSpan txt_time { get; set; }
+            public TimeSpan Doc_Start_Time { get; set; }
+            public TimeSpan Doc_End_Time { get; set; }
+            public TimeSpan Helper_Start_Time { get; set; }
+            public TimeSpan Machine_Start_Time { get; set; }
+            public TimeSpan Room_Start_Time { get; set; }
+            public TimeSpan Room_End_Time { get; set; }
+            public TimeSpan Hepler_End_Time { get; set; }
+            public TimeSpan Machine_End_Time { get; set; }
             public string txt_Status { get; set; }
             public string subdepartment { get; set; }
             public string item_id { get; set; }
