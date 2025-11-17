@@ -395,6 +395,7 @@ function Get_Pat_Info(reg_id) {
             $('#txt_Address').val(data.Address);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#txt_cnic').val(data.CNIC_Masked);
+            $('#txtAge_yearss').val(data.DOB);
          
             if (data.MaritalStatus_text)
                 $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
