@@ -18,10 +18,10 @@
                     { id: '#ddl_Gender', method: 'GetGender' },
                     { id: '#ddl_status', method: 'GetMartailStatus' },
                     { id: '#ddlPatient_Type', method: 'PatientType' },
-                    { id: '#ddl_colstnt', method: 'GetDoctors' },
-                    { id: '#ddl_helper', method: 'GetHelper' },
-                    { id: '#ddlRoom', method: 'GetRooms' },
-                    { id: '#ddlMachine', method: 'GetMachine' }
+                    //{ id: '#ddl_colstnt', method: 'GetDoctors' },
+                    //{ id: '#ddl_helper', method: 'GetHelper' },
+                    //{ id: '#ddlRoom', method: 'GetRooms' },
+                    //{ id: '#ddlMachine', method: 'GetMachine'}
                 ];
 
                 dropdowns.forEach(item => {
@@ -39,55 +39,36 @@
                             $(this).prop('disabled', true);
                         });
                     }
-
-                   
-
-                    if (item.id === '#ddl_colstnt') {
-                        $element.off('change').on('change', function () {
-                            var doctor_id = $(this).val();
-                            if (doctor_id) {
-                                ConfigureAvailableDates(doctor_id);
-                                GetAppNoByDoctor();
-                                LoadPage();
-                            }
-                        });
-                    }
-
-                    if (item.id === '#ddl_helper') {
-                        $element.off('change').on('change', function () {
-                            var Helper_Id = $(this).val();
-                            if (Helper_Id) {
-                                GethelperAvailbilty();                            
-                            }
-                        });
-                    }
-
-                    if (item.id === '#ddlMachine') {
-                        $element.off('change').on('change', function () {
-                            var Mach_Id = $(this).val();
-                            if (Mach_Id) {
-                                GetMachineAvailbilty();                            
-                            }
-                        });
-                    }
-
-                    if (item.id === '#ddlMachine') {
-                        $element.off('change').on('change', function () {
-                            var Mach_Id = $(this).val();
-                            if (Mach_Id) {
-                                GetMachineAvailbilty();                            
-                            }
-                        });
-                    }
-
+            
 
                 });
             
-            //else {
-            //    // LoadDetailDoctor();
+            LoadDetailDoctor();
+            LoadMachine();
+            LoadHelper();
+            LoadRooms();
+            $('#ddl_colstnt').on('change', function () {
+                ConfigureAvailableDates();
+                GetAppNoByDoctor();
+                LoadPage();
+            });
 
+            $('#ddl_helper').on('change', function () {
+                GethelperAvailbilty();
+            });
 
-            //}
+            $('#ddlMachine').on('change', function () {
+                GetMachineAvailbilty();
+            });
+
+            $('#ddlRoom').on('change', function () {
+                GetRoomsAvailbilty();
+            });
+
+            $('#ddl_procedures').on('change', function () {
+                LoadProcedureTime();
+                //ConfigureAvailableDates();
+            });
             GetServices();
             //LoadDetailDoctor();
 
@@ -107,21 +88,8 @@
 
                 isSaving = true;
                 $('#btnSave, #btnSaveMessage').prop('disabled', true).addClass('disabled');
+                SaveAllRecord();
 
-                verifydoctoravail(function (result) {
-                    try {
-                        if (result === 'OnDay') {
-                            save = $('#btnSave').val();
-                            SaveAllRecord();
-                        }
-                    } finally {
-                        // Re-enable buttons after a short delay
-                        setTimeout(() => {
-                            isSaving = false;
-                            $('#btnSave, #btnSaveMessage').prop('disabled', false).removeClass('disabled');
-                        }, 1000);
-                    }
-                });
             }
 
             // Attach both buttons to the same safe handler
@@ -182,32 +150,6 @@
 
                  });
              }
-
-
-
-  <%--           debugger;
-             $('#ddl_colstnt').on('change', function () {
-                 debugger;
-                 var doctor_id = $('#ddl_colstnt').val();
-                 ConfigureAvailableDates(doctor_id);
-                 var aID = '<%= Request.QueryString["aID"]%>';
-                if (aID != "") {
-
-                }
-                else {
-                    GetAppNoByDoctor();
-                }
-
-                //GetSubDepartmentByDoctor(doctor_id);
-                LoadPage();
-
-                setTimeout(function () {
-                    $('#ddlsubdepartment').focus();
-                }, 14);
-
-
-
-            });--%>
              $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
                  debugger;
 
@@ -415,51 +357,21 @@
         function closemodal() {
             window.location.href = "Derma_Appointment.aspx";
         }
-        //function ConfigureAvailableDates(doc_id) {
-        //    debugger;
-        //    var txt_date = $("#txt_date").val();
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "Derma_Appointment.aspx/GetAvailableDatesAndTimes",
-        //        data: JSON.stringify({
-        //            'doc_id': doc_id,
-        //            'txt_date': txt_date
-        //        }),
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        success: function (response) {
-        //            var availableDates = JSON.parse(response.d);
+        
 
-        //            $("#txt_date").datepicker("destroy");
-
-        //            $("#txt_date").datepicker({
-        //                dateFormat: "yy-mm-dd", // format to match your returned data
-        //                beforeShowDay: function (date) {
-        //                    var dmy = $.datepicker.formatDate("yy-mm-dd", date);
-        //                    if (availableDates.indexOf(dmy) !== -1) {
-        //                        return [true, "available-date", "Doctor Available"];
-        //                    } else {
-        //                        return [false, "", "Doctor Not Available"];
-        //                    }
-        //                }
-        //            });
-        //        },
-        //        error: function (xhr, status, error) {
-        //            console.error("Error fetching available dates:", error);
-        //        }
-        //    });
-        //}
-
-        function ConfigureAvailableDates(doc_id) {
+        function ConfigureAvailableDates() {
             debugger;
+            var doc_id = $('#ddl_colstnt').val();
             var txt_date = $("#txt_date").val();
+            var procTimeSlot = $("#txtProcedureTime").val();
 
             $.ajax({
                 type: "POST",
                 url: "Derma_Appointment.aspx/GetAvailableDatesAndTimes",
                 data: JSON.stringify({
                     'doc_id': doc_id,
-                    'txt_date': txt_date
+                    'txt_date': txt_date,
+                    'procTimeSlot': procTimeSlot
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -478,6 +390,12 @@
                     // 🔥 Assign TimeIn & TimeOut to input fields
                     $("#txt_stdoctime").val(result.TimeIn);
                     $("#txt_enddoctime").val(result.TimeOut);
+                    $("#txt_sthelpertime").val(result.TimeIn);
+                    $("#txt_endhelpertime").val(result.TimeOut);
+                    $("#txt_stmachinetime").val(result.TimeIn);
+                    $("#txt_endmachinetime").val(result.TimeOut);
+                    $("#txt_roomStTime").val(result.TimeIn);
+                    $("#txt_roomendTime").val(result.TimeOut);
 
 
                 },
@@ -495,8 +413,8 @@
             //var helperTimeIn = $("#txt_sthelpertime").val()
             //var helperTimeOut = $("#txt_endhelpertime").val()
 
-            var helperTimeIn = moment($("#txt_sthelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
-            var helperTimeOut = moment($("#txt_endhelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+            var helperTimeIn = moment($("#txt_stdoctime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+            var helperTimeOut = moment($("#txt_enddoctime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
 
             $.ajax({
                 type: "POST",
@@ -516,16 +434,55 @@
                     // If backend returned an error
                     if (result.error) {
                         alert(result.error);
-                        $("#txt_stdoctime").val("");
-                        $("#txt_enddoctime").val("");
+                        $("#txt_sthelpertime").val("");
+                        $("#txt_endhelpertime").val("");
                         return;
                     }
 
                     // 🔥 Assign TimeIn & TimeOut to input fields
-                    $("#txt_stdoctime").val(result.TimeIn);
-                    $("#txt_enddoctime").val(result.TimeOut);
+                    //$("#txt_sthelpertime").val(result.TimeIn);
+                    //$("#txt_endhelpertime").val(result.TimeOut);
 
+                },
 
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
+        }
+
+        function GetRoomsAvailbilty() {
+            debugger;
+            var Room_Id = $("#ddlRoom").val();
+            var txt_date = $("#txt_date").val();
+            var RoomTimeIn = moment($("#txt_stdoctime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+            var RoomTimeOut = moment($("#txt_enddoctime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+
+            $.ajax({
+                type: "POST",
+                url: "Derma_Appointment.aspx/CheckRoomsAvailability",
+                data: JSON.stringify({
+                    'Room_Id': Room_Id,
+                    'txt_date': txt_date,
+                    'RoomTimeIn': RoomTimeIn,
+                    'RoomTimeOut': RoomTimeOut,
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+
+                    // If backend returned an error
+                    if (result.error) {
+                        alert(result.error);
+                        $("#txt_roomStTime").val("");
+                        $("#txt_enddoctime").val("");
+                        return;
+                    }
+                    //// 🔥 Assign TimeIn & TimeOut to input fields
+                    //$("#txt_stdoctime").val(result.TimeIn);
+                    //$("#txt_roomendTime").val(result.TimeOut);
                 },
 
                 error: function (xhr, status, error) {
@@ -538,11 +495,9 @@
             debugger;
             var Mch_Id = $("#ddlMachine").val()
             var txt_date = $("#txt_date").val();
-            //var helperTimeIn = $("#txt_sthelpertime").val()
-            //var helperTimeOut = $("#txt_endhelpertime").val()
 
-            var MachineTimeIn = moment($("#txt_sthelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
-            var MachineTimeOut = moment($("#txt_endhelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+            var MachineTimeIn = moment($("#txt_stdoctime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+            var MachineTimeOut = moment($("#txt_enddoctime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
 
             $.ajax({
                 type: "POST",
@@ -559,19 +514,12 @@
                 success: function (response) {
                     var result = JSON.parse(response.d);
 
-                    // If backend returned an error
                     if (result.error) {
                         alert(result.error);
-                        $("#txt_stdoctime").val("");
-                        $("#txt_enddoctime").val("");
+                        $("#txt_stmachinetime").val("");
+                        $("#txt_endmachinetime").val("");
                         return;
                     }
-
-                    // 🔥 Assign TimeIn & TimeOut to input fields
-                    $("#txt_stdoctime").val(result.TimeIn);
-                    $("#txt_enddoctime").val(result.TimeOut);
-
-
                 },
 
                 error: function (xhr, status, error) {
@@ -1488,24 +1436,67 @@
 
         }
 
+    
+        var ProcedureTime = "";   
+        function LoadProcedureTime() {
+            var procid = $('#ddl_procedures').val();
+            PageMethods.GetProcedureTime(procid, function (data) {
+                ProcedureTime = JSON.parse(data);  
+                $('#txtProcedureTime').val(ProcedureTime);
+            });
+        }
+        function LoadDetailDoctor() {
+            debugger;
+            var options = '<option value="0">Select Doctor</option>';
+            PageMethods.GetDoctors(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    if (key >= 0) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    }
+                });
+                $('#ddl_colstnt').html(options);
+                $('#chk_Doc').html(options);
+            });
+        }
 
-        //function LoadDetailDoctor() {
-        //    debugger;
-        //    var options = '<option value="0">Select Doctor</option>';
-        //    PageMethods.GetDoctors(function (data) {
-        //        $.each(JSON.parse(data), function (key, value) {
+        function LoadRooms() {
+            debugger;
+            var options = '<option value="0">Select Doctor</option>';
+            PageMethods.GetRooms(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    if (key >= 0) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    }
+                });
+                $('#ddlRoom').html(options);
+            });
+        }
 
-        //            if (key >= 0) {
-        //                options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
-        //            }
-        //        });
-        //        $('#ddl_colstnt').html(options);
+        function LoadMachine() {
+            debugger;
+            var options = '<option value="0">Select Doctor</option>';
+            PageMethods.GetMachine(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    if (key >= 0) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    }
+                });
+                $('#ddlMachine').html(options);
+            });
+        }
 
-        //        $('#chk_Doc').html(options);
-
-        //    });
-
-        //}
+        function LoadHelper() {
+            debugger;
+            var options = '<option value="0">Select Doctor</option>';
+            PageMethods.GetHelper(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    if (key >= 0) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    }
+                });
+                $('#ddl_helper').html(options);
+            });
+        }
 
 
         var abc = false;
@@ -1623,113 +1614,77 @@
         var save;
         function SaveAllRecord() {
             debugger;
-
-            var btnsave = save;
-
-
+            var btnsave = $('#btnSave').val();
             var txt_ID = $('#txt_ID').val();
-            var txtPatientTitle = $("#ctl00_MainContent_ddlPrefixDrp :selected").text();
-            var txt_pt_name = $('#txt_pt_name').val();
-            var txt_phone_no = $('#txt_phone_no').val();
-            if (txt_phone_no === "___________") {
-                txt_phone_no = "";
-            }
-            var agePrefix = $("#ctl00_MainContent_ddlPrefixAge").val();
-            var txt_age = $('#txt_age').val();
-            var type = $('#ddlPatient_Type').val();
-
             var ddl_colstnt = $('#ddl_colstnt').val();
+            var ddl_helper = $('#ddl_helper').val();
+            var ddlMachine = $('#ddlMachine').val();
+            var ddlRoom = $('#ddlRoom').val();
             var txt_apt_no = $('#txt_apt_no').val();
             var txt_date = $('#txt_date').val();
             var txt_time_24hr = $('#txt_time').val();
-            var txt_time = convertTo24Hour(txt_time_24hr);
             var reg_id = $('#hdfreg_ini_id').val();
+            var item_id = $('#ddl_procedures').val();
 
-            debugger;
-            var subdepartment = $('#ddlsubdepartment').val();
-            if (subdepartment == '' || subdepartment == '0' || subdepartment == null) {
+
+
+            var Doc_Start_Time = $("#txt_stdoctime").val();
+            var Doc_End_Time = $("#txt_enddoctime").val();
+            var Helper_Start_Time = $("#txt_sthelpertime").val();
+            var Hepler_End_Time = $("#txt_endhelpertime").val();
+            var Machine_Start_Time = $("#txt_stmachinetime").val();
+            var Machine_End_Time = $("#txt_endmachinetime").val();
+            var Room_Start_Time = $("#txt_roomStTime").val();
+            var Room_End_Time = $("#txt_roomendTime").val();
+
+            if (!(Doc_Start_Time === Helper_Start_Time &&
+                Helper_Start_Time === Machine_Start_Time &&
+                Machine_Start_Time === Room_Start_Time)) {
 
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Please Select Mandatory Fields.',
+                    text: 'Doctor, Helper, Machine and Room START TIME must be the same.',
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 2500,
                     customClass: {
                         popup: 'swal-big-popup',
                         title: 'swal-big-title',
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
-                return true;
+                return;
             }
-            if (txt_time == '' || txt_time == undefined) {
+            if (!(Doc_End_Time === Hepler_End_Time &&
+                Hepler_End_Time === Machine_End_Time &&
+                Machine_End_Time === Room_End_Time)) {
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Please Select Time Slot',
+                    text: 'Doctor, Helper, Machine and Room END TIME must be the same.',
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 2500,
                     customClass: {
                         popup: 'swal-big-popup',
                         title: 'swal-big-title',
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
-                return
-            }
-
-            if (txt_time_24hr == '' || txt_time_24hr == undefined) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Roaster Not Defined',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-
-                return
+                return;
             }
             var aptid = '<%= Request.QueryString["aID"]%>';
             debugger;
-            PageMethods.CheckDoctorAvailability(ddl_colstnt, txt_date, txt_time, aptid, function (res) {
-                debugger;
-
-                if (res === "Doctor not Available") {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Doctor is not available, Please choose some other Day and time',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-
-
-                    return false;
-                }
-
-                else {
-
-
                     var editmode_ID = '<%= Request.QueryString["aID"]%>';
 
                     $('#btnSave').attr('disabled', true);
                     var AllItemDetail = {
-                        'txt_ID': txt_ID, 'type': type, 'txt_pt_name': txt_pt_name, 'PatientTitle': txtPatientTitle,
-                        'txt_phone_no': txt_phone_no, 'txt_age': txt_age, 'ddl_colstnt': ddl_colstnt,
-                        'txt_apt_no': txt_apt_no, 'txt_date': txt_date, 'txt_time': txt_time, 'subdepartment': subdepartment, 'reg_id': reg_id,
+                        'txt_ID': txt_ID,'ddl_colstnt': ddl_colstnt, 'ddl_helper': ddl_helper, 'ddlMachine': ddlMachine, 'ddlRoom': ddlRoom,
+                        'txt_apt_no': txt_apt_no, 'txt_date': txt_date,'reg_id': reg_id
+                        ,'Doc_Start_Time': Doc_Start_Time, 'Doc_End_Time': Doc_End_Time
+                        , 'Helper_Start_Time': Helper_Start_Time, 'Hepler_End_Time': Hepler_End_Time
+                        ,'Machine_Start_Time': Machine_Start_Time, 'Machine_End_Time': Machine_End_Time
+                        ,'Room_Start_Time': Room_Start_Time, 'Room_End_Time': Room_End_Time, 'item_id': item_id
                     };
 
                     PageMethods.SaveAppointment(btnsave, JSON.stringify(AllItemDetail), editmode_ID, function (res) {
@@ -1739,14 +1694,9 @@
                             text: 'A WhatsApp confirmation has been sent automatically.',
                             confirmButtonText: 'OK'
                         }).then(() => {
-                            window.location = "Appointment.aspx";
+                            window.location = "Derma_Appointment.aspx";
                         });
                     });
-
-                }
-
-            });
-
         }
         debugger;
         function convertTo24Hour(time) {
@@ -2131,6 +2081,7 @@
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Patient Name</label>
                 <input type="text" id="txt_pt_name" class="form-control" style="text-transform: capitalize;" autocomplete="off" />
+                <input type="hidden" id="Pat_Id" class="form-control" style="text-transform: capitalize;" autocomplete="off" />
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Phone #</label>
@@ -2145,6 +2096,7 @@
                 <select class="form-control" id="ddl_procedures">
                     <option></option>
                 </select>
+                <input type ="hidden" id="txtProcedureTime" name ="txtProcedureTime" />
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Date</label>

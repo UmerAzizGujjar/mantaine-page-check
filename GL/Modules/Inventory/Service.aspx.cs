@@ -54,7 +54,7 @@ namespace PMS.Modules.Inventory
         }
         //
         [WebMethod]
-        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService,string fluid)
+        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string IsHospital, string IsService,string fluid, string Procedure_Time)
         {
             string result = string.Empty;
             string Id = "";
@@ -107,6 +107,7 @@ namespace PMS.Modules.Inventory
                 obj.IsNonStockItem = Convert.ToBoolean(NonStockItem);
                 obj.Isfixasset = Convert.ToBoolean(Fixasset);
                 obj.Infusion_Fluid = Convert.ToBoolean(fluid);
+                obj.Procedure_Time = Procedure_Time;
                 if (MinimumStock == "")
                 {
                     MinimumStock = null;
@@ -274,6 +275,7 @@ namespace PMS.Modules.Inventory
                 obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
                 obj.Narcotics = Convert.ToBoolean(Narcotics);
                 obj.Infusion_Fluid = Convert.ToBoolean(fluid);
+                obj.Procedure_Time = Procedure_Time;
                 obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
                 obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
                 obj.Refregrator = Convert.ToBoolean(Refregrator);
@@ -357,6 +359,7 @@ namespace PMS.Modules.Inventory
                                      obj.Controller_Drug,
                                      obj.Narcotics,
                                      obj.Infusion_Fluid,
+                                     obj.Procedure_Time,
                                      obj.Refregrator,
                                      obj.IsPharmacyItem,
                                      obj.Procedure_Type,
