@@ -431,15 +431,12 @@ namespace PMS
                 employee.Doc_qualification = dataa.txtdoc_qualification;
 
 
-                if (!string.IsNullOrEmpty(dataa.TxtTime_In))
-                {
-                    employee.Timings_In = Convert.ToDateTime(dataa.TxtTime_In);
-                }
+                    employee.Timings_In = dataa.TxtTime_In;
+               
 
-                if (!string.IsNullOrEmpty(dataa.TxtTime_Out))
-                {
-                    employee.Timings_Out = Convert.ToDateTime(dataa.TxtTime_Out);
-                }
+              
+                    employee.Timings_Out = dataa.TxtTime_Out;
+          
 
                 if (!string.IsNullOrEmpty(dataa.txtPatient_Time.Trim()))
                     employee.Patient_Time = Convert.ToInt32(dataa.txtPatient_Time);
@@ -652,8 +649,8 @@ namespace PMS
             public string txtEmployee_Phone1 { get; set; }
             public string txtEmployee_Email { get; set; }
             public string txtPatient_Time { get; set; }
-            public string TxtTime_In { get; set; }
-            public string TxtTime_Out { get; set; }
+            public TimeSpan TxtTime_In { get; set; }
+            public TimeSpan TxtTime_Out { get; set; }
             public string txtEmployee_NTN_No { get; set; }
             public string ddlRoom { get; set; }
             public string txtEmployee_DOJ { get; set; }
