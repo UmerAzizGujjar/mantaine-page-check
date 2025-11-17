@@ -88,6 +88,8 @@ namespace PMS.Modules.PatientManagement
             public string Area_text { get; set; }
             public int Reg_PatientID { get; set; }
             public string CNIC_Masked { get; set; }
+            public string DOB { get; set; }
+
         }
 
         private static string MaskMobile(string mobile)
@@ -232,26 +234,26 @@ namespace PMS.Modules.PatientManagement
 
             var errors = new List<string>();
 
-            if (!ValidationHelper.IsValidName(Full_Name))
-                errors.Add("Full name is required and must contain only letters.");
-            if (!ValidationHelper.IsValidName(Relation))
-                errors.Add("Relation name is required and must contain only letters.");
-            if (!ValidationHelper.IsValidMobile(Mobile))
-                errors.Add("Mobile must be in format +923001234567 (13 digits starting with +92).");
-            if (!ValidationHelper.IsValidAge(Age))
-                errors.Add("Age must be a number between 0 and 150.");
-            if (!ValidationHelper.IsValidDate(Date_Of_Birth))
-                errors.Add("Date of Birth must be in dd/MM/yyyy format.");
-            if (!ValidationHelper.IsValidAddress(Address))
-                errors.Add("Address is required and must not exceed 500 characters.");
-            if (!string.IsNullOrWhiteSpace(CNIC) && !ValidationHelper.IsValidCNIC(CNIC))
-                errors.Add("CNIC must be in format 12345-1234567-1.");
-            if (Gender == "0" || string.IsNullOrWhiteSpace(Gender))
-                errors.Add("Please select a valid Gender.");
-            if (martail_status == "0")
-                errors.Add("Please select Marital Status.");
-            if (Blood_Group == "0")
-                errors.Add("Please select Blood Group.");
+            //if (!ValidationHelper.IsValidName(Full_Name))
+            //    errors.Add("Full name is required and must contain only letters.");
+            //if (!ValidationHelper.IsValidName(Relation))
+            //    errors.Add("Relation name is required and must contain only letters.");
+            //if (!ValidationHelper.IsValidMobile(Mobile))
+            //    errors.Add("Mobile must be in format +923001234567 (13 digits starting with +92).");
+            //if (!ValidationHelper.IsValidAge(Age))
+            //    errors.Add("Age must be a number between 0 and 150.");
+            //if (!ValidationHelper.IsValidDate(Date_Of_Birth))
+            //    errors.Add("Date of Birth must be in dd/MM/yyyy format.");
+            //if (!ValidationHelper.IsValidAddress(Address))
+            //    errors.Add("Address is required and must not exceed 500 characters.");
+            //if (!string.IsNullOrWhiteSpace(CNIC) && !ValidationHelper.IsValidCNIC(CNIC))
+            //    errors.Add("CNIC must be in format 12345-1234567-1.");
+            //if (Gender == "0" || string.IsNullOrWhiteSpace(Gender))
+            //    errors.Add("Please select a valid Gender.");
+            //if (martail_status == "0")
+            //    errors.Add("Please select Marital Status.");
+            //if (Blood_Group == "0")
+            //    errors.Add("Please select Blood Group.");
 
             if (errors.Any())
                 return "ERROR: " + string.Join("; ", errors);
@@ -326,28 +328,56 @@ namespace PMS.Modules.PatientManagement
         {
             using (var db = new DataBaseDataContext())
             {
-                var patient = (from rg in db.Reg_patients
-                               where rg.pat_id == reg_id
-                               select new SafePatientData
-                               {
-                                  
-                                   Name = HttpUtility.HtmlEncode(rg.Full_Name ?? ""),
-                                   FatherName = HttpUtility.HtmlEncode(rg.Father_Name ?? ""),
-                                   Relation = HttpUtility.HtmlEncode(rg.Relation_prefix ?? ""),
-                                   Gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", rg.Gender) ?? ""),
-                                   Age = rg.Age_years,
-                                   MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", rg.Martial_Status) ?? ""),
-                                   Mr_No = HttpUtility.HtmlEncode(rg.mr_no_sequence ?? ""),
-                                   CNIC_Masked = MaskCNIC(rg.NIC),
-                                   Address = HttpUtility.HtmlEncode(rg.Permanent_Address ?? ""),
-                                   Mobile = MaskMobile(rg.Mobile1),
-                                   BloodGroup_text = HttpUtility.HtmlEncode(db.GetDataValueName("Blood Group", rg.Blood_Group) ?? ""),
-                                   Country_text = HttpUtility.HtmlEncode(db.GetDataValueName("Country", rg.Country) ?? ""),
-                                   State_text = HttpUtility.HtmlEncode(db.GetDataValueName("Province", rg.State) ?? ""),
-                                   City_text = HttpUtility.HtmlEncode(db.GetDataValueName("City", rg.val_city) ?? ""),
-                                   Area_text = HttpUtility.HtmlEncode(db.GetDataValueName("Area", rg.val_area) ?? ""),
-                                   Reg_PatientID = rg.pat_id
-                               }).FirstOrDefault();
+                // Fetch raw data first — minimal projection, no formatting
+                var patientRaw = (from rg in db.Reg_patients
+                                  where rg.pat_id == reg_id
+                                  select new
+                                  {
+                                      rg.Full_Name,
+                                      rg.Father_Name,
+                                      rg.Relation_prefix,
+                                      rg.Gender,
+                                      rg.Age_years,
+                                      rg.Martial_Status,
+                                      rg.mr_no_sequence,
+                                      rg.NIC,
+                                      rg.Permanent_Address,
+                                      rg.Mobile1,
+                                      rg.Blood_Group,
+                                      rg.Country,
+                                      rg.State,
+                                      rg.val_city,
+                                      rg.val_area,
+                                      rg.pat_id,
+                                      rg.DOB  // Keep as raw DateTime? or string? depends on DB schema
+                                  }).FirstOrDefault();
+
+                if (patientRaw == null)
+                    return new JavaScriptSerializer().Serialize((object)null);
+
+                // Now format in-memory (after query is executed)
+                var patient = new SafePatientData
+                {
+                    Name = HttpUtility.HtmlEncode(patientRaw.Full_Name ?? ""),
+                    FatherName = HttpUtility.HtmlEncode(patientRaw.Father_Name ?? ""),
+                    Relation = HttpUtility.HtmlEncode(patientRaw.Relation_prefix ?? ""),
+                    Gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", patientRaw.Gender) ?? ""),
+                    Age = patientRaw.Age_years,
+                    MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patientRaw.Martial_Status) ?? ""),
+                    Mr_No = HttpUtility.HtmlEncode(patientRaw.mr_no_sequence ?? ""),
+                    CNIC_Masked = (patientRaw.NIC),
+                    Address = HttpUtility.HtmlEncode(patientRaw.Permanent_Address ?? ""),
+                    Mobile = (patientRaw.Mobile1),
+                    BloodGroup_text = HttpUtility.HtmlEncode(db.GetDataValueName("Blood Group", patientRaw.Blood_Group) ?? ""),
+                    Country_text = HttpUtility.HtmlEncode(db.GetDataValueName("Country", patientRaw.Country) ?? ""),
+                    State_text = HttpUtility.HtmlEncode(db.GetDataValueName("Province", patientRaw.State) ?? ""),
+                    City_text = HttpUtility.HtmlEncode(db.GetDataValueName("City", patientRaw.val_city) ?? ""),
+                    Area_text = HttpUtility.HtmlEncode(db.GetDataValueName("Area", patientRaw.val_area) ?? ""),
+                    Reg_PatientID = patientRaw.pat_id,
+                    DOB = patientRaw.DOB.HasValue
+                          ? patientRaw.DOB.Value.ToString("dd/MM/yyyy")
+                          : ""
+                };
 
                 return new JavaScriptSerializer().Serialize(patient);
             }
