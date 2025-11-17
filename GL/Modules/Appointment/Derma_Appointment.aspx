@@ -8,7 +8,7 @@
         $(document).ready(function () {
             debugger;
             var txt_apt_no = $('#txt_apt_no').val();
-            if (txt_apt_no && txt_apt_no > 0) {
+         
                 var dropdowns = [
               
                     { id: '#ddl_Province', method: 'GetProvince' },
@@ -48,26 +48,53 @@
                             if (doctor_id) {
                                 ConfigureAvailableDates(doctor_id);
                                 GetAppNoByDoctor();
-                                GetHelper(doctor_id);
                                 LoadPage();
+                            }
+                        });
+                    }
+
+                    if (item.id === '#ddl_helper') {
+                        $element.off('change').on('change', function () {
+                            var Helper_Id = $(this).val();
+                            if (Helper_Id) {
+                                GethelperAvailbilty();                            
+                            }
+                        });
+                    }
+
+                    if (item.id === '#ddlMachine') {
+                        $element.off('change').on('change', function () {
+                            var Mach_Id = $(this).val();
+                            if (Mach_Id) {
+                                GetMachineAvailbilty();                            
+                            }
+                        });
+                    }
+
+                    if (item.id === '#ddlMachine') {
+                        $element.off('change').on('change', function () {
+                            var Mach_Id = $(this).val();
+                            if (Mach_Id) {
+                                GetMachineAvailbilty();                            
                             }
                         });
                     }
 
 
                 });
-            }
-            else {
-                // LoadDetailDoctor();
+            
+            //else {
+            //    // LoadDetailDoctor();
 
 
-            }
+            //}
             GetServices();
             //LoadDetailDoctor();
 
             $('#ddl_colstnt').select2();
-            $('#chk_status').select2();
-            $('#ddlsubdepartment').select2();
+            $('#ddl_helper').select2();
+            $('#ddlRoom').select2();
+            $('#ddlMachine').select2();
             //
             // Flag to prevent double-click or dual-button duplicate save
             let isSaving = false;
@@ -158,7 +185,7 @@
 
 
 
-             debugger;
+  <%--           debugger;
              $('#ddl_colstnt').on('change', function () {
                  debugger;
                  var doctor_id = $('#ddl_colstnt').val();
@@ -180,7 +207,7 @@
 
 
 
-            });
+            });--%>
              $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
                  debugger;
 
@@ -330,6 +357,7 @@
          });
 
         function fillDropdown($dropdown, methodName) {
+            debugger;
             if ($dropdown.data('filled')) return;
 
             $dropdown.data('filled', false);
@@ -342,6 +370,7 @@
                 dataType: "json",
                 success: function (response) {
                     try {
+                        debugger;
                         const data = JSON.parse(response.d);
                         var options = '<option value="0">Please Select</option>';
 
@@ -386,35 +415,172 @@
         function closemodal() {
             window.location.href = "Derma_Appointment.aspx";
         }
+        //function ConfigureAvailableDates(doc_id) {
+        //    debugger;
+        //    var txt_date = $("#txt_date").val();
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "Derma_Appointment.aspx/GetAvailableDatesAndTimes",
+        //        data: JSON.stringify({
+        //            'doc_id': doc_id,
+        //            'txt_date': txt_date
+        //        }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            var availableDates = JSON.parse(response.d);
+
+        //            $("#txt_date").datepicker("destroy");
+
+        //            $("#txt_date").datepicker({
+        //                dateFormat: "yy-mm-dd", // format to match your returned data
+        //                beforeShowDay: function (date) {
+        //                    var dmy = $.datepicker.formatDate("yy-mm-dd", date);
+        //                    if (availableDates.indexOf(dmy) !== -1) {
+        //                        return [true, "available-date", "Doctor Available"];
+        //                    } else {
+        //                        return [false, "", "Doctor Not Available"];
+        //                    }
+        //                }
+        //            });
+        //        },
+        //        error: function (xhr, status, error) {
+        //            console.error("Error fetching available dates:", error);
+        //        }
+        //    });
+        //}
+
         function ConfigureAvailableDates(doc_id) {
+            debugger;
+            var txt_date = $("#txt_date").val();
+
             $.ajax({
                 type: "POST",
-                url: "Derma_Appointment.aspx/GetAvailableDates",
-                data: JSON.stringify({ doc_id: doc_id }),
+                url: "Derma_Appointment.aspx/GetAvailableDatesAndTimes",
+                data: JSON.stringify({
+                    'doc_id': doc_id,
+                    'txt_date': txt_date
+                }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+
                 success: function (response) {
-                    var availableDates = JSON.parse(response.d);
+                    var result = JSON.parse(response.d);
 
-                    $("#txt_date").datepicker("destroy");
+                    // If backend returned an error
+                    if (result.error) {
+                        alert(result.error);
+                        $("#txt_stdoctime").val("");
+                        $("#txt_enddoctime").val("");
+                        return;
+                    }
 
-                    $("#txt_date").datepicker({
-                        dateFormat: "yy-mm-dd", // format to match your returned data
-                        beforeShowDay: function (date) {
-                            var dmy = $.datepicker.formatDate("yy-mm-dd", date);
-                            if (availableDates.indexOf(dmy) !== -1) {
-                                return [true, "available-date", "Doctor Available"];
-                            } else {
-                                return [false, "", "Doctor Not Available"];
-                            }
-                        }
-                    });
+                    // 🔥 Assign TimeIn & TimeOut to input fields
+                    $("#txt_stdoctime").val(result.TimeIn);
+                    $("#txt_enddoctime").val(result.TimeOut);
+
+
                 },
+
                 error: function (xhr, status, error) {
                     console.error("Error fetching available dates:", error);
                 }
             });
         }
+
+        function GethelperAvailbilty() {
+            debugger;
+            var Emp_Id = $("#ddl_helper").val()
+            var txt_date = $("#txt_date").val();
+            //var helperTimeIn = $("#txt_sthelpertime").val()
+            //var helperTimeOut = $("#txt_endhelpertime").val()
+
+            var helperTimeIn = moment($("#txt_sthelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+            var helperTimeOut = moment($("#txt_endhelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+
+            $.ajax({
+                type: "POST",
+                url: "Derma_Appointment.aspx/CheckHelperAvailability",
+                data: JSON.stringify({
+                    'Emp_Id': Emp_Id,
+                    'txt_date': txt_date,
+                    'helperTimeIn': helperTimeIn,
+                    'helperTimeOut': helperTimeOut,
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+
+                    // If backend returned an error
+                    if (result.error) {
+                        alert(result.error);
+                        $("#txt_stdoctime").val("");
+                        $("#txt_enddoctime").val("");
+                        return;
+                    }
+
+                    // 🔥 Assign TimeIn & TimeOut to input fields
+                    $("#txt_stdoctime").val(result.TimeIn);
+                    $("#txt_enddoctime").val(result.TimeOut);
+
+
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
+        }
+
+        function GetMachineAvailbilty() {
+            debugger;
+            var Mch_Id = $("#ddlMachine").val()
+            var txt_date = $("#txt_date").val();
+            //var helperTimeIn = $("#txt_sthelpertime").val()
+            //var helperTimeOut = $("#txt_endhelpertime").val()
+
+            var MachineTimeIn = moment($("#txt_sthelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+            var MachineTimeOut = moment($("#txt_endhelpertime").val(), ["hh:mm A", "HH:mm"]).format("HH:mm:ss");
+
+            $.ajax({
+                type: "POST",
+                url: "Derma_Appointment.aspx/CheckMachineAvailability",
+                data: JSON.stringify({
+                    'Mch_Id': Mch_Id,
+                    'txt_date': txt_date,
+                    'MachineTimeIn': MachineTimeIn,
+                    'MachineTimeOut': MachineTimeOut,
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+
+                    // If backend returned an error
+                    if (result.error) {
+                        alert(result.error);
+                        $("#txt_stdoctime").val("");
+                        $("#txt_enddoctime").val("");
+                        return;
+                    }
+
+                    // 🔥 Assign TimeIn & TimeOut to input fields
+                    $("#txt_stdoctime").val(result.TimeIn);
+                    $("#txt_enddoctime").val(result.TimeOut);
+
+
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
+        }
+
+
         function addfunc() {
             debugger;
 
@@ -1323,23 +1489,23 @@
         }
 
 
-        function LoadDetailDoctor() {
-            debugger;
-            var options = '<option value="0">Select Doctor</option>';
-            PageMethods.GetDoctors(function (data) {
-                $.each(JSON.parse(data), function (key, value) {
+        //function LoadDetailDoctor() {
+        //    debugger;
+        //    var options = '<option value="0">Select Doctor</option>';
+        //    PageMethods.GetDoctors(function (data) {
+        //        $.each(JSON.parse(data), function (key, value) {
 
-                    if (key >= 0) {
-                        options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
-                    }
-                });
-                $('#ddl_colstnt').html(options);
+        //            if (key >= 0) {
+        //                options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+        //            }
+        //        });
+        //        $('#ddl_colstnt').html(options);
 
-                $('#chk_Doc').html(options);
+        //        $('#chk_Doc').html(options);
 
-            });
+        //    });
 
-        }
+        //}
 
 
         var abc = false;
@@ -1619,11 +1785,6 @@
                 success: function (data) {
                     debugger;
                     var dataaa = JSON.parse(data.d);
-
-
-
-
-
                     debugger;
                     if (dataaa && dataaa.Off_Days_Names && dataaa.Off_Days_Names.includes) {
                         var dateObject = new Date(date);

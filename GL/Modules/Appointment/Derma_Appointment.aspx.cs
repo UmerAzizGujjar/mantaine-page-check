@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMS.Modules.Dashboards;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -138,26 +139,157 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string GetAvailableDates(int doc_id)
+        public static string GetAvailableDatesAndTimes(int doc_id, string txt_date)
         {
-            List<string> availableDates = new List<string>();
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                // First get DateTime list from DB (no formatting in SQL)
-                var rawDates = (from r in db.Doctor_Rouster_Masters
-                                join d in db.Doctor_Rouster_Details
-                                on r.Rouster_id equals d.Rouster_id
-                                where r.Doctor_Id == doc_id
-                                && d.Rouster_Date >= DateTime.Today
-                                select d.Rouster_Date.Value).Distinct().ToList();
+                DateTime selectedDate;
+                if (!DateTime.TryParse(txt_date, out selectedDate))
+                    return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
 
-                // Format in C#
-                availableDates = rawDates.Select(d => d.ToString("yyyy-MM-dd")).ToList();
+                // Step 1: Get doctor's off days
+                var doctor = (from hr in db.HR_Employees
+                              where hr.Emp_ID == doc_id && hr.IsDoctor == true
+                              select new
+                              {
+                                  hr.Off_Days_Names, 
+                                  hr.Timings_In,
+                                  hr.Timings_Out
+                              }).FirstOrDefault();
+
+                if (doctor == null)
+                    return new JavaScriptSerializer().Serialize(new { error = "Doctor not found" });
+
+                string dayName = selectedDate.ToString("ddd");
+                var offDays = doctor.Off_Days_Names?.Split(',') ?? new string[0];
+
+                if (offDays.Contains(dayName, StringComparer.OrdinalIgnoreCase))
+                    return new JavaScriptSerializer().Serialize(new { error = "Doctor not available" });
+
+                var lastAppointmentEnd = (from ap in db.Derma_Appointments
+                                          where ap.Doctor_Id == Convert.ToString( doc_id)
+                                          && ap.Appointment_Date == selectedDate.Date
+                                          orderby ap.Doctor_End_Time descending
+                                          select ap.Doctor_End_Time).FirstOrDefault();
+
+                TimeSpan availableStart;
+                TimeSpan availableEnd;
+
+                if (lastAppointmentEnd.HasValue)
+                {
+                    availableStart = lastAppointmentEnd.Value;
+                }
+                else
+                {
+                    availableStart = doctor.Timings_In ?? TimeSpan.Zero;
+                }
+
+                availableEnd = availableStart.Add(new TimeSpan(0, 15, 0));
+
+                if (doctor.Timings_Out.HasValue && availableEnd > doctor.Timings_Out.Value)
+                {
+                    availableEnd = doctor.Timings_Out.Value;
+                }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    TimeIn = availableStart.ToString(@"hh\:mm"),
+                    TimeOut = availableEnd.ToString(@"hh\:mm")
+                });
             }
-
-            return new JavaScriptSerializer().Serialize(availableDates);
         }
+
+        [WebMethod]
+        public static string CheckMachineAvailability(string Mch_Id, string txt_date, TimeSpan MachineTimeIn, TimeSpan MachineTimeOut)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (!DateTime.TryParse(txt_date, out DateTime selectedDate))
+                    return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
+                var overlapping = (from ap in db.Derma_Appointments
+                                   where ap.Machine_Id == Mch_Id
+                                   && ap.Appointment_Date == selectedDate.Date
+                                   && (
+                                           (MachineTimeIn >= ap.Machine_Start_Time && MachineTimeIn < ap.Machine_End_Time) ||
+                                           (MachineTimeOut > ap.Machine_Start_Time && MachineTimeOut <= ap.Machine_End_Time) ||
+                                           (MachineTimeIn <= ap.Machine_Start_Time && MachineTimeOut >= ap.Machine_End_Time)
+                                       )
+                                   select ap).Any();
+
+                if (overlapping)
+                {
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        error = "Machine already has an appointment in this time"
+                    });
+                }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    success = "Machine is Available"
+                });
+            }
+        }
+        [WebMethod]
+        public static string CheckHelperAvailability(int Emp_Id, string txt_date, TimeSpan helperTimeIn, TimeSpan helperTimeOut)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                DateTime selectedDate;
+                if (!DateTime.TryParse(txt_date, out selectedDate))
+                    return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
+
+                var helper = (from hr in db.HR_Employees
+                              where hr.Emp_ID == Emp_Id && hr.is_Employee == true
+                              select new
+                              {
+                                  hr.Off_Days_Names,
+                                  hr.Timings_In,     
+                                  hr.Timings_Out     
+                              }).FirstOrDefault();
+
+                if (helper == null)
+                    return new JavaScriptSerializer().Serialize(new { error = "Helper not found" });
+
+                string dayName = selectedDate.ToString("ddd");
+                var offDays = helper.Off_Days_Names?.Split(',') ?? new string[0];
+
+                if (offDays.Contains(dayName, StringComparer.OrdinalIgnoreCase))
+                    return new JavaScriptSerializer().Serialize(new { error = "Helper is OFF today" });
+                TimeSpan shiftStart = helper.Timings_In ?? TimeSpan.Zero;
+                TimeSpan shiftEnd = helper.Timings_Out ?? TimeSpan.Zero;
+                if (helperTimeIn < shiftStart || helperTimeOut > shiftEnd)
+                {
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        error = "Helper time is outside working hours"
+                    });
+                }
+                var overlapping = (from ap in db.Derma_Appointments
+                                   where ap.Helper_Id == Emp_Id.ToString()
+                                   && ap.Appointment_Date == selectedDate.Date
+                                   && (
+                                           (helperTimeIn >= ap.Helper_Start_Time && helperTimeIn < ap.Helper_End_Time) ||
+                                           (helperTimeOut > ap.Helper_Start_Time && helperTimeOut <= ap.Helper_End_Time) ||
+                                           (helperTimeIn <= ap.Helper_Start_Time && helperTimeOut >= ap.Helper_End_Time)
+                                       )
+                                   select ap).Any();
+
+                if (overlapping)
+                {
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        error = "Helper already has an appointment in this time"
+                    });
+                }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    success = "Helper is Available"
+                });
+            }
+        }
+
         [WebMethod]
         public static string CheckDays(string ddl_colstnts, DateTime date)
         {
@@ -517,20 +649,29 @@ on DM.Rouster_id equals DD.Rouster_id
         public static string GetDoctors()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            List<HR_Employee> emps = (from emp in db.HR_Employees
+            var emps = (from emp in db.HR_Employees
                                       where emp.IsDoctor == true
-                                      select emp).ToList();
+                        select new
+                        {
+                            DataValue_Name = emp.Emp_ID.ToString(),
+                            DataValue_Description = emp.Emp_Name
+                        }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(emps);
         }
+
 
         [WebMethod]
         public static string GetHelper()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            List<HR_Employee> emps = (from emp in db.HR_Employees
-                                      where emp.is_Employee == true
-                                      select emp).ToList();
+            var emps = (from emp in db.HR_Employees
+                        where emp.is_Employee == true
+                        select new
+                        {
+                            DataValue_Name = emp.Emp_ID.ToString(),
+                            DataValue_Description = emp.Emp_Name
+                        }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(emps);
         }
@@ -539,8 +680,12 @@ on DM.Rouster_id equals DD.Rouster_id
         public static string GetRooms()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            List<Room> emps = (from emp in db.Rooms                       
-                                      select emp).ToList();
+            var emps = (from emp in db.Rooms
+                               select new
+                               {
+                                   DataValue_Name = emp.Room_ID.ToString(),
+                                   DataValue_Description = emp.Room_No.ToString()
+                               }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(emps);
         }

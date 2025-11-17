@@ -385,6 +385,7 @@
     <Content Include="Modules\BloodBank\BloodTransfusionForm.aspx" />
     <Content Include="Modules\BloodBank\BloodTransfusionList.aspx" />
     <Content Include="Modules\Accounts\ChangeAccount.aspx" />
+    <Content Include="RadiologyAcknolgment.aspx" />
     <Content Include="upload\ChartofAccountExcelUpload.aspx" />
     <Content Include="Modules\PatientManagement\ChildBirth.aspx" />
     <Content Include="Modules\PatientManagement\ChildBirthView.aspx" />
@@ -25194,7 +25195,7 @@
     <Content Include="DataBase.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>DataBase2.designer.cs</LastGenOutput>
+      <LastGenOutput>DataBase1.designer.cs</LastGenOutput>
     </Content>
     <Content Include="upload\FileUploadHandler.ashx" />
     <Content Include="upload\ImageUpload.ashx" />
@@ -26729,6 +26730,13 @@
     </Compile>
     <Compile Include="Modules\StudentAffair\TimeTableList.aspx.designer.cs">
       <DependentUpon>TimeTableList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RadiologyAcknolgment.aspx.cs">
+      <DependentUpon>RadiologyAcknolgment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RadiologyAcknolgment.aspx.designer.cs">
+      <DependentUpon>RadiologyAcknolgment.aspx</DependentUpon>
     </Compile>
     <Compile Include="UploadStudentImg.ashx.cs">
       <DependentUpon>UploadStudentImg.ashx</DependentUpon>
