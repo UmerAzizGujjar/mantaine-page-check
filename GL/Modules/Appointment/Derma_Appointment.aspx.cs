@@ -916,6 +916,8 @@ on DM.Rouster_id equals DD.Rouster_id
                 Obj.Room_End_Time = record.Room_End_Time;
                 Obj.Procedure_Id = record.item_id;
                 AppID = Obj.Derma_Appointment_Id.ToString();
+                Obj.Created_By  = AppConfig.UserID;
+                Obj.Created_Date = DateTime.Now;
                 db.Derma_Appointments.InsertOnSubmit(Obj);
                 db.SubmitChanges();
 
