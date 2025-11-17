@@ -3612,6 +3612,13 @@
             }
 
         }
+
+        function PrintoutPatient() {
+            debugger;
+            var id = '<%=Request.QueryString["ID"]%>';
+             var url = '../../ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
+             window.open(url, '_blanks');
+         }
     </script>
 
 </asp:Content>
@@ -3896,6 +3903,8 @@
                         <input type="button" class="btn btn-primry" value="Reset" onclick="ResetForm()" />
                         <input id="btnSave" type="button" class="btn btn-primry" value="Save" onclick="SaveMedicines()" />
 
+                        <input type="button" class="btn btn-primry" value="Prescription" name="name" onclick="PrintoutPatient();" />
+                        <input type="button" class="btn btn-primry" value="List View" name="name" onclick="window.location = 'OutPatientsView.aspx'" />
                     </div>
                 </div>
 
