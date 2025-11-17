@@ -528,6 +528,51 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Department", departmentID);
             }
+            else if (reportName == "DepartmentWiseReport")
+            {
+                string rptFileName = "DepartmentWiseReport.rpt";
+                bool CheckSummary = Convert.ToBoolean(Request.QueryString["Summary"]);
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string Shift = Request.QueryString["Shift"].ToString();
+                string DoctorName = Request.QueryString["DoctorName"].ToString();
+
+                if (CheckSummary == true)
+                {
+                    rptFileName = "DepartmentWiseReport_Summary.rpt";
+                    reportTitle = "OPD Summary Report From " + StartDateTime + " to " + EndDateTime;
+                }
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+
+                rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("Shift", Shift);
+                rd.SetParameterValue("@FromDate", StartDateTime);
+                rd.SetParameterValue("@ToDate", EndDateTime);
+                rd.SetParameterValue("@ToDate", EndDateTime);
+
+                rd.SetParameterValue("@Operator", Request.QueryString["Operator"]);
+                rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                string departmentID = Request.QueryString["Department"].ToString();
+                rd.SetParameterValue("@Department", departmentID);
+                rd.SetParameterValue("@DoctorName", DoctorName);
+
+                string Discharge = Request.QueryString["Discount"].ToString();
+
+
+                if (Discharge == "1")
+                {
+                    rd.RecordSelectionFormula = "{OPD_Detail_Report;1.Discount}> 0";
+                }
+                else if (Discharge == "2")
+                {
+                    rd.RecordSelectionFormula = "{OPD_Detail_Report;1.Discount} = 0";
+                }
+            }
+
 
             else if (reportName == "IPDDetailReport")
             {
@@ -838,7 +883,6 @@ namespace PMS
                     string DateFormate = "yyyy-MM-dd";
                     //string DateTimeFormate = "yyyy-MM-dd hh:mm tt";
                     //string AllPatientsRecords = Request.QueryString["AllPatientsRecords"].ToString();
-                    //Mohsin
                     string DateTimeFormate = "yyyy-MM-dd HH:mm:ss";
                     int AllPatientsRecords;
                     if (Request.QueryString["AllPatientsRecords"] == "false")
@@ -849,7 +893,6 @@ namespace PMS
                     {
                         AllPatientsRecords = 1;
                     }
-                    //Mohsin
                     string CurrentUserID = AppConfig.UserID.ToString();
                     string CurrentUserName = DBClass.getField("select username from aspnet_users where userid='" + AppConfig.UserID + "'").ToString();
                     int dateOnly = 0;
@@ -869,14 +912,13 @@ namespace PMS
                     {
                         edateTime = Convert.ToDateTime(edateTime).ToString(DateTimeFormate);
                     }
-                    //Mohsin
                     int deptID = Convert.ToInt32(Request.QueryString["DepartmentID"]);
                     string PatType = Request.QueryString["PatientType"].ToString();
-                    //Mohsin
                     string Operator = Convert.ToString(Request.QueryString["Operator"]);
                     string STIME = Request.QueryString["STime"].ToString();
                     string ETIME = Request.QueryString["ETime"].ToString();
                     bool summary = Convert.ToBoolean(Request.QueryString["Summary"]);
+                    string doctorID = Request.QueryString["DoctorID"].ToString();
                     //bool date_Only_Boolean_converted = Convert.ToBoolean(dateOnly);
                     bool AllPatientsRecords_Boolean_Converted = Convert.ToBoolean(AllPatientsRecords);
                     bool summary_Boolean_Converted = Convert.ToBoolean(summary);
@@ -884,7 +926,6 @@ namespace PMS
 
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                    //Mohsin
                     reportPath += "Patients/rptPatientsDetails.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
@@ -896,6 +937,7 @@ namespace PMS
                     rd.SetParameterValue("@DateOnly", dateOnly);
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("Summary", summary);
+                    rd.SetParameterValue("@DoctorID", doctorID);
                     rd.SetParameterValue("@UserID", CurrentUserID);
                     rd.SetParameterValue("@AllPatientsRecords", AllPatientsRecords_Boolean_Converted);
                     rd.SetParameterValue("@Operator", Operator);
