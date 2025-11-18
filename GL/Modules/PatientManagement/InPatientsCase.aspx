@@ -114,7 +114,7 @@
         localStorage.IsDischarge = 0;
         $(document).ready(function () {
             debugger;
-            
+            $("#tabs").tabs();
             CheckReferIPDPermission();
             
 
@@ -579,7 +579,6 @@
 
         var tabsEmr;
         function CheckReferIPDPermission() {
-            debugger;
             $.ajax({
                 type: "POST",
                 url: "InPatientsCase.aspx/CheckReferIPDRights",
@@ -588,8 +587,8 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    debugger;
                     tabsEmr = data.d;
+                    $('#ui-id-12').show();
 
                     if (tabsEmr == '"True"') {
                         $('#ui-id-1').show();
@@ -603,8 +602,10 @@
                         $('#ui-id-9').show();
                         $('#ui-id-10').show();
                         $('#ui-id-11').show();
-                    }
-                    else {                      
+                        $('#ui-id-13').show();
+                        $('#ui-id-15').show();
+                        $('#Tab-19').show();
+                    } else {
                         $('#ui-id-1').hide();
                         $('#ui-id-2').hide();
                         $('#ui-id-3').hide();
@@ -619,11 +620,15 @@
                         $('#ui-id-13').hide();
                         $('#ui-id-15').hide();
                         $('#Tab-19').hide();
-                    }
 
+                        var referIndex = $("#tabs ul li a[href='#Tab-12']").closest('li').index();
+                        if (referIndex >= 0) {
+                            $("#tabs").tabs("option", "active", referIndex);
+                        }
+                    }
                 },
                 failure: function () {
-                    alert(bi);
+                    alert("bi");
                 }
             });
         }
