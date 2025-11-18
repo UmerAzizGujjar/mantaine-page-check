@@ -114,8 +114,9 @@
         localStorage.IsDischarge = 0;
         $(document).ready(function () {
             debugger;
-          
-           
+            
+            CheckReferIPDPermission();
+            
 
             $('#ctl00_MainContent_ctl00_MainContent_txtEOR').on('focus click', function () {
                 $(this)[0].setSelectionRange(0, 0);
@@ -355,12 +356,15 @@
                 }
             });
 
+            
 
             var id = '<%=Request.QueryString["ID"]%>';
             if (id == "") {
                 RemoveExtraDepts();
             }
-
+                
+                
+            
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != "") {
                 setTimeout(function () {
@@ -571,6 +575,58 @@
             CheckExistInOutPatient();
         }
 
+        
+
+        var tabsEmr;
+        function CheckReferIPDPermission() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "InPatientsCase.aspx/CheckReferIPDRights",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    tabsEmr = data.d;
+
+                    if (tabsEmr == '"True"') {
+                        $('#ui-id-1').show();
+                        $('#ui-id-2').show();
+                        $('#ui-id-3').show();
+                        $('#ui-id-4').show();
+                        $('#ui-id-5').show();
+                        $('#ui-id-6').show();
+                        $('#ui-id-7').show();
+                        $('#ui-id-8').show();
+                        $('#ui-id-9').show();
+                        $('#ui-id-10').show();
+                        $('#ui-id-11').show();
+                    }
+                    else {                      
+                        $('#ui-id-1').hide();
+                        $('#ui-id-2').hide();
+                        $('#ui-id-3').hide();
+                        $('#ui-id-4').hide();
+                        $('#ui-id-5').hide();
+                        $('#ui-id-6').hide();
+                        $('#ui-id-7').hide();
+                        $('#ui-id-8').hide();
+                        $('#ui-id-9').hide();
+                        $('#ui-id-10').hide();
+                        $('#ui-id-11').hide();
+                        $('#ui-id-13').hide();
+                        $('#ui-id-15').hide();
+                        $('#Tab-19').hide();
+                    }
+
+                },
+                failure: function () {
+                    alert(bi);
+                }
+            });
+        }
 
         function AddServiceOrItem() {
 

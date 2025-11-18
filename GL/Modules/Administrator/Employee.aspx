@@ -149,6 +149,16 @@
               return options;
           }
 
+          function to12Hour(time24) {
+              if (!time24) return '';
+              const [h, m] = time24.split(':');
+              let hour = parseInt(h, 10);
+              const ampm = hour >= 12 ? 'PM' : 'AM';
+              hour = hour % 12;
+              hour = hour ? hour : 12;
+              return `${hour}:${m} ${ampm}`;
+          }
+
           function populatedata(empID) {
               PageMethods.PopulateEmployeeData(parseInt(empID), function (data) {
                   var empData = JSON.parse(data);
@@ -181,8 +191,8 @@
                   
                   $("#ddluser").val(empData.ddluser);
                   $("#txtPatient_Time").val(empData.txtPatient_Time);
-                  $("#TxtTime_In").val(empData.TxtTime_In);
-                  $("#TxtTime_Out").val(empData.TxtTime_Out);
+                  $("#TxtTime_In").val(to12Hour(empData.TxtTime_In));
+                  $("#TxtTime_Out").val(to12Hour(empData.TxtTime_Out));
                   $("#ddlRoom").val(empData.ddlRoom);
                   $("#Ext_txt").val(empData.Ext_txt);
                   $("#txtEmployee_NTN_No").val(empData.txtEmployee_NTN_No);
@@ -293,6 +303,18 @@
 
 
           }
+          function to24Hour(timeStr) {
+              if (!timeStr) return '';
+              const [time, modifier] = timeStr.split(' ');
+              let [hours, minutes] = time.split(':');
+              if (hours === '12') {
+                  hours = '00';
+              }
+              if (modifier === 'PM') {
+                  hours = (parseInt(hours, 10) + 12).toString();
+              }
+              return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+          }
           function saveData() {             
               debugger;          
               var hdfAccount_ID = $('#hdfAccount_ID').val();
@@ -313,8 +335,8 @@
               var txtEmployee_Phone1 = $('#txtEmployee_Phone1').val();
               var txtEmployee_Email = $('#txtEmployee_Email').val();
               var txtPatient_Time = $('#txtPatient_Time').val();
-              var TxtTime_In = $('#TxtTime_In').val();
-              var TxtTime_Out = $('#TxtTime_Out').val();
+              var TxtTime_In = to24Hour($('#TxtTime_In').val());  
+              var TxtTime_Out = to24Hour($('#TxtTime_Out').val());
               var txtEmployee_NTN_No = $('#txtEmployee_NTN_No').val();
               var ddlRoom = $('#ddlRoom').val();
               var txtEmployee_DOJ = $('#txtEmployee_DOJ').val();
