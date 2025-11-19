@@ -21,42 +21,74 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var query = (
-                from pat in db.Patients
-                join bill in db.Ar_Billings on pat.Patient_ID equals bill.Patient_ID
-                join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
-                join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
-                join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
-                where lbt.System_Generated == true
-                      && (labtest_detail.isApproved == false || labtest_detail.isApproved == null)
-                      && bill_details.Test_Main_Department != "001"
-                      && (bill.isCancel == false || bill.isCancel == null)
-                      && (labtest_detail.IsAcknowledge == false || labtest_detail.IsAcknowledge == null)
-                select new
-                {
-                    bill.Bill_Date,
-                    bill.Bill_No,
-                    bill.Bill_ID,
-                    bill_details.Item_Name,
-                    pat.Full_Name,
-                    bill_details.Bill_Details_ID,
-                    labtest_detail.Lab_Test_Detail_ID,
-                    Department =
-                        (from ipd in db.In_Patients
-                         where ipd.Patient_ID == pat.Patient_ID
-                         orderby ipd.In_Patient_ID descending
-                         select db.GetDataValueName("Patient Main Category", ipd.Department)).FirstOrDefault()
-                        ??
-                        (from emg in db.Emergency_Patients
-                         where emg.Patient_ID == pat.Patient_ID
-                         orderby emg.Emergency_ID descending
-                         select db.GetDataValueName("Patient Main Category", emg.Department)).FirstOrDefault()
-                        ??
-                        (from p2 in db.Patients
-                         where p2.Patient_ID == pat.Patient_ID
-                         select db.GetDataValueName("Patient Main Category", p2.Patient_Main_Category)).FirstOrDefault()
-                }
-            );
+            //var query = (
+            //    from pat in db.Reg_patients
+            //    join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+            //    join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+            //    join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+            //    join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+            //    where lbt.System_Generated == true
+            //          && (labtest_detail.isApproved == false || labtest_detail.isApproved == null)
+            //          && bill_details.Test_Main_Department != "001"
+            //          && (bill.isCancel == false || bill.isCancel == null)
+            //          && (labtest_detail.IsAcknowledge == false || labtest_detail.IsAcknowledge == null)
+            //    select new
+            //    {
+            //        bill.Bill_Date,
+            //        bill.Bill_No,
+            //        bill.Bill_ID,
+            //        bill_details.Item_Name,
+            //        pat.Full_Name,
+            //        bill_details.Bill_Details_ID,
+            //        labtest_detail.Lab_Test_Detail_ID,
+            //        Department =
+            //            (from ipd in db.In_Patients
+            //             where ipd.Patient_ID == pat.pat_id
+            //             orderby ipd.In_Patient_ID descending
+            //             select db.GetDataValueName("Patient Main Category", ipd.Department)).FirstOrDefault()
+            //            ??
+            //            (from emg in db.Emergency_Patients
+            //             where emg.Patient_ID == pat.pat_id
+            //             orderby emg.Emergency_ID descending
+            //             select db.GetDataValueName("Patient Main Category", emg.Department)).FirstOrDefault()
+            //            ??
+            //            (from p2 in db.Patients
+            //             where p2.Patient_ID == pat.pat_id
+            //             select db.GetDataValueName("Patient Main Category", p2.Patient_Main_Category)).FirstOrDefault()
+            //    }
+            //);
+            var query = from pat in db.Reg_patients
+                        join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+                        join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+                        join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+                        join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+                        where lbt.System_Generated == true
+                              && (labtest_detail.isApproved == false || labtest_detail.isApproved == null)
+                              && bill_details.Test_Main_Department != "001"
+                              && (bill.isCancel == false || bill.isCancel == null)
+                              && (labtest_detail.IsAcknowledge == false || labtest_detail.IsAcknowledge == null)
+                        let dept = (from ipd in db.In_Patients
+                                    where ipd.Patient_ID == pat.pat_id
+                                    orderby ipd.In_Patient_ID descending
+                                    select ipd.Department).FirstOrDefault()
+                              ?? (from emg in db.Emergency_Patients
+                                  where emg.Patient_ID == pat.pat_id
+                                  orderby emg.Emergency_ID descending
+                                  select emg.Department).FirstOrDefault()
+                              ?? (from p2 in db.Patients
+                                  where p2.Patient_ID == pat.pat_id
+                                  select p2.Patient_Main_Category).FirstOrDefault()
+                        select new
+                        {
+                            bill.Bill_Date,
+                            bill.Bill_No,
+                            bill.Bill_ID,
+                            bill_details.Item_Name,
+                            pat.Full_Name,
+                            bill_details.Bill_Details_ID,
+                            labtest_detail.Lab_Test_Detail_ID,
+                            Department = db.GetDataValueName("Patient Main Category", dept)
+                        };
 
             if (!string.IsNullOrEmpty(searchValue))
             {
@@ -123,7 +155,8 @@ namespace PMS
                     {
                         record.Priorities = item.status;
                         record.IsAcknowledge = true;
-
+                        record.Acknowledged_By = AppConfig.UserID;
+                        record.Acknowledged_Time = DateTime.Now;
                     }
                 }
                 db.SubmitChanges();

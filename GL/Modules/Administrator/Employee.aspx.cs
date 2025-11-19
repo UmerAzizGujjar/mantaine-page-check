@@ -35,21 +35,22 @@ namespace PMS
                 var sun = false; var mon = false; var tue = false; var wed = false; var thur = false; var fri = false; var sat = false;
                 var txtEmployee_Resign = "";
                 var txtPanelAmount = "";
-                if (employee.Timings_In == null)
+                if (employee.Timings_In.HasValue)
+                {
+                    TxtTime_In = employee.Timings_In.Value.ToString(@"hh\:mm");
+                }
+                else
                 {
                     TxtTime_In = "";
                 }
-                else
+
+                if (employee.Timings_Out.HasValue)
                 {
-                    TxtTime_In = employee.Timings_In.Value.ToString("hh:mm tt"); // "hh:mm:ss tt"
+                    TxtTime_Out = employee.Timings_Out.Value.ToString(@"hh\:mm"); 
                 }
-                if (employee.Timings_Out == null)
+                else
                 {
                     TxtTime_Out = "";
-                }
-                else
-                {
-                    TxtTime_Out = employee.Timings_Out.Value.ToString("hh:mm tt");
                 }
                 if (employee.Room_No == null)
                 {

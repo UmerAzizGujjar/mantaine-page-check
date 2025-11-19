@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.Services;
 using System.Web.Script.Serialization;
 using System.Web.Script.Services;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace PMS
 {
@@ -39,6 +40,65 @@ namespace PMS
         {
 
         }
+        [WebMethod]
+        public static string AllUltraSoundTest()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                JavaScriptSerializer serl = new JavaScriptSerializer();
+                serl.MaxJsonLength = int.MaxValue;
+
+                // Date range (if needed)
+                DateTime startDate = DateTime.Now.AddMonths(-2);
+                DateTime endDate = DateTime.Now.Date;
+
+                // Filter laboratory tests first
+                var approvedLabTests = db.Laboratory_Tests
+               .Where(l => l.System_Generated == true)
+               .Select(l => l.Lab_Test_ID);
+
+
+                // Filter lab test details early
+                var pendingLabDetails = db.Lab_Test_Details
+                    .Where(ld =>
+                        (ld.isApproved == false || ld.isApproved == null) &&
+                        (ld.IsAcknowledge == false || ld.IsAcknowledge == null) &&
+                        approvedLabTests.Contains(ld.Lab_Test_ID)
+                    );
+
+                // Filter active bills early
+                var activeBills = db.Ar_Billings
+                    .Where(b => b.isCancel == false || b.isCancel == null);
+
+                // Main query
+                var result = (from pat in db.Reg_patients.AsNoTracking()
+                              join bill in activeBills.AsNoTracking() on pat.pat_id equals bill.Patient_ID
+                              join bill_details in db.Ar_Billing_Details.AsNoTracking() on bill.Bill_ID equals bill_details.Bill_ID
+                              join labtest_detail in pendingLabDetails.AsNoTracking() on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+                              join lbt in db.Laboratory_Tests.AsNoTracking() on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+                              where bill_details.Test_Main_Department != "001"
+                              orderby labtest_detail.Lab_Test_Detail_ID descending
+                              select new
+                              {
+                                  bill.Bill_Date,
+                                  bill.Bill_No,
+                                  bill.Bill_ID,
+                                  bill_details.Category_ID,
+                                  bill_details.Item_Name,
+                                  pat.Patient_No,
+                                  pat.Created_time,
+                                  pat.pat_id,
+                                  pat.Full_Name,
+                                  bill_details.Bill_Details_ID,
+                                  bill.Remarks,
+                                  labtest_detail.Priorities,
+                                  labtest_detail.IsAcknowledge
+                              }).ToList().Take(200);
+
+                return serl.Serialize(result);
+            }
+        }
+
         public void buttonimageuploadNotes_Click(Object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext();
