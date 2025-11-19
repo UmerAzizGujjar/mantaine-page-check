@@ -405,6 +405,38 @@
                   return;
               }
 
+              if (!TxtTime_In || TxtTime_In.trim() === '') {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Please select Time In',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      customClass: {
+                          popup: 'swal-big-popup',
+                          title: 'swal-big-title',
+                          htmlContainer: 'swal-big-text'
+                      }
+                  });
+                  return;
+              }
+
+              if (!TxtTime_Out || TxtTime_Out.trim() === '') {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Please select Time Out',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      customClass: {
+                          popup: 'swal-big-popup',
+                          title: 'swal-big-title',
+                          htmlContainer: 'swal-big-text'
+                      }
+                  });
+                  return;
+              }
+
               
               var dataObj = {
                   "buttonVal": buttonVal,
@@ -496,7 +528,6 @@
                       console.log("Status:", status);
                       console.log("Error:", error);
 
-                      // Try to show server response if it's plain text
                       if (xhr.responseText) {
                           alert("Server Error: " + xhr.responseText);
                       } else {

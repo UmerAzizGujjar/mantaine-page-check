@@ -563,7 +563,7 @@
                             $targetDropdown.trigger("change");
                         }
                         else {
-                            $('.subject-dropdown').html(optionsHtml);                          
+                           /* $('.subject-dropdown').html(optionsHtml);*/                          
                         }
                         resolve();
                     },
