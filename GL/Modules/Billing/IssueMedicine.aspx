@@ -1160,7 +1160,7 @@
                 $('#txtDisPer').val(0);
             }
             $('#txtNetPayable').val(Math.round(NetAmount));
-            $('#txtAmountReceived').val(Math.round(NetAmount));
+            $('#txtBalances').val(Math.round(NetAmount));
             var AmtReceived = $('#txtAmountReceived').val();
 
             if ($('#txtTotalPayable').val() != '') {
@@ -1342,7 +1342,7 @@
             }
             var totamourcvd = $('#txtAmountReceived').val();
             var finalbalance = parseFloat(TotalAmount) - parseFloat(txtLineDisc) - parseFloat(txtDisAmt).toFixed(2) - parseFloat(flatdisc);
-            $('#txtAmountReceived').val((finalbalance).toFixed());
+            $('#txtBalances').val((finalbalance).toFixed());
         }
 
         function AssignValue(ControlID, value) {
@@ -1402,7 +1402,7 @@
             });
             debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
-            $('#txtAmountReceived').val(TotAmount);
+            $('#txtBalances').val(TotAmount);
             var discper = $('#txtDisPer').val();
             var FlatDisc = $('#txtFlatDisc').val();
             if (FlatDisc == "") {
@@ -1412,7 +1412,7 @@
             $('#txtLineDisc').val(TotalDiscountAmount.toFixed(2));
             var discfinalAmnt = $('#txtLineDisc').val()||0;
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
-            $('#txtAmountReceived').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
         }
 
         function getbatchfrom_grn() {            debugger;            var Inv_batch = $('#chkbatch').prop("checked");            if (Inv_batch == false) {                $('#batchno').hide();
@@ -1558,10 +1558,10 @@
             //$('#txtAmountReceived').val(finlblce.toFixed());
             if (finlblce > -1) {
                 finlblce = Math.abs(finlblce);
-                $('#txtAmountReceived').val(finlblce.toFixed());
+                $('#txtBalances').val(finlblce.toFixed());
             }
             else {
-                $('#txtAmountReceived').val(ttlpayable.toFixed());
+                $('#txtBalances').val(ttlpayable.toFixed());
             }
         }
 
@@ -2217,7 +2217,7 @@
                 <div class="row mb-2 align-items-center left-right-margin">
                     <div class="col-lg-6">
                         <label>Amount Received</label>
-                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()" readonly />
+                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()"  />
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Adjustment (Alt+A)</label>
@@ -2226,7 +2226,7 @@
 
                 </div>
                 <!-- Amount Received -->
-                <div class="row mb-2 align-items-center  left-right-margin" style="display:none !important">
+                <div class="row mb-2 align-items-center  left-right-margin" >
 
                     <div class="col-lg-6 d-flex align-items-center">
                         <label class="ms-3">Balance</label>

@@ -2022,6 +2022,10 @@ namespace PMS
                     pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
                     pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
                     pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_id);
+                    pt.pkg_name = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+
+                    pt.pkg_type = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+
 
                 }
 
