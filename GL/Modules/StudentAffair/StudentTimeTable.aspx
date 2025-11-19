@@ -54,6 +54,20 @@
                 GetSubject();
                 GetGroup();
             })
+            $('#ddlModule').on("change", function () {
+                $('.subject-dropdown').each(function () {
+                    $(this).val('0');
+                    this.selectedIndex = 0;
+                    GetSubject();
+                });
+            })
+            $('#ddlBlock').on("change", function () {
+                $('.subject-dropdown').each(function () {
+                    $(this).val('0');
+                    this.selectedIndex = 0;
+                    GetSubject();
+                });
+            })
 
             var dropdowns = [
                 { id: '#program', method: 'GetProgram' },
@@ -210,10 +224,10 @@
 
                 '<td style = "width: 220px !important; ">From:<input type="time" name="FTime" value=" " id="FTime' + rowlength + '"  style="width: 94px !important;font-size: 12px;height: 23px;"   /> To: <input type="time" name="TTime"  value="" id="Time' + rowlength + '" style="width: 94px!important;font-size: 12px;height: 23px;" /></td>' +
 
-                '<td ><select style ="font-size:12px;height:25px;" id="ddlstdsubj' + rowlength + '" name="ddlGetStuSub"> ' + GetStudentSubject + ' </select > ' +
+                '<td ><select class="subject-dropdown" style ="font-size:12px;height:25px;" id="ddlstdsubj' + rowlength + '" name="ddlGetStuSub"> ' + GetStudentSubject + ' </select > ' +
                 '</td>' +
 
-                '<td ><select style ="font-size:12px;height:25px;" id="ddlitmeCode' + rowlength + '" name="ddlSubject"> ' + GlobSubj + ' </select > ' +
+                '<td ><select  style ="font-size:12px;height:25px;" id="ddlitmeCode' + rowlength + '" name="ddlSubject"> ' + GlobSubj + ' </select > ' +
                 '</td>' +
 
                 '<td ><select style ="font-size:12px;height:25px;" id="ddlbatchs' + rowlength + '" name="ddlBatch"> ' + Getbatch + ' </select > ' +
@@ -515,6 +529,7 @@
         }
 
         var GetStudentSubject;
+      
         function GetSubject($targetDropdown) {
             return new Promise(function (resolve, reject) {
                 var studentClass = $('#ddlClass').val();
@@ -533,12 +548,23 @@
                     type: 'post',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
-                    success: function (data) {
+                    success: function (response) {
+                        debugger;
+                        const data = JSON.parse(response.d);
+                        //$targetDropdown.val('');
+                        //$targetDropdown.empty();
                         var optionsHtml = '<option value="0">Please Select</option>';
-                        $.each(JSON.parse(data.d), function (key, value) {
+                        $.each(data, function (key, value) {
                             optionsHtml += '<option value="' + value.Subject_Detail_ID + '">' + value.Subject_Name + '</option>';
                         });
-                        $targetDropdown.html(optionsHtml);
+                        if ($targetDropdown) {
+                            $targetDropdown.html(optionsHtml);
+                            $targetDropdown.val("0"); // reset
+                            $targetDropdown.trigger("change");
+                        }
+                        else {
+                            $('.subject-dropdown').html(optionsHtml);                          
+                        }
                         resolve();
                     },
                     error: function () {
@@ -690,8 +716,8 @@
                 From:<input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="FTime" id="FTime${index}" value="${time}" />
                 To: <input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="TTime" id="Time${index}" value="${ttime}" />
             </td>
-            <td><select style="font-size:12px;height:25px;" id="ddlstdsubj${index}" name="ddlGetStuSub">${GetStudentSubject}</select></td>
-            <td><select style="font-size:12px;height:25px;" id="ddlitmeCode${index}" name="ddlSubject">${GlobSubj}</select></td>
+            <td><select class="subject-dropdown" style="font-size:12px;height:25px;" id="ddlstdsubj${index}" name="ddlGetStuSub">${GetStudentSubject}</select></td>
+            <td><select  style="font-size:12px;height:25px;" id="ddlitmeCode${index}" name="ddlSubject">${GlobSubj}</select></td>
             <td><select style="font-size:12px;height:25px;" id="ddlbatchs${index}" name="ddlBatch">${Getbatch}</select></td>
             <td><select style="font-size:12px;height:25px;" id="ddlgroups${index}" name="ddlGroup">${Getgrp}</select></td>
             <td><input style="margin-left: 12px !important; width: 31px !important;" type="checkbox" name="whlclass" id="whole${index}" value="${md.Whole_Class}" /></td>
