@@ -126,27 +126,34 @@ namespace PMS.Modules.StudentAffair
                         master.Update_Time = DateTime.Now;
                         master.Update_By = AppConfig.UserID;
 
-                        var existingDetails = db.Subject_Definition_Lists.Where(x => x.Subject_ID == masterId).ToList();
-                        if (existingDetails.Any())
-                        {
-                            db.Subject_Definition_Lists.DeleteAllOnSubmit(existingDetails);
-                        }
+                        var existingSubjectNames = db.Subject_Definition_Lists
+                            .Where(x => x.Subject_ID == masterId)
+                            .Select(x => x.Subject_Name.Trim().ToLower())
+                            .ToList();
 
                         foreach (var subject in record.Subjects)
                         {
-                            if (string.IsNullOrWhiteSpace(subject?.SubjectName)) continue;
+                            if (string.IsNullOrWhiteSpace(subject?.SubjectName))
+                                continue;
 
-                            var newDetail = new Subject_Definition_List
+                            string trimmedName = subject.SubjectName.Trim();
+                            string lowerName = trimmedName.ToLower();
+
+                            if (!existingSubjectNames.Contains(lowerName))
                             {
-                                Subject_ID = masterId,
-                                Subject_Name = subject.SubjectName.Trim(),
-                                IS_Active = subject.IsActive,
-                                Created_Time = DateTime.Now,
-                                Created_By = AppConfig.UserID,
-                                Update_Time = DateTime.Now,
-                                Update_By = AppConfig.UserID
-                            };
-                            db.Subject_Definition_Lists.InsertOnSubmit(newDetail);
+                                var newDetail = new Subject_Definition_List
+                                {
+                                    Subject_ID = masterId,
+                                    Subject_Name = trimmedName,
+                                    IS_Active = subject.IsActive,
+                                    Created_Time = DateTime.Now,
+                                    Created_By = AppConfig.UserID,
+                                    Update_Time = DateTime.Now,
+                                    Update_By = AppConfig.UserID
+                                };
+                                db.Subject_Definition_Lists.InsertOnSubmit(newDetail);
+                                existingSubjectNames.Add(lowerName);
+                            }
                         }
 
                         db.SubmitChanges();
@@ -193,7 +200,6 @@ namespace PMS.Modules.StudentAffair
             }
             catch (Exception ex)
             {
-                // Log exception
                 return "0";
             }
         }
@@ -221,7 +227,6 @@ namespace PMS.Modules.StudentAffair
             {
                 if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int subjectId))
                 {
-                    // Log or return meaningful error
                     System.Diagnostics.Debug.WriteLine("❌ Invalid ID: " + id);
                     return "{\"error\": \"Invalid subject ID\"}";
                 }
@@ -262,10 +267,8 @@ namespace PMS.Modules.StudentAffair
             }
             catch (Exception ex)
             {
-                // 🔥 LOG EXCEPTION FOR DEBUGGING
                 System.Diagnostics.Debug.WriteLine("🔥 EXCEPTION in GetSubjectDefinitionById: " + ex.ToString());
 
-                // 💡 Return user-friendly error (or full error in dev mode)
 #if DEBUG
                 return "{\"error\": \"Exception: " + ex.Message.Replace("\"", "\\\"") + "\"}";
 #else
