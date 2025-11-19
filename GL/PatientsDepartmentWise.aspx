@@ -699,12 +699,45 @@
 
                         window.open(url, '_blank');
                     }
+
+                    //else if (rptTitle == "DepartmentWiseReport") {
+                    //    debugger;
+                    //    var ddlShift = $("#ctl00_MainContent_ddlShift option:selected").text();
+                    //    var ddDoctor = $("#ctl00_MainContent_ddlDoctor").val();
+                    //    var sDate = new Date($("#ctl00_MainContent_txtsDate").val());
+                    //    var eDate = new Date($("#ctl00_MainContent_txteDate").val());
+                    //    var sSDate = weekday[sDate.getDay()];
+                    //    var eEDate = weekday[eDate.getDay()];
+                    //    window.location.href = 'ReportViewer.aspx?ReportName=DepartmentWiseReport&ReportTitle=OPD Detail Report from ' + $('#ctl00_MainContent_txtsDate').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + '  to ' + $('#ctl00_MainContent_txteDate').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '  ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtsDate').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txteDate').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + $('#chkSummary')[0].checked + '&Shift=' + ddlShift + '&DoctorName=' + ddDoctor + '&Operator=' + ((typeof ($("#ctl00_MainContent_oprators").val()) != 'undefined') ? $("#ctl00_MainContent_oprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Discount=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0");
+                        //}
+                    else if (rptTitle == "DepartmentWiseReport") {
+                        debugger;
+                        var weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // Define weekday
+                        var ddlShift = $("#ctl00_MainContent_ddlShift option:selected").text();
+                        var ddDoctor = $("#ctl00_MainContent_ddlDoctor").val();
+                        var sDate = new Date($("#ctl00_MainContent_txtStart_Date").val()); // Fixed ID
+                        var eDate = new Date($("#ctl00_MainContent_txtEnd_Date").val());   // Fixed ID
+                        var sSDate = weekday[sDate.getDay()];
+                        var eEDate = weekday[eDate.getDay()];
+                        window.location.href = 'ReportViewer.aspx?ReportName=DepartmentWiseReport&ReportTitle=OPD Detail Report from ' +
+                            $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + '  to ' +
+                            $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '  ' + eEDate +
+                            '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() +
+                            '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() +
+                            '&Summary=' + $('#chkSummary')[0].checked +
+                            '&Shift=' + encodeURIComponent(ddlShift) +
+                            '&DoctorName=' + encodeURIComponent(ddDoctor) +
+                            '&Operator=' + ($("#ctl00_MainContent_ddloprators").val() || "0") + // Fixed ID
+                            '&Department=' + ($("#ctl00_MainContent_ddlDepartments option:selected").text() || "0") +
+                            '&Discount=' + ($("#ctl00_MainContent_ddlMedicalSubsidy").val() || "0");
+                    }
  <%--                   else if (rptTitle == "IPD_Detail_Report") {
                         debugger;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=IPDDetailReport&ReportTitle=IPD Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
                         window.open(url, '_blank');
                     }--%>
+
                     else if (rptTitle == "IPD_Detail_Report") {
                         debugger;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
@@ -983,7 +1016,7 @@
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var allPatientRecord = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=DeptWisePatients&ReportTitle=Department Wise and Patient Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        var url = 'ReportViewer.aspx?ReportName=DeptWisePatients&ReportTitle=Department Wise and Patient Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blanks');
                     }
 

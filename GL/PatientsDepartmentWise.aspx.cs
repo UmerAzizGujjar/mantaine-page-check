@@ -153,6 +153,97 @@ namespace PMS
                     ddlPatientType.DataBind();
                 }
 
+                if (this.PageTitle == "DepartmentWiseReport")
+                {
+
+                    object valusets;
+                    //lblMainDepartment.Visible = true;
+                    lblPatientType.Visible = true;
+                    lblMultiSelect.Visible = true;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = true;
+                    //ddlDepartments.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    DateDiv.Visible = true; 
+                    Time_Row.Visible = true;
+                    tr1MedicalSubsidy.Visible = true;
+                    //dpROw.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    // SetDepartent();  
+                    ddlMedicalSubsidy.Visible = true;
+                    //fillshiftdropdown
+                    optRw.Visible = true;
+                    lblMedical.Text = "Discount Detail";
+                    //lboperator.Visible = true;
+                    //ddloprators.Visible = true;
+                    lbShift.Visible = true;
+                    ddlShift.Visible = true;
+                    DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
+                    ddlShift.DataSource = shift;
+                    ddlShift.DataValueField = "Shift_ID";
+                    ddlShift.DataTextField = "Shift_Name";
+                    ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
+                    ddlShift.DataBind();
+                    trDoctor.Visible = true;
+                    ddlReportType.Visible = false;
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+
+                    //
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    var qry = (from p in db.aspnet_Roles
+                               join roles in db.aspnet_UsersInRoles
+                               on p.RoleId equals roles.RoleId
+                               join users in db.aspnet_Users on roles.UserId equals users.UserId
+                               where users.UserId == AppConfig.UserID
+                               select p).FirstOrDefault();
+
+
+                    if (qry.Department_ID == "All_Departments")
+                    {
+                        var records = (from data in db.ValueSets
+                                       join d in db.DataValues on data.ValueSet_ID equals d.ValueSet_ID
+                                       where data.ValueSet_Description.Equals("Patient Main Category")
+                                       select new
+                                       {
+                                           d.DataValue_Name,
+                                           d.DataValue_Description
+
+                                       }).ToList();
+                        ddlDepartments.DataSource = records;
+                        ddlDepartments.DataTextField = "DataValue_Description";
+                        ddlDepartments.DataValueField = "DataValue_Name";
+                        ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                        ddlDepartments.DataBind();
+                    }
+                    else
+                    {
+                        var signledepartment = (from data in db.ValueSets
+                                                join d in db.DataValues on data.ValueSet_ID equals d.ValueSet_ID
+                                                where data.ValueSet_Description.Equals("Patient Main Category") && d.DataValue_Name == qry.Department_ID
+                                                select new
+                                                {
+                                                    d.DataValue_Name,
+                                                    d.DataValue_Description
+
+
+                                                }).ToList();
+                        ddlDepartments.DataSource = signledepartment;
+                        ddlDepartments.DataTextField = "DataValue_Description";
+                        ddlDepartments.DataValueField = "DataValue_Name";
+                        //ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                        ddlDepartments.DataBind();
+
+                    }
+
+                }
+
                 else if (this.PageTitle == "IPD_Detail_Report")
                 {
                     string x = "IPD Detail Report";
@@ -4033,6 +4124,15 @@ namespace PMS
                     ddlPatientType.DataValueField = "DataValue_Name";
                     ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
                     ddlPatientType.DataBind();
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = true;
 
                     if (AllowPatientRecord)
                     {

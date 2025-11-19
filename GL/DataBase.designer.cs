@@ -861,9 +861,6 @@ namespace PMS
         partial void InsertAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
         partial void UpdateAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
         partial void DeleteAP_Purchase_Order_Item(AP_Purchase_Order_Item instance);
-        partial void Insertaspnet_User(aspnet_User instance);
-        partial void Updateaspnet_User(aspnet_User instance);
-        partial void Deleteaspnet_User(aspnet_User instance);
         partial void InsertEmergency_Patient(Emergency_Patient instance);
         partial void UpdateEmergency_Patient(Emergency_Patient instance);
         partial void DeleteEmergency_Patient(Emergency_Patient instance);
@@ -891,6 +888,15 @@ namespace PMS
         partial void Insertsys_Parm(sys_Parm instance);
         partial void Updatesys_Parm(sys_Parm instance);
         partial void Deletesys_Parm(sys_Parm instance);
+        partial void Insertaspnet_User(aspnet_User instance);
+        partial void Updateaspnet_User(aspnet_User instance);
+        partial void Deleteaspnet_User(aspnet_User instance);
+        partial void Insertinv_bom(inv_bom instance);
+        partial void Updateinv_bom(inv_bom instance);
+        partial void Deleteinv_bom(inv_bom instance);
+        partial void Insertinv_bom_detail(inv_bom_detail instance);
+        partial void Updateinv_bom_detail(inv_bom_detail instance);
+        partial void Deleteinv_bom_detail(inv_bom_detail instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3169,14 +3175,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<aspnet_User> aspnet_Users
-        {
-            get
-            {
-                return this.GetTable<aspnet_User>();
-            }
-        }
-
         public System.Data.Linq.Table<Emergency_Patient> Emergency_Patients
         {
             get
@@ -3246,6 +3244,30 @@ namespace PMS
             get
             {
                 return this.GetTable<sys_Parm>();
+            }
+        }
+
+        public System.Data.Linq.Table<aspnet_User> aspnet_Users
+        {
+            get
+            {
+                return this.GetTable<aspnet_User>();
+            }
+        }
+
+        public System.Data.Linq.Table<inv_bom> inv_boms
+        {
+            get
+            {
+                return this.GetTable<inv_bom>();
+            }
+        }
+
+        public System.Data.Linq.Table<inv_bom_detail> inv_bom_details
+        {
+            get
+            {
+                return this.GetTable<inv_bom_detail>();
             }
         }
 
@@ -135381,1117 +135403,6 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.aspnet_Users")]
-    public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private System.Guid _ApplicationId;
-
-        private System.Guid _UserId;
-
-        private string _UserName;
-
-        private string _LoweredUserName;
-
-        private string _MobileAlias;
-
-        private bool _IsAnonymous;
-
-        private System.DateTime _LastActivityDate;
-
-        private System.Nullable<bool> _AllowUnapproveVoucher;
-
-        private System.Nullable<bool> _AllowPatientEdit;
-
-        private System.Nullable<bool> _AllowPatientDelete;
-
-        private string _Emp_Code;
-
-        private System.Nullable<bool> _AllPatientRecords;
-
-        private System.Nullable<bool> _AllowToAccessAllTest;
-
-        private System.Nullable<bool> _AllowTestRate;
-
-        private System.Nullable<decimal> _Discount;
-
-        private System.Nullable<decimal> _Discount_Amount;
-
-        private System.Nullable<bool> _BlockUser;
-
-        private System.Nullable<bool> _AllowBillDelete;
-
-        private System.Nullable<bool> _allowtestbox;
-
-        private System.Nullable<bool> _allow_lab;
-
-        private System.Nullable<bool> _allow_ultra;
-
-        private System.Nullable<bool> _allow_xray;
-
-        private System.Nullable<bool> _allow_ctscan;
-
-        private System.Nullable<bool> _allow_b_bank;
-
-        private System.Nullable<bool> _allow_cardio;
-
-        private System.Nullable<bool> _OpdAllow;
-
-        private System.Nullable<bool> _AllowPharmacy;
-
-        private System.Nullable<bool> _AllowGeneralItems;
-
-        private System.Nullable<bool> _IsShowBudget;
-
-        private System.Nullable<bool> _IsInventoryUnApprove;
-
-        private System.Nullable<bool> _IsNotificationViewed;
-
-        private System.Nullable<bool> _OTPUsers;
-
-        private string _mobileno;
-
-        private System.Nullable<bool> _EditEmergency;
-
-        private string _Gl_Account;
-
-        private System.Nullable<bool> _Allow_bill_edit;
-
-        private System.Nullable<bool> _Emergency_adm_dis;
-
-        private System.Nullable<bool> _Allow_emer_disc;
-
-        private EntitySet<aspnet_PersonalizationPerUser> _aspnet_PersonalizationPerUsers;
-
-        private EntityRef<aspnet_Profile> _aspnet_Profile;
-
-        private EntitySet<aspnet_UsersInRole> _aspnet_UsersInRoles;
-
-        private EntityRef<aspnet_Membership> _aspnet_Membership;
-
-        private EntityRef<aspnet_Application> _aspnet_Application;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnApplicationIdChanging(System.Guid value);
-        partial void OnApplicationIdChanged();
-        partial void OnUserIdChanging(System.Guid value);
-        partial void OnUserIdChanged();
-        partial void OnUserNameChanging(string value);
-        partial void OnUserNameChanged();
-        partial void OnLoweredUserNameChanging(string value);
-        partial void OnLoweredUserNameChanged();
-        partial void OnMobileAliasChanging(string value);
-        partial void OnMobileAliasChanged();
-        partial void OnIsAnonymousChanging(bool value);
-        partial void OnIsAnonymousChanged();
-        partial void OnLastActivityDateChanging(System.DateTime value);
-        partial void OnLastActivityDateChanged();
-        partial void OnAllowUnapproveVoucherChanging(System.Nullable<bool> value);
-        partial void OnAllowUnapproveVoucherChanged();
-        partial void OnAllowPatientEditChanging(System.Nullable<bool> value);
-        partial void OnAllowPatientEditChanged();
-        partial void OnAllowPatientDeleteChanging(System.Nullable<bool> value);
-        partial void OnAllowPatientDeleteChanged();
-        partial void OnEmp_CodeChanging(string value);
-        partial void OnEmp_CodeChanged();
-        partial void OnAllPatientRecordsChanging(System.Nullable<bool> value);
-        partial void OnAllPatientRecordsChanged();
-        partial void OnAllowToAccessAllTestChanging(System.Nullable<bool> value);
-        partial void OnAllowToAccessAllTestChanged();
-        partial void OnAllowTestRateChanging(System.Nullable<bool> value);
-        partial void OnAllowTestRateChanged();
-        partial void OnDiscountChanging(System.Nullable<decimal> value);
-        partial void OnDiscountChanged();
-        partial void OnDiscount_AmountChanging(System.Nullable<decimal> value);
-        partial void OnDiscount_AmountChanged();
-        partial void OnBlockUserChanging(System.Nullable<bool> value);
-        partial void OnBlockUserChanged();
-        partial void OnAllowBillDeleteChanging(System.Nullable<bool> value);
-        partial void OnAllowBillDeleteChanged();
-        partial void OnallowtestboxChanging(System.Nullable<bool> value);
-        partial void OnallowtestboxChanged();
-        partial void Onallow_labChanging(System.Nullable<bool> value);
-        partial void Onallow_labChanged();
-        partial void Onallow_ultraChanging(System.Nullable<bool> value);
-        partial void Onallow_ultraChanged();
-        partial void Onallow_xrayChanging(System.Nullable<bool> value);
-        partial void Onallow_xrayChanged();
-        partial void Onallow_ctscanChanging(System.Nullable<bool> value);
-        partial void Onallow_ctscanChanged();
-        partial void Onallow_b_bankChanging(System.Nullable<bool> value);
-        partial void Onallow_b_bankChanged();
-        partial void Onallow_cardioChanging(System.Nullable<bool> value);
-        partial void Onallow_cardioChanged();
-        partial void OnOpdAllowChanging(System.Nullable<bool> value);
-        partial void OnOpdAllowChanged();
-        partial void OnAllowPharmacyChanging(System.Nullable<bool> value);
-        partial void OnAllowPharmacyChanged();
-        partial void OnAllowGeneralItemsChanging(System.Nullable<bool> value);
-        partial void OnAllowGeneralItemsChanged();
-        partial void OnIsShowBudgetChanging(System.Nullable<bool> value);
-        partial void OnIsShowBudgetChanged();
-        partial void OnIsInventoryUnApproveChanging(System.Nullable<bool> value);
-        partial void OnIsInventoryUnApproveChanged();
-        partial void OnIsNotificationViewedChanging(System.Nullable<bool> value);
-        partial void OnIsNotificationViewedChanged();
-        partial void OnOTPUsersChanging(System.Nullable<bool> value);
-        partial void OnOTPUsersChanged();
-        partial void OnmobilenoChanging(string value);
-        partial void OnmobilenoChanged();
-        partial void OnEditEmergencyChanging(System.Nullable<bool> value);
-        partial void OnEditEmergencyChanged();
-        partial void OnGl_AccountChanging(string value);
-        partial void OnGl_AccountChanged();
-        partial void OnAllow_bill_editChanging(System.Nullable<bool> value);
-        partial void OnAllow_bill_editChanged();
-        partial void OnEmergency_adm_disChanging(System.Nullable<bool> value);
-        partial void OnEmergency_adm_disChanged();
-        partial void OnAllow_emer_discChanging(System.Nullable<bool> value);
-        partial void OnAllow_emer_discChanged();
-        #endregion
-
-        public aspnet_User()
-        {
-            this._aspnet_PersonalizationPerUsers = new EntitySet<aspnet_PersonalizationPerUser>(new Action<aspnet_PersonalizationPerUser>(this.attach_aspnet_PersonalizationPerUsers), new Action<aspnet_PersonalizationPerUser>(this.detach_aspnet_PersonalizationPerUsers));
-            this._aspnet_Profile = default(EntityRef<aspnet_Profile>);
-            this._aspnet_UsersInRoles = new EntitySet<aspnet_UsersInRole>(new Action<aspnet_UsersInRole>(this.attach_aspnet_UsersInRoles), new Action<aspnet_UsersInRole>(this.detach_aspnet_UsersInRoles));
-            this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
-            this._aspnet_Application = default(EntityRef<aspnet_Application>);
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ApplicationId", DbType = "UniqueIdentifier NOT NULL")]
-        public System.Guid ApplicationId
-        {
-            get
-            {
-                return this._ApplicationId;
-            }
-            set
-            {
-                if ((this._ApplicationId != value))
-                {
-                    if (this._aspnet_Application.HasLoadedOrAssignedValue)
-                    {
-                        throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-                    }
-                    this.OnApplicationIdChanging(value);
-                    this.SendPropertyChanging();
-                    this._ApplicationId = value;
-                    this.SendPropertyChanged("ApplicationId");
-                    this.OnApplicationIdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UserId", DbType = "UniqueIdentifier NOT NULL", IsPrimaryKey = true)]
-        public System.Guid UserId
-        {
-            get
-            {
-                return this._UserId;
-            }
-            set
-            {
-                if ((this._UserId != value))
-                {
-                    this.OnUserIdChanging(value);
-                    this.SendPropertyChanging();
-                    this._UserId = value;
-                    this.SendPropertyChanged("UserId");
-                    this.OnUserIdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UserName", DbType = "NVarChar(256) NOT NULL", CanBeNull = false)]
-        public string UserName
-        {
-            get
-            {
-                return this._UserName;
-            }
-            set
-            {
-                if ((this._UserName != value))
-                {
-                    this.OnUserNameChanging(value);
-                    this.SendPropertyChanging();
-                    this._UserName = value;
-                    this.SendPropertyChanged("UserName");
-                    this.OnUserNameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LoweredUserName", DbType = "NVarChar(256) NOT NULL", CanBeNull = false)]
-        public string LoweredUserName
-        {
-            get
-            {
-                return this._LoweredUserName;
-            }
-            set
-            {
-                if ((this._LoweredUserName != value))
-                {
-                    this.OnLoweredUserNameChanging(value);
-                    this.SendPropertyChanging();
-                    this._LoweredUserName = value;
-                    this.SendPropertyChanged("LoweredUserName");
-                    this.OnLoweredUserNameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MobileAlias", DbType = "NVarChar(16)")]
-        public string MobileAlias
-        {
-            get
-            {
-                return this._MobileAlias;
-            }
-            set
-            {
-                if ((this._MobileAlias != value))
-                {
-                    this.OnMobileAliasChanging(value);
-                    this.SendPropertyChanging();
-                    this._MobileAlias = value;
-                    this.SendPropertyChanged("MobileAlias");
-                    this.OnMobileAliasChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsAnonymous", DbType = "Bit NOT NULL")]
-        public bool IsAnonymous
-        {
-            get
-            {
-                return this._IsAnonymous;
-            }
-            set
-            {
-                if ((this._IsAnonymous != value))
-                {
-                    this.OnIsAnonymousChanging(value);
-                    this.SendPropertyChanging();
-                    this._IsAnonymous = value;
-                    this.SendPropertyChanged("IsAnonymous");
-                    this.OnIsAnonymousChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LastActivityDate", DbType = "DateTime NOT NULL")]
-        public System.DateTime LastActivityDate
-        {
-            get
-            {
-                return this._LastActivityDate;
-            }
-            set
-            {
-                if ((this._LastActivityDate != value))
-                {
-                    this.OnLastActivityDateChanging(value);
-                    this.SendPropertyChanging();
-                    this._LastActivityDate = value;
-                    this.SendPropertyChanged("LastActivityDate");
-                    this.OnLastActivityDateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowUnapproveVoucher", DbType = "Bit")]
-        public System.Nullable<bool> AllowUnapproveVoucher
-        {
-            get
-            {
-                return this._AllowUnapproveVoucher;
-            }
-            set
-            {
-                if ((this._AllowUnapproveVoucher != value))
-                {
-                    this.OnAllowUnapproveVoucherChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowUnapproveVoucher = value;
-                    this.SendPropertyChanged("AllowUnapproveVoucher");
-                    this.OnAllowUnapproveVoucherChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowPatientEdit", DbType = "Bit")]
-        public System.Nullable<bool> AllowPatientEdit
-        {
-            get
-            {
-                return this._AllowPatientEdit;
-            }
-            set
-            {
-                if ((this._AllowPatientEdit != value))
-                {
-                    this.OnAllowPatientEditChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowPatientEdit = value;
-                    this.SendPropertyChanged("AllowPatientEdit");
-                    this.OnAllowPatientEditChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowPatientDelete", DbType = "Bit")]
-        public System.Nullable<bool> AllowPatientDelete
-        {
-            get
-            {
-                return this._AllowPatientDelete;
-            }
-            set
-            {
-                if ((this._AllowPatientDelete != value))
-                {
-                    this.OnAllowPatientDeleteChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowPatientDelete = value;
-                    this.SendPropertyChanged("AllowPatientDelete");
-                    this.OnAllowPatientDeleteChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Emp_Code", DbType = "VarChar(50)")]
-        public string Emp_Code
-        {
-            get
-            {
-                return this._Emp_Code;
-            }
-            set
-            {
-                if ((this._Emp_Code != value))
-                {
-                    this.OnEmp_CodeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Emp_Code = value;
-                    this.SendPropertyChanged("Emp_Code");
-                    this.OnEmp_CodeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllPatientRecords", DbType = "Bit")]
-        public System.Nullable<bool> AllPatientRecords
-        {
-            get
-            {
-                return this._AllPatientRecords;
-            }
-            set
-            {
-                if ((this._AllPatientRecords != value))
-                {
-                    this.OnAllPatientRecordsChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllPatientRecords = value;
-                    this.SendPropertyChanged("AllPatientRecords");
-                    this.OnAllPatientRecordsChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowToAccessAllTest", DbType = "Bit")]
-        public System.Nullable<bool> AllowToAccessAllTest
-        {
-            get
-            {
-                return this._AllowToAccessAllTest;
-            }
-            set
-            {
-                if ((this._AllowToAccessAllTest != value))
-                {
-                    this.OnAllowToAccessAllTestChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowToAccessAllTest = value;
-                    this.SendPropertyChanged("AllowToAccessAllTest");
-                    this.OnAllowToAccessAllTestChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowTestRate", DbType = "Bit")]
-        public System.Nullable<bool> AllowTestRate
-        {
-            get
-            {
-                return this._AllowTestRate;
-            }
-            set
-            {
-                if ((this._AllowTestRate != value))
-                {
-                    this.OnAllowTestRateChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowTestRate = value;
-                    this.SendPropertyChanged("AllowTestRate");
-                    this.OnAllowTestRateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Discount
-        {
-            get
-            {
-                return this._Discount;
-            }
-            set
-            {
-                if ((this._Discount != value))
-                {
-                    this.OnDiscountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Discount = value;
-                    this.SendPropertyChanged("Discount");
-                    this.OnDiscountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Discount_Amount
-        {
-            get
-            {
-                return this._Discount_Amount;
-            }
-            set
-            {
-                if ((this._Discount_Amount != value))
-                {
-                    this.OnDiscount_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Discount_Amount = value;
-                    this.SendPropertyChanged("Discount_Amount");
-                    this.OnDiscount_AmountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BlockUser", DbType = "Bit")]
-        public System.Nullable<bool> BlockUser
-        {
-            get
-            {
-                return this._BlockUser;
-            }
-            set
-            {
-                if ((this._BlockUser != value))
-                {
-                    this.OnBlockUserChanging(value);
-                    this.SendPropertyChanging();
-                    this._BlockUser = value;
-                    this.SendPropertyChanged("BlockUser");
-                    this.OnBlockUserChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowBillDelete", DbType = "Bit")]
-        public System.Nullable<bool> AllowBillDelete
-        {
-            get
-            {
-                return this._AllowBillDelete;
-            }
-            set
-            {
-                if ((this._AllowBillDelete != value))
-                {
-                    this.OnAllowBillDeleteChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowBillDelete = value;
-                    this.SendPropertyChanged("AllowBillDelete");
-                    this.OnAllowBillDeleteChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allowtestbox", DbType = "Bit")]
-        public System.Nullable<bool> allowtestbox
-        {
-            get
-            {
-                return this._allowtestbox;
-            }
-            set
-            {
-                if ((this._allowtestbox != value))
-                {
-                    this.OnallowtestboxChanging(value);
-                    this.SendPropertyChanging();
-                    this._allowtestbox = value;
-                    this.SendPropertyChanged("allowtestbox");
-                    this.OnallowtestboxChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_lab", DbType = "Bit")]
-        public System.Nullable<bool> allow_lab
-        {
-            get
-            {
-                return this._allow_lab;
-            }
-            set
-            {
-                if ((this._allow_lab != value))
-                {
-                    this.Onallow_labChanging(value);
-                    this.SendPropertyChanging();
-                    this._allow_lab = value;
-                    this.SendPropertyChanged("allow_lab");
-                    this.Onallow_labChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_ultra", DbType = "Bit")]
-        public System.Nullable<bool> allow_ultra
-        {
-            get
-            {
-                return this._allow_ultra;
-            }
-            set
-            {
-                if ((this._allow_ultra != value))
-                {
-                    this.Onallow_ultraChanging(value);
-                    this.SendPropertyChanging();
-                    this._allow_ultra = value;
-                    this.SendPropertyChanged("allow_ultra");
-                    this.Onallow_ultraChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_xray", DbType = "Bit")]
-        public System.Nullable<bool> allow_xray
-        {
-            get
-            {
-                return this._allow_xray;
-            }
-            set
-            {
-                if ((this._allow_xray != value))
-                {
-                    this.Onallow_xrayChanging(value);
-                    this.SendPropertyChanging();
-                    this._allow_xray = value;
-                    this.SendPropertyChanged("allow_xray");
-                    this.Onallow_xrayChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_ctscan", DbType = "Bit")]
-        public System.Nullable<bool> allow_ctscan
-        {
-            get
-            {
-                return this._allow_ctscan;
-            }
-            set
-            {
-                if ((this._allow_ctscan != value))
-                {
-                    this.Onallow_ctscanChanging(value);
-                    this.SendPropertyChanging();
-                    this._allow_ctscan = value;
-                    this.SendPropertyChanged("allow_ctscan");
-                    this.Onallow_ctscanChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_b_bank", DbType = "Bit")]
-        public System.Nullable<bool> allow_b_bank
-        {
-            get
-            {
-                return this._allow_b_bank;
-            }
-            set
-            {
-                if ((this._allow_b_bank != value))
-                {
-                    this.Onallow_b_bankChanging(value);
-                    this.SendPropertyChanging();
-                    this._allow_b_bank = value;
-                    this.SendPropertyChanged("allow_b_bank");
-                    this.Onallow_b_bankChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_cardio", DbType = "Bit")]
-        public System.Nullable<bool> allow_cardio
-        {
-            get
-            {
-                return this._allow_cardio;
-            }
-            set
-            {
-                if ((this._allow_cardio != value))
-                {
-                    this.Onallow_cardioChanging(value);
-                    this.SendPropertyChanging();
-                    this._allow_cardio = value;
-                    this.SendPropertyChanged("allow_cardio");
-                    this.Onallow_cardioChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpdAllow", DbType = "Bit")]
-        public System.Nullable<bool> OpdAllow
-        {
-            get
-            {
-                return this._OpdAllow;
-            }
-            set
-            {
-                if ((this._OpdAllow != value))
-                {
-                    this.OnOpdAllowChanging(value);
-                    this.SendPropertyChanging();
-                    this._OpdAllow = value;
-                    this.SendPropertyChanged("OpdAllow");
-                    this.OnOpdAllowChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowPharmacy", DbType = "Bit")]
-        public System.Nullable<bool> AllowPharmacy
-        {
-            get
-            {
-                return this._AllowPharmacy;
-            }
-            set
-            {
-                if ((this._AllowPharmacy != value))
-                {
-                    this.OnAllowPharmacyChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowPharmacy = value;
-                    this.SendPropertyChanged("AllowPharmacy");
-                    this.OnAllowPharmacyChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowGeneralItems", DbType = "Bit")]
-        public System.Nullable<bool> AllowGeneralItems
-        {
-            get
-            {
-                return this._AllowGeneralItems;
-            }
-            set
-            {
-                if ((this._AllowGeneralItems != value))
-                {
-                    this.OnAllowGeneralItemsChanging(value);
-                    this.SendPropertyChanging();
-                    this._AllowGeneralItems = value;
-                    this.SendPropertyChanged("AllowGeneralItems");
-                    this.OnAllowGeneralItemsChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsShowBudget", DbType = "Bit")]
-        public System.Nullable<bool> IsShowBudget
-        {
-            get
-            {
-                return this._IsShowBudget;
-            }
-            set
-            {
-                if ((this._IsShowBudget != value))
-                {
-                    this.OnIsShowBudgetChanging(value);
-                    this.SendPropertyChanging();
-                    this._IsShowBudget = value;
-                    this.SendPropertyChanged("IsShowBudget");
-                    this.OnIsShowBudgetChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsInventoryUnApprove", DbType = "Bit")]
-        public System.Nullable<bool> IsInventoryUnApprove
-        {
-            get
-            {
-                return this._IsInventoryUnApprove;
-            }
-            set
-            {
-                if ((this._IsInventoryUnApprove != value))
-                {
-                    this.OnIsInventoryUnApproveChanging(value);
-                    this.SendPropertyChanging();
-                    this._IsInventoryUnApprove = value;
-                    this.SendPropertyChanged("IsInventoryUnApprove");
-                    this.OnIsInventoryUnApproveChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsNotificationViewed", DbType = "Bit")]
-        public System.Nullable<bool> IsNotificationViewed
-        {
-            get
-            {
-                return this._IsNotificationViewed;
-            }
-            set
-            {
-                if ((this._IsNotificationViewed != value))
-                {
-                    this.OnIsNotificationViewedChanging(value);
-                    this.SendPropertyChanging();
-                    this._IsNotificationViewed = value;
-                    this.SendPropertyChanged("IsNotificationViewed");
-                    this.OnIsNotificationViewedChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OTPUsers", DbType = "Bit")]
-        public System.Nullable<bool> OTPUsers
-        {
-            get
-            {
-                return this._OTPUsers;
-            }
-            set
-            {
-                if ((this._OTPUsers != value))
-                {
-                    this.OnOTPUsersChanging(value);
-                    this.SendPropertyChanging();
-                    this._OTPUsers = value;
-                    this.SendPropertyChanged("OTPUsers");
-                    this.OnOTPUsersChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mobileno", DbType = "NVarChar(150)")]
-        public string mobileno
-        {
-            get
-            {
-                return this._mobileno;
-            }
-            set
-            {
-                if ((this._mobileno != value))
-                {
-                    this.OnmobilenoChanging(value);
-                    this.SendPropertyChanging();
-                    this._mobileno = value;
-                    this.SendPropertyChanged("mobileno");
-                    this.OnmobilenoChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_EditEmergency", DbType = "Bit")]
-        public System.Nullable<bool> EditEmergency
-        {
-            get
-            {
-                return this._EditEmergency;
-            }
-            set
-            {
-                if ((this._EditEmergency != value))
-                {
-                    this.OnEditEmergencyChanging(value);
-                    this.SendPropertyChanging();
-                    this._EditEmergency = value;
-                    this.SendPropertyChanged("EditEmergency");
-                    this.OnEditEmergencyChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Gl_Account", DbType = "NVarChar(150)")]
-        public string Gl_Account
-        {
-            get
-            {
-                return this._Gl_Account;
-            }
-            set
-            {
-                if ((this._Gl_Account != value))
-                {
-                    this.OnGl_AccountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Gl_Account = value;
-                    this.SendPropertyChanged("Gl_Account");
-                    this.OnGl_AccountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_bill_edit", DbType = "Bit")]
-        public System.Nullable<bool> Allow_bill_edit
-        {
-            get
-            {
-                return this._Allow_bill_edit;
-            }
-            set
-            {
-                if ((this._Allow_bill_edit != value))
-                {
-                    this.OnAllow_bill_editChanging(value);
-                    this.SendPropertyChanging();
-                    this._Allow_bill_edit = value;
-                    this.SendPropertyChanged("Allow_bill_edit");
-                    this.OnAllow_bill_editChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Emergency_adm_dis", DbType = "Bit")]
-        public System.Nullable<bool> Emergency_adm_dis
-        {
-            get
-            {
-                return this._Emergency_adm_dis;
-            }
-            set
-            {
-                if ((this._Emergency_adm_dis != value))
-                {
-                    this.OnEmergency_adm_disChanging(value);
-                    this.SendPropertyChanging();
-                    this._Emergency_adm_dis = value;
-                    this.SendPropertyChanged("Emergency_adm_dis");
-                    this.OnEmergency_adm_disChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_emer_disc", DbType = "Bit")]
-        public System.Nullable<bool> Allow_emer_disc
-        {
-            get
-            {
-                return this._Allow_emer_disc;
-            }
-            set
-            {
-                if ((this._Allow_emer_disc != value))
-                {
-                    this.OnAllow_emer_discChanging(value);
-                    this.SendPropertyChanging();
-                    this._Allow_emer_disc = value;
-                    this.SendPropertyChanged("Allow_emer_disc");
-                    this.OnAllow_emer_discChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_PersonalizationPerUser", Storage = "_aspnet_PersonalizationPerUsers", ThisKey = "UserId", OtherKey = "UserId")]
-        public EntitySet<aspnet_PersonalizationPerUser> aspnet_PersonalizationPerUsers
-        {
-            get
-            {
-                return this._aspnet_PersonalizationPerUsers;
-            }
-            set
-            {
-                this._aspnet_PersonalizationPerUsers.Assign(value);
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_Profile", Storage = "_aspnet_Profile", ThisKey = "UserId", OtherKey = "UserId", IsUnique = true, IsForeignKey = false)]
-        public aspnet_Profile aspnet_Profile
-        {
-            get
-            {
-                return this._aspnet_Profile.Entity;
-            }
-            set
-            {
-                aspnet_Profile previousValue = this._aspnet_Profile.Entity;
-                if (((previousValue != value)
-                            || (this._aspnet_Profile.HasLoadedOrAssignedValue == false)))
-                {
-                    this.SendPropertyChanging();
-                    if ((previousValue != null))
-                    {
-                        this._aspnet_Profile.Entity = null;
-                        previousValue.aspnet_User = null;
-                    }
-                    this._aspnet_Profile.Entity = value;
-                    if ((value != null))
-                    {
-                        value.aspnet_User = this;
-                    }
-                    this.SendPropertyChanged("aspnet_Profile");
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_UsersInRole", Storage = "_aspnet_UsersInRoles", ThisKey = "UserId", OtherKey = "UserId")]
-        public EntitySet<aspnet_UsersInRole> aspnet_UsersInRoles
-        {
-            get
-            {
-                return this._aspnet_UsersInRoles;
-            }
-            set
-            {
-                this._aspnet_UsersInRoles.Assign(value);
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_Membership", Storage = "_aspnet_Membership", ThisKey = "UserId", OtherKey = "UserId", IsUnique = true, IsForeignKey = false)]
-        public aspnet_Membership aspnet_Membership
-        {
-            get
-            {
-                return this._aspnet_Membership.Entity;
-            }
-            set
-            {
-                aspnet_Membership previousValue = this._aspnet_Membership.Entity;
-                if (((previousValue != value)
-                            || (this._aspnet_Membership.HasLoadedOrAssignedValue == false)))
-                {
-                    this.SendPropertyChanging();
-                    if ((previousValue != null))
-                    {
-                        this._aspnet_Membership.Entity = null;
-                        previousValue.aspnet_User = null;
-                    }
-                    this._aspnet_Membership.Entity = value;
-                    if ((value != null))
-                    {
-                        value.aspnet_User = this;
-                    }
-                    this.SendPropertyChanged("aspnet_Membership");
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_Application_aspnet_User", Storage = "_aspnet_Application", ThisKey = "ApplicationId", OtherKey = "ApplicationId", IsForeignKey = true)]
-        public aspnet_Application aspnet_Application
-        {
-            get
-            {
-                return this._aspnet_Application.Entity;
-            }
-            set
-            {
-                aspnet_Application previousValue = this._aspnet_Application.Entity;
-                if (((previousValue != value)
-                            || (this._aspnet_Application.HasLoadedOrAssignedValue == false)))
-                {
-                    this.SendPropertyChanging();
-                    if ((previousValue != null))
-                    {
-                        this._aspnet_Application.Entity = null;
-                        previousValue.aspnet_Users.Remove(this);
-                    }
-                    this._aspnet_Application.Entity = value;
-                    if ((value != null))
-                    {
-                        value.aspnet_Users.Add(this);
-                        this._ApplicationId = value.ApplicationId;
-                    }
-                    else
-                    {
-                        this._ApplicationId = default(System.Guid);
-                    }
-                    this.SendPropertyChanged("aspnet_Application");
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        private void attach_aspnet_PersonalizationPerUsers(aspnet_PersonalizationPerUser entity)
-        {
-            this.SendPropertyChanging();
-            entity.aspnet_User = this;
-        }
-
-        private void detach_aspnet_PersonalizationPerUsers(aspnet_PersonalizationPerUser entity)
-        {
-            this.SendPropertyChanging();
-            entity.aspnet_User = null;
-        }
-
-        private void attach_aspnet_UsersInRoles(aspnet_UsersInRole entity)
-        {
-            this.SendPropertyChanging();
-            entity.aspnet_User = this;
-        }
-
-        private void detach_aspnet_UsersInRoles(aspnet_UsersInRole entity)
-        {
-            this.SendPropertyChanging();
-            entity.aspnet_User = null;
-        }
-    }
-
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Emergency_Patient")]
     public partial class Emergency_Patient : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -155625,6 +154536,1649 @@ namespace PMS
                     this._Segment4 = value;
                     this.SendPropertyChanged("Segment4");
                     this.OnSegment4Changed();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.aspnet_Users")]
+    public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private System.Guid _ApplicationId;
+
+        private System.Guid _UserId;
+
+        private string _UserName;
+
+        private string _LoweredUserName;
+
+        private string _MobileAlias;
+
+        private bool _IsAnonymous;
+
+        private System.DateTime _LastActivityDate;
+
+        private System.Nullable<bool> _AllowUnapproveVoucher;
+
+        private System.Nullable<bool> _AllowPatientEdit;
+
+        private System.Nullable<bool> _AllowPatientDelete;
+
+        private string _Emp_Code;
+
+        private System.Nullable<bool> _AllPatientRecords;
+
+        private System.Nullable<bool> _AllowToAccessAllTest;
+
+        private System.Nullable<bool> _AllowTestRate;
+
+        private System.Nullable<decimal> _Discount;
+
+        private System.Nullable<decimal> _Discount_Amount;
+
+        private System.Nullable<bool> _BlockUser;
+
+        private System.Nullable<bool> _AllowBillDelete;
+
+        private System.Nullable<bool> _allowtestbox;
+
+        private System.Nullable<bool> _allow_lab;
+
+        private System.Nullable<bool> _allow_ultra;
+
+        private System.Nullable<bool> _allow_xray;
+
+        private System.Nullable<bool> _allow_ctscan;
+
+        private System.Nullable<bool> _allow_b_bank;
+
+        private System.Nullable<bool> _allow_cardio;
+
+        private System.Nullable<bool> _OpdAllow;
+
+        private System.Nullable<bool> _AllowPharmacy;
+
+        private System.Nullable<bool> _AllowGeneralItems;
+
+        private System.Nullable<bool> _IsShowBudget;
+
+        private System.Nullable<bool> _IsInventoryUnApprove;
+
+        private System.Nullable<bool> _IsNotificationViewed;
+
+        private System.Nullable<bool> _OTPUsers;
+
+        private string _mobileno;
+
+        private System.Nullable<bool> _EditEmergency;
+
+        private string _Gl_Account;
+
+        private System.Nullable<bool> _Allow_bill_edit;
+
+        private System.Nullable<bool> _Emergency_adm_dis;
+
+        private System.Nullable<bool> _Allow_emer_disc;
+
+        private System.Nullable<bool> _Refer_IPD;
+
+        private EntitySet<aspnet_PersonalizationPerUser> _aspnet_PersonalizationPerUsers;
+
+        private EntityRef<aspnet_Profile> _aspnet_Profile;
+
+        private EntitySet<aspnet_UsersInRole> _aspnet_UsersInRoles;
+
+        private EntityRef<aspnet_Membership> _aspnet_Membership;
+
+        private EntityRef<aspnet_Application> _aspnet_Application;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnApplicationIdChanging(System.Guid value);
+        partial void OnApplicationIdChanged();
+        partial void OnUserIdChanging(System.Guid value);
+        partial void OnUserIdChanged();
+        partial void OnUserNameChanging(string value);
+        partial void OnUserNameChanged();
+        partial void OnLoweredUserNameChanging(string value);
+        partial void OnLoweredUserNameChanged();
+        partial void OnMobileAliasChanging(string value);
+        partial void OnMobileAliasChanged();
+        partial void OnIsAnonymousChanging(bool value);
+        partial void OnIsAnonymousChanged();
+        partial void OnLastActivityDateChanging(System.DateTime value);
+        partial void OnLastActivityDateChanged();
+        partial void OnAllowUnapproveVoucherChanging(System.Nullable<bool> value);
+        partial void OnAllowUnapproveVoucherChanged();
+        partial void OnAllowPatientEditChanging(System.Nullable<bool> value);
+        partial void OnAllowPatientEditChanged();
+        partial void OnAllowPatientDeleteChanging(System.Nullable<bool> value);
+        partial void OnAllowPatientDeleteChanged();
+        partial void OnEmp_CodeChanging(string value);
+        partial void OnEmp_CodeChanged();
+        partial void OnAllPatientRecordsChanging(System.Nullable<bool> value);
+        partial void OnAllPatientRecordsChanged();
+        partial void OnAllowToAccessAllTestChanging(System.Nullable<bool> value);
+        partial void OnAllowToAccessAllTestChanged();
+        partial void OnAllowTestRateChanging(System.Nullable<bool> value);
+        partial void OnAllowTestRateChanged();
+        partial void OnDiscountChanging(System.Nullable<decimal> value);
+        partial void OnDiscountChanged();
+        partial void OnDiscount_AmountChanging(System.Nullable<decimal> value);
+        partial void OnDiscount_AmountChanged();
+        partial void OnBlockUserChanging(System.Nullable<bool> value);
+        partial void OnBlockUserChanged();
+        partial void OnAllowBillDeleteChanging(System.Nullable<bool> value);
+        partial void OnAllowBillDeleteChanged();
+        partial void OnallowtestboxChanging(System.Nullable<bool> value);
+        partial void OnallowtestboxChanged();
+        partial void Onallow_labChanging(System.Nullable<bool> value);
+        partial void Onallow_labChanged();
+        partial void Onallow_ultraChanging(System.Nullable<bool> value);
+        partial void Onallow_ultraChanged();
+        partial void Onallow_xrayChanging(System.Nullable<bool> value);
+        partial void Onallow_xrayChanged();
+        partial void Onallow_ctscanChanging(System.Nullable<bool> value);
+        partial void Onallow_ctscanChanged();
+        partial void Onallow_b_bankChanging(System.Nullable<bool> value);
+        partial void Onallow_b_bankChanged();
+        partial void Onallow_cardioChanging(System.Nullable<bool> value);
+        partial void Onallow_cardioChanged();
+        partial void OnOpdAllowChanging(System.Nullable<bool> value);
+        partial void OnOpdAllowChanged();
+        partial void OnAllowPharmacyChanging(System.Nullable<bool> value);
+        partial void OnAllowPharmacyChanged();
+        partial void OnAllowGeneralItemsChanging(System.Nullable<bool> value);
+        partial void OnAllowGeneralItemsChanged();
+        partial void OnIsShowBudgetChanging(System.Nullable<bool> value);
+        partial void OnIsShowBudgetChanged();
+        partial void OnIsInventoryUnApproveChanging(System.Nullable<bool> value);
+        partial void OnIsInventoryUnApproveChanged();
+        partial void OnIsNotificationViewedChanging(System.Nullable<bool> value);
+        partial void OnIsNotificationViewedChanged();
+        partial void OnOTPUsersChanging(System.Nullable<bool> value);
+        partial void OnOTPUsersChanged();
+        partial void OnmobilenoChanging(string value);
+        partial void OnmobilenoChanged();
+        partial void OnEditEmergencyChanging(System.Nullable<bool> value);
+        partial void OnEditEmergencyChanged();
+        partial void OnGl_AccountChanging(string value);
+        partial void OnGl_AccountChanged();
+        partial void OnAllow_bill_editChanging(System.Nullable<bool> value);
+        partial void OnAllow_bill_editChanged();
+        partial void OnEmergency_adm_disChanging(System.Nullable<bool> value);
+        partial void OnEmergency_adm_disChanged();
+        partial void OnAllow_emer_discChanging(System.Nullable<bool> value);
+        partial void OnAllow_emer_discChanged();
+        partial void OnRefer_IPDChanging(System.Nullable<bool> value);
+        partial void OnRefer_IPDChanged();
+        #endregion
+
+        public aspnet_User()
+        {
+            this._aspnet_PersonalizationPerUsers = new EntitySet<aspnet_PersonalizationPerUser>(new Action<aspnet_PersonalizationPerUser>(this.attach_aspnet_PersonalizationPerUsers), new Action<aspnet_PersonalizationPerUser>(this.detach_aspnet_PersonalizationPerUsers));
+            this._aspnet_Profile = default(EntityRef<aspnet_Profile>);
+            this._aspnet_UsersInRoles = new EntitySet<aspnet_UsersInRole>(new Action<aspnet_UsersInRole>(this.attach_aspnet_UsersInRoles), new Action<aspnet_UsersInRole>(this.detach_aspnet_UsersInRoles));
+            this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
+            this._aspnet_Application = default(EntityRef<aspnet_Application>);
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ApplicationId", DbType = "UniqueIdentifier NOT NULL")]
+        public System.Guid ApplicationId
+        {
+            get
+            {
+                return this._ApplicationId;
+            }
+            set
+            {
+                if ((this._ApplicationId != value))
+                {
+                    if (this._aspnet_Application.HasLoadedOrAssignedValue)
+                    {
+                        throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+                    }
+                    this.OnApplicationIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._ApplicationId = value;
+                    this.SendPropertyChanged("ApplicationId");
+                    this.OnApplicationIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UserId", DbType = "UniqueIdentifier NOT NULL", IsPrimaryKey = true)]
+        public System.Guid UserId
+        {
+            get
+            {
+                return this._UserId;
+            }
+            set
+            {
+                if ((this._UserId != value))
+                {
+                    this.OnUserIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._UserId = value;
+                    this.SendPropertyChanged("UserId");
+                    this.OnUserIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UserName", DbType = "NVarChar(256) NOT NULL", CanBeNull = false)]
+        public string UserName
+        {
+            get
+            {
+                return this._UserName;
+            }
+            set
+            {
+                if ((this._UserName != value))
+                {
+                    this.OnUserNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._UserName = value;
+                    this.SendPropertyChanged("UserName");
+                    this.OnUserNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LoweredUserName", DbType = "NVarChar(256) NOT NULL", CanBeNull = false)]
+        public string LoweredUserName
+        {
+            get
+            {
+                return this._LoweredUserName;
+            }
+            set
+            {
+                if ((this._LoweredUserName != value))
+                {
+                    this.OnLoweredUserNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._LoweredUserName = value;
+                    this.SendPropertyChanged("LoweredUserName");
+                    this.OnLoweredUserNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MobileAlias", DbType = "NVarChar(16)")]
+        public string MobileAlias
+        {
+            get
+            {
+                return this._MobileAlias;
+            }
+            set
+            {
+                if ((this._MobileAlias != value))
+                {
+                    this.OnMobileAliasChanging(value);
+                    this.SendPropertyChanging();
+                    this._MobileAlias = value;
+                    this.SendPropertyChanged("MobileAlias");
+                    this.OnMobileAliasChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsAnonymous", DbType = "Bit NOT NULL")]
+        public bool IsAnonymous
+        {
+            get
+            {
+                return this._IsAnonymous;
+            }
+            set
+            {
+                if ((this._IsAnonymous != value))
+                {
+                    this.OnIsAnonymousChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsAnonymous = value;
+                    this.SendPropertyChanged("IsAnonymous");
+                    this.OnIsAnonymousChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LastActivityDate", DbType = "DateTime NOT NULL")]
+        public System.DateTime LastActivityDate
+        {
+            get
+            {
+                return this._LastActivityDate;
+            }
+            set
+            {
+                if ((this._LastActivityDate != value))
+                {
+                    this.OnLastActivityDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._LastActivityDate = value;
+                    this.SendPropertyChanged("LastActivityDate");
+                    this.OnLastActivityDateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowUnapproveVoucher", DbType = "Bit")]
+        public System.Nullable<bool> AllowUnapproveVoucher
+        {
+            get
+            {
+                return this._AllowUnapproveVoucher;
+            }
+            set
+            {
+                if ((this._AllowUnapproveVoucher != value))
+                {
+                    this.OnAllowUnapproveVoucherChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowUnapproveVoucher = value;
+                    this.SendPropertyChanged("AllowUnapproveVoucher");
+                    this.OnAllowUnapproveVoucherChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowPatientEdit", DbType = "Bit")]
+        public System.Nullable<bool> AllowPatientEdit
+        {
+            get
+            {
+                return this._AllowPatientEdit;
+            }
+            set
+            {
+                if ((this._AllowPatientEdit != value))
+                {
+                    this.OnAllowPatientEditChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowPatientEdit = value;
+                    this.SendPropertyChanged("AllowPatientEdit");
+                    this.OnAllowPatientEditChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowPatientDelete", DbType = "Bit")]
+        public System.Nullable<bool> AllowPatientDelete
+        {
+            get
+            {
+                return this._AllowPatientDelete;
+            }
+            set
+            {
+                if ((this._AllowPatientDelete != value))
+                {
+                    this.OnAllowPatientDeleteChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowPatientDelete = value;
+                    this.SendPropertyChanged("AllowPatientDelete");
+                    this.OnAllowPatientDeleteChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Emp_Code", DbType = "VarChar(50)")]
+        public string Emp_Code
+        {
+            get
+            {
+                return this._Emp_Code;
+            }
+            set
+            {
+                if ((this._Emp_Code != value))
+                {
+                    this.OnEmp_CodeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Emp_Code = value;
+                    this.SendPropertyChanged("Emp_Code");
+                    this.OnEmp_CodeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllPatientRecords", DbType = "Bit")]
+        public System.Nullable<bool> AllPatientRecords
+        {
+            get
+            {
+                return this._AllPatientRecords;
+            }
+            set
+            {
+                if ((this._AllPatientRecords != value))
+                {
+                    this.OnAllPatientRecordsChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllPatientRecords = value;
+                    this.SendPropertyChanged("AllPatientRecords");
+                    this.OnAllPatientRecordsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowToAccessAllTest", DbType = "Bit")]
+        public System.Nullable<bool> AllowToAccessAllTest
+        {
+            get
+            {
+                return this._AllowToAccessAllTest;
+            }
+            set
+            {
+                if ((this._AllowToAccessAllTest != value))
+                {
+                    this.OnAllowToAccessAllTestChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowToAccessAllTest = value;
+                    this.SendPropertyChanged("AllowToAccessAllTest");
+                    this.OnAllowToAccessAllTestChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowTestRate", DbType = "Bit")]
+        public System.Nullable<bool> AllowTestRate
+        {
+            get
+            {
+                return this._AllowTestRate;
+            }
+            set
+            {
+                if ((this._AllowTestRate != value))
+                {
+                    this.OnAllowTestRateChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowTestRate = value;
+                    this.SendPropertyChanged("AllowTestRate");
+                    this.OnAllowTestRateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount
+        {
+            get
+            {
+                return this._Discount;
+            }
+            set
+            {
+                if ((this._Discount != value))
+                {
+                    this.OnDiscountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount = value;
+                    this.SendPropertyChanged("Discount");
+                    this.OnDiscountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount_Amount
+        {
+            get
+            {
+                return this._Discount_Amount;
+            }
+            set
+            {
+                if ((this._Discount_Amount != value))
+                {
+                    this.OnDiscount_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount_Amount = value;
+                    this.SendPropertyChanged("Discount_Amount");
+                    this.OnDiscount_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BlockUser", DbType = "Bit")]
+        public System.Nullable<bool> BlockUser
+        {
+            get
+            {
+                return this._BlockUser;
+            }
+            set
+            {
+                if ((this._BlockUser != value))
+                {
+                    this.OnBlockUserChanging(value);
+                    this.SendPropertyChanging();
+                    this._BlockUser = value;
+                    this.SendPropertyChanged("BlockUser");
+                    this.OnBlockUserChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowBillDelete", DbType = "Bit")]
+        public System.Nullable<bool> AllowBillDelete
+        {
+            get
+            {
+                return this._AllowBillDelete;
+            }
+            set
+            {
+                if ((this._AllowBillDelete != value))
+                {
+                    this.OnAllowBillDeleteChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowBillDelete = value;
+                    this.SendPropertyChanged("AllowBillDelete");
+                    this.OnAllowBillDeleteChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allowtestbox", DbType = "Bit")]
+        public System.Nullable<bool> allowtestbox
+        {
+            get
+            {
+                return this._allowtestbox;
+            }
+            set
+            {
+                if ((this._allowtestbox != value))
+                {
+                    this.OnallowtestboxChanging(value);
+                    this.SendPropertyChanging();
+                    this._allowtestbox = value;
+                    this.SendPropertyChanged("allowtestbox");
+                    this.OnallowtestboxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_lab", DbType = "Bit")]
+        public System.Nullable<bool> allow_lab
+        {
+            get
+            {
+                return this._allow_lab;
+            }
+            set
+            {
+                if ((this._allow_lab != value))
+                {
+                    this.Onallow_labChanging(value);
+                    this.SendPropertyChanging();
+                    this._allow_lab = value;
+                    this.SendPropertyChanged("allow_lab");
+                    this.Onallow_labChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_ultra", DbType = "Bit")]
+        public System.Nullable<bool> allow_ultra
+        {
+            get
+            {
+                return this._allow_ultra;
+            }
+            set
+            {
+                if ((this._allow_ultra != value))
+                {
+                    this.Onallow_ultraChanging(value);
+                    this.SendPropertyChanging();
+                    this._allow_ultra = value;
+                    this.SendPropertyChanged("allow_ultra");
+                    this.Onallow_ultraChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_xray", DbType = "Bit")]
+        public System.Nullable<bool> allow_xray
+        {
+            get
+            {
+                return this._allow_xray;
+            }
+            set
+            {
+                if ((this._allow_xray != value))
+                {
+                    this.Onallow_xrayChanging(value);
+                    this.SendPropertyChanging();
+                    this._allow_xray = value;
+                    this.SendPropertyChanged("allow_xray");
+                    this.Onallow_xrayChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_ctscan", DbType = "Bit")]
+        public System.Nullable<bool> allow_ctscan
+        {
+            get
+            {
+                return this._allow_ctscan;
+            }
+            set
+            {
+                if ((this._allow_ctscan != value))
+                {
+                    this.Onallow_ctscanChanging(value);
+                    this.SendPropertyChanging();
+                    this._allow_ctscan = value;
+                    this.SendPropertyChanged("allow_ctscan");
+                    this.Onallow_ctscanChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_b_bank", DbType = "Bit")]
+        public System.Nullable<bool> allow_b_bank
+        {
+            get
+            {
+                return this._allow_b_bank;
+            }
+            set
+            {
+                if ((this._allow_b_bank != value))
+                {
+                    this.Onallow_b_bankChanging(value);
+                    this.SendPropertyChanging();
+                    this._allow_b_bank = value;
+                    this.SendPropertyChanged("allow_b_bank");
+                    this.Onallow_b_bankChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_cardio", DbType = "Bit")]
+        public System.Nullable<bool> allow_cardio
+        {
+            get
+            {
+                return this._allow_cardio;
+            }
+            set
+            {
+                if ((this._allow_cardio != value))
+                {
+                    this.Onallow_cardioChanging(value);
+                    this.SendPropertyChanging();
+                    this._allow_cardio = value;
+                    this.SendPropertyChanged("allow_cardio");
+                    this.Onallow_cardioChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpdAllow", DbType = "Bit")]
+        public System.Nullable<bool> OpdAllow
+        {
+            get
+            {
+                return this._OpdAllow;
+            }
+            set
+            {
+                if ((this._OpdAllow != value))
+                {
+                    this.OnOpdAllowChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpdAllow = value;
+                    this.SendPropertyChanged("OpdAllow");
+                    this.OnOpdAllowChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowPharmacy", DbType = "Bit")]
+        public System.Nullable<bool> AllowPharmacy
+        {
+            get
+            {
+                return this._AllowPharmacy;
+            }
+            set
+            {
+                if ((this._AllowPharmacy != value))
+                {
+                    this.OnAllowPharmacyChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowPharmacy = value;
+                    this.SendPropertyChanged("AllowPharmacy");
+                    this.OnAllowPharmacyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowGeneralItems", DbType = "Bit")]
+        public System.Nullable<bool> AllowGeneralItems
+        {
+            get
+            {
+                return this._AllowGeneralItems;
+            }
+            set
+            {
+                if ((this._AllowGeneralItems != value))
+                {
+                    this.OnAllowGeneralItemsChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowGeneralItems = value;
+                    this.SendPropertyChanged("AllowGeneralItems");
+                    this.OnAllowGeneralItemsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsShowBudget", DbType = "Bit")]
+        public System.Nullable<bool> IsShowBudget
+        {
+            get
+            {
+                return this._IsShowBudget;
+            }
+            set
+            {
+                if ((this._IsShowBudget != value))
+                {
+                    this.OnIsShowBudgetChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsShowBudget = value;
+                    this.SendPropertyChanged("IsShowBudget");
+                    this.OnIsShowBudgetChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsInventoryUnApprove", DbType = "Bit")]
+        public System.Nullable<bool> IsInventoryUnApprove
+        {
+            get
+            {
+                return this._IsInventoryUnApprove;
+            }
+            set
+            {
+                if ((this._IsInventoryUnApprove != value))
+                {
+                    this.OnIsInventoryUnApproveChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsInventoryUnApprove = value;
+                    this.SendPropertyChanged("IsInventoryUnApprove");
+                    this.OnIsInventoryUnApproveChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsNotificationViewed", DbType = "Bit")]
+        public System.Nullable<bool> IsNotificationViewed
+        {
+            get
+            {
+                return this._IsNotificationViewed;
+            }
+            set
+            {
+                if ((this._IsNotificationViewed != value))
+                {
+                    this.OnIsNotificationViewedChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsNotificationViewed = value;
+                    this.SendPropertyChanged("IsNotificationViewed");
+                    this.OnIsNotificationViewedChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OTPUsers", DbType = "Bit")]
+        public System.Nullable<bool> OTPUsers
+        {
+            get
+            {
+                return this._OTPUsers;
+            }
+            set
+            {
+                if ((this._OTPUsers != value))
+                {
+                    this.OnOTPUsersChanging(value);
+                    this.SendPropertyChanging();
+                    this._OTPUsers = value;
+                    this.SendPropertyChanged("OTPUsers");
+                    this.OnOTPUsersChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mobileno", DbType = "NVarChar(150)")]
+        public string mobileno
+        {
+            get
+            {
+                return this._mobileno;
+            }
+            set
+            {
+                if ((this._mobileno != value))
+                {
+                    this.OnmobilenoChanging(value);
+                    this.SendPropertyChanging();
+                    this._mobileno = value;
+                    this.SendPropertyChanged("mobileno");
+                    this.OnmobilenoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_EditEmergency", DbType = "Bit")]
+        public System.Nullable<bool> EditEmergency
+        {
+            get
+            {
+                return this._EditEmergency;
+            }
+            set
+            {
+                if ((this._EditEmergency != value))
+                {
+                    this.OnEditEmergencyChanging(value);
+                    this.SendPropertyChanging();
+                    this._EditEmergency = value;
+                    this.SendPropertyChanged("EditEmergency");
+                    this.OnEditEmergencyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Gl_Account", DbType = "NVarChar(150)")]
+        public string Gl_Account
+        {
+            get
+            {
+                return this._Gl_Account;
+            }
+            set
+            {
+                if ((this._Gl_Account != value))
+                {
+                    this.OnGl_AccountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Gl_Account = value;
+                    this.SendPropertyChanged("Gl_Account");
+                    this.OnGl_AccountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_bill_edit", DbType = "Bit")]
+        public System.Nullable<bool> Allow_bill_edit
+        {
+            get
+            {
+                return this._Allow_bill_edit;
+            }
+            set
+            {
+                if ((this._Allow_bill_edit != value))
+                {
+                    this.OnAllow_bill_editChanging(value);
+                    this.SendPropertyChanging();
+                    this._Allow_bill_edit = value;
+                    this.SendPropertyChanged("Allow_bill_edit");
+                    this.OnAllow_bill_editChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Emergency_adm_dis", DbType = "Bit")]
+        public System.Nullable<bool> Emergency_adm_dis
+        {
+            get
+            {
+                return this._Emergency_adm_dis;
+            }
+            set
+            {
+                if ((this._Emergency_adm_dis != value))
+                {
+                    this.OnEmergency_adm_disChanging(value);
+                    this.SendPropertyChanging();
+                    this._Emergency_adm_dis = value;
+                    this.SendPropertyChanged("Emergency_adm_dis");
+                    this.OnEmergency_adm_disChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_emer_disc", DbType = "Bit")]
+        public System.Nullable<bool> Allow_emer_disc
+        {
+            get
+            {
+                return this._Allow_emer_disc;
+            }
+            set
+            {
+                if ((this._Allow_emer_disc != value))
+                {
+                    this.OnAllow_emer_discChanging(value);
+                    this.SendPropertyChanging();
+                    this._Allow_emer_disc = value;
+                    this.SendPropertyChanged("Allow_emer_disc");
+                    this.OnAllow_emer_discChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Refer_IPD", DbType = "Bit")]
+        public System.Nullable<bool> Refer_IPD
+        {
+            get
+            {
+                return this._Refer_IPD;
+            }
+            set
+            {
+                if ((this._Refer_IPD != value))
+                {
+                    this.OnRefer_IPDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Refer_IPD = value;
+                    this.SendPropertyChanged("Refer_IPD");
+                    this.OnRefer_IPDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_PersonalizationPerUser", Storage = "_aspnet_PersonalizationPerUsers", ThisKey = "UserId", OtherKey = "UserId")]
+        public EntitySet<aspnet_PersonalizationPerUser> aspnet_PersonalizationPerUsers
+        {
+            get
+            {
+                return this._aspnet_PersonalizationPerUsers;
+            }
+            set
+            {
+                this._aspnet_PersonalizationPerUsers.Assign(value);
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_Profile", Storage = "_aspnet_Profile", ThisKey = "UserId", OtherKey = "UserId", IsUnique = true, IsForeignKey = false)]
+        public aspnet_Profile aspnet_Profile
+        {
+            get
+            {
+                return this._aspnet_Profile.Entity;
+            }
+            set
+            {
+                aspnet_Profile previousValue = this._aspnet_Profile.Entity;
+                if (((previousValue != value)
+                            || (this._aspnet_Profile.HasLoadedOrAssignedValue == false)))
+                {
+                    this.SendPropertyChanging();
+                    if ((previousValue != null))
+                    {
+                        this._aspnet_Profile.Entity = null;
+                        previousValue.aspnet_User = null;
+                    }
+                    this._aspnet_Profile.Entity = value;
+                    if ((value != null))
+                    {
+                        value.aspnet_User = this;
+                    }
+                    this.SendPropertyChanged("aspnet_Profile");
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_UsersInRole", Storage = "_aspnet_UsersInRoles", ThisKey = "UserId", OtherKey = "UserId")]
+        public EntitySet<aspnet_UsersInRole> aspnet_UsersInRoles
+        {
+            get
+            {
+                return this._aspnet_UsersInRoles;
+            }
+            set
+            {
+                this._aspnet_UsersInRoles.Assign(value);
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_User_aspnet_Membership", Storage = "_aspnet_Membership", ThisKey = "UserId", OtherKey = "UserId", IsUnique = true, IsForeignKey = false)]
+        public aspnet_Membership aspnet_Membership
+        {
+            get
+            {
+                return this._aspnet_Membership.Entity;
+            }
+            set
+            {
+                aspnet_Membership previousValue = this._aspnet_Membership.Entity;
+                if (((previousValue != value)
+                            || (this._aspnet_Membership.HasLoadedOrAssignedValue == false)))
+                {
+                    this.SendPropertyChanging();
+                    if ((previousValue != null))
+                    {
+                        this._aspnet_Membership.Entity = null;
+                        previousValue.aspnet_User = null;
+                    }
+                    this._aspnet_Membership.Entity = value;
+                    if ((value != null))
+                    {
+                        value.aspnet_User = this;
+                    }
+                    this.SendPropertyChanged("aspnet_Membership");
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "aspnet_Application_aspnet_User", Storage = "_aspnet_Application", ThisKey = "ApplicationId", OtherKey = "ApplicationId", IsForeignKey = true)]
+        public aspnet_Application aspnet_Application
+        {
+            get
+            {
+                return this._aspnet_Application.Entity;
+            }
+            set
+            {
+                aspnet_Application previousValue = this._aspnet_Application.Entity;
+                if (((previousValue != value)
+                            || (this._aspnet_Application.HasLoadedOrAssignedValue == false)))
+                {
+                    this.SendPropertyChanging();
+                    if ((previousValue != null))
+                    {
+                        this._aspnet_Application.Entity = null;
+                        previousValue.aspnet_Users.Remove(this);
+                    }
+                    this._aspnet_Application.Entity = value;
+                    if ((value != null))
+                    {
+                        value.aspnet_Users.Add(this);
+                        this._ApplicationId = value.ApplicationId;
+                    }
+                    else
+                    {
+                        this._ApplicationId = default(System.Guid);
+                    }
+                    this.SendPropertyChanged("aspnet_Application");
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void attach_aspnet_PersonalizationPerUsers(aspnet_PersonalizationPerUser entity)
+        {
+            this.SendPropertyChanging();
+            entity.aspnet_User = this;
+        }
+
+        private void detach_aspnet_PersonalizationPerUsers(aspnet_PersonalizationPerUser entity)
+        {
+            this.SendPropertyChanging();
+            entity.aspnet_User = null;
+        }
+
+        private void attach_aspnet_UsersInRoles(aspnet_UsersInRole entity)
+        {
+            this.SendPropertyChanging();
+            entity.aspnet_User = this;
+        }
+
+        private void detach_aspnet_UsersInRoles(aspnet_UsersInRole entity)
+        {
+            this.SendPropertyChanging();
+            entity.aspnet_User = null;
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.inv_bom")]
+    public partial class inv_bom : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _BOMID;
+
+        private int _ProcedureID;
+
+        private string _Category;
+
+        private decimal _TotalCost;
+
+        private System.Nullable<System.Guid> _CreatedBy;
+
+        private System.DateTime _CreatedDate;
+
+        private System.Nullable<System.Guid> _UpdatedBy;
+
+        private System.DateTime _UpdatedDate;
+
+        private System.Nullable<bool> _isCancel;
+
+        private System.Nullable<System.Guid> _Cancel_By;
+
+        private System.Nullable<System.DateTime> _CancelDate;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnBOMIDChanging(int value);
+        partial void OnBOMIDChanged();
+        partial void OnProcedureIDChanging(int value);
+        partial void OnProcedureIDChanged();
+        partial void OnCategoryChanging(string value);
+        partial void OnCategoryChanged();
+        partial void OnTotalCostChanging(decimal value);
+        partial void OnTotalCostChanged();
+        partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreatedByChanged();
+        partial void OnCreatedDateChanging(System.DateTime value);
+        partial void OnCreatedDateChanged();
+        partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdatedByChanged();
+        partial void OnUpdatedDateChanging(System.DateTime value);
+        partial void OnUpdatedDateChanged();
+        partial void OnisCancelChanging(System.Nullable<bool> value);
+        partial void OnisCancelChanged();
+        partial void OnCancel_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCancel_ByChanged();
+        partial void OnCancelDateChanging(System.Nullable<System.DateTime> value);
+        partial void OnCancelDateChanged();
+        #endregion
+
+        public inv_bom()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BOMID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int BOMID
+        {
+            get
+            {
+                return this._BOMID;
+            }
+            set
+            {
+                if ((this._BOMID != value))
+                {
+                    this.OnBOMIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._BOMID = value;
+                    this.SendPropertyChanged("BOMID");
+                    this.OnBOMIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProcedureID", DbType = "Int NOT NULL")]
+        public int ProcedureID
+        {
+            get
+            {
+                return this._ProcedureID;
+            }
+            set
+            {
+                if ((this._ProcedureID != value))
+                {
+                    this.OnProcedureIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ProcedureID = value;
+                    this.SendPropertyChanged("ProcedureID");
+                    this.OnProcedureIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "NVarChar(100)")]
+        public string Category
+        {
+            get
+            {
+                return this._Category;
+            }
+            set
+            {
+                if ((this._Category != value))
+                {
+                    this.OnCategoryChanging(value);
+                    this.SendPropertyChanging();
+                    this._Category = value;
+                    this.SendPropertyChanged("Category");
+                    this.OnCategoryChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCost", DbType = "Decimal(18,2) NOT NULL")]
+        public decimal TotalCost
+        {
+            get
+            {
+                return this._TotalCost;
+            }
+            set
+            {
+                if ((this._TotalCost != value))
+                {
+                    this.OnTotalCostChanging(value);
+                    this.SendPropertyChanging();
+                    this._TotalCost = value;
+                    this.SendPropertyChanged("TotalCost");
+                    this.OnTotalCostChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> CreatedBy
+        {
+            get
+            {
+                return this._CreatedBy;
+            }
+            set
+            {
+                if ((this._CreatedBy != value))
+                {
+                    this.OnCreatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedBy = value;
+                    this.SendPropertyChanged("CreatedBy");
+                    this.OnCreatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedDate", DbType = "DateTime NOT NULL")]
+        public System.DateTime CreatedDate
+        {
+            get
+            {
+                return this._CreatedDate;
+            }
+            set
+            {
+                if ((this._CreatedDate != value))
+                {
+                    this.OnCreatedDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedDate = value;
+                    this.SendPropertyChanged("CreatedDate");
+                    this.OnCreatedDateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> UpdatedBy
+        {
+            get
+            {
+                return this._UpdatedBy;
+            }
+            set
+            {
+                if ((this._UpdatedBy != value))
+                {
+                    this.OnUpdatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._UpdatedBy = value;
+                    this.SendPropertyChanged("UpdatedBy");
+                    this.OnUpdatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedDate", DbType = "DateTime NOT NULL")]
+        public System.DateTime UpdatedDate
+        {
+            get
+            {
+                return this._UpdatedDate;
+            }
+            set
+            {
+                if ((this._UpdatedDate != value))
+                {
+                    this.OnUpdatedDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._UpdatedDate = value;
+                    this.SendPropertyChanged("UpdatedDate");
+                    this.OnUpdatedDateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isCancel", DbType = "Bit")]
+        public System.Nullable<bool> isCancel
+        {
+            get
+            {
+                return this._isCancel;
+            }
+            set
+            {
+                if ((this._isCancel != value))
+                {
+                    this.OnisCancelChanging(value);
+                    this.SendPropertyChanging();
+                    this._isCancel = value;
+                    this.SendPropertyChanged("isCancel");
+                    this.OnisCancelChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Cancel_By
+        {
+            get
+            {
+                return this._Cancel_By;
+            }
+            set
+            {
+                if ((this._Cancel_By != value))
+                {
+                    this.OnCancel_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cancel_By = value;
+                    this.SendPropertyChanged("Cancel_By");
+                    this.OnCancel_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CancelDate", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> CancelDate
+        {
+            get
+            {
+                return this._CancelDate;
+            }
+            set
+            {
+                if ((this._CancelDate != value))
+                {
+                    this.OnCancelDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._CancelDate = value;
+                    this.SendPropertyChanged("CancelDate");
+                    this.OnCancelDateChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.inv_bom_detail")]
+    public partial class inv_bom_detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _BOMDetailID;
+
+        private int _BOMID;
+
+        private int _ItemID;
+
+        private decimal _Qty;
+
+        private string _Unit;
+
+        private decimal _CostPerUnit;
+
+        private decimal _Total;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnBOMDetailIDChanging(int value);
+        partial void OnBOMDetailIDChanged();
+        partial void OnBOMIDChanging(int value);
+        partial void OnBOMIDChanged();
+        partial void OnItemIDChanging(int value);
+        partial void OnItemIDChanged();
+        partial void OnQtyChanging(decimal value);
+        partial void OnQtyChanged();
+        partial void OnUnitChanging(string value);
+        partial void OnUnitChanged();
+        partial void OnCostPerUnitChanging(decimal value);
+        partial void OnCostPerUnitChanged();
+        partial void OnTotalChanging(decimal value);
+        partial void OnTotalChanged();
+        #endregion
+
+        public inv_bom_detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BOMDetailID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int BOMDetailID
+        {
+            get
+            {
+                return this._BOMDetailID;
+            }
+            set
+            {
+                if ((this._BOMDetailID != value))
+                {
+                    this.OnBOMDetailIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._BOMDetailID = value;
+                    this.SendPropertyChanged("BOMDetailID");
+                    this.OnBOMDetailIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BOMID", DbType = "Int NOT NULL")]
+        public int BOMID
+        {
+            get
+            {
+                return this._BOMID;
+            }
+            set
+            {
+                if ((this._BOMID != value))
+                {
+                    this.OnBOMIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._BOMID = value;
+                    this.SendPropertyChanged("BOMID");
+                    this.OnBOMIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ItemID", DbType = "Int NOT NULL")]
+        public int ItemID
+        {
+            get
+            {
+                return this._ItemID;
+            }
+            set
+            {
+                if ((this._ItemID != value))
+                {
+                    this.OnItemIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ItemID = value;
+                    this.SendPropertyChanged("ItemID");
+                    this.OnItemIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(10,4) NOT NULL")]
+        public decimal Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this.OnQtyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Qty = value;
+                    this.SendPropertyChanged("Qty");
+                    this.OnQtyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "NVarChar(20) NOT NULL", CanBeNull = false)]
+        public string Unit
+        {
+            get
+            {
+                return this._Unit;
+            }
+            set
+            {
+                if ((this._Unit != value))
+                {
+                    this.OnUnitChanging(value);
+                    this.SendPropertyChanging();
+                    this._Unit = value;
+                    this.SendPropertyChanged("Unit");
+                    this.OnUnitChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostPerUnit", DbType = "Decimal(18,4) NOT NULL")]
+        public decimal CostPerUnit
+        {
+            get
+            {
+                return this._CostPerUnit;
+            }
+            set
+            {
+                if ((this._CostPerUnit != value))
+                {
+                    this.OnCostPerUnitChanging(value);
+                    this.SendPropertyChanging();
+                    this._CostPerUnit = value;
+                    this.SendPropertyChanged("CostPerUnit");
+                    this.OnCostPerUnitChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total", DbType = "Decimal(18,4) NOT NULL")]
+        public decimal Total
+        {
+            get
+            {
+                return this._Total;
+            }
+            set
+            {
+                if ((this._Total != value))
+                {
+                    this.OnTotalChanging(value);
+                    this.SendPropertyChanging();
+                    this._Total = value;
+                    this.SendPropertyChanged("Total");
+                    this.OnTotalChanged();
                 }
             }
         }

@@ -4071,6 +4071,16 @@ namespace PMS
             return "";
         }
         [WebMethod]
+        public static string CheckReferIPDRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var referIPD = (from u in db.aspnet_Users
+                            where u.UserId == AppConfig.UserID
+                            select u.Refer_IPD).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(referIPD?.ToString() ?? "false");
+        }
+        [WebMethod]
         public static string FillDays_Years_MonthsDropDown()
         {
             DataBaseDataContext db = new DataBaseDataContext();

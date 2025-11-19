@@ -65,6 +65,7 @@
                     $('#AllowEmergency_adm_dis').prop('checked', data.Emergency_adm_dis);
                     $('#BlockUser').prop('checked', data.BlockUser);
                     $('#AllowemergencyDiscount').prop('checked', data.Allow_emer_disc);
+                    $('#AllowReferIPD').prop('checked', data.AllowReferIPD);
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -109,6 +110,7 @@
             var AllowBillUpdate = $('#AllowBillUpdate').prop('checked');
             var BlockUser = $('#BlockUser').prop('checked');
             var AllowemergencyDiscount = $('#AllowemergencyDiscount').prop('checked');
+            var AllowReferIPD = $('#AllowReferIPD').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var hasMinLength = Password.length >= 6;
             var hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(Password);
@@ -224,7 +226,8 @@
                 "AllowEmergency_adm_dis": AllowEmergency_adm_dis,
                 "AllowBillUpdate": AllowBillUpdate,
                 "BlockUser": BlockUser,
-                "AllowemergencyDiscount": AllowemergencyDiscount
+                "AllowemergencyDiscount": AllowemergencyDiscount,
+                "AllowReferIPD": AllowReferIPD
 
             };
 
@@ -533,6 +536,9 @@
                                                          <input type="checkbox" class="form-check-input" id="AllowemergencyDiscount" name="AllowemergencyDiscount" />
                                                      </div>
                                                     <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowReferIPD" name="AllowReferIPD" />
+                                                    </div>
+                                                    <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
                                                     </div>
 
@@ -577,6 +583,9 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowemergencyDiscount">Discount Emergency</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowReferIPD">Refer IPD</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="EmpCode">Employee Code</label>
