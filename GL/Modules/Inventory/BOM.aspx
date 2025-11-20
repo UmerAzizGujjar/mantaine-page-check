@@ -241,11 +241,20 @@
                     <label>Cost/Unit <span class="text-danger">*</span></label>
                     <input type="number" id="itemCost" step="0.01" min="0" class="form-control" />
                 </div>
-                <div class="col-md-2">
+               
+                <div class="col-md-1">
                     <button id="addItemBtn" class="btn btn-primry">
-                        <i class="fa fa-plus"></i>Add
+                        <i ></i>Add
                     </button>
                 </div>
+                 <div class="col-md-1">
+                     <label>P_Rate  <span class="text-danger">*</span></label>
+                     <input type="text" disabled="disabled" id="txtpr_rate" step="0.01" min="0" class="form-control" />
+                 </div>
+                 <div class="col-md-1">
+                     <label>Current Stock <span class="text-danger">*</span></label>
+                     <input type="number" id="txtStock" step="0.01" min="0" class="form-control" />
+                 </div>
             </div>
 
             <table class="table table-sm table-bordered mt-3" id="itemsTable">
