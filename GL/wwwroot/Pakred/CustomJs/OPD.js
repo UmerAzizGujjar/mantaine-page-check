@@ -880,7 +880,7 @@ function SavePatient() {
     var Country = $('#ddlCountry :selected').val();
     var Province = $('#ddl_Province :selected').val();
 
-    if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || city_val == "0" || area_val == "0")) {
+    if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || city_val == "0")) {
         Swal.fire({
             icon: 'error',
             title: 'Error!',

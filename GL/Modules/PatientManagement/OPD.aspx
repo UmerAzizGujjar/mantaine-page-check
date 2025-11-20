@@ -661,7 +661,7 @@
 
                         $('#ddldoctor').html(options);
                         var type = $('#ddlPatient_Type').val();
-                        if (type != "02") {
+                        if (type !== "02" && type !== "11") {
 
                             getGeneralFee();
                         }
@@ -736,6 +736,44 @@
                 loadDepartment(Doc);
             }
         }
+
+
+        debugger;
+        function getspecialfees(Doc) {
+            debugger
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/loadSpecialFees",
+                data: JSON.stringify({ Doc: Doc }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+
+                    if (!res) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Special Fee not found.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        return;
+                    }
+                    $('#txtactualfee').val(res.Consultant_Charges);
+                    $('#txtfees').val(res.Consultant_Charges);
+                    $('#txtdiscount').val(0);
+
+                    $('#hdnhospShare').val(res.Hospital_Amount);
+                    $('#hdnDocshare').val(res.Doctor_Amount);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+
     </script>
 
 </asp:Content>

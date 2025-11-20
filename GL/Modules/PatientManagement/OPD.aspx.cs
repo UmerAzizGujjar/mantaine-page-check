@@ -162,6 +162,24 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string loadSpecialFees(string Doc)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            var data = (from emp in db.HR_Employees
+                        where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+                        select new
+                        {
+                            Consultant_Charges = emp.Consultant_Charges,
+                            Doctor_Amount = emp.Doctor_Amount,
+                            Hospital_Amount = emp.Hospital_Amount
+                        }).FirstOrDefault();
+
+            return new JavaScriptSerializer().Serialize(data);
+        }
+
+
+        [WebMethod]
         public static string GetClinics()
         {
             string data = string.Empty;
@@ -977,11 +995,28 @@ namespace PMS.Modules.PatientManagement
                     pat.Card_Issued = data.IssueCard ?? false;
                     pat.free_check = data.FreeCheck ?? false;
 
+                    //decimal netAmount = data.Fees;
+                    //decimal hospitalSharePct = data.Hosp_share;
+                    //decimal doctorSharePct = data.Doc_Share;
+                    //pat.Hospital_share = Math.Round((netAmount * hospitalSharePct) / 100, 2);
+                    //pat.doc_share = Math.Round((netAmount * doctorSharePct) / 100, 2).ToString("F2");
                     decimal netAmount = data.Fees;
-                    decimal hospitalSharePct = data.Hosp_share;
-                    decimal doctorSharePct = data.Doc_Share;
-                    pat.Hospital_share = Math.Round((netAmount * hospitalSharePct) / 100, 2);
-                    pat.doc_share = Math.Round((netAmount * doctorSharePct) / 100, 2).ToString("F2");
+
+                    if (category == "11")
+                    {
+                        pat.Hospital_share = Math.Round(netAmount / 2, 2);
+                        pat.doc_share = Math.Round(netAmount / 2, 2).ToString("F2");
+                    }
+                    else
+                    {
+                        decimal hospitalSharePct = data.Hosp_share; 
+                        decimal doctorSharePct = data.Doc_Share;
+
+                        pat.Hospital_share = Math.Round((netAmount * hospitalSharePct) / 100, 2);
+                        pat.doc_share = Math.Round((netAmount * doctorSharePct) / 100, 2).ToString("F2");
+                    }
+
+
                     pat.Share_Transfered = (category == "02");
 
                     if (isNew)

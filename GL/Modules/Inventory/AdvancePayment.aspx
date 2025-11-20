@@ -163,10 +163,20 @@
         var txtPoAmount = parseFloat($('#txtPoAmount').val().replace(/,/g, '') || 0);
         var advance_amount = parseFloat($('#advance_amount').val().replace(/,/g, '') || 0);          
 
-        // Validate advance_amount
         if (advance_amount > txtPoAmount) {
             $('#advance_amount').val(0);
-            alert('Advance amount must be less than or equal to PO Amount.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Advance amount must be less than or equal to PO Amount.',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             advance_amount = 0;
         }
 
@@ -181,37 +191,6 @@
         $('#txtbalance_amount').val(balance);
     }
 
-
-
-    //function calculatetax() {
-    //    debugger;
-    //    var taxperc = $('#ddl_withholdtax :selected').text();
-    //    if (taxperc == 'Please Select') {
-    //        taxperc = 0;
-    //    } else {
-    //        taxperc = parseFloat(taxperc) || 0;
-    //    }
-    //    var txtPoAmount = parseFloat($('#txtPoAmount').val() || 0);
-    //    var advance_amount = parseFloat($('#advance_amount').val() || 0);
-
-    //    // Validate advance_amount
-    //    if (advance_amount > txtPoAmount) {
-    //        $('#advance_amount').val(0);
-    //        alert('Advance amount must be less than or equal to PO Amount.');
-    //        advance_amount = 0;
-    //    }
-
-    //    var balance = parseFloat(txtPoAmount - advance_amount).toFixed(2);
-    //    var taxamount = advance_amount * taxperc / 100;
-    //    var paidamount = advance_amount - taxamount;
-    //    var total = taxamount + paidamount;
-    //    $('#withhold_tax_amount').val(taxamount.toFixed(2));
-    //    $('#txt_paidamount').val(paidamount.toFixed(2));
-    //    $('#txtTotalAmount').val(total.toFixed(2));
-    //    $('#txtbalance_amount').val(balance);
-    //}
-
-
     function SaveAllRecord() {
         debugger;
         $("#btn_Save").prop("disabled", true);
@@ -222,19 +201,52 @@
         var advance_amount = $('#advance_amount').val();
         var ddl_vendor = $('#ddl_vendor').val() || 0;
         if (ddl_vendor == 0) {
-            alert("Please Select Vendor");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Select Vendor',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             $("#btn_Save").prop("disabled", false);
             return false;
         }
         var PoID = $('#ddl_PoNum').val() || 0;
         if (PoID == 0) {
-            alert("Please Select PO");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Select PO',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             $("#btn_Save").prop("disabled", false);
             return false;
         }
         var PoAmount = $('#txtPoAmount').val() || 0;
         if (PoAmount == 0) {
-            alert("Please Check PO and Its Amount");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Check PO and Its Amount',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             $("#btn_Save").prop("disabled", false);
             return false;
         }
@@ -244,14 +256,36 @@
         var chkWHTax = $('#chkWHTax').prop('checked');
 
         if (advamt > txtPoAmount) {
-            alert("Please Advance Amount Must be Less Then or Equal to PO Amount");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Advance Amount Must be Less Then or Equal to PO Amount',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             $("#btn_Save").prop("disabled", false);
             return false;
         }
         var referno = $('#referno').val();
         var ddl_paidthrough = $('#ddl_paidthrough').val() || 0;
         if (ddl_paidthrough == 0) {
-            alert("Please Select Paid Through");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Select Paid Through',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             $("#btn_Save").prop("disabled", false);
             return false;
         }
@@ -267,7 +301,18 @@
         PageMethods.SaveAdvancePayment(btnSave, JSON.stringify(AllItemDetail), function (res) {
             debugger;
             sendFile(res);
-            alert('Data Save Successfully');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Data Save Successfully',
+                showConfirmButton: false,
+                timer: 2500,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
             $('#btn_Save').val("Update");
             window.location = "AdvancePayment.aspx?Adv_ID=" + res;
             $('#btn_Save').val("Update");
