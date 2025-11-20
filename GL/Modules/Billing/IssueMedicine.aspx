@@ -1414,7 +1414,10 @@
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
             $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
         }
-
+        function getOPDandIPDNO(pat_id) {
+            PageMethods.GetOPDandIPDNO(pat_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                // Process GRN_Details                $.each(parsedData.OPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.IPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                $('#ddlPatient_No').html(options);                $('#ddlPatient_No').select2();
+            })
+        }
         function getbatchfrom_grn() {            debugger;            var Inv_batch = $('#chkbatch').prop("checked");            if (Inv_batch == false) {                $('#batchno').hide();
                 $('#batchno').prop('disabled', true);                AddnonBatchItems();            }            else {                var med_id = $('#medName').find('option:selected').val();                PageMethods.GetinvBatch(med_id, function (dataa) {                    debugger;                    var parsedDataa = JSON.parse(dataa);                    console.log(parsedDataa)                    if (parsedDataa == true) {                        debugger                        PageMethods.Getbatch_grn(med_id, function (data) {                            var parsedData = JSON.parse(data);                            var options = '<option value="0" >Please Select</option>';                            // Process GRN_Details                            $.each(parsedData.GRN_Details, function (key, value) {                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            });                            // Process Stock_Adjustment_Details                            $.each(parsedData.Stock_Adjustment_Details, function (key, value) {                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            });                            $('#batchno').html(options);                            $('#batchno').select2();                            var isbatch = $('#chkbatch').prop("checked");                            debugger;
                             if (isbatch == true) {
@@ -1752,9 +1755,11 @@
                     debugger;
                     try {
                         pat_id = item.id;
-                      /*  LoadPriscription();*/
+                        /*  LoadPriscription();*/
+                        out_Patient_Id = pat_id
                         getOPDID(pat_id);
                         getIPDID(pat_id);
+                        getOPDandIPDNO(pat_id)
                       
                     } catch (err) {
                         alert(err.message);
@@ -1778,7 +1783,7 @@
 
                     if (opdId && opdId !== "") {
                        
-                        getitem_code(opdId);
+                        //getitem_code(opdId);
                         $("#txtTransType").val('OPD Patient');
                       
                     }
@@ -1887,31 +1892,86 @@
         }
         debugger;
         var itemIds;
-        function getitem_code(opdId) {
+        function getitem_code() {
             debugger;
-            var out_Patient_Id = opdId
+            var pat_Id = $('#ddlPatient_No').val();
+            var PatNo = $('#ddlPatient_No option:selected').text();
+            var parts = PatNo.split('-');
+            var prefix = parts[0];
+            var number = parts[1];   
+
+
+            var Pat_Id = pat_Id
             itemIds = [];
-            $.ajax({
-                type: "post",
-                url: "IssueMedicine.aspx/GetItemCodes",
-                data: JSON.stringify({
-                    "out_Patient_Id": out_Patient_Id,
-                }),
-                dataType: 'JSON',
-                contentType: "application/json; charset=utf-8",
-                async: false,
-                success: function (msg) {
-                    debugger;
-                    var data = JSON.parse(msg.d);
-                    debugger;
-                    $.each(data, function (key, value) {
+            if (prefix == 'OPD') {
+                $.ajax({
+                    type: "post",
+                    url: "IssueMedicine.aspx/GetItemCodesOPD",
+                    data: JSON.stringify({
+                        "Pat_Id": Pat_Id,
+                    }),
+                    dataType: 'JSON',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (msg) {
                         debugger;
-                        itemIds.push(value);
-                    });
-                }
-            });
+                        var data = JSON.parse(msg.d);
+                        debugger;
+                        $.each(data, function (key, value) {
+                            debugger;
+                            itemIds.push(value);
+                        });
+                    }
+                });
+            }
+            if (prefix == 'IPD') {
+                $.ajax({
+                    type: "post",
+                    url: "IssueMedicine.aspx/GetItemCodesIPD",
+                    data: JSON.stringify({
+                        "Pat_Id": Pat_Id,
+                    }),
+                    dataType: 'JSON',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (msg) {
+                        debugger;
+                        var data = JSON.parse(msg.d);
+                        getWardAndBed(pat_Id)
+                        debugger;
+                        $.each(data, function (key, value) {
+                            debugger;
+                            itemIds.push(value);
+                           
+                        });
+                    }
+                });
+                
+            }
             AddMedicineDetailFormOPD(itemIds)
         }
+        function getWardAndBed(pat_Id) {
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/GetWardAndBed",
+                data: JSON.stringify({ Pat_Id: pat_Id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    debugger;
+
+                    var data = JSON.parse(msg.d);
+
+                    // Set values in fields
+                    $('#Ward_Name').val(data.Ward_Name || "");
+                    $('#BedName').val(data.Bed_No || "");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in getWardAndBed: ", error);
+                }
+            });
+        }
+
         debugger;
         function AddMedicineDetailFormOPD(itemIds) {
             debugger;
@@ -1970,7 +2030,9 @@
 
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
+
                             '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' + 
+                            '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
 
@@ -2120,6 +2182,24 @@
                     </select>
                 </div>
             </div>
+                      <div class="row mb-3">
+                          <div class="col-sm-12 col-md-4 col-lg-3">
+                              <label>Patient NO</label>
+                              <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
+                                  <option></option>
+                              </select>
+
+                          </div>
+              <div class="col-sm-12 col-md-4 col-lg-3">
+                  <label id="LblWard">Ward Name</label>
+                  <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
+              </div>
+
+              <div class="col-sm-6 col-md-4 col-lg-3">
+                  <label id="lblBed">Bed No:</label>
+            <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
+              </div>
+          </div>
 
             <!-- OPD Prescription & Batch -->
             <div class="row mb-3">

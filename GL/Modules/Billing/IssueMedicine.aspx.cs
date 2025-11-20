@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMS.Modules.PatientManagement;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -27,12 +28,36 @@ namespace PMS
             return result;
         }
         [WebMethod]
-        public static string GetItemCodes(int out_Patient_Id)
+        public static string GetWardAndBed(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var itemCodes = (from op in db.Out_Patients
-                             join ip in db.In_Patient_Medicines on op.Out_Patient_ID equals ip.Patient_ID
-                             where ip.Patient_ID == out_Patient_Id
+            var itemCodes = (from  ip in db.In_Patients 
+                             where ip.In_Patient_ID == Pat_Id
+                             select new
+                             {
+                                 Ward_Name =(from w in db.Ward_Definitions where w.Ward_ID == ip.Ward_ID select w.Ward_Type).FirstOrDefault(),
+                                 ip.Bed_No
+                             }).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+
+        }
+        [WebMethod]
+        public static string GetItemCodesIPD(int Pat_Id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemCodes = (from  ip in db.In_Patient_Medicines 
+                             where ip.Patient_ID == Pat_Id
+                             select ip.Item_Code).ToList();
+            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+
+        }
+        [WebMethod]
+        public static string GetItemCodesOPD(int Pat_Id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemCodes = (from  ip in db.In_Patient_Medicines join o in db.Out_Patients on ip.Patient_ID equals o.Out_Patient_ID
+                             join p in db.Patients on o.Patient_ID equals p.Patient_ID
+                             where p.Patient_ID == Pat_Id
                              select ip.Item_Code).ToList();
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
@@ -51,6 +76,37 @@ namespace PMS
         }
 
 
+        [WebMethod]
+        public static string GetOPDandIPDNO(int pat_id)
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var OPD_NO = (from opd in db.Patients                                
+                                 where opd.Reg_PatId == pat_id
+                                 select new
+                                 {
+                                     Patient_No = "OPD-" + opd.Opd_No,
+                                     Patient_ID = opd.Patient_ID
+                                 }).ToList();
+                var IPD_NO = (from ipd in db.In_Patients
+                                             where ipd.Patient_ID == pat_id
+                                          
+                                             select new
+                                             {
+                                                 Patient_No = "IPD-" + ipd.IPD_No,
+                                                 Patient_ID = ipd.In_Patient_ID
+                                             }).ToList();
+
+                var combinedResult = new
+                {
+                    OPD_NO = OPD_NO,
+                    IPD_NO = IPD_NO
+                };
+                data = new JavaScriptSerializer().Serialize(combinedResult);
+            }
+            return data;
+        }
 
         [WebMethod]
         public static string Getbatch_grn(int med_id)
