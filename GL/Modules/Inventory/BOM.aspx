@@ -200,6 +200,27 @@
                 }
             });
         }
+
+        function onItemSelectionChanged(selectElement) {
+            var itemId = selectElement.value;
+            $.ajax({
+                type: "POST",
+                url: "BOM.aspx/GetItemDetails",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ itemId: parseInt(itemId) }),
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    if (data && data !== null) {
+                        $('#txtpr_rate').val(data.P_Rate ? parseFloat(data.P_Rate).toFixed(2) : '');
+                        $('#txtStock').val(data.CurrentStock ? parseFloat(data.CurrentStock).toFixed(2) : '');
+                    }
+                },
+                error: function () {
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load item details.' });
+                }
+            });
+        }
     </script>
 </asp:Content>
 
@@ -221,7 +242,7 @@
             <div class="row mb-3 align-items-end">
                 <div class="col-lg-3 col-md-3 col-sm-3">
                     <label>Item Name <span class="text-danger">*</span></label>
-                    <select id="ddlitem" class="form-control"></select>
+                   <select id="ddlitem" class="form-control" onchange="onItemSelectionChanged(this)"></select>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <label>Qty <span class="text-danger">*</span></label>
