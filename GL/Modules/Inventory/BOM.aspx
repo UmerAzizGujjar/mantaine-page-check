@@ -138,12 +138,13 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    var options = '<option value="">-- Select --</option>';
+                    var options = '<option value="">Select<option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (i, v) {
-                        options += '<option value="' + v.ProcedureID + '">' + v.ProcedureName + '</option>';
+                        options += '<option value="' + v.Item_ID + '">' + v.Description + '</option>';
                     });
                     $('#ddlprocedure').html(options);
+                    $('#ddlprocedure').select2();
                 }
             });
         }
@@ -155,12 +156,13 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    var options = '<option value="">-- Select Item --</option>';
+                    var options = '<option value="">Select Item</option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (i, v) {
-                        options += '<option value="' + v.ItemID + '" data-cost="' + v.Cost + '">' + v.ItemName + '</option>';
+                        options += '<option value="' + v.Item_ID + '">' + v.Description + '</option>';
                     });
                     $('#ddlitem').html(options);
+                    $('#ddlitem').select2();
                 }
             });
         }
