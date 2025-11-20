@@ -472,7 +472,7 @@
             </div>
             <div class="col-lg-4 col-md-3 col-sm-4">
                 <label>Remarks</label>
-                <textarea id="txt_remarks" style="width: 100% !important;"></textarea>
+                <textarea id="txt_remarks" style="width: 100% !important;height: 36px !important"></textarea>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <label>Status</label>
