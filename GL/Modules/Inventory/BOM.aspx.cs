@@ -49,6 +49,60 @@ namespace PMS.Inventory
                 return new JavaScriptSerializer().Serialize(list);
             }
         }
+        [WebMethod]
+        public static string GetItemDetails(int itemId)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+
+                decimal latestGrnRate = (from g in db.GRN_Details
+                                         join inv in db.INV_Items on g.Item_Id equals inv.Item_ID
+                                         where g.Item_Id == itemId
+                                           && g.GRNQty.HasValue && g.GRNQty > 0
+                                           && g.Amount.HasValue
+                                           && inv.UOM_Qty.HasValue && inv.UOM_Qty > 0
+                                         orderby g.GRN_detail_Id descending
+                                         select (g.Amount.Value / g.GRNQty.Value) / inv.UOM_Qty.Value)
+                                        .FirstOrDefault(); 
+
+                decimal purchaseRate = latestGrnRate; 
+
+              
+                if (latestGrnRate == 0)
+                {
+                    
+                    var fallbackRate = (from s in db.INV_Stock_Adjustments
+                                        where s.Item_Id == Convert.ToString(itemId)
+                                        orderby s.Adjustment_ID descending
+                                        select s.Rate.Value)
+                                       .FirstOrDefault(); 
+
+                    if (fallbackRate != 0)
+                    {
+                        purchaseRate = fallbackRate;
+                    }
+                }
+
+                var item = db.INV_Items.FirstOrDefault(m => m.Item_ID == itemId);
+                if (item == null)
+                    return new JavaScriptSerializer().Serialize(new { error = "Item not found" });
+
+                // 4. Get stock
+                decimal? stockTotal = db.GetInvenrtoryItemUomTotalStock(item.Item_ID, item.InventoryOrg);
+
+                // 5. Build result
+                var result = new
+                {
+                    item.Sale_Rate,
+                    Purchase_Rate = purchaseRate,         
+                    item.Base_Unit,
+                    item.Base_Unit_Qty,
+                    StockTotal = stockTotal ?? 0
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
         public class BOM_Item
         {
             public int ItemID { get; set; }

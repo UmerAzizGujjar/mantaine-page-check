@@ -305,6 +305,23 @@
 
 
             }
+            else if (Category == "11") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').show();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#emp_id').hide();
+            }
         }
         function Approve() {
             var pat_id = '<% =Request.QueryString["OPDID"] %>';
@@ -644,7 +661,7 @@
 
                         $('#ddldoctor').html(options);
                         var type = $('#ddlPatient_Type').val();
-                        if (type != "02") {
+                        if (type !== "02" && type !== "11") {
 
                             getGeneralFee();
                         }
@@ -662,14 +679,18 @@
 
             var Doc = $('#ddldoctor').val();
             var opdid = $('#hdn_opdId').val();
+            var cateogry = $('#ddlPatient_Type').val();
+
             var emer_reffered = $("#hdn_emer_reffered").val();
+
             if (emer_reffered != "") {
                 $('#txtfees').val("0");
-            }
-
-            else {
-                if (opdid != "" || opdid != "") {
-
+            } else if (cateogry == '11') {
+                getspecialfees(Doc);
+            } else {
+              
+                if (opdid != "") {
+                    
                 } else {
                     $.ajax({
                         type: "POST",
@@ -679,7 +700,8 @@
                         dataType: "json",
                         success: function (response) {
                             debugger;
-                            var res = JSON.parse(response.d);
+                            var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+
                             if (!res.success) {
                                 Swal.fire({
                                     icon: 'error',
@@ -694,12 +716,11 @@
                                     }
                                 });
                             } else {
+                                var fee = parseFloat(res.fee) || 0;
+                                var disper = parseFloat(res.discount_percentage) || 0;
+                                var afterdiscountfee = fee - ((fee * disper) / 100);
 
-                                var fee = res.fee;
-                                var disper = res.discount_percentage           
-                                var afterdiscountfee = fee - ((fee * disper) / 100)
-
-                                $('#txtfees').val(afterdiscountfee);
+                                $('#txtfees').val(afterdiscountfee.toFixed(2));
                                 $('#txtactualfee').val(res.fee);
                                 $('#txtdiscount').val(res.discount_percentage);
                                 $('#hdnhospShare').val(res.Hospital_Share);
@@ -714,8 +735,45 @@
 
                 loadDepartment(Doc);
             }
-
         }
+
+
+        debugger;
+        function getspecialfees(Doc) {
+            debugger
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/loadSpecialFees",
+                data: JSON.stringify({ Doc: Doc }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+
+                    if (!res) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Special Fee not found.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        return;
+                    }
+                    $('#txtactualfee').val(res.Consultant_Charges);
+                    $('#txtfees').val(res.Consultant_Charges);
+                    $('#txtdiscount').val(0);
+
+                    $('#hdnhospShare').val(res.Hospital_Amount);
+                    $('#hdnDocshare').val(res.Doctor_Amount);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+
     </script>
 
 </asp:Content>

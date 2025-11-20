@@ -200,6 +200,53 @@
                 }
             });
         }
+
+      function onItemSelectionChanged(selectElement) {
+    var itemId = selectElement.value;
+    if (!itemId) {
+        // Clear fields if no item selected
+        $('#txtpr_rate, #txtStock, #itemUnit').val('');
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "BOM.aspx/GetItemDetails",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({ itemId: parseInt(itemId) }),
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            if (data && !data.error) {
+                // ✅ Purchase Rate → txtpr_rate (disabled input)
+                $('#txtpr_rate').val(data.P_Rate ? parseFloat(data.P_Rate).toFixed(2) : '');
+
+                // ✅ Stock → txtStock
+                $('#txtStock').val(data.CurrentStock ? parseFloat(data.CurrentStock).toFixed(2) : '');
+
+                // ✅ Optional: Auto-set unit dropdown to BaseUnit (e.g., 'g', 'ml')
+                if (data.BaseUnit) {
+                    var $unitDropdown = $('#itemUnit');
+                    // Only set if option exists
+                    if ($unitDropdown.find('option[value="' + data.BaseUnit + '"]').length) {
+                        $unitDropdown.val(data.BaseUnit).trigger('change'); // trigger if needed
+                    }
+                }
+
+                // ✅ Optional: Show helper (e.g., in a small <span> near stock)
+                // $('#stockHelper').text(data.BaseUnitQty ? `1 unit = ${data.BaseUnitQty} ${data.BaseUnit}` : '');
+            } else {
+                Swal.fire({ icon: 'warning', title: 'Not Found', text: data.error || 'Item details not available.' });
+                $('#txtpr_rate, #txtStock').val('');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+            Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load item details.' });
+            $('#txtpr_rate, #txtStock').val('');
+        }
+    });
+}
     </script>
 </asp:Content>
 
@@ -221,7 +268,7 @@
             <div class="row mb-3 align-items-end">
                 <div class="col-lg-3 col-md-3 col-sm-3">
                     <label>Item Name <span class="text-danger">*</span></label>
-                    <select id="ddlitem" class="form-control"></select>
+                   <select id="ddlitem" class="form-control" onchange="onItemSelectionChanged(this)"></select>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <label>Qty <span class="text-danger">*</span></label>
@@ -241,11 +288,20 @@
                     <label>Cost/Unit <span class="text-danger">*</span></label>
                     <input type="number" id="itemCost" step="0.01" min="0" class="form-control" />
                 </div>
-                <div class="col-md-2">
+               
+                <div class="col-md-1">
                     <button id="addItemBtn" class="btn btn-primry">
-                        <i class="fa fa-plus"></i>Add
+                        <i ></i>Add
                     </button>
                 </div>
+                 <div class="col-md-1">
+                     <label>P_Rate  <span class="text-danger">*</span></label>
+                     <input type="text" disabled="disabled" id="txtpr_rate" step="0.01" min="0" class="form-control" />
+                 </div>
+                 <div class="col-md-1">
+                     <label>Current Stock <span class="text-danger">*</span></label>
+                     <input type="number" id="txtStock" step="0.01" min="0" class="form-control" />
+                 </div>
             </div>
 
             <table class="table table-sm table-bordered mt-3" id="itemsTable">
