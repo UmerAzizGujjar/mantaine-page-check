@@ -662,14 +662,18 @@
 
             var Doc = $('#ddldoctor').val();
             var opdid = $('#hdn_opdId').val();
+            var cateogry = $('#ddlPatient_Type').val(); // ✅ Fixed: was $("ddlPatient_Type") → missing #
+
             var emer_reffered = $("#hdn_emer_reffered").val();
+
             if (emer_reffered != "") {
                 $('#txtfees').val("0");
-            }
-
-            else {
-                if (opdid != "" || opdid != "") {
-
+            } else if (cateogry == '011') {
+                getspecialfees(Doc);
+            } else {
+              
+                if (opdid != "") {
+                    
                 } else {
                     $.ajax({
                         type: "POST",
@@ -679,7 +683,9 @@
                         dataType: "json",
                         success: function (response) {
                             debugger;
-                            var res = JSON.parse(response.d);
+                            // ✅ Safer: check if response.d is string before parsing
+                            var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+
                             if (!res.success) {
                                 Swal.fire({
                                     icon: 'error',
@@ -694,12 +700,11 @@
                                     }
                                 });
                             } else {
+                                var fee = parseFloat(res.fee) || 0;
+                                var disper = parseFloat(res.discount_percentage) || 0;
+                                var afterdiscountfee = fee - ((fee * disper) / 100);
 
-                                var fee = res.fee;
-                                var disper = res.discount_percentage           
-                                var afterdiscountfee = fee - ((fee * disper) / 100)
-
-                                $('#txtfees').val(afterdiscountfee);
+                                $('#txtfees').val(afterdiscountfee.toFixed(2)); // ✅ Optional: round to 2 decimals
                                 $('#txtactualfee').val(res.fee);
                                 $('#txtdiscount').val(res.discount_percentage);
                                 $('#hdnhospShare').val(res.Hospital_Share);
@@ -714,7 +719,6 @@
 
                 loadDepartment(Doc);
             }
-
         }
     </script>
 
