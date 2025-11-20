@@ -13,6 +13,12 @@
             margin-top: 15px;
             font-weight: bold;
         }
+        .toast-center-screen {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: fit-content;
+        }
     </style>
 
     <script type="text/javascript">
@@ -76,10 +82,12 @@
                 var category = $('#recipeCategory').val().trim();
 
                 if (!procedureId) {
-                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Select Procedure.', timer: 2000 }); return;
+                    toasterMessage(true, 'Error!', 'Select Procedure.');
+                    return;
                 }
                 if (items.length === 0) {
-                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Add at least one item.', timer: 2000 }); return;
+                    toasterMessage(true, 'Error!', 'Add at least one item.');
+                    return;
                 }
 
                 var list = [];
@@ -102,24 +110,50 @@
                     list,
                     function (response) {
                         if (response.startsWith("DUPLICATE:")) {
-                            Swal.fire({ icon: 'error', title: 'Duplicate!', text: response.replace("DUPLICATE:", ""), timer: 2500 });
+                            toasterMessage(true, 'Duplicate!', response.replace("DUPLICATE:", ""));
                             return;
                         }
                         if (response === "-1") {
-                            Swal.fire({ icon: 'error', title: 'Failed!', text: 'Save failed. Check logs.', timer: 2500 });
+                            toasterMessage(true, 'Failed!', 'Save failed. Check logs.');
                             return;
                         }
-                        Swal.fire({ icon: 'success', title: 'Success!', text: 'BOM saved. ID: ' + response, timer: 2500 });
+                        toasterMessage(false, 'Success!', 'BOM saved. ID: ' + response);
                         setTimeout(function () {
-                            window.location.reload(); // or redirect
+                            window.location.reload(); // or redirect as needed
                         }, 2000);
                     },
                     function (error) {
-                        Swal.fire({ icon: 'error', title: 'Error!', text: 'AJAX call failed.', timer: 2500 });
+                        toasterMessage(true, 'Error!', 'AJAX call failed.');
                     }
                 );
             });
         });
+        function toasterMessage(isError = false, title, message) {
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "preventDuplicates": false,
+                "positionClass": "toast-center-screen",
+                "onclick": null,
+                "showDuration": "551500",
+                "hideDuration": "2000",
+                "timeOut": "4000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                onclick: function () {
+                    $('#right-sidebar').toggleClass('sidebar-open');
+                }
+            };
+
+            if (isError)
+                toastr.error(message, title);
+            else
+                toastr.success(message, title);
+        }
 
         function deleteRow(elem) {
             $(elem).closest('tr').remove();
@@ -138,12 +172,13 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    var options = '<option value="">-- Select --</option>';
+                    var options = '<option value="">Select<option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (i, v) {
-                        options += '<option value="' + v.ProcedureID + '">' + v.ProcedureName + '</option>';
+                        options += '<option value="' + v.Item_ID + '">' + v.Description + '</option>';
                     });
                     $('#ddlprocedure').html(options);
+                    $('#ddlprocedure').select2();
                 }
             });
         }
@@ -155,15 +190,63 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    var options = '<option value="">-- Select Item --</option>';
+                    var options = '<option value="">Select Item</option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (i, v) {
-                        options += '<option value="' + v.ItemID + '" data-cost="' + v.Cost + '">' + v.ItemName + '</option>';
+                        options += '<option value="' + v.Item_ID + '">' + v.Description + '</option>';
                     });
                     $('#ddlitem').html(options);
+                    $('#ddlitem').select2();
                 }
             });
         }
+
+      function onItemSelectionChanged(selectElement) {
+    var itemId = selectElement.value;
+    if (!itemId) {
+        // Clear fields if no item selected
+        $('#txtpr_rate, #txtStock, #itemUnit').val('');
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "BOM.aspx/GetItemDetails",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({ itemId: parseInt(itemId) }),
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            if (data && !data.error) {
+                // ✅ Purchase Rate → txtpr_rate (disabled input)
+                $('#txtpr_rate').val(data.P_Rate ? parseFloat(data.P_Rate).toFixed(2) : '');
+
+                // ✅ Stock → txtStock
+                $('#txtStock').val(data.CurrentStock ? parseFloat(data.CurrentStock).toFixed(2) : '');
+
+                // ✅ Optional: Auto-set unit dropdown to BaseUnit (e.g., 'g', 'ml')
+                if (data.BaseUnit) {
+                    var $unitDropdown = $('#itemUnit');
+                    // Only set if option exists
+                    if ($unitDropdown.find('option[value="' + data.BaseUnit + '"]').length) {
+                        $unitDropdown.val(data.BaseUnit).trigger('change'); // trigger if needed
+                    }
+                }
+
+                // ✅ Optional: Show helper (e.g., in a small <span> near stock)
+                // $('#stockHelper').text(data.BaseUnitQty ? `1 unit = ${data.BaseUnitQty} ${data.BaseUnit}` : '');
+            } else {
+                Swal.fire({ icon: 'warning', title: 'Not Found', text: data.error || 'Item details not available.' });
+                $('#txtpr_rate, #txtStock').val('');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+            Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load item details.' });
+            $('#txtpr_rate, #txtStock').val('');
+        }
+    });
+}
     </script>
 </asp:Content>
 
@@ -183,15 +266,15 @@
             <hr />
 
             <div class="row mb-3 align-items-end">
-                <div class="col-md-4">
+                <div class="col-lg-3 col-md-3 col-sm-3">
                     <label>Item Name <span class="text-danger">*</span></label>
-                    <select id="ddlitem" class="form-control"></select>
+                   <select id="ddlitem" class="form-control" onchange="onItemSelectionChanged(this)"></select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-1 col-md-1 col-sm-1">
                     <label>Qty <span class="text-danger">*</span></label>
                     <input type="number" id="itemQuantity" step="0.01" min="0.01" class="form-control" />
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-1 col-md-2 col-sm-1">
                     <label>Unit</label>
                     <select id="itemUnit" class="form-control">
                         <option value="g">g</option>
@@ -201,15 +284,24 @@
                         <option value="cup">cup</option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label>Cost/Unit <span class="text-danger">*</span></label>
                     <input type="number" id="itemCost" step="0.01" min="0" class="form-control" />
                 </div>
-                <div class="col-md-2">
+               
+                <div class="col-md-1">
                     <button id="addItemBtn" class="btn btn-primry">
-                        <i class="fa fa-plus"></i>Add
+                        <i ></i>Add
                     </button>
                 </div>
+                 <div class="col-md-1">
+                     <label>P_Rate  <span class="text-danger">*</span></label>
+                     <input type="text" disabled="disabled" id="txtpr_rate" step="0.01" min="0" class="form-control" />
+                 </div>
+                 <div class="col-md-1">
+                     <label>Current Stock <span class="text-danger">*</span></label>
+                     <input type="number" id="txtStock" step="0.01" min="0" class="form-control" />
+                 </div>
             </div>
 
             <table class="table table-sm table-bordered mt-3" id="itemsTable">

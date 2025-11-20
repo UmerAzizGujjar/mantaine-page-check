@@ -884,8 +884,9 @@ namespace PMS
                     {
                         OPD = new In_Patient();
                         OPD.Patient_ID = Convert.ToInt32(Patient_ID);
-                        
-                       
+                        OPD.IPD_No = Convert.ToString(DBClass.getMaxEntry_No("In_Patient", "IPD_No"));
+
+
                         if (PatientDiscountType == "02")
                         {
                             var query = (from v in db.ValueSets

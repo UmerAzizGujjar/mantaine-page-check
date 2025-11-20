@@ -44,149 +44,135 @@ namespace PMS.Inventory
                             {
                                 i.Item_ID,
                                 i.Description
-                               
+
                             }).ToList();
                 return new JavaScriptSerializer().Serialize(list);
             }
         }
+        [WebMethod]
+        public static string GetItemDetails(int itemId)
+        {
+            using (var db = new DataBaseDataContext())
+            {
 
+                decimal latestGrnRate = (from g in db.GRN_Details
+                                         join inv in db.INV_Items on g.Item_Id equals inv.Item_ID
+                                         where g.Item_Id == itemId
+                                           && g.GRNQty.HasValue && g.GRNQty > 0
+                                           && g.Amount.HasValue
+                                           && inv.UOM_Qty.HasValue && inv.UOM_Qty > 0
+                                         orderby g.GRN_detail_Id descending
+                                         select (g.Amount.Value / g.GRNQty.Value) / inv.UOM_Qty.Value)
+                                        .FirstOrDefault(); 
+
+                decimal purchaseRate = latestGrnRate; 
+
+              
+                if (latestGrnRate == 0)
+                {
+                    
+                    var fallbackRate = (from s in db.INV_Stock_Adjustments
+                                        where s.Item_Id == Convert.ToString(itemId)
+                                        orderby s.Adjustment_ID descending
+                                        select s.Rate.Value)
+                                       .FirstOrDefault(); 
+
+                    if (fallbackRate != 0)
+                    {
+                        purchaseRate = fallbackRate;
+                    }
+                }
+
+                var item = db.INV_Items.FirstOrDefault(m => m.Item_ID == itemId);
+                if (item == null)
+                    return new JavaScriptSerializer().Serialize(new { error = "Item not found" });
+
+                // 4. Get stock
+                decimal? stockTotal = db.GetInvenrtoryItemUomTotalStock(item.Item_ID, item.InventoryOrg);
+
+                // 5. Build result
+                var result = new
+                {
+                    item.Sale_Rate,
+                    Purchase_Rate = purchaseRate,         
+                    item.Base_Unit,
+                    item.Base_Unit_Qty,
+                    StockTotal = stockTotal ?? 0
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+        public class BOM_Item
+        {
+            public int ItemID { get; set; }
+            public string ItemName { get; set; }
+            public decimal Qty { get; set; }
+            public string Unit { get; set; }
+            public decimal CostPerUnit { get; set; }
+            public decimal Total { get; set; }
+        }
+        [WebMethod]
+        public static string SaveBOM(int procedureId, string category, List<BOM_Item> items)
+        {
+            // Validate
+            if (procedureId <= 0 || items == null || items.Count == 0)
+                return "-1";
+
+            using (var db = new DataBaseDataContext())
+            {
+                try
+                {
+                    // Check duplicate: e.g., same Procedure + same ItemID already in BOM? (optional)
+                    // Example: prevent same item added twice in same BOM
+                    var seenItemIDs = new HashSet<int>();
+                    foreach (var item in items)
+                    {
+                        if (seenItemIDs.Contains(item.ItemID))
+                        {
+                            return $"DUPLICATE: Item '{item.ItemName}' added multiple times.";
+                        }
+                        seenItemIDs.Add(item.ItemID);
+                    }
+
+                    // Create master
+                    var bom = new inv_bom
+                    {
+                        ProcedureID = procedureId,
+                        Category = string.IsNullOrWhiteSpace(category) ? null : category.Trim(),
+                        TotalCost = items.Sum(x => x.Total),
+                        CreatedBy = AppConfig.UserID,
+                        CreatedDate = DateTime.Now,
+                     
+                    };
+                    db.inv_boms.InsertOnSubmit(bom);
+                    db.SubmitChanges(); // Get BOMID
+
+                    // Insert details
+                    foreach (var item in items)
+                    {
+                        var detail = new inv_bom_detail
+                        {
+                            BOMID = bom.BOMID,
+                            ItemID = item.ItemID,
+                            Qty = item.Qty,
+                            Unit = item.Unit ?? "pcs",
+                            CostPerUnit = item.CostPerUnit,
+                            Total = item.Total
+                        };
+                        db.inv_bom_details.InsertOnSubmit(detail);
+                    }
+                    db.SubmitChanges();
+
+                    return bom.BOMID.ToString(); // success → return ID (like your depreciation SaveRecord)
+                }
+                catch (Exception ex)
+                {
+                    return "-1"; // or ex.Message — but you return "-1" on failure in depreciation
+                }
+            }
+
+        }
     }
 }
 
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Web;
-//using System.Web.Script.Serialization;
-//using System.Web.Services;
-//using System.Web.UI;
-//using System.Web.UI.WebControls;
-
-//namespace PMS.Inventory
-//{
-//    public partial class BOM : System.Web.UI.Page
-//    {
-//        protected void Page_Load(object sender, EventArgs e) { }
-
-//        // DTO for detail items (like Dep_Fill)
-//        public class BOM_Item
-//        {
-//            public int ItemID { get; set; }
-//            public string ItemName { get; set; }
-//            public decimal Qty { get; set; }
-//            public string Unit { get; set; }
-//            public decimal CostPerUnit { get; set; }
-//            public decimal Total { get; set; }
-//        }
-
-//        [WebMethod]
-//        public static string LoadProcedures()
-//        {
-//            using (var db = new DataBaseDataContext())
-//            {
-//                var list = (from p in db.inv_procedures
-//                            where p.IsActive == true
-//                            select new
-//                            {
-//                                p.ProcedureID,
-//                                p.ProcedureName
-//                            }).ToList();
-//                return new JavaScriptSerializer().Serialize(list);
-//            }
-//        }
-
-//        [WebMethod]
-//        public static string LoadItems()
-//        {
-//            using (var db = new DataBaseDataContext())
-//            {
-//                var list = (from i in db.inv_item
-//                            where i.IsActive == true
-//                            select new
-//                            {
-//                                i.ItemID,
-//                                i.ItemName,
-//                                Cost = i.Cost ?? 0m
-//                            }).ToList();
-//                return new JavaScriptSerializer().Serialize(list);
-//            }
-//        }
-
-//        [WebMethod]
-//        public static string SaveBOM(int procedureId, string category, List<BOM_Item> items)
-//        {
-//            // Validate
-//            if (procedureId <= 0 || items == null || items.Count == 0)
-//                return "-1";
-
-//            using (var db = new DataBaseDataContext())
-//            {
-//                try
-//                {
-//                    // Check duplicate: e.g., same Procedure + same ItemID already in BOM? (optional)
-//                    // Example: prevent same item added twice in same BOM
-//                    var seenItemIDs = new HashSet<int>();
-//                    foreach (var item in items)
-//                    {
-//                        if (seenItemIDs.Contains(item.ItemID))
-//                        {
-//                            return $"DUPLICATE: Item '{item.ItemName}' added multiple times.";
-//                        }
-//                        seenItemIDs.Add(item.ItemID);
-//                    }
-
-//                    // Create master
-//                    var bom = new inv_bom
-//                    {
-//                        ProcedureID = procedureId,
-//                        Category = string.IsNullOrWhiteSpace(category) ? null : category.Trim(),
-//                        TotalCost = items.Sum(x => x.Total),
-//                        CreatedBy = AppConfig.UserID,
-//                        CreatedDate = DateTime.Now
-//                    };
-//                    db.inv_bom.InsertOnSubmit(bom);
-//                    db.SubmitChanges(); // Get BOMID
-
-//                    // Insert details
-//                    foreach (var item in items)
-//                    {
-//                        var detail = new inv_bom_detail
-//                        {
-//                            BOMID = bom.BOMID,
-//                            ItemID = item.ItemID,
-//                            ItemName = item.ItemName, // denormalized
-//                            Qty = item.Qty,
-//                            Unit = item.Unit ?? "pcs",
-//                            CostPerUnit = item.CostPerUnit,
-//                            Total = item.Total
-//                        };
-//                        db.inv_bom_detail.InsertOnSubmit(detail);
-//                    }
-//                    db.SubmitChanges();
-
-//                    return bom.BOMID.ToString(); // success → return ID (like your depreciation SaveRecord)
-//                }
-//                catch (Exception ex)
-//                {
-//                    return "-1"; // or ex.Message — but you return "-1" on failure in depreciation
-//                }
-//            }
-//        }
-
-//        // Optional: Get for Edit (if you later add ?ID= support)
-//        /*
-//        [WebMethod]
-//        public static string GetBOM(string id)
-//        {
-//            using (var db = new DataBaseDataContext())
-//            {
-//                var master = db.inv_bom.FirstOrDefault(x => x.BOMID == Convert.ToInt32(id));
-//                if (master == null) return "[]";
-
-//                var details = db.inv_bom_detail.Where(x => x.BOMID == master.BOMID).ToList();
-//                return new JavaScriptSerializer().Serialize(new { master, details });
-//            }
-//        }
-//        */
-//    }
-//}

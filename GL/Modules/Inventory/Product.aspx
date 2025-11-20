@@ -16,6 +16,7 @@
                 { id: '#ddlItemGroup', method: 'GetItemGroups' },
                 { id: '#ddlwareHouse', method: 'GetWarehouses' },
                 { id: '#ddlPatient_type', method: 'GetPatientType' },
+                { id: '#ddlunitsize', method: 'GetUnitSize' },
                 { id: '#ddlfiance_integration', method: 'getAccountCategory' },
                 { id: '#ddldepartment', method: 'GetDepartments' },
 
@@ -28,15 +29,15 @@
                     fillDropdown($element, item.method);
                 });
             });
-        
+
             if (id != "") {
-            LoadItemInventory(id);
+                LoadItemInventory(id);
 
                 $("#btnValue").val('Update');
             }
             else {
                 GetitemNum();
-                  
+
             }
 
             document.getElementById('chkSehatSahulat').addEventListener('change', function () {
@@ -48,7 +49,7 @@
                 }
             });
 
-       
+
 
         });
         $(function () {
@@ -61,8 +62,8 @@
         function ListView() {
             window.location = "ProductsView.aspx";
         }
-        
-      
+
+
         function fillDropdown($dropdown, methodName) {
             if ($dropdown.data('filled')) return;
 
@@ -113,7 +114,7 @@
                 }
             });
         }
-        
+
         function validateSave() {
             debugger;
             var proceed = true;
@@ -373,7 +374,24 @@
                 row.remove();
             }
         }
-        function getbatchfrom_grn(id) {            debugger;            var item_id = id            PageMethods.Getbatch_grn(item_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                $.each(parsedData.GRN_Details, function (key, value) {                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                });                $.each(parsedData.Stock_Adjustment_Details, function (key, value) {                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                });                $('#ddlBatchNum').html(options);                $('#ddlBatchNum').select2();
+        function getbatchfrom_grn(id) {
+            debugger;
+
+            var item_id = id
+            PageMethods.Getbatch_grn(item_id, function (data) {
+                var parsedData = JSON.parse(data);
+                var options = '<option value="0" >Please Select</option>';
+
+                $.each(parsedData.GRN_Details, function (key, value) {
+                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                });
+
+                $.each(parsedData.Stock_Adjustment_Details, function (key, value) {
+                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                });
+
+                $('#ddlBatchNum').html(options);
+                $('#ddlBatchNum').select2();
                 $('.select2-container--default').css('width', "150px")
             }, function (error) {
                 alert(error.get_message());
@@ -406,7 +424,7 @@
                 $('#BatchTable_body').append(rows);
             }
         }
-        
+
         function Saveitem() {
             if (validateSave()) {
                 debugger;
@@ -423,6 +441,8 @@
                 var lenght = $('#txtLength').val();
                 var width = $('#txtwidth').val();
                 var heigth = $('#txtheight').val();
+                var basesize = $('#ddlunitsize').val();
+                var baseqty = $('#txtunitqty').val();
                 var salesRate = $('#sales_Rate').val();
                 var purchRate = $('#purch_rate').val();
                 var itemGroup = $('#ddlItemGroup').val();
@@ -504,6 +524,8 @@
                         "Lenght": lenght,
                         "Width": width,
                         "Heigth": heigth,
+                        "basesize": basesize,
+                        "baseqty": baseqty,
                         "SalesRate": salesRate,
                         "PurchRate": purchRate,
                         "ItemGroup": itemGroup,
@@ -665,7 +687,7 @@
                     $('#txtDescription').val(parse.Description);
                     if (parse.Active == 1) {
                         $("#Active").prop('checked', true);
-                    }   
+                    }
 
                     $('#ddlpack_unit').html(
                         $('<option>', {
@@ -730,7 +752,7 @@
                         })
                     );
 
-                   
+
                     $('#txtlocatorAddress').val(parse.locatorAddress);
                     $('#txtLength').val(parse.Length);
                     $('#txtwidth').val(parse.Width);
@@ -1049,22 +1071,21 @@
                   <label id="Lblsales_Rate">Sale Rate</label> 
                  <input type="text" class="form-control" id="sales_Rate" name="sales_Rate" />
             </div> 
-            <div class="col-lg-1 col-md-6 col-sm-12">       
+            <div class="col-lg-1 col-md-6 col-sm-12" >       
                   <label id="Lblpurch_rate">PR Rate</label>
                   <input type="text" class="form-control" id="purch_rate" name="purch_rate" />
              </div>
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label id="LblLength">Length</label>
-                <input type="text" class="form-control" id="txtLength" name="txtLength" />
-            </div> 
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                 <label id="Lblwidth">Width</label>
-                   <input type="text" class="form-control" id="txtwidth" name="txtwidth" />
-            </div> 
-            <div class="col-lg-1 col-md-6 col-sm-12">
-                <label id="Lblheight">Height</label>
-                <input type="text" class="form-control" id="txtheight" name="txtheight" />
-            </div> 
+              <div class="col-lg-1 col-md-6 col-sm-12">
+                  <label id="lblunitSize">Unit Size</label>
+                  <select id="ddlunitsize"></select>
+              </div>
+               <div class="col-lg-1 col-md-6 col-sm-12" >       
+                   <label id="lblunitsizeqty">Unit Size QTY</label>
+                   <input type="text" class="form-control" id="txtunitqty" name="purch_rate" />
+              </div>
+             <div class="col-lg-1 col-md-6 col-sm-12">
+
+            </div>
               <div class="col-lg-1 col-md-6 col-sm-12" id="sehatCardRateContainer" style="display: none;">
                 <label id="LblsehatCardrate">Sehat Card Rate</label>
                 <input type="text" class="form-control" id="txtSehatCardRate" name="txtSehatCardRate" />
@@ -1075,7 +1096,18 @@
               <input type="text" class="form-control" id="txtremarks" name="txtremarks" />           
            </div>
             </div>
-            
+            <div class="col-lg-1 col-md-6 col-sm-12"  style="display:none">
+                    <label id="LblLength">Length</label>
+                    <input type="text" class="form-control" id="txtLength" name="txtLength" />
+                </div> 
+                <div class="col-lg-1 col-md-6 col-sm-12"  style="display:none">
+                     <label id="Lblwidth">Width</label>
+                       <input type="text" class="form-control" id="txtwidth" name="txtwidth" />
+                </div> 
+                <div class="col-lg-1 col-md-6 col-sm-12"  style="display:none">
+                    <label id="Lblheight">Height</label>
+                    <input type="text" class="form-control" id="txtheight" name="txtheight" />
+            </div> 
          </form>
 
 

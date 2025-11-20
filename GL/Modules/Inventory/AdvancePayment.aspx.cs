@@ -95,15 +95,19 @@ namespace PMS.Inventory
                 {
                     lstItem.Date = Convert.ToDateTime(record.txtdate);
                 }
-                if (record.ddl_vendor != "")
+                if (record.ddl_vendor != "" || record.ddl_vendor != "0")
                 {
                     lstItem.Vendor_ID = Convert.ToInt32(record.ddl_vendor);
+                }
+                if (record.PoID != "" || record.PoID != "0")
+                {
+                    lstItem.Po_Id = Convert.ToInt32(record.PoID);
                 }
                 if (record.referno != "")
                 {
                     lstItem.Refer_No = record.referno;
                 }
-                if (record.ddl_paidthrough != "")
+                if (record.ddl_paidthrough != "" || record.ddl_paidthrough != "0")
                 {
                     lstItem.Paid_Through = Convert.ToInt32(record.ddl_paidthrough);
                 }
@@ -132,9 +136,14 @@ namespace PMS.Inventory
                 {
                     lstItem.Status = record.txt_status;
                 }
+                if (record.balance_amount != "")
+                {
+                    lstItem.BalanceAmount = Convert.ToDecimal(record.balance_amount);
+                }
+
+                lstItem.WithHoldTax_Check = record.chkWHTax;
                 lstItem.Updated_By = Convert.ToString(AppConfig.UserID);
                 lstItem.Updated_Date = DateTime.Now;
-                lstItem.IsDeleted = false;
                 db.SubmitChanges();
                 AdvancepaymentID = lstItem.Advance_ID.ToString();
             }
@@ -149,15 +158,20 @@ namespace PMS.Inventory
                 {
                     obj.Date = Convert.ToDateTime(record.txtdate);
                 }
-                if (record.ddl_vendor != "")
+                if (record.ddl_vendor != "" || record.ddl_vendor != "0")
                 {
                     obj.Vendor_ID = Convert.ToInt32(record.ddl_vendor);
                 }
+                if (record.PoID != "" || record.PoID != "0")
+                {
+                    obj.Po_Id = Convert.ToInt32(record.PoID);
+                }
+
                 if (record.referno != "")
                 {
                     obj.Refer_No = record.referno;
                 }
-                if (record.ddl_paidthrough != "")
+                if (record.ddl_paidthrough != "" || record.ddl_paidthrough != "0")
                 {
                     obj.Paid_Through = Convert.ToInt32(record.ddl_paidthrough);
                 }
@@ -186,6 +200,11 @@ namespace PMS.Inventory
                 {
                     obj.Status = record.txt_status;
                 }
+                if (record.balance_amount != "")
+                {
+                    obj.BalanceAmount = Convert.ToDecimal(record.balance_amount);
+                }
+                obj.WithHoldTax_Check = record.chkWHTax;
                 obj.Created_By = Convert.ToString(AppConfig.UserID);
                 obj.Created_Date = DateTime.Now;
                 obj.IsDeleted = false;
@@ -194,7 +213,7 @@ namespace PMS.Inventory
                 AdvancepaymentID = obj.Advance_ID.ToString();
             }
             return int.Parse(AdvancepaymentID);
-        }        
+        }
         [WebMethod]
         public static string getwtaxtype()
 
@@ -221,7 +240,8 @@ namespace PMS.Inventory
         {
             DataBaseDataContext db = new DataBaseDataContext();
             AP_Vendor obj = new AP_Vendor();
-            var listItems = (from a in db.AP_Vendors where a.IsActive==true
+            var listItems = (from a in db.AP_Vendors
+                             where a.IsActive == true
                              select new
                              {
                                  a.Vendor_ID,
@@ -229,6 +249,33 @@ namespace PMS.Inventory
                              }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(listItems);
+        }
+        [WebMethod]
+        public static string getPONumbersByVendor(int vendorId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var poList = (from po in db.AP_Purchase_Orders
+                          where po.Vendor_ID == vendorId && po.Status == "Approved"
+                          select new
+                          {
+                              po.PO_ID,
+                              po.PO_No
+                          }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(poList);
+        }
+        [WebMethod]
+        public static string getPOAmount(int PoId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var poAmount = (from po in db.AP_Purchase_Orders
+                            where po.PO_ID == PoId
+                            select new
+                            {
+                                po.PO_Amount
+                            }).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(poAmount);
         }
         [WebMethod]
         public static string GetPaidThrough()
@@ -247,6 +294,8 @@ namespace PMS.Inventory
             public string advanceno { get; set; }
             public string txtdate { get; set; }
             public string ddl_vendor { get; set; }
+            public string PoID { get; set; }
+            public string balance_amount { get; set; }
             public string referno { get; set; }
             public string ddl_paidthrough { get; set; }
             public string advance_amount { get; set; }
@@ -256,6 +305,7 @@ namespace PMS.Inventory
             public string txt_status { get; set; }
             public string txt_paidamount { get; set; }
             public decimal? txtTotalAmount { get; set; }
+            public bool chkWHTax { get; set; }
         }
     }
 }
