@@ -902,7 +902,7 @@ namespace PMS
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
-        }]
+        }
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
