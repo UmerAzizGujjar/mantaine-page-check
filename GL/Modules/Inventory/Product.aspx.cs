@@ -25,6 +25,24 @@ namespace PMS.Inventory
         }
        
         [WebMethod]
+        public static string GetUnitSize()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Unit Size"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+        [WebMethod]
         public static string GetManufacturers()
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -286,7 +304,7 @@ namespace PMS.Inventory
         [WebMethod]
         public static string AddItems(
     string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
-    string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate,
+    string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth,string basesize, string baseqty, string SalesRate, string PurchRate,
     string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable,
     string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock,string Procedure_Time,
     string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
@@ -344,6 +362,8 @@ namespace PMS.Inventory
                     obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
                     obj.Procedure_Type = ProcedureTypes;
                     obj.Notes = Notes;
+                    obj.Base_Unit = basesize;
+                    obj.Base_Unit_Qty = Convert.ToInt32(baseqty);
                     obj.LabOR_RadiologyCharges = Convert.ToBoolean(RadioCharges);
                     obj.Dental_Item = Convert.ToBoolean(DentalItem);
                     obj.Procedure_Required = Convert.ToBoolean(Procedure);
@@ -398,6 +418,8 @@ namespace PMS.Inventory
                     obj.Financial_Integration = FianceIntegration;
                     obj.Updated_By = AppConfig.UserID;
                     obj.Updated_Time = DateTime.Now;
+                    obj.Base_Unit = basesize;
+                    obj.Base_Unit_Qty = Convert.ToInt32(baseqty);
                     obj.Item_Account_category = int.TryParse(FianceIntegration, out int finCat) ? finCat : 0;
                     obj.UOM_Qty = decimal.TryParse(UomQty, out decimal uomQty) ? uomQty : 0;
                     obj.Length = decimal.TryParse(Lenght, out decimal length) ? length : 0;
@@ -531,6 +553,8 @@ namespace PMS.Inventory
                                      obj.Length,
                                      obj.Width,
                                      obj.Height,
+                                     obj.Base_Unit,
+                                     obj.Base_Unit_Qty,
                                      obj.Sale_Rate,
                                      obj.Purchase_Rate,
                                      obj.Remarks,
