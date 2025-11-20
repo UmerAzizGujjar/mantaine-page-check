@@ -43,22 +43,38 @@
         }
         var patid;
         function loadMRNo() {
+
             $("#ctl00_MainContent_txtMRNo").tokenInput("../../json.aspx?Table=PatientsByMr",
+
                 {
+
                     tokenLimit: 1,
+
                     onAdd: function (item) {
+
                         try {
 
                             $("#ctl00_MainContent_txtMRNo").val(item.name);
+
                             patid = item.id;
+
                         }
+
                         catch (err) {
+
                             alert(err.message);
+
                         }
+
                     }
+
                 });
+
             $('#ctl00_MainContent_txtMRNo').focus();
+
         }
+
+
         function LoadInvNo() {
             var ItemName = $('#ctl00_MainContent_ddlInvForm').val();
             var options = '<option value="0">All</option>';
@@ -709,7 +725,7 @@
                     //    var sSDate = weekday[sDate.getDay()];
                     //    var eEDate = weekday[eDate.getDay()];
                     //    window.location.href = 'ReportViewer.aspx?ReportName=DepartmentWiseReport&ReportTitle=OPD Detail Report from ' + $('#ctl00_MainContent_txtsDate').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + '  to ' + $('#ctl00_MainContent_txteDate').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '  ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtsDate').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txteDate').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + $('#chkSummary')[0].checked + '&Shift=' + ddlShift + '&DoctorName=' + ddDoctor + '&Operator=' + ((typeof ($("#ctl00_MainContent_oprators").val()) != 'undefined') ? $("#ctl00_MainContent_oprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Discount=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0");
-                        //}
+                    //}
                     else if (rptTitle == "DepartmentWiseReport") {
                         debugger;
                         var weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // Define weekday
@@ -808,8 +824,8 @@
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "PatientLedger") {
-                        debugger;
-                        var url = 'ReportViewer.aspx?ReportName=PatientLedger&ReportTitle=Patient Ledger Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + $("#ctl00_MainContent_ddlDepartments option:selected").val() + '&FilterClinic=' + $("#ctl00_MainContent_ddlFilterClinic").val() + '&Doctor=' + $("#ctl00_MainContent_ddlDoctor").val() + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val();
+                        debugger;    // excluded : + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() 
+                        var url = 'ReportViewer.aspx?ReportName=PatientLedger&ReportTitle=Patient Ledger Report fr+om ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + $("#ctl00_MainContent_ddlDepartments option:selected").val() + '&FilterClinic=' + $("#ctl00_MainContent_ddlFilterClinic").val() + '&Doctor=' + $("#ctl00_MainContent_ddlDoctor").val() + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SinglePatientLedger") {
@@ -817,6 +833,7 @@
                         var url = 'ReportViewer.aspx?ReportName=SinglePatientLedger&ReportTitle=Single Patient Ledger Report ' + '&MrNo=' + patid;
                         window.open(url, '_blank');
                     }
+
                     else if (rptTitle == 'RDW') {
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=RevenueDepartmentWise&ReportTitle=Revenue Department Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Cashier=' + $("#ctl00_MainContent_ddlcashier").val() + '&Patient_Type=' + $("#ctl00_MainContent_ddlDepartments option:selected").val();
@@ -997,6 +1014,13 @@
                         var url = 'ReportViewer.aspx?ReportName=Discharge_Detail&ReportTitle=Discharge Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '' + '&Patient_Type=' + $("#ctl00_MainContent_lblMultiSelect").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&MedicalSubsidy=' + ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0") + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val();
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "DoctorShare_Report") {
+                        debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=DoctorShare_Report&ReportTitle=Hospital Admission Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0") + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val();  // excluded: + '&ExportPDF=' + exporttopdf    + '&Summary=' + summary 
+                        window.open(url, '_blank');
+                    }
 
                     else if (rptTitle == "Patients_Cards") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -1016,7 +1040,7 @@
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var allPatientRecord = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=DeptWisePatients&ReportTitle=Department Wise and Patient Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        var url = 'ReportViewer.aspx?ReportName=DeptWisePatients&ReportTitle=Department Wise and Patient Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Shift=' + ddlShift  + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blanks');
                     }
 
@@ -1031,15 +1055,15 @@
                     }
                     else if (rptTitle == "InPatients_Detail") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=rptInPatientDetail&ReportTitle=Department Wise And InPatient Details from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&TransType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
-                        window.open(url, '_blanks');
+                        var url = 'ReportViewer.aspx?ReportName=InPatients_Detail&ReportTitle=Department Wise And InPatient Details from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&TransType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        window.open(url, '_blank');
                     }
-                    if (rptTitle == "DoctorShare_Report") {
+                    <%--if (rptTitle == "DoctorShare_Report") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=AllDoctorShareDetail&ReportTitle=Doctor Share from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ShareType=' + ((typeof ($("#ctl00_MainContent_ddlReportType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlReportType").val() : "0");
                         window.open(url, '_blanks');
-                    }
+                    }--%>
 
                     if (rptTitle == "StockBalnce_Report") {
 
@@ -1113,6 +1137,14 @@
                 <asp:TextBox runat="server" ID="txtMRNo"></asp:TextBox>
             </div>
         </div>
+        <%-- newly inserted div for MR_No --%>
+        <div class="col-lg-3 col-md-4 col-sm-12" id="PatientDiv" visible="false" runat="server">
+            <asp:Label runat="server" ID="lblPatient" Text="Patient"></asp:Label>
+            <asp:DropDownList runat="server" ID="ddlPatient" AppendDataBoundItems="true">
+                <asp:ListItem Text="Select Patient" Value="0" />
+            </asp:DropDownList>
+        </div>
+
         <div class="row mb-3">
             <div class="col-lg-3 col-md-4 col-sm-12" id="MainDeptDiv" visible="false" runat="server">
                 <asp:Label runat="server" ID="lblMainDepartment" Text="Main Department"></asp:Label>

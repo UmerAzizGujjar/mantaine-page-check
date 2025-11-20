@@ -42,6 +42,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtMRNo;
 
         /// <summary>
+        /// PatientDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PatientDiv;
+
+        /// <summary>
+        /// lblPatient control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPatient;
+
+        /// <summary>
+        /// ddlPatient control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPatient;
+
+        /// <summary>
         /// MainDeptDiv control.
         /// </summary>
         /// <remarks>
