@@ -305,6 +305,23 @@
 
 
             }
+            else if (Category == "11") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').show();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#emp_id').hide();
+            }
         }
         function Approve() {
             var pat_id = '<% =Request.QueryString["OPDID"] %>';
@@ -662,13 +679,13 @@
 
             var Doc = $('#ddldoctor').val();
             var opdid = $('#hdn_opdId').val();
-            var cateogry = $('#ddlPatient_Type').val(); // ✅ Fixed: was $("ddlPatient_Type") → missing #
+            var cateogry = $('#ddlPatient_Type').val();
 
             var emer_reffered = $("#hdn_emer_reffered").val();
 
             if (emer_reffered != "") {
                 $('#txtfees').val("0");
-            } else if (cateogry == '011') {
+            } else if (cateogry == '11') {
                 getspecialfees(Doc);
             } else {
               
@@ -683,7 +700,6 @@
                         dataType: "json",
                         success: function (response) {
                             debugger;
-                            // ✅ Safer: check if response.d is string before parsing
                             var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
 
                             if (!res.success) {
@@ -704,7 +720,7 @@
                                 var disper = parseFloat(res.discount_percentage) || 0;
                                 var afterdiscountfee = fee - ((fee * disper) / 100);
 
-                                $('#txtfees').val(afterdiscountfee.toFixed(2)); // ✅ Optional: round to 2 decimals
+                                $('#txtfees').val(afterdiscountfee.toFixed(2));
                                 $('#txtactualfee').val(res.fee);
                                 $('#txtdiscount').val(res.discount_percentage);
                                 $('#hdnhospShare').val(res.Hospital_Share);
