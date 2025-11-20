@@ -6871,6 +6871,41 @@
       <Column Name="IPD_No" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Advance_Payment" Member="Advance_Payments">
+    <Type Name="Advance_Payment">
+      <Column Name="Advance_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Advance_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Account_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Advance_Account_Desc" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Refer_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Paid_Through" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="WithHoldTax_Perc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="WithHoldTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Actual_Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Advance_PO" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="BalanceAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Updated_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Approved_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Deleted_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="WithHoldTax_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.INV_Items" Member="INV_Items">
     <Type Name="INV_Item">
       <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6972,41 +7007,7 @@
       <Column Name="Procedure_Time" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="Base_Unit" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Base_Unit_Qty" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Advance_Payment" Member="Advance_Payments">
-    <Type Name="Advance_Payment">
-      <Column Name="Advance_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Advance_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Account_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Advance_Account_Desc" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Refer_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Paid_Through" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="WithHoldTax_Perc" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="WithHoldTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Paid_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Actual_Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Advance_PO" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Total_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="BalanceAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Created_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Updated_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Approved_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Deleted_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="WithHoldTax_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsCancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
