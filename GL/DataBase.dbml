@@ -7485,25 +7485,6 @@
       <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_loadAdvancePaymentHeader" Method="sp_loadAdvancePaymentHeader">
-    <Parameter Name="advanceID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_loadAdvancePaymentHeaderResult">
-      <Column Name="Advance_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Advance_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Account_Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Paid_Through" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Actual_Advance_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="WithHoldTax_Perc" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="WithHoldTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Total_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="BalanceAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Advance_PO" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetPONoByVendorId" Method="sp_GetPONoByVendorId">
     <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_GetPONoByVendorIdResult">
@@ -10778,6 +10759,28 @@
     <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="SpApprove_OPDResult">
       <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_loadAdvancePaymentHeader" Method="sp_loadAdvancePaymentHeader">
+    <Parameter Name="advanceID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_loadAdvancePaymentHeaderResult">
+      <Column Name="Advance_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Advance_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Refer_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Paid_Through" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Actual_Advance_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="WithHoldTax_Perc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="WithHoldTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Total_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="BalanceAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Advance_PO" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Po_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="WithHoldTax_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

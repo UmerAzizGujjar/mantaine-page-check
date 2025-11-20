@@ -201,26 +201,52 @@
             });
         }
 
-        function onItemSelectionChanged(selectElement) {
-            var itemId = selectElement.value;
-            $.ajax({
-                type: "POST",
-                url: "BOM.aspx/GetItemDetails",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify({ itemId: parseInt(itemId) }),
-                success: function (response) {
-                    var data = JSON.parse(response.d);
-                    if (data && data !== null) {
-                        $('#txtpr_rate').val(data.P_Rate ? parseFloat(data.P_Rate).toFixed(2) : '');
-                        $('#txtStock').val(data.CurrentStock ? parseFloat(data.CurrentStock).toFixed(2) : '');
+      function onItemSelectionChanged(selectElement) {
+    var itemId = selectElement.value;
+    if (!itemId) {
+        // Clear fields if no item selected
+        $('#txtpr_rate, #txtStock, #itemUnit').val('');
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "BOM.aspx/GetItemDetails",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({ itemId: parseInt(itemId) }),
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            if (data && !data.error) {
+                // ✅ Purchase Rate → txtpr_rate (disabled input)
+                $('#txtpr_rate').val(data.P_Rate ? parseFloat(data.P_Rate).toFixed(2) : '');
+
+                // ✅ Stock → txtStock
+                $('#txtStock').val(data.CurrentStock ? parseFloat(data.CurrentStock).toFixed(2) : '');
+
+                // ✅ Optional: Auto-set unit dropdown to BaseUnit (e.g., 'g', 'ml')
+                if (data.BaseUnit) {
+                    var $unitDropdown = $('#itemUnit');
+                    // Only set if option exists
+                    if ($unitDropdown.find('option[value="' + data.BaseUnit + '"]').length) {
+                        $unitDropdown.val(data.BaseUnit).trigger('change'); // trigger if needed
                     }
-                },
-                error: function () {
-                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load item details.' });
                 }
-            });
+
+                // ✅ Optional: Show helper (e.g., in a small <span> near stock)
+                // $('#stockHelper').text(data.BaseUnitQty ? `1 unit = ${data.BaseUnitQty} ${data.BaseUnit}` : '');
+            } else {
+                Swal.fire({ icon: 'warning', title: 'Not Found', text: data.error || 'Item details not available.' });
+                $('#txtpr_rate, #txtStock').val('');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+            Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load item details.' });
+            $('#txtpr_rate, #txtStock').val('');
         }
+    });
+}
     </script>
 </asp:Content>
 

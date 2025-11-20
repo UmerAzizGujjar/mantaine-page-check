@@ -902,7 +902,7 @@ namespace PMS
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
-        }
+        }]
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -3562,13 +3562,6 @@ namespace PMS
             return ((ISingleResult<BloodDonor_ListResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_loadAdvancePaymentHeader")]
-        public ISingleResult<sp_loadAdvancePaymentHeaderResult> sp_loadAdvancePaymentHeader([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> advanceID)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), advanceID);
-            return ((ISingleResult<sp_loadAdvancePaymentHeaderResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPONoByVendorId")]
         public ISingleResult<sp_GetPONoByVendorIdResult> sp_GetPONoByVendorId([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "VendorId", DbType = "Int")] System.Nullable<int> vendorId)
         {
@@ -4824,6 +4817,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, pat_Category, user_id);
             return ((ISingleResult<SpApprove_OPDResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_loadAdvancePaymentHeader")]
+        public ISingleResult<sp_loadAdvancePaymentHeaderResult> sp_loadAdvancePaymentHeader([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> advanceID)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), advanceID);
+            return ((ISingleResult<sp_loadAdvancePaymentHeaderResult>)(result.ReturnValue));
         }
     }
 
@@ -161426,266 +161426,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_loadAdvancePaymentHeaderResult
-    {
-
-        private int _Advance_ID;
-
-        private System.Nullable<int> _Advance_No;
-
-        private System.Nullable<System.DateTime> _Date;
-
-        private System.Nullable<int> _Vendor_ID;
-
-        private string _Advance_Account_Code;
-
-        private System.Nullable<int> _Paid_Through;
-
-        private System.Nullable<decimal> _Advance_Amount;
-
-        private System.Nullable<decimal> _Actual_Advance_Amount;
-
-        private System.Nullable<int> _WithHoldTax_Perc;
-
-        private System.Nullable<decimal> _WithHoldTax_Amount;
-
-        private string _Status;
-
-        private System.Nullable<decimal> _Total_amount;
-
-        private System.Nullable<decimal> _BalanceAmount;
-
-        private System.Nullable<int> _Advance_PO;
-
-        public sp_loadAdvancePaymentHeaderResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_ID", DbType = "Int NOT NULL")]
-        public int Advance_ID
-        {
-            get
-            {
-                return this._Advance_ID;
-            }
-            set
-            {
-                if ((this._Advance_ID != value))
-                {
-                    this._Advance_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_No", DbType = "Int")]
-        public System.Nullable<int> Advance_No
-        {
-            get
-            {
-                return this._Advance_No;
-            }
-            set
-            {
-                if ((this._Advance_No != value))
-                {
-                    this._Advance_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Date
-        {
-            get
-            {
-                return this._Date;
-            }
-            set
-            {
-                if ((this._Date != value))
-                {
-                    this._Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_ID", DbType = "Int")]
-        public System.Nullable<int> Vendor_ID
-        {
-            get
-            {
-                return this._Vendor_ID;
-            }
-            set
-            {
-                if ((this._Vendor_ID != value))
-                {
-                    this._Vendor_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_Account_Code", DbType = "VarChar(50)")]
-        public string Advance_Account_Code
-        {
-            get
-            {
-                return this._Advance_Account_Code;
-            }
-            set
-            {
-                if ((this._Advance_Account_Code != value))
-                {
-                    this._Advance_Account_Code = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Paid_Through", DbType = "Int")]
-        public System.Nullable<int> Paid_Through
-        {
-            get
-            {
-                return this._Paid_Through;
-            }
-            set
-            {
-                if ((this._Paid_Through != value))
-                {
-                    this._Paid_Through = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Advance_Amount
-        {
-            get
-            {
-                return this._Advance_Amount;
-            }
-            set
-            {
-                if ((this._Advance_Amount != value))
-                {
-                    this._Advance_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Actual_Advance_Amount", DbType = "Decimal(18,4)")]
-        public System.Nullable<decimal> Actual_Advance_Amount
-        {
-            get
-            {
-                return this._Actual_Advance_Amount;
-            }
-            set
-            {
-                if ((this._Actual_Advance_Amount != value))
-                {
-                    this._Actual_Advance_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WithHoldTax_Perc", DbType = "Int")]
-        public System.Nullable<int> WithHoldTax_Perc
-        {
-            get
-            {
-                return this._WithHoldTax_Perc;
-            }
-            set
-            {
-                if ((this._WithHoldTax_Perc != value))
-                {
-                    this._WithHoldTax_Perc = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WithHoldTax_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> WithHoldTax_Amount
-        {
-            get
-            {
-                return this._WithHoldTax_Amount;
-            }
-            set
-            {
-                if ((this._WithHoldTax_Amount != value))
-                {
-                    this._WithHoldTax_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(50)")]
-        public string Status
-        {
-            get
-            {
-                return this._Status;
-            }
-            set
-            {
-                if ((this._Status != value))
-                {
-                    this._Status = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Total_amount
-        {
-            get
-            {
-                return this._Total_amount;
-            }
-            set
-            {
-                if ((this._Total_amount != value))
-                {
-                    this._Total_amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BalanceAmount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> BalanceAmount
-        {
-            get
-            {
-                return this._BalanceAmount;
-            }
-            set
-            {
-                if ((this._BalanceAmount != value))
-                {
-                    this._BalanceAmount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_PO", DbType = "Int")]
-        public System.Nullable<int> Advance_PO
-        {
-            get
-            {
-                return this._Advance_PO;
-            }
-            set
-            {
-                if ((this._Advance_PO != value))
-                {
-                    this._Advance_PO = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetPONoByVendorIdResult
     {
 
@@ -204201,6 +203941,320 @@ namespace PMS
                 if ((this._Message != value))
                 {
                     this._Message = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_loadAdvancePaymentHeaderResult
+    {
+
+        private int _Advance_ID;
+
+        private System.Nullable<int> _Advance_No;
+
+        private System.Nullable<System.DateTime> _Date;
+
+        private System.Nullable<int> _Vendor_ID;
+
+        private string _Refer_No;
+
+        private System.Nullable<int> _Paid_Through;
+
+        private System.Nullable<decimal> _Advance_Amount;
+
+        private System.Nullable<decimal> _Actual_Advance_Amount;
+
+        private System.Nullable<int> _WithHoldTax_Perc;
+
+        private System.Nullable<decimal> _WithHoldTax_Amount;
+
+        private string _Remarks;
+
+        private string _Status;
+
+        private System.Nullable<decimal> _Total_amount;
+
+        private System.Nullable<decimal> _BalanceAmount;
+
+        private System.Nullable<int> _Advance_PO;
+
+        private System.Nullable<int> _Po_Id;
+
+        private System.Nullable<bool> _WithHoldTax_Check;
+
+        public sp_loadAdvancePaymentHeaderResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_ID", DbType = "Int NOT NULL")]
+        public int Advance_ID
+        {
+            get
+            {
+                return this._Advance_ID;
+            }
+            set
+            {
+                if ((this._Advance_ID != value))
+                {
+                    this._Advance_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_No", DbType = "Int")]
+        public System.Nullable<int> Advance_No
+        {
+            get
+            {
+                return this._Advance_No;
+            }
+            set
+            {
+                if ((this._Advance_No != value))
+                {
+                    this._Advance_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Date
+        {
+            get
+            {
+                return this._Date;
+            }
+            set
+            {
+                if ((this._Date != value))
+                {
+                    this._Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vendor_ID", DbType = "Int")]
+        public System.Nullable<int> Vendor_ID
+        {
+            get
+            {
+                return this._Vendor_ID;
+            }
+            set
+            {
+                if ((this._Vendor_ID != value))
+                {
+                    this._Vendor_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Refer_No", DbType = "VarChar(50)")]
+        public string Refer_No
+        {
+            get
+            {
+                return this._Refer_No;
+            }
+            set
+            {
+                if ((this._Refer_No != value))
+                {
+                    this._Refer_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Paid_Through", DbType = "Int")]
+        public System.Nullable<int> Paid_Through
+        {
+            get
+            {
+                return this._Paid_Through;
+            }
+            set
+            {
+                if ((this._Paid_Through != value))
+                {
+                    this._Paid_Through = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Advance_Amount
+        {
+            get
+            {
+                return this._Advance_Amount;
+            }
+            set
+            {
+                if ((this._Advance_Amount != value))
+                {
+                    this._Advance_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Actual_Advance_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Actual_Advance_Amount
+        {
+            get
+            {
+                return this._Actual_Advance_Amount;
+            }
+            set
+            {
+                if ((this._Actual_Advance_Amount != value))
+                {
+                    this._Actual_Advance_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WithHoldTax_Perc", DbType = "Int")]
+        public System.Nullable<int> WithHoldTax_Perc
+        {
+            get
+            {
+                return this._WithHoldTax_Perc;
+            }
+            set
+            {
+                if ((this._WithHoldTax_Perc != value))
+                {
+                    this._WithHoldTax_Perc = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WithHoldTax_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> WithHoldTax_Amount
+        {
+            get
+            {
+                return this._WithHoldTax_Amount;
+            }
+            set
+            {
+                if ((this._WithHoldTax_Amount != value))
+                {
+                    this._WithHoldTax_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "NVarChar(MAX)")]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this._Remarks = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(50)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Total_amount
+        {
+            get
+            {
+                return this._Total_amount;
+            }
+            set
+            {
+                if ((this._Total_amount != value))
+                {
+                    this._Total_amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BalanceAmount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> BalanceAmount
+        {
+            get
+            {
+                return this._BalanceAmount;
+            }
+            set
+            {
+                if ((this._BalanceAmount != value))
+                {
+                    this._BalanceAmount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_PO", DbType = "Int")]
+        public System.Nullable<int> Advance_PO
+        {
+            get
+            {
+                return this._Advance_PO;
+            }
+            set
+            {
+                if ((this._Advance_PO != value))
+                {
+                    this._Advance_PO = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Po_Id", DbType = "Int")]
+        public System.Nullable<int> Po_Id
+        {
+            get
+            {
+                return this._Po_Id;
+            }
+            set
+            {
+                if ((this._Po_Id != value))
+                {
+                    this._Po_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WithHoldTax_Check", DbType = "Bit")]
+        public System.Nullable<bool> WithHoldTax_Check
+        {
+            get
+            {
+                return this._WithHoldTax_Check;
+            }
+            set
+            {
+                if ((this._WithHoldTax_Check != value))
+                {
+                    this._WithHoldTax_Check = value;
                 }
             }
         }
