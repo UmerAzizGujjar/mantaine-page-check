@@ -13,6 +13,12 @@
             margin-top: 15px;
             font-weight: bold;
         }
+        .toast-center-screen {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: fit-content;
+        }
     </style>
 
     <script type="text/javascript">
@@ -76,10 +82,12 @@
                 var category = $('#recipeCategory').val().trim();
 
                 if (!procedureId) {
-                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Select Procedure.', timer: 2000 }); return;
+                    toasterMessage(true, 'Error!', 'Select Procedure.');
+                    return;
                 }
                 if (items.length === 0) {
-                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Add at least one item.', timer: 2000 }); return;
+                    toasterMessage(true, 'Error!', 'Add at least one item.');
+                    return;
                 }
 
                 var list = [];
@@ -102,24 +110,50 @@
                     list,
                     function (response) {
                         if (response.startsWith("DUPLICATE:")) {
-                            Swal.fire({ icon: 'error', title: 'Duplicate!', text: response.replace("DUPLICATE:", ""), timer: 2500 });
+                            toasterMessage(true, 'Duplicate!', response.replace("DUPLICATE:", ""));
                             return;
                         }
                         if (response === "-1") {
-                            Swal.fire({ icon: 'error', title: 'Failed!', text: 'Save failed. Check logs.', timer: 2500 });
+                            toasterMessage(true, 'Failed!', 'Save failed. Check logs.');
                             return;
                         }
-                        Swal.fire({ icon: 'success', title: 'Success!', text: 'BOM saved. ID: ' + response, timer: 2500 });
+                        toasterMessage(false, 'Success!', 'BOM saved. ID: ' + response);
                         setTimeout(function () {
-                            window.location.reload(); // or redirect
+                            window.location.reload(); // or redirect as needed
                         }, 2000);
                     },
                     function (error) {
-                        Swal.fire({ icon: 'error', title: 'Error!', text: 'AJAX call failed.', timer: 2500 });
+                        toasterMessage(true, 'Error!', 'AJAX call failed.');
                     }
                 );
             });
         });
+        function toasterMessage(isError = false, title, message) {
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "preventDuplicates": false,
+                "positionClass": "toast-center-screen",
+                "onclick": null,
+                "showDuration": "551500",
+                "hideDuration": "2000",
+                "timeOut": "4000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                onclick: function () {
+                    $('#right-sidebar').toggleClass('sidebar-open');
+                }
+            };
+
+            if (isError)
+                toastr.error(message, title);
+            else
+                toastr.success(message, title);
+        }
 
         function deleteRow(elem) {
             $(elem).closest('tr').remove();
@@ -185,15 +219,15 @@
             <hr />
 
             <div class="row mb-3 align-items-end">
-                <div class="col-md-4">
+                <div class="col-lg-3 col-md-3 col-sm-3">
                     <label>Item Name <span class="text-danger">*</span></label>
                     <select id="ddlitem" class="form-control"></select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-1 col-md-1 col-sm-1">
                     <label>Qty <span class="text-danger">*</span></label>
                     <input type="number" id="itemQuantity" step="0.01" min="0.01" class="form-control" />
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-1 col-md-2 col-sm-1">
                     <label>Unit</label>
                     <select id="itemUnit" class="form-control">
                         <option value="g">g</option>
@@ -203,7 +237,7 @@
                         <option value="cup">cup</option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label>Cost/Unit <span class="text-danger">*</span></label>
                     <input type="number" id="itemCost" step="0.01" min="0" class="form-control" />
                 </div>

@@ -373,7 +373,24 @@
                 row.remove();
             }
         }
-        function getbatchfrom_grn(id) {            debugger;            var item_id = id            PageMethods.Getbatch_grn(item_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                $.each(parsedData.GRN_Details, function (key, value) {                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                });                $.each(parsedData.Stock_Adjustment_Details, function (key, value) {                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                });                $('#ddlBatchNum').html(options);                $('#ddlBatchNum').select2();
+        function getbatchfrom_grn(id) {
+            debugger;
+
+            var item_id = id
+            PageMethods.Getbatch_grn(item_id, function (data) {
+                var parsedData = JSON.parse(data);
+                var options = '<option value="0" >Please Select</option>';
+
+                $.each(parsedData.GRN_Details, function (key, value) {
+                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                });
+
+                $.each(parsedData.Stock_Adjustment_Details, function (key, value) {
+                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                });
+
+                $('#ddlBatchNum').html(options);
+                $('#ddlBatchNum').select2();
                 $('.select2-container--default').css('width', "150px")
             }, function (error) {
                 alert(error.get_message());
