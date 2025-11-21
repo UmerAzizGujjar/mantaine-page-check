@@ -13,6 +13,7 @@
             margin-top: 15px;
             font-weight: bold;
         }
+
         .toast-center-screen {
             top: 50%;
             left: 50%;
@@ -28,12 +29,10 @@
 
             var items = [];
 
-            $('#ddlitem').change(function () {
-                var cost = $(this).find(':selected').data('cost') || 0;
-                $('#itemCost').val(parseFloat(cost).toFixed(2));
-            });
+         
 
-            $('#addItemBtn').click(function () {
+            $('#addItemBtn').click(function (e) {
+                e.preventDefault(); // ✅ Prevent accidental form submission
                 var itemId = $('#ddlitem').val();
                 var itemName = $('#ddlitem :selected').text().trim();
                 var qty = $('#itemQuantity').val().trim();
@@ -71,13 +70,12 @@
                 var grandTotal = items.reduce((sum, i) => sum + i.Total, 0);
                 $('#grandTotal').text(grandTotal.toFixed(2));
 
-                // Reset
-                $('#ddlitem').val('');
+                // Reset inputs
                 $('#itemQuantity, #itemCost').val('');
-                $('#ddlitem').focus();
             });
 
-            $('#btnSave').click(function () {
+            $('#btnSave').click(function (e) {
+                e.preventDefault(); // ✅ Prevent accidental form submission
                 var procedureId = $('#ddlprocedure').val();
                 var category = $('#recipeCategory').val().trim();
 
@@ -119,7 +117,7 @@
                         }
                         toasterMessage(false, 'Success!', 'BOM saved. ID: ' + response);
                         setTimeout(function () {
-                            window.location.reload(); // or redirect as needed
+                            window.location.reload();
                         }, 2000);
                     },
                     function (error) {
@@ -128,25 +126,22 @@
                 );
             });
         });
-        function toasterMessage(isError = false, title, message) {
 
+        function toasterMessage(isError = false, title, message) {
             toastr.options = {
                 "closeButton": true,
                 "debug": false,
                 "preventDuplicates": false,
                 "positionClass": "toast-center-screen",
                 "onclick": null,
-                "showDuration": "551500",
-                "hideDuration": "2000",
+                "showDuration": "300",
+                "hideDuration": "1000",
                 "timeOut": "4000",
                 "extendedTimeOut": "1000",
                 "showEasing": "swing",
                 "hideEasing": "linear",
                 "showMethod": "fadeIn",
-                "hideMethod": "fadeOut",
-                onclick: function () {
-                    $('#right-sidebar').toggleClass('sidebar-open');
-                }
+                "hideMethod": "fadeOut"
             };
 
             if (isError)
@@ -157,7 +152,6 @@
 
         function deleteRow(elem) {
             $(elem).closest('tr').remove();
-            // Recalculate total (optional — can also recompute on save)
             var total = 0;
             $('#itemsTableBody input[name="Total"]').each(function () {
                 total += parseFloat($(this).val()) || 0;
@@ -172,13 +166,18 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    var options = '<option value="">Select<option>';
+                    // ✅ Fixed: typo in first option: </option> → </option>
+                    var options = '<option value="">Select Procedure</option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (i, v) {
                         options += '<option value="' + v.Item_ID + '">' + v.Description + '</option>';
                     });
                     $('#ddlprocedure').html(options);
                     $('#ddlprocedure').select2();
+                },
+                error: function (xhr, status, err) {
+                    console.error('LoadProcedures failed', err);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load procedures.' });
                 }
             });
         }
@@ -193,60 +192,59 @@
                     var options = '<option value="">Select Item</option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (i, v) {
-                        options += '<option value="' + v.Item_ID + '">' + v.Description + '</option>';
+                        // ✅ Store cost in data-cost for easy access
+                        options += '<option value="' + v.Item_ID + '" data-cost="' + (v.Purchase_Rate || 0) + '">' + v.Description + '</option>';
                     });
                     $('#ddlitem').html(options);
                     $('#ddlitem').select2();
+                },
+                error: function (xhr, status, err) {
+                    console.error('LoadItems failed', err);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load items.' });
                 }
             });
         }
 
-      function onItemSelectionChanged(selectElement) {
-    var itemId = selectElement.value;
-    if (!itemId) {
-        // Clear fields if no item selected
-        $('#txtpr_rate, #txtStock, #itemUnit').val('');
-        return;
-    }
-
-    $.ajax({
-        type: "POST",
-        url: "BOM.aspx/GetItemDetails",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        data: JSON.stringify({ itemId: parseInt(itemId) }),
-        success: function (response) {
-            var data = JSON.parse(response.d);
-            if (data && !data.error) {
-                // ✅ Purchase Rate → txtpr_rate (disabled input)
-                $('#txtpr_rate').val(data.P_Rate ? parseFloat(data.P_Rate).toFixed(2) : '');
-
-                // ✅ Stock → txtStock
-                $('#txtStock').val(data.CurrentStock ? parseFloat(data.CurrentStock).toFixed(2) : '');
-
-                // ✅ Optional: Auto-set unit dropdown to BaseUnit (e.g., 'g', 'ml')
-                if (data.BaseUnit) {
-                    var $unitDropdown = $('#itemUnit');
-                    // Only set if option exists
-                    if ($unitDropdown.find('option[value="' + data.BaseUnit + '"]').length) {
-                        $unitDropdown.val(data.BaseUnit).trigger('change'); // trigger if needed
-                    }
-                }
-
-                // ✅ Optional: Show helper (e.g., in a small <span> near stock)
-                // $('#stockHelper').text(data.BaseUnitQty ? `1 unit = ${data.BaseUnitQty} ${data.BaseUnit}` : '');
-            } else {
-                Swal.fire({ icon: 'warning', title: 'Not Found', text: data.error || 'Item details not available.' });
-                $('#txtpr_rate, #txtStock').val('');
+        function onItemSelectionChanged(selectElement) {
+            var itemId = selectElement.value;
+            if (!itemId) {
+                $('#txtpr_rate, #txtStock, #itemCost').val('');
+                return;
             }
-        },
-        error: function (xhr, status, error) {
-            console.error("AJAX Error:", error);
-            Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load item details.' });
-            $('#txtpr_rate, #txtStock').val('');
+
+            $.ajax({
+                type: "POST",
+                url: "BOM.aspx/GetItemDetails",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ itemId: parseInt(itemId) }),
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    if (data && !data.error) {
+                        var purchaseRate = parseFloat(data.Purchase_Rate) || 0;
+                        $('#txtpr_rate').val(purchaseRate.toFixed(2));
+                        $('#itemCost').val(purchaseRate.toFixed(2)); // ✅ Auto-fill cost from PR
+                        $('#txtStock').val(data.StockDisplay || '');
+
+                        // Auto-set unit if match exists
+                        if (data.BaseUnit) {
+                            var $unitDropdown = $('#itemUnit');
+                            if ($unitDropdown.find('option[value="' + data.BaseUnit + '"]').length) {
+                                $unitDropdown.val(data.BaseUnit).trigger('change');
+                            }
+                        }
+                    } else {
+                        Swal.fire({ icon: 'warning', title: 'Not Found', text: data.error || 'Item details unavailable.' });
+                        $('#txtpr_rate, #txtStock, #itemCost').val('');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load item details.' });
+                    $('#txtpr_rate, #txtStock, #itemCost').val('');
+                }
+            });
         }
-    });
-}
     </script>
 </asp:Content>
 
@@ -255,11 +253,11 @@
         <div class="col-lg-12">
             <div class="row mb-3">
                 <div class="col-lg-3">
-                    <label>Procedure Name <span class="text-danger">*</span></label>
+                    <label for="ddlprocedure">Procedure Name <span class="text-danger">*</span></label>
                     <select id="ddlprocedure" class="form-control"></select>
                 </div>
                 <div class="col-lg-3">
-                    <label>Category</label>
+                    <label for="recipeCategory">Category</label>
                     <input type="text" id="recipeCategory" class="form-control" placeholder="e.g., Skincare" />
                 </div>
             </div>
@@ -267,15 +265,15 @@
 
             <div class="row mb-3 align-items-end">
                 <div class="col-lg-3 col-md-3 col-sm-3">
-                    <label>Item Name <span class="text-danger">*</span></label>
-                   <select id="ddlitem" class="form-control" onchange="onItemSelectionChanged(this)"></select>
+                    <label for="ddlitem">Item Name <span class="text-danger">*</span></label>
+                    <select id="ddlitem" class="form-control" onchange="onItemSelectionChanged(this)"></select>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
-                    <label>Qty <span class="text-danger">*</span></label>
-                    <input type="number" id="itemQuantity" step="0.01" min="0.01" class="form-control" />
+                    <label for="itemQuantity">Qty <span class="text-danger">*</span></label>
+                    <input type="number" id="itemQuantity" step="0.01" min="0.01" class="form-control" placeholder="Qty" />
                 </div>
                 <div class="col-lg-1 col-md-2 col-sm-1">
-                    <label>Unit</label>
+                    <label for="itemUnit">Unit</label>
                     <select id="itemUnit" class="form-control">
                         <option value="g">g</option>
                         <option value="ml">ml</option>
@@ -285,23 +283,23 @@
                     </select>
                 </div>
                 <div class="col-md-1">
-                    <label>Cost/Unit <span class="text-danger">*</span></label>
-                    <input type="number" id="itemCost" step="0.01" min="0" class="form-control" />
+                    <label for="itemCost">Cost/Unit <span class="text-danger">*</span></label>
+                    <input type="number" id="itemCost" step="0.01" min="0" class="form-control" placeholder="Cost" />
                 </div>
-               
                 <div class="col-md-1">
-                    <button id="addItemBtn" class="btn btn-primry">
-                        <i ></i>Add
+                    <!-- ✅ Fixed: button type="button" to prevent postback -->
+                    <button type="button" id="addItemBtn" class="btn btn-primary">
+                        <i class="fa fa-plus"></i>Add
                     </button>
                 </div>
-                 <div class="col-md-1">
-                     <label>P_Rate  <span class="text-danger">*</span></label>
-                     <input type="text" disabled="disabled" id="txtpr_rate" step="0.01" min="0" class="form-control" />
-                 </div>
-                 <div class="col-md-1">
-                     <label>Current Stock <span class="text-danger">*</span></label>
-                     <input type="number" id="txtStock" step="0.01" min="0" class="form-control" />
-                 </div>
+                <div class="col-md-1">
+                    <label>P_Rate</label>
+                    <input type="text" disabled="disabled" id="txtpr_rate" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label>Current Stock</label>
+                    <input type="text" id="txtStock" class="form-control" readonly />
+                </div>
             </div>
 
             <table class="table table-sm table-bordered mt-3" id="itemsTable">
@@ -323,24 +321,20 @@
             <div class="total-box">
                 Total Cost: <span id="grandTotal">0.00</span>
             </div>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
 
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" class="btn btn-primry" value="New" onclick="window.location='BOM.aspx'" />
 
+            </div>
 
         </div>
-      
     </div>
-     <div class="row">
-     <div class="col-lg-8 col-md-8 col-sm-8">
-         <div class="col-lg-2 col-md-2 col-sm-2">
-             <input type="button" id="btnSave" class="btn btn-primry" value="Save" />
-
-         </div>
-         <div class="col-lg-2 col-md-2 col-sm-2">
-             <input type="button" class="btn btn-primry" value="New" onclick="window.location='BOM.aspx'" />
-
-         </div>
-
-     </div>
- </div>
 </asp:Content>

@@ -40,6 +40,7 @@ namespace PMS.Inventory
             {
                 var list = (from i in db.INV_Items
                             where i.Is_Active == true
+                            && i.InventoryOrg == "001"
                             select new
                             {
                                 i.Item_ID,
@@ -87,17 +88,30 @@ namespace PMS.Inventory
                 if (item == null)
                     return new JavaScriptSerializer().Serialize(new { error = "Item not found" });
 
-                // 4. Get stock
-                decimal? stockTotal = db.GetInvenrtoryItemUomTotalStock(item.Item_ID, item.InventoryOrg);
+                decimal stockInBaseUnit = db.GetInventoryItemTotalStock_BaseUnit(item.Item_ID, item.InventoryOrg) ?? 0;
 
-                // 5. Build result
+                // Compute stock in UOM (e.g., tubes, packets)
+                decimal stockInUOM = item.UOM_Qty > 0
+                   ? Math.Round(stockInBaseUnit / (decimal)item.UOM_Qty, 2)
+                   : stockInBaseUnit;
+
+                decimal baseqty = stockInUOM * Convert.ToDecimal(item.Base_Unit_Qty);
+                // Get UOM name (e.g., "tube", "packet") — assuming you have a helper or table
+                string uomName = db.GetDataValueName("UOM", item.Unit)?.ToLower() ?? "unit"; // e.g., "tube"
+                string baseUnitName = db.GetDataValueName("Unit Size", item.Base_Unit)?.ToLower() ?? "gram"; // e.g., "gram"
+
+                // Build display string
+                string displayText = $"{stockInUOM:0.#} {uomName}(s) ({baseqty:0.#} {baseUnitName})";
+
                 var result = new
                 {
                     item.Sale_Rate,
-                    Purchase_Rate = purchaseRate,         
+                    Purchase_Rate = purchaseRate,
                     item.Base_Unit,
                     item.Base_Unit_Qty,
-                    StockTotal = stockTotal ?? 0
+                    StockTotal = stockInUOM,          // 100
+                    StockInBaseUnit = baseqty, // 1000
+                    StockDisplay = displayText         // "100 tube(s) (1000 gram)"
                 };
 
                 return new JavaScriptSerializer().Serialize(result);

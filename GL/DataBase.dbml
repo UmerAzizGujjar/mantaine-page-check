@@ -10783,4 +10783,9 @@
       <Column Name="WithHoldTax_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetInventoryItemTotalStock_BaseUnit" Method="GetInventoryItemTotalStock_BaseUnit" IsComposable="true">
+    <Parameter Name="itemcode" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
+    <Return Type="System.Decimal" />
+  </Function>
 </Database>
