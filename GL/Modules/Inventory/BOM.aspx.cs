@@ -51,7 +51,7 @@ namespace PMS.Inventory
             }
         }
         [WebMethod]
-        public static string GetItemDetails(int itemId)
+        public static string GetItemDetails(int itemId ,string batchNo)
         {
             using (var db = new DataBaseDataContext())
             {
@@ -59,6 +59,7 @@ namespace PMS.Inventory
                 decimal latestGrnRate = (from g in db.GRN_Details
                                          join inv in db.INV_Items on g.Item_Id equals inv.Item_ID
                                          where g.Item_Id == itemId
+                                         
                                            && g.GRNQty.HasValue && g.GRNQty > 0
                                            && g.Amount.HasValue
                                            && inv.UOM_Qty.HasValue && inv.UOM_Qty > 0
@@ -74,6 +75,7 @@ namespace PMS.Inventory
                     
                     var fallbackRate = (from s in db.INV_Stock_Adjustments
                                         where s.Item_Id == Convert.ToString(itemId)
+                                   
                                         orderby s.Adjustment_ID descending
                                         select s.Rate.Value)
                                        .FirstOrDefault(); 
@@ -88,7 +90,7 @@ namespace PMS.Inventory
                 if (item == null)
                     return new JavaScriptSerializer().Serialize(new { error = "Item not found" });
 
-                decimal stockInBaseUnit = db.GetInventoryItemTotalStock_BaseUnit(item.Item_ID, item.InventoryOrg) ?? 0;
+                decimal stockInBaseUnit = db.GetInventoryItemTotalStock_BaseUnit(item.Item_ID, item.InventoryOrg, batchNo) ?? 0;
 
                 // Compute stock in UOM (e.g., tubes, packets)
                 decimal stockInUOM = item.UOM_Qty > 0
@@ -125,6 +127,39 @@ namespace PMS.Inventory
             public string Unit { get; set; }
             public decimal CostPerUnit { get; set; }
             public decimal Total { get; set; }
+        }
+        [WebMethod]
+        public static string Getbatch_grn(int med_id)
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var grnResult = (from dv in db.INV_Items
+                                 join ds in db.GRN_Details
+                                 on dv.Item_ID equals ds.Item_Id
+                                 where ds.Item_Id == med_id
+                                 select new
+                                 {
+                                     BatchNum = ds.BatchNum
+                                 }).ToList();
+
+                var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
+                                             where inv.Item_Id == Convert.ToString(med_id)
+                                              && inv.Status == "Approved"
+                                             orderby inv.Creation_Time descending
+                                             select new
+                                             {
+                                                 BatchNum = inv.Batch_No
+                                             }).ToList();
+                var combinedResult = new
+                {
+                    GRN_Details = grnResult,
+                    Stock_Adjustment_Details = stockAdjustmentResult
+                };
+                data = new JavaScriptSerializer().Serialize(combinedResult);
+            }
+            return data;
         }
         [WebMethod]
         public static string SaveBOM(int procedureId, string category, List<BOM_Item> items)
