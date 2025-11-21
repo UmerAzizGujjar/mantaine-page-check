@@ -1894,6 +1894,7 @@
         var itemIds;
         function getitem_code() {
             debugger;
+            $('#ddlPatient_No').select2('close');
             var pat_Id = $('#ddlPatient_No').val();
             var PatNo = $('#ddlPatient_No option:selected').text();
             var parts = PatNo.split('-');
