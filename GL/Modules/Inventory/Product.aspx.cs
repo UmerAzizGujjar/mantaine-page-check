@@ -554,6 +554,7 @@ namespace PMS.Inventory
                                      obj.Width,
                                      obj.Height,
                                      obj.Base_Unit,
+                                     Base_Unit_Text = db.GetDataValueName("Unit Size", obj.Base_Unit),
                                      obj.Base_Unit_Qty,
                                      obj.Sale_Rate,
                                      obj.Purchase_Rate,

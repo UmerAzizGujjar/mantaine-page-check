@@ -206,7 +206,8 @@
         }
 
         function onItemSelectionChanged(selectElement) {
-            var itemId = selectElement.value;
+            var batchno = selectElement.value;
+            var itemId = $('#ddlitem').find('option:selected').val();
             if (!itemId) {
                 $('#txtpr_rate, #txtStock, #itemCost').val('');
                 return;
@@ -217,7 +218,10 @@
                 url: "BOM.aspx/GetItemDetails",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                data: JSON.stringify({ itemId: parseInt(itemId) }),
+                data: JSON.stringify({
+                    itemId: parseInt(itemId),
+                    batchNo: batchno  
+                }),
                 success: function (response) {
                     var data = JSON.parse(response.d);
                     if (data && !data.error) {
@@ -245,6 +249,62 @@
                 }
             });
         }
+        function getbatchfrom_grn() {
+            debugger;
+
+            var med_id = $('#ddlitem').find('option:selected').val();
+
+            if (!med_id || isNaN(med_id)) {
+                alert("Please select a valid medicine.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "BOM.aspx/Getbatch_grn",
+                data: JSON.stringify({ med_id: parseInt(med_id) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var $batchSelect = $('#ddlbatchno');
+                    // Always show default option first
+                    $batchSelect.empty().append('<option value="0">-- Select Batch --</option>');
+
+                    if (response.d) {
+                        var result = JSON.parse(response.d);
+
+                        // Append GRN batches
+                        if (result.GRN_Details && result.GRN_Details.length > 0) {
+                            $.each(result.GRN_Details, function (i, item) {
+                                if (item.BatchNum) {
+                                    $batchSelect.append('<option value="' + item.BatchNum + '">' + item.BatchNum + '</option>');
+                                }
+                            });
+                        }
+
+                        // Append Stock Adjustment batches (avoid duplicates)
+                        if (result.Stock_Adjustment_Details && result.Stock_Adjustment_Details.length > 0) {
+                            var existingBatches = $batchSelect.find('option').map(function () { return $(this).val(); }).get();
+
+                            $.each(result.Stock_Adjustment_Details, function (i, item) {
+                                if (item.BatchNum && existingBatches.indexOf(item.BatchNum) === -1) {
+                                    $batchSelect.append('<option value="' + item.BatchNum + '">' + item.BatchNum + '</option>');
+                                    existingBatches.push(item.BatchNum);
+                                }
+                            });
+                        }
+                    } else {
+                        $batchSelect.append('<option value="">No batches found</option>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    alert("Failed to load batch numbers. Please try again.");
+                }
+            });
+        }
+
     </script>
 </asp:Content>
 
@@ -264,10 +324,14 @@
             <hr />
 
             <div class="row mb-3 align-items-end">
-                <div class="col-lg-3 col-md-3 col-sm-3">
+                <div class="col-lg-2 col-md-3 col-sm-3">
                     <label for="ddlitem">Item Name <span class="text-danger">*</span></label>
-                    <select id="ddlitem" class="form-control" onchange="onItemSelectionChanged(this)"></select>
+                    <select id="ddlitem" class="form-control" onchange="getbatchfrom_grn()" ></select>
                 </div>
+                 <div class="col-lg-2 col-md-3 col-sm-3">
+                         <label for="ddlbatchno">Batch no <span class="text-danger">*</span></label>
+                         <select id="ddlbatchno" onchange="onItemSelectionChanged(this)" class="form-control"></select>
+                     </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <label for="itemQuantity">Qty <span class="text-danger">*</span></label>
                     <input type="number" id="itemQuantity" step="0.01" min="0.01" class="form-control" placeholder="Qty" />

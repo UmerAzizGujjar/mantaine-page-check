@@ -752,6 +752,14 @@
                         })
                     );
 
+                    $('#ddlunitsize').html(
+                        $('<option>', {
+                            value: parse.Base_Unit,
+                            text: parse.Base_Unit_Text
+                        })
+                    );
+                    $('#txtunitqty').val(parse.Base_Unit_Qty);
+
 
                     $('#txtlocatorAddress').val(parse.locatorAddress);
                     $('#txtLength').val(parse.Length);

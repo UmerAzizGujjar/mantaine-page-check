@@ -172,27 +172,7 @@ namespace PMS
             }
             return data;
         }
-        //[WebMethod]
-        //public static string loadPrescrpition(int opdId)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-
-        //    var itemCodes = (from rg in db.Reg_patients
-        //                     join p in db.Patients
-        //                     on rg.pat_id equals p.Reg_PatId
-        //                     join opd in db.Out_Patients
-        //                     on p.Patient_ID equals opd.Patient_ID
-        //                     where rg.Patient_No == opdId
-        //                     orderby opd.Created_Time descending
-        //                     select new
-        //                     {
-        //                         opd.Out_Patient_ID,
-        //                         p.Opd_No
-        //                     }
-        //                     ).Take(3).ToList();
-
-        //    return (new JavaScriptSerializer()).Serialize(itemCodes); ;
-        //}
+       
         [WebMethod]
         public static string Preview(string search)
         {
