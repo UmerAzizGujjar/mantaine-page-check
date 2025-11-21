@@ -213,6 +213,13 @@
                         var url = 'ReportViewer.aspx?ReportName=OPDTimeLine&ReportTitle=OPD Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }--%>
+                    else if (rptTitle == "InPatients_Detail") {
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var allPatientRecord = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=InPatients_Detail&ReportTitle=Department Wise And InPatient Details from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&TransType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");   // excluded  '&ExportPDF=' + exporttopdf +     '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked +
+                        console.log(url);
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "ComponentBloodBankStockLedger") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var Component = $("#ctl00_MainContent_ddlMainDepartment").val();
@@ -1053,11 +1060,7 @@
                         var url = 'ReportViewer.aspx?ReportName=HospitalCashReport&ReportTitle=Hospital Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
                     }
-                    else if (rptTitle == "InPatients_Detail") {
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=InPatients_Detail&ReportTitle=Department Wise And InPatient Details from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&TransType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
-                        window.open(url, '_blank');
-                    }
+                   
                     <%--if (rptTitle == "DoctorShare_Report") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;

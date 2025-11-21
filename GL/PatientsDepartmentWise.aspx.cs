@@ -4414,9 +4414,9 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     ddlShift.Visible = false;
+                    lbShift.Visible = false;
                     tr_AllPatientRecord.Visible = true;
-                    
-
+                    dpROw.Visible = true;
 
 
                     DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests");
@@ -4473,7 +4473,7 @@ namespace PMS
                     ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
                     ddlDoctor.DataBind();
 
-                    ddlPatientType.Visible = true;
+                    //ddlPatientType.Visible = true;
                     //trDoctor.Visible = true;
 
                     //

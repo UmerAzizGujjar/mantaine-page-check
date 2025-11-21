@@ -2922,7 +2922,23 @@ namespace PMS
                     throw;
                 }
             }
-            else if (reportName == "InPatients_Detail")
+            //else if (reportName == "InPatients_Detail")
+            //{
+            //    string InPatient_ID = Request.QueryString["InPatient_ID"].ToString();
+
+            //    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+            //    reportPath += "InPatient/rptInpatientDetails.rpt";
+            //    rd.Load(reportPath);
+            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //    rd.SetParameterValue("CompanyLogo", logoPath);
+            //    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID));
+            //    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[0].Name.ToString());
+            //    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[1].Name.ToString());
+            //    rd.SetParameterValue("@outPatient", Convert.ToInt32(InPatient_ID), rd.Subreports[2].Name.ToString());
+            //    // rd.SetParameterValue("@InPatient_id", Convert.ToInt32(InPatient_ID), rd.Subreports[3].Name.ToString());
+            //}
+            else if (reportName == "InpatientDetail")
             {
                 string InPatient_ID = Request.QueryString["InPatient_ID"].ToString();
 
