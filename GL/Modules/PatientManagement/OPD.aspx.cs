@@ -10,6 +10,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
+using PMS.Modules.Dashboards;
 
 namespace PMS.Modules.PatientManagement
 {
@@ -197,6 +198,53 @@ namespace PMS.Modules.PatientManagement
                 data = new JavaScriptSerializer().Serialize(result);
             }
             return data;
+        }
+
+        [WebMethod]
+        public static string GetDoctorBlockInfo(string Doc)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                var employee = (from emp in db.HR_Employees
+                                where emp.Emp_ID == Convert.ToInt32(Doc) && emp.IsDoctor == true
+                                select new
+                                {
+                                    emp.Block_category,
+                                    emp.st_day,
+                                    emp.end_day,
+                                    emp.Timings_In,
+                                    emp.Timings_Out,
+                                    emp.Patient_Type
+                                }).FirstOrDefault();
+
+                if (employee == null)
+                {
+                    return new JavaScriptSerializer().Serialize(new { error = "Doctor not found" });
+                }
+
+                string timingsIn = employee.Timings_In?.ToString(@"hh\:mm") ?? "";
+                string timingsOut = employee.Timings_Out?.ToString(@"hh\:mm") ?? "";
+
+                var result = new
+                {
+                    Block_category = employee.Block_category != null &&
+                    (employee.Block_category == true ||
+                     employee.Block_category.ToString() == "1"),
+                    st_day = employee.st_day?.ToString("yyyy-MM-dd"),
+                    end_day = employee.end_day?.ToString("yyyy-MM-dd"),
+                    Timings_In = employee.Timings_In?.ToString(@"hh\:mm"),
+                    Timings_Out = employee.Timings_Out?.ToString(@"hh\:mm"),
+                    Patient_Type = employee.Patient_Type?.ToString()
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { error = ex.Message });
+            }
         }
 
         [WebMethod]
