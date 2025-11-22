@@ -147,6 +147,8 @@ namespace PMS
                     txtEmployee_NTN_No = employee.NTN_No,
                     txtEmployee_Email = employee.Email,
                     txtEmployee_DOJ = employee.DOJ.Value.ToString(AppConfig.DateFormat),
+                    txtStartDate = employee.st_day?.ToString(AppConfig.DateFormat) ?? string.Empty,
+                    txtEndDate = employee.end_day?.ToString(AppConfig.DateFormat) ?? string.Empty,
                     txtDoctorShare = employee.Doctor_Amount.ToString(),
                     txtHospital_Share = employee.Hospital_Amount.ToString(),
                     txtEmployee_Resign = txtEmployee_Resign,
@@ -155,6 +157,7 @@ namespace PMS
                     ChkDoctor = employee.IsDoctor.HasValue ? Convert.ToBoolean(employee.IsDoctor) : false,
                     ChkVisting = employee.IS_Visting.HasValue ? Convert.ToBoolean(employee.IS_Visting) : false,
                     ChkEmployee = employee.is_Employee.HasValue ? Convert.ToBoolean(employee.is_Employee) : false,
+                    ChkBlockCategory = employee.Block_category.HasValue ? Convert.ToBoolean(employee.Block_category) : false,
                     txtConsultant_Charges = employee.Consultant_Charges.ToString(),
                     btnSave = "Update",
                 };
@@ -496,6 +499,8 @@ namespace PMS
                 employee.NTN_No = dataa.txtEmployee_NTN_No;
                 employee.Email = dataa.txtEmployee_Email;
                 employee.DOJ = Convert.ToDateTime(dataa.txtEmployee_DOJ);
+                employee.st_day = Convert.ToDateTime(dataa.txtStartDate);
+                employee.end_day = Convert.ToDateTime(dataa.txtEndDate);
                 employee.Account_ID = accountID;
 
 
@@ -533,6 +538,11 @@ namespace PMS
                     employee.is_Employee = Convert.ToBoolean(true);
                 else
                     employee.is_Employee = false;
+
+                if (dataa.BlockCategory)
+                    employee.Block_category = Convert.ToBoolean(true);
+                else
+                    employee.Block_category = false;
 
                 if (dataa.buttonVal == "Save")
                 {
@@ -655,6 +665,8 @@ namespace PMS
             public string txtEmployee_NTN_No { get; set; }
             public string ddlRoom { get; set; }
             public string txtEmployee_DOJ { get; set; }
+            public string txtStartDate { get; set; }
+            public string txtEndDate { get; set; }
             public string txtEmployee_Resign { get; set; }
             public string ddlFloor { get; set; }
             public string txtDoctorShare { get; set; }
@@ -678,6 +690,7 @@ namespace PMS
             public bool isDoc { get; set; }
             public bool isVisiting { get; set; }
             public bool IsEmployee { get; set; }
+            public bool BlockCategory { get; set; }
             public string hdfAccount_ID { get; set; }
             public string hdfParent_Code { get; set; }
             public string hdfAccount_Serial { get; set; }

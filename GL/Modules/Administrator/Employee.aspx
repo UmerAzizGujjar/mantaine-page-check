@@ -55,6 +55,8 @@
                   $("#txtEmployee_Date_of_Birth").datepicker({ dateFormat: 'mm/dd/yy' });
                   $("#txtEmployee_DOJ").datepicker({ dateFormat: 'mm/dd/yy' });
                   $("#txtEmployee_Resign").datepicker({ dateFormat: 'mm/dd/yy' });
+                  $("#txtStartDate").datepicker({ dateFormat: 'mm/dd/yy' });
+                  $("#txtEndDate").datepicker({ dateFormat: 'mm/dd/yy' });
 
               });
           });
@@ -198,6 +200,8 @@
                   $("#txtEmployee_NTN_No").val(empData.txtEmployee_NTN_No);
                   $("#txtEmployee_Email").val(empData.txtEmployee_Email);
                   $("#txtEmployee_DOJ").val(empData.txtEmployee_DOJ);
+                  $("#txtStartDate").val(empData.txtStartDate);
+                  $("#txtEndDate").val(empData.txtEndDate);
                   $("#txtDoctorShare").val(empData.txtDoctorShare);
                   $("#txtHospital_Share").val(empData.txtHospital_Share);
                   $("#txtEmployee_Resign").val(empData.txtEmployee_Resign);
@@ -221,6 +225,7 @@
                       $("#ChkDoctor").prop("checked", empData.ChkDoctor);
                       $("#ChkVisting").prop("checked", empData.ChkVisting);
                       $("#ChkEmployee").prop("checked", empData.ChkEmployee);
+                      $("#ChkBlockCategory").prop("checked", empData.ChkBlockCategory);
                       $("#sun").prop("checked", empData.isSun);
                       $("#mon").prop("checked", empData.isMon);
                       $("#tue").prop("checked", empData.isTue);
@@ -340,6 +345,8 @@
               var txtEmployee_NTN_No = $('#txtEmployee_NTN_No').val();
               var ddlRoom = $('#ddlRoom').val();
               var txtEmployee_DOJ = $('#txtEmployee_DOJ').val();
+              var txtStartDate = $('#txtStartDate').val();
+              var txtEndDate = $('#txtEndDate').val();
               var txtEmployee_Resign = $('#txtEmployee_Resign').val();
               var ddlFloor = $('#ddlFloor').val();
               var txtDoctorShare = $('#txtDoctorShare').val();
@@ -363,6 +370,7 @@
               var isDoc = $('#ChkDoctor').prop('checked');
               var isVisiting = $('#ChkVisting').prop('checked');
               var IsEmployee = $('#ChkEmployee').prop('checked');
+              var BlockCategory = $('#ChkBlockCategory').prop('checked');
 
               var hdfParent_Code = $('#hdfParent_Code').val();
               var hdfAccount_Serial = $('#hdfAccount_Serial').val();
@@ -458,6 +466,8 @@
                   "txtEmployee_NTN_No": txtEmployee_NTN_No,
                   "ddlRoom": ddlRoom,
                   "txtEmployee_DOJ": txtEmployee_DOJ,
+                  "txtStartDate": txtStartDate,
+                  "txtEndDate": txtEndDate,
                   "txtEmployee_Resign": txtEmployee_Resign,
                   "ddlFloor": ddlFloor,
                   "txtDoctorShare": txtDoctorShare,
@@ -487,6 +497,7 @@
                   "hdfAccount_Code": hdfAccount_Code,
                   "txtGovt_Hospital": txtGovt_Hospital,
                   "IsEmployee": IsEmployee,
+                  "BlockCategory": BlockCategory,
                   "hdnEmp": hdnEmp,
                   "lblMessage": lblMessage,
                   "CustomerJSON": CustomerJSON
@@ -674,18 +685,18 @@
             <div class="col-lg-1 col-md-4 col-sm-6">
                 <label>Time Out</label>
                 <input type="text" id="TxtTime_Out" name="TxtTime_Out" />
-
-
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label>NTN No.</label>
-                <input type="text" id="txtEmployee_NTN_No" name="txtEmployee_NTN_No" autocomplete="off" />
-
+            <div class="col-lg-1 col-md-4 col-sm-6">
+                <label>Start Date</label>
+                <input type="text" id="txtStartDate" name="txtStartDate" />
+            </div>
+            <div class="col-lg-1 col-md-4 col-sm-6">
+                <label>End Date</label>
+                <input type="text" id="txtEndDate" name="txtEndDate" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label>Room #</label>
                 <select id="ddlRoom" name="ddlRoom">
-                  <!-- Add your <option> elements here -->
                 </select>
 
             </div>
@@ -844,6 +855,10 @@
                     <option value="">Please Select</option>
                 </select>
             </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label>NTN No.</label>
+                <input type="text" id="txtEmployee_NTN_No" name="txtEmployee_NTN_No" autocomplete="off" />
+            </div>
                   <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
                  <input type="checkbox" id="ChkDoctor" name="ChkDoctor" class="chkwdth" />
                 <label id="LblIsDoctor" for="ChkDoctor">Doctor</label>
@@ -859,7 +874,10 @@
                 <input type="checkbox" id="ChkEmployee" name="ChkEmployee" class="chkwdth" />
                 <label id="LblEmployee" for="ChkEmployee">Employee</label>
             </div>
-
+            <div class="col-lg-1 col-md-4 col-sm-6 custom-label-checkbox">
+                <input type="checkbox" id="ChkBlockCategory" name="ChkBlockCategory" class="chkwdth" />
+                <label id="LblChkBlockCategory" for="ChkBlockCategory">Block Category</label>
+            </div>
 
             <div class="col-lg-8 col-md-4 col-sm-6">
             </div>
