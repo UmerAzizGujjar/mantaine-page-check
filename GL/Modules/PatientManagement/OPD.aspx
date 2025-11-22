@@ -674,67 +674,73 @@
                 $("#hdn_dep_id").val(dept_gnl);
             }
         }
+       
+
         function loadFee() {
             debugger;
 
             var Doc = $('#ddldoctor').val();
             var opdid = $('#hdn_opdId').val();
-            var cateogry = $('#ddlPatient_Type').val();
-
+            var selectedPatientType = $('#ddlPatient_Type').val();
             var emer_reffered = $("#hdn_emer_reffered").val();
 
-            if (emer_reffered != "") {
+            if (emer_reffered !== "") {
                 $('#txtfees').val("0");
-            } else if (cateogry == '11') {
-                getspecialfees(Doc);
-            } else {
-              
-                if (opdid != "") {
-                    
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        url: "OPD.aspx/loadRegistrationFees",
-                        data: JSON.stringify({ Doc: Doc }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
-                            debugger;
-                            var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                return;
+            }
 
-                            if (!res.success) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: res.message,
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    customClass: {
-                                        popup: 'swal-big-popup',
-                                        title: 'swal-big-title',
-                                        htmlContainer: 'swal-big-text'
-                                    }
-                                });
-                            } else {
-                                var fee = parseFloat(res.fee) || 0;
-                                var disper = parseFloat(res.discount_percentage) || 0;
-                                var afterdiscountfee = fee - ((fee * disper) / 100);
-
-                                $('#txtfees').val(afterdiscountfee.toFixed(2));
-                                $('#txtactualfee').val(res.fee);
-                                $('#txtdiscount').val(res.discount_percentage);
-                                $('#hdnhospShare').val(res.Hospital_Share);
-                                $('#hdnDocshare').val(res.Doctor_Share);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.log("Error: " + error);
-                        }
-                    });
+            if (!Doc) return;
+            checkDoctorBlockStatus(Doc, selectedPatientType, function (isBlocked) {
+                if (isBlocked) {
+                    return; 
                 }
 
-                loadDepartment(Doc);
-            }
+                if (selectedPatientType == '11') {
+                    getspecialfees(Doc);
+                } else {
+                    if (opdid == "") {
+                        $.ajax({
+                            type: "POST",
+                            url: "OPD.aspx/loadRegistrationFees",
+                            data: JSON.stringify({ Doc: Doc }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+
+                                if (!res.success) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: res.message,
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+                                } else {
+                                    var fee = parseFloat(res.fee) || 0;
+                                    var disper = parseFloat(res.discount_percentage) || 0;
+                                    var afterdiscountfee = fee - ((fee * disper) / 100);
+
+                                    $('#txtfees').val(afterdiscountfee.toFixed(2));
+                                    $('#txtactualfee').val(res.fee);
+                                    $('#txtdiscount').val(res.discount_percentage);
+                                    $('#hdnhospShare').val(res.Hospital_Share);
+                                    $('#hdnDocshare').val(res.Doctor_Share);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("Error: " + error);
+                            }
+                        });
+                    }
+                    loadDepartment(Doc);
+                }
+            });
         }
 
 
@@ -770,6 +776,73 @@
                 },
                 error: function (xhr, status, error) {
                     console.log("Error: " + error);
+                }
+            });
+        }
+
+        function checkDoctorBlockStatus(Doc, selectedPatientType, callback) {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/GetDoctorBlockInfo",
+                data: JSON.stringify({ Doc: Doc }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var blockInfo = JSON.parse(response.d);
+
+                    if (blockInfo && blockInfo.error) {
+                        console.error("Block info error:", blockInfo.error);
+                        callback(false);
+                        return;
+                    }
+
+                    if (blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+                        const now = new Date();
+
+                        const parseLocalDate = (str) => {
+                            const [y, m, d] = str.split('-').map(Number);
+                            return new Date(y, m - 1, d);
+                        };
+
+                        const stDate = parseLocalDate(blockInfo.st_day);
+                        const endDate = parseLocalDate(blockInfo.end_day);
+
+                        const [startHour, startMin] = (blockInfo.Timings_In || "00:00").split(':').map(Number);
+                        const [endHour, endMin] = (blockInfo.Timings_Out || "23:59").split(':').map(Number);
+
+                        stDate.setHours(startHour, startMin, 0, 0);
+                        endDate.setHours(endHour, endMin, 0, 0);
+
+                        const isWithinWindow = now >= stDate && now <= endDate;
+
+                        if (!isWithinWindow) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Access Denied',
+                                text: 'This category is blocked by the admin.',
+                                timer: 2500,
+                                showConfirmButton: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                            $('#txtfees').val("0");
+                            $('#txtactualfee').val("0");
+                            $('#txtdiscount').val("");
+                            $('#ddldoctor').val("");
+                            callback(true);
+                            return;
+                        }
+                    }
+
+                    callback(false);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch block info:", error);
+                    callback(false);
                 }
             });
         }
