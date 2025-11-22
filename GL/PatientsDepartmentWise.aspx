@@ -206,13 +206,7 @@
                         var url = 'ReportViewer.aspx?ReportName=DoctorWisePatients&ReportTitle=Doctor Wise Patient from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked;
                         window.open(url, '_blanks');
                     }
-<%--                    else if (rptTitle == 'OPD_Time_Line') {
-                        debugger;
-                        var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=OPDTimeLine&ReportTitle=OPD Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
-                        window.open(url, '_blanks');
-                    }--%>
+
                     else if (rptTitle == "InPatients_Detail") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var allPatientRecord = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
@@ -271,11 +265,6 @@
                         window.open(url, '_blank');
 
                     }
-                    //else if (rptTitle == "Pharmacy_Profit_and_Loss_Report") {
-                    //    debugger;
-                    //    var url = 'ReportViewer.aspx?ReportName=Pharmacy_Profit_and_Loss_Report&ReportTitle=Pharmacy Profit and Loss from ' + $('#ctl00_MainContent_txtsDate').val() + ' to ' + $('#ctl00_MainContent_txteDate').val() + '&StartDate=' + $('#ctl00_MainContent_txtsDate').val() + '&EndDate=' + $('#ctl00_MainContent_txteDate').val() + '&ExportPDF=' + exporttopdf;
-                    //    window.open(url, '_blank');
-                    //}
 
                     else if (rptTitle == "GroupTestsRateList") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -577,20 +566,7 @@
                         var url = 'ReportViewer.aspx?ReportName=Lab_Test_Patient_Wise&ReportTitle=Lab Tests Patient Wise from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&testName=' + testname + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
-                        // new insertion
-                        //else if (rptTitle == "Lab_Test_Wise_Summary") {
-                        //    debugger;
-                        //    var testname = ((typeof ($("#ctl00_MainContent_ddlTestName option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlTestName option:selected").text() : "0")
-                        //    var oprators = ((typeof ($("#ctl00_MainContent_ddlProcedure").val()) != 'undefined') ? $("#ctl00_MainContent_ddlProcedure").val() : "0");
-                        //    window.location.href = 'ReportViewer.aspx?ReportName=Lab_Test_Wise_Summary&ReportTitle=LabCashCollection from ' + $('#ctl00_MainContent_txtsDate').val() + ' to ' + $('#ctl00_MainContent_txteDate').val() + '&sDate=' + $('#ctl00_MainContent_txtsDate').val() + '&eDate=' + $('#ctl00_MainContent_txteDate').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&testName=' + testname + '&Operator=' + oprators + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect option:selected").text() : "0")
-                        //}  // new insertion
 
-                    <%--else if (rptTitle == "Lab_Test_Wise_Summary") {
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var testname = ((typeof ($("#ctl00_MainContent_ddlTestName option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlTestName option:selected").text() : "0")
-                        var url = 'ReportViewer.aspx?ReportName=LabTestWiseSummary&ReportTitle=LabCashCollection from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&testName=' + testname + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_lblMultiSelect").val()) != 'undefined') ? $("#ctl00_MainContent_lblMultiSelect").val() : "0") + '&ExportPDF=' + exporttopdf;
-                        window.open(url, '_blanks');
-                    }--%>
                     else if (rptTitle == "Dischare_Revd") {
                         debugger;
                         var ddlShift = ((typeof ($("#ctl00_MainContent_ddlShift").val()) != 'undefined') ? $("#ctl00_MainContent_ddlShift").val() : "0");
@@ -789,12 +765,7 @@
                         var url = 'ReportViewer.aspx?ReportName=EmerDetailReport&ReportTitle=Emergency Detail Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
                     }
-                    //else if (rpttitle == "opd_time_line") {
-                    //    debugger;
-                    //    var timeline = $('#ctl00_maincontent_ddlmedicalsubsidy').val();
-                    //    var url = 'reportviewer.aspx?reportname=opd_time_line&reporttitle=opd time line from ' + $('#ctl00_maincontent_txtstart_date').val() + ' ' + $('#ctl00_maincontent_txtstime').val() + ' to ' + $('#ctl00_maincontent_txtend_date').val() + ' ' + $('#ctl00_maincontent_txtetime').val() + '&report_type=' + timeline + '&startdatetime=' + $('#ctl00_maincontent_txtstart_date').val() + ' ' + $('#ctl00_maincontent_txtstime').val() + '&enddatetime=' + $('#ctl00_maincontent_txtend_date').val() + ' ' + $('#ctl00_maincontent_txtetime').val();
-                    //    window.open(url, '_blank');
-                    //}
+
                     else if (rptTitle == "OPD_Time_Line") {
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
@@ -1050,40 +1021,7 @@
                         var url = 'ReportViewer.aspx?ReportName=DeptWisePatients&ReportTitle=Department Wise and Patient Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Shift=' + ddlShift  + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blanks');
                     }
-                  <%--  else if (rptTitle == "Patients_Receipts") {
-                        debugger;
-
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var allPatientRecord = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
-
-                        var url = 'ReportViewer.aspx?'
-                            + 'ReportName=' + encodeURIComponent('DeptWisePatients')
-                            + '&ReportTitle=' + encodeURIComponent('Department Wise and Patient Wise Report from '
-                                + $('#ctl00_MainContent_txtStart_Date').val()
-                                + ' to '
-                                + $('#ctl00_MainContent_txtEnd_Date').val())
-                            + '&DoctorID=' + encodeURIComponent($('#ctl00_MainContent_ddlDoctor').val())
-                            + '&DepartmentID=' + encodeURIComponent($('#ctl00_MainContent_ddlDepartments').val())
-                            + '&Shift=' + encodeURIComponent(ddlShift)
-                            + '&PatientType=' + encodeURIComponent($('#ctl00_MainContent_ddlPatientType').val())
-                            + '&sDate=' + encodeURIComponent($('#ctl00_MainContent_txtStart_Date').val())
-                            + '&eDate=' + encodeURIComponent($('#ctl00_MainContent_txtEnd_Date').val())
-                            + '&STime=' + encodeURIComponent($('#ctl00_MainContent_txtSTime').val())
-                            + '&ETime=' + encodeURIComponent($('#ctl00_MainContent_txtETime').val())
-                            + '&ExportPDF=' + exporttopdf
-                            + '&Summary=' + summary
-                            + '&AllPatientsRecords=' + allPatientRecord
-                            + '&Operator=' + encodeURIComponent(
-                                (typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined')
-                                    ? $("#ctl00_MainContent_ddloprators").val()
-                                    : "0"
-                            );
-
-                        window.open(url, '_blank');
-                    }--%>
-
-
+                 
                     else if (rptTitle == "AllCash_Report") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=AllCashReport&ReportTitle=All Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
@@ -1093,13 +1031,6 @@
                         var url = 'ReportViewer.aspx?ReportName=HospitalCashReport&ReportTitle=Hospital Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
                     }
-                   
-                    <%--if (rptTitle == "DoctorShare_Report") {
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=AllDoctorShareDetail&ReportTitle=Doctor Share from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ShareType=' + ((typeof ($("#ctl00_MainContent_ddlReportType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlReportType").val() : "0");
-                        window.open(url, '_blanks');
-                    }--%>
 
                     if (rptTitle == "StockBalnce_Report") {
 
