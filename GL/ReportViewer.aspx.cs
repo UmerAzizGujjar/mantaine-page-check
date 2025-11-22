@@ -948,7 +948,7 @@ namespace PMS
                     rd.SetParameterValue("STime", STIME);
                     rd.SetParameterValue("ETime", ETIME);
                     rd.SetParameterValue("CompanyLogo", logoPath);
-                    rd.SetParameterValue("Shift_Id", Shift_Id);
+                    rd.SetParameterValue("@Shift_Id", Shift_Id);
 
                     //rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
 
@@ -1907,6 +1907,8 @@ namespace PMS
                 string stTime = Request.QueryString["StartTime"].ToString();
                 string endTime = Request.QueryString["EndTime"].ToString();
 
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 string parameterStDate = string.Empty;
                 string parameterEndDate = string.Empty;
 
@@ -1922,6 +1924,7 @@ namespace PMS
                 rd.SetParameterValue("Address", companyAddress);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "AdmissionDetail")
             {
