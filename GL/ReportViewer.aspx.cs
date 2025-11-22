@@ -948,7 +948,7 @@ namespace PMS
                     rd.SetParameterValue("STime", STIME);
                     rd.SetParameterValue("ETime", ETIME);
                     rd.SetParameterValue("CompanyLogo", logoPath);
-                    rd.SetParameterValue("Shift_Id", Shift_Id);
+                    rd.SetParameterValue("@Shift_Id", Shift_Id);
 
                     //rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
 

@@ -4238,8 +4238,8 @@ namespace PMS
                     tr_AllPatientRecord.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
-                    ddlShift.Visible = false;
-                    lbShift.Visible = false;
+                    ddlShift.Visible = true;   //turned it on
+                    lbShift.Visible = true;    //turned it on
                     valusets = DBClass.GetValueSet("Patient Type");
                     ddlPatientType.DataSource = valusets;
                     ddlPatientType.DataTextField = "DataValue_Description";
