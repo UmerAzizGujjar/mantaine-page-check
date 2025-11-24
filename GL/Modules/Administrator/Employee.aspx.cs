@@ -499,8 +499,22 @@ namespace PMS
                 employee.NTN_No = dataa.txtEmployee_NTN_No;
                 employee.Email = dataa.txtEmployee_Email;
                 employee.DOJ = Convert.ToDateTime(dataa.txtEmployee_DOJ);
-                employee.st_day = Convert.ToDateTime(dataa.txtStartDate);
-                employee.end_day = Convert.ToDateTime(dataa.txtEndDate);
+                if (!string.IsNullOrEmpty(dataa.txtStartDate))
+                {
+                    employee.st_day = Convert.ToDateTime(dataa.txtStartDate);
+                }
+                else
+                {
+                    employee.st_day = null;
+                }
+                if (!string.IsNullOrEmpty(dataa.txtEndDate))
+                {
+                    employee.end_day = Convert.ToDateTime(dataa.txtEndDate);
+                }
+                else
+                {
+                    employee.end_day = null;
+                }
                 employee.Account_ID = accountID;
 
 
