@@ -15,7 +15,42 @@ namespace PMS.Inventory
         protected void Page_Load(object sender, EventArgs e)
         {
         }
+        [WebMethod]
+        public static string GetWareHouse()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Ware House"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
 
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+        [WebMethod]
+        public static string GetUnitSize()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Unit Size"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
         [WebMethod]
         public static string LoadProcedures()
         {
@@ -91,6 +126,7 @@ namespace PMS.Inventory
                     return new JavaScriptSerializer().Serialize(new { error = "Item not found" });
 
                 decimal stockInBaseUnit = db.GetInventoryItemTotalStock_BaseUnit(item.Item_ID, item.InventoryOrg, batchNo) ?? 0;
+                decimal weighted_avg = db.GetAvgAmount(item.Item_ID) ?? 0;
 
                 // Compute stock in UOM (e.g., tubes, packets)
                 decimal stockInUOM = item.UOM_Qty > 0
@@ -100,8 +136,8 @@ namespace PMS.Inventory
                 decimal baseqty = stockInUOM * Convert.ToDecimal(item.Base_Unit_Qty);
                 // Get UOM name (e.g., "tube", "packet") — assuming you have a helper or table
                 string uomName = db.GetDataValueName("UOM", item.Unit)?.ToLower() ?? "unit"; // e.g., "tube"
-                string baseUnitName = db.GetDataValueName("Unit Size", item.Base_Unit)?.ToLower() ?? "gram"; // e.g., "gram"
-
+                string baseUnitName = db.GetDataValueName("Unit Size", item.Base_Unit)?.ToLower() ?? "gram";
+                string baseUnit = item.Base_Unit;
                 // Build display string
                 string displayText = $"{stockInUOM:0.#} {uomName}(s) ({baseqty:0.#} {baseUnitName})";
 
@@ -109,11 +145,14 @@ namespace PMS.Inventory
                 {
                     item.Sale_Rate,
                     Purchase_Rate = purchaseRate,
+                    baseUnitName = db.GetDataValueName("Unit Size", item.Base_Unit)?.ToLower() ?? "gram",
                     item.Base_Unit,
                     item.Base_Unit_Qty,
                     StockTotal = stockInUOM,          // 100
                     StockInBaseUnit = baseqty, // 1000
-                    StockDisplay = displayText         // "100 tube(s) (1000 gram)"
+                    StockDisplay = displayText,         // "100 tube(s) (1000 gram)"
+                    weighted_avg = weighted_avg
+
                 };
 
                 return new JavaScriptSerializer().Serialize(result);
@@ -127,6 +166,8 @@ namespace PMS.Inventory
             public string Unit { get; set; }
             public decimal CostPerUnit { get; set; }
             public decimal Total { get; set; }
+            public string Batch_No { get; set; }
+            public decimal BaseUnitQty { get; set; }
         }
         [WebMethod]
         public static string Getbatch_grn(int med_id)
@@ -172,8 +213,7 @@ namespace PMS.Inventory
             {
                 try
                 {
-                    // Check duplicate: e.g., same Procedure + same ItemID already in BOM? (optional)
-                    // Example: prevent same item added twice in same BOM
+                    // Check duplicate
                     var seenItemIDs = new HashSet<int>();
                     foreach (var item in items)
                     {
@@ -192,7 +232,7 @@ namespace PMS.Inventory
                         TotalCost = items.Sum(x => x.Total),
                         CreatedBy = AppConfig.UserID,
                         CreatedDate = DateTime.Now,
-                     
+                        Company_ID = AppConfig.Company_ID,
                     };
                     db.inv_boms.InsertOnSubmit(bom);
                     db.SubmitChanges(); // Get BOMID
@@ -207,20 +247,21 @@ namespace PMS.Inventory
                             Qty = item.Qty,
                             Unit = item.Unit ?? "pcs",
                             CostPerUnit = item.CostPerUnit,
-                            Total = item.Total
+                            Total = item.Total,
+                            Batch_No = string.IsNullOrWhiteSpace(item.Batch_No) ? null : item.Batch_No.Trim(),
+                            BaseUnitQty = item.BaseUnitQty // ✅ STORE BASE UNIT QTY
                         };
                         db.inv_bom_details.InsertOnSubmit(detail);
                     }
                     db.SubmitChanges();
 
-                    return bom.BOMID.ToString(); // success → return ID (like your depreciation SaveRecord)
+                    return bom.BOMID.ToString();
                 }
                 catch (Exception ex)
                 {
-                    return "-1"; // or ex.Message — but you return "-1" on failure in depreciation
+                    return "-1";
                 }
             }
-
         }
     }
 }
