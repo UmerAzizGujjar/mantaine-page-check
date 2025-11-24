@@ -815,7 +815,7 @@
 
                         const isWithinWindow = now >= stDate && now <= endDate;
 
-                        if (!isWithinWindow) {
+                        if (isWithinWindow) {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Access Denied',
@@ -833,7 +833,7 @@
                             $('#txtactualfee').val("0");
                             $('#txtdiscount').val("");
                             $('#ddldoctor').val("");
-                            callback(true);
+                            callback(true); 
                             return;
                         }
                     }
