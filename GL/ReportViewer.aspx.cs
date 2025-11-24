@@ -1208,6 +1208,24 @@ namespace PMS
                     rd.SetParameterValue("Address", companyAddress);
                 }
             }
+            else if (reportName == "PharmacyStockBatchWise")
+            {
+                if (Request.QueryString["Stock"] != null)
+                {
+                    var stock = Request.QueryString["Stock"];
+                  //  string stDate = Request.QueryString["startDate"].ToString();
+                  //  string endDate = Request.QueryString["endDate"].ToString();
+                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                    reportPath += "Pharmacy/rptPharmacyStockBatchWise.rpt";
+                    rd.Load(reportPath);
+                    rd.SetParameterValue("@Stock", stock);
+                  //  rd.SetParameterValue("@FromDate", stDate);
+                  //  rd.SetParameterValue("@ToDate", endDate);
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", companyAddress);
+                }
+            }
             else if (reportName == "PharmacySaleReport")
             {
                 string rptFileName = "Pharmacy/rptSaleReport.rpt";

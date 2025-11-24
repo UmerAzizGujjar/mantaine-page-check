@@ -85,6 +85,13 @@ namespace PMS
                         DateDiv.Visible = true;
                         break;
 
+                    case "SIHBW":
+                        vendorDiv.Visible = false;
+                        stockDiv.Visible = true;
+                        accountDiv.Visible = false;
+                        DateDiv.Visible = false;
+                        break;
+
                     default:
                         accountDiv.Visible = true;
                         stockDiv.Visible = false;
@@ -127,6 +134,9 @@ namespace PMS
                     break;
                 case "Stock_Consumption_Details":
                     query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" +  ddlStock.SelectedValue + "";
+                    break;
+                case "SIHBW":
+                    query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" +  ddlStock.SelectedValue + "";   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
                     break;
                 default:
                     query = "ReportName=Ledger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
