@@ -730,6 +730,8 @@ namespace PMS
                 {
                     string x = "Pharmacy Cash Report";
                     Master.Label2.Text = x;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = false;
@@ -757,6 +759,8 @@ namespace PMS
                     string x = "Pharmacy Cash Report Summary";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = false;
                     ddlDepartments.Visible = false;
@@ -784,6 +788,8 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
                     dpROw.Visible = false;
                     SetDepartent();
                     ddlDepartments.Visible = false;
@@ -825,6 +831,8 @@ namespace PMS
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
                     SetDepartent();
                     ddlDepartments.Visible = false;
                     lblDepartment.Visible = false;
@@ -864,6 +872,8 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
                     dpROw.Visible = false;
                     SetDepartent();
                     ddlDepartments.Visible = true;
@@ -892,6 +902,8 @@ namespace PMS
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
                     SetDepartent();
                     ddlDepartments.Visible = true;
                     lblDepartment.Visible = true;
@@ -2306,8 +2318,8 @@ namespace PMS
                     tr1ChkIPD.Visible = false;
                     tr1ShowRate.Visible = false;
                     tr1MedicalSubsidy.Visible = true;
-                    lblMedical.Visible = false;
-                    ddlMedicalSubsidy.Visible = false;
+                    lblMedical.Visible = true;
+                    ddlMedicalSubsidy.Visible = true;
                     
                     lblMedical.Text = "Service/Procedure";
                     ddlMedicalSubsidy.Items.Clear();
@@ -2317,7 +2329,7 @@ namespace PMS
                     lblMainDepartment.Text = "Companies";
                     lblMainDepartment.Visible = false;
                     compDiv.Visible = true;
-
+                    ddlCompdrop.Visible = true;
 
 
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -2331,6 +2343,7 @@ namespace PMS
                         ddlCompdrop.DataTextField = "Company_Name";
                         ddlCompdrop.DataBind();
                     }
+                    ddlCompdrop.Visible = true;
 
 
 

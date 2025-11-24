@@ -813,8 +813,8 @@
                     }
 
                     else if (rptTitle == 'RDW') {
-                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=RevenueDepartmentWise&ReportTitle=Revenue Department Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Cashier=' + $("#ctl00_MainContent_ddlcashier").val() + '&Patient_Type=' + $("#ctl00_MainContent_ddlDepartments option:selected").val();
+                        ////////var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=RevenueDepartmentWise&ReportTitle=Revenue Department Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Cashier=' + $("#ctl00_MainContent_ddlcashier").val() + '&Patient_Type=' + $("#ctl00_MainContent_ddlDepartments option:selected").val();  // + '&Summary=' + summary 
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "RevenuseSummary") {

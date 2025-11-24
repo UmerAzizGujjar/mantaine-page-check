@@ -390,10 +390,11 @@
         }
         //Print
         function OPD_Print() {
-            debugger;
+            debugger;    //   OPD_Patient_Print only for Assiraat 
             var ID = '<%= Request.QueryString["OPDID"]%>';
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
+           // var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + ID;
             if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
