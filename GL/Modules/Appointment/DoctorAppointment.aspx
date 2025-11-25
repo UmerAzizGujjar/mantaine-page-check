@@ -26,106 +26,192 @@
                 border-color: #007bff;
             }
     </style>
-    <script type="text/javascript">
+<script type="text/javascript">
+    $(document).ready(function () {
+        loaddoctor();
+        var now = new Date();
+        var today = moment(now).format('L'); // Locale date, e.g., MM/DD/YYYY
 
+        $("#txt_datefrom, #txt_dateto")
+            .datepicker({
+                dateFormat: 'mm/dd/yy',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50"
+            })
+            .attr('readonly', 'readonly')
+            .val(today);
 
+        // Handle query string overrides
+        var stDate = '<%= Request.QueryString["stDate"] ?? "" %>';
+        var endDate = '<%= Request.QueryString["endDate"] ?? "" %>';
+        if (stDate) $("#txt_datefrom").val(stDate);
+        if (endDate) $("#txt_dateto").val(endDate);
 
-        $(document).ready(function () {
-            loaddoctor();
-            var date = '<%= DateTime.Now%>';
-            $("#txt_dateto").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $("#txt_dateto").val(date);
+        $('#btnSearch').click(getpage);
+        getpage(); // Load default (last 24h) on page load
+    });
 
+    function toTitleCase(str) {
+        return (str || "").replace(/(?:^|\s)\w/g, function (match) {
+            return match.toUpperCase();
+        }).replace(/_/g, ' ');
+    }
 
+    function formatTime(rawTime) {
+        if (!rawTime || typeof rawTime !== 'string') return "—";
+        var trimmed = rawTime.trim();
+        if (!trimmed || trimmed === "—" || trimmed === "-") return "—";
 
-            $("#txt_datefrom").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $("#txt_datefrom").val(date);
+        // Try multiple formats strictly
+        var formats = ["h:mm A", "hh:mm A", "H:mm", "HH:mm", "HH:mm:ss", "LT"];
+        var m = moment(trimmed, formats, true);
+        return m.isValid() ? m.format('h:mm a') : trimmed; // fallback to raw if unparseable
+    }
 
+    function getpage() {
+        var stDate = $('#txt_datefrom').val() || "";
+        var endDate = $('#txt_dateto').val() || "";
+        var doc_id = $('#chk_Doc').val() || "0";
 
-            var checkeditmode_startdate = '<%= Request.QueryString["stDate"]%>';
+        // Clear table & pagination before request
+        $('#t_body').empty();
+        $('#pagination').empty();
 
-            var checkeditmode_enddate = '<%= Request.QueryString["endDate"]%>';
+        PageMethods.getlist(stDate, endDate, doc_id, function (response) {
+            try {
+                var data = JSON.parse(response);
+                if (data.error) {
+                    alert("Error: " + data.error);
+                    return;
+                }
 
+                if (!Array.isArray(data) || data.length === 0) {
+                    $('#t_body').html('<tr><td colspan="7" class="text-center text-muted">No appointments found.</td></tr>');
+                    return;
+                }
 
-            if (checkeditmode_startdate != '') {
+                const rowsPerPage = 10;
+                let currentPage = 1;
 
-                $('#txt_datefrom').val(checkeditmode_startdate);
+                function displayTable(page) {
+                    const start = (page - 1) * rowsPerPage;
+                    const end = start + rowsPerPage;
+                    const paginatedData = data.slice(start, end);
+
+                    let rows = '';
+                    paginatedData.forEach((item, index) => {
+                        var serial = start + index + 1;
+                        var appDate = item.App_Date ? moment(item.App_Date).format('LL') : "—";
+                        var time = formatTime(item.Time);
+                        var status = item.Status || "—";
+
+                        rows += `<tr>
+                            <td>${serial}</td>
+                            <td>${item.Appointment_No || "—"}</td>
+                            <td>${toTitleCase(item.Patient_Name)}</td>
+                            <td>${item.emp_name || "—"}</td>
+                            <td>${appDate}</td>
+                            <td>${time}</td>
+                            <td>${status}</td>
+                        </tr>`;
+                    });
+
+                    $('#t_body').html(rows);
+                    applyRowStyles();
+                }
+
+                function applyRowStyles() {
+                    $('#t_body tr').each(function () {
+                        var $row = $(this);
+                        var status = $row.find('td:eq(6)').text().trim().toLowerCase();
+                        $row.css('background-color', '');
+                        if (status.includes('visited')) {
+                            $row.css('background-color', 'rgba(39, 174, 96, 0.25)');
+                        } else if (status.includes('not visited') || status.includes('missed')) {
+                            $row.css('background-color', 'rgba(231, 76, 60, 0.2)');
+                        }
+                    });
+                }
+
+                function setupPagination() {
+                    const totalPages = Math.ceil(data.length / rowsPerPage);
+                    if (totalPages <= 1) {
+                        $('#pagination').empty();
+                        return;
+                    }
+
+                    let paginationHTML = '';
+                    // Show first, current ±2, last
+                    const maxVisible = 5;
+                    let startPage = Math.max(1, currentPage - 2);
+                    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+                    if (endPage - startPage + 1 < maxVisible) {
+                        startPage = Math.max(1, endPage - maxVisible + 1);
+                    }
+
+                    if (startPage > 1) {
+                        paginationHTML += `<span class="page-link" data-page="1">1</span>`;
+                        if (startPage > 2) paginationHTML += `<span class="page-link disabled">...</span>`;
+                    }
+
+                    for (let i = startPage; i <= endPage; i++) {
+                        paginationHTML += `<span class="page-link${i === currentPage ? ' active' : ''}" data-page="${i}">${i}</span>`;
+                    }
+
+                    if (endPage < totalPages) {
+                        if (endPage < totalPages - 1) paginationHTML += `<span class="page-link disabled">...</span>`;
+                        paginationHTML += `<span class="page-link" data-page="${totalPages}">${totalPages}</span>`;
+                    }
+
+                    $('#pagination').html(paginationHTML);
+
+                    $('.page-link:not(.disabled)').off('click').on('click', function () {
+                        currentPage = parseInt($(this).data('page'));
+                        displayTable(currentPage);
+                        setupPagination(); // refresh active state
+                    });
+                }
+
+                displayTable(currentPage);
+                setupPagination();
+            } catch (ex) {
+                console.error("Parse error:", ex);
+                $('#t_body').html(`<tr><td colspan="7" class="text-danger">Failed to load data: ${ex.message}</td></tr>`);
             }
-
-            if (checkeditmode_enddate != '') {
-
-                $('#txt_dateto').val(checkeditmode_enddate);
-            }
-            $('#btnSearch').click(function () {
-                getpage();
-
-
-            });
-
+        }, function (error) {
+            console.error("AJAX error:", error);
+            $('#t_body').html(`<tr><td colspan="7" class="text-danger">Server error. Please try again.</td></tr>`);
         });
-        function toTitleCase(str) {
-            return str.replace(/[^a-zA-Z0-9]+(.)/g, function (match) {
-                return match.toUpperCase();
-            });
-        }
-        function getpage() {            debugger;            var stDate = $('#txt_datefrom').val() || "";            var endDate = $('#txt_dateto').val() || "";            var doc_id = $('#chk_Doc').find('option:selected').val();            if (doc_id == "0") {                stDate = "";                endDate = "";            }            PageMethods.getlist(stDate, endDate, doc_id, function (data) {                debugger;                if (data.length === 0) {                    $("#table_res tbody").empty();                    $("#pagination").empty(); // Clear pagination if no data                    return false;                }                var parsedData = JSON.parse(data);                const rowsPerPage = 10;  // Adjust this value as needed                let currentPage = 1;                function displayTable(page) {                    $('#t_body').empty();                    const start = (page - 1) * rowsPerPage;                    const end = start + rowsPerPage;                    const paginatedData = parsedData.slice(start, end);                    let rows = '';                    paginatedData.forEach((item, i) => {                        var App_Date = moment(item.App_Date).format('LL');                        var time = moment(item.Time).format('h:mm a');                        rows += `<tr>                            <td>${start + i + 1}</td>                            <td>${item.Appointment_No}</td>                            <td>${toTitleCase(item.Patient_Name.replace("_", " "))}</td>                            <td>${item.emp_name}</td>                            <td>${App_Date}</td>                            <td>${time}</td>                            <td>${item.Status}</td>                         </tr>`;                    });                    $('#t_body').html(rows);                    applyRowStyles();                }                function applyRowStyles() {                    $('#t_body tr').each(function () {                        var status = $(this).find('td:eq(6)').text();                        if (status === "Visited") {                            $(this).css('background-color', 'rgba(26, 255, 26, 0.44)');                        } else if (status === "Not Visited") {                            $(this).css('background-color', '#ff7c7c69');                        }                    });                }                function setupPagination(totalRows) {                    const totalPages = Math.ceil(totalRows / rowsPerPage);                    let paginationHTML = '';                    for (let i = 1; i <= totalPages; i++) {                        paginationHTML += `<span class="page-link" data-page="${i}">${i}</span>`;                    }                    $('#pagination').html(paginationHTML);                    $('.page-link').on('click', function () {                        currentPage = $(this).data('page');                        displayTable(currentPage);                    });                }                setupPagination(parsedData.length);                displayTable(currentPage);            });            return false;        }
 
+        return false;
+    }
 
-        var Doctors;
-        var options;
-        function loaddoctor() {
-            PageMethods.LoadDoctor(function (res) {
-                var doctor = JSON.parse(res);
-
-                var rowsText = '';
-                $.each(doctor, function (key, value) {
-                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+    function loaddoctor() {
+        PageMethods.LoadDoctor(function (res) {
+            try {
+                var doctors = JSON.parse(res);
+                var options = '<option value="0">Select Doctor</option>';
+                $.each(doctors, function (i, doc) {
+                    options += `<option value="${doc.Emp_ID}">${doc.Emp_Name}</option>`;
                 });
-                Doctors = options
 
-                $('#ddl_colstnt').html(options).trigger('change');
-
-                $('#chk_Doc').html(options).select2().trigger('change');
-                $('#chk_Doc').attr('disabled', true);
-
-            });
-        }
-
-        function ddldocchange() {
-            debugger;
-            var DocChk = $('#chk_Doc').find('option:selected').text();
-            getpage();
-            if (DocChk == "Select Doctor") {
-                acc = true;
-
-            }
-            else {
-                var tbl = document.getElementById('table_res');
-                if (DocChk.trim() != '') {
-
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        if (tbl.rows[i].cells[3].innerText != DocChk) {
-                            var row = tbl.rows[i];
-                            row.style.display = 'none';
-                        }
-                        else {
-                            var row = tbl.rows[i];
-                            row.style.display = '';
-                        }
-                    }
+                $('#chk_Doc').html(options).prop('disabled', false);
+                if (doctors.length > 0) {
+                    $('#chk_Doc').val(doctors[0].Emp_ID); // Auto-select first
                 }
-                else {
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        var row = tbl.rows[i];
-                        row.style.display = '';
-                    }
-                }
+            } catch (ex) {
+                console.error("Doctor load failed:", ex);
             }
+        }, function (err) {
+            console.error("LoadDoctor failed:", err);
+        });
+    }
 
-        }
-    </script>
+    function ddldocchange() {
+        getpage(); // Simpler: just reload — avoids client-side filtering bugs
+    }
+</script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

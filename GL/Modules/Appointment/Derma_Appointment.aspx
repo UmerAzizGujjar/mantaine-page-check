@@ -18,10 +18,7 @@
                     { id: '#ddl_Gender', method: 'GetGender' },
                     { id: '#ddl_status', method: 'GetMartailStatus' },
                     { id: '#ddlPatient_Type', method: 'PatientType' },
-                    //{ id: '#ddl_colstnt', method: 'GetDoctors' },
-                    //{ id: '#ddl_helper', method: 'GetHelper' },
-                    //{ id: '#ddlRoom', method: 'GetRooms' },
-                    //{ id: '#ddlMachine', method: 'GetMachine'}
+                  
                 ];
 
                 dropdowns.forEach(item => {
@@ -76,8 +73,7 @@
             $('#ddl_helper').select2();
             $('#ddlRoom').select2();
             $('#ddlMachine').select2();
-            //
-            // Flag to prevent double-click or dual-button duplicate save
+   
             let isSaving = false;
 
             function safeSaveAttempt() {
