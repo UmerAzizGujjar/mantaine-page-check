@@ -1,6 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoomAllocation.aspx.cs" Inherits="PMS.RoomAllocation" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
+         .btn-yellow {
+width: 95px !important;
+ }
+ #ctl00_MainContent_btnSave{
+     width: 95px !important;
+ }
+
+    </style>
+
     <script type="text/javascript" src="../Scripts/jquery.tokeninput.js"></script>
     <script type="text/javascript">
 
@@ -213,16 +223,16 @@
                 <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
             </td>
             <td colspan="5">
-                <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" Height="87"></asp:TextBox>
+                <asp:TextBox ID="txtRemarks" runat="server" TextMode="MultiLine" Width="93%" Height="87"></asp:TextBox>
             </td>
         </tr>
         <tr>
             <td></td>
             <td colspan="5">
                 <br />
-                <asp:Button ID="btnBack" Width="95px" runat="server" Text="List View" CausesValidation="false" PostBackUrl="~/RoomAllocationView.aspx" />
+                <asp:Button ID="btnBack" Width="95px" runat="server" CssClass="btn-yellow" Text="List View" CausesValidation="false" PostBackUrl="~/RoomAllocationView.aspx" />
                 &nbsp;
-                <asp:Button ID="btnSave" Width="95px" runat="server" Text="Save" OnClick="btnSave_Click" />
+                <asp:Button ID="btnSave" Width="95px" runat="server" CssClass="btn btn-primry" Text="Save" OnClick="btnSave_Click" />
             </td>
         </tr>
         <tr>

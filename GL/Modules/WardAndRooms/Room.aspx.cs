@@ -152,7 +152,8 @@ namespace PMS
                     }
                 }
 
-                Response.Redirect("RoomView.aspx");
+                Response.Redirect("~/Modules/WardAndRooms/RoomView.aspx");
+
             }
             catch (Exception ex)
             {
