@@ -36,7 +36,8 @@ namespace PMS
                              select new
                              {
                                  Ward_Name =(from w in db.Ward_Definitions where w.Ward_ID == ip.Ward_ID select w.Ward_Type).FirstOrDefault(),
-                                 ip.Bed_No
+                                 ip.Bed_No,
+                                 Patient_Discount_Type = db.GetDataValueName("Patient Type", ip.Patient_Discount_Type)
                              }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 

@@ -1848,6 +1848,11 @@
                     if (discountType === "10" && typeName === "Sehat Sahulat Card") {
                         $("#txtTransType").val('IPD Sehat Patient');
                         $("#hdndiscountType").val(discountType);
+
+                        $('#txtDisPer').attr("disabled", true);
+                        $('#txtDisAmt').attr("disabled", true);
+                        $('#txtFlatDisc').attr("disabled", true);
+                        $('#txtAmountReceived').attr("disabled", true);
                     } else {
                         $("#txtTransType").val('IPD Patient');
                     }
@@ -1966,6 +1971,7 @@
                     // Set values in fields
                     $('#Ward_Name').val(data.Ward_Name || "");
                     $('#BedName').val(data.Bed_No || "");
+                    $('#txtPatientType').val(data.Patient_Discount_Type || "");
                 },
                 error: function (xhr, status, error) {
                     console.error("Error in getWardAndBed: ", error);
@@ -2194,6 +2200,10 @@
                               </select>
 
                           </div>
+              <div class="col-sm-12 col-md-4 col-lg-3">
+                  <label id="LblPatientType">Patient Type</label>
+                  <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
+              </div>
               <div class="col-sm-12 col-md-4 col-lg-3">
                   <label id="LblWard">Ward Name</label>
                   <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
