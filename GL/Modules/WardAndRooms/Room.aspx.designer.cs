@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS {
-    
-    
-    public partial class Room {
-        
+namespace PMS
+{
+
+
+    public partial class Room
+    {
+
         /// <summary>
         /// lblRoom_ID control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRoom_ID;
-        
+
         /// <summary>
         /// txtRoom_ID control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRoom_ID;
-        
+
         /// <summary>
         /// lblRoom_No control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRoom_No;
-        
+
         /// <summary>
         /// txtRoom_No control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRoom_No;
-        
+
         /// <summary>
         /// rfvRoom_No control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvRoom_No;
-        
+
         /// <summary>
         /// rngRoom_No control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rngRoom_No;
-        
+
         /// <summary>
         /// lblName control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblName;
-        
+
         /// <summary>
         /// txtName control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtName;
-        
+
         /// <summary>
         /// lblBuilding_Type control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblBuilding_Type;
-        
+
         /// <summary>
         /// ddlBuildingType control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlBuildingType;
-        
+
         /// <summary>
         /// lblFloor_No control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFloor_No;
-        
+
         /// <summary>
         /// txtFloorNo control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFloorNo;
-        
+
         /// <summary>
         /// rfvFloor_No control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFloor_No;
-        
+
         /// <summary>
         /// rngFloor_No control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rngFloor_No;
-        
+
         /// <summary>
         /// lblRoom_Type control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRoom_Type;
-        
+
         /// <summary>
         /// ddlRoomType control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlRoomType;
-        
+
         /// <summary>
         /// rfvRoomType control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvRoomType;
-        
+
         /// <summary>
         /// LblRoom_Charges control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LblRoom_Charges;
-        
+
         /// <summary>
         /// upCharges control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upCharges;
-        
+
         /// <summary>
         /// txtRoom_Charges control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRoom_Charges;
-        
+
         /// <summary>
         /// RequiredFieldValidator1 control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
-        
+
         /// <summary>
         /// rvRoom_Charges control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvRoom_Charges;
-        
+
         /// <summary>
         /// UpdateProgress1 control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress UpdateProgress1;
-        
+
         /// <summary>
         /// lblLocation control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblLocation;
-        
+
         /// <summary>
         /// txtLocation control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLocation;
-        
+
         /// <summary>
         /// lblWarden control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblWarden;
-        
+
         /// <summary>
         /// ddlWarden control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlWarden;
-        
+
         /// <summary>
         /// rfvWarden control.
         /// </summary>
@@ -263,16 +265,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvWarden;
-        
-        /// <summary>
-        /// btnBack control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBack;
-        
+
         /// <summary>
         /// btnSave control.
         /// </summary>
@@ -281,7 +274,7 @@ namespace PMS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSave;
-        
+
         /// <summary>
         /// ValidationSummary1 control.
         /// </summary>

@@ -13,6 +13,12 @@
         }
 
     </style>
+
+    <script type="text/javascript">
+    function goToListView() {
+        window.location.href = '<%= ResolveUrl("~/Modules/WardAndRooms/RoomView.aspx") %>';
+    }
+</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -138,7 +144,7 @@
             <td></td>
             <td style="width: 205px;">
                 <br />
-                <asp:Button ID="btnBack" runat="server" Text="List View" CssClass="btn-yellow" CausesValidation="false"  PostBackUrl="~/Modules/WardAndRooms/RoomView.aspx" />
+               <input type="button" value="List View" class="btn-yellow" onclick="goToListView()" />
                 &nbsp;
                 <asp:Button ID="btnSave" runat="server" Text="Save" CssClass="btn btn-primry" OnClick="btnSave_Click" />
             </td>
