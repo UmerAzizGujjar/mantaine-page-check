@@ -138,7 +138,7 @@
             <td></td>
             <td style="width: 205px;">
                 <br />
-                <asp:Button ID="btnBack"  runat="server" Text="List View" CssClass="btn-yellow" CausesValidation="false" OnClick="btnBack_Click" />
+                <asp:Button ID="btnBack" runat="server" Text="List View" CssClass="btn-yellow" CausesValidation="false"  PostBackUrl="~/Modules/WardAndRooms/RoomView.aspx" />
                 &nbsp;
                 <asp:Button ID="btnSave" runat="server" Text="Save" CssClass="btn btn-primry" OnClick="btnSave_Click" />
             </td>
