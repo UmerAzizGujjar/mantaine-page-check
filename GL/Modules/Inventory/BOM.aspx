@@ -493,7 +493,10 @@
 
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2">
-                <input type="button" id="btnNew" value="NEw" class="btn btn-primry" />
+                <input type="button" id="btnNew" value="New" class="btn btn-primry" />
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" id="btnView" value="View" class="btn btn-primry" />
             </div>
         </div>
     </div>
