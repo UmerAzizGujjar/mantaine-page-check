@@ -2076,6 +2076,7 @@
             debugger;
             var row = $(anchors).closest('tr');
             var rowIndex = row.index();
+            var hdndiscountType = $('#hdndiscountType').val();
             debugger;
             var selectId = $(anchors).attr('id');
             var idParts = selectId.split('ddlbatch');
@@ -2091,6 +2092,7 @@
                 url: "IssueMedicine.aspx/GetStockByBatch",
                 data: JSON.stringify({
                     "itemId": itemId,
+                    "hdndiscountType": hdndiscountType,
                     "batchNumber": batchNumber
                 }),
                 dataType: 'JSON',
@@ -2114,6 +2116,7 @@
                     debugger;
                     $('#txtStock' + counter).val(stock);
                     $('#txtSalerate' + counter).val(rate);
+                    $(row).find('td:eq(8)').text(rate);
                     $(row).find('td:eq(11)').text(rate);
                     $('#exp_date' + counter).val(date);
                     $('#BatchNo' + counter).val(batchNumber);
