@@ -70,7 +70,7 @@
                     '<td><input type="text" name="BatchNo" class="form-control" value="' + batchNo + '" readonly /></td>' +
                     '<td><input type="text" name="CostPerUnit" class="form-control" value="' + parseFloat(cost).toFixed(2) + '" readonly /></td>' +
                     '<td><input type="text" name="Total" class="form-control" value="' + total + '" readonly /></td>' +
-                    '<td><small>Base: ' + parseFloat(qtyInBaseUnits).toFixed(2) + 'ml</small></td>' +
+                    '<td><small>Base: ' + parseFloat(qtyInBaseUnits).toFixed(2) + '</small></td>' +
                     '<td>' +
                     '<input type="hidden" name="ItemID" value="' + itemId + '" />' +
                     '<input type="hidden" name="BaseUnitQty" value="' + parseFloat(qtyInBaseUnits).toFixed(2) + '" />' +
@@ -86,8 +86,10 @@
                 $('#grandTotal').text(grandTotal.toFixed(2));
 
                 // Reset inputs
-                $('#itemQuantity, #itemCost').val('');
-                $('#txtCalculatedBaseQty, #txtCalculatedPieces').val('');
+               $('#itemQuantity, #itemCost').val('');
+                $('#txtCalculatedBaseQty, #txtCalculatedPieces, #txtStock, #txtpr_rate, #txtWeightedAVG').val('');
+                $('#itemUnit ,#ddlitem,#ddlbatchno').val('0').trigger('change');  
+
             });
 
             $('#btnSave').click(function (e) {
@@ -253,7 +255,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    var options = '<option value="">Select Item</option>';
+                    var options = '<option value="0">Select Item</option>';
                     var values = JSON.parse(data.d);
                     $.each(values, function (i, v) {
                         options += '<option value="' + v.Item_ID + '" data-cost="' + (v.Purchase_Rate || 0) + '">' + v.Description + '</option>';
