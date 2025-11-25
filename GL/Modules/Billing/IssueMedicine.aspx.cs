@@ -36,7 +36,8 @@ namespace PMS
                              select new
                              {
                                  Ward_Name =(from w in db.Ward_Definitions where w.Ward_ID == ip.Ward_ID select w.Ward_Type).FirstOrDefault(),
-                                 ip.Bed_No
+                                 ip.Bed_No,
+                                 Patient_Discount_Type = db.GetDataValueName("Patient Type", ip.Patient_Discount_Type)
                              }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
@@ -82,16 +83,22 @@ namespace PMS
             string data = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                DateTime last24Hours = DateTime.Now.AddHours(-24);
                 var OPD_NO = (from opd in db.Patients                                
                                  where opd.Reg_PatId == pat_id
-                                 select new
+                                    && opd.Created_Time >= last24Hours
+
+                              select new
                                  {
                                      Patient_No = "OPD-" + opd.Opd_No,
                                      Patient_ID = opd.Patient_ID
+
                                  }).ToList();
                 var IPD_NO = (from ipd in db.In_Patients
                                              where ipd.Patient_ID == pat_id
-                                          
+                                             && (ipd.Discharge == null || ipd.Discharge == false)
+
+
                                              select new
                                              {
                                                  Patient_No = "IPD-" + ipd.IPD_No,
@@ -285,13 +292,13 @@ namespace PMS
             return new JavaScriptSerializer().Serialize(combinedResult);
         }
         [WebMethod]
-        public static string GetStockByBatch(int itemId, string batchNumber)
+        public static string GetStockByBatch(int itemId, string hdndiscountType, string batchNumber)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId,"" ,batchNumber).ToList();
+                var query = db.spMedicinesDetails(itemId, hdndiscountType, batchNumber).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;

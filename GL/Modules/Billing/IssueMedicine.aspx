@@ -1848,6 +1848,11 @@
                     if (discountType === "10" && typeName === "Sehat Sahulat Card") {
                         $("#txtTransType").val('IPD Sehat Patient');
                         $("#hdndiscountType").val(discountType);
+
+                        $('#txtDisPer').attr("disabled", true);
+                        $('#txtDisAmt').attr("disabled", true);
+                        $('#txtFlatDisc').attr("disabled", true);
+                        $('#txtAmountReceived').attr("disabled", true);
                     } else {
                         $("#txtTransType").val('IPD Patient');
                     }
@@ -1966,6 +1971,7 @@
                     // Set values in fields
                     $('#Ward_Name').val(data.Ward_Name || "");
                     $('#BedName').val(data.Bed_No || "");
+                    $('#txtPatientType').val(data.Patient_Discount_Type || "");
                 },
                 error: function (xhr, status, error) {
                     console.error("Error in getWardAndBed: ", error);
@@ -2076,6 +2082,7 @@
             debugger;
             var row = $(anchors).closest('tr');
             var rowIndex = row.index();
+            var hdndiscountType = $('#hdndiscountType').val();
             debugger;
             var selectId = $(anchors).attr('id');
             var idParts = selectId.split('ddlbatch');
@@ -2091,6 +2098,7 @@
                 url: "IssueMedicine.aspx/GetStockByBatch",
                 data: JSON.stringify({
                     "itemId": itemId,
+                    "hdndiscountType": hdndiscountType,
                     "batchNumber": batchNumber
                 }),
                 dataType: 'JSON',
@@ -2114,6 +2122,7 @@
                     debugger;
                     $('#txtStock' + counter).val(stock);
                     $('#txtSalerate' + counter).val(rate);
+                    $(row).find('td:eq(8)').text(rate);
                     $(row).find('td:eq(11)').text(rate);
                     $('#exp_date' + counter).val(date);
                     $('#BatchNo' + counter).val(batchNumber);
@@ -2191,6 +2200,10 @@
                               </select>
 
                           </div>
+              <div class="col-sm-12 col-md-4 col-lg-3">
+                  <label id="LblPatientType">Patient Type</label>
+                  <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
+              </div>
               <div class="col-sm-12 col-md-4 col-lg-3">
                   <label id="LblWard">Ward Name</label>
                   <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
