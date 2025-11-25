@@ -82,24 +82,34 @@ namespace PMS
                 {
                     DateTime last24Hours = DateTime.Now.AddHours(-24);
 
-                    var query = (from a in db.Appointment_Forms
-                                 where a.App_Date >= last24Hours && a.App_Date <= DateTime.Now
+                    var query = (from a in db.Derma_Appointments
+                                 where a.Appointment_Date >= last24Hours && a.Appointment_Date <= DateTime.Now
                                  select new
                                  {
-                                     a.Appointment_ID,
-                                     a.Patient_Name,
-                                     a.Phone,
-                                     a.Age,
-                                     a.Consultant_ID,
+                                     a.Derma_Appointment_Id,
+                                     a.Patient_Id,
+                                     departmentid = db.Reg_patients
+                                         .Where(b => b.pat_id == Convert.ToInt32(a.Patient_Id))
+                                         .Select(b => b.Full_Name)
+                                         .FirstOrDefault(),
+                                     Phone = db.Reg_patients
+                                         .Where(b => b.pat_id == Convert.ToInt32(a.Patient_Id))
+                                         .Select(b => b.Mobile1)
+                                         .FirstOrDefault(),
+                                     Age = db.Reg_patients
+                                         .Where(b => b.pat_id == Convert.ToInt32(a.Patient_Id))
+                                         .Select(b => b.Age_years)
+                                         .FirstOrDefault(),
+                                     a.Doctor_Id,
                                      a.Appointment_No,
-                                     a.Appointment_Code,
-                                     a.App_Date,
-                                     a.Time,
+                                     //a.Appointment_No,
+                                     a.Appointment_Date,
+                                     a.Doctor_Start_Time,
                                      a.Status,
-                                     a.cancelAppointment,
-                                     a.created_time,
-                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Consultant_ID) select data.Emp_Name).FirstOrDefault(),
-                                 }).ToList().OrderByDescending(x => x.created_time);
+                                     //a.cancelAppointment,
+                                     a.Created_Date,
+                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
+                                 }).ToList().OrderByDescending(x => x.Created_Date);
 
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
@@ -113,23 +123,33 @@ namespace PMS
                 dTimeenDate = Convert.ToDateTime(endDate);
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var query = (from a in db.Appointment_Forms
-                                 where a.App_Date.Value.Date >= dTimestDate && a.App_Date.Value.Date <= dTimeenDate
+                    var query = (from a in db.Derma_Appointments
+                                 where a.Appointment_Date.Value.Date >= dTimestDate && a.Appointment_Date.Value.Date <= dTimeenDate
 
                                  select new
                                  {
-                                     a.Appointment_ID,
-                                     a.Patient_Name,
-                                     a.Phone,
-                                     a.Age,
-                                     a.Consultant_ID,
+                                     a.Derma_Appointment_Id,
+                                     a.Patient_Id,
+                                     departmentid = db.Reg_patients
+                                         .Where(b => b.pat_id == Convert.ToInt32(a.Patient_Id))
+                                         .Select(b => b.Full_Name)
+                                         .FirstOrDefault(),
+                                     Phone = db.Reg_patients
+                                         .Where(b => b.pat_id == Convert.ToInt32(a.Patient_Id))
+                                         .Select(b => b.Mobile1)
+                                         .FirstOrDefault(),
+                                     Age = db.Reg_patients
+                                         .Where(b => b.pat_id == Convert.ToInt32(a.Patient_Id))
+                                         .Select(b => b.Age_years)
+                                         .FirstOrDefault(),
+                                     a.Doctor_Id,
                                      a.Appointment_No,
-                                     a.Appointment_Code,
-                                     a.App_Date,
-                                     a.Time,
+                                     a.Appointment_Date,
+                                     a.Doctor_Start_Time,
                                      a.Status,
-                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Consultant_ID) select data.Emp_Name).FirstOrDefault(),
-                                 }).ToList().OrderByDescending(x => x.App_Date);
+                                     a.Created_Date,
+                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
+                                 }).ToList().OrderByDescending(x => x.Created_Date);
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
             }
@@ -138,66 +158,6 @@ namespace PMS
             return result;
         }
 
-        //[WebMethod]
-        //public static string GetAvailableDatesAndTimes(int doc_id, string txt_date , string procTimeSlot)
-        //{
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        DateTime selectedDate;
-        //        if (!DateTime.TryParse(txt_date, out selectedDate))
-        //            return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
-
-        //        // Step 1: Get doctor's off days
-        //        var doctor = (from hr in db.HR_Employees
-        //                      where hr.Emp_ID == doc_id && hr.IsDoctor == true
-        //                      select new
-        //                      {
-        //                          hr.Off_Days_Names, 
-        //                          hr.Timings_In,
-        //                          hr.Timings_Out
-        //                      }).FirstOrDefault();
-
-        //        if (doctor == null)
-        //            return new JavaScriptSerializer().Serialize(new { error = "Doctor not found" });
-
-        //        string dayName = selectedDate.ToString("ddd");
-        //        var offDays = doctor.Off_Days_Names?.Split(',') ?? new string[0];
-
-        //        if (offDays.Contains(dayName, StringComparer.OrdinalIgnoreCase))
-        //            return new JavaScriptSerializer().Serialize(new { error = "Doctor not available" });
-
-        //        var lastAppointmentEnd = (from ap in db.Derma_Appointments
-        //                                  where ap.Doctor_Id == Convert.ToString( doc_id)
-        //                                  && ap.Appointment_Date == selectedDate.Date
-        //                                  orderby ap.Doctor_End_Time descending
-        //                                  select ap.Doctor_End_Time).FirstOrDefault();
-
-        //        TimeSpan availableStart;
-        //        TimeSpan availableEnd;
-
-        //        if (lastAppointmentEnd.HasValue)
-        //        {
-        //            availableStart = lastAppointmentEnd.Value;
-        //        }
-        //        else
-        //        {
-        //            availableStart = doctor.Timings_In ?? TimeSpan.Zero;
-        //        }
-
-        //        availableEnd = availableStart.Add(new TimeSpan(0, 15, 0));
-
-        //        if (doctor.Timings_Out.HasValue && availableEnd > doctor.Timings_Out.Value)
-        //        {
-        //            availableEnd = doctor.Timings_Out.Value;
-        //        }
-
-        //        return new JavaScriptSerializer().Serialize(new
-        //        {
-        //            TimeIn = availableStart.ToString(@"hh\:mm"),
-        //            TimeOut = availableEnd.ToString(@"hh\:mm")
-        //        });
-        //    }
-        //}
         [WebMethod]
         public static string GetAvailableDatesAndTimes(int doc_id, string txt_date, string procTimeSlot)
         {

@@ -80,74 +80,66 @@ $(document).ready(function () {
     ];
 
     dropdowns.forEach(item => {
-
         const $element = $(item.id);
-        $element.select2();
-        $element.off('select2:open').on('select2:open', function () {
-            fillDropdown($element, item.method);
-        });
 
+        const isInsideModal = $element.closest('#PatientModel').length > 0;
 
+        if (!isInsideModal) {
+            // Non-modal: use Select2 as before
+            $element.select2();
+            $element.off('select2:open').on('select2:open', function () {
+                fillDropdown($element, item.method);
+            });
+        } else {
+            // ✅ MODAL: Use native 'focus' to load data ONCE
+            $element.off('focus.fill').on('focus.fill', function () {
+                if (!$element.data('filled')) {
+                    fillDropdown($element, item.method);
+                }
+            });
+        }
+
+        // 👇 Keep ALL your existing logic exactly as before
         if (item.id === '#ddlPatient_Type') {
             $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
+            // Since modal uses native select, bind to 'change', not 'select2:select'
+            const changeHandler = function () {
                 loaddata();
                 $(this).prop('disabled', true);
-            });
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', changeHandler);
+            } else {
+                $element.off('change').on('change', changeHandler);
+            }
         }
 
         if (item.id === '#ddlDepartment') {
             $element.prop('disabled', false);
-            $element.off('select2:select').on('select2:select', function () {
+            const deptHandler = function () {
                 loaddoctor();
-            });
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', deptHandler);
+            } else {
+                $element.off('change').on('change', deptHandler);
+            }
         }
 
         if (item.id === '#ddldoctor') {
-
-            $element.off('select2:select');
-
-            $element.on('select2:select', function (e) {
+            const doctorHandler = function (e) {
                 var selectedVal = $(this).val();
                 if (selectedVal) {
                     loadFee();
                 }
-            });
-
-            $element.off('select2:open');
+            };
+            if (!isInsideModal) {
+                $element.off('select2:select').on('select2:select', doctorHandler);
+                $element.off('select2:open');
+            } else {
+                $element.off('change').on('change', doctorHandler);
+            }
         }
-
-        $element.select2({
-            minimumResultsForSearch: -1,
-            width: '100%'
-        });
-
-        if (item.id !== '#ddl_Gender' &&
-            item.id !== '#ddlPatient_Type' &&
-            item.id !== '#ddlDepartment' &&
-            item.id !== '#ddldoctor') {
-
-            $element.off('select2:select').on('select2:select', function () {
-                setTimeout(() => {
-                    var $currentSelection = $(this).siblings('.select2').find('.select2-selection');
-                    var $tabbable = $(':input:visible:enabled, .select2-selection:visible')
-                        .not('[type="hidden"]')
-                        .not(':disabled');
-
-                    var currentIndex = $tabbable.index($currentSelection);
-                    var $next = $tabbable.eq(currentIndex + 1);
-
-                    if ($next.length) {
-                        if ($next.hasClass('select2-selection')) {
-                            $next.attr('tabindex', '0').focus();
-                        } else {
-                            $next.focus();
-                        }
-                    }
-                }, 50);
-            });
-        }
-
 
 
     });
@@ -293,11 +285,12 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
+            $('#txtnic').val(data.CNIC_Masked);
             $('#txtmobile').val(data.Mobile);
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#hdn_aptid').val(apt_Id);
+            $('#hdnAppointmentType').val(data.AppointmentType);
             $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
             $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
@@ -800,41 +793,44 @@ function AllowOPdEdit() {
 
 debugger;
 function CalculateDateOfBirth() {
-    debugger;
+    var Numbers = $('#PrefixAge').val();
+    var CalDob = $('#txt_dob').val();
 
-    var now = moment();
-    var value = $('#txt_dob').val();
-    var type = $('#PrefixAge').val();
-
-    if (!value || isNaN(value)) {
-        alert("Please enter a valid number.");
+    if (!CalDob || isNaN(CalDob) || CalDob <= 0) {
+        $('#txtAge_yearss').val('');
         return;
     }
 
-    var calculateDate;
+    var now = moment();
+    var dob;
 
-    if (type === "Year") {
-        calculateDate = now.clone().subtract(value, 'years');
-    } else if (type === "Month") {
-        calculateDate = now.clone().subtract(value, 'months');
-    } else if (type === "Day") {
-        calculateDate = now.clone().subtract(value, 'days');
+    if (Numbers === "Year") {
+        dob = now.subtract(CalDob, 'years');
+    } else if (Numbers === "Month") {
+        dob = now.subtract(CalDob, 'months');
+    } else if (Numbers === "Day") {
+        dob = now.subtract(CalDob, 'days');
+    } else {
+        $('#txtAge_yearss').val('');
+        return;
     }
 
-    var finalDate = calculateDate.format("DD/MM/YYYY");
+    var finalDate = dob.format("DD/MM/YYYY");
+
     var $datepicker = $('#txtAge_yearss');
+    if (!$datepicker.hasClass('hasDatepicker')) {
+        $datepicker.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0",
+            dateFormat: "dd/mm/yy"
+        });
+    }
 
-    $datepicker.datepicker({
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-50:+50",
-        dateFormat: "dd/mm/yy"
-    });
+    $datepicker.datepicker('setDate', dob.toDate());
 
-    $datepicker.datepicker('setDate', finalDate);
-
-    $("#txtAge_yearss").mask("99/99/9999");
 }
+
 function fillmrno() {
     var data = {};
 
@@ -915,7 +911,6 @@ function SavePatient() {
         "Province": Province,
     };
 
-    console.log(data);
 
     $.ajax({
         type: "POST",
@@ -983,6 +978,7 @@ function SavePatient() {
     var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
+    var hdnAppointmentType = $('#hdnAppointmentType').val();
     var EmployeeName = $('#empname').val();
     var EmployeeDept = $('#EmpDept').val();
     var StudentName = $('#txtStdName').val();
@@ -1134,6 +1130,7 @@ function SavePatient() {
         Class: Class,
         section: section,
         FilterClinic: FilterClinic,
+        hdnAppointmentType: hdnAppointmentType,
         Services: Services,
         Cashier: Cashier,
         accountid: accountid,
@@ -1186,6 +1183,7 @@ function SavePatient() {
                 }
             });
             var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
+            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_slip&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
             window.location.href = "OPDView.aspx";
         },

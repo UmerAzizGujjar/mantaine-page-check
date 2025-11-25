@@ -993,9 +993,21 @@ namespace PMS.Modules.PatientManagement
                         pat.Company_ID = AppConfig.Company_ID;
                         pat.Book_ID = AppConfig.Book_ID;
                         pat.isCancel = false;
+                        pat.AppointmentType = data.hdnAppointmentType;
 
                         if (!string.IsNullOrEmpty(data.appid))
-                            DBClass.executeNonQueryWithoutBegin("UPDATE Appointment_Form SET Status='Visited' WHERE Appointment_ID=" + data.appid);
+                        {
+                            if(data.hdnAppointmentType == "Derma")
+                            {
+                                DBClass.executeNonQueryWithoutBegin("UPDATE Derma_Appointment SET Status='Visited' WHERE Derma_Appointment_Id=" + data.appid);
+                                
+                            }
+                            else if(data.hdnAppointmentType == "OPD")
+                            {
+                                DBClass.executeNonQueryWithoutBegin("UPDATE Appointment_Form SET Status='Visited' WHERE Appointment_ID=" + data.appid);
+                            }
+                        }
+                           
                     }
 
                     // 🔹 Fill patient data
@@ -1042,12 +1054,6 @@ namespace PMS.Modules.PatientManagement
                     pat.AccountID = string.IsNullOrEmpty(data.accountid) ? 0 : Convert.ToInt32(data.accountid);
                     pat.Card_Issued = data.IssueCard ?? false;
                     pat.free_check = data.FreeCheck ?? false;
-
-                    //decimal netAmount = data.Fees;
-                    //decimal hospitalSharePct = data.Hosp_share;
-                    //decimal doctorSharePct = data.Doc_Share;
-                    //pat.Hospital_share = Math.Round((netAmount * hospitalSharePct) / 100, 2);
-                    //pat.doc_share = Math.Round((netAmount * doctorSharePct) / 100, 2).ToString("F2");
                     decimal netAmount = data.Fees;
 
                     if (category == "11")
@@ -1076,7 +1082,7 @@ namespace PMS.Modules.PatientManagement
             }
             catch (Exception ex)
             {
-                // 🔹 Optional: Log ex.Message for debugging
+                
                 return "ERROR: Failed to save OPD record. Please try again.";
             }
         }
@@ -1369,6 +1375,7 @@ namespace PMS.Modules.PatientManagement
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+           
                 var patient = (from rg in db.Reg_patients
                                where rg.pat_id == reg_id
                                select new
@@ -1392,54 +1399,76 @@ namespace PMS.Modules.PatientManagement
                                    val_city = rg.val_city,
                                    pat_id = rg.pat_id
                                }).FirstOrDefault();
+
                 if (patient == null)
                     return new JavaScriptSerializer().Serialize(null);
 
+            
                 string pat_type_Val = "02";
                 string pat_type_text = HttpUtility.HtmlEncode(db.GetDataValueName("Patient Type", pat_type_Val));
                 string maritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patient.Martial_Status));
                 string gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", patient.Gender));
 
-                var doctorId = db.Appointment_Forms
-                                 .Where(a => a.Appointment_ID == apt_Id)
-                                 .Select(a => a.Consultant_ID)
-                                 .FirstOrDefault();
+                string doctorId = null;
+                string departmentid = null;
+                string appointmentType = null; 
+
+                var opdApt = db.Appointment_Forms.FirstOrDefault(a => a.Appointment_ID == apt_Id);
+                if (opdApt != null)
+                {
+                    doctorId = opdApt.Consultant_ID;
+                    departmentid = opdApt.Sub_Department;
+                    appointmentType = "OPD";
+                }
+                else
+                {
+                    // Try Derma Appointment
+                    var dermApt = db.Derma_Appointments.FirstOrDefault(a => a.Derma_Appointment_Id == apt_Id);
+                    if (dermApt != null)
+                    {
+                        doctorId = dermApt.Doctor_Id;
+
+                        departmentid = db.HR_Employees
+                                         .Where(a => a.Emp_ID == Convert.ToInt32(doctorId))
+                                         .Select(a => a.Department)
+                                         .FirstOrDefault();
+
+                        appointmentType = "Derma";
+                    }
+                    else
+                    {
+                        return new JavaScriptSerializer().Serialize(new { error = "Appointment not found" });
+                    }
+
+                }
+
                 string DoctorName = "";
                 if (!string.IsNullOrEmpty(doctorId) && int.TryParse(doctorId, out int docId))
                 {
                     DoctorName = db.HR_Employees
-                                   .Where(e => e.Emp_ID == docId)
-                                   .Select(e => e.Emp_Name)
-                                   .FirstOrDefault() ?? "";
+                                    .Where(e => e.Emp_ID == docId)
+                                    .Select(e => e.Emp_Name)
+                                    .FirstOrDefault() ?? "";
                     DoctorName = HttpUtility.HtmlEncode(DoctorName);
                 }
 
-                var departmentid = db.Appointment_Forms
-                                     .Where(a => a.Appointment_ID == apt_Id)
-                                     .Select(a => a.Sub_Department)
-                                     .FirstOrDefault();
                 string department_Text = HttpUtility.HtmlEncode(db.GetDataValueName("Patient Main Category", departmentid));
 
+         
                 int numberOfDaysLatest = 0;
                 int numberOfDaysSecondLatest = 0;
-                var opd_time = (from pt in db.Patients
-                                where pt.Reg_PatId == patient.pat_id
-                                orderby pt.Patient_ID descending
-                                select pt.Created_Time).FirstOrDefault();
-                if (opd_time != null)
-                {
-                    numberOfDaysLatest = (int)(DateTime.Now.Date - opd_time.Value.Date).TotalDays;
-                }
-                var opd_time2 = (from pt in db.Patients
-                                 where pt.Reg_PatId == patient.pat_id
-                                 orderby pt.Patient_ID descending
-                                 select pt.Created_Time)
-                                 .Skip(1)
-                                 .FirstOrDefault();
-                if (opd_time2 != null)
-                {
-                    numberOfDaysSecondLatest = (int)(DateTime.Now.Date - opd_time2.Value.Date).TotalDays;
-                }
+
+                var latestVisit = db.Patients
+                                    .Where(p => p.Reg_PatId == patient.pat_id)
+                                    .OrderByDescending(p => p.Patient_ID)
+                                    .Take(2)
+                                    .ToList();
+
+                if (latestVisit.Count > 0 && latestVisit[0].Created_Time.HasValue)
+                    numberOfDaysLatest = (int)(DateTime.Now.Date - latestVisit[0].Created_Time.Value.Date).TotalDays;
+
+                if (latestVisit.Count > 1 && latestVisit[1].Created_Time.HasValue)
+                    numberOfDaysSecondLatest = (int)(DateTime.Now.Date - latestVisit[1].Created_Time.Value.Date).TotalDays;
 
                 var result = new
                 {
@@ -1462,15 +1491,21 @@ namespace PMS.Modules.PatientManagement
                     ValArea = HttpUtility.HtmlEncode(patient.val_area),
                     ValCity = HttpUtility.HtmlEncode(patient.val_city),
                     Reg_PatientID = patient.pat_id,
+
                     doctorId = doctorId,
                     DoctorName = DoctorName,
                     departmentid = departmentid,
                     department_Text = department_Text,
+
                     pat_type_Val = pat_type_Val,
                     pat_type_text = pat_type_text,
+
                     DaysSinceLatestVisit = numberOfDaysLatest,
-                    DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
+                    DaysSinceSecondLatestVisit = numberOfDaysSecondLatest,
+
+                    AppointmentType = appointmentType
                 };
+
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
@@ -1592,30 +1627,96 @@ namespace PMS.Modules.PatientManagement
         [WebMethod]
         public static List<Search_App> SearchAppointment(string SearchString)
         {
-            string SearchSql = "";
-            if (string.IsNullOrEmpty(SearchString))
-                SearchSql = "SELECT Appointment_ID, isnull(Appointment_No,'')Appointment_No,isnull(Patient_Name,'')Patient_Name,isnull(Consultant_ID,'')Consultant_ID,isnull(Age,'')Age,isnull(Phone,'') Phone, (select top 1 emp_name from HR_Employees where Emp_ID=Consultant_ID ) Emp_name,rg.pat_id FROM Appointment_Form app inner join Reg_patient rg on rg.pat_id = app.Reg_id  where(1=1) and Appointment_No<>0 and Appointment_No is not null and Status = 'Booked' order by Appointment_ID desc";
-            else
-                SearchSql = "SELECT Appointment_ID,isnull(Appointment_No,'')Appointment_No,isnull(Patient_Name,'')Patient_Name,isnull(Consultant_ID,'')Consultant_ID,isnull(Age,'') Age,isnull(Phone,'')Phone, (select top 1 emp_name from HR_Employees where Emp_ID=Consultant_ID ) Emp_name,Reg_id FROM Appointment_Form where(1=1) and Appointment_No<>0 and Appointment_No is not null and Status = 'Booked' and (LTRIM(RTRIM(Appointment_No)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(Patient_Name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(Consultant_ID))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(Age))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(Phone)) like '%" + SearchString.Trim() + "%' or Consultant_ID = isnull((select top 1 Emp_ID from HR_Employees where Emp_Name like '%" + SearchString.Trim() + "%'),'0'))";
+            string safeSearch = SearchString?.Replace("'", "''").Trim() ?? "";
 
-            DataTable dt = DBClass.getDataTable(SearchSql);
-            List<Search_App> list = new List<Search_App>();
-            foreach (DataRow dr in dt.Rows)
+            // 🔹 OPD Appointments — ✅ Add SortOrderID
+            string opdQuery = @"
+        SELECT 
+            CAST(a.Appointment_ID AS VARCHAR) AS Appointment_ID,
+            ISNULL(CAST(a.Appointment_No AS VARCHAR), '') AS Appointment_No,
+            ISNULL(a.Patient_Name, '') AS Patient_Name,
+            ISNULL(a.Consultant_ID, '') AS Consultant_ID,
+            ISNULL(a.Age, '') AS Age,
+            ISNULL(a.Phone, '') AS Phone,
+            ISNULL((SELECT TOP 1 e.Emp_Name FROM HR_Employees e WHERE e.Emp_ID = a.Consultant_ID), '') AS Emp_name,
+            ISNULL(CAST(a.Reg_id AS VARCHAR), '') AS pat_id,
+            a.Appointment_ID AS SortOrderID   -- ✅ numeric, for ordering
+        FROM Appointment_Form a
+        INNER JOIN Reg_patient r ON r.pat_id = a.Reg_id
+        WHERE a.Appointment_No <> 0 
+          AND a.Appointment_No IS NOT NULL 
+          AND a.Status = 'Booked'";
+
+            // 🔹 Derma Appointments — ✅ Add SortOrderID
+            string dermaQuery = @"
+        SELECT 
+            CAST(d.Derma_Appointment_Id AS VARCHAR) AS Appointment_ID,
+            ISNULL(CAST(d.Appointment_No AS VARCHAR), '') AS Appointment_No,
+            ISNULL(r.Full_Name, '') AS Patient_Name,
+            ISNULL(d.Doctor_Id, '') AS Consultant_ID,
+            ISNULL(CAST(r.Age_years AS VARCHAR), '') AS Age,
+            ISNULL(r.Mobile1, '') AS Phone,
+            ISNULL((SELECT TOP 1 e.Emp_Name FROM HR_Employees e WHERE e.Emp_ID = d.Doctor_Id), '') AS Emp_name,
+            ISNULL(CAST(d.Patient_Id AS VARCHAR), '') AS pat_id,
+            d.Derma_Appointment_Id AS SortOrderID   -- ✅ numeric, for ordering
+        FROM Derma_Appointment d
+        INNER JOIN Reg_patient r ON r.pat_id = d.Patient_Id
+        WHERE d.Status = 'Booked'";
+
+            string unionQuery = $"({opdQuery}) UNION ALL ({dermaQuery})";
+
+
+            string whereClause = "1=1";
+            if (!string.IsNullOrEmpty(safeSearch))
             {
-                Search_App rsslt = new Search_App()
-                {
-                    Appointment_ID = dr[0] == DBNull.Value ? "" : dr[0].ToString(),
-                    Appointment_No = dr[1] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[1].ToString()),
-                    Patient_Name = dr[2] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[2].ToString()),
-                    Consultant_ID = dr[3] == DBNull.Value ? "" : dr[3].ToString(),
-                    Age = dr[4] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[4].ToString()),
-                    Phone = dr[5] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[5].ToString()),
-                    Emp_name = dr[6] == DBNull.Value ? "" : HttpUtility.HtmlEncode(dr[6].ToString()),
-                    pat_id = dr[7] == DBNull.Value ? "" : dr[7].ToString(),
-                };
-                list.Add(rsslt);
+                whereClause += $@"
+            AND (
+                LTRIM(RTRIM(Appointment_No)) LIKE '%{safeSearch}%' OR
+                LTRIM(RTRIM(Patient_Name)) LIKE '%{safeSearch}%' OR
+                LTRIM(RTRIM(Consultant_ID)) LIKE '%{safeSearch}%' OR
+                LTRIM(RTRIM(Age)) LIKE '%{safeSearch}%' OR
+                LTRIM(RTRIM(Phone)) LIKE '%{safeSearch}%' OR
+                Consultant_ID = ISNULL((SELECT TOP 1 Emp_ID FROM HR_Employees WHERE Emp_Name LIKE '%{safeSearch}%'), '0')
+            )";
             }
-            return list;
+
+            // ✅ Final query: wrap UNION, apply WHERE, ORDER BY SortOrderID
+            string finalQuery = $@"
+        SELECT 
+            Appointment_ID, Appointment_No, Patient_Name, Consultant_ID, 
+            Age, Phone, Emp_name, pat_id
+        FROM (
+            {unionQuery}
+        ) AS Combined
+        WHERE {whereClause}
+        ORDER BY SortOrderID DESC";
+
+            try
+            {
+                DataTable dt = DBClass.getDataTable(finalQuery);
+                var list = new List<Search_App>();
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    list.Add(new Search_App
+                    {
+                        Appointment_ID = dr["Appointment_ID"]?.ToString() ?? "",
+                        Appointment_No = HttpUtility.HtmlEncode(dr["Appointment_No"]?.ToString() ?? ""),
+                        Patient_Name = HttpUtility.HtmlEncode(dr["Patient_Name"]?.ToString() ?? ""),
+                        Consultant_ID = dr["Consultant_ID"]?.ToString() ?? "",
+                        Age = HttpUtility.HtmlEncode(dr["Age"]?.ToString() ?? ""),
+                        Phone = HttpUtility.HtmlEncode(dr["Phone"]?.ToString() ?? ""),
+                        Emp_name = HttpUtility.HtmlEncode(dr["Emp_name"]?.ToString() ?? ""),
+                        pat_id = dr["pat_id"]?.ToString() ?? ""
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Search Error: " + ex.Message);
+                return new List<Search_App>();
+            }
         }
 
         [WebMethod]
@@ -1807,6 +1908,7 @@ namespace PMS.Modules.PatientManagement
             public decimal Hosp_share { get; set; }
             public string accountid { get; set; }
             public string FilterClinic { get; set; }
+            public string hdnAppointmentType { get; set; }
             public string EmployeeName { get; set; }
             public string EmployeeDept { get; set; }
             public string AntiForgeryToken { get; set; }

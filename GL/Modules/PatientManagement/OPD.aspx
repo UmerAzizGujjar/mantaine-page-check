@@ -856,6 +856,7 @@
     <!-- Anti-CSRF Token -->
 <input type="hidden" id="hfAntiForgery" runat="server" />
     <input type="text " id="hdfPatient_ID" style="display: none;" />
+    <input type="hidden" id="hdnAppointmentType" />
     <input type="text" id="hdn_aptid" style="display: none;" />
     <input type="text" id="hdn_regid" style="display: none;" />
     <input type="text" id="hdn_opdId" style="display: none;" />
