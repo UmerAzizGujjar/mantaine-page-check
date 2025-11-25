@@ -24,22 +24,30 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var items = [];  // ✅ Global scope for deleteRow compatibility
+             const urlParams = new URLSearchParams(window.location.search);
+             const bomId = urlParams.get("ID");
 
-            LoadProcedures();
-            LoadItems();
-            Loadunit();
-            LoadWareHouse();
+             if (bomId && !isNaN(bomId) && parseInt(bomId) > 0) {
+             $('#hdnBOMID').val(bomId);
+             LoadBOMForEdit(parseInt(bomId));
+             $('#btnSave').val('Update');
+                    } else {
+                        $('#hdnBOMID').val('0');
+                        LoadProcedures();
+                        LoadItems();
+                        Loadunit();
+                        LoadWareHouse();
+                    }
             $('#addItemBtn').click(function (e) {
                 debugger;
                 e.preventDefault();
                 var itemId = $('#ddlitem').val();
                 var itemName = $('#ddlitem :selected').text().trim();
-                var qtyInBaseUnits = $('#itemQuantity').val().trim(); // e.g., 50ml
-                var txtCalculatedPieces = $('#txtCalculatedPieces').val().trim(); // e.g., 50ml
+                var qtyInBaseUnits = $('#itemQuantity').val().trim(); 
+                var txtCalculatedPieces = $('#txtCalculatedPieces').val().trim(); 
                 var unit = $('#itemUnit').val();
                 var cost = $('#itemCost').val().trim();
-                var baseUnitQtyPerPiece = $('#txtbaseunitqty').val().trim(); // e.g., 120ml/tube
+                var baseUnitQtyPerPiece = $('#txtbaseunitqty').val().trim(); 
                 var weightedAvg = $('#txtWeightedAVG').val().trim();
                 var batchNo = $('#ddlbatchno').val();
 
@@ -55,12 +63,12 @@
                 items.push({
                     ItemID: parseInt(itemId),
                     ItemName: itemName,
-                    Qty: quantityInPieces, // pieces (for display)
+                    Qty: quantityInPieces, 
                     Unit: unit,
                     CostPerUnit: parseFloat(cost),
                     Total: parseFloat(total),
                     Batch_No: batchNo,
-                    BaseUnitQty: parseFloat(qtyInBaseUnits) // actual ml for deduction
+                    BaseUnitQty: parseFloat(qtyInBaseUnits)
                 });
                 debugger;
                 var row = '<tr>' +
@@ -146,6 +154,68 @@
                 );
             });
         });
+
+        function LoadBOMForEdit(id) {
+             $.ajax({
+        type: "POST",
+        url: "BOM.aspx/LoadBOM",
+        data: JSON.stringify({ ID: id }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            const data = JSON.parse(response.d);
+            if (data.error) {
+                Swal.fire('Error!', data.error, 'error');
+                return;
+            }
+
+            $('#ddlprocedure').val(data.ProcedureID).trigger('change');
+            $('#recipeCategory').val(data.Category || '');
+
+            window.items = [];
+            $('#itemsTableBody').empty();
+
+            data.Items.forEach(item => {
+                const itemObj = {
+                    ItemID: item.ItemID,
+                    ItemName: item.ItemName,
+                    Qty: parseFloat(item.Qty),
+                    Unit: item.Unit,
+                    CostPerUnit: parseFloat(item.CostPerUnit),
+                    Total: parseFloat(item.Total),
+                    Batch_No: item.Batch_No || '',
+                    BaseUnitQty: parseFloat(item.BaseUnitQty)
+                };
+                window.items.push(itemObj);
+
+                const row = `
+                    <tr>
+                        <td><input type="text" class="form-control" value="${item.ItemName}" readonly /></td>
+                        <td><input type="text" class="form-control" value="${parseFloat(item.Qty).toFixed(2)}" readonly /></td>
+                        <td><input type="text" class="form-control" value="${item.Unit}" readonly /></td>
+                        <td><input type="text" class="form-control" value="${item.Batch_No || ''}" readonly /></td>
+                        <td><input type="text" class="form-control" value="${parseFloat(item.CostPerUnit).toFixed(2)}" readonly /></td>
+                        <td><input type="text" class="form-control" value="${parseFloat(item.Total).toFixed(2)}" readonly /></td>
+                        <td><small>Base: ${parseFloat(item.BaseUnitQty).toFixed(2)}</small></td>
+                        <td>
+                            <input type="hidden" name="ItemID" value="${item.ItemID}" />
+                            <input type="hidden" name="BaseUnitQty" value="${parseFloat(item.BaseUnitQty).toFixed(2)}" />
+                            <a href="javascript:void(0);" onclick="deleteRow(this)" style="cursor:pointer; border-radius:4px; background:#d91212; color:white; padding:4px 8px;">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>`;
+                $('#itemsTableBody').append(row);
+            });
+
+            const grandTotal = window.items.reduce((sum, i) => sum + i.Total, 0);
+            $('#grandTotal').text(grandTotal.toFixed(2));
+        },
+        error: function () {
+            Swal.fire('Error!', 'Failed to load BOM.', 'error');
+        }
+    });
+}
 
         function toasterMessage(isError = false, title, message) {
             toastr.options = {
@@ -391,7 +461,7 @@
     <div class="row">
   
         <input type="hidden" id="txtbaseunitqty" />
-
+        <input type="hidden" id="hdnBOMID" value="0" />
         <div class="col-lg-12">
             <div class="row mb-3">
                 <div class="col-lg-2 col-md-3 col-sm-3">

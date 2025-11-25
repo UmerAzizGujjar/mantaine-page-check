@@ -202,6 +202,42 @@ namespace PMS.Inventory
             }
             return data;
         }
+
+        [WebMethod]
+        public static string LoadBOM(int ID)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var bom = db.inv_boms.FirstOrDefault(x => x.BOMID == ID);
+                if (bom == null)
+                    return new JavaScriptSerializer().Serialize(new { error = "BOM not found." });
+
+                var details = (from d in db.inv_bom_details
+                               join i in db.INV_Items on d.ItemID equals i.Item_ID
+                               select new
+                               {
+                                   d.ItemID,
+                                   ItemName = i.Description,
+                                   d.Qty,
+                                   d.Unit,
+                                   d.CostPerUnit,
+                                   d.Total,
+                                   d.Batch_No,
+                                   d.BaseUnitQty  
+                               }).ToList();
+
+                var result = new
+                {
+                    bom.BOMID,
+                    bom.ProcedureID,
+                    bom.Category,
+                    bom.warehouse,
+                    Items = details
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
         [WebMethod]
         public static string SaveBOM(int procedureId, string category, List<BOM_Item> items)
         {
@@ -262,6 +298,8 @@ namespace PMS.Inventory
                     return "-1";
                 }
             }
+
+
         }
     }
 }
