@@ -26,7 +26,7 @@
                 border-color: #007bff;
             }
     </style>
-<script type="text/javascript">
+    <script type="text/javascript">
     $(document).ready(function () {
         loaddoctor();
         var now = new Date();
@@ -211,7 +211,7 @@
     function ddldocchange() {
         getpage(); // Simpler: just reload — avoids client-side filtering bugs
     }
-</script>
+    </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
