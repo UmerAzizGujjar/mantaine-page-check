@@ -3285,6 +3285,8 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
+                        var pat_id = response.d;
+                        ApprovedOPDShare(pat_id);
                         window.location = "NewOutPatient.aspx?ID=" + response.d;
                         $('#btnSave').val("Update");
                     }
@@ -3302,6 +3304,28 @@
                         title: 'Error!',
                         text: 'An error occurred while saving the record. Please check the console for details.',
                         showConfirmButton: true
+                    });
+                }
+            });
+        }
+        function ApprovedOPDShare(pat_id) {
+
+
+            PageMethods.approvepatient(pat_id, function (Tests) {
+                debugger
+                var message = JSON.parse(Tests);
+                if (message[0].Message != null || message[0].Message != "") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: message[0].Message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
                     });
                 }
             });

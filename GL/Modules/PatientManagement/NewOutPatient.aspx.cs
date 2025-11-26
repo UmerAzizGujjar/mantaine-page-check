@@ -65,6 +65,14 @@ namespace PMS.Modules.PatientManagement
             return new JavaScriptSerializer().Serialize(availableDates);
         }
         [WebMethod]
+        public static string approvepatient(string pat_id)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.SpApprove_OPD(Convert.ToInt32(pat_id),  user_id);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
         public static string SaveRecord(PatientVisitData data)
         {
             try
