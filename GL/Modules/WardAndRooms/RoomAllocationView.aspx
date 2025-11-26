@@ -1,11 +1,18 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoomAllocationView.aspx.cs" Inherits="PMS.RoomAllocationView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
+        .btn-primary {
+            width: 120px !important;
+            border-radius: 5px !important;
+        }
+    </style>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <table style="width:100%;">
         <tr>
             <td>
-                <asp:Button Text="Add New" ID="Button1" runat="server" PostBackUrl="~/RoomAllocation.aspx" CausesValidation="false" />
+                <asp:Button Text="Add New" ID="Button1" runat="server"  CssClass="btn btn-primary" PostBackUrl="~/Modules/WardAndRooms/RoomAllocation.aspx" CausesValidation="false" />
             </td>
         </tr>
 

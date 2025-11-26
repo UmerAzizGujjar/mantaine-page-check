@@ -1353,6 +1353,38 @@
                         var referred_by_doctor = $('#ddlReffered_By').val();
                         var Casher = $('#ddlcasher').val();
 
+                        var bomItems = [];
+                        $('#tblBOM tbody tr').each(function () {
+                           
+                            if ($(this).find('td[colspan]').length) return;
+
+                            var BOMDetailID = parseInt($(this).find('input[name="hdnBOMDetailID"]').val()) || 0;
+                            var ItemID = parseInt($(this).find('input[name="hdnBOMItemID"]').val()) || 0;
+                            var ItemCode = $(this).find('input[name="hdnBOMItemCode"]').val() || '';
+                            var Description = $(this).find('input[name="hdnBOMDescription"]').val() || '';
+                            var Qty = parseFloat($(this).find('input[name="hdnBOMQty"]').val()) || 0;
+                            var Unit = $(this).find('input[name="hdnBOMUnit"]').val() || '';
+                            var RecipeCostPerUnit = parseFloat($(this).find('input[name="hdnBOMRecipeCost"]').val()) || 0;
+                            var CurrentAvgCost = parseFloat($(this).find('input[name="hdnBOMAvgCost"]').val()) || 0;
+                            var RuntimeCost = parseFloat($(this).find('input[name="hdnBOMRuntimeCost"]').val()) || 0;
+                            var Batch_No = $(this).find('input[name="hdnBOMBatchNo"]').val() || '';
+                            var BaseUnitQty = $(this).find('input[name="hdnBOMBaseUnitQty"]').val();
+                            BaseUnitQty = BaseUnitQty === '' ? null : parseFloat(BaseUnitQty);
+
+                            bomItems.push({
+                                BOMDetailID: BOMDetailID,
+                                ItemID: ItemID,
+                                ItemCode: ItemCode,
+                                Description: Description,
+                                Qty: Qty,
+                                Unit: Unit,
+                                RecipeCostPerUnit: RecipeCostPerUnit,
+                                CurrentAvgCost: CurrentAvgCost,
+                                RuntimeCost: RuntimeCost,
+                                Batch_No: Batch_No,
+                                BaseUnitQty: BaseUnitQty
+                            });
+                        });
                         $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
                             var Doc_ID = $(value).find('td:eq(0) #ddlDoctorList' + key + '').val();
                             var Share_type = $(value).find('td:eq(1) #ddlShareType' + key + '').val();
@@ -1435,7 +1467,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -3307,6 +3339,179 @@
 
 
             }
+
+            function getbomprocedure() {
+                var Pat_id = $('#hdfPatient_ID').val();
+                if (!Pat_id || Pat_id <= 0) {
+                    console.warn("Invalid Patient ID");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetItemCodesforBOM",
+                    data: JSON.stringify({ "Pat_id": parseInt(Pat_id) }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+    
+                    success: function (response) {
+                        var data = response.d; 
+                        if (!data || data.Item_ID == null || data.Item_ID <= 0) {
+                            console.log("No service/item found for this patient.");
+                            return;
+                        }
+
+                        var rowIndex = $('#tblDetails tbody tr').length; 
+                        var remarks = $("#ctl00_MainContent_ddlpro_dis").val() || "";
+                        var itemtype = data.Services === true ? 'Service' : 'Item';
+                        var isMajorMinors = (data.Procedure_types == null ||
+                            data.Procedure_types === 0 ||
+                            data.Procedure_types === "" ||
+                            String(data.Procedure_types).toLowerCase() === "null")
+                            ? ""
+                            : data.Procedure_types;
+
+                        var servicerow =
+                            '<tr>' +
+                            '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
+                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
+                            '<td style="text-align:left;">' +
+                            '<input type="hidden" name="hdnParentTrans_ID" value="0" />' +
+                            '<input type="hidden" name="hdnParentTrans_Name" value="OPD" />' +
+                            '<input type="hidden" name="hdnParentTrans_Type" value="" />' +
+                            '<input type="hidden" name="hdnItemID" value="' + data.Item_ID + '" />' +
+                            '<input type="hidden" name="hdnItemName" value="' + (data.Description || '').replace(/"/g, '&quot;') + '" />' +
+                            '<input type="hidden" name="hdnProcedure" value="' + (isMajorMinors || '').replace(/"/g, '&quot;') + '" />' +
+                            '<input type="hidden" name="hdnDisPer" value="0" />' +
+                            '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
+                            '<input type="hidden" name="hdnNet_Amount" value="' + (data.Sale_Rate || 0) + '" />' +
+                            '<input type="hidden" name="hdnItemType" value="' + itemtype + '" />' +
+                            '<input type="hidden" name="hdnRecommendedByDoctor" value="false" />' +
+                            (data.Description || '') +
+                            '</td>' +
+                            '<td>' + remarks.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</td>' +
+                            '<td>' +
+                            '<input type="text" name="txtQty" value="1" style="width: 45px !important;" ' +
+                            'onkeyup="CulculateAmonutWithQty(this, true, false)"/>' +
+                            '<input type="hidden" name="txtActualAmount" value="' + (data.Sale_Rate || 0) + '" />' +
+                            '</td>' +
+                            '<td style="text-align:right;" id="amnt' + rowIndex + '" name="amnt">' + (data.Sale_Rate || 0).toFixed(2) + '</td>' +
+                            '<td><input type="text" name="DisPer" value="0" style="width: 37px !important;" ' +
+                            'onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/></td>' +
+                            '<td><input type="text" name="DisAmount" value="0.00" style="width: 75px !important;" disabled ' +
+                            'onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/></td>' +
+                            '<td style="text-align:right;">' + (data.Sale_Rate || 0).toFixed(2) + '</td>' +
+                            '<td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="0" ' +
+                            'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                            '<td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="0" ' +
+                            'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                            '<td><select id="ddldoctor' + (rowIndex + 1) + '" name="ddlDoctor" class="ddlDoctor">' + (typeof doctors !== 'undefined' ? doctors : '') + '</select></td>' +
+                            '</tr>';
+
+                        $('#tblDetails tbody').append(servicerow);
+
+                      
+                        setTimeout(function () {
+                            CalculateSummarieDiscountPerWise(rowIndex);
+                        }, 1500);
+
+                        loadBOMDetails(data.Item_ID);
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                        try {
+                            var err = JSON.parse(xhr.responseText);
+                            alert("Server Error: " + (err.Message || err));
+                        } catch (e) {
+                            alert("Failed to load item. Please try again.");
+                        }
+                    }
+                });
+            }
+            function loadBOMDetails(procedureId) {
+                procedureId = parseInt(procedureId);
+                if (!procedureId || procedureId <= 0) {
+                    console.warn("⚠️ Invalid procedureId:", procedureId);
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetBOMDetailsByProcedure",
+                    data: JSON.stringify({ "procedureId": procedureId }), 
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var data = response.d;
+                        var $tbody = $('#tblBOM tbody');
+                        $tbody.empty();
+
+                        if (!data || !data.success || !Array.isArray(data.items) || data.items.length === 0) {
+                            $tbody.append('<tr><td colspan="9" class="text-center text-muted">— No BOM configured for this procedure —</td></tr>');
+                            $('#bomSection').hide();
+                            $('#bomTotal').hide();
+                            return;
+                        }
+                        data.items.forEach(function (item, idx) {
+                            var safeDesc = (item.Description || '—').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                            var safeItemCode = (item.ItemCode || '—').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                          /*  var safeBatch = (item.Batch_No || '—').replace(/</g, '&lt;').replace(/>/g, '&gt;');*/
+
+                            var row =
+                                '<tr>' +
+                                '<td>' + (idx + 1) + '</td>' +
+                                '<td>' + safeItemCode +
+                                '<input type="hidden" name="hdnBOMDetailID" value="' + (item.BOMDetailID || 0) + '" />' +
+                                '<input type="hidden" name="hdnBOMItemID" value="' + (item.ItemID || 0) + '" />' +
+                                '<input type="hidden" name="hdnBOMItemCode" value="' + safeItemCode + '" />' +
+                                '<input type="hidden" name="hdnBOMDescription" value="' + (item.Description || '').replace(/"/g, '&quot;') + '" />' +
+                                '<input type="hidden" name="hdnBOMBatchNo" value="' + (item.Batch_No || '').replace(/"/g, '&quot;') + '" />' +
+                                '</td>' +
+                                '<td>' + safeDesc + '</td>' +
+                                '<td class="text-right">' + parseFloat(item.Qty).toFixed(2) +
+                                '<input type="hidden" name="hdnBOMQty" value="' + (item.Qty || 0) + '" />' +
+                                '</td>' +
+                                '<td>' + (item.Unit || '—') +
+                                '<input type="hidden" name="hdnBOMUnit" value="' + (item.Unit || '') + '" />' +
+                                '</td>' +
+                                '<td class="text-right text-muted">' + parseFloat(item.RecipeCostPerUnit).toFixed(2) +
+                                '<input type="hidden" name="hdnBOMRecipeCost" value="' + (item.RecipeCostPerUnit || 0) + '" />' +
+                                '</td>' +
+                                '<td class="text-right"><strong>' + parseFloat(item.CurrentAvgCost).toFixed(2) +
+                                '<input type="hidden" name="hdnBOMAvgCost" value="' + (item.CurrentAvgCost || 0) + '" />' +
+                                '</td>' +
+                                '<td class="text-right"><strong class="text-danger">' + parseFloat(item.RuntimeCost).toFixed(2) +
+                                '<input type="hidden" name="hdnBOMRuntimeCost" value="' + (item.RuntimeCost || 0) + '" />' +
+                                '<input type="hidden" name="hdnBOMBaseUnitQty" value="' + (item.BaseUnitQty != null ? item.BaseUnitQty : '') + '" />' +
+                                '</td>' +
+                                '</tr>';
+                            $tbody.append(row);
+                        });
+                        var totalRuntime = data.items.reduce(function (sum, item) {
+                            return sum + parseFloat(item.RuntimeCost || 0);
+                        }, 0);
+
+                        $('#bomTotalValue').text(totalRuntime.toFixed(2));
+                        $('#bomTotal').show();
+
+                        $('#bomSection').show();
+
+                        console.log('✅ Loaded ' + data.items.length + ' BOM item(s). Total runtime cost: ' + totalRuntime.toFixed(2));
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('❌ BOM Load Error:', error);
+                        try {
+                            var err = JSON.parse(xhr.responseText);
+                            console.error('Server:', err.Message || err);
+                        } catch (e) { }
+                        $('#tblBOM tbody').html('<tr><td colspan="9" class="text-danger text-center">⚠️ Failed to load BOM</td></tr>');
+                        $('#bomSection').hide();
+                        $('#bomTotal').hide();
+                    }
+                });
+            }
+
             var itemIds;
             function getitem_codeEmergency() {
                 debugger;
@@ -3704,6 +3909,7 @@
                     getitem_code();
 
                     FetchRecommendedInPatientDetails();
+                    getbomprocedure();
                 });
             }
             function FetchRecommendedInPatientDetails() {
@@ -4154,6 +4360,7 @@
                     PatientID = data.d.opdid;
                     debugger;
                     var Patient_ID = $('#hdfPatient_ID').val();
+
 
 
 
@@ -5942,6 +6149,43 @@
         </div>
     </div>
 </div>
+<!-- =============== BOM SECTION (INTERNAL) =============== -->
+<!-- Hidden by default — shows only when BOM exists -->
+<div id="bomSection" style="display:none; margin-top:20px; padding:12px; background:#f8f9fa; border-radius:6px; border:1px solid #dee2e6;">
+  <h5 style="margin-top:0; color:#333; font-weight:600;">
+    <i class="fa fa-cogs"></i> BOM Components (Internal Costing)
+  </h5>
+  
+  <table id="tblBOM" class="table table-bordered table-sm" style="font-size:0.875rem; margin-bottom:8px;">
+    <thead class="thead-light">
+      <tr>
+        <th>#</th>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th><abbr title="From BOM setup">Recipe<br>Cost/Unit</abbr></th>
+        <th><abbr title="Weighted Avg Cost (real-time)">Avg<br>Cost/Unit</abbr></th>
+        <th><abbr title="Avg Cost × Qty">Runtime<br>Cost</abbr></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="9" class="text-center text-muted">Loading BOM...</td></tr>
+    </tbody>
+  </table>
+
+
+  <div id="bomTotal" style="display:none; font-weight:bold; color:#1e7e34; font-size:1.1em;">
+    <i class="fa fa-calculator"></i> 
+    Total BOM Runtime Cost: 
+    <span id="bomTotalValue" style="color:#d9534f;">0.00</span>
+  </div>
+</div>
+
+
+<!-- Optional: Hidden container for form submission (uncomment if needed for Save) -->
+<!-- <div id="bomContainer" style="display:none;"></div> -->
      <div id="PrintBillingReport" style="display:none;">
         <div style="height: 110px; -webkit-print-color-adjust: exact; width: 750px; margin-left: 100px">
             <div style="padding: 5px; margin-left: -30px">
@@ -6196,4 +6440,5 @@
             </tbody>
         </table>
     </div>
+
 </asp:Content>

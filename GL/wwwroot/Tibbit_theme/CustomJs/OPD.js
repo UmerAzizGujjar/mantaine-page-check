@@ -285,11 +285,12 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
+            $('#txtnic').val(data.CNIC_Masked);
             $('#txtmobile').val(data.Mobile);
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#hdn_aptid').val(apt_Id);
+            $('#hdnAppointmentType').val(data.AppointmentType);
             $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
             $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
@@ -977,6 +978,7 @@ function SavePatient() {
     var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
+    var hdnAppointmentType = $('#hdnAppointmentType').val();
     var EmployeeName = $('#empname').val();
     var EmployeeDept = $('#EmpDept').val();
     var StudentName = $('#txtStdName').val();
@@ -1128,6 +1130,7 @@ function SavePatient() {
         Class: Class,
         section: section,
         FilterClinic: FilterClinic,
+        hdnAppointmentType: hdnAppointmentType,
         Services: Services,
         Cashier: Cashier,
         accountid: accountid,

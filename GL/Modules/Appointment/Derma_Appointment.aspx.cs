@@ -138,66 +138,6 @@ namespace PMS
             return result;
         }
 
-        //[WebMethod]
-        //public static string GetAvailableDatesAndTimes(int doc_id, string txt_date , string procTimeSlot)
-        //{
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        DateTime selectedDate;
-        //        if (!DateTime.TryParse(txt_date, out selectedDate))
-        //            return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
-
-        //        // Step 1: Get doctor's off days
-        //        var doctor = (from hr in db.HR_Employees
-        //                      where hr.Emp_ID == doc_id && hr.IsDoctor == true
-        //                      select new
-        //                      {
-        //                          hr.Off_Days_Names, 
-        //                          hr.Timings_In,
-        //                          hr.Timings_Out
-        //                      }).FirstOrDefault();
-
-        //        if (doctor == null)
-        //            return new JavaScriptSerializer().Serialize(new { error = "Doctor not found" });
-
-        //        string dayName = selectedDate.ToString("ddd");
-        //        var offDays = doctor.Off_Days_Names?.Split(',') ?? new string[0];
-
-        //        if (offDays.Contains(dayName, StringComparer.OrdinalIgnoreCase))
-        //            return new JavaScriptSerializer().Serialize(new { error = "Doctor not available" });
-
-        //        var lastAppointmentEnd = (from ap in db.Derma_Appointments
-        //                                  where ap.Doctor_Id == Convert.ToString( doc_id)
-        //                                  && ap.Appointment_Date == selectedDate.Date
-        //                                  orderby ap.Doctor_End_Time descending
-        //                                  select ap.Doctor_End_Time).FirstOrDefault();
-
-        //        TimeSpan availableStart;
-        //        TimeSpan availableEnd;
-
-        //        if (lastAppointmentEnd.HasValue)
-        //        {
-        //            availableStart = lastAppointmentEnd.Value;
-        //        }
-        //        else
-        //        {
-        //            availableStart = doctor.Timings_In ?? TimeSpan.Zero;
-        //        }
-
-        //        availableEnd = availableStart.Add(new TimeSpan(0, 15, 0));
-
-        //        if (doctor.Timings_Out.HasValue && availableEnd > doctor.Timings_Out.Value)
-        //        {
-        //            availableEnd = doctor.Timings_Out.Value;
-        //        }
-
-        //        return new JavaScriptSerializer().Serialize(new
-        //        {
-        //            TimeIn = availableStart.ToString(@"hh\:mm"),
-        //            TimeOut = availableEnd.ToString(@"hh\:mm")
-        //        });
-        //    }
-        //}
         [WebMethod]
         public static string GetAvailableDatesAndTimes(int doc_id, string txt_date, string procTimeSlot)
         {

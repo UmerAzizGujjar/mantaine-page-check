@@ -86,7 +86,7 @@ namespace PMS.Inventory
             }
         }
         [WebMethod]
-        public static string GetItemDetails(int itemId ,string batchNo)
+        public static string GetItemDetails(int itemId)
         {
             using (var db = new DataBaseDataContext())
             {
@@ -125,7 +125,7 @@ namespace PMS.Inventory
                 if (item == null)
                     return new JavaScriptSerializer().Serialize(new { error = "Item not found" });
 
-                decimal stockInBaseUnit = db.GetInventoryItemTotalStock_BaseUnit(item.Item_ID, item.InventoryOrg, batchNo) ?? 0;
+                decimal stockInBaseUnit = db.GetInventoryItemTotalStock_BaseUnit(item.Item_ID, item.InventoryOrg) ?? 0;
                 decimal weighted_avg = db.GetAvgAmount(item.Item_ID) ?? 0;
 
                 // Compute stock in UOM (e.g., tubes, packets)
@@ -166,41 +166,77 @@ namespace PMS.Inventory
             public string Unit { get; set; }
             public decimal CostPerUnit { get; set; }
             public decimal Total { get; set; }
-            public string Batch_No { get; set; }
+            //public string Batch_No { get; set; }
             public decimal BaseUnitQty { get; set; }
         }
+        //[WebMethod]
+        //public static string Getbatch_grn(int med_id)
+        //{
+        //    string data = string.Empty;
+
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var grnResult = (from dv in db.INV_Items
+        //                         join ds in db.GRN_Details
+        //                         on dv.Item_ID equals ds.Item_Id
+        //                         where ds.Item_Id == med_id
+        //                         select new
+        //                         {
+        //                             BatchNum = ds.BatchNum
+        //                         }).ToList();
+
+        //        var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
+        //                                     where inv.Item_Id == Convert.ToString(med_id)
+        //                                      && inv.Status == "Approved"
+        //                                     orderby inv.Creation_Time descending
+        //                                     select new
+        //                                     {
+        //                                         BatchNum = inv.Batch_No
+        //                                     }).ToList();
+        //        var combinedResult = new
+        //        {
+        //            GRN_Details = grnResult,
+        //            Stock_Adjustment_Details = stockAdjustmentResult
+        //        };
+        //        data = new JavaScriptSerializer().Serialize(combinedResult);
+        //    }
+        //    return data;
+        //}
+
         [WebMethod]
-        public static string Getbatch_grn(int med_id)
+        public static string LoadBOM(int ID)
         {
-            string data = string.Empty;
-
-            using (DataBaseDataContext db = new DataBaseDataContext())
+            using (var db = new DataBaseDataContext())
             {
-                var grnResult = (from dv in db.INV_Items
-                                 join ds in db.GRN_Details
-                                 on dv.Item_ID equals ds.Item_Id
-                                 where ds.Item_Id == med_id
-                                 select new
-                                 {
-                                     BatchNum = ds.BatchNum
-                                 }).ToList();
+                var bom = db.inv_boms.FirstOrDefault(x => x.BOMID == ID);
+                if (bom == null)
+                    return new JavaScriptSerializer().Serialize(new { error = "BOM not found." });
 
-                var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
-                                             where inv.Item_Id == Convert.ToString(med_id)
-                                              && inv.Status == "Approved"
-                                             orderby inv.Creation_Time descending
-                                             select new
-                                             {
-                                                 BatchNum = inv.Batch_No
-                                             }).ToList();
-                var combinedResult = new
+                var details = (from d in db.inv_bom_details
+                               join i in db.INV_Items on d.ItemID equals i.Item_ID
+                               select new
+                               {
+                                   d.ItemID,
+                                   ItemName = i.Description,
+                                   d.Qty,
+                                   d.Unit,
+                                   d.CostPerUnit,
+                                   d.Total,
+                                  // d.Batch_No,
+                                   d.BaseUnitQty  
+                               }).ToList();
+
+                var result = new
                 {
-                    GRN_Details = grnResult,
-                    Stock_Adjustment_Details = stockAdjustmentResult
+                    bom.BOMID,
+                    bom.ProcedureID,
+                    bom.Category,
+                    bom.warehouse,
+                    Items = details
                 };
-                data = new JavaScriptSerializer().Serialize(combinedResult);
+
+                return new JavaScriptSerializer().Serialize(result);
             }
-            return data;
         }
         [WebMethod]
         public static string SaveBOM(int procedureId, string category, List<BOM_Item> items)
@@ -248,7 +284,7 @@ namespace PMS.Inventory
                             Unit = item.Unit ?? "pcs",
                             CostPerUnit = item.CostPerUnit,
                             Total = item.Total,
-                            Batch_No = string.IsNullOrWhiteSpace(item.Batch_No) ? null : item.Batch_No.Trim(),
+                            //Batch_No = string.IsNullOrWhiteSpace(item.Batch_No) ? null : item.Batch_No.Trim(),
                             BaseUnitQty = item.BaseUnitQty // ✅ STORE BASE UNIT QTY
                         };
                         db.inv_bom_details.InsertOnSubmit(detail);
@@ -262,6 +298,8 @@ namespace PMS.Inventory
                     return "-1";
                 }
             }
+
+
         }
     }
 }

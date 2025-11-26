@@ -50,7 +50,8 @@ namespace PMS.Modules.Administrator
 
                     var Total_Policy = _dbContext.Policy_Details.Count();
                     var Shift_policy = from a in _dbContext.Policy_Details
-                                       where a.Policy_Name.Contains(searchValue)
+                                       where a.Is_Cancel == false &&
+                                      a.Policy_Name.Contains(searchValue)
                                        select new
                                        {
                                            Policy_Detail_ID = a.Policy_Detail_ID,

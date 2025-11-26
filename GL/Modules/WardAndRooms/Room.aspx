@@ -5,7 +5,20 @@
         .mg {
             padding-left: 53px;
         }
+        .btn-yellow {
+       width: 95px !important;
+        }
+        #ctl00_MainContent_btnSave{
+            width: 95px !important;
+        }
+
     </style>
+
+    <script type="text/javascript">
+    function goToListView() {
+        window.location.href = '<%= ResolveUrl("~/Modules/WardAndRooms/RoomView.aspx") %>';
+    }
+</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -56,7 +69,7 @@
                 <asp:Label ID="lblBuilding_Type" runat="server" Text="Building Type"></asp:Label>
             </td>
             <td style="width: 205px;">
-                <asp:DropDownList ID="ddlBuildingType" runat="server" AppendDataBoundItems="true" Width="167px">
+                <asp:DropDownList ID="ddlBuildingType" runat="server" AppendDataBoundItems="true" Width="202px">
                 </asp:DropDownList>
             </td>
             <td></td>
@@ -77,7 +90,7 @@
                 <asp:Label ID="lblRoom_Type" runat="server" Text="Room Type *"></asp:Label>
             </td>
             <td style="width: 205px;">
-                <asp:DropDownList ID="ddlRoomType" runat="server" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="ddlRoomType_SelectedIndexChanged" Width="167px">
+                <asp:DropDownList ID="ddlRoomType" runat="server" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="ddlRoomType_SelectedIndexChanged" Width="202px">
                 </asp:DropDownList>
             </td>
             <td>
@@ -119,7 +132,7 @@
                 <asp:Label ID="lblWarden" runat="server" Text="Warden *"></asp:Label>
             </td>
             <td style="width: 205px;">
-                <asp:DropDownList ID="ddlWarden" runat="server" AppendDataBoundItems="true" Width="167px">
+                <asp:DropDownList ID="ddlWarden" runat="server" AppendDataBoundItems="true" Width="202px">
                 </asp:DropDownList>
             </td>
             <td>
@@ -131,9 +144,9 @@
             <td></td>
             <td style="width: 205px;">
                 <br />
-                <asp:Button ID="btnBack" Width="95px" runat="server" Text="List View" CausesValidation="false" OnClick="btnBack_Click" />
+               <input type="button" value="List View" class="btn-yellow" onclick="goToListView()" />
                 &nbsp;
-                <asp:Button ID="btnSave" Width="95px" runat="server" Text="Save" OnClick="btnSave_Click" />
+                <asp:Button ID="btnSave" runat="server" Text="Save" CssClass="btn btn-primry" OnClick="btnSave_Click" />
             </td>
             <td></td>
             <td class="mg"></td>

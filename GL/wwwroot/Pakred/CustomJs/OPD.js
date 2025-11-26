@@ -78,6 +78,7 @@ $(document).ready(function () {
         { id: '#ddlpanel', method: 'GetPanel' }
 
     ];
+
     dropdowns.forEach(item => {
         const $element = $(item.id);
 
@@ -141,18 +142,6 @@ $(document).ready(function () {
         }
 
 
-    });
-
-    const defaults = {
-        '#ddlCountry': { value: '01', text: 'Pakistan' },
-        '#ddl_Province': { value: '01', text: 'Punjab' },
-        '#txtcity': { value: '0002', text: 'Kasur' },
-        '#txtarea': { value: '04', text: 'Dina Nath' }
-    };
-
-    $.each(defaults, function (id, data) {
-        const $el = $(id);
-        $el.html(`<option value="${data.value}" selected>${data.text}</option>`);
     });
 
     $('#txt_mobile').on('focus', function () {
@@ -296,11 +285,12 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#txt_patname').val(data.Name);
             $('#txt_F_Name').val(data.FatherName);
             $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC_Masked); // 👈 Updated!
+            $('#txtnic').val(data.CNIC_Masked);
             $('#txtmobile').val(data.Mobile);
             $('#txtAdrress').val(data.PermanentAdrress);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#hdn_aptid').val(apt_Id);
+            $('#hdnAppointmentType').val(data.AppointmentType);
             $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
             $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
@@ -803,41 +793,44 @@ function AllowOPdEdit() {
 
 debugger;
 function CalculateDateOfBirth() {
-    debugger;
+    var Numbers = $('#PrefixAge').val();
+    var CalDob = $('#txt_dob').val();
 
-    var now = moment();
-    var value = $('#txt_dob').val();
-    var type = $('#PrefixAge').val();
-
-    if (!value || isNaN(value)) {
-        alert("Please enter a valid number.");
+    if (!CalDob || isNaN(CalDob) || CalDob <= 0) {
+        $('#txtAge_yearss').val('');
         return;
     }
 
-    var calculateDate;
+    var now = moment();
+    var dob;
 
-    if (type === "Year") {
-        calculateDate = now.clone().subtract(value, 'years');
-    } else if (type === "Month") {
-        calculateDate = now.clone().subtract(value, 'months');
-    } else if (type === "Day") {
-        calculateDate = now.clone().subtract(value, 'days');
+    if (Numbers === "Year") {
+        dob = now.subtract(CalDob, 'years');
+    } else if (Numbers === "Month") {
+        dob = now.subtract(CalDob, 'months');
+    } else if (Numbers === "Day") {
+        dob = now.subtract(CalDob, 'days');
+    } else {
+        $('#txtAge_yearss').val('');
+        return;
     }
 
-    var finalDate = calculateDate.format("DD/MM/YYYY");
+    var finalDate = dob.format("DD/MM/YYYY");
+
     var $datepicker = $('#txtAge_yearss');
+    if (!$datepicker.hasClass('hasDatepicker')) {
+        $datepicker.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0",
+            dateFormat: "dd/mm/yy"
+        });
+    }
 
-    $datepicker.datepicker({
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-50:+50",
-        dateFormat: "dd/mm/yy"
-    });
+    $datepicker.datepicker('setDate', dob.toDate());
 
-    $datepicker.datepicker('setDate', finalDate);
-
-    $("#txtAge_yearss").mask("99/99/9999");
 }
+
 function fillmrno() {
     var data = {};
 
@@ -918,7 +911,6 @@ function SavePatient() {
         "Province": Province,
     };
 
-    console.log(data);
 
     $.ajax({
         type: "POST",
@@ -986,6 +978,7 @@ function SavePatient() {
     var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
     var panel = $('#ddlpanel').val();
     var reffer_no = $('#txtreferenceno').val();
+    var hdnAppointmentType = $('#hdnAppointmentType').val();
     var EmployeeName = $('#empname').val();
     var EmployeeDept = $('#EmpDept').val();
     var StudentName = $('#txtStdName').val();
@@ -1137,6 +1130,7 @@ function SavePatient() {
         Class: Class,
         section: section,
         FilterClinic: FilterClinic,
+        hdnAppointmentType: hdnAppointmentType,
         Services: Services,
         Cashier: Cashier,
         accountid: accountid,
@@ -1189,6 +1183,7 @@ function SavePatient() {
                 }
             });
             var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
+            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_slip&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
             window.location.href = "OPDView.aspx";
         },
