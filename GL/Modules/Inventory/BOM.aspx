@@ -24,32 +24,24 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-             const urlParams = new URLSearchParams(window.location.search);
-             const bomId = urlParams.get("ID");
+            var items = [];  // ✅ Global scope for deleteRow compatibility
 
-             if (bomId && !isNaN(bomId) && parseInt(bomId) > 0) {
-             $('#hdnBOMID').val(bomId);
-             LoadBOMForEdit(parseInt(bomId));
-             $('#btnSave').val('Update');
-                    } else {
-                        $('#hdnBOMID').val('0');
-                        LoadProcedures();
-                        LoadItems();
-                        Loadunit();
-                        LoadWareHouse();
-                    }
+            LoadProcedures();
+            LoadItems();
+            Loadunit();
+            LoadWareHouse();
             $('#addItemBtn').click(function (e) {
                 debugger;
                 e.preventDefault();
                 var itemId = $('#ddlitem').val();
                 var itemName = $('#ddlitem :selected').text().trim();
-                var qtyInBaseUnits = $('#itemQuantity').val().trim(); 
-                var txtCalculatedPieces = $('#txtCalculatedPieces').val().trim(); 
+                var qtyInBaseUnits = $('#itemQuantity').val().trim(); // e.g., 50ml
+                var txtCalculatedPieces = $('#txtCalculatedPieces').val().trim(); // e.g., 50ml
                 var unit = $('#itemUnit').val();
                 var cost = $('#itemCost').val().trim();
-                var baseUnitQtyPerPiece = $('#txtbaseunitqty').val().trim(); 
+                var baseUnitQtyPerPiece = $('#txtbaseunitqty').val().trim(); // e.g., 120ml/tube
                 var weightedAvg = $('#txtWeightedAVG').val().trim();
-                var batchNo = $('#ddlbatchno').val();
+               /* var batchNo = $('#ddlbatchno').val();*/
 
                 if (!itemId || !qtyInBaseUnits || !cost || isNaN(qtyInBaseUnits) || isNaN(cost) || parseFloat(qtyInBaseUnits) <= 0) {
                     Swal.fire({ icon: 'warning', title: 'Warning!', text: 'Select item & enter valid qty/cost.', timer: 2000 });
@@ -63,19 +55,19 @@
                 items.push({
                     ItemID: parseInt(itemId),
                     ItemName: itemName,
-                    Qty: quantityInPieces, 
+                    Qty: quantityInPieces, // pieces (for display)
                     Unit: unit,
                     CostPerUnit: parseFloat(cost),
                     Total: parseFloat(total),
-                    Batch_No: batchNo,
-                    BaseUnitQty: parseFloat(qtyInBaseUnits)
+              /*      Batch_No: batchNo,*/
+                    BaseUnitQty: parseFloat(qtyInBaseUnits) // actual ml for deduction
                 });
                 debugger;
                 var row = '<tr>' +
                     '<td><input type="text" name="ItemName" class="form-control" value="' + itemName + '" readonly /></td>' +
                     '<td><input type="text" name="Qty" class="form-control" value="' + quantityInPieces.toFixed(2) + '" readonly /></td>' +
                     '<td><input type="text" name="Unit" class="form-control" value="' + unit + '" readonly /></td>' +
-                    '<td><input type="text" name="BatchNo" class="form-control" value="' + batchNo + '" readonly /></td>' +
+                    //'<td><input type="text" name="BatchNo" class="form-control" value="' + batchNo + '" readonly /></td>' +
                     '<td><input type="text" name="CostPerUnit" class="form-control" value="' + parseFloat(cost).toFixed(2) + '" readonly /></td>' +
                     '<td><input type="text" name="Total" class="form-control" value="' + total + '" readonly /></td>' +
                     '<td><small>Base: ' + parseFloat(qtyInBaseUnits).toFixed(2) + '</small></td>' +
@@ -94,9 +86,9 @@
                 $('#grandTotal').text(grandTotal.toFixed(2));
 
                 // Reset inputs
-               $('#itemQuantity, #itemCost').val('');
+                $('#itemQuantity, #itemCost').val('');
                 $('#txtCalculatedBaseQty, #txtCalculatedPieces, #txtStock, #txtpr_rate, #txtWeightedAVG').val('');
-                $('#itemUnit ,#ddlitem,#ddlbatchno').val('0').trigger('change');  
+                $('#itemUnit,').val('0').trigger('change');
 
             });
 
@@ -124,7 +116,7 @@
                         Unit: $row.find('input[name="Unit"]').val(),
                         CostPerUnit: $row.find('input[name="CostPerUnit"]').val(),
                         Total: $row.find('input[name="Total"]').val(),
-                        Batch_No: $row.find('input[name="BatchNo"]').val() || $('#ddlbatchno').val(), // fallback if not in row
+                        //Batch_No: $row.find('input[name="BatchNo"]').val() || $('#ddlbatchno').val(), // fallback if not in row
                         BaseUnitQty: $row.find('input[name="BaseUnitQty"]').val()
                     };
                     list.push(item);
@@ -154,68 +146,6 @@
                 );
             });
         });
-
-        function LoadBOMForEdit(id) {
-             $.ajax({
-        type: "POST",
-        url: "BOM.aspx/LoadBOM",
-        data: JSON.stringify({ ID: id }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            const data = JSON.parse(response.d);
-            if (data.error) {
-                Swal.fire('Error!', data.error, 'error');
-                return;
-            }
-
-            $('#ddlprocedure').val(data.ProcedureID).trigger('change');
-            $('#recipeCategory').val(data.Category || '');
-
-            window.items = [];
-            $('#itemsTableBody').empty();
-
-            data.Items.forEach(item => {
-                const itemObj = {
-                    ItemID: item.ItemID,
-                    ItemName: item.ItemName,
-                    Qty: parseFloat(item.Qty),
-                    Unit: item.Unit,
-                    CostPerUnit: parseFloat(item.CostPerUnit),
-                    Total: parseFloat(item.Total),
-                    Batch_No: item.Batch_No || '',
-                    BaseUnitQty: parseFloat(item.BaseUnitQty)
-                };
-                window.items.push(itemObj);
-
-                const row = `
-                    <tr>
-                        <td><input type="text" class="form-control" value="${item.ItemName}" readonly /></td>
-                        <td><input type="text" class="form-control" value="${parseFloat(item.Qty).toFixed(2)}" readonly /></td>
-                        <td><input type="text" class="form-control" value="${item.Unit}" readonly /></td>
-                        <td><input type="text" class="form-control" value="${item.Batch_No || ''}" readonly /></td>
-                        <td><input type="text" class="form-control" value="${parseFloat(item.CostPerUnit).toFixed(2)}" readonly /></td>
-                        <td><input type="text" class="form-control" value="${parseFloat(item.Total).toFixed(2)}" readonly /></td>
-                        <td><small>Base: ${parseFloat(item.BaseUnitQty).toFixed(2)}</small></td>
-                        <td>
-                            <input type="hidden" name="ItemID" value="${item.ItemID}" />
-                            <input type="hidden" name="BaseUnitQty" value="${parseFloat(item.BaseUnitQty).toFixed(2)}" />
-                            <a href="javascript:void(0);" onclick="deleteRow(this)" style="cursor:pointer; border-radius:4px; background:#d91212; color:white; padding:4px 8px;">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>`;
-                $('#itemsTableBody').append(row);
-            });
-
-            const grandTotal = window.items.reduce((sum, i) => sum + i.Total, 0);
-            $('#grandTotal').text(grandTotal.toFixed(2));
-        },
-        error: function () {
-            Swal.fire('Error!', 'Failed to load BOM.', 'error');
-        }
-    });
-}
 
         function toasterMessage(isError = false, title, message) {
             toastr.options = {
@@ -341,10 +271,10 @@
         }
 
         // ✅ Renamed for clarity: when batch changes, fetch item details *for that batch*
-        function onBatchSelectionChanged(selectElement) {
-            var batchNo = selectElement.value;
+        function onSelectionChanged(selectElement) {
+            var itemId = selectElement.value;
             var itemId = $('#ddlitem').val();
-            if (!itemId || batchNo === "0") {
+            if (!itemId) {
                 $('#txtpr_rate, #txtStock, #itemCost, #txtWeightedAVG, #txtbaseunitqty').val('');
                 $('#itemUnit').html('<option value="">Select unit</option>');
                 return;
@@ -355,7 +285,7 @@
                 url: "BOM.aspx/GetItemDetails",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                data: JSON.stringify({ itemId: parseInt(itemId), batchNo: batchNo }),
+                data: JSON.stringify({ itemId: parseInt(itemId) }),
                 success: function (response) {
                     var data = JSON.parse(response.d);
                     if (data && !data.error) {
@@ -384,56 +314,56 @@
             });
         }
 
-        function getbatchfrom_grn() {
-            var med_id = $('#ddlitem').val();
-            if (!med_id || isNaN(med_id)) {
-                Swal.fire({ icon: 'warning', title: 'Select Item', text: 'Please select a valid item.' });
-                return;
-            }
+        //function getbatchfrom_grn() {
+        //    var med_id = $('#ddlitem').val();
+        //    if (!med_id || isNaN(med_id)) {
+        //        Swal.fire({ icon: 'warning', title: 'Select Item', text: 'Please select a valid item.' });
+        //        return;
+        //    }
 
-            $.ajax({
-                type: "POST",
-                url: "BOM.aspx/Getbatch_grn",
-                data: JSON.stringify({ med_id: parseInt(med_id) }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var $batchSelect = $('#ddlbatchno');
-                    $batchSelect.empty().append('<option value="0">-- Select Batch --</option>');
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "BOM.aspx/Getbatch_grn",
+        //        data: JSON.stringify({ med_id: parseInt(med_id) }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            //var $batchSelect = $('#ddlbatchno');
+        //            $batchSelect.empty().append('<option value="0">-- Select Batch --</option>');
 
-                    if (response.d) {
-                        var result = JSON.parse(response.d);
-                        var existingBatches = ['0'];
+        //            if (response.d) {
+        //                var result = JSON.parse(response.d);
+        //                var existingBatches = ['0'];
 
-                        // Add GRN batches
-                        if (result.GRN_Details && result.GRN_Details.length > 0) {
-                            $.each(result.GRN_Details, function (i, item) {
-                                if (item.BatchNum && existingBatches.indexOf(item.BatchNum) === -1) {
-                                    $batchSelect.append('<option value="' + item.BatchNum + '">' + item.BatchNum + '</option>');
-                                    existingBatches.push(item.BatchNum);
-                                }
-                            });
-                        }
+        //                // Add GRN batches
+        //                if (result.GRN_Details && result.GRN_Details.length > 0) {
+        //                    $.each(result.GRN_Details, function (i, item) {
+        //                        if (item.BatchNum && existingBatches.indexOf(item.BatchNum) === -1) {
+        //                            $batchSelect.append('<option value="' + item.BatchNum + '">' + item.BatchNum + '</option>');
+        //                            existingBatches.push(item.BatchNum);
+        //                        }
+        //                    });
+        //                }
 
-                        // Add Stock Adjustment batches (avoid dupes)
-                        if (result.Stock_Adjustment_Details && result.Stock_Adjustment_Details.length > 0) {
-                            $.each(result.Stock_Adjustment_Details, function (i, item) {
-                                if (item.BatchNum && existingBatches.indexOf(item.BatchNum) === -1) {
-                                    $batchSelect.append('<option value="' + item.BatchNum + '">' + item.BatchNum + '</option>');
-                                }
-                            });
-                        }
-                    }
-                    if ($batchSelect.children().length === 1) {
-                        $batchSelect.append('<option value="">No batches</option>');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error);
-                    Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load batch numbers.' });
-                }
-            });
-        }
+        //                // Add Stock Adjustment batches (avoid dupes)
+        //                if (result.Stock_Adjustment_Details && result.Stock_Adjustment_Details.length > 0) {
+        //                    $.each(result.Stock_Adjustment_Details, function (i, item) {
+        //                        if (item.BatchNum && existingBatches.indexOf(item.BatchNum) === -1) {
+        //                            $batchSelect.append('<option value="' + item.BatchNum + '">' + item.BatchNum + '</option>');
+        //                        }
+        //                    });
+        //                }
+        //            }
+        //            if ($batchSelect.children().length === 1) {
+        //                $batchSelect.append('<option value="">No batches</option>');
+        //            }
+        //        },
+        //        error: function (xhr, status, error) {
+        //            console.error("AJAX Error:", error);
+        //            Swal.fire({ icon: 'error', title: 'Error!', text: 'Failed to load batch numbers.' });
+        //        }
+        //    });
+        //}
 
         function getPerBaseUnitCost() {
             var baseUnitQtyPerPiece = parseFloat($('#txtbaseunitqty').val()) || 0; // e.g., 120 ml/tube
@@ -461,7 +391,7 @@
     <div class="row">
   
         <input type="hidden" id="txtbaseunitqty" />
-        <input type="hidden" id="hdnBOMID" value="0" />
+
         <div class="col-lg-12">
             <div class="row mb-3">
                 <div class="col-lg-2 col-md-3 col-sm-3">
@@ -490,11 +420,12 @@
             <div class="row mb-3 align-items-end">
                 <div class="col-lg-2 col-md-3 col-sm-3">
                     <label for="ddlitem">Item Name <span class="text-danger">*</span></label>
-                    <select id="ddlitem" class="form-control" onchange="getbatchfrom_grn()"></select>
+                    <select id="ddlitem" class="form-control"  onchange="onSelectionChanged(this)" ></select>
+                    <%--onchange="getbatchfrom_grn()"--%>
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-3">
+                <div class="col-lg-2 col-md-3 col-sm-3" style="display:none;">
                     <label for="ddlbatchno">Batch No <span class="text-danger">*</span></label>
-                    <select id="ddlbatchno" class="form-control" onchange="onBatchSelectionChanged(this)">
+                    <select id="ddlbatchno" class="form-control">
                         <option value="0">-- Select Batch --</option>
                     </select>
                 </div>
@@ -538,7 +469,6 @@
                         <th>Item</th>
                         <th>Qty (Pieces)</th>
                         <th>Unit</th>
-                        <th>Batch</th>
                         <th>Cost/Unit</th>
                         <th>Total</th>
                         <th>Base Qty</th>

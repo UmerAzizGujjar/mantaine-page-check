@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "SkinStudio")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Skinderma")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -897,6 +897,9 @@ namespace PMS
         partial void InsertPatient(Patient instance);
         partial void UpdatePatient(Patient instance);
         partial void DeletePatient(Patient instance);
+        partial void InsertBill_BOM_Consumption(Bill_BOM_Consumption instance);
+        partial void UpdateBill_BOM_Consumption(Bill_BOM_Consumption instance);
+        partial void DeleteBill_BOM_Consumption(Bill_BOM_Consumption instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3271,6 +3274,14 @@ namespace PMS
             }
         }
 
+        public System.Data.Linq.Table<Bill_BOM_Consumption> Bill_BOM_Consumptions
+        {
+            get
+            {
+                return this.GetTable<Bill_BOM_Consumption>();
+            }
+        }
+
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetDataValueName", IsComposable = true)]
         public string GetDataValueName([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ValueSetName", DbType = "VarChar(150)")] string valueSetName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DataValueName", DbType = "VarChar(50)")] string dataValueName)
         {
@@ -4826,16 +4837,16 @@ namespace PMS
             return ((ISingleResult<sp_loadAdvancePaymentHeaderResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetInventoryItemTotalStock_BaseUnit", IsComposable = true)]
-        public System.Nullable<decimal> GetInventoryItemTotalStock_BaseUnit([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> itemcode, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Inventory_Org", DbType = "VarChar(100)")] string inventory_Org, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Batch_no", DbType = "VarChar(100)")] string batch_no)
-        {
-            return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemcode, inventory_Org, batch_no).ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetAvgAmount", IsComposable = true)]
         public System.Nullable<decimal> GetAvgAmount([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Item_ID", DbType = "Int")] System.Nullable<int> item_ID)
         {
             return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), item_ID).ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetInventoryItemTotalStock_BaseUnit", IsComposable = true)]
+        public System.Nullable<decimal> GetInventoryItemTotalStock_BaseUnit([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> itemcode, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Inventory_Org", DbType = "VarChar(100)")] string inventory_Org)
+        {
+            return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemcode, inventory_Org).ReturnValue));
         }
     }
 
@@ -156551,6 +156562,380 @@ namespace PMS
                     this._AppointmentType = value;
                     this.SendPropertyChanged("AppointmentType");
                     this.OnAppointmentTypeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Bill_BOM_Consumption")]
+    public partial class Bill_BOM_Consumption : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ID;
+
+        private int _Bill_ID;
+
+        private System.Nullable<int> _BOMDetailID;
+
+        private int _ItemID;
+
+        private string _ItemCode;
+
+        private string _Description;
+
+        private decimal _Qty;
+
+        private string _Unit;
+
+        private System.Nullable<decimal> _RecipeCostPerUnit;
+
+        private decimal _AvgCostPerUnit;
+
+        private decimal _TotalCost;
+
+        private System.Nullable<decimal> _BaseUnitQty;
+
+        private System.DateTime _CreatedOn;
+
+        private System.Nullable<System.Guid> _CreatedBy;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIDChanging(int value);
+        partial void OnIDChanged();
+        partial void OnBill_IDChanging(int value);
+        partial void OnBill_IDChanged();
+        partial void OnBOMDetailIDChanging(System.Nullable<int> value);
+        partial void OnBOMDetailIDChanged();
+        partial void OnItemIDChanging(int value);
+        partial void OnItemIDChanged();
+        partial void OnItemCodeChanging(string value);
+        partial void OnItemCodeChanged();
+        partial void OnDescriptionChanging(string value);
+        partial void OnDescriptionChanged();
+        partial void OnQtyChanging(decimal value);
+        partial void OnQtyChanged();
+        partial void OnUnitChanging(string value);
+        partial void OnUnitChanged();
+        partial void OnRecipeCostPerUnitChanging(System.Nullable<decimal> value);
+        partial void OnRecipeCostPerUnitChanged();
+        partial void OnAvgCostPerUnitChanging(decimal value);
+        partial void OnAvgCostPerUnitChanged();
+        partial void OnTotalCostChanging(decimal value);
+        partial void OnTotalCostChanged();
+        partial void OnBaseUnitQtyChanging(System.Nullable<decimal> value);
+        partial void OnBaseUnitQtyChanged();
+        partial void OnCreatedOnChanging(System.DateTime value);
+        partial void OnCreatedOnChanged();
+        partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreatedByChanged();
+        #endregion
+
+        public Bill_BOM_Consumption()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this.OnIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ID = value;
+                    this.SendPropertyChanged("ID");
+                    this.OnIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_ID", DbType = "Int NOT NULL")]
+        public int Bill_ID
+        {
+            get
+            {
+                return this._Bill_ID;
+            }
+            set
+            {
+                if ((this._Bill_ID != value))
+                {
+                    this.OnBill_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Bill_ID = value;
+                    this.SendPropertyChanged("Bill_ID");
+                    this.OnBill_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BOMDetailID", DbType = "Int")]
+        public System.Nullable<int> BOMDetailID
+        {
+            get
+            {
+                return this._BOMDetailID;
+            }
+            set
+            {
+                if ((this._BOMDetailID != value))
+                {
+                    this.OnBOMDetailIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._BOMDetailID = value;
+                    this.SendPropertyChanged("BOMDetailID");
+                    this.OnBOMDetailIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ItemID", DbType = "Int NOT NULL")]
+        public int ItemID
+        {
+            get
+            {
+                return this._ItemID;
+            }
+            set
+            {
+                if ((this._ItemID != value))
+                {
+                    this.OnItemIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ItemID = value;
+                    this.SendPropertyChanged("ItemID");
+                    this.OnItemIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ItemCode", DbType = "NVarChar(50)")]
+        public string ItemCode
+        {
+            get
+            {
+                return this._ItemCode;
+            }
+            set
+            {
+                if ((this._ItemCode != value))
+                {
+                    this.OnItemCodeChanging(value);
+                    this.SendPropertyChanging();
+                    this._ItemCode = value;
+                    this.SendPropertyChanged("ItemCode");
+                    this.OnItemCodeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "NVarChar(255)")]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this.OnDescriptionChanging(value);
+                    this.SendPropertyChanging();
+                    this._Description = value;
+                    this.SendPropertyChanged("Description");
+                    this.OnDescriptionChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(10,4) NOT NULL")]
+        public decimal Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this.OnQtyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Qty = value;
+                    this.SendPropertyChanged("Qty");
+                    this.OnQtyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "NVarChar(20)")]
+        public string Unit
+        {
+            get
+            {
+                return this._Unit;
+            }
+            set
+            {
+                if ((this._Unit != value))
+                {
+                    this.OnUnitChanging(value);
+                    this.SendPropertyChanging();
+                    this._Unit = value;
+                    this.SendPropertyChanged("Unit");
+                    this.OnUnitChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RecipeCostPerUnit", DbType = "Decimal(18,4)")]
+        public System.Nullable<decimal> RecipeCostPerUnit
+        {
+            get
+            {
+                return this._RecipeCostPerUnit;
+            }
+            set
+            {
+                if ((this._RecipeCostPerUnit != value))
+                {
+                    this.OnRecipeCostPerUnitChanging(value);
+                    this.SendPropertyChanging();
+                    this._RecipeCostPerUnit = value;
+                    this.SendPropertyChanged("RecipeCostPerUnit");
+                    this.OnRecipeCostPerUnitChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AvgCostPerUnit", DbType = "Decimal(18,4) NOT NULL")]
+        public decimal AvgCostPerUnit
+        {
+            get
+            {
+                return this._AvgCostPerUnit;
+            }
+            set
+            {
+                if ((this._AvgCostPerUnit != value))
+                {
+                    this.OnAvgCostPerUnitChanging(value);
+                    this.SendPropertyChanging();
+                    this._AvgCostPerUnit = value;
+                    this.SendPropertyChanged("AvgCostPerUnit");
+                    this.OnAvgCostPerUnitChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCost", DbType = "Decimal(18,4) NOT NULL")]
+        public decimal TotalCost
+        {
+            get
+            {
+                return this._TotalCost;
+            }
+            set
+            {
+                if ((this._TotalCost != value))
+                {
+                    this.OnTotalCostChanging(value);
+                    this.SendPropertyChanging();
+                    this._TotalCost = value;
+                    this.SendPropertyChanged("TotalCost");
+                    this.OnTotalCostChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BaseUnitQty", DbType = "Decimal(10,4)")]
+        public System.Nullable<decimal> BaseUnitQty
+        {
+            get
+            {
+                return this._BaseUnitQty;
+            }
+            set
+            {
+                if ((this._BaseUnitQty != value))
+                {
+                    this.OnBaseUnitQtyChanging(value);
+                    this.SendPropertyChanging();
+                    this._BaseUnitQty = value;
+                    this.SendPropertyChanged("BaseUnitQty");
+                    this.OnBaseUnitQtyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedOn", DbType = "DateTime2 NOT NULL")]
+        public System.DateTime CreatedOn
+        {
+            get
+            {
+                return this._CreatedOn;
+            }
+            set
+            {
+                if ((this._CreatedOn != value))
+                {
+                    this.OnCreatedOnChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedOn = value;
+                    this.SendPropertyChanged("CreatedOn");
+                    this.OnCreatedOnChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> CreatedBy
+        {
+            get
+            {
+                return this._CreatedBy;
+            }
+            set
+            {
+                if ((this._CreatedBy != value))
+                {
+                    this.OnCreatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedBy = value;
+                    this.SendPropertyChanged("CreatedBy");
+                    this.OnCreatedByChanged();
                 }
             }
         }

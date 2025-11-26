@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SkinStudio" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Skinderma" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7021,6 +7021,24 @@
       <Column Name="AppointmentType" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Bill_BOM_Consumption" Member="Bill_BOM_Consumptions">
+    <Type Name="Bill_BOM_Consumption">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bill_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BOMDetailID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ItemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ItemCode" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(10,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Unit" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="RecipeCostPerUnit" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="AvgCostPerUnit" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="TotalCost" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="BaseUnitQty" Type="System.Decimal" DbType="Decimal(10,4)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -10793,14 +10811,13 @@
       <Column Name="WithHoldTax_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetAvgAmount" Method="GetAvgAmount" IsComposable="true">
+    <Parameter Name="Item_ID" Parameter="item_ID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Decimal" />
+  </Function>
   <Function Name="dbo.GetInventoryItemTotalStock_BaseUnit" Method="GetInventoryItemTotalStock_BaseUnit" IsComposable="true">
     <Parameter Name="itemcode" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="Batch_no" Parameter="batch_no" Type="System.String" DbType="VarChar(100)" />
-    <Return Type="System.Decimal" />
-  </Function>
-  <Function Name="dbo.GetAvgAmount" Method="GetAvgAmount" IsComposable="true">
-    <Parameter Name="Item_ID" Parameter="item_ID" Type="System.Int32" DbType="Int" />
     <Return Type="System.Decimal" />
   </Function>
 </Database>
