@@ -3285,8 +3285,14 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
+                        debugger;
                         var pat_id = response.d;
-                        ApprovedOPDShare(pat_id);
+                        if (
+                            data.Doctor_ID &&
+                            (data.pulse_Min !== "" || data.Respiration_Min !== "")
+                        ) {
+                            ApprovedOPDShare(pat_id);
+                        }
                         window.location = "NewOutPatient.aspx?ID=" + response.d;
                         $('#btnSave').val("Update");
                     }

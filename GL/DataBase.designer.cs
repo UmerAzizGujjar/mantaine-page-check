@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Skinderma")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Live")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -4847,6 +4847,13 @@ namespace PMS
         public System.Nullable<decimal> GetInventoryItemTotalStock_BaseUnit([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> itemcode, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Inventory_Org", DbType = "VarChar(100)")] string inventory_Org)
         {
             return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemcode, inventory_Org).ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPDShare")]
+        public ISingleResult<SpApprove_OPDShareResult> SpApprove_OPDShare([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, user_id);
+            return ((ISingleResult<SpApprove_OPDShareResult>)(result.ReturnValue));
         }
     }
 
@@ -204892,6 +204899,32 @@ namespace PMS
                 if ((this._WithHoldTax_Check != value))
                 {
                     this._WithHoldTax_Check = value;
+                }
+            }
+        }
+    }
+
+    public partial class SpApprove_OPDShareResult
+    {
+
+        private string _Message;
+
+        public SpApprove_OPDShareResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
                 }
             }
         }

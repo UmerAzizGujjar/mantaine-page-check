@@ -69,7 +69,7 @@ namespace PMS.Modules.PatientManagement
         {
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.SpApprove_OPD(Convert.ToInt32(pat_id),  user_id);
+            var Details = db.SpApprove_OPDShare(Convert.ToInt32(pat_id), user_id);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         [WebMethod]
