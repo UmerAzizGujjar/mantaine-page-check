@@ -24,22 +24,34 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var items = [];  // ✅ Global scope for deleteRow compatibility
+            var items = []; 
+                const urlParams = new URLSearchParams(window.location.search);
+                const bomId = urlParams.get("ID");
 
-            LoadProcedures();
-            LoadItems();
-            Loadunit();
-            LoadWareHouse();
+                if (bomId && !isNaN(bomId) && parseInt(bomId) > 0) {
+                    $('#hdnBOMID').val(bomId);
+                    LoadBOMForEdit(parseInt(bomId));
+                    $('#btnSave').val('Update');
+                    LoadItems();
+                    Loadunit();
+                } else {
+                    $('#hdnBOMID').val('0');
+                    LoadProcedures();
+                    LoadItems();
+                    Loadunit();
+                    LoadWareHouse();
+                }
+           
             $('#addItemBtn').click(function (e) {
                 debugger;
                 e.preventDefault();
                 var itemId = $('#ddlitem').val();
                 var itemName = $('#ddlitem :selected').text().trim();
-                var qtyInBaseUnits = $('#itemQuantity').val().trim(); // e.g., 50ml
-                var txtCalculatedPieces = $('#txtCalculatedPieces').val().trim(); // e.g., 50ml
+                var qtyInBaseUnits = $('#itemQuantity').val().trim();
+                var txtCalculatedPieces = $('#txtCalculatedPieces').val().trim();
                 var unit = $('#itemUnit').val();
                 var cost = $('#itemCost').val().trim();
-                var baseUnitQtyPerPiece = $('#txtbaseunitqty').val().trim(); // e.g., 120ml/tube
+                var baseUnitQtyPerPiece = $('#txtbaseunitqty').val().trim(); 
                 var weightedAvg = $('#txtWeightedAVG').val().trim();
                /* var batchNo = $('#ddlbatchno').val();*/
 
@@ -48,19 +60,22 @@
                     return;
                 }
 
+                    
                 var total = (parseFloat(qtyInBaseUnits) * parseFloat(txtCalculatedPieces)).toFixed(2);
                 var baseUnitQtyPerPieceValue = parseFloat(baseUnitQtyPerPiece) || 0;
                 var quantityInPieces = (baseUnitQtyPerPieceValue > 0) ? (parseFloat(qtyInBaseUnits) / baseUnitQtyPerPieceValue) : 0;
 
+
+
                 items.push({
                     ItemID: parseInt(itemId),
                     ItemName: itemName,
-                    Qty: quantityInPieces, // pieces (for display)
+                    Qty: quantityInPieces, 
                     Unit: unit,
                     CostPerUnit: parseFloat(cost),
                     Total: parseFloat(total),
               /*      Batch_No: batchNo,*/
-                    BaseUnitQty: parseFloat(qtyInBaseUnits) // actual ml for deduction
+                    BaseUnitQty: parseFloat(qtyInBaseUnits) 
                 });
                 debugger;
                 var row = '<tr>' +
@@ -85,7 +100,6 @@
                 var grandTotal = items.reduce((sum, i) => sum + i.Total, 0);
                 $('#grandTotal').text(grandTotal.toFixed(2));
 
-                // Reset inputs
                 $('#itemQuantity, #itemCost').val('');
                 $('#txtCalculatedBaseQty, #txtCalculatedPieces, #txtStock, #txtpr_rate, #txtWeightedAVG').val('');
                 $('#itemUnit,').val('0').trigger('change');
@@ -94,8 +108,10 @@
 
             $('#btnSave').click(function (e) {
                 e.preventDefault();
+                var bomId = parseInt($('#hdnBOMID').val()) || 0;
                 var procedureId = $('#ddlprocedure').val();
                 var category = $('#recipeCategory').val().trim();
+                var warehouse = $('#ddlWarehouse').val();
 
                 if (!procedureId) {
                     toasterMessage(true, 'Error!', 'Select Procedure.');
@@ -110,21 +126,22 @@
                 $('#itemsTableBody tr').each(function () {
                     var $row = $(this);
                     var item = {
-                        ItemID: $row.find('input[name="ItemID"]').val(),
+                        ItemID: parseInt($row.find('input[name="ItemID"]').val()) || 0,
                         ItemName: $row.find('input[name="ItemName"]').val(),
-                        Qty: $row.find('input[name="Qty"]').val(),
+                        Qty: parseFloat($row.find('input[name="Qty"]').val()) || 0,
                         Unit: $row.find('input[name="Unit"]').val(),
-                        CostPerUnit: $row.find('input[name="CostPerUnit"]').val(),
-                        Total: $row.find('input[name="Total"]').val(),
-                        //Batch_No: $row.find('input[name="BatchNo"]').val() || $('#ddlbatchno').val(), // fallback if not in row
-                        BaseUnitQty: $row.find('input[name="BaseUnitQty"]').val()
+                        CostPerUnit: parseFloat($row.find('input[name="CostPerUnit"]').val()) || 0,
+                        Total: parseFloat($row.find('input[name="Total"]').val()) || 0,
+                        BaseUnitQty: parseFloat($row.find('input[name="BaseUnitQty"]').val()) || 0
                     };
                     list.push(item);
                 });
 
                 PageMethods.SaveBOM(
+                    bomId, 
                     procedureId,
                     category,
+                     warehouse,
                     list,
                     function (response) {
                         if (response.startsWith("DUPLICATE:")) {
@@ -174,7 +191,6 @@
             var $row = $(elem).closest('tr');
             var itemId = $row.find('input[name="ItemID"]').val();
 
-            // Remove from items array
             items = items.filter(item => item.ItemID != itemId);
 
             $row.remove();
@@ -183,6 +199,98 @@
             $('#grandTotal').text(grandTotal.toFixed(2));
         }
 
+
+                     debugger;
+                     function LoadBOMForEdit(id) {
+                         debugger;
+                        LoadProcedures();
+                        LoadWareHouse();
+                        LoadItems();      
+                        Loadunit();      
+
+                        $.ajax({
+                            type: "POST",
+                            url: "BOM.aspx/LoadBOM",
+                            data: JSON.stringify({ ID: id }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                const data = JSON.parse(response.d);
+                                if (data.error) {
+                                    Swal.fire('Error!', data.error, 'error');
+                                    return;
+                                }
+
+                                const checkInterval = setInterval(() => {
+                                    const hasProcedures = $('#ddlprocedure option').length > 1;
+                                    const hasWarehouses = $('#ddlWarehouse option').length > 1;
+
+                                    if (hasProcedures && hasWarehouses) {
+                                        clearInterval(checkInterval);
+
+                                        $('#ddlprocedure').val(data.ProcedureID).trigger('change');
+                                        $('#ddlWarehouse').val(data.warehouse).trigger('change');
+                                        $('#recipeCategory').val(data.Category || '');
+
+                                        items = [];
+                                        $('#itemsTableBody').empty();
+
+                                        data.Items.forEach(item => {
+                                            const itemObj = {
+                                                ItemID: item.ItemID,
+                                                ItemName: item.ItemName,
+                                                Qty: parseFloat(item.Qty),
+                                                Unit: item.Unit,
+                                                CostPerUnit: parseFloat(item.CostPerUnit),
+                                                Total: parseFloat(item.Total),
+                                                BaseUnitQty: parseFloat(item.BaseUnitQty)
+                                            };
+                                            items.push(itemObj);
+
+                                                const row = `
+                                                <tr>
+                                                    <td><input type="text" name="ItemName" class="form-control" value="${item.ItemName}" readonly /></td>
+                                                    <td><input type="text" name="Qty" class="form-control" value="${parseFloat(item.Qty).toFixed(2)}" readonly /></td>
+                                                    <td><input type="text" name="Unit" class="form-control" value="${item.Unit}" readonly /></td>
+                                                    <td><input type="text" name="CostPerUnit" class="form-control" value="${parseFloat(item.CostPerUnit).toFixed(2)}" readonly /></td>
+                                                    <td><input type="text" name="Total" class="form-control" value="${parseFloat(item.Total).toFixed(2)}" readonly /></td>
+                                                    <td><small>Base: ${parseFloat(item.BaseUnitQty).toFixed(2)}</small></td>
+                                                    <td>
+                                                        <input type="hidden" name="ItemID" value="${item.ItemID}" />
+                                                        <input type="hidden" name="BaseUnitQty" value="${parseFloat(item.BaseUnitQty).toFixed(2)}" />
+                                                        <a href="javascript:void(0);" onclick="deleteRow(this)" style="cursor:pointer; border-radius:4px; background:#d91212; color:white; padding:4px 8px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>`;
+                                            $('#itemsTableBody').append(row);
+                                        });
+
+                                        if (data.Items.length === 1) {
+                                            const firstItem = data.Items[0];
+                                            const itemSelectInterval = setInterval(() => {
+                                                if ($('#ddlitem option').length > 1) {
+                                                    clearInterval(itemSelectInterval);
+                                                    $('#ddlitem').val(firstItem.ItemID).trigger('change');
+
+                                                    setTimeout(() => {
+                                                        $('#itemQuantity').val(firstItem.BaseUnitQty);
+                                                        getPerBaseUnitCost();
+                                                    }, 300);
+                                                }
+                                            }, 50);
+                                        }
+
+                                        const grandTotal = items.reduce((sum, i) => sum + i.Total, 0);
+                                        $('#grandTotal').text(grandTotal.toFixed(2));
+                                    }
+                                }, 100);
+                            },
+                            error: function () {
+                                Swal.fire('Error!', 'Failed to load BOM.', 'error');
+                            }
+                        });
+                    }
         function Loadunit() {
             $.ajax({
                 type: "POST",
@@ -270,7 +378,6 @@
             });
         }
 
-        // ✅ Renamed for clarity: when batch changes, fetch item details *for that batch*
         function onSelectionChanged(selectElement) {
             var itemId = selectElement.value;
             var itemId = $('#ddlitem').val();
@@ -295,12 +402,11 @@
                         $('#txtWeightedAVG').val((data.weighted_avg || 0).toFixed(2));
                         $('#txtbaseunitqty').val(data.Base_Unit_Qty || '');
 
-                        // Update unit dropdown with base unit (disable since it's fixed per item)
                         var $unitSelect = $('#itemUnit');
                         $unitSelect.empty().append(
                             $('<option>', { value: data.baseUnit, text: data.baseUnitName })
                         );
-                        $unitSelect.prop('disabled', true); // still disabled — it's informational
+                        $unitSelect.prop('disabled', true); 
                     } else {
                         Swal.fire({ icon: 'warning', title: 'Not Found', text: data.error || 'Item details unavailable.' });
                         $('#txtpr_rate, #txtStock, #itemCost, #txtWeightedAVG, #txtbaseunitqty').val('');
@@ -366,9 +472,9 @@
         //}
 
         function getPerBaseUnitCost() {
-            var baseUnitQtyPerPiece = parseFloat($('#txtbaseunitqty').val()) || 0; // e.g., 120 ml/tube
-            var weightedAvg = parseFloat($('#txtWeightedAVG').val()) || 0;        // e.g., Rs. 2400/tube
-            var qtyInBaseUnits = parseFloat($('#itemQuantity').val()) || 0;       // e.g., 50 ml
+            var baseUnitQtyPerPiece = parseFloat($('#txtbaseunitqty').val()) || 0; 
+            var weightedAvg = parseFloat($('#txtWeightedAVG').val()) || 0;       
+            var qtyInBaseUnits = parseFloat($('#itemQuantity').val()) || 0;   
 
             if (baseUnitQtyPerPiece <= 0 || qtyInBaseUnits <= 0) {
                 $('#itemCost').val('0.00');
@@ -377,7 +483,6 @@
                 return;
             }
 
-            // Cost per ml = weighted_avg / baseUnitQtyPerPiece
             var costPerBaseUnit = (weightedAvg / baseUnitQtyPerPiece) * qtyInBaseUnits;
 
             $('#itemCost').val(costPerBaseUnit.toFixed(2));
@@ -389,9 +494,9 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-  
-        <input type="hidden" id="txtbaseunitqty" />
 
+        <input type="hidden" id="txtbaseunitqty" />
+        <input type="hidden" id="hdnBOMID" value="0" />
         <div class="col-lg-12">
             <div class="row mb-3">
                 <div class="col-lg-2 col-md-3 col-sm-3">
@@ -402,28 +507,28 @@
                     <label for="recipeCategory">Category</label>
                     <input type="text" id="recipeCategory" class="form-control" placeholder="e.g., Skincare" />
                 </div>
-                 <div class="col-lg-2 col-md-3 col-sm-3">
-                     <label for="ddlWarehouse">WareHouse <span class="text-danger">*</span></label>
-                     <select id="ddlWarehouse" class="form-control"></select>
-                 </div>
+                <div class="col-lg-2 col-md-3 col-sm-3">
+                    <label for="ddlWarehouse">WareHouse <span class="text-danger">*</span></label>
+                    <select id="ddlWarehouse" class="form-control"></select>
+                </div>
                 <div class="col-lg-2 col-md-3 col-sm-3">
                     <label for="txtWeightedAVG">Weighted Avg /Unit</label>
                     <input type="text" id="txtWeightedAVG" class="form-control" disabled="disabled" />
                 </div>
-                 <div class="col-lg-1 col-md-1 col-sm-1">
-                     <label>Last P. Rate</label>
-                     <input type="text" id="txtpr_rate" class="form-control" disabled="disabled" />
-                 </div>
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label>Last P. Rate</label>
+                    <input type="text" id="txtpr_rate" class="form-control" disabled="disabled" />
+                </div>
             </div>
             <hr />
 
             <div class="row mb-3 align-items-end">
                 <div class="col-lg-2 col-md-3 col-sm-3">
                     <label for="ddlitem">Item Name <span class="text-danger">*</span></label>
-                    <select id="ddlitem" class="form-control"  onchange="onSelectionChanged(this)" ></select>
+                    <select id="ddlitem" class="form-control" onchange="onSelectionChanged(this)"></select>
                     <%--onchange="getbatchfrom_grn()"--%>
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-3" style="display:none;">
+                <div class="col-lg-2 col-md-3 col-sm-3" style="display: none;">
                     <label for="ddlbatchno">Batch No <span class="text-danger">*</span></label>
                     <select id="ddlbatchno" class="form-control">
                         <option value="0">-- Select Batch --</option>
@@ -453,10 +558,10 @@
                 </div>
                 <div class="col-md-1">
                     <input type="button" id="addItemBtn" value="Add" class="btn btn-primry" style="margin-top: 20px;" />
-                       
-                  
+
+
                 </div>
-               
+
                 <div class="col-md-2">
                     <label>Current Stock</label>
                     <input type="text" id="txtStock" class="form-control" readonly />
@@ -493,10 +598,10 @@
 
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2">
-                <input type="button" id="btnNew" value="New" class="btn btn-primry" />
+                <input type="button" id="btnNew" value="New" class="btn btn-primry" onclick="window.location='BOM.aspx'" />
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2">
-                <input type="button" id="btnView" value="View" class="btn btn-primry" />
+                <input type="button" id="btnView" value="View" class="btn btn-primry" onclick="window.location='BOM_View.aspx'" />
             </div>
         </div>
     </div>
