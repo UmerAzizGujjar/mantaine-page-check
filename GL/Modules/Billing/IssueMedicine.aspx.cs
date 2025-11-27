@@ -115,39 +115,69 @@ namespace PMS
             return data;
         }
 
+        //[WebMethod]
+        //public static string Getbatch_grn(int med_id)
+        //{
+        //    string data = string.Empty;
+
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var grnResult = (from dv in db.INV_Items
+        //                         join ds in db.GRN_Details
+        //                         on dv.Item_ID equals ds.Item_Id
+        //                         where ds.Item_Id == med_id
+        //                         select new
+        //                         {
+        //                             BatchNum = ds.BatchNum
+        //                         }).ToList();
+
+        //        var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
+        //                                     where inv.Item_Id == Convert.ToString(med_id)
+        //                                      && inv.Status == "Approved"
+        //                                     orderby inv.Creation_Time descending
+        //                                     select new
+        //                                     {
+        //                                         BatchNum = inv.Batch_No
+        //                                     }).ToList();
+        //        var combinedResult = new
+        //        {
+        //            GRN_Details = grnResult,
+        //            Stock_Adjustment_Details = stockAdjustmentResult
+        //        };
+        //        data = new JavaScriptSerializer().Serialize(combinedResult);
+        //    }
+        //    return data;
+        //}
         [WebMethod]
         public static string Getbatch_grn(int med_id)
         {
-            string data = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var grnResult = (from dv in db.INV_Items
-                                 join ds in db.GRN_Details
-                                 on dv.Item_ID equals ds.Item_Id
-                                 where ds.Item_Id == med_id
-                                 select new
-                                 {
-                                     BatchNum = ds.BatchNum
-                                 }).ToList();
+                var grnBatches = (from ds in db.GRN_Details
+                                  where ds.Item_Id == med_id
+                                  select ds.BatchNum).ToList();
 
-                var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
-                                             where inv.Item_Id == Convert.ToString(med_id)
-                                              && inv.Status == "Approved"
-                                             orderby inv.Creation_Time descending
-                                             select new
-                                             {
-                                                 BatchNum = inv.Batch_No
-                                             }).ToList();
-                var combinedResult = new
+                var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
+                                       where inv.Item_Id == med_id.ToString()
+                                          && inv.Status == "Approved"
+                                       select inv.Batch_No).ToList();
+
+                var uniqueBatches = grnBatches
+                                    .Concat(stockAdjBatches)
+                                    .Where(x => !string.IsNullOrEmpty(x))
+                                    .Distinct()
+                                    .OrderBy(x => x)
+                                    .ToList();
+
+                var result = new
                 {
-                    GRN_Details = grnResult,
-                    Stock_Adjustment_Details = stockAdjustmentResult
+                    BatchNos = uniqueBatches
                 };
-                data = new JavaScriptSerializer().Serialize(combinedResult);
+
+                return new JavaScriptSerializer().Serialize(result);
             }
-            return data;
         }
+
 
         [WebMethod]
         public static string GetBatchNumbers(int itemId)
