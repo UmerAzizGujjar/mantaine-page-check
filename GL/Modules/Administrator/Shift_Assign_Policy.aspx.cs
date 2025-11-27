@@ -98,64 +98,86 @@ namespace PMS.Modules.Administrator
             try
             {
                 DataBaseDataContext db = new DataBaseDataContext();
-
-                foreach (var item in policies)
                 {
-                    if (item.Policy_Detail_ID > 0)
+                    if (policies.Count > 0 && policies.All(p => p.Policy_ID == policies[0].Policy_ID) && policies[0].Policy_ID.HasValue)
                     {
-                        var existingPolicy = db.Policy_Details.FirstOrDefault(p => p.Policy_Detail_ID == item.Policy_Detail_ID);
+                        var policyId = policies[0].Policy_ID.Value;
+                        var incomingIds = policies.Where(p => p.Policy_Detail_ID.HasValue && p.Policy_Detail_ID > 0)
+                                                  .Select(p => p.Policy_Detail_ID.Value)
+                                                  .ToList();
 
-                        if (existingPolicy != null)
+                        var toDelete = db.Policy_Details
+                                         .Where(pd => pd.Policy_ID == policyId)
+                                         .ToList();
+
+                        foreach (var detail in toDelete)
                         {
-                            existingPolicy.Policy_ID = item.Policy_ID;
-                            existingPolicy.Policy_Name = item.Policy_Name;
-                            existingPolicy.Fees = item.Fees;
-                            existingPolicy.Discount_Percentage = item.Discount_Percentage;
-                            existingPolicy.Discount_Amount = item.Discount_Amount;
-                            existingPolicy.Hospital_Share = item.Hospital_Share;
-                            existingPolicy.Doctor_Share = item.Doctor_Share;
-                            existingPolicy.Expiry_Date = item.Expiry_Date;
-                            existingPolicy.IsTime = item.IsTime;
-                            existingPolicy.Day_Check = item.IsDay;
-                            existingPolicy.Start_Time = string.IsNullOrEmpty(item.Start_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.Start_Time);
-                            existingPolicy.End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time);
-                            existingPolicy.Next_Day = item.Next_Day;
-                            existingPolicy.St_Day = item.St_Day;
-                            existingPolicy.En_Day = item.En_Day;
-                            existingPolicy.Updated_By = AppConfig.UserID;
-                            existingPolicy.Updated_At = DateTime.Now;
+                            if (!incomingIds.Contains(detail.Policy_Detail_ID))
+                            {
+                                db.Policy_Details.DeleteOnSubmit(detail);
+                            }
                         }
                     }
-                    else
+
+
+                    foreach (var item in policies)
                     {
-                        Policy_Detail newPolicy = new Policy_Detail
+                        if (item.Policy_Detail_ID > 0)
                         {
-                            Policy_ID = item.Policy_ID,
-                            Policy_Name = item.Policy_Name,
-                            Fees = item.Fees,
-                            Discount_Percentage = item.Discount_Percentage,
-                            Discount_Amount = item.Discount_Amount,
-                            Hospital_Share = item.Hospital_Share,
-                            Doctor_Share = item.Doctor_Share,
-                            Expiry_Date = item.Expiry_Date,
-                            IsTime = item.IsTime,
-                            Day_Check = item.IsDay,
-                            Start_Time = string.IsNullOrEmpty(item.Start_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.Start_Time),
-                            End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time),
-                            Next_Day = item.Next_Day,
-                            Is_Cancel = false,
-                            St_Day = item.St_Day,
-                            En_Day = item.En_Day,
-                            Created_By = AppConfig.UserID,
-                            Created_At = DateTime.Now
-                        };
+                            var existingPolicy = db.Policy_Details.FirstOrDefault(p => p.Policy_Detail_ID == item.Policy_Detail_ID);
 
-                        db.Policy_Details.InsertOnSubmit(newPolicy);
+                            if (existingPolicy != null)
+                            {
+                                existingPolicy.Policy_ID = item.Policy_ID;
+                                existingPolicy.Policy_Name = item.Policy_Name;
+                                existingPolicy.Fees = item.Fees;
+                                existingPolicy.Discount_Percentage = item.Discount_Percentage;
+                                existingPolicy.Discount_Amount = item.Discount_Amount;
+                                existingPolicy.Hospital_Share = item.Hospital_Share;
+                                existingPolicy.Doctor_Share = item.Doctor_Share;
+                                existingPolicy.Expiry_Date = item.Expiry_Date;
+                                existingPolicy.IsTime = item.IsTime;
+                                existingPolicy.Day_Check = item.IsDay;
+                                existingPolicy.Start_Time = string.IsNullOrEmpty(item.Start_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.Start_Time);
+                                existingPolicy.End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time);
+                                existingPolicy.Next_Day = item.Next_Day;
+                                existingPolicy.St_Day = item.St_Day;
+                                existingPolicy.En_Day = item.En_Day;
+                                existingPolicy.Updated_By = AppConfig.UserID;
+                                existingPolicy.Updated_At = DateTime.Now;
+                            }
+                        }
+                        else
+                        {
+                            Policy_Detail newPolicy = new Policy_Detail
+                            {
+                                Policy_ID = item.Policy_ID,
+                                Policy_Name = item.Policy_Name,
+                                Fees = item.Fees,
+                                Discount_Percentage = item.Discount_Percentage,
+                                Discount_Amount = item.Discount_Amount,
+                                Hospital_Share = item.Hospital_Share,
+                                Doctor_Share = item.Doctor_Share,
+                                Expiry_Date = item.Expiry_Date,
+                                IsTime = item.IsTime,
+                                Day_Check = item.IsDay,
+                                Start_Time = string.IsNullOrEmpty(item.Start_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.Start_Time),
+                                End_Time = string.IsNullOrEmpty(item.End_Time) ? (TimeSpan?)null : TimeSpan.Parse(item.End_Time),
+                                Next_Day = item.Next_Day,
+                                Is_Cancel = false,
+                                St_Day = item.St_Day,
+                                En_Day = item.En_Day,
+                                Created_By = AppConfig.UserID,
+                                Created_At = DateTime.Now
+                            };
+
+                            db.Policy_Details.InsertOnSubmit(newPolicy);
+                        }
                     }
-                }
 
-                db.SubmitChanges();
-                return "All policies saved successfully!";
+                    db.SubmitChanges();
+                    return "All policies saved successfully!";
+                }
             }
             catch (Exception ex)
             {
