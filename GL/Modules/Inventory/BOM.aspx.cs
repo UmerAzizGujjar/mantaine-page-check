@@ -57,7 +57,7 @@ namespace PMS.Inventory
             using (var db = new DataBaseDataContext())
             {
                 var list = (from p in db.INV_Items
-                            where p.Is_Active == true
+                            where p.Active == true
                             && p.Procedure_Required == true
                             select new
                             {
@@ -74,7 +74,7 @@ namespace PMS.Inventory
             using (var db = new DataBaseDataContext())
             {
                 var list = (from i in db.INV_Items
-                            where i.Is_Active == true
+                            where i.Active == true
                             && i.InventoryOrg == "002"
                             select new
                             {
