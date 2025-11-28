@@ -75,7 +75,7 @@ namespace PMS.Inventory
             {
                 var list = (from i in db.INV_Items
                             where i.Is_Active == true
-                            && i.InventoryOrg == "001"
+                            && i.InventoryOrg == "002"
                             select new
                             {
                                 i.Item_ID,
