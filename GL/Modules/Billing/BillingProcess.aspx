@@ -1266,30 +1266,6 @@
                         var Net_Amount = $('#txtNetPayable').val();
                         var Received_Amount = $('#txtAmountReceived').val();
                         var Balance_Amount = $('#txtBalances').val();
-                        //if (Balance_Amount < 0) {
-                        //    alert("please Enter Valid Discount Amount ");
-                        //    $('#btnSave').removeAttr("disabled");
-                        //    return;
-                        //}
-
-                        //if (parseInt(Received_Amount) > 0 && parseInt(Balance_Amount) != 0) {
-
-                        //    Swal.fire({
-                        //        icon: 'error',
-                        //        title: 'Error!',
-                        //        text: 'Please enter Complete received Amount or Not !',
-                        //        showConfirmButton: false,
-                        //        timer: 2000,
-                        //        customClass: {
-                        //            popup: 'swal-big-popup',
-                        //            title: 'swal-big-title',
-                        //            htmlContainer: 'swal-big-text'
-                        //        }
-                        //    });
-                        //    $("#btnSave").prop("disabled", false);
-                        //    return false;
-                        //}
-
                         var Previous_Balance = $('#txtPreviousBlnc').val();
                         var Previous_Paid = $('#txtprevious_paid').val();
                         var Over_and_Above = $('#txtOver_and_Above').val();
@@ -3557,7 +3533,7 @@
                             return sum + parseFloat(item.RuntimeCost || 0);
                         }, 0);
 
-                        $('#bomTotalValue').text(totalRuntime.toFixed(2));
+                        $('#bomTotalValue').val(totalRuntime.toFixed(2));
                         $('#bomTotal').show();
 
                         $('#bomSection').show();
@@ -6244,7 +6220,7 @@
   <div id="bomTotal" style="display:none; font-weight:bold; color:#1e7e34; font-size:1.1em;">
     <i class="fa fa-calculator"></i> 
     Total BOM Runtime Cost: 
-    <span id="bomTotalValue" style="color:#d9534f;">0.00</span>
+    <input type="text" id="bomTotalValue" style="color:#d9534f;" disabled="disabled" />
   </div>
 </div>
 
