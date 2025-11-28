@@ -3249,6 +3249,8 @@
 
 
                     $('#tblDetails tbody').append(rows);
+                     loadBOMDetails(localStorage.SelectedItemID)
+         
                     debugger;
                     if (departmentpat == "Sehat Sahulat Card") {
                         $("#amnt" + rowIndex).attr('contenteditable', true);
@@ -3472,12 +3474,13 @@
                 });
             }
             function loadBOMDetails(procedureId) {
+                debugger;
                 procedureId = parseInt(procedureId);
                 if (!procedureId || procedureId <= 0) {
                     console.warn("⚠️ Invalid procedureId:", procedureId);
                     return;
                 }
-
+                
                 $.ajax({
                     type: "POST",
                     url: "BillingProcess.aspx/GetBOMDetailsByProcedure",
@@ -4190,17 +4193,22 @@
                                     if (tblName == 'Patients') {
                                         debugger;
                                         $("#hdfPatient_ID").val(item.id);
+                                      
 
                                         LoadPatientDetails();
 
                                         GetPatientIdfromOPd();
                                     }
                                     else if (tblName == 'INV_ItemsForBilling') {
+
                                         localStorage.SelectedItemID = item.id;
                                         localStorage.SelectedItemType = item.Type;
                                         localStorage.SelectedItemName = item.name;
                                         localStorage.SelectedItemAmount = (item.Amount.length == 0 ? 0 : item.Amount);
                                         LoadITemsForDiscount(item.id);
+
+                                     
+                                        
                                         $('#txtAddPackage').tokenInput("clear");
                                     }
                                     else if (tblName == 'Inv_Items_Panel' || tblName.includes('Inv_Items_Panel')) {

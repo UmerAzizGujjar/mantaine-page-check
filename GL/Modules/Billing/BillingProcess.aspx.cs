@@ -125,7 +125,10 @@ namespace PMS
                     var itemId = (from p in db.Reg_patients
                                   join vs in db.Patients on p.pat_id equals vs.Reg_PatId
                                   where vs.Reg_PatId == Pat_id
-                                  select vs.Service_id).FirstOrDefault();
+                                  orderby vs.Created_Time descending   // 👈 sort newest first
+                                  select vs.Service_id)
+                                .FirstOrDefault();
+
 
                     if (itemId <= 0)
                         return null;
