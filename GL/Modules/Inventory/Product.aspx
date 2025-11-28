@@ -443,6 +443,11 @@
                 var heigth = $('#txtheight').val();
                 var basesize = $('#ddlunitsize').val();
                 var baseqty = $('#txtunitqty').val();
+                if (baseqty === null || baseqty.trim() === '') {
+                    baseqty = 0; 
+                } else {
+                    baseqty = parseFloat(baseqty);
+                }
                 var salesRate = $('#sales_Rate').val();
                 var purchRate = $('#purch_rate').val();
                 var itemGroup = $('#ddlItemGroup').val();
