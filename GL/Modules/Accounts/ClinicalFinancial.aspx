@@ -235,9 +235,8 @@
                                     let row = `
 <tr class="data-row">
     <td style="display: none">
-        <select class="financialDepartmentOPD" disabled>
-            ${setSelected(options, item.financialdepartment)}
-        </select>
+
+        <input type="hidden" class="financialDepartmentOPD" value="${item.financialdepartment}"/>
     </td>
     <td>
         <select class="categorynameOPD select2select" style="background-color: white; height:32px;" disabled>
@@ -294,9 +293,7 @@
                                     let row = `
 <tr class="data-row">
     <td style="display: none">
-        <select class="financialDepartmentDiagnostic" disabled>
-            ${setSelected(options, item.financialdepartment)}
-        </select>
+        <input type="hidden" class="financialDepartmentDiagnostic" value="${item.financialdepartment}"/>
     </td>
     <td>
         <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;" disabled>
@@ -358,9 +355,8 @@
                                     let row = `
 <tr class="data-row">
     <td style="display: none">
-        <select class="financialDepartmentEMERGENCY" disabled>
-            ${setSelected(options, item.financialdepartment)}
-        </select>
+
+       <input type="hidden" class="financialDepartmentEMERGENCY" value="${item.financialdepartment}"/>
     </td>
     <td>
         <select class="categorynameEMERGENCY select2select" style="background-color: white; height:32px;" disabled>
@@ -564,10 +560,7 @@
                         let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
-                        <select class="financialDepartmentOPD">
-                            ${options}
-                        </select>
-                    
+                         <input type = "hidden" class="financialDepartmentOPD" value = "001">                   
                     <td>
                         <select class="categorynameOPD select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
@@ -605,10 +598,7 @@
                         let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
-                        <select class="financialDepartmentDiagnostic">
-                            ${options}
-                        </select>
-                    
+                         <input type = "hidden" class="financialDepartmentDiagnostic" value = "002">                   
                     <td>
                         <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
@@ -640,22 +630,66 @@
                         $('#tableDiagnostic tbody').append(newRow);
                         $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
                         $('.select2select').select2(); // initialize Select2
+                  
+
                     });
                 });
             });
+        }
+        function addNewRowProcedure() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getSpecialServices(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                         <input type = "hidden" class="financialDepartmentDiagnostic" value = "002">                   
+                    <td>
+                        <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;">
+                            ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="cashinhandDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="discountDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenueDiagnostic select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
 
+                    </td>
+                </tr>
+            `;
+                        $('#tableDiagnostic tbody').append(newRow);
+                        $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+
+
+                    });
+                });
+            });
         }
         function addNewRowEMERGENCY() {
+            debugger;
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getPatientTypes(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
                         let newRow = `
                 <tr class="data-row">
-                    <td style="display: none">
-                        <select class="financialDepartmentEMERGENCY">
-                            ${options}
-                        </select>
-                    
+                    <td style="display: none">                
+                        <input type = "hidden" class="financialDepartmentEMERGENCY" value = "003">                  
                     <td>
                         <select class="categorynameEMERGENCY select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
@@ -697,10 +731,7 @@
                     let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
-                        <select class="financialDepartmentSERVICE">
-                            ${options}
-                        </select>
-                    
+                     <input type = "hidden" class="financialDepartmentSERVICE" value = "004">     
                     <td>
                         <select class="categorynameSERVICE" disabled style="background-color: white; height:32px;">
                             <option value="0">Please Select</option>
@@ -753,9 +784,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="cashinhandPHARMACY select2select" style="background-color: white;">
-                            ${optionsVen}
-                        </select>
+                        <input type = "hidden" class="cashinhandPHARMACY" value = "005">
                     </td>
                     <td>
                         <select class="discountPHARMACY select2select" style="background-color: white;">
@@ -808,6 +837,26 @@
         function getMainTestDepartments(callback) {
             $.ajax({
                 url: 'ClinicalFinancial.aspx/MainTestDepartments',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    let options = '<option value="0">Please Select</option>';
+                    let data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
+                    });
+                    callback(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching patient types:', error);
+                    callback('<option value="0">Error</option>');
+                }
+            });
+        }
+        function getSpecialServices(callback) {
+            $.ajax({
+                url: 'ClinicalFinancial.aspx/SpecialServices',
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -883,7 +932,7 @@
             <li><a href="#Tab-2">Diagnostic</a></li>
             <li><a href="#Tab-3">Emergency</a></li>
             <li><a href="#Tab-4">Service</a></li>
-            <li><a href="#Tab-5">Pharmacy</a></li>
+            <li style="display:none;"><a href="#Tab-5">Pharmacy</a></li>
 
         </ul>
 
@@ -990,7 +1039,7 @@
             </table>
         </div>
 
-        <div id="Tab-5">
+        <div id="Tab-5" >
             <div class="row">
 
                 <div class="col-lg-11 col-md-11 col-sm-11"></div>

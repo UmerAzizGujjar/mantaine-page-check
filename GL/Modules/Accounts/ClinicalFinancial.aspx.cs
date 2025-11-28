@@ -171,6 +171,24 @@ namespace PMS.Modules.Accounts
             }
             return data;
         }
+        //[WebMethod]
+        //public static string SpecialServices()
+        //{
+        //    string data = string.Empty;
+
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var result = (from dv in db.INV_Items
+        //                      where dv.IsSpecialService == true
+        //                      select new
+        //                      {
+        //                          dv.DataValue_Name,
+        //                          dv.DataValue_Description
+        //                      }).ToList();
+        //        data = new JavaScriptSerializer().Serialize(result);
+        //    }
+        //    return data;
+        //}
         [WebMethod]
         public static string filldropdowns()
         {
