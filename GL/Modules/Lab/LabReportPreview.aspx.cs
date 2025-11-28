@@ -60,11 +60,11 @@ namespace PMS
 
                 // Filter lab test details early
                 var pendingLabDetails = db.Lab_Test_Details
-                    .Where(ld =>
-                        (ld.isApproved == false || ld.isApproved == null) &&
-                        (ld.IsAcknowledge == false || ld.IsAcknowledge == null) &&
-                        approvedLabTests.Contains(ld.Lab_Test_ID)
-                    );
+                .Where(ld =>
+                    (ld.isApproved == false || ld.isApproved == null) &&
+                    (ld.Is_Result == false || ld.Is_Result == null) &&
+                    approvedLabTests.Contains(ld.Lab_Test_ID) 
+                );
 
                 // Filter active bills early
                 var activeBills = db.Ar_Billings
@@ -810,6 +810,17 @@ namespace PMS
                         }).FirstOrDefault();
 
             return (new JavaScriptSerializer()).Serialize(user);
+        }
+
+        [WebMethod]
+        public static string CheckRadiologylistRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Radiology_result).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
         }
 
         [WebMethod]

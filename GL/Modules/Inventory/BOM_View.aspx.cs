@@ -17,37 +17,30 @@ namespace PMS.Modules.Inventory
         }
 
         [WebMethod]
-        public static bool DeleteRecord(string itemID)
+        public static string CancelBOM(int bomId)
         {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            SqlTransaction tranObj = null;
-            SqlConnection con = new SqlConnection(DBClass.ConnectionString());
-            con.Open();
-            tranObj = con.BeginTransaction();
             try
             {
-                var itmId = (from itm in db.INV_Items
-                             where (itm.Item_ID == int.Parse(itemID))
-                             select itm.Item_ID).FirstOrDefault();
-                if (itmId != 0)
+                using (var db = new DataBaseDataContext())
                 {
-                    DBClass.exectueQuery("delete from INV_Items where Item_ID =" + itmId, tranObj, con);
-                    tranObj.Commit();
-                }
-                else
-                {
-                    tranObj.Rollback();
-                    return false;
+                    var bom = db.inv_boms.FirstOrDefault(b => b.BOMID == bomId);
+                    if (bom == null)
+                        return "Error: BOM not found.";
+
+                    bom.isCancel = true;
+                    bom.Cancel_By = AppConfig.UserID;
+                    bom.CancelDate = DateTime.Now;
+                    db.SubmitChanges();
+
+                    return "BOM canceled successfully.";
                 }
             }
             catch (Exception ex)
             {
-                if (tranObj != null)
-                    tranObj.Rollback();
-                return false;
+                return "Error: " + ex.Message;
             }
-            return true;
         }
+
 
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
@@ -60,18 +53,15 @@ namespace PMS.Modules.Inventory
 
                     var Total_Items = _dbContext.inv_boms.Count();
                     var inv_Items = from I in _dbContext.inv_boms
-                                    join BD in _dbContext.inv_bom_details on I.BOMID equals BD.BOMID
-                                    where
-                                       ((I.Category.ToString().Contains(searchValue)))
+                                    where (I.isCancel == false || I.isCancel == null) &&
+                                       ((I.Category.ToString().Contains(searchValue))) 
                                     select new
                                     {
                                         BOMID = I.BOMID,
+                                        ProcedureName = (from p in _dbContext.INV_Items  where p.Item_ID == I.ProcedureID
+                                                         select p.Description).FirstOrDefault() ?? "(No Procedure)",
                                         Category = I.Category,
                                         TotalCost = I.TotalCost,
-                                        itemName = (from item in _dbContext.INV_Items  where item.Item_ID == BD.ItemID select item.Description).FirstOrDefault(),
-                                        Qty = BD.Qty,
-                                        Unit = BD.Unit,
-                                        Total = BD.Total,
 
                                     };
 

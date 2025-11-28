@@ -176,6 +176,19 @@
             $('select').select2();
             LoadAccount();
             $('#btnSave').attr('disabled', true);
+
+            $('#searchCategoryName').on('input', function () {
+                var searchTerm = $(this).val().toLowerCase();
+
+                $('#tblItemDescriptionDetail tr').each(function () {
+                    var categoryName = $(this).find('td:nth-child(3) input[name=AccountCategoryName]').val().toLowerCase(); 
+                    if (categoryName.includes(searchTerm)) {
+                        $(this).show(); 
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
         });
         function loadItemList(rowlength) {
             debugger;
@@ -318,6 +331,10 @@
         <div class="col-lg-1 col-md-4 col-sm-6">
      <input type="button" class="btn-primry" onclick="Addrow()" value="+" id="AddAccount" />
  </div>
+        <div class="col-lg-9 col-md-4 col-sm-6"></div>
+        <div class="col-lg-2 col-md-12 col-sm-12" style="margin-bottom: 10px;">
+        <input type="text" id="searchCategoryName" class="form-control" placeholder="Search by Category Name" style="height: 40px !important;" />
+    </div>
         </div>
     <div class="row">
         <div class="col-lg-12 col-md-12- col-sm-12" style="overflow-x:scroll;height:600px">

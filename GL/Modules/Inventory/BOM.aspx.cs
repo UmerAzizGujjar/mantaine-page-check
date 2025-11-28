@@ -57,7 +57,7 @@ namespace PMS.Inventory
             using (var db = new DataBaseDataContext())
             {
                 var list = (from p in db.INV_Items
-                            where p.Is_Active == true
+                            where p.Active == true
                             && p.Procedure_Required == true
                             select new
                             {
@@ -74,8 +74,8 @@ namespace PMS.Inventory
             using (var db = new DataBaseDataContext())
             {
                 var list = (from i in db.INV_Items
-                            where i.Is_Active == true
-                            && i.InventoryOrg == "001"
+                            where i.Active == true
+                            && i.InventoryOrg == "002"
                             select new
                             {
                                 i.Item_ID,
@@ -213,6 +213,7 @@ namespace PMS.Inventory
                     return new JavaScriptSerializer().Serialize(new { error = "BOM not found." });
 
                 var details = (from d in db.inv_bom_details
+                               where d.BOMID == ID  
                                join i in db.INV_Items on d.ItemID equals i.Item_ID
                                select new
                                {
@@ -220,18 +221,27 @@ namespace PMS.Inventory
                                    ItemName = i.Description,
                                    d.Qty,
                                    d.Unit,
+                                   UnitText = db.GetDataValueName("Unit Size", d.Unit),
                                    d.CostPerUnit,
                                    d.Total,
-                                  // d.Batch_No,
-                                   d.BaseUnitQty  
+                                   d.BaseUnitQty
                                }).ToList();
+
+                string procedureText = db.INV_Items
+                    .Where(x => x.Item_ID == bom.ProcedureID)
+                    .Select(x => x.Description)
+                    .FirstOrDefault() ?? "";
+
+                string warehouseText = db.GetDataValueName("Ware House", bom.warehouse) ?? "";
 
                 var result = new
                 {
                     bom.BOMID,
                     bom.ProcedureID,
+                    ProcedureText = procedureText,
                     bom.Category,
                     bom.warehouse,
+                    WarehouseText = warehouseText,
                     Items = details
                 };
 
@@ -239,58 +249,89 @@ namespace PMS.Inventory
             }
         }
         [WebMethod]
-        public static string SaveBOM(int procedureId, string category, List<BOM_Item> items)
+        public static string SaveBOM(int bomId, int procedureId, string category, string warehouse, List<BOM_Item> items)
         {
-            // Validate
             if (procedureId <= 0 || items == null || items.Count == 0)
                 return "-1";
+
+            foreach (var item in items)
+            {
+                if (item.Qty <= 0)
+                    return "ERROR: Quantity must be greater than zero.";
+            }
 
             using (var db = new DataBaseDataContext())
             {
                 try
                 {
-                    // Check duplicate
-                    var seenItemIDs = new HashSet<int>();
+                    var seen = new HashSet<int>();
                     foreach (var item in items)
                     {
-                        if (seenItemIDs.Contains(item.ItemID))
-                        {
+                        if (seen.Contains(item.ItemID))
                             return $"DUPLICATE: Item '{item.ItemName}' added multiple times.";
-                        }
-                        seenItemIDs.Add(item.ItemID);
+                        seen.Add(item.ItemID);
                     }
 
-                    // Create master
-                    var bom = new inv_bom
-                    {
-                        ProcedureID = procedureId,
-                        Category = string.IsNullOrWhiteSpace(category) ? null : category.Trim(),
-                        TotalCost = items.Sum(x => x.Total),
-                        CreatedBy = AppConfig.UserID,
-                        CreatedDate = DateTime.Now,
-                        Company_ID = AppConfig.Company_ID,
-                    };
-                    db.inv_boms.InsertOnSubmit(bom);
-                    db.SubmitChanges(); // Get BOMID
+                    inv_bom bom;
 
-                    // Insert details
+                    if (bomId > 0)
+                    {
+                        bom = db.inv_boms.FirstOrDefault(b => b.BOMID == bomId);
+                        if (bom == null) return "-1";
+
+                        bom.ProcedureID = procedureId;
+                        bom.Category = string.IsNullOrWhiteSpace(category) ? null : category.Trim();
+                        bom.warehouse = warehouse;
+                        bom.TotalCost = items.Sum(x => x.Total);
+                        bom.UpdatedBy = AppConfig.UserID;
+                        bom.UpdatedDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        bom = new inv_bom
+                        {
+                            ProcedureID = procedureId,
+                            Category = string.IsNullOrWhiteSpace(category) ? null : category.Trim(),
+                            warehouse = warehouse,
+                            TotalCost = items.Sum(x => x.Total),
+                            CreatedBy = AppConfig.UserID,
+                            CreatedDate = DateTime.Now,
+                            Company_ID = AppConfig.Company_ID,
+                        };
+                        db.inv_boms.InsertOnSubmit(bom);
+                        db.SubmitChanges();
+                    }
+
                     foreach (var item in items)
                     {
-                        var detail = new inv_bom_detail
-                        {
-                            BOMID = bom.BOMID,
-                            ItemID = item.ItemID,
-                            Qty = item.Qty,
-                            Unit = item.Unit ?? "pcs",
-                            CostPerUnit = item.CostPerUnit,
-                            Total = item.Total,
-                            //Batch_No = string.IsNullOrWhiteSpace(item.Batch_No) ? null : item.Batch_No.Trim(),
-                            BaseUnitQty = item.BaseUnitQty // ✅ STORE BASE UNIT QTY
-                        };
-                        db.inv_bom_details.InsertOnSubmit(detail);
-                    }
-                    db.SubmitChanges();
+                        var detail = db.inv_bom_details
+                            .FirstOrDefault(d => d.BOMID == bom.BOMID && d.ItemID == item.ItemID);
 
+                        if (detail != null)
+                        {
+                            detail.Qty = item.Qty;
+                            detail.Unit = item.Unit ?? "pcs";
+                            detail.CostPerUnit = item.CostPerUnit;
+                            detail.Total = item.Total;
+                            detail.BaseUnitQty = item.BaseUnitQty;
+                        }
+                        else
+                        {
+                            detail = new inv_bom_detail
+                            {
+                                BOMID = bom.BOMID,
+                                ItemID = item.ItemID,
+                                Qty = item.Qty,
+                                Unit = item.Unit ?? "pcs",
+                                CostPerUnit = item.CostPerUnit,
+                                Total = item.Total,
+                                BaseUnitQty = item.BaseUnitQty
+                            };
+                            db.inv_bom_details.InsertOnSubmit(detail);
+                        }
+                    }
+
+                    db.SubmitChanges();
                     return bom.BOMID.ToString();
                 }
                 catch (Exception ex)
@@ -298,8 +339,6 @@ namespace PMS.Inventory
                     return "-1";
                 }
             }
-
-
         }
     }
 }

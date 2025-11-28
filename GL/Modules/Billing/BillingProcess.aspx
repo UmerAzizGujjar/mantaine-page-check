@@ -1266,30 +1266,6 @@
                         var Net_Amount = $('#txtNetPayable').val();
                         var Received_Amount = $('#txtAmountReceived').val();
                         var Balance_Amount = $('#txtBalances').val();
-                        //if (Balance_Amount < 0) {
-                        //    alert("please Enter Valid Discount Amount ");
-                        //    $('#btnSave').removeAttr("disabled");
-                        //    return;
-                        //}
-
-                        //if (parseInt(Received_Amount) > 0 && parseInt(Balance_Amount) != 0) {
-
-                        //    Swal.fire({
-                        //        icon: 'error',
-                        //        title: 'Error!',
-                        //        text: 'Please enter Complete received Amount or Not !',
-                        //        showConfirmButton: false,
-                        //        timer: 2000,
-                        //        customClass: {
-                        //            popup: 'swal-big-popup',
-                        //            title: 'swal-big-title',
-                        //            htmlContainer: 'swal-big-text'
-                        //        }
-                        //    });
-                        //    $("#btnSave").prop("disabled", false);
-                        //    return false;
-                        //}
-
                         var Previous_Balance = $('#txtPreviousBlnc').val();
                         var Previous_Paid = $('#txtprevious_paid').val();
                         var Over_and_Above = $('#txtOver_and_Above').val();
@@ -1301,6 +1277,7 @@
                         debugger;
                         var PackageType = $('#hdn_pkgtype').val();
                         var PackageName = $('#hdn_pkgname').val();
+                        var bomTotalValue = $('#bomTotalValue').val();
 
                         if (PackageType == "There is no row at position 0.") {
                             PackageType = "";
@@ -1467,20 +1444,60 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
                         }
-                        PageMethods.CheckReceipts(Bill_ID, function (dataaaaaaaaaaaaaa) {
-                            if (dataaaaaaaaaaaaaa == '') {
+                        PageMethods.CheckReceipts(Bill_ID, function (receipts) {
+                            if (receipts == '') {
+                                // ✅ Proceed to save — only ONE CheckReceipts call
                                 PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
-                                    debugger;
+                                    // 🔹 Parse response safely
+                                    let result;
+                                    try {
+                                        result = JSON.parse(resp);
+                                    } catch (e1) {
+                                        try {
+                                            result = JSON.parse(JSON.parse(resp)); // double-serialized fallback
+                                        } catch (e2) {
+                                            result = { success: true, billId: resp.toString().trim() };
+                                        }
+                                    }
+
+                                    // 🔹 Handle error
+                                    if (result.success === false) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Validation Failed',
+                                            text: result.message || 'An error occurred during save.',
+                                            confirmButtonText: 'OK',
+                                            customClass: {
+                                                popup: 'swal-big-popup',
+                                                title: 'swal-big-title',
+                                                htmlContainer: 'swal-big-text'
+                                            }
+                                        }).then(() => {
+                                            $('#btnSave').prop('disabled', false);
+                                            document.getElementById("hdnDuplicateCheck").value = "0";
+                                        });
+                                        return;
+                                    }
+
+                                    // 🔹 Success path
+                                    const billId = (result.billId || result || '').toString().trim();
+                                    if (!billId || isNaN(billId)) {
+                                        Swal.fire('Error!', 'Invalid Bill ID returned: ' + billId, 'error').then(() => {
+                                            $('#btnSave').prop('disabled', false);
+                                            document.getElementById("hdnDuplicateCheck").value = "0";
+                                        });
+                                        return;
+                                    }
 
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success!',
-                                        text: 'Data Successfully Save.',
+                                        text: 'Data Successfully Saved.',
                                         showConfirmButton: false,
                                         timer: 2500,
                                         customClass: {
@@ -1489,21 +1506,46 @@
                                             htmlContainer: 'swal-big-text'
                                         }
                                     });
-                                    window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + JSON.parse(resp));
+
+                                    const encodedBillId = encodeURIComponent(billId);
+                                    window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing%20Base%20Report&Bill_ID=' + encodedBillId);
+
                                     setTimeout(function () {
-                                        window.location.href = 'BillingProcess.aspx?Bill_ID=' + JSON.parse(resp);
+                                        window.location.href = 'BillingProcess.aspx?Bill_ID=' + encodedBillId;
                                     }, 700);
-                                    // }
+
                                     DeleteExcludedItems();
+
                                 }, function (error) {
-                                    alert(error.get_message());
+                                    // Save failed (network/exception)
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Save Failed',
+                                        text: 'Network error: ' + (error.get_message?.() || error),
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        $('#btnSave').prop('disabled', false);
+                                        document.getElementById("hdnDuplicateCheck").value = "0";
+                                    });
                                 });
-                            }
-                            else {
-                                alert('Delete Following Receipts:- ' + dataaaaaaaaaaaaaa);
+
+                            } else {
+                                // Receipts exist — block save
+                                alert('Delete Following Receipts:- ' + receipts);
+                                $('#btnSave').prop('disabled', false);
+                                document.getElementById("hdnDuplicateCheck").value = "0";
                             }
                         }, function (error) {
-                            alert(error.get_message());
+                            // CheckReceipts failed
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Receipt Check Failed',
+                                text: 'Error: ' + (error.get_message?.() || error),
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                $('#btnSave').prop('disabled', false);
+                                document.getElementById("hdnDuplicateCheck").value = "0";
+                            });
                         });
                     }
                     else {
@@ -3411,9 +3453,9 @@
                         $('#tblDetails tbody').append(servicerow);
 
                       
-                        setTimeout(function () {
+                        //setTimeout(function () {
                             CalculateSummarieDiscountPerWise(rowIndex);
-                        }, 1500);
+                        //}, 500);
 
                         loadBOMDetails(data.Item_ID);
 
@@ -3492,7 +3534,7 @@
                             return sum + parseFloat(item.RuntimeCost || 0);
                         }, 0);
 
-                        $('#bomTotalValue').text(totalRuntime.toFixed(2));
+                        $('#bomTotalValue').val(totalRuntime.toFixed(2));
                         $('#bomTotal').show();
 
                         $('#bomSection').show();
@@ -6179,7 +6221,7 @@
   <div id="bomTotal" style="display:none; font-weight:bold; color:#1e7e34; font-size:1.1em;">
     <i class="fa fa-calculator"></i> 
     Total BOM Runtime Cost: 
-    <span id="bomTotalValue" style="color:#d9534f;">0.00</span>
+    <input type="text" id="bomTotalValue" style="color:#d9534f;" disabled="disabled" />
   </div>
 </div>
 

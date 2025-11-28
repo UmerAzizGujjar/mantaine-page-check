@@ -947,7 +947,7 @@ namespace PMS
         {
 
 
-            return (new JavaScriptSerializer()).Serialize(SaveBill(Parameters));
+            return SaveBill(Parameters);
         }
 
         public static string SaveBill(string Parameters)
@@ -1064,6 +1064,7 @@ namespace PMS
             newBill.Bank_Account = data.Bank_Account;
             newBill.Bank_Cash = data.Bank_Cash;
             newBill.Main_Department = data.Main_Department;
+            newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
 
             // Handle In-Patient logic
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
@@ -1114,6 +1115,28 @@ namespace PMS
             }
 
             // Save Bill Header
+           
+            // >>>>>>>>>>>>>>>>>> ✅ SIMPLE STOCK VALIDATION (as requested) <<<<<<<<<<<<<<<<<<<<
+            if (data.bomItems != null && data.bomItems.Count > 0)
+            {
+                foreach (var item in data.bomItems)
+                {
+                    if (item.ItemID <= 0 || item.Qty == null) continue;
+
+                    // Use a FIXED org (e.g., "MAIN") — no frontend dependency
+                    decimal availableStock = db.GetInventoryItemTotalStock_BaseUnit(item.ItemID, "002") ?? 0;
+
+                    if (item.Qty > availableStock)
+                    {
+                        // Return early with simple message → Swal on frontend
+                        return (new JavaScriptSerializer()).Serialize(new
+                        {
+                            success = false,
+                            message = $"Stock not available for {item.ItemCode}"
+                        });
+                    }
+                }
+            }
             if (data.Bill_ID == 0)
             {
                 db.Ar_Billings.InsertOnSubmit(newBill);
@@ -1140,8 +1163,9 @@ namespace PMS
                 }).ToList();
 
                 db.Bill_BOM_Consumptions.InsertAllOnSubmit(bomConsumptions);
-                db.SubmitChanges(); // Optional: can defer to final SubmitChanges
+                db.SubmitChanges();
             }
+      
             // ▲▲▲ END BOM SAVE ▲▲▲
 
             // Prepare Bill Details
@@ -1197,6 +1221,7 @@ namespace PMS
                 ListOfDetails.Add(newBillDetails);
             }
 
+         
             // Prepare Doctor Shares
             List<AR_Billing_Detail_Doctor_Share> ListOfshare = new List<AR_Billing_Detail_Doctor_Share>();
             foreach (DoctorDistributionList doc in data.Share)
@@ -2204,6 +2229,7 @@ namespace PMS
             public int Opd_id { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
+            public string bomTotalValue { get; set; }
             public string PackageType { get; set; }
             public string Casher { get; set; }
             public DateTime Bill_Date { get; set; }
@@ -2242,6 +2268,7 @@ namespace PMS
             public decimal RuntimeCost { get; set; }
             public string Batch_No { get; set; }
             public decimal? BaseUnitQty { get; set; }
+            public string InventoryOrg { get; set; }
         }
 
         //Bilal
