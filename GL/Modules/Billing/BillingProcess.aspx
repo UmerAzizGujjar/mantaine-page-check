@@ -1277,6 +1277,7 @@
                         debugger;
                         var PackageType = $('#hdn_pkgtype').val();
                         var PackageName = $('#hdn_pkgname').val();
+                        var bomTotalValue = $('#bomTotalValue').val();
 
                         if (PackageType == "There is no row at position 0.") {
                             PackageType = "";
@@ -1443,7 +1444,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -3452,9 +3453,9 @@
                         $('#tblDetails tbody').append(servicerow);
 
                       
-                        setTimeout(function () {
+                        //setTimeout(function () {
                             CalculateSummarieDiscountPerWise(rowIndex);
-                        }, 1500);
+                        //}, 500);
 
                         loadBOMDetails(data.Item_ID);
 
