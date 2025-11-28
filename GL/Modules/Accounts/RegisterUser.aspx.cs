@@ -82,6 +82,7 @@ namespace PMS.Modules.Accounts
                              Allow_bill_edit = p.Allow_bill_edit,
                              Emergency_adm_dis = p.Emergency_adm_dis,
                              Allow_emer_disc = p.Allow_emer_disc,
+                             AllowRadiologylist = p.Radiology_result,
                              AllowReferIPD = p.Refer_IPD,   
                              EmpCode=p.Emp_Code
                          }).FirstOrDefault();
@@ -160,6 +161,7 @@ namespace PMS.Modules.Accounts
                     user.IsAnonymous = data.IsAnonymous;
                     user.EditEmergency = data.EditEmergency;
                     user.Emergency_adm_dis = data.AllowEmergency_adm_dis;
+                    user.Radiology_result = data.AllowRadiologylist;
                     user.Allow_bill_edit = data.AllowBillUpdate;
                     user.Allow_emer_disc = data.AllowemergencyDiscount;
                     user.Refer_IPD = data.AllowReferIPD;
@@ -229,6 +231,7 @@ namespace PMS.Modules.Accounts
                 newuser.EditEmergency = data.EditEmergency;
                 newuser.Allow_bill_edit = data.AllowBillUpdate;
                 newuser.Emergency_adm_dis = data.AllowEmergency_adm_dis;
+                newuser.Radiology_result = data.AllowRadiologylist;
                 newuser.Allow_emer_disc = data.AllowemergencyDiscount;
                 newuser.Refer_IPD = data.AllowReferIPD;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
@@ -332,6 +335,7 @@ namespace PMS.Modules.Accounts
             public bool IsAnonymous { get; set; }
             public bool EditEmergency { get; set; }
             public bool AllowEmergency_adm_dis { get; set; }
+            public bool AllowRadiologylist { get; set; }
             public bool AllowReferIPD { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }

@@ -65,6 +65,7 @@
                     $('#AllowEmergency_adm_dis').prop('checked', data.Emergency_adm_dis);
                     $('#BlockUser').prop('checked', data.BlockUser);
                     $('#AllowemergencyDiscount').prop('checked', data.Allow_emer_disc);
+                    $('#AllowRadiologylist').prop('checked', data.AllowRadiologylist);
                     $('#AllowReferIPD').prop('checked', data.AllowReferIPD);
                 },
                 error: function (xhr, status, error) {
@@ -107,6 +108,7 @@
             var IsAnonymous = $('#IsAnonymous').prop('checked');
             var EditEmergency = $('#AllowEditEmergency').prop('checked');
             var AllowEmergency_adm_dis = $('#AllowEmergency_adm_dis').prop('checked');
+            var AllowRadiologylist = $('#AllowRadiologylist').prop('checked');
             var AllowBillUpdate = $('#AllowBillUpdate').prop('checked');
             var BlockUser = $('#BlockUser').prop('checked');
             var AllowemergencyDiscount = $('#AllowemergencyDiscount').prop('checked');
@@ -224,6 +226,7 @@
                 "IsAnonymous": IsAnonymous,
                 "EditEmergency": EditEmergency,
                 "AllowEmergency_adm_dis": AllowEmergency_adm_dis,
+                "AllowRadiologylist": AllowRadiologylist,
                 "AllowBillUpdate": AllowBillUpdate,
                 "BlockUser": BlockUser,
                 "AllowemergencyDiscount": AllowemergencyDiscount,
@@ -447,6 +450,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowEmergency_adm_dis" name="AllowEmergency_adm_dis" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowRadiologylist" name="AllowRadiologylist" />
+                                                    </div>
                                                 </div>
 
                                                 <div class="col-md-3">
@@ -491,6 +497,9 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowAdmissionDischarge">Emergency Adm_Dis </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="Radiologyresult">Radiology List</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2"></div>

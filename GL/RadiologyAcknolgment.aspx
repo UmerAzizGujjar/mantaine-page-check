@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RadiologyAcknolgment.aspx.cs" Inherits="PMS.RadiologyAcknolgment" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-      <link href="../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">     
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             loadRadiologyAcknowledgment();
