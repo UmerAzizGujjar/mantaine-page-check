@@ -8,8 +8,10 @@
         $(document).ready(function () {
             OPDloadSavedRows();
             DiagnosticloadSavedRows();
+            SpecialServicesloadSavedRows();
             EMERGENCYloadSavedRows();
             SERVICEloadSavedRows();
+            ProcedureloadSavedRows();
             PHARMACYloadSavedRows();
         });
 
@@ -28,9 +30,13 @@
             let categoryNamesEMERGENCY = new Set();
             let categoryNamesSERVICE = new Set();
             let categoryNamesPHARMACY = new Set();
+            let categoryNamesProcedure = new Set();
+            let categoryNamesSpecialService = new Set();
             let duplicateFound = false;
             let rowsOPD = $('#tableOPD .data-row');
             let rowsDiagnostic = $('#tableDiagnostic .data-row');
+            let rowsSpecialService = $('#tableSpecialServices .data-row');
+            let rowsProcedure = $('#tableProcedure .data-row');
             let rowsEMERGENCY = $('#tableEMERGENCY .data-row');
             let rowsSERVICE = $('#tableSERVICE .data-row');
             let rowsPHARMACY = $('#tablePHARMACY .data-row');
@@ -84,6 +90,50 @@
                     categoryNamesDiagnostic.add(rowDataDiagnostic.categoryname);
                 }
                 allData.push(rowDataDiagnostic);
+            });
+            rowsSpecialService.each(function () {
+                let row = $(this);
+                let rowDataSpecialService = {
+
+                    financialdepartment: row.find('.financialDepartmentSpecialServices').val(),
+                    categoryname: row.find('.categorynameSpecialServices').val(),
+                    cashinhand: row.find('.cashinhandSpecialServices').val(),
+                    discount: row.find('.discountSpecialServices').val(),
+                    revenue: row.find('.revenueSpecialServices').val()
+                };
+                // Check if any value is empty
+                if (rowsSpecialService.categoryname == 0 || rowsSpecialService.cashinhand == 0 || rowsSpecialService.discount == 0 || rowsSpecialService.revenue == 0) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesSpecialService.has(rowsSpecialService.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesSpecialService.add(rowsSpecialService.categoryname);
+                }
+                allData.push(rowsSpecialService);
+            });
+            rowsProcedure.each(function () {
+                let row = $(this);
+                let rowDataProcedure = {
+
+                    financialdepartment: row.find('.financialDepartmentProcedure').val(),
+                    categoryname: row.find('.categorynameProcedure').val(),
+                    cashinhand: row.find('.cashinhandProcedure').val(),
+                    discount: row.find('.discountProcedure').val(),
+                    revenue: row.find('.revenueProcedure').val()
+                };
+                // Check if any value is empty
+                if (rowDataProcedure.categoryname == 0 || rowDataProcedure.cashinhand == 0 || rowDataProcedure.discount == 0 || rowDataProcedure.revenue == 0) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesProcedure.has(rowDataProcedurec.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesProcedure.add(rowDataProcedure.categoryname);
+                }
+                allData.push(rowsProcedure);
             });
             rowsEMERGENCY.each(function () {
                 let row = $(this);
@@ -291,43 +341,105 @@
 
                                 savedData.forEach(item => {
                                     let row = `
-<tr class="data-row">
-    <td style="display: none">
-        <input type="hidden" class="financialDepartmentDiagnostic" value="${item.financialdepartment}"/>
-    </td>
-    <td>
-        <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;" disabled>
-            ${setSelected(categoryOptions, item.categoryname)}
-        </select>
-    </td>
-    <td>
-        <select class="cashinhandDiagnostic select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.cashinhand)}
-        </select>
-    </td>
-    <td>
-        <select class="discountDiagnostic select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.discount)}
-        </select>
-    </td>
-    <td>
-        <select class="revenueDiagnostic select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.revenue)}
-        </select>
-    </td>
-    <td>
-        <a href="#" onclick="removeRow(this)">
-            <i class="fa fa-trash fa-lg " style="color: black;"></i>
-        </a>
-        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
-        </a>
-    </td>
-</tr>`;
+                                        <tr class="data-row">
+                                            <td style="display: none">
+                                                <input type="hidden" class="financialDepartmentDiagnostic" value="${item.financialdepartment}"/>
+                                            </td>
+                                            <td>
+                                                <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;" disabled>
+                                                    ${setSelected(categoryOptions, item.categoryname)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="cashinhandDiagnostic select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.cashinhand)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="discountDiagnostic select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.discount)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="revenueDiagnostic select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.revenue)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <a href="#" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                                </a>
+                                                <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                                    <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>`;
 
                                     $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
 
                                     $('#tableDiagnostic tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        function SpecialServicesloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsSpecialService",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getMainTestDepartments(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+                                        <tr class="data-row">
+                                            <td style="display: none">
+                                                <input type="hidden" class="financialDepartmentSpecialServices" value="${item.financialdepartment}"/>
+                                            </td>
+                                            <td>
+                                                <select class="categorynameSpecialServices select2select" style="background-color: white; height:32px;" disabled>
+                                                    ${setSelected(categoryOptions, item.categoryname)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="cashinhandSpecialServices select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.cashinhand)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="discountSpecialServices select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.discount)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="revenueSpecialServices select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.revenue)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <a href="#" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                                </a>
+                                                <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                                    <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>`;
+
+                                    $('.financialDepartmentSpecialServices option[value="006"]').prop('selected', true);
+
+                                    $('#tableSpecialServices tbody').append(row);
                                 });
 
                                 $('.select2select').select2(); // reinit after DOM update
@@ -353,40 +465,40 @@
 
                                 savedData.forEach(item => {
                                     let row = `
-<tr class="data-row">
-    <td style="display: none">
-
-       <input type="hidden" class="financialDepartmentEMERGENCY" value="${item.financialdepartment}"/>
-    </td>
-    <td>
-        <select class="categorynameEMERGENCY select2select" style="background-color: white; height:32px;" disabled>
-            ${setSelected(categoryOptions, item.categoryname)}
-        </select>
-    </td>
-    <td>
-        <select class="cashinhandEMERGENCY select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.cashinhand)}
-        </select>
-    </td>
-    <td>
-        <select class="discountEMERGENCY select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.discount)}
-        </select>
-    </td>
-    <td>
-        <select class="revenueEMERGENCY select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.revenue)}
-        </select>
-    </td>
-    <td>
-        <a href="#" onclick="removeRow(this)">
-            <i class="fa fa-trash fa-lg " style="color: black;"></i>
-        </a>
-        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
-        </a>
-    </td>
-</tr>`;
+                                    <tr class="data-row">
+                                        <td style="display: none">
+                                    
+                                           <input type="hidden" class="financialDepartmentEMERGENCY" value="${item.financialdepartment}"/>
+                                        </td>
+                                        <td>
+                                            <select class="categorynameEMERGENCY select2select" style="background-color: white; height:32px;" disabled>
+                                                ${setSelected(categoryOptions, item.categoryname)}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="cashinhandEMERGENCY select2select" style="background-color: white;" disabled>
+                                                ${setSelected(optionsVen, item.cashinhand)}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="discountEMERGENCY select2select" style="background-color: white;" disabled>
+                                                ${setSelected(optionsVen, item.discount)}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="revenueEMERGENCY select2select" style="background-color: white;" disabled>
+                                                ${setSelected(optionsVen, item.revenue)}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a href="#" onclick="removeRow(this)">
+                                                <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                            </a>
+                                            <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                                <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                            </a>
+                                        </td>
+                                    </tr>`;
 
                                     $('.financialDepartmentEMERGENCY option[value="003"]').prop('selected', true);
 
@@ -395,6 +507,67 @@
 
                                 $('.select2select').select2(); // reinit after DOM update
                             });
+                        });
+                    });
+                }
+            });
+        }
+        function ProcedureloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsProcedure",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getAccounts(function (optionsVen) {
+
+                            savedData.forEach(item => {
+                                let row = `
+                                    <tr class="data-row">
+                                        <td style="display: none">                                    
+                                            <input type="hidden" class="financialDepartmentProcedure" value="${item.financialdepartment}"/>
+                                        </td>
+                                        <td>
+                                            <select class="categorynameProcedure" style="background-color: white; height:32px;" disabled>
+                                                <option value="0">Please Select</option>
+                                                <option value="001" selected>Procedure</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="cashinhandProcedure select2select" style="background-color: white;" disabled>
+                                                ${setSelected(optionsVen, item.cashinhand)}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="discountProcedure select2select" style="background-color: white;" disabled>
+                                                ${setSelected(optionsVen, item.discount)}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="revenueProcedure select2select" style="background-color: white;" disabled>
+                                                ${setSelected(optionsVen, item.revenue)}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a href="#" onclick="removeRow(this)">
+                                                <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                            </a>
+                                            <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                                <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                            </a>
+                                        </td>
+                                    </tr>`;
+
+                                $('.financialDepartmentProcedure option[value="007"]').prop('selected', true);
+
+                                $('#tableProcedure tbody').append(row);
+                            });
+
+                            $('.select2select').select2(); // reinit after DOM update
                         });
                     });
                 }
@@ -636,31 +809,31 @@
                 });
             });
         }
-        function addNewRowProcedure() {
+        function addNewRowSpecialServices() {
             getClinicalFinancialAcoountsDropdown(function (options) {
                 getSpecialServices(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
                         let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
-                         <input type = "hidden" class="financialDepartmentDiagnostic" value = "002">                   
+                         <input type = "hidden" class="financialDepartmentSpecialServices" value = "006">
                     <td>
-                        <select class="categorynameDiagnostic select2select" style="background-color: white; height:32px;">
+                        <select class="categorynameSpecialServices select2select" style="background-color: white; height:32px;">
                             ${categoryOptions}
                         </select>
                     </td>
                     <td>
-                        <select class="cashinhandDiagnostic select2select" style="background-color: white;">
+                        <select class="cashinhandSpecialServices select2select" style="background-color: white;">
                             ${optionsVen}
                         </select>
                     </td>
                     <td>
-                        <select class="discountDiagnostic select2select" style="background-color: white;">
+                        <select class="discountSpecialServices select2select" style="background-color: white;">
                             ${optionsVen}
                         </select>
                     </td>
                     <td>
-                        <select class="revenueDiagnostic select2select" style="background-color: white;">
+                        <select class="revenueSpecialServices select2select" style="background-color: white;">
                             ${optionsVen}
                         </select>
                     </td>
@@ -672,8 +845,8 @@
                     </td>
                 </tr>
             `;
-                        $('#tableDiagnostic tbody').append(newRow);
-                        $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
+                        $('#tableSpecialServices tbody').append(newRow);
+                        $('.financialDepartmentSpecialServices option[value="006"]').prop('selected', true);
                         $('.select2select').select2(); // initialize Select2
 
 
@@ -764,6 +937,47 @@
                     $('#tableSERVICE tbody').append(newRow);
                     $('.financialDepartmentSERVICE option[value="004"]').prop('selected', true);
                     $('.select2select').select2(); // initialize Select2
+                });
+            });
+        }
+        function addNewRowProcedure() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getAccounts(function (optionsVen) {
+                    let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                     <input type = "hidden" class="financialDepartmentProcedure" value = "007">
+                    <td>
+                        <select class="categorynameProcedure" disabled style="background-color: white; height:32px;">
+                            <option value="0">Please Select</option>
+                            <option value="001" selected >Procedure</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="cashinhandProcedure select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="discountProcedure select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenueProcedure select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+                    $('#tableProcedure tbody').append(newRow);
+                    $('.financialDepartmentProcedure option[value="007"]').prop('selected', true);
+                    $('.select2select').select2(); 
                 });
             });
         }
@@ -928,11 +1142,13 @@
     <div id="tabs">
 
         <ul>
-            <li><a href="#Tab-1">OPD</a></li>
+            <li style="display:none;"><a href="#Tab-1">OPD</a></li>
             <li><a href="#Tab-2">Diagnostic</a></li>
-            <li><a href="#Tab-3">Emergency</a></li>
-            <li><a href="#Tab-4">Service</a></li>
-            <li style="display:none;"><a href="#Tab-5">Pharmacy</a></li>
+            <li style="display:none;"><a href="#Tab-3">Emergency</a></li>
+            <li><a href="#Tab-4">Service</a></li>           
+            <li ><a href="#Tab-5">Pharmacy</a></li>
+            <li><a href="#Tab-6">SpecialServices</a></li>
+            <li><a href="#Tab-7">Procedure</a></li>
 
         </ul>
 
@@ -986,7 +1202,56 @@
                 </tbody>
             </table>
         </div>
+               <div id="Tab-6">
+           <div class="row">
 
+               <div class="col-lg-11 col-md-11 col-sm-11"></div>
+               <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                   <a href="#" id="addNewRowSpecialServices" onclick="addNewRowSpecialServices()">
+                       <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
+                   </a>
+               </div>
+           </div>
+           <table id="tableSpecialServices" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+               <thead id="theadSpecialServices">
+                   <tr>
+                       <th style="display: none">Financial Department  </th>
+                       <th style="width: 16%;">Category Name         </th>
+                       <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                       <th style="width: 25%;">Discount              </th>
+                       <th style="width: 25%;">Revenue               </th>
+                       <th style="width: 9%;">Action                </th>
+                   </tr>
+               </thead>
+               <tbody id="tbodySpecialServices">
+               </tbody>
+           </table>
+       </div>
+               <div id="Tab-7">
+           <div class="row">
+
+               <div class="col-lg-11 col-md-11 col-sm-11"></div>
+               <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                   <a href="#" id="addNewRowProcedure" onclick="addNewRowProcedure()">
+                       <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
+                   </a>
+               </div>
+           </div>
+           <table id="tableProcedure" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+               <thead id="theadProcedure">
+                   <tr>
+                       <th style="display: none">Financial Department  </th>
+                       <th style="width: 16%;">Category Name         </th>
+                       <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                       <th style="width: 25%;">Discount              </th>
+                       <th style="width: 25%;">Revenue               </th>
+                       <th style="width: 9%;">Action                </th>
+                   </tr>
+               </thead>
+               <tbody id="tbodyProcedure">
+               </tbody>
+           </table>
+       </div>
         <div id="Tab-3">
             <div class="row">
 

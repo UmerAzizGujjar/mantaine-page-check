@@ -112,6 +112,45 @@ namespace PMS.Modules.Accounts
             }
         }
         [WebMethod]
+        public static List<RowData> loadSavedRowsSpecialService()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "006"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                cashinhand = x.CashInHand.ToString(),
+                                discount = x.Discount.ToString(),
+                                revenue = x.Revenue.ToString(),
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
+        [WebMethod]
+        public static List<RowData> loadSavedRowsProcedure()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var data = (from x in db.ClinicalAccountCategories
+                            where x.IsCancel == false && x.Fn_Department == "007"
+                            select new RowData
+                            {
+                                categoryname = x.CategoryName,
+                                cashinhand = x.CashInHand.ToString(),
+                                discount = x.Discount.ToString(),
+                                revenue = x.Revenue.ToString(),
+                                financialdepartment = x.Fn_Department
+                            }).ToList();
+
+                return data;
+            }
+        }
+    
+        [WebMethod]
         public static string ClinicalFinancialDepartmentDropdown()
         {
             string data = string.Empty;
@@ -171,24 +210,24 @@ namespace PMS.Modules.Accounts
             }
             return data;
         }
-        //[WebMethod]
-        //public static string SpecialServices()
-        //{
-        //    string data = string.Empty;
+        [WebMethod]
+        public static string SpecialServices()
+        {
+            string data = string.Empty;
 
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var result = (from dv in db.INV_Items
-        //                      where dv.IsSpecialService == true
-        //                      select new
-        //                      {
-        //                          dv.DataValue_Name,
-        //                          dv.DataValue_Description
-        //                      }).ToList();
-        //        data = new JavaScriptSerializer().Serialize(result);
-        //    }
-        //    return data;
-        //}
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.INV_Items
+                              where dv.IsSpecialService == true
+                              select new
+                              {
+                                 DataValue_Name = dv.Item_ID ,
+                                 DataValue_Description = dv.Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string filldropdowns()
         {
