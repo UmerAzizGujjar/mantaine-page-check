@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Skin")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Live")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -906,6 +906,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4854,6 +4855,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, user_id);
             return ((ISingleResult<SpApprove_OPDShareResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApproveBillingProcess")]
+        public ISingleResult<SpApproveBillingProcessResult> SpApproveBillingProcess([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "BillId", DbType = "BigInt")] System.Nullable<long> billId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), billId, user_id);
+            return ((ISingleResult<SpApproveBillingProcessResult>)(result.ReturnValue));
         }
     }
 
@@ -204986,6 +204994,32 @@ namespace PMS
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
+                }
+            }
+        }
+    }
+
+    public partial class SpApproveBillingProcessResult
+    {
+
+        private string _Message;
+
+        public SpApproveBillingProcessResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(29) NOT NULL", CanBeNull = false)]
         public string Message
         {
             get

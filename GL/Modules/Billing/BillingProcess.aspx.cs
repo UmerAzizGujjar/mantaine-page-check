@@ -2355,6 +2355,7 @@ namespace PMS
                             data.Cash_In_Hand_Account,
                             data.Bank_Cash,
                             data.Main_Department,
+                            data.Status,
                             data.Voucher_ID,
                             data.In_Patient_ID,
                             data.Referred_By,
@@ -2529,6 +2530,14 @@ namespace PMS
         }
 
 
+        [WebMethod]
+        public static string approve_Bill(string BillId)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.SpApproveBillingProcess(Convert.ToInt32(BillId), user_id);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
         [WebMethod]
         public static string LoadDocShare(int Bill_ID)
         {

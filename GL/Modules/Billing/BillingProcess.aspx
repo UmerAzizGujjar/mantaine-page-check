@@ -51,6 +51,30 @@
                 window.open(url, '_blank');
 
             }
+            function ApproveBill() {
+                debugger;
+                var BillId = '<% =Request.QueryString["Bill_ID"] %>';
+                            PageMethods.approve_Bill(BillId, function (Tests) {
+                                debugger
+                                var message = JSON.parse(Tests);
+                                if (message[0].Message != null || message[0].Message != "") {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: message[0].Message,
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+                                    //alert(message[0].Message);
+                                    location.reload();
+                                }
+                            });
+                        }
             function BackToPrintPatient() {
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
                 var PatID = document.getElementById('<%=hdfPatient_ID.ClientID%>').value;
@@ -1113,7 +1137,15 @@
                     $('#txtOver_and_Above').val(data[0].Over_and_Above);
                     $('#txtcashinhand').val(data[0].Cash_In_Hand);
                     $('#txtbankcash').val(data[0].Bank_Cash);
-
+                    var status = data[0].Status;
+                    if (status === 'Approved') {
+                        $('#btnPrintVoucher').show();
+                    } else {
+                        $('#btnPrintVoucher').hide();
+                    }
+                    if (status != "Approved") {
+                        $('#btnApprove').show();
+                    }
 
                     setTimeout(function () {
                         $('#ddlCashInHand').val(data[0].Cash_In_Hand_Account).trigger('change');
@@ -1278,7 +1310,9 @@
                         var PackageType = $('#hdn_pkgtype').val();
                         var PackageName = $('#hdn_pkgname').val();
                         var bomTotalValue = $('#bomTotalValue').val();
-
+                        if (bomTotalValue == undefined || bomTotalValue == null || bomTotalValue == "") {
+                            bomTotalValue=0.00
+                        }
                         if (PackageType == "There is no row at position 0.") {
                             PackageType = "";
                         }
@@ -5834,11 +5868,15 @@
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />
                     </div>
+                                        <div class="col-lg-2">
+                        <input type="button" class="btn btn-primry"  style="width: 110px; display: none;" value="Approve" id="btnApprove"   onclick="ApproveBill()" />
+                    </div>
                     <div class="col-lg-2">
                         <input type="button" style="width: 110px; display: none;" value="Print Voucher" onclick="PrintVoucher();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
                         <input type="button" style="width: 110px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();" style="width: 100px;" />
+                    
                     </div>
                 </div>
             </div>
