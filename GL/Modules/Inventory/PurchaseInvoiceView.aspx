@@ -11,19 +11,50 @@
     border-left: 4px solid #3498db;
     animation: fadeIn .25s ease-in;
 }
+.table-wrapper {
+    max-height: 200px; /* adjust height as needed */
+    overflow-y: auto;   /* vertical scroll */
+    overflow-x: auto;   /* horizontal scroll if table is wider */
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+/* Optional: fixed header style */
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper th, .table-wrapper td {
+    padding: 6px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    text-align: left;
+    white-space: nowrap; /* prevents wrapping */
+}
 
 .child-col-left {
-    width: 35%;
+  
     background: #ffffff;
-    padding: 15px;
+   
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
+.child-col-left p{
+    color: #1b48ed;
+    font-size :15px;
+}
+.child-col-left p b{
+    color: black;
+   
+}
 .child-col-right {
     width: 65%;
 }
-
+h5 {
+    font-size : 20px;
+    font-weight:1000;
+}
 .child-table {
     width: 100%;
     border-collapse: collapse;
@@ -181,27 +212,21 @@
                     }
                 }
             });
-            $('#example tbody').on('click', 'tr', function () {
+   
 
+            $('#example tbody').on('click', 'tr', function () {
                 var row = table.row(this);
                 var data = row.data();
-
                 if (!data) return;
-
                 var id = data.PurchaseInvoiceId;
-
-                // If already open → close
                 if (row.child.isShown()) {
                     row.child.hide();
                     $(this).removeClass('shown');
                     return;
                 }
-
-                // Show loading placeholder
                 row.child('<div class="child-loading">Loading...</div>').show();
                 $(this).addClass('shown');
 
-                // First AJAX: Master + Details
                 $.ajax({
                     type: "POST",
                     url: "PurchaseInvoiceView.aspx/GetMasterAndDetail",
@@ -209,70 +234,70 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (resp) {
-
                         var d = resp.d;
-
-                        var html =
-                            `<div class="child-container">
-
-          <div class="child-col-left">
-              <h5>Master Information</h5>
-              <p><b>Invoice #:</b> ${d.Master.InvoiceNum}</p>
-              <p><b>Date:</b> ${moment(d.Master.CreatedDate).format("DD-MMM-YYYY")}</p>
-              <p><b>Vendor:</b> ${d.Master.VendorName}</p>
-              <p><b>Status:</b> ${d.Master.Status}</p>
-              <p><b>Remarks:</b> ${d.Master.Remarks}</p>
-          </div>
-
-          <div class="child-col-right">
-
-              <h5>Invoice Details</h5>
-              <table class="child-table" id="detailTable_${id}">
-                  <tr>
-                      <th>Item</th>
-                      <th>Qty</th>
-                      <th>Rate</th>
-                      <th>Total Amount</th>
-                      <th>Discount Amount</th>
-                      <th>STax Amount</th>
-                      <th>Net Amount</th>
-                  </tr>
-              </table>
-
-              <h5 class="mt-3">Other Information</h5>
-              <table class="child-table" id="otherTable_${id}">
-                  <tr>
-                      <th>Field 1</th>
-                      <th>Field 2</th>
-                  </tr>
-              </table>
-
-          </div>
-
-      </div>`;
+                        var html = `
+                            <div class="child-container">                            
+                                <div class="col-sm-4 col-md-4 col-lg-3 child-col-left">
+                                    <h5>Master Information</h5>
+                                    <p><b>Invoice #:</b> ${d.Master.InvoiceNum}</p>
+                                    <p><b>Date:</b> ${moment(d.Master.CreatedDate).format("DD-MMM-YYYY")}</p>
+                                    <p><b>Vendor:</b> ${d.Master.VendorName}</p>
+                                    <p><b>Status:</b> ${d.Master.Status}</p>
+                                    <p><b>Remarks:</b> ${d.Master.Remarks}</p>
+                                </div>                           
+                                <div class="col-sm-9 col-md-4 col-lg-9">
+                                    <h5>Invoice Details</h5>
+                                     <div class="table-wrapper">
+                                    <table class="child-table" id="detailTable_${id}">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Qty</th>
+                                                <th>Rate</th>
+                                                <th>Total Amount</th>
+                                                <th>Discount Amount</th>
+                                                <th>STax Amount</th>
+                                                <th>Net Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>   
+                                    </div>
+                                    <h5 class="mt-3">Audit Information</h5>
+                                    <table class="child-table" id="otherTable_${id}">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Number</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>View</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>                           
+                                </div>                            
+                            </div>`;
 
                         row.child(html).show();
-
-                        // Fill detail table
                         $.each(d.Detail, function (i, item) {
-                            $("#detailTable_" + id).append(`
-              <tr>
-                  <td>${item.Description}</td>
-                  <td>${item.Qty}</td>
-                  <td>${item.Rate}</td>
-                  <td>${item.TotalAmount}</td>
-                  <td>${item.DiscAmt}</td>
-                  <td>${item.Stax_Amount}</td>
-                  <td>${item.Amount}</td>
-              </tr>
-          `);
+                            $("#detailTable_" + id + " tbody").append(`
+                              <tr>
+                                  <td>${item.Description}</td>
+                                  <td>${item.Qty}</td>
+                                  <td>${item.Rate}</td>
+                                  <td>${item.TotalAmount}</td>
+                                  <td>${item.DiscAmt}</td>
+                                  <td>${item.Stax_Amount}</td>
+                                  <td>${item.Amount}</td>
+                              </tr>
+                `);
                         });
-                    
                         LoadAuditInfo(id);
                     }
                 });
 
-            }); 
+            });
         }        
 
         function LoadAuditInfo(id) {
@@ -286,17 +311,29 @@
                 success: function (resp) {
 
                     $.each(resp.d, function (i, x) {
-                        $("#otherTable_" + id).append(`
+
+                        $("#otherTable_" + id + " tbody").append(`
                     <tr>
-                        <td>${x.Field1}</td>
-                        <td>${x.Field2}</td>
+                        <td>${x.T_Type}</td>
+                        <td>${x.NUmber}</td>
+                        <td>${moment(x.Dates).format("DD-MMM-YYYY")}</td>
+                        <td>${x.Status}</td>
+                        <td>
+                           <a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="ViewPage(${x.ID},'${x.T_Type}')" id="btnview"><i class="fa fa-eye" ></i></a>
+                        </td>
                     </tr>
                 `);
                     });
-
                 }
             });
+        }
 
+        function ViewPage(id, type) {
+            debugger;
+            var ID =id
+            if (type == 'GRN') {
+                window.location.href = "GRN.aspx?GRN_ID=" + ID;
+            }
         }
     </script>
 </asp:Content>

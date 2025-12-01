@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Skin")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Live")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -906,7 +906,7 @@ namespace PMS
         {
             OnCreated();
         }
- 
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4862,6 +4862,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), billId, user_id);
             return ((ISingleResult<SpApproveBillingProcessResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAuditRecordAginstPurIvo")]
+        public ISingleResult<spGetAuditRecordAginstPurIvoResult> spGetAuditRecordAginstPurIvo([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Invoice_id", DbType = "Int")] System.Nullable<int> invoice_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invoice_id);
+            return ((ISingleResult<spGetAuditRecordAginstPurIvoResult>)(result.ReturnValue));
         }
     }
 
@@ -205055,6 +205062,104 @@ namespace PMS
                 if ((this._Message != value))
                 {
                     this._Message = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetAuditRecordAginstPurIvoResult
+    {
+
+        private string _T_Type;
+
+        private long _ID;
+
+        private System.Nullable<System.DateTime> _Dates;
+
+        private System.Nullable<long> _NUmber;
+
+        private string _Status;
+
+        public spGetAuditRecordAginstPurIvoResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_T_Type", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string T_Type
+        {
+            get
+            {
+                return this._T_Type;
+            }
+            set
+            {
+                if ((this._T_Type != value))
+                {
+                    this._T_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", DbType = "BigInt NOT NULL")]
+        public long ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this._ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dates", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Dates
+        {
+            get
+            {
+                return this._Dates;
+            }
+            set
+            {
+                if ((this._Dates != value))
+                {
+                    this._Dates = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NUmber", DbType = "BigInt")]
+        public System.Nullable<long> NUmber
+        {
+            get
+            {
+                return this._NUmber;
+            }
+            set
+            {
+                if ((this._NUmber != value))
+                {
+                    this._NUmber = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(100)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
                 }
             }
         }
