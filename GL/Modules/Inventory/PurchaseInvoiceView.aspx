@@ -3,7 +3,61 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 
+    <style>table.dataTable tbody tr.child td > .child-container {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    background: #f4f7fb;
+    border-left: 4px solid #3498db;
+    animation: fadeIn .25s ease-in;
+}
 
+.child-col-left {
+    width: 35%;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.child-col-right {
+    width: 65%;
+}
+
+.child-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.child-table th {
+    background: #3498db;
+    color: #fff;
+    padding: 6px;
+    font-size: 13px;
+    text-align: left;
+}
+
+.child-table td {
+    padding: 6px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+}
+
+.child-loading {
+    padding: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
     <script type="text/javascript">
 
         function PrintPurchaseDetail(PurchaseInvoiceId) {
@@ -40,7 +94,7 @@
 
 
         function LoadPage() {
-            $("#example").DataTable({
+            var table =  $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
@@ -127,8 +181,123 @@
                     }
                 }
             });
+            $('#example tbody').on('click', 'tr', function () {
+
+                var row = table.row(this);
+                var data = row.data();
+
+                if (!data) return;
+
+                var id = data.PurchaseInvoiceId;
+
+                // If already open → close
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    $(this).removeClass('shown');
+                    return;
+                }
+
+                // Show loading placeholder
+                row.child('<div class="child-loading">Loading...</div>').show();
+                $(this).addClass('shown');
+
+                // First AJAX: Master + Details
+                $.ajax({
+                    type: "POST",
+                    url: "PurchaseInvoiceView.aspx/GetMasterAndDetail",
+                    data: JSON.stringify({ invoiceId: id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (resp) {
+
+                        var d = resp.d;
+
+                        var html =
+                            `<div class="child-container">
+
+          <div class="child-col-left">
+              <h5>Master Information</h5>
+              <p><b>Invoice #:</b> ${d.Master.InvoiceNum}</p>
+              <p><b>Date:</b> ${moment(d.Master.CreatedDate).format("DD-MMM-YYYY")}</p>
+              <p><b>Vendor:</b> ${d.Master.VendorName}</p>
+              <p><b>Status:</b> ${d.Master.Status}</p>
+              <p><b>Remarks:</b> ${d.Master.Remarks}</p>
+          </div>
+
+          <div class="child-col-right">
+
+              <h5>Invoice Details</h5>
+              <table class="child-table" id="detailTable_${id}">
+                  <tr>
+                      <th>Item</th>
+                      <th>Qty</th>
+                      <th>Rate</th>
+                      <th>Total Amount</th>
+                      <th>Discount Amount</th>
+                      <th>STax Amount</th>
+                      <th>Net Amount</th>
+                  </tr>
+              </table>
+
+              <h5 class="mt-3">Other Information</h5>
+              <table class="child-table" id="otherTable_${id}">
+                  <tr>
+                      <th>Field 1</th>
+                      <th>Field 2</th>
+                  </tr>
+              </table>
+
+          </div>
+
+      </div>`;
+
+                        row.child(html).show();
+
+                        // Fill detail table
+                        $.each(d.Detail, function (i, item) {
+                            $("#detailTable_" + id).append(`
+              <tr>
+                  <td>${item.Description}</td>
+                  <td>${item.Qty}</td>
+                  <td>${item.Rate}</td>
+                  <td>${item.TotalAmount}</td>
+                  <td>${item.DiscAmt}</td>
+                  <td>${item.Stax_Amount}</td>
+                  <td>${item.Amount}</td>
+              </tr>
+          `);
+                        });
+                    
+                        LoadAuditInfo(id);
+                    }
+                });
+
+            }); 
         }        
-        
+
+        function LoadAuditInfo(id) {
+
+            $.ajax({
+                type: "POST",
+                url: "PurchaseInvoiceView.aspx/GetAuditInfo",
+                data: JSON.stringify({ invoiceId: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (resp) {
+
+                    $.each(resp.d, function (i, x) {
+                        $("#otherTable_" + id).append(`
+                    <tr>
+                        <td>${x.Field1}</td>
+                        <td>${x.Field2}</td>
+                    </tr>
+                `);
+                    });
+
+                }
+            });
+
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

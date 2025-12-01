@@ -17,6 +17,55 @@ namespace PMS.Inventory
         {
         }
         [WebMethod]
+        public static object GetAuditInfo(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+
+                    return
+        }
+        [WebMethod]
+        public static object GetMasterAndDetail(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // Master record
+                var master = (from m in db.Purchase_Invoice_Masters
+                              where m.PurchaseInvoiceId == invoiceId
+                              select new
+                              {
+                                  m.PurchaseInvoiceId,
+                                  m.InvoiceNum,
+                                  m.CreatedDate,
+                                  VendorName  = DBClass.getField("select Vendor_Name from AP_Vendors where Vendor_ID=" + m.VendorId),
+                                  m.Status,
+                                  m.Remarks
+                              }).FirstOrDefault();
+
+                // Detail rows
+                var detail = (from d in db.Purchase_Invoice_Details
+                              join inv in db.INV_Items on d.ItemId equals inv.Item_ID
+                              where d.PurchaseInvoiceId == invoiceId
+                              select new
+                              {
+                                  inv.Description,
+                                  d.Qty,
+                                  d.Rate,
+                                  d.Amount,
+                                  d.TotalAmount,
+                                  d.DiscAmt,
+                                  d.Stax_Amount,
+
+                              }).ToList();
+
+                return new
+                {
+                    Master = master,
+                    Detail = detail
+                };
+            }
+        }
+
+        [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
             try
