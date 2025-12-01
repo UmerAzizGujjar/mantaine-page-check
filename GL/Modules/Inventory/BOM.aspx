@@ -399,6 +399,7 @@
                         var purchaseRate = parseFloat(data.Purchase_Rate) || 0;
                         $('#txtpr_rate').val(purchaseRate.toFixed(2));
                         $('#txtStock').val(data.StockDisplay || '');
+                        $('#txtStock_qty').val(data.baseDisplay || '');
                         $('#txtWeightedAVG').val((data.weighted_avg || 0).toFixed(2));
                         $('#txtbaseunitqty').val(data.Base_Unit_Qty || '');
 
@@ -562,9 +563,14 @@
 
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label>Current Stock</label>
-                    <input type="text" id="txtStock" class="form-control" readonly />
+                    <input type="text" id="txtStock" class="form-control" disabled="disabled" />
+                    
+                </div>
+                <div class="col-lg-1">
+                      <label></label>
+                    <input type="text" id="txtStock_qty" style="margin-top:4px;" class="form-control" disabled="disabled" />
                 </div>
             </div>
 

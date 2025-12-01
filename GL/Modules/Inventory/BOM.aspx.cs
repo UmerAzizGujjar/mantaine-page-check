@@ -139,7 +139,9 @@ namespace PMS.Inventory
                 string baseUnitName = db.GetDataValueName("Unit Size", item.Base_Unit)?.ToLower() ?? "gram";
                 string baseUnit = item.Base_Unit;
                 // Build display string
-                string displayText = $"{stockInUOM:0.#} {uomName}(s) ({baseqty:0.#} {baseUnitName})";
+                //string displayText = $"{stockInUOM:0.#} {uomName}(s) ({baseqty:0.#} {baseUnitName})";
+                string stockDisplay = $"{stockInUOM:0.#} {uomName}(s)";
+                string baseDisplay = $"{baseqty:0.#} {baseUnitName}";
 
                 var result = new
                 {
@@ -150,7 +152,8 @@ namespace PMS.Inventory
                     item.Base_Unit_Qty,
                     StockTotal = stockInUOM,          // 100
                     StockInBaseUnit = baseqty, // 1000
-                    StockDisplay = displayText,         // "100 tube(s) (1000 gram)"
+                    StockDisplay = stockDisplay,         // "100 tube(s) (1000 gram)"
+                    baseDisplay = baseDisplay,         // "100 tube(s) (1000 gram)"
                     weighted_avg = weighted_avg
 
                 };

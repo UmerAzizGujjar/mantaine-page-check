@@ -1,80 +1,117 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using static PMS.StudentAttendance;
 
 namespace PMS
 {
-    public partial class TimeTableList : System.Web.UI.Page
+    public partial class TimeTableList : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
+
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
             try
             {
-                using (var _dbContext = new DataBaseDataContext())
+                using (var db = new DataBaseDataContext())
                 {
-                    string userId = HttpContext.Current.Session["UserId"].ToString();
+                    // 🔹 Build base query
+                    var query = from stt in db.Student_Time_Tables
+                                select new
+                                {
+                                    St_id = stt.St_id,
+                                    Classname = db.GetDataValueName("Student Class", stt.Class),
+                                    ProgramName = db.GetDataValueName("Admission Category", stt.Program),
+                                    WeekName = db.GetDataValueName("Week", stt.Weeks),
+                                    FirstDate = db.Student_Time_Table_Details
+                                                 .Where(d => d.St_id == stt.St_id)
+                                                 .OrderBy(d => d.Std_Id)
+                                                 .Select(d => d.Date)
+                                                 .FirstOrDefault(),
+                                    LastDate = db.Student_Time_Table_Details
+                                                 .Where(d => d.St_id == stt.St_id)
+                                                 .OrderByDescending(d => d.Std_Id)
+                                                 .Select(d => d.Date)
+                                                 .FirstOrDefault()
+                                };
 
-                    var Total_Student = _dbContext.Student_Time_Tables.Count();
-                    var Student = from STT in _dbContext.Student_Time_Tables
-                                  where ((_dbContext.GetDataValueName("Student Class", STT.Class).Contains(searchValue) || _dbContext.GetDataValueName("Admission Category", STT.Program).Contains(searchValue)
-                                  || _dbContext.GetDataValueName("Week", STT.Weeks).Contains(searchValue)))
-                                  select new
-                                  {                                    
-                                      St_id = STT.St_id,
-                                      Classname = _dbContext.GetDataValueName("Student Class", STT.Class),
-                                      ProgramName = _dbContext.GetDataValueName("Admission Category", STT.Program),
-                                      WeekName = _dbContext.GetDataValueName("Week", STT.Weeks),
-                                      FirstDate = _dbContext.Student_Time_Table_Details.Where(sd => sd.St_id == STT.St_id).OrderBy(sd => sd.Std_Id).Select(sd => sd.Date).FirstOrDefault(),
-                                      LastDate = _dbContext.Student_Time_Table_Details.Where(sd => sd.St_id == STT.St_id).OrderByDescending(sd => sd.Std_Id).Select(sd => sd.Date).FirstOrDefault()
-                                  };
+                    // 🔹 Apply search (case-insensitive)
+                    if (!string.IsNullOrWhiteSpace(searchValue))
+                    {
+                        string term = searchValue.Trim().ToLower();
+                        query = query.Where(x =>
+                            (x.Classname ?? "").ToLower().Contains(term) ||
+                            (x.ProgramName ?? "").ToLower().Contains(term) ||
+                            (x.WeekName ?? "").ToLower().Contains(term)
+                        );
+                    }
 
+                    var totalRecords = db.Student_Time_Tables.Count();
+                    var filteredCount = query.Count();
 
-
-                    var FilteredCount = Student.Count();
+                    // 🔹 Sorting — now includes WeekName (✅ your request)
                     switch (sortColumn)
                     {
                         case "Classname":
-                            Student = sortColumnDirection == "asc" ? Student.OrderBy(a => a.Classname) : Student.OrderByDescending(a => a.Classname);
+                            query = sortColumnDirection == "asc"
+                                ? query.OrderBy(x => x.Classname)
+                                : query.OrderByDescending(x => x.Classname);
+                            break;
+                        case "ProgramName":
+                            query = sortColumnDirection == "asc"
+                                ? query.OrderBy(x => x.ProgramName)
+                                : query.OrderByDescending(x => x.ProgramName);
+                            break;
+                        case "WeekName":   // ✅ ADDED — sorts Week column
+                            query = sortColumnDirection == "asc"
+                                ? query.OrderBy(x => x.WeekName)
+                                : query.OrderByDescending(x => x.WeekName);
                             break;
                         default:
-                            Student = Student.OrderByDescending(a => a.St_id);
+                            query = query.OrderByDescending(x => x.St_id);
                             break;
                     }
 
+                    // 🔹 Paging
+                    var data = query.Skip(start).Take(length).ToList();
 
-                    var StudentList = Student.Skip(start).Take(length).ToList();
-
-
-                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Student, data = StudentList };
-                    return jsonData;
+                    return new
+                    {
+                        draw,
+                        recordsTotal = totalRecords,
+                        recordsFiltered = filteredCount,
+                        data
+                    };
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching Time Table list", ex);
+                throw new Exception("Error in ViewList", ex);
             }
         }
 
         [WebMethod]
         public static string DeleteRecord(int Id)
         {
-            DataBaseDataContext db = new DataBaseDataContext();
+            using (var db = new DataBaseDataContext())
+            {
+                // Delete details first
+                var details = db.Student_Time_Table_Details.Where(d => d.St_id == Id);
+                db.Student_Time_Table_Details.DeleteAllOnSubmit(details);
 
-            var Delete = DBClass.getField("delete from Student_Time_Table_Detail where St_id= '" + Id + "' ");
-            var DeleteMaster = DBClass.getField("delete from Student_Time_Table where St_id= '" + Id + "' ");
-            return (Delete);
+                // Delete master
+                var master = db.Student_Time_Tables.FirstOrDefault(m => m.St_id == Id);
+                if (master != null)
+                {
+                    db.Student_Time_Tables.DeleteOnSubmit(master);
+                }
+
+                db.SubmitChanges();
+                return "OK";
+            }
         }
-
     }
 }
