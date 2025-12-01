@@ -16,13 +16,13 @@ namespace PMS.Inventory
         protected void Page_Load(object sender, EventArgs e)
         {
         }
-        [WebMethod]
-        public static object GetAuditInfo(int invoiceId)
-        {
-            using (DataBaseDataContext db = new DataBaseDataContext())
+        //[WebMethod]
+        //public static object GetAuditInfo(int invoiceId)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
 
-                    return
-        }
+        //            return
+        //}
         [WebMethod]
         public static object GetMasterAndDetail(int invoiceId)
         {
