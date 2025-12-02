@@ -518,7 +518,7 @@
                         </td>
                         <td>
                             <div>
-                                <fieldset style="display:none">
+                                <fieldset>
                                     <legend style="margin-bottom: 0px">Doctor Refund Distribution</legend>
                                     <div class="table-responsive" style="max-height: 217px;">
                                         <table class="table table-borderless" id="Doctor_Share_Table">
