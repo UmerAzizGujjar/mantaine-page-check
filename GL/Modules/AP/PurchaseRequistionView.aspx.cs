@@ -17,7 +17,58 @@ namespace PMS.AP
         protected void Page_Load(object sender, EventArgs e)
         {
         }
+        [WebMethod]
+        public static List<object> GetAuditInfo(int invoiceId)
+        {
+            string result = string.Empty;
 
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spGetAuditRecordAginstPR(invoiceId).ToList<object>();
+
+                return query;
+            }
+
+        }
+        [WebMethod]
+        public static object GetMasterAndDetail(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // Master record
+                var master = (from m in db.Purchase_Requisitions
+                              where m.PR_Id == invoiceId
+                              select new
+                              {
+                                  ID = m.PR_Id,
+                                  Number = m.PR_Num,
+                                  Date = m.PR_Date,
+                                  //VendorName = DBClass.getField("select Vendor_Name from AP_Vendors where Vendor_ID=" + m.ven),
+                                  Status = m.Status,
+                                  Remarks = m.Remarks
+                              }).FirstOrDefault();
+
+                // Detail rows
+                var detail = (from d in db.Purchase_Requisition_Details
+                              join inv in db.INV_Items on d.Item_ID equals inv.Item_ID
+                              where d.PR_Detail_ID == invoiceId
+                              select new
+                              {
+                                  inv.Item_Code,
+                                  inv.Description,
+                                  d.Qty,
+                                  d.EstimateCost,
+                                  d.Required_Date
+
+                              }).ToList();
+
+                return new
+                {
+                    Master = master,
+                    Detail = detail
+                };
+            }
+        }
         [WebMethod]
         public static bool isDeleteAllow()
         {

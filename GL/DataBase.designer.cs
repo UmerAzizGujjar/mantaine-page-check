@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Live")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "Pakred_Live")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -4869,6 +4869,41 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invoice_id);
             return ((ISingleResult<spGetAuditRecordAginstPurIvoResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAuditRecordAginstGRN")]
+        public ISingleResult<spGetAuditRecordAginstGRNResult> spGetAuditRecordAginstGRN([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Invoice_id", DbType = "Int")] System.Nullable<int> invoice_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invoice_id);
+            return ((ISingleResult<spGetAuditRecordAginstGRNResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAuditRecordAginstIGP")]
+        public ISingleResult<spGetAuditRecordAginstIGPResult> spGetAuditRecordAginstIGP([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Invoice_id", DbType = "Int")] System.Nullable<int> invoice_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invoice_id);
+            return ((ISingleResult<spGetAuditRecordAginstIGPResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAuditRecordAginstPay")]
+        public ISingleResult<spGetAuditRecordAginstPayResult> spGetAuditRecordAginstPay([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Invoice_id", DbType = "Int")] System.Nullable<int> invoice_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invoice_id);
+            return ((ISingleResult<spGetAuditRecordAginstPayResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAuditRecordAginstPO")]
+        public ISingleResult<spGetAuditRecordAginstPOResult> spGetAuditRecordAginstPO([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Invoice_id", DbType = "Int")] System.Nullable<int> invoice_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invoice_id);
+            return ((ISingleResult<spGetAuditRecordAginstPOResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAuditRecordAginstPR")]
+        public ISingleResult<spGetAuditRecordAginstPRResult> spGetAuditRecordAginstPR([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Invoice_id", DbType = "Int")] System.Nullable<int> invoice_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invoice_id);
+            return ((ISingleResult<spGetAuditRecordAginstPRResult>)(result.ReturnValue));
         }
     }
 
@@ -205081,6 +205116,496 @@ namespace PMS
         private string _Status;
 
         public spGetAuditRecordAginstPurIvoResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_T_Type", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string T_Type
+        {
+            get
+            {
+                return this._T_Type;
+            }
+            set
+            {
+                if ((this._T_Type != value))
+                {
+                    this._T_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", DbType = "BigInt NOT NULL")]
+        public long ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this._ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dates", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Dates
+        {
+            get
+            {
+                return this._Dates;
+            }
+            set
+            {
+                if ((this._Dates != value))
+                {
+                    this._Dates = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NUmber", DbType = "BigInt")]
+        public System.Nullable<long> NUmber
+        {
+            get
+            {
+                return this._NUmber;
+            }
+            set
+            {
+                if ((this._NUmber != value))
+                {
+                    this._NUmber = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(100)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetAuditRecordAginstGRNResult
+    {
+
+        private string _T_Type;
+
+        private long _ID;
+
+        private System.Nullable<System.DateTime> _Dates;
+
+        private System.Nullable<long> _NUmber;
+
+        private string _Status;
+
+        public spGetAuditRecordAginstGRNResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_T_Type", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string T_Type
+        {
+            get
+            {
+                return this._T_Type;
+            }
+            set
+            {
+                if ((this._T_Type != value))
+                {
+                    this._T_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", DbType = "BigInt NOT NULL")]
+        public long ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this._ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dates", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Dates
+        {
+            get
+            {
+                return this._Dates;
+            }
+            set
+            {
+                if ((this._Dates != value))
+                {
+                    this._Dates = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NUmber", DbType = "BigInt")]
+        public System.Nullable<long> NUmber
+        {
+            get
+            {
+                return this._NUmber;
+            }
+            set
+            {
+                if ((this._NUmber != value))
+                {
+                    this._NUmber = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(100)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetAuditRecordAginstIGPResult
+    {
+
+        private string _T_Type;
+
+        private long _ID;
+
+        private System.Nullable<System.DateTime> _Dates;
+
+        private System.Nullable<long> _NUmber;
+
+        private string _Status;
+
+        public spGetAuditRecordAginstIGPResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_T_Type", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string T_Type
+        {
+            get
+            {
+                return this._T_Type;
+            }
+            set
+            {
+                if ((this._T_Type != value))
+                {
+                    this._T_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", DbType = "BigInt NOT NULL")]
+        public long ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this._ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dates", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Dates
+        {
+            get
+            {
+                return this._Dates;
+            }
+            set
+            {
+                if ((this._Dates != value))
+                {
+                    this._Dates = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NUmber", DbType = "BigInt")]
+        public System.Nullable<long> NUmber
+        {
+            get
+            {
+                return this._NUmber;
+            }
+            set
+            {
+                if ((this._NUmber != value))
+                {
+                    this._NUmber = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(100)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetAuditRecordAginstPayResult
+    {
+
+        private string _T_Type;
+
+        private long _ID;
+
+        private System.Nullable<System.DateTime> _Dates;
+
+        private System.Nullable<long> _NUmber;
+
+        private string _Status;
+
+        public spGetAuditRecordAginstPayResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_T_Type", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string T_Type
+        {
+            get
+            {
+                return this._T_Type;
+            }
+            set
+            {
+                if ((this._T_Type != value))
+                {
+                    this._T_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", DbType = "BigInt NOT NULL")]
+        public long ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this._ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dates", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Dates
+        {
+            get
+            {
+                return this._Dates;
+            }
+            set
+            {
+                if ((this._Dates != value))
+                {
+                    this._Dates = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NUmber", DbType = "BigInt")]
+        public System.Nullable<long> NUmber
+        {
+            get
+            {
+                return this._NUmber;
+            }
+            set
+            {
+                if ((this._NUmber != value))
+                {
+                    this._NUmber = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(100)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetAuditRecordAginstPOResult
+    {
+
+        private string _T_Type;
+
+        private long _ID;
+
+        private System.Nullable<System.DateTime> _Dates;
+
+        private System.Nullable<long> _NUmber;
+
+        private string _Status;
+
+        public spGetAuditRecordAginstPOResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_T_Type", DbType = "VarChar(7) NOT NULL", CanBeNull = false)]
+        public string T_Type
+        {
+            get
+            {
+                return this._T_Type;
+            }
+            set
+            {
+                if ((this._T_Type != value))
+                {
+                    this._T_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", DbType = "BigInt NOT NULL")]
+        public long ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this._ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dates", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Dates
+        {
+            get
+            {
+                return this._Dates;
+            }
+            set
+            {
+                if ((this._Dates != value))
+                {
+                    this._Dates = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NUmber", DbType = "BigInt")]
+        public System.Nullable<long> NUmber
+        {
+            get
+            {
+                return this._NUmber;
+            }
+            set
+            {
+                if ((this._NUmber != value))
+                {
+                    this._NUmber = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(100)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetAuditRecordAginstPRResult
+    {
+
+        private string _T_Type;
+
+        private long _ID;
+
+        private System.Nullable<System.DateTime> _Dates;
+
+        private System.Nullable<long> _NUmber;
+
+        private string _Status;
+
+        public spGetAuditRecordAginstPRResult()
         {
         }
 

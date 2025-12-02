@@ -33,7 +33,7 @@ namespace PMS.Inventory
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spGetAuditRecordAginstPurIvo(invoiceId).ToList<object>();
+                var query = db.spGetAuditRecordAginstGRN(invoiceId).ToList<object>();
 
                 return query;
             }
