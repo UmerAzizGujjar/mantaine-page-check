@@ -26,7 +26,59 @@ namespace PMS.Inventory
             return value;
 
         }
+        [WebMethod]
+        public static List<object> GetAuditInfo(int invoiceId)
+        {
+            string result = string.Empty;
 
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spGetAuditRecordAginstPurIvo(invoiceId).ToList<object>();
+
+                return query;
+            }
+
+        }
+        [WebMethod]
+        public static object GetMasterAndDetail(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // Master record
+                var master = (from m in db.GRN_Masters
+                              where m.GRN_ID == invoiceId
+                              select new
+                              {
+                                  m.GRN_ID,
+                                  m.GRN_Num,
+                                  m.GRN_Date,
+                                  VendorName = DBClass.getField("select Vendor_Name from AP_Vendors where Vendor_ID=" + m.VendorId),
+                                  m.Status,
+                                  m.Remarks
+                              }).FirstOrDefault();
+
+                // Detail rows
+                var detail = (from d in db.GRN_Details
+                              join inv in db.INV_Items on d.Item_Id equals inv.Item_ID
+                              where d.GRNId == invoiceId
+                              select new
+                              {
+                                  inv.Item_Code,
+                                  inv.Description,
+                                  d.GRNQty,
+                                  d.Rate,
+                                  d.Amount,
+                                 // d.BounusQty
+
+                              }).ToList();
+
+                return new
+                {
+                    Master = master,
+                    Detail = detail
+                };
+            }
+        }
         [WebMethod]
         public static bool DeleteRecord(string GRNID)
         {
