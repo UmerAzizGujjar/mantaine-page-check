@@ -17,7 +17,57 @@ namespace PMS.Inventory
         {
 
         }
+        [WebMethod]
+        public static List<object> GetAuditInfo(int invoiceId)
+        {
+            string result = string.Empty;
 
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spGetAuditRecordAginstPay(invoiceId).ToList<object>();
+
+                return query;
+            }
+
+        }
+        [WebMethod]
+        public static object GetMasterAndDetail(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // Master record
+                var master = (from m in db.Payment_Invoices
+                              where m.PaymentInvoiceId == invoiceId
+                              select new
+                              {
+                                  ID = m.PaymentInvoiceId,
+                                  Number = m.PaymentNum,
+                                  Date = m.PaymentDate,
+                                  VendorName = DBClass.getField("select Vendor_Name from AP_Vendors where Vendor_ID=" + m.Vendor_ID),
+                                  Status = m.Status,
+                                  Remarks = m.Remarks
+                              }).FirstOrDefault();
+
+                // Detail rows
+                var detail = (from d in db.Payment_Invoice_Details                             
+                              where d.PaymentInvoiceId == invoiceId
+                              select new
+                              {
+                                  d.AdjustedAmount,
+                                  d.TotalPaidAmount,
+                                  d.Withholdtaxamount,
+                                  d.Payable,
+                                  // d.BounusQty
+
+                              }).ToList();
+
+                return new
+                {
+                    Master = master,
+                    Detail = detail
+                };
+            }
+        }
         [WebMethod]
         public static bool isDeleteAllow()
         {

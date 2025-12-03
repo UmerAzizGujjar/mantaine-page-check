@@ -21,6 +21,60 @@ namespace PMS.Inventory
 
         }
         [WebMethod]
+        public static List<object> GetAuditInfo(int invoiceId)
+        {
+            string result = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spGetAuditRecordAginstIGP(invoiceId).ToList<object>();
+
+                return query;
+            }
+
+        }
+        [WebMethod]
+        public static object GetMasterAndDetail(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // Master record
+                var master = (from m in db.Igp_masters
+                              where m.Igp_Id == invoiceId
+                              select new
+                              {
+                                 ID= m.Igp_Id,
+                                 Number = m.Igp_num,
+                                 Date = m.Igp_date,
+                                 VendorName = DBClass.getField("select Vendor_Name from AP_Vendors where Vendor_ID=" + m.Vendor),
+                                 Status = m.Status,
+                                 Remarks = m.Remarks
+                              }).FirstOrDefault();
+
+                // Detail rows
+                var detail = (from d in db.Igp_Details
+                              join inv in db.INV_Items on d.Item_Id equals inv.Item_ID
+                              where d.Igp_Id == invoiceId
+                              select new
+                              {
+                                  inv.Item_Code,
+                                  inv.Description,
+                                  d.POQty,
+                                  d.InspecQty,
+                                  d.IGPQty,
+                                  d.BlncQty,
+                                  // d.BounusQty
+
+                              }).ToList();
+
+                return new
+                {
+                    Master = master,
+                    Detail = detail
+                };
+            }
+        }
+        [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
             try

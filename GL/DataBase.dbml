@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="IITH_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -10841,6 +10841,56 @@
   <Function Name="dbo.spGetAuditRecordAginstPurIvo" Method="spGetAuditRecordAginstPurIvo">
     <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
     <ElementType Name="spGetAuditRecordAginstPurIvoResult">
+      <Column Name="T_Type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Dates" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NUmber" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetAuditRecordAginstGRN" Method="spGetAuditRecordAginstGRN">
+    <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAuditRecordAginstGRNResult">
+      <Column Name="T_Type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Dates" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NUmber" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetAuditRecordAginstIGP" Method="spGetAuditRecordAginstIGP">
+    <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAuditRecordAginstIGPResult">
+      <Column Name="T_Type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Dates" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NUmber" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetAuditRecordAginstPay" Method="spGetAuditRecordAginstPay">
+    <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAuditRecordAginstPayResult">
+      <Column Name="T_Type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Dates" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NUmber" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetAuditRecordAginstPO" Method="spGetAuditRecordAginstPO">
+    <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAuditRecordAginstPOResult">
+      <Column Name="T_Type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Dates" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NUmber" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetAuditRecordAginstPR" Method="spGetAuditRecordAginstPR">
+    <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetAuditRecordAginstPRResult">
       <Column Name="T_Type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
       <Column Name="ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
       <Column Name="Dates" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
