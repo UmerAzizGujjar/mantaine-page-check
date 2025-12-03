@@ -3528,14 +3528,14 @@
 
                         if (!data || !data.success || !Array.isArray(data.items) || data.items.length === 0) {
                             $tbody.append('<tr><td colspan="9" class="text-center text-muted">— No BOM configured for this procedure —</td></tr>');
-                            $('#bomSection').hide();
-                            $('#bomTotal').hide();
+                            //$('#bomSection').hide();
+                            //$('#bomTotal').hide();
                             return;
                         }
                         data.items.forEach(function (item, idx) {
                             var safeDesc = (item.Description || '—').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                             var safeItemCode = (item.ItemCode || '—').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                          /*  var safeBatch = (item.Batch_No || '—').replace(/</g, '&lt;').replace(/>/g, '&gt;');*/
+                            //var safeBatch = (item.Batch_No || '—').replace(/</g, '&lt;').replace(/>/g, '&gt;');*
 
                             var row =
                                 '<tr>' +
@@ -3572,9 +3572,9 @@
                         }, 0);
 
                         $('#bomTotalValue').val(totalRuntime.toFixed(2));
-                        $('#bomTotal').show();
+                       // $('#bomTotal').show();
 
-                        $('#bomSection').show();
+                       //$('#bomSection').show();
 
                         console.log('✅ Loaded ' + data.items.length + ' BOM item(s). Total runtime cost: ' + totalRuntime.toFixed(2));
                     },
@@ -3585,8 +3585,8 @@
                             console.error('Server:', err.Message || err);
                         } catch (e) { }
                         $('#tblBOM tbody').html('<tr><td colspan="9" class="text-danger text-center">⚠️ Failed to load BOM</td></tr>');
-                        $('#bomSection').hide();
-                        $('#bomTotal').hide();
+                        //$('#bomSection').hide();
+                        //$('#bomTotal').hide();
                     }
                 });
             }
@@ -5127,6 +5127,39 @@
 
 
             }
+
+
+
+            var editrights;
+            function AllowReceipeRights() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/CheckRecipeRights",
+                    data: "",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        debugger;
+                        editrights = data.d;
+
+                        if (editrights == "true") {
+
+                            $('#bomSection').show();
+                        }
+                        else {
+                            $('#bomSection').hide();
+                        }
+
+                    },
+                    failure: function () {
+                        alert("Error");
+                    }
+                });
+
+
+            }
             var inPatientID;
             var Discharged;
             debugger;
@@ -5268,6 +5301,7 @@
                 if (Bill_ID != "") {
                     AllowBillEdit();
                 }
+               
                 $("#btnPrint").hide();
                 debugger;
                 fillCasher();
@@ -5367,6 +5401,7 @@
                 FillChargePolicy();
                 LoadMainDepartment();
                 fillCashInHand();
+                AllowReceipeRights();
                 $('#add-new-testDirect').click(function () {
                 });
                 $('#add-new-Othertest').click(function () {
@@ -6238,8 +6273,7 @@
     </div>
 </div>
 <!-- =============== BOM SECTION (INTERNAL) =============== -->
-<!-- Hidden by default — shows only when BOM exists -->
-<div id="bomSection" style="display:none; margin-top:20px; padding:12px; background:#f8f9fa; border-radius:6px; border:1px solid #dee2e6;">
+<div id="bomSection" style=" display:none; margin-top:20px; padding:12px; background:#f8f9fa; border-radius:6px; border:1px solid #dee2e6;">
   <h5 style="margin-top:0; color:#333; font-weight:600;">
     <i class="fa fa-cogs"></i> BOM Components (Internal Costing)
   </h5>
@@ -6264,7 +6298,7 @@
   </table>
 
 
-  <div id="bomTotal" style="display:none; font-weight:bold; color:#1e7e34; font-size:1.1em;">
+  <div id="bomTotal" style="font-weight:bold; color:#1e7e34; font-size:1.1em;">
     <i class="fa fa-calculator"></i> 
     Total BOM Runtime Cost: 
     <input type="text" id="bomTotalValue" style="color:#d9534f;" disabled="disabled" />
