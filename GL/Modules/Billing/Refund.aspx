@@ -477,6 +477,14 @@
                 <label>Remarks:</label>
                <textarea id="txtRemarks" class="form-control" style="height:35px"></textarea>
            </div>
+           <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Total Bill:</label>
+             <input type="text" id="txtToT_amount" disabled="disabled" />
+           </div>
+           <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Recieved Amount:</label>
+             <input type="text" id="txt_RcvdAmount" disabled="disabled" />
+           </div>
        </div>       
     </div>
 

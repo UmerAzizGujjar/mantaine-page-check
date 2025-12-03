@@ -1604,13 +1604,13 @@
                 debugger;
                 var InPatient_Type = $("#hdn_InPatienttype").val();
                 var Patient_Type = $("#hdn_PatienttypeId").val();
-                var Aggreement_Type = ''
+                var Aggreement_Type = '02'
 
                 if (InPatient_Type == "There is no row at position 0.") {
                     Aggreement_Type = Patient_Type
                 }
                 else {
-                    Aggreement_Type = InPatient_Type
+                    Aggreement_Type = Aggreement_Type
                 }
                 var doc_id = $(rows).closest('tr').find('td select[name="ddlDoctor"]').val();
                 var test_id = $(rows).closest('tr').find('td input[name ="hdnItemID"]').val();
