@@ -127,9 +127,14 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Advance_Payment where Advance_ID = " + transID).ToString();
                     }
-                    else if (transType == "OJV")
+                    else if (transType == "OPD")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Patients where Patient_ID = " + transID).ToString();
+                    }
+                    else if (transType == "ADV")
+                    {
+                        var rawVoucherId = DBClass.getField("select Voucher_ID from Advance_Payment where Advance_ID = " + transID);
+                        VoucherId = rawVoucherId != null ? rawVoucherId.ToString() : "0"; // Default to "0" if null
                     }
 
                     if (transType == "AJV")
@@ -139,7 +144,15 @@ namespace PMS
 
                     reportPath += "Inventory/rptGLViewVoucher.rpt";
                     rd.Load(reportPath);
-                    rd.SetParameterValue("@Voucher_ID", Convert.ToInt32(VoucherId));
+                    //rd.SetParameterValue("@Voucher_ID", Convert.ToInt32(VoucherId));    // this is the original parameter that is wihotu a fail safe 
+                    int voucherIdInt;
+                    if (!int.TryParse(VoucherId, out voucherIdInt))
+                    {
+                        // If parsing fails, use a default value (like 0) or handle the error gracefully.
+                        voucherIdInt = 0;
+                    }
+
+                    rd.SetParameterValue("@Voucher_ID", voucherIdInt);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Title", Title);
                     rd.SetParameterValue("UserName", AppConfig.UserName);

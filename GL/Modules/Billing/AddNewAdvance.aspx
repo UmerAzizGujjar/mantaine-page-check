@@ -1,26 +1,25 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewAdvance.aspx.cs" Inherits="PMS.AddNewAdvance" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">    
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Advance.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-       <script type="text/javascript">
-          
+    <script type="text/javascript">
+
 
         $(document).ready(function () {
             $("#txtAdvanceDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#txtAdvanceDate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
             debugger;
             LoadTokenInputsDefaultMRNo();
-            
+
             var advID = '<% =Request.QueryString["advID"] %>';
-            if (advID != "")
-            {
+            if (advID != "") {
                 LoadPatientDetails(advID);
 
             }
             var Reg_ID = '<% =Request.QueryString["Reg_ID"] %>';
-            var   PatientId_QS = '<% =Request.QueryString["Reg_ID"] %>';
+            var PatientId_QS = '<% =Request.QueryString["Reg_ID"] %>';
 
             if (PatientId_QS != "") {
                 debugger;
@@ -47,7 +46,7 @@
                 $('#lblDepartment').text(ReplaceNullWith_Space(data.d.department));
                 $('#lblPatientCategory').text(ReplaceNullWith_Space(data.d.Patient_Type));
                 $('#lblPatientDiscountType').text(ReplaceNullWith_Space(data.d.Patient_Discount_Type));
-                $('#lblOutputShow').text(ReplaceNullWith_Space(data.d.Balance));  
+                $('#lblOutputShow').text(ReplaceNullWith_Space(data.d.Balance));
             }
         }
         debugger
@@ -84,18 +83,18 @@
         function LoadTokenInputsDefaultMRNo() {
             debugger;
             $("#txtMRNo").tokenInput("../../json.aspx?Table=Patients",
-             {
-                 tokenLimit: 1,
-                 onAdd: function (item) {
-                     try {
-                         $("#hdPatientID").val(item.id);
-                         $("#txtMRNo").val(item.name);
-                         GetPatientDetail();
-                     } catch (err) {
-                         alert(err.message);
-                     }
-                 }
-             });
+                {
+                    tokenLimit: 1,
+                    onAdd: function (item) {
+                        try {
+                            $("#hdPatientID").val(item.id);
+                            $("#txtMRNo").val(item.name);
+                            GetPatientDetail();
+                        } catch (err) {
+                            alert(err.message);
+                        }
+                    }
+                });
         }
 
         function GetPatientDetail() {
@@ -149,7 +148,7 @@
                 $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name });
                 $('#btnSave').val('Update');
                 $('#lblOutputShow').text(ReplaceNullWith_Space(Balance));
-            
+
             }
         }
 
@@ -159,7 +158,41 @@
             else
                 return Data;
         }
+        // Add this function to print the voucher
+       <%-- function PrintVoucher() {
+            debugger;
+            var advID = '<% =Request.QueryString["advID"] %>';
+    var locationInfo = window.location;
+    // Use the same report name and parameter structure as OPD.aspx
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Voucher&TransID=' + advID + '&TransType=ADVANCE';
+    if (!locationInfo.origin.includes('localhost')) {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Voucher&TransID=' + advID + '&TransType=ADVANCE';
+    }
+    window.open(url, '_blank');
+}--%>
+        function PrintVoucher() {
+            debugger;
+            var advID = '<%= Request.QueryString["advID"] %>' || '0'; // Default to '0' if missing
 
+           // Optional: trim and validate
+           advID = advID.trim() === "" ? "0" : advID;
+
+           var locationInfo = window.location;
+           // Pass TransID=0 if no valid ID — your report must tolerate this
+           var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Voucher&TransID=' + advID + '&TransType=ADVANCE';
+
+           if (!locationInfo.origin.includes('localhost')) {
+               var urlInfo = window.location.href.split('/');
+               var ip = urlInfo[2];
+               var foldername = urlInfo[3];
+               url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Voucher&TransID=' + advID + '&TransType=ADVANCE';
+           }
+
+           window.open(url, '_blank');
+       }
 
         function SaveRecord() {
             debugger;
@@ -184,7 +217,7 @@
                     url: "AddNewAdvance.aspx/CheckExistInPatient",
                     data: JSON.stringify({
                         "PatientID": Patient_ID,
-                       
+
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -218,8 +251,7 @@
                                     console.log(advID)
                                     console.log(saveVal)
 
-                                    if (saveVal == "Save")
-                                    {
+                                    if (saveVal == "Save") {
                                         alert("Data Save Successfully");
                                         $("#txtMRNo").tokenInput('clear');
                                         $("#txtAdvanceAmount").val("");
@@ -237,11 +269,10 @@
                                         window.open(url, '_blank');
                                         window.location = "AddNewAdvance.aspx";
                                     }
-                                    else
-                                    {
+                                    else {
                                         alert(response.d);
                                     }
-                                   
+
                                 },
                                 failure: function (response) {
                                     alert(response.d);
@@ -254,158 +285,161 @@
                     }
                 });
             }
-           }
+        }
 
-       </script>
-
-
+    </script>
 
 
 
-<div id="header" class="container-fluid">
-    <input type="hidden" id="hdPatientID" />
-     <div class="row">
- <!-- Left Card -->
- <div class="col-lg-5 col-md-5 col-sm-12">
-     <div class="card">
-         <div class="card-body">
-             <div class="row">
-                 <div class="col-lg-5 col-md-5 col-sm-6 text-center">
-                     <div class="image-container">
-                         <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/AddAdvance.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
-                     </div>
-                 </div>
-                 <div class="col-lg-7 col-md-5 col-sm-6">
-                     <div class="row mb-3 mtt">
-                         <div class="col-lg-5 col-md-5 col-sm-6">
-                            <label for="txtMRNo" class="form-label">MR No *:</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6 top">
-                              <input type="text" id="txtMRNo" class="form-control" />
-                         </div>
-                     </div>
-                     <div class="row mb-3 mtt">
-                         <div class="col-lg-5 col-md-5 col-sm-6">
-                              <label class="form-label">Patient Name :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6 top">
-                           <label id="lblPatienName"></label>
-                         </div>
-                     </div>
-                     <div class="row mb-3 mtt">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                           <label class="form-label">Contact No :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6 top">
-                             <label id="lblContactNo"></label>
-                         </div>
-                     </div>
-                     <div class="row mb-3 mtt">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                             <label class="form-label">Reg. Date :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6 top">
-                              <label id="lblRegDate"></label>
-                         </div>
-                     </div>
-                     <div class="row mb-3 mtt">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label class="form-label">Gender :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6 top">
-                             <label id="lblGender"></label>
-                         </div>
-                     </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
-         <!-- Right Card -->
-         <div class="col-lg-5 col-md-5 col-sm-12">
-             <div class="card">
-                 <div class="card-body">
-                     <div class="row mb-3">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                             <label class="form-label">Age Years :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6">
-                              <label id="lblAgeYears"></label>
-                         </div>
-                     </div>              
-                     <div class="row mb-3">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                             <label class="form-label">Address :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6">
-                              <label id="lblAddress"></label>
-                         </div>
-                     </div>
-                     <div class="row mb-3">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label class="form-label">Patient Category :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6">
-                            <label id="lblPatientCategory"></label>
-                         </div>
-                     </div>
-                     <div class="row mb-3">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label class="form-label">Department :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6">
-                             <label id="lblDepartment"></label>
-                         </div>
-                     </div>
-                     <div class="row mb-3">
-                         <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                            <label class="form-label">InPatient Admit Category :</label>
-                         </div>
-                         <div class="col-lg-7 col-md-5 col-sm-6">
-                             <label id="lblPatientDiscountType" style="background-color:silver;"></label>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-    </div>
 
-         
-    <div class="row">
-        <div class="col-md-2 mb-3">
-            <label for="txtAdvanceDate" class="form-label">Advance Date :</label>
-            <input type="text" id="txtAdvanceDate" class="form-control" />
-        </div>
-          <div class="col-md-2 mb-3">
-            <label for="txtAdvanceAmount" class="form-label">Advance Amount *:</label>
-            <input type="text" id="txtAdvanceAmount" class="form-control" />
-        </div>
-        <div class="col-md-3 mb-3" style="display:none">
-            <label class="form-label">Output:</label>
-            <label id="lblOutput" style="background-color:silver;"></label>
-            <label id="lblOutputShow" style="margin-left: -214px;"></label>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="txtRemarks" class="form-label">Remarks:</label>
-            <textarea id="txtRemarks" style="width: 100% !important;
-    height: 35px !important;" class="form-control" cols="" rows="2"></textarea>
-        </div>
-    </div>
- 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <input type="button" value="Save" class="btn btn-primry" onclick="SaveRecord()" id="btnSave" />
+
+    <div id="header" class="container-fluid">
+        <input type="hidden" id="hdPatientID" />
+        <div class="row">
+            <!-- Left Card -->
+            <div class="col-lg-5 col-md-5 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-5 col-md-5 col-sm-6 text-center">
+                                <div class="image-container">
+                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/AddAdvance.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                                </div>
+                            </div>
+                            <div class="col-lg-7 col-md-5 col-sm-6">
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6">
+                                        <label for="txtMRNo" class="form-label">MR No *:</label>
+                                    </div>
+                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
+                                        <input type="text" id="txtMRNo" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6">
+                                        <label class="form-label">Patient Name :</label>
+                                    </div>
+                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
+                                        <label id="lblPatienName"></label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                        <label class="form-label">Contact No :</label>
+                                    </div>
+                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
+                                        <label id="lblContactNo"></label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                        <label class="form-label">Reg. Date :</label>
+                                    </div>
+                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
+                                        <label id="lblRegDate"></label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 mtt">
+                                    <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                        <label class="form-label">Gender :</label>
+                                    </div>
+                                    <div class="col-lg-7 col-md-5 col-sm-6 top">
+                                        <label id="lblGender"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <input type="button" class="btn-gray" value="View" onclick="window.open('AdvanceList.aspx')" />
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-3">
-                    <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintAdvance()" value="Print" />
+            </div>
+            <!-- Right Card -->
+            <div class="col-lg-5 col-md-5 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                <label class="form-label">Age Years :</label>
+                            </div>
+                            <div class="col-lg-7 col-md-5 col-sm-6">
+                                <label id="lblAgeYears"></label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                <label class="form-label">Address :</label>
+                            </div>
+                            <div class="col-lg-7 col-md-5 col-sm-6">
+                                <label id="lblAddress"></label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                <label class="form-label">Patient Category :</label>
+                            </div>
+                            <div class="col-lg-7 col-md-5 col-sm-6">
+                                <label id="lblPatientCategory"></label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                <label class="form-label">Department :</label>
+                            </div>
+                            <div class="col-lg-7 col-md-5 col-sm-6">
+                                <label id="lblDepartment"></label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
+                                <label class="form-label">InPatient Admit Category :</label>
+                            </div>
+                            <div class="col-lg-7 col-md-5 col-sm-6">
+                                <label id="lblPatientDiscountType" style="background-color: silver;"></label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+
+        <div class="row">
+            <div class="col-md-2 mb-3">
+                <label for="txtAdvanceDate" class="form-label">Advance Date :</label>
+                <input type="text" id="txtAdvanceDate" class="form-control" />
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="txtAdvanceAmount" class="form-label">Advance Amount *:</label>
+                <input type="text" id="txtAdvanceAmount" class="form-control" />
+            </div>
+            <div class="col-md-3 mb-3" style="display: none">
+                <label class="form-label">Output:</label>
+                <label id="lblOutput" style="background-color: silver;"></label>
+                <label id="lblOutputShow" style="margin-left: -214px;"></label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="txtRemarks" class="form-label">Remarks:</label>
+                <textarea id="txtRemarks" style="width: 100% !important; height: 35px !important;"
+                    class="form-control" cols="" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <input type="button" value="Save" class="btn btn-primry" onclick="SaveRecord()" id="btnSave" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <input type="button" class="btn-gray" value="View" onclick="window.open('AdvanceList.aspx')" />
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3">
+                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintAdvance()" value="Print" />
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3">
+                        <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </asp:Content>

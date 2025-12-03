@@ -451,15 +451,19 @@
                 }
 
 
+
+
+
         function PrintVoucher() {
+            debugger;
             var id = '<% =Request.QueryString["OPDID"] %>';
             var locationInfo = window.location;
-            var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OJV Voucher&TransID=' + id + '&TransType=OJV';
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPD';
             if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OJV Voucher&TransID=' + id + '&TransType=OJV';
+                url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPD';
             }
             window.open(url, '_blank');
         }
@@ -1195,8 +1199,8 @@
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none;">
                     <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6" id="divvoucher">
-                    <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" style="display: none;" />
+                <div class="col-lg-2 col-md-3 col-sm-6" id="divvoucher">
+                   <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
                     <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" />

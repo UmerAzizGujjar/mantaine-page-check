@@ -6,7 +6,7 @@ $(document).ready(function () {
     $('#divcard').hide();
     $('#divapprove').hide();
     $('#btn-opdprint').hide();
-    $('#divvoucher').hide();
+  /*  $('#divvoucher').hide();*/
     $("#tabs").on('click', 'li', function () {
         debugger;
         var activeTab = $(this).find('a').html();
