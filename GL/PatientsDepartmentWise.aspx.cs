@@ -3045,8 +3045,9 @@ namespace PMS
                     tr_Summary.Visible = false;
                     
                     AllowPatientRecord = false;
-
-
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    trTestResult1.Visible = false;
                     //lblMainDepartment.Visible = true;
                     //ddlDepartments.Visible = true;
                     object valusets;
@@ -3061,7 +3062,7 @@ namespace PMS
 
                     //lblPatientType.Visible = true;
                     //lblMultiSelect.Visible = true;
-                    SetDepartent();
+                    /*SetDepartent*/();
                 }
                 else if (this.PageTitle == "Test_Result_Status")
                 {
