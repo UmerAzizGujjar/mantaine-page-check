@@ -323,6 +323,7 @@
     <Content Include="Modules\PatientManagement\OPD.aspx" />
     <Content Include="Modules\PatientManagement\OPDPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDView.aspx" />
+    <Content Include="Modules\PatientManagement\OPD_Refund.aspx" />
     <Content Include="Modules\PatientManagement\RegisterPatient.aspx" />
     <Content Include="Modules\StudentAffair\AddStudent.aspx" />
     <Content Include="Modules\StudentAffair\AddStudentChallan.aspx" />
@@ -26620,6 +26621,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OPDView.aspx.designer.cs">
       <DependentUpon>OPDView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPD_Refund.aspx.cs">
+      <DependentUpon>OPD_Refund.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPD_Refund.aspx.designer.cs">
+      <DependentUpon>OPD_Refund.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\RegisterPatient.aspx.cs">
       <DependentUpon>RegisterPatient.aspx</DependentUpon>
