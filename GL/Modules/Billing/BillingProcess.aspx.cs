@@ -2458,12 +2458,12 @@ namespace PMS
                                      .Join(db.Doctor_agreement_details,
                                            data => data.Doc_agreemnt_id,
                                            dd => dd.Doc_agreement_id,
-                                           (data, dd) => new { dd })
+                                           (data, dd) => new { dd , data })
                                      .Where(d => d.dd.services == "002"
                                               && d.dd.AgrementTypeId == Aggreement_Type
                                               && d.dd.isactive == true
                                               && d.dd.item_id.ToString() == item_id
-                                              && d.dd.Doc_agreement_id.ToString() == doc_id)
+                                              && d.data.Doctor.ToString() == doc_id)
                                      .Select(d => new { d.dd.doc_share, d.dd.hos_share })
                                      .FirstOrDefault();
 
@@ -2474,13 +2474,13 @@ namespace PMS
                                   .Join(db.Doctor_agreement_details,
                                         data => data.Doc_agreemnt_id,
                                         dd => dd.Doc_agreement_id,
-                                        (data, dd) => new { dd })
+                                        (data, dd) => new { dd, data })
                                   .Where(d => d.dd.AgrementTypeId == Aggreement_Type
                                            && d.dd.isactive == true
                                            && d.dd.services == null
                                            && d.dd.test_id == Convert.ToInt32(test_id)
                                            && d.dd.item_id == 0
-                                           && d.dd.Doc_agreement_id.ToString() == doc_id)
+                                          && d.data.Doctor.ToString() == doc_id)
                                   .Select(d => new { d.dd.doc_share, d.dd.hos_share })
                                   .FirstOrDefault();
 

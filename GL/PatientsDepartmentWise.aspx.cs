@@ -3062,7 +3062,7 @@ namespace PMS
 
                     //lblPatientType.Visible = true;
                     //lblMultiSelect.Visible = true;
-                    /*SetDepartent*/;
+                    /*SetDepartent();*/
                 }
                 else if (this.PageTitle == "Test_Result_Status")
                 {
