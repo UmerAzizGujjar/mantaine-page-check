@@ -2,8 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/NewOutPatient.css" rel="stylesheet" />
-      
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/NewOutPatient.css" rel="stylesheet" />
+
     <script id="ScriptmanageSymptomsModal">
 
         $(document).on('input', '#symptomSearch', function () {
@@ -212,12 +212,13 @@
     <script id="DocumentReady">
         $(document).ready(function () {
 
-            
+            makeSelectsSelect2();
             loaddoctor_byDep();
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != "") {
                 $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
                 loadPatientFormData(id);
+                
                 $('#btnSave').val("Update");
                 AppendSymtompsHistory();
                 Appendtestintable();
@@ -233,7 +234,7 @@
                         Add_GeneralExamRow(param);
                     }
                 });
- 
+
             }
             else {
                 openQueue();
@@ -245,9 +246,11 @@
             $('.labtest_checkbox').hide();
             $('#06').click();
             fillDepartment();
+            fillFilterClinic();
             filldoc();
             loaddoctor();
             FillMainTestDepartment();
+            
             FillLabTests('');
             fillComplaints("");
             fillPrimaryDiagnosis("");
@@ -297,9 +300,35 @@
                 LoadTestByDepartment(searchTerm);
             });
             $('#ctl00_MainContent_ddlPatientDepartment').on("change", function () {
-                $('#ctl00_MainContent_ddlPatientDepartment').find('option:selected')[0].value;
-                fillPendingPatientsList();
-            })
+                 var selectedText = $(this).find('option:selected').text();
+
+                 if (selectedText === 'Filter Clinic') {
+                     $('#divFilterClinic').slideDown();
+                }
+                else {
+                     $('#divFilterClinic').slideUp();
+                }
+
+                 fillPendingPatientsList();
+            });
+            $('#isPrivate').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('#divdocname').slideDown();  
+                    $('#divFilterClinic').slideUp();  
+                } else {
+                    $('#divdocname').slideUp();  
+
+                    var selectedText = $('#ctl00_MainContent_ddlPatientDepartment').find('option:selected').text();
+
+                    if (selectedText === 'Filter Clinic') {
+                        
+                        $('#divFilterClinic').slideDown(); 
+                    } else {
+                       
+                        $('#divFilterClinic').slideUp();  
+                    }
+                }
+            });
             $('#<%= ddlDoctorName.ClientID %>, #<%= ddlIssuance_Of.ClientID %>, #<%= ddlFOllowUp.ClientID %>').change(function () {
                 updateFollowUpTable();
             });
@@ -487,7 +516,7 @@
                             $table.attr('tabindex', '-1')
                                 .get(0)
                                 .scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                         }
+                        }
                     });
                 });
 
@@ -511,7 +540,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                   
+
                     hideLoading();
 
                     var result = JSON.parse(response.d);
@@ -668,9 +697,9 @@
                 updateDisposalTable();
                 updateHistoryTable();
                 // Show success message
-                 AddVitals();
+                AddVitals();
                 setDropdownValue('ctl00_MainContent_ddldoctors', data.referDoc);
-                
+
             } catch (error) {
                 console.error("Error populating form: ", error);
                 alert("Error populating form data. Please check console for details.");
@@ -699,7 +728,8 @@
                 <div class="particle"></div>
                 <div class="particle"></div>
             </div>
-        `);        }
+        `);
+        }
 
         function hideLoading() {
             const overlay = document.querySelector('.modern-loading-overlay');
@@ -712,7 +742,7 @@
                 }, 500); // Match this duration with your CSS transition time
             }
         }
-         
+
 
         // Example usage:
         // Call this function with a patient ID to load the form
@@ -797,7 +827,7 @@
                         $('#<%= Label1.ClientID %>').text(opdNo);
                         $("#<%= hdfPatient_ID.ClientID %>").val(PatientID);
                         $("#<%= hdfReg_ID.ClientID %>").val(regPatID);
-
+                        FillPreviousLabTests();
                         $('#queueModal').modal('hide');
                     }
                 },
@@ -929,9 +959,19 @@
                 $('#ctl00_MainContent_ddlDoctorName').html(options)
             });
         }
+        function makeSelectsSelect2() {
+             const selector = '.select2-enable';
+
+             const $elements = $(selector);
+
+            if ($elements.length > 0) {
+                $elements.select2();
+            } 
+        }
         function fillPendingPatientsList() {
 
             var filterDepartment = $('#ctl00_MainContent_ddlPatientDepartment').val();
+            var filterClinic = $('#ctl00_MainContent_ddlFilterClinic').val();
             var doc_name = $('#ctl00_MainContent_ddldocname').val();
             if (doc_name == "0") {
                 doc_name = "";
@@ -939,8 +979,10 @@
             if (filterDepartment == "0") {
                 filterDepartment = "";
             }
-
-            PageMethods.PendingPatients(filterDepartment, doc_name, function (data) {
+            if (filterClinic == "0") {
+                filterClinic = "";
+            }
+            PageMethods.PendingPatients(filterDepartment, filterClinic, doc_name, function (data) {
                 debugger;
                 var parsedData = JSON.parse(data);
                 var rows = '';
@@ -976,7 +1018,19 @@
                     options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                 });
                 $("#ctl00_MainContent_ddlPatientDepartment").html(options);
-                $("#ctl00_MainContent_ddlPatientDepartment").select2();
+            });
+            return options;
+        }
+        function fillFilterClinic() {
+            var options;
+            PageMethods.GetAllFilterClinics(function (data) {
+                debugger;
+                var options = '<option value="0" >Filter Clinic</option>';
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $("#ctl00_MainContent_ddlFilterClinic").html(options);
+                $("#ctl00_MainContent_ddlFilterClinic").select2();
             });
             return options;
         }
@@ -1104,7 +1158,7 @@
                     $('#dvtblSymtomps').slideDown(); // 👈 Show the table container
                 }
 
-                 $('#txtDuration').val("");
+                $('#txtDuration').val("");
                 $('#ddlDaysMonthsYears').val("001");
                 $('#txtRemarks').val("");
             } else {
@@ -1202,6 +1256,15 @@
                 $divSymptom.slideDown(300, function () {
                     $('#NewSymptom').focus();
                 });
+            }
+        }
+        function ShowPreviousHistory() {
+            const $divPreviousHistory = $('#InvestigationPreviousHistory');
+
+            if ($divPreviousHistory.is(':visible')) {
+                $divPreviousHistory.slideUp();
+            } else {
+                $divPreviousHistory.slideDown();
             }
         }
         function openManageSymptomsModal() {
@@ -1863,7 +1926,49 @@
 
             handleFinalDiagnosisRow(diagnosisId, diagnosisName);
         });
+        function FillPreviousLabTests() {
+            debugger;
+            var patientID = $("#<%= hdfReg_ID.ClientID %>").val();; // Get patient ID from the heheid input
 
+            if (!patientID || patientID === '') {
+                $('#InvestigationPreviousHistory').html('<div style="padding: 10px; color: #999;">No patient selected</div>');
+                return;
+            }
+
+            var html = '';
+
+            PageMethods.GetPreviousLabTests(patientID, function (Tests) {
+                var testData = JSON.parse(Tests);
+
+                if (testData.length === 0) {
+                    $('#InvestigationPreviousHistory').html('<div style="padding: 10px; color: #999;">No previous lab tests found</div>');
+                    return;
+                }
+
+                $.each(testData, function (key, value) {
+                    html += '<div class="labtest-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
+                        'onclick="ShowLabTestDetails(\'' + value.SerialNo + '\', \'' + value.TestName + '\')">' +
+                        '<div style="display: flex; align-items: center;">' +
+                        '<input type="hidden" id="PrevLabTestchk_' + value.SerialNo + '" ' +
+                        'value="' + value.SerialNo + '" ' +
+                        'class="prev-labtest_checkbox" ' +
+                        'onclick="this.checked ? Add_LabTestRow(\'' + value.SerialNo + '\', \'' + value.TestName + '\') : Remove_LabTestRow(\'' + value.SerialNo + '\')" />' +
+                        '<label class="labtest-label" for="PrevLabTestchk_' + value.SerialNo + '" style="margin-left: 8px; font-size: 14px; color: #333; cursor: pointer;">' + value.TestName + '</label>' +
+                        '</div>' +
+                        '<button type="button" class="labtest-dropdown-btn" ' +
+                        'onclick="event.stopPropagation(); ShowLabTestDetails(\'' + value.SerialNo + '\', \'' + value.TestName + '\')" ' +
+                        'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
+                        '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
+                        '</button>' +
+                        '</div>';
+                });
+
+                $('#InvestigationPreviousHistory').html(html);
+            }, function (error) {
+                console.error('Error loading previous lab tests:', error);
+                $('#InvestigationPreviousHistory').html('<div style="padding: 10px; color: #d9534f;">Error loading previous tests</div>');
+            });
+        }
         function FillLabTests(searchValue) {
             debugger;
             var html = '';
@@ -2919,9 +3024,14 @@
             if (selectedValue === '001') {
                 $('#subTab001').slideDown();
             }
-
             else if (selectedValue === '002') {
                 $('#subTab002').slideDown();
+            }
+            else if (selectedValue === '004') {
+                $('#subTab004').slideDown();
+            }
+            else if (selectedValue === '005') {
+                $('#subTab005').slideDown();
             }
             else {
                 $('#subTab003').slideDown();
@@ -2943,11 +3053,11 @@
             element.classList.toggle('active');
         }
         function navigateAction(element) {
-             $('.menu-item').removeClass('selected');
+            $('.menu-item').removeClass('selected');
 
-             $(element).addClass('selected');
+            $(element).addClass('selected');
 
-             const allTabs = document.querySelectorAll('.tabs');
+            const allTabs = document.querySelectorAll('.tabs');
             $(allTabs).not('#tab' + element.id).slideUp(300);
 
             const tabId = 'tab' + element.id;
@@ -2956,7 +3066,7 @@
                 $(selectedTab).slideDown(300);
             }
 
-             const spanText = $(element).find('span').text().trim();
+            const spanText = $(element).find('span').text().trim();
             if (spanText) {
                 $('.header').text(spanText);
             }
@@ -3646,9 +3756,9 @@
         function PrintoutPatient() {
             debugger;
             var id = '<%=Request.QueryString["ID"]%>';
-             var url = '../../ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
-             window.open(url, '_blanks');
-         }
+            var url = '../../ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
+            window.open(url, '_blanks');
+        }
     </script>
 
 </asp:Content>
@@ -3659,13 +3769,22 @@
                 <div class="modal-body">
                     <div id="QueueList">
                         <div class="row" style="margin-bottom: 15px">
-                            <div class="col-lg-4">
-                                <select id="ddlPatientDepartment" runat="server"></select>
+                            <div class="col-lg-3">
+                                <select class="" id="ddlPatientDepartment" onchange="fillPendingPatientsList();" runat="server"></select>
                             </div>
-                            <div class="col-lg-4">
-                                <select id="ddldocname" onchange="fillPendingPatientsList();" runat="server"></select>
+                            <div id="divFilterClinic" class="col-lg-3" style="display: none">
+                                <select class="select2-enable" id="ddlFilterClinic" onchange="fillPendingPatientsList();" runat="server"></select>
                             </div>
-                            <div class="col-lg-4 text-end">
+                            <div class="col-lg-1">
+                                <input type="checkbox" id="isPrivate" />
+                            </div>
+                            <div class="col-lg-2">
+    <label>Private</label>
+</div>
+                            <div id="divdocname" class="col-lg-3" style="display: none">
+                                <select class="select2-enable" id="ddldocname" onchange="fillPendingPatientsList();" runat="server"></select>
+                            </div>
+                            <div class="col-lg-2 text-end">
                                 <a onclick="fillPendingPatientsList()">
                                     <i class="fa fa-refresh fa-2x"></i>
                                 </a>
@@ -3914,7 +4033,7 @@
 
             </div>
         </div>
-        <div class="col-lg-10 grow-col" style="margin-top:10px">
+        <div class="col-lg-10 grow-col" style="margin-top: 10px">
             <div class="row">
                 <div class="col-lg-2">
                     <div style="width: fit-content !important;" class="retractIcon">
@@ -4015,7 +4134,7 @@
                                                     <asp:Label ID="lblFollow" runat="server"></asp:Label>
                                                 </div>
                                             </div>
-                                            <div class="row mb-3" style="display:none">
+                                            <div class="row mb-3" style="display: none">
                                                 <div class="col-md-5 col-sm-6">
                                                     <asp:Label ID="Doctor" CssClass="labels" runat="server" Text="Doctor:"></asp:Label>
                                                     <input type="hidden" id="hdndoctors_id" runat="server" />
@@ -4055,7 +4174,7 @@
                                         <div class="row">
                                             <div class="col-md-5 col-sm-12">
                                                 <div class="big-select2">
-                                                    <select class="enhanced-select2" id="filterDepartments">
+                                                    <select class="select2-enable" id="filterDepartments">
                                                     </select>
                                                 </div>
                                             </div>
@@ -4312,6 +4431,8 @@
                                                 <select id="filterExaminations">
                                                     <option value="001">General Physical</option>
                                                     <option value="002">Systematic</option>
+                                                    <option value="004">Gynae</option>
+                                                     <option value="005">OBS</option>
                                                     <option value="003">Special</option>
                                                 </select>
                                             </div>
@@ -4541,6 +4662,80 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div id="subTab004" class="subtabs" style="display: none">
+    <div class="exam-container" style="width: 100%;">
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label25" runat="server" Text="P/A"></asp:Label>
+                <asp:TextBox ID="txtPA_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label26" runat="server" Text="P/S"></asp:Label>
+                <asp:TextBox ID="txtPS_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label27" runat="server" Text="Uterus"></asp:Label>
+                <asp:TextBox ID="txtUterus_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label28" runat="server" Text="FX"></asp:Label>
+                <asp:TextBox ID="txtFX_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+    </div>
+</div>
+                                        <div id="subTab005" class="subtabs" style="display: none">
+    <div class="exam-container" style="width: 100%;">
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label23" runat="server" Text="P/S"></asp:Label>
+                <asp:TextBox ID="txtPS_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label24" runat="server" Text="P/V"></asp:Label>
+                <asp:TextBox ID="txtPV_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label29" runat="server" Text="SFH"></asp:Label>
+                <asp:TextBox ID="txtSFH_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label30" runat="server" Text="LIE"></asp:Label>
+                <asp:TextBox ID="txtLIE_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label31" runat="server" Text="Presentation"></asp:Label>
+                <asp:TextBox ID="txtPresentation_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label32" runat="server" Text="FHR"></asp:Label>
+                <asp:TextBox ID="txtFHR_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+        <div class="Systematic-Exam-Row">
+            <div style="display: flex; align-items: center; width: 100%">
+                <asp:Label Style="width: 75%;" ID="Label33" runat="server" Text="Engagement"></asp:Label>
+                <asp:TextBox ID="txtEngagement_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+            </div>
+        </div>
+    </div>
+</div>
                                         <div id="subTab003" class="subtabs">
                                         </div>
                                     </div>
@@ -4628,7 +4823,11 @@
                                         <div id="allFinalDiagnosis"></div>
                                     </div>
                                     <div class="tabs" id="tab09" style="display: none">
-
+                                         <div style="display: flex; justify-content: flex-end;">
+     <input type="button" class="btn btn-primry" value="Previous History" onclick="ShowPreviousHistory()" />
+  </div>
+                                        <div style="display:none" id="InvestigationPreviousHistory">
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-7 col-sm-12">
                                                 <input type="text" class="form-control mb-2" id="tab09Search" placeholder="Search..." />
@@ -4644,7 +4843,7 @@
                                         <div class="row">
                                             <div class="col-md-5 col-sm-12">
                                                 <div class="big-select2">
-                                                    <select class="enhanced-select2" id="filterMainDepartments">
+                                                    <select class="select2-enable" id="filterMainDepartments">
                                                     </select>
                                                 </div>
                                             </div>
@@ -4825,13 +5024,13 @@
 
                                                     <tr style="position: sticky; top: 0; z-index: 10;">
                                                         <th style="display: none">Date</th>
-                                                        <th style="width:30%">Test Name</th>
+                                                        <th style="width: 30%">Test Name</th>
                                                         <th style="display: none">Sample Received</th>
                                                         <th style="display: none">Result</th>
-                                                        <th style="width:30%">Special Tests</th>
-                                                        <th style="width:20%">Area Of Interest</th>
-                                                        <th style="width:10%">Rotation</th>
-                                                        <th style="width:10%" class="actions-col">Action</th>
+                                                        <th style="width: 30%">Special Tests</th>
+                                                        <th style="width: 20%">Area Of Interest</th>
+                                                        <th style="width: 10%">Rotation</th>
+                                                        <th style="width: 10%" class="actions-col">Action</th>
                                                     </tr>
 
                                                 </thead>
@@ -4953,7 +5152,7 @@
                                     </div>
                                 </div>
 
-                                
+
 
 
 
@@ -5081,24 +5280,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                                                <!-- History Panel -->
-<div class="col-lg-6" id="divtblHistory" style="display: none">
-    <div class="dashboard-card">
-        <div class="card-header">
-            <h4><i class="fa fa-history"></i>History</h4>
-        </div>
-        <div class="table-responsive">
-            <table class="table modern-table" id="tblHistory">
-                <thead class="hidden">
-                    <tr>
-                        <th>History</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                                <!-- History Panel -->
+                                <div class="col-lg-6" id="divtblHistory" style="display: none">
+                                    <div class="dashboard-card">
+                                        <div class="card-header">
+                                            <h4><i class="fa fa-history"></i>History</h4>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table modern-table" id="tblHistory">
+                                                <thead class="hidden">
+                                                    <tr>
+                                                        <th>History</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- Protos Panel -->
                                 <div class="col-lg-4" id="dvtblProto" style="display: none">
                                     <div class="dashboard-card">
@@ -5118,7 +5317,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>

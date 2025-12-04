@@ -1385,7 +1385,7 @@ namespace PMS.Modules.PatientManagement
             return data;
         }
         [WebMethod]
-        public static string PendingPatients(string filterDepartment, string doc_name)
+        public static string PendingPatients(string filterDepartment,string filterClinic, string doc_name)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -1414,6 +1414,7 @@ namespace PMS.Modules.PatientManagement
                             p.Age_years,
                             p.Patient_Type,
                             p.Doctor_ID,
+                            p.filter_clinic,
                             Checked = ((from op in db.Out_Patients
                                         where op.Patient_ID == p.Patient_ID
                                         && op.Doctor_ID != null && op.Doctor_ID != ""
@@ -1430,6 +1431,10 @@ namespace PMS.Modules.PatientManagement
             if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && doc_name == "")
             {
                 data = data.Where(p => p.Department == db.GetDataValueName("Patient Main Category", filterDepartment));
+            }
+            if (!string.IsNullOrEmpty(filterClinic) && filterClinic != "" && doc_name == "")
+            {
+                data = data.Where(p => p.filter_clinic == db.GetDataValueName("Filter Clinic", filterClinic));
             }
 
             else if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && !string.IsNullOrEmpty(doc_name))
@@ -1456,6 +1461,26 @@ namespace PMS.Modules.PatientManagement
                               join ds in db.ValueSets
                               on dv.ValueSet_ID equals ds.ValueSet_ID
                               where ds.ValueSet_Name == "Patient Main Category"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+        [WebMethod]
+        public static string GetAllFilterClinics()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Filter Clinic"
                               select new
                               {
                                   dv.DataValue_Name,
@@ -1741,6 +1766,44 @@ on d.Doctor_Id equals hr.Emp_ID
                 return (new JavaScriptSerializer()).Serialize(GroupCategories);
 
             }
+        }
+        [WebMethod]
+        public static string GetPreviousLabTests(string patientID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            // Get previous lab tests for the patient
+            var previousTests = from ltd in db.Lab_Test_Details
+                                join lt in db.Lab_Tests on ltd.Test_ID equals lt.Test_ID
+                                where ltd.Patient_ID.ToString() == patientID
+                                && lt.Active == true
+                                group new { ltd, lt } by new { lt.Test_ID, lt.Test_Name, lt.Group_Category } into g
+                                select new
+                                {
+                                    Test_ID = g.Key.Test_ID,
+                                    Test_Name = g.Key.Test_Name,
+                                    Group_Category = g.Key.Group_Category,
+                                    LastTestDate = g.Max(x => x.ltd.Date)
+                                };
+
+            List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
+            int counter = 1;
+
+            foreach (var test in previousTests.OrderByDescending(t => t.LastTestDate))
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name.ToString() +
+                              (test.Group_Category != string.Empty ?
+                               " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") :
+                               string.Empty);
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTest);
         }
         [WebMethod]
         public static string GetLabTests(string searchValue)
