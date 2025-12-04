@@ -504,6 +504,8 @@ namespace PMS.Modules.PatientManagement
                            select new
                            {
                                Code = tbl.Fees,
+                               Receipt_fee = (tbl.Fees ?? 0) - (tbl.Discount_Amount ?? 0),
+                                Discount_Percentage = tbl.Discount_Percentage,
                                D_Share = tbl.Doctor_Share,
                                H_Share = tbl.Hospital_Share
                            }).FirstOrDefault();

@@ -6,15 +6,86 @@
         $(document).ready(function () {
             $("#txtAdvanceDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#txtAdvanceDate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
-            debugger;
 
-            var advID = '<% =Request.QueryString["advID"] %>';
-        if (advID != "") {
-            LoadPatientDetails(advID);
+            var urlParams = new URLSearchParams(window.location.search);
+            var refundID = urlParams.get("RefundID");
 
+            if (refundID) {
+                LoadPatientDetails(refundID);
+            }
+        });
+
+        function LoadPatientDetails(refundID) {
+            $.ajax({
+                type: "POST",
+                url: "OPD_Refund.aspx/GetOPDPatient",
+                data: JSON.stringify({ refundID: refundID }), 
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccesss,
+                error: function () {
+                    alert("Failed to load refund details.");
+                }
+            });
         }
 
-    });
+        function OnSuccesss(response) {
+            var data = JSON.parse(response.d);
+            if (!data.Refund_ID) {
+                alert("Refund not found.");
+                return;
+            }
+            $('#hdPatientID').text(data.Patient_ID);
+            $('#lblMRNo').text(data.Patient_No);
+            $('#lblPatienName').text(data.Full_Name);
+            $('#lblAgeYears').text(data.Age_years);
+            $('#lblGender').text(data.Gender);
+            $('#lblRegDate').text(formatDate(data.Entry_Date));
+            $('#lblAddress').text(data.Address);
+            $('#lblContactNo').text(data.Mobile1);
+            $('#lblDepartment').text(data.department);
+            $('#lblPatientCategory').text(data.Patient_Main_Category);
+            $('#txtRemarks').val(data.Remarks);
+
+            $('#txtOPD_NO').val(data.OPD_No);
+            $('#txtHospitalRefund').val((data.Hospital_Refund || 0).toFixed(2));
+            $('#txtDoctorRefund').val((data.Doctor_Refund || 0).toFixed(2));
+
+            $('#txtDoctorAmount').val((data.Doctor_Amount || 0).toFixed(2));
+            $('#txtHospitalShare').val((data.Hospital_share || 0).toFixed(2));
+            $('#txtActualAmount').val((data.Actual_amount || 0).toFixed(2));
+
+            $('#btnSave').val('Update');
+        }
+
+        function parseAspNetDate(dateStr) {
+            if (!dateStr) return null;
+            var match = dateStr.match(/\/Date\((\d+)(?:[+-]\d+)?\)\//);
+            if (match) {
+                return new Date(parseInt(match[1]));
+            }
+            var isoDate = new Date(dateStr);
+            return isNaN(isoDate.getTime()) ? null : isoDate;
+        }
+
+        function formatDate(dateStr) {
+            var d = parseAspNetDate(dateStr);
+            if (!d) return "";
+
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return d.getDate() + '-' + months[d.getMonth()] + '-' + d.getFullYear();
+        }
+
+        function formatDateForPicker(dateStr) {
+            var d = parseAspNetDate(dateStr);
+            if (!d) return "";
+
+            var mm = (d.getMonth() + 1).toString().padStart(2, '0');
+            var dd = d.getDate().toString().padStart(2, '0');
+            var yyyy = d.getFullYear();
+            return mm + '/' + dd + '/' + yyyy;
+        }
         
         function PrintRefund() {
             debugger;
@@ -56,7 +127,7 @@
                     }
 
                     var p = patients[0];
-                    $('#hdPatientID').text(p.Patient_ID);
+                    $('#hdPatientID').text(p.pat_id);
                     $('#lblMRNo').text(p.Patient_No);
                     $('#lblPatienName').text(p.Full_Name);
                     $('#lblAgeYears').text(p.Age_years);
@@ -97,77 +168,22 @@
         }
 
 
-        function SaveRecord() {
-            if (validateSave()) {
-                debugger;
-                var Patient_ID = $("#hdPatientID").text();
-
-                var remarks = $("#txtRemarks").text();
-                var advanceDate = $("#txtAdvanceDate").val();
-                var saveVal = $('#btnSave').val();
-                var advID = '<% =Request.QueryString["advID"] %>';
-
-                var ServiceRefund = [];
-                $.each($('#tblDetails tbody tr'), function (key, value) {
-                    debugger;
-                    var Bill_Detial_ID = document.getElementById('tblDetails').rows[key + 1].cells[1].innerText;
-                    var Doctor_Refund = $(value).find('input[name="DocRefund"]').val();
-                    var Hos_Refund = $(value).find('input[name="HosRefund"]').val();
-                    var Item_ID = document.getElementById('tblDetails').rows[key + 1].cells[2].innerText;
-                    ServiceRefund.push({
-                        Bill_Detial_ID: Bill_Detial_ID, Doctor_Refund: Doctor_Refund, Item_ID: Item_ID, Hos_Refund: Hos_Refund
-                    });
-                });
-                var ShareRefund = [];
-                $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
-                    debugger;
-                    var Emp_ID = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[1].innerText;
-                    var Record_Id = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[2].innerText;
-                    var Refund_Amount = $(value).find('input[name="RefundDis"]').val();
-
-                    ShareRefund.push({
-                        Emp_ID: Emp_ID, Record_Id: Record_Id, Refund_Amount: Refund_Amount
-                    });
-                });
-                var data = { Patient_ID: Patient_ID, advanceDate: advanceDate, remarks: remarks, ServiceRefund: ServiceRefund, ShareRefund: ShareRefund };
-                PageMethods.SaveRefund(JSON.stringify(data), function (res) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Data Successfully Save',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                    window.location.reload();
-                    $('#btnSave').attr('disabled', 'disabled');
-                }, function (error) {
-                    alert(error.get_message());
-                });
-            }
-        }
-
-        function validateSave() {
-            debugger;
-            var proceed = true;
-
-            var Totaldoctorshare = $('#txtTotalDoctorShare').val();
-            var Totaldoctordistribution = $('#txtDoctorTotalDistribution').val();
-
-            return proceed;
-        }
+        
 
         function SaveOPDRecord() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var refundID = urlParams.get("RefundID"); // matches your URL: ?RefundID=5
+
+            var HospitalRefund = parseFloat($("#txtHospitalRefund").val()) || 0;
+            var DoctorRefund = parseFloat($("#txtDoctorRefund").val()) || 0;
+
             var data = {
+                Refund_ID: refundID || "", 
                 pat_id: $("#hdPatientID").text(),
                 OPD_No: $("#txtOPD_NO").val(),
                 Refund_Date: $("#txtAdvanceDate").val(),
-                Hospital_Refund: parseFloat($("#txtHospitalRefund").val()) || 0,
-                Doctor_Refund: parseFloat($("#txtDoctorRefund").val()) || 0,
+                Hospital_Refund: HospitalRefund,
+                Doctor_Refund: DoctorRefund,
                 Remarks: $("#txtRemarks").val()
             };
 
@@ -177,11 +193,21 @@
                 data: JSON.stringify({ data: data }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function () {
-                    Swal.fire("Success", "Refund Saved!", "success");
+                success: function (response) {
+                    if (response.d === "Success") {
+                        Swal.fire("Success", "Refund saved!", "success").then(() => {
+                            window.location.href = "OPD_Refund_List.aspx";
+                        });
+                    } else {
+                        Swal.fire("Error", response.d, "error");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Error", "Save failed.", "error");
                 }
             });
         }
+
 
 
     </script>
