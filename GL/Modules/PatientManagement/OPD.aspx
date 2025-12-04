@@ -549,7 +549,8 @@
                         var code = data && data.Code !== undefined ? data.Code : 0;
                         var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
                         var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
-
+                        var Discount_Percentage = data && data.Discount_Percentage !== undefined ? data.Discount_Percentage : 0;
+                        debugger;
                         $('#txtactualfee').val(code);
                         
           
@@ -567,14 +568,15 @@
                             $('#hdnhospShare').val(hShare);
                         }
                         else {
-                           
-                            $('#txtdiscount').val("");           
+                            debugger;
+                            $('#txtdiscount').val(Discount_Percentage);           
                             $('#txtdiscount').attr('disabled', false); 
-                            $('#txtfees').val(code);
+                            $('#txtfees').val(Receipt_fee.toFixed(2));
                             $('#txtactualfee').val(code);
                             $('#hdnDocshare').val(dShare);
                             $('#hdnhospShare').val(hShare);
                         }
+                        debugger;
                         if (parseFloat(code) === 0) {
                             Swal.fire({
                                 icon: 'warning',
