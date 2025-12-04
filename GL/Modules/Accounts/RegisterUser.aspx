@@ -67,6 +67,8 @@
                     $('#AllowemergencyDiscount').prop('checked', data.Allow_emer_disc);
                     $('#AllowRadiologylist').prop('checked', data.AllowRadiologylist);
                     $('#AllowReferIPD').prop('checked', data.AllowReferIPD);
+                    $('#AllowRecipe').prop('checked', data.Allow_Recipe);
+                    $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -113,6 +115,8 @@
             var BlockUser = $('#BlockUser').prop('checked');
             var AllowemergencyDiscount = $('#AllowemergencyDiscount').prop('checked');
             var AllowReferIPD = $('#AllowReferIPD').prop('checked');
+            var AllowRecipe = $('#AllowRecipe').prop('checked');
+            var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var hasMinLength = Password.length >= 6;
             var hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(Password);
@@ -230,7 +234,9 @@
                 "AllowBillUpdate": AllowBillUpdate,
                 "BlockUser": BlockUser,
                 "AllowemergencyDiscount": AllowemergencyDiscount,
-                "AllowReferIPD": AllowReferIPD
+                "AllowReferIPD": AllowReferIPD,
+                "AllowRecipe": AllowRecipe,
+                "AllowRateEdit": AllowRateEdit
 
             };
 
@@ -453,6 +459,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowRadiologylist" name="AllowRadiologylist" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowRateEdit" name="AllowRateEdit" />
+                                                    </div>
                                                 </div>
 
                                                 <div class="col-md-3">
@@ -501,6 +510,9 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="Radiologyresult">Radiology List</label>
                                                     </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowRateEdit">Edit Rate</label>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-1">
@@ -548,8 +560,11 @@
                                                         <input type="checkbox" class="form-check-input" id="AllowReferIPD" name="AllowReferIPD" />
                                                     </div>
                                                     <div class="form-check">
-                                                        <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
+                                                        <input type="checkbox" class="form-check-input" id="AllowRecipe" name="AllowRecipe" />
                                                     </div>
+                                                   <div class="form-check">
+                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
+                                                     </div>
 
                                                 </div>
                                                 <div class="col-md-3">
@@ -597,8 +612,14 @@
                                                         <label class="form-check-label" for="AllowReferIPD">Refer IPD</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>
+                                                        <label class="form-check-label" for="AllowRecipe">Allow Receipe</label>
                                                     </div>
+                                                  <div class="form-check">
+                                                     <label class="form-check-label" for="EmpCode">Employee Code</label>
+                                                 </div>
+
+
+
                                                 </div>
 
                                                 <div class="col-md-2"></div>

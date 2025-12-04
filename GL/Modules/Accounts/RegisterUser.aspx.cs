@@ -82,6 +82,8 @@ namespace PMS.Modules.Accounts
                              Allow_bill_edit = p.Allow_bill_edit,
                              Emergency_adm_dis = p.Emergency_adm_dis,
                              Allow_emer_disc = p.Allow_emer_disc,
+                             Allow_Recipe = p.Allow_Recipe,
+                             AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
                              AllowReferIPD = p.Refer_IPD,   
                              EmpCode=p.Emp_Code
@@ -165,6 +167,8 @@ namespace PMS.Modules.Accounts
                     user.Allow_bill_edit = data.AllowBillUpdate;
                     user.Allow_emer_disc = data.AllowemergencyDiscount;
                     user.Refer_IPD = data.AllowReferIPD;
+                    user.Allow_Recipe = data.AllowRecipe;
+                    user.AllowRateEdit = data.AllowRateEdit;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -234,6 +238,8 @@ namespace PMS.Modules.Accounts
                 newuser.Radiology_result = data.AllowRadiologylist;
                 newuser.Allow_emer_disc = data.AllowemergencyDiscount;
                 newuser.Refer_IPD = data.AllowReferIPD;
+                newuser.Allow_Recipe = data.AllowRecipe;
+                newuser.AllowRateEdit = data.AllowRateEdit;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
 
@@ -337,6 +343,8 @@ namespace PMS.Modules.Accounts
             public bool AllowEmergency_adm_dis { get; set; }
             public bool AllowRadiologylist { get; set; }
             public bool AllowReferIPD { get; set; }
+            public bool AllowRecipe { get; set; }
+            public bool AllowRateEdit { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
             public bool AllowemergencyDiscount { get; set; }

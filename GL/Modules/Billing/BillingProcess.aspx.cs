@@ -76,6 +76,16 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
+        [WebMethod]
+        public static string AllowEditRates()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.AllowRateEdit).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
 
         [WebMethod]
         public static object GetBOMDetailsByProcedure(int procedureId)

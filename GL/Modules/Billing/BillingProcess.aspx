@@ -678,6 +678,12 @@
                             $('#tblDetails tbody').append(rows);
 
                             $('input[name="DisAmount"]').attr('disabled', true);
+                            //if (editrights == "true") {
+                            //    $("#amnt" + rowIndex).attr('contenteditable', true);
+                            //}
+                            //else {
+                            //    $("#amnt" + rowIndex).attr('contenteditable', false);
+                            //}
 
                             CalculateSummarieDiscountPerWise(rowIndex);
 
@@ -707,6 +713,7 @@
                 }, function (err) { });
             }
             function AddRadialogyTest(maindpt) {
+                debugger;
                 localStorage.Disc_Zero = 0;
                 localStorage.OnlyPercentage = 0;
                 var remarks = $('#Remarks').val();
@@ -804,11 +811,17 @@
                         }
                         var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnDisPer" value="' + DisAmt + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + globalTestRate + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + ',' + Rotation_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" disabled style="width: 45px !important;"  onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td style="text-align:Right;"onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + globalTestRate + ' </td><td> <input type="text" name="DisPer" value="' + DisAmt + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">  </td><input type="text" name="DocShare" value="' + 0 + '"  style="width: 75px !important;"/></td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" onchange="GetDocAgreementValuess(this)" name="ddlDoctor" class="ddlDoctor" >' + doctors + '</select></td> </tr>'
                         var rowstbl = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + '.' + Rotation_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" disabled=disabled onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td>' + globalTestRate + '</td><input type="text" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td></tr>'
-
+                        debugger;
                         $('#tblDetails tbody').append(rows);
                         $('#tbltestModelTable tbody').append(rowstbl);
-
-                        $('input[name="DisAmount"]').attr('disabled', true)
+                        debugger;
+                        $('input[name="DisAmount"]').attr('disabled', true);
+                        //if (editrights == "true") {
+                        //    $("#amnt" + rowIndex).attr('contenteditable', true);
+                        //}
+                        //else {
+                        //    $("#amnt" + rowIndex).attr('contenteditable', false);
+                        //}
                         CalculateSummarieDiscountPerWise(rowIndex);
                         setTimeout(function () {
                             $(arr).filter(function (i, n) {
@@ -1193,7 +1206,8 @@
 
 
                         $('#tblDetails tbody').append(rows);
-                        if (departmentpat == "Sehat Sahulat Card") {
+                        //1 rightk
+                        if (Alloweditrate == "true") {
                             $("#amnt" + rowIndex).attr('contenteditable', true);
                         }
                         else {
@@ -1209,6 +1223,7 @@
                     });
                     $('#btnSave').val('Update');
                     $('#btnPrint').show();
+
 
                 },
                     function (error) {
@@ -3128,13 +3143,17 @@
 
                             $('#tblDetails tbody').append(row);
                             CalculateSummarieDiscountPerWise(rowIndex);
+                            if (Alloweditrate == "true") {
+                                $(this).find("td:eq(5)").attr('contenteditable', 'true');
+                            }
 
                             // Patient type logic
-                            if ($("#lblPatientDiscountType").text().trim() === "Private") {
-                                $("#tblDetails tr").each(function () {
-                                    $(this).find("td:eq(5)").attr('contenteditable', 'true');
-                                });
-                            }
+                            //if ($("#lblPatientDiscountType").text().trim() === "Private") {
+                            //    $("#tblDetails tr").each(function () {
+                            //        //2right
+                            //        $(this).find("td:eq(5)").attr('contenteditable', 'true');
+                            //    });
+                            //}
 
                             rowIndex++;
                         });
@@ -3290,7 +3309,8 @@
                      loadBOMDetails(localStorage.SelectedItemID)
          
                     debugger;
-                    if (departmentpat == "Sehat Sahulat Card") {
+                    if (Alloweditrate == "true") {
+                     
                         $("#amnt" + rowIndex).attr('contenteditable', true);
 
                     }
@@ -3301,14 +3321,14 @@
 
                     var user_name = '<% =AppConfig.UserName %>';
                     // Ali.Tariq
-                    if (user_name === "Ali.Tariq" || user_name === "ali.tariq") {
-                        debugger;
-                        $('input[name="DisPer"]').attr('disabled', false);
-                        $('input[name="DisAmount"]').attr('disabled', false);
-                    }
-                    else {
+                    //if (user_name === "Ali.Tariq" || user_name === "ali.tariq") {
+                    //    debugger;
+                    //    $('input[name="DisPer"]').attr('disabled', false);
+                    //    $('input[name="DisAmount"]').attr('disabled', false);
+                    //}
+                   /* else {*/
                         $('input[name="DisAmount"]').attr('disabled', true);
-                    }
+                    //}
                     $('#txtDisPer').on('keyup', function () {
                         $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
                         $('#tblDetails').find('input[name="DisAmount"]').prop('disabled', true);
@@ -3351,26 +3371,24 @@
                             $("#tblDetails tr").each(function () {
                                 var item_id = $('#txtAddService').val();
                                 var row_item_id = $(this).find('input[name="hdnItemID"]').val();
-                                if (item_id == row_item_id) {
-                                    $(this).find("td:eq(5)").attr('contenteditable', 'True');
-                                }
+                              
                             });
                         }
                     }
                     else if (pat_type == "Insurance Company" || INP_Private == "Insurance Company") {
 
                         debugger;
-                        if (ItemId == 13206 || ItemId == 18842 || ItemId == 13208 || ItemId == 12393 || ItemId == 19192 || ItemId == 19068) {
-                            $("#tblDetails tr").each(function () {
-                                debugger;
-                                var item_id = $('#txtAddService').val();
-                                var row_item_id = $(this).find('input[name="hdnItemID"]').val();
-                                if (item_id == row_item_id) {
+                        //if (ItemId == 13206 || ItemId == 18842 || ItemId == 13208 || ItemId == 12393 || ItemId == 19192 || ItemId == 19068) {
+                        //    $("#tblDetails tr").each(function () {
+                        //        debugger;
+                        //        var item_id = $('#txtAddService').val();
+                        //        var row_item_id = $(this).find('input[name="hdnItemID"]').val();
+                        //        if (item_id == row_item_id) {
 
-                                    $(this).find("td:eq(5)").attr('contenteditable', 'True');
-                                }
-                            });
-                        }
+                        //            $(this).find("td:eq(5)").attr('contenteditable', 'True');
+                        //        }
+                        //    });
+                        //}
                     }
 
                     var user_name = '<% =AppConfig.UserName %>';
@@ -5131,7 +5149,36 @@
 
 
             }
+            var Alloweditrate;
+            function AllowRateEdit() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/AllowEditRates",
+                    data: "",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        debugger;
+                        Alloweditrate = data.d;
 
+                        if (Alloweditrate == "true") {
+
+                            $('#bomSection').show();
+                        }
+                        else {
+                            $('#bomSection').hide();
+                        }
+
+                    },
+                    failure: function () {
+                        alert("Error");
+                    }
+                });
+
+
+            }
 
 
             var editrights;
@@ -5274,31 +5321,7 @@
                 });
             }
 
-            //function fillCashInHand() {
-            //    var options = '<option value="0">Please Select</option>';
 
-            //    $.ajax({
-            //        url: 'BillingProcess.aspx/GetGLAccounts',
-            //        type: 'POST',
-            //        contentType: 'application/json; charset=utf-8',
-            //        dataType: 'json',
-            //        success: function (response) {
-            //            var data = response.d ? JSON.parse(response.d) : response;
-            //            $.each(data, function (key, value) {
-            //                options += '<option value="' + value.Account_ID + '">' + value.Account_Name + '</option>';
-            //            });
-            //            $('#ddlCashInHand').html(options);
-
-
-
-            //        },
-            //        error: function (xhr, status, error) {
-            //            console.error('Error fetching area data:', error);
-            //        }
-            //    });
-
-            //    return options;
-            //}
 
             $(document).ready(function () {
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
@@ -5367,16 +5390,7 @@
                 localStorage.removeItem('Disc');
                 localStorage.removeItem('Total_Disc_Amt');
                 localStorage.Disc_Pro = "0.00";
-<%--                var user_name = '<% =AppConfig.UserName %>';
-                if (user_name == "Ali.Tariq" || user_name == "ali.tariq") {
-                $('#txtDisPer').attr('disabled', false);
-                $('#txtDisAmt').attr('disabled', false);
-            }
-            else
-            {
-                $('#txtDisPer').attr('disabled', true);
-                $('#txtDisAmt').attr('disabled', true);
-            }--%>
+  
                 GetPanelRateAndDiscountComplete();
                 $("#txtDateFrom").datepicker({ dateFormat: 'mm/dd/yy' });
                 $("#txtDateTo").datepicker({ dateFormat: 'mm/dd/yy' });
@@ -5406,6 +5420,7 @@
                 LoadMainDepartment();
                 fillCashInHand();
                 AllowReceipeRights();
+                AllowRateEdit();
                 $('#add-new-testDirect').click(function () {
                 });
                 $('#add-new-Othertest').click(function () {
