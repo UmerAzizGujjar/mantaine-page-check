@@ -543,6 +543,37 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Department", departmentID);
             }
+            else if (reportName == "OPD_Department_Wise_Report")
+            {
+
+                string rptFileName = "Patients/OPDDepartmentWiseReport.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string Shift = Request.QueryString["Shift"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+
+                string departmentID = Request.QueryString["Department"].ToString();
+                if (departmentID == "0")
+                {
+                    departmentID = "All";
+                }
+                string Operator = Request.QueryString["Operator"].ToString();
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@FromDate", sqlStartDateTime);
+                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("Shift", Shift);
+                rd.SetParameterValue("@Department", departmentID);
+            }
             else if (reportName == "DepartmentWiseReport")
             {
                 string rptFileName = "DepartmentWiseReport.rpt";
