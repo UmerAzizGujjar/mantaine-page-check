@@ -173,6 +173,7 @@
     }
     window.open(url, '_blank');
 }--%>
+
         function PrintVoucher() {
             debugger;
             var advID = '<%= Request.QueryString["advID"] %>' || '0'; // Default to '0' if missing
@@ -443,4 +444,3 @@
         </div>
     </div>
 </asp:Content>
-00000000000000000000
