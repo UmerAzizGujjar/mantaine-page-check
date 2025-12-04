@@ -549,7 +549,12 @@
                         var code = data && data.Code !== undefined ? data.Code : 0;
                         var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
                         var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
-                        var Discount_Percentage = data && data.Discount_Percentage !== undefined ? data.Discount_Percentage : 0;
+                        var Discount_Percentage = data &&
+                            data.Discount_Percentage !== undefined &&
+                            data.Discount_Percentage !== null
+                            ? data.Discount_Percentage
+                            : 0;
+                        var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
                         debugger;
                         $('#txtactualfee').val(code);
                         
