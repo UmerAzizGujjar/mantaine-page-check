@@ -4,8 +4,7 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Refund.css" rel="stylesheet" />
     <script type="text/javascript">          
         $(document).ready(function () {
-            $("#txtAdvanceDate").datepicker({ dateFormat: 'mm/dd/yy' });
-            $("#txtAdvanceDate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
+            
 
             var urlParams = new URLSearchParams(window.location.search);
             var refundID = urlParams.get("RefundID");
@@ -36,6 +35,7 @@
                 return;
             }
             $('#hdPatientID').text(data.Patient_ID);
+            $('#hdRegPatId').val(data.Reg_PatId); 
             $('#lblMRNo').text(data.Patient_No);
             $('#lblPatienName').text(data.Full_Name);
             $('#lblAgeYears').text(data.Age_years);
@@ -127,7 +127,8 @@
                     }
 
                     var p = patients[0];
-                    $('#hdPatientID').text(p.pat_id);
+                    $('#hdPatientID').text(p.Patient_ID);
+                    $('#hdRegPatId').val(p.Reg_PatId);
                     $('#lblMRNo').text(p.Patient_No);
                     $('#lblPatienName').text(p.Full_Name);
                     $('#lblAgeYears').text(p.Age_years);
@@ -172,16 +173,62 @@
 
         function SaveOPDRecord() {
             var urlParams = new URLSearchParams(window.location.search);
-            var refundID = urlParams.get("RefundID"); // matches your URL: ?RefundID=5
+            var refundID = urlParams.get("RefundID");
 
             var HospitalRefund = parseFloat($("#txtHospitalRefund").val()) || 0;
             var DoctorRefund = parseFloat($("#txtDoctorRefund").val()) || 0;
 
+            var maxHospitalShare = parseFloat($("#txtHospitalShare").val()) || 0;
+            var maxDoctorAmount = parseFloat($("#txtDoctorAmount").val()) || 0;
+
+            if (HospitalRefund > maxHospitalShare) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Hospital Refund',
+                    text: 'Hospital refund cannot exceed the hospital share (' + maxHospitalShare.toFixed(2) + ').',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            if (DoctorRefund > maxDoctorAmount) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Doctor Refund',
+                    text: 'Doctor refund cannot exceed the doctor amount (' + maxDoctorAmount.toFixed(2) + ').',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            if (HospitalRefund === 0 && DoctorRefund === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Refund Amount',
+                    text: 'Please enter at least one refund amount (Hospital or Doctor).',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             var data = {
-                Refund_ID: refundID || "", 
-                pat_id: $("#hdPatientID").text(),
+                Refund_ID: refundID || "",
+                Patient_ID: $("#hdPatientID").text(),
+                Reg_PatId: $("#hdRegPatId").val(),
                 OPD_No: $("#txtOPD_NO").val(),
-                Refund_Date: $("#txtAdvanceDate").val(),
+                Refund_Date: $("#txtAdvanceDate").val(), 
                 Hospital_Refund: HospitalRefund,
                 Doctor_Refund: DoctorRefund,
                 Remarks: $("#txtRemarks").val()
@@ -195,15 +242,44 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.d === "Success") {
-                        Swal.fire("Success", "Refund saved!", "success").then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Refund OPD saved successfully.',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        }).then(() => {
                             window.location.href = "OPD_Refund_List.aspx";
                         });
                     } else {
-                        Swal.fire("Error", response.d, "error");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.d,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
                     }
                 },
                 error: function () {
-                    Swal.fire("Error", "Save failed.", "error");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Save failed.',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                 }
             });
         }
@@ -214,6 +290,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
+        <input type="hidden" id="hdRegPatId" />
         <input type="hidden" id="hdPatientID" />
         <input type="hidden" id="txtOPD_No" />
         <div class="row">
@@ -359,10 +436,10 @@
                         <input type="button" value="Save" onclick="SaveOPDRecord()" id="btnSave" class="btn btn-primry" />
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="List View" class="btn-gray" onclick="window.open('RefundList.aspx')" />
+                        <input type="button" value="List View" class="btn-gray" onclick="window.open('OPD_Refund_List.aspx')" />
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
+                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" style="display: none" />
                     </div>
                 </div>
             </div>

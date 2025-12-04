@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="pakredTestDb_uat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6478,26 +6478,6 @@
       <Column Name="IsSpecialService" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.OPD_Refund" Member="OPD_Refunds">
-    <Type Name="OPD_Refund">
-      <Column Name="Refund_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="OPD_No" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Refund_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Refund_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="isCancelled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="CancelledBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Hospital_Refund" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Doctor_Refund" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Association Name="Reg_patient_OPD_Refund" Member="Reg_patient" ThisKey="pat_id" OtherKey="pat_id" Type="Reg_patient" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.aspnet_Users" Member="aspnet_Users">
     <Type Name="aspnet_User">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -7063,6 +7043,27 @@
       <Column Name="ispackagebilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="IPD_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPD_Refund" Member="OPD_Refunds">
+    <Type Name="OPD_Refund">
+      <Column Name="Refund_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="OPD_No" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Refund_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Refund_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="isCancelled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="CancelledBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Update_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Hospital_Refund" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Doctor_Refund" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Reg_patient_OPD_Refund" Member="Reg_patient" ThisKey="pat_id" OtherKey="pat_id" Type="Reg_patient" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
