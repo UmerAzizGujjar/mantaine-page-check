@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 90.75, 168.75" name="DataBase">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 99.875, 168.75" name="DataBase">
   <DataContextMoniker Name="/DataBaseDataContext" />
   <nestedChildShapes>
     <classShape Id="fa9019b7-a859-464e-8cc1-67828fbc07fe" isExpanded="false" absoluteBounds="3.875, 9.125, 2, 0.45">
@@ -897,7 +897,7 @@
         <elementListCompartment Id="8c36c02a-4ad6-4ace-a1c0-a1ac910d7966" absoluteBounds="5.265, 12.335, 1.9700000000000002, 3.7108154296875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.25 : 13.16875); (5.20833333333333 : 13.16875 : JumpStart); (5.04166666666667 : 13.16875 : JumpEnd); (3.25 : 13.16875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.25 : 13.16875); (5.20833333333333 : 13.16875 : JumpStart); (5.04166666666667 : 13.16875 : JumpEnd); (3.25 : 13.16875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataBaseDataContext/Stock_Transfer/Stock_Transfer_Stock_Transfer_Item" />
       <nodes>
         <classShapeMoniker Id="7764d5b3-e630-476f-8c5a-895ea8432740" />
@@ -1805,12 +1805,6 @@
         <elementListCompartment Id="8ca20115-3296-4748-b6f6-5d6b814f7f47" absoluteBounds="31.765, 50.21, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="3e41de84-f3e6-4405-b36e-452534aa2f41" absoluteBounds="88.5, 32.625, 2, 99.267722981770817">
-      <DataClassMoniker Name="/DataBaseDataContext/In_Patient" />
-      <nestedChildShapes>
-        <elementListCompartment Id="18f5c398-8325-4010-8583-def152b0ed57" absoluteBounds="88.515, 33.085, 1.9700000000000002, 98.707722981770829" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="5f8381c0-27f9-4932-bf2c-cfd60a8b44e0" absoluteBounds="13.5, 36.625, 2, 6.9630354817708326">
       <DataClassMoniker Name="/DataBaseDataContext/Advance_Payment" />
       <nestedChildShapes>
@@ -1926,5 +1920,11 @@
         <classShapeMoniker Id="b24db093-246f-4a9b-869f-e2117519c5e0" />
       </nodes>
     </associationConnector>
+    <classShape Id="7aa64bf7-3746-458e-b3f9-8e9f9cd54966" absoluteBounds="97.625, 38.875, 2, 99.267722981770817">
+      <DataClassMoniker Name="/DataBaseDataContext/In_Patient" />
+      <nestedChildShapes>
+        <elementListCompartment Id="93df6154-9354-4408-ae92-0bcbf291a6d6" absoluteBounds="97.64, 39.335, 1.9700000000000002, 98.707722981770829" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>
