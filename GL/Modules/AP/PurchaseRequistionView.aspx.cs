@@ -51,7 +51,7 @@ namespace PMS.AP
                 // Detail rows
                 var detail = (from d in db.Purchase_Requisition_Details
                               join inv in db.INV_Items on d.Item_ID equals inv.Item_ID
-                              where d.PR_Detail_ID == invoiceId
+                              where d.PR_ID == invoiceId
                               select new
                               {
                                   inv.Item_Code,
