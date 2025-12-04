@@ -36,8 +36,8 @@ namespace PMS.Modules.PatientManagement
                                 select new
                                 {
                                     pat.Opd_No,
-                                    pat.Patient_ID,
-                                    pat_id = pat.Reg_PatId,
+                                    Patient_ID = pat.Patient_ID,      
+                                    Reg_PatId = pat.Reg_PatId,
                                     pat.Patient_No,
                                     pat.Full_Name,
                                     pat.Father_Name,
@@ -64,8 +64,8 @@ namespace PMS.Modules.PatientManagement
                     var result = list.Select(p => new
                     {
                         p.Opd_No,
-                        p.Patient_ID,
-                        pat_id = p.pat_id, 
+                        Patient_ID = p.Patient_ID,
+                        Reg_PatId = p.Reg_PatId,
                         p.Patient_No,
                         p.Full_Name,
                         p.Father_Name,
@@ -105,21 +105,22 @@ namespace PMS.Modules.PatientManagement
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    decimal totalRefund = data.Hospital_Refund + data.Doctor_Refund;
-                    DateTime refundDate;
+                    long opdNo = string.IsNullOrEmpty(data.OPD_No) ? 0 : Convert.ToInt64(data.OPD_No);
+                    int patientID = string.IsNullOrEmpty(data.Patient_ID) ? 0 : Convert.ToInt32(data.Patient_ID);
+                    int regPatId = string.IsNullOrEmpty(data.Reg_PatId) ? 0 : Convert.ToInt32(data.Reg_PatId);
+                    DateTime refundDate = DateTime.Now;
+                    if (!string.IsNullOrWhiteSpace(data.Refund_Date))
+                        DateTime.TryParse(data.Refund_Date, out refundDate);
 
-                    if (string.IsNullOrWhiteSpace(data.Refund_Date) ||
-                        !DateTime.TryParse(data.Refund_Date, out refundDate))
-                    {
-                        refundDate = DateTime.Now;
-                    }
+                    decimal totalRefund = data.Hospital_Refund + data.Doctor_Refund;
 
                     if (string.IsNullOrEmpty(data.Refund_ID))
                     {
                         PMS.OPD_Refund refund = new PMS.OPD_Refund
                         {
-                            OPD_No = string.IsNullOrEmpty(data.OPD_No) ? 0 : Convert.ToInt64(data.OPD_No),
-                            pat_id = string.IsNullOrEmpty(data.pat_id) ? 0 : Convert.ToInt32(data.pat_id),
+                            OPD_No = opdNo,
+                            pat_id = patientID, 
+                            Reg_PatId = regPatId,  
                             Refund_Date = refundDate,
                             Hospital_Refund = data.Hospital_Refund,
                             Doctor_Refund = data.Doctor_Refund,
@@ -128,7 +129,6 @@ namespace PMS.Modules.PatientManagement
                             Created_By = AppConfig.UserID,
                             Creation_Date = DateTime.Now
                         };
-
                         db.OPD_Refunds.InsertOnSubmit(refund);
                     }
                     else
@@ -138,10 +138,11 @@ namespace PMS.Modules.PatientManagement
 
                         var refund = db.OPD_Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
                         if (refund == null)
-                            return "Error: Refund record not found.";
+                            return "Error: Refund not found.";
 
-                        refund.OPD_No = string.IsNullOrEmpty(data.OPD_No) ? 0 : Convert.ToInt64(data.OPD_No);
-                        refund.pat_id = string.IsNullOrEmpty(data.pat_id) ? 0 : Convert.ToInt32(data.pat_id);
+                        refund.OPD_No = opdNo;
+                        refund.pat_id = patientID;       
+                        refund.Reg_PatId = regPatId;   
                         refund.Refund_Date = refundDate;
                         refund.Hospital_Refund = data.Hospital_Refund;
                         refund.Doctor_Refund = data.Doctor_Refund;
@@ -165,11 +166,11 @@ namespace PMS.Modules.PatientManagement
         {
             public string Refund_ID { get; set; }
             public string OPD_No { get; set; }
-            public string pat_id { get; set; }
+            public string Patient_ID { get; set; }
+            public string Reg_PatId { get; set; }
             public string Refund_Date { get; set; }
-            public decimal Refund_Amount { get; set; }
-            public decimal Doctor_Refund { get; set; }
             public decimal Hospital_Refund { get; set; }
+            public decimal Doctor_Refund { get; set; }
             public string Remarks { get; set; }
         }
 
@@ -189,36 +190,36 @@ namespace PMS.Modules.PatientManagement
                     return new JavaScriptSerializer().Serialize(new { });
 
                 var patient = (from pat in db.Patients
-                               where pat.Reg_PatId == refund.pat_id
+                               where pat.Patient_ID == refund.pat_id  
                                select new
                                {
-                                   Patient_ID = refund.pat_id, 
-                                   Patient_No = pat.Patient_No,
-                                   Full_Name = pat.Full_Name,
-                                   Mobile1 = pat.Mobile1,
-                                   Gender = pat.Gender,
-                                   Age_years = pat.Age_years,
-                                   Address = pat.Permanent_Address,
-                                   Entry_Date = pat.Created_Time,
+                                   pat.Patient_No,
+                                   pat.Full_Name,
+                                   pat.Mobile1,
+                                   pat.Gender,
+                                   pat.Age_years,
+                                   pat.Permanent_Address,
+                                   pat.Created_Time,
                                    department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category),
                                    Patient_Main_Category = db.GetDataValueName("Patient Type", pat.Patient_Type),
-                                   OPD_No = pat.Opd_No,
-                                   Doctor_Amount = pat.Doctor_Amount,
-                                   Hospital_share = pat.Hospital_share,
-                                   Actual_amount = pat.Actual_amount
+                                   pat.Opd_No,
+                                   pat.Doctor_Amount,
+                                   pat.Hospital_share,
+                                   pat.Actual_amount
                                }).FirstOrDefault();
 
                 var result = new
                 {
                     Refund_ID = refund.Refund_ID,
-                    Patient_ID = refund.pat_id,
+                    Patient_ID = refund.pat_id,    
+                    Reg_PatId = refund.Reg_PatId,     
                     Patient_No = patient?.Patient_No,
                     Full_Name = patient?.Full_Name ?? "Unknown Patient",
                     Mobile1 = patient?.Mobile1 ?? "",
                     Gender = patient?.Gender ?? "",
                     Age_years = patient?.Age_years,
-                    Address = patient?.Address ?? "",
-                    Entry_Date = refund.Refund_Date ?? refund.Creation_Date, 
+                    Address = patient?.Permanent_Address ?? "",
+                    Entry_Date = refund.Refund_Date ?? refund.Creation_Date,
                     department = patient?.department ?? "",
                     Patient_Main_Category = patient?.Patient_Main_Category ?? "",
                     Remarks = refund.Remarks ?? "",

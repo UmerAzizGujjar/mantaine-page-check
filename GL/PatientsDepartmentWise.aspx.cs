@@ -153,6 +153,50 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
                 }
+                else if (this.PageTitle == "OPD_Department_Wise_Report")
+                {
+                    string x = "OPD Department Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    trDoctor.Visible = false;                  
+                    tr_Summary.Visible = false;      // changed
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Text = "Operators";
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Main Category");
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();    
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                      select new { d.UserName, d.UserId };
+                    ddlPatientType.DataSource = valusetss;
+                    ddlPatientType.DataTextField = "UserName";
+                    ddlPatientType.DataValueField = "UserId";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+
+                    lbShift.Visible = true;
+                    ddlShift.Visible = true;
+                    DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
+                    ddlShift.DataSource = shift;
+                    ddlShift.DataValueField = "Shift_ID";
+                    ddlShift.DataTextField = "Shift_Name";
+                    ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
+                    ddlShift.DataBind();
+
+
+
+
+                }
 
                 if (this.PageTitle == "DepartmentWiseReport")
                 {
