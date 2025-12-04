@@ -290,6 +290,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (resp) {
+                        debugger;
                         var d = resp.d;
                         var html = `
               <div class="child-container">                            
@@ -340,7 +341,7 @@
                     <td>${item.Description}</td>
                     <td>${item.Qty}</td>
                     <td>${item.EstimateCost}</td>
-                    <td>${moment(x.Required_Date).format("DD-MMM-YYYY")}</td>
+                    <td>${moment(item.Required_Date).format("DD-MMM-YYYY")}</td>
                 </tr>
                `);
                         });

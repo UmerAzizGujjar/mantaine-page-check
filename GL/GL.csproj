@@ -668,6 +668,7 @@
     <Content Include="wwwroot\ASsiratTheme\CustomJs\Appointment.js" />
     <Content Include="wwwroot\ASsiratTheme\CustomJs\EMR.js" />
     <Content Include="wwwroot\ASsiratTheme\CustomJs\OPD.js" />
+    <Content Include="wwwroot\ASsiratTheme\CustomJs\OPDView.js" />
     <Content Include="wwwroot\ASsiratTheme\CustomJs\RegPatient.js" />
     <Content Include="wwwroot\ASsiratTheme\CustomJs\Student.js" />
     <Content Include="wwwroot\ASsiratTheme\datatables\buttons.dataTables.css" />
@@ -4102,6 +4103,7 @@
     <Content Include="wwwroot\IITH_Theme\CustomJs\Appointment.js" />
     <Content Include="wwwroot\IITH_Theme\CustomJs\EMR.js" />
     <Content Include="wwwroot\IITH_Theme\CustomJs\OPD.js" />
+    <Content Include="wwwroot\IITH_Theme\CustomJs\OPDView.js" />
     <Content Include="wwwroot\IITH_Theme\CustomJs\RegPatient.js" />
     <Content Include="wwwroot\IITH_Theme\CustomJs\Student.js" />
     <Content Include="wwwroot\IITH_Theme\datatables\buttons.dataTables.css" />
@@ -7656,6 +7658,7 @@
     <Content Include="wwwroot\khurshid\CustomJs\Appointment.js" />
     <Content Include="wwwroot\khurshid\CustomJs\EMR.js" />
     <Content Include="wwwroot\khurshid\CustomJs\OPD.js" />
+    <Content Include="wwwroot\khurshid\CustomJs\OPDView.js" />
     <Content Include="wwwroot\khurshid\CustomJs\RegPatient.js" />
     <Content Include="wwwroot\khurshid\CustomJs\Student.js" />
     <Content Include="wwwroot\khurshid\datatables\buttons.dataTables.css" />
@@ -11083,6 +11086,7 @@
     <Content Include="wwwroot\NoorHospitalTheme\css\ui.jqgrid.min.css" />
     <Content Include="wwwroot\NoorHospitalTheme\CustomJs\Appointment.js" />
     <Content Include="wwwroot\NoorHospitalTheme\CustomJs\EMR.js" />
+    <Content Include="wwwroot\NoorHospitalTheme\CustomJs\OPDView.js" />
     <Content Include="wwwroot\NoorHospitalTheme\CustomJs\OPD.js" />
     <Content Include="wwwroot\NoorHospitalTheme\CustomJs\RegPatient.js" />
     <Content Include="wwwroot\NoorHospitalTheme\CustomJs\Student.js" />
@@ -14513,6 +14517,7 @@
     <Content Include="wwwroot\Pakred\CustomJs\Appointment.js" />
     <Content Include="wwwroot\Pakred\CustomJs\EMR.js" />
     <Content Include="wwwroot\Pakred\CustomJs\OPD.js" />
+    <Content Include="wwwroot\Pakred\CustomJs\OPDView.js" />
     <Content Include="wwwroot\Pakred\CustomJs\RegPatient.js" />
     <Content Include="wwwroot\Pakred\CustomJs\Student.js" />
     <Content Include="wwwroot\Pakred\datatables\buttons.dataTables.css" />
@@ -17637,6 +17642,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\SubjDefinintion.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
+    <Content Include="wwwroot\StandardTheme\CustomJs\OPDView.js" />
     <Content Include="wwwroot\StandardTheme\header-footer\Footer.ascx" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\LoginBackground.jpg" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\logo.PNG" />
@@ -17751,6 +17757,7 @@
     <Content Include="wwwroot\Tibbit_theme\CustomJs\Appointment.js" />
     <Content Include="wwwroot\Tibbit_theme\CustomJs\EMR.js" />
     <Content Include="wwwroot\Tibbit_theme\CustomJs\OPD.js" />
+    <Content Include="wwwroot\Tibbit_theme\CustomJs\OPDView.js" />
     <Content Include="wwwroot\Tibbit_theme\CustomJs\RegPatient.js" />
     <Content Include="wwwroot\Tibbit_theme\CustomJs\Student.js" />
     <Content Include="wwwroot\Tibbit_theme\datatables\buttons.dataTables.css" />

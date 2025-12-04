@@ -2,7 +2,9 @@
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+
+
     <script type="text/javascript">
         function loaddoctor() {
             var Type = $('#ctl00_MainContent_ddlPatient_Type').val();
@@ -629,7 +631,9 @@
 
             $('#ctl00_MainContent_chckPatientCard').attr('disabled', true);
 
-            Patient_ID = document.getElementById('<%=hdnPatientID.ClientID%>').value            var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;            window.open(url);
+            Patient_ID = document.getElementById('<%=hdnPatientID.ClientID%>').value
+            var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;
+            window.open(url);
         }
         debugger;
 
@@ -800,7 +804,10 @@
 
         function PrintReceipt() {
 
-            debugger;            Patient_ID = document.getElementById('<%=hdnPatientID.ClientID%>').value            var url = "ReportViewer.aspx?ReportName=PatientSlip&Title=OPD Slip&Patient_ID=" + Patient_ID;            window.open(url);
+            debugger;
+            Patient_ID = document.getElementById('<%=hdnPatientID.ClientID%>').value
+            var url = "ReportViewer.aspx?ReportName=PatientSlip&Title=OPD Slip&Patient_ID=" + Patient_ID;
+            window.open(url);
 
         }
         function SearchPatients() {
