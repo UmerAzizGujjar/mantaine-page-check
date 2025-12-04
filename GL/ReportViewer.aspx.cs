@@ -545,7 +545,6 @@ namespace PMS
             }
             else if (reportName == "OPD_Department_Wise_Report")
             {
-
                 string rptFileName = "Patients/OPDDepartmentWiseReport.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
