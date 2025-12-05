@@ -573,6 +573,35 @@ namespace PMS
                 rd.SetParameterValue("Shift", Shift);
                 rd.SetParameterValue("@Department", departmentID);
             }
+            else if (reportName == "Over_Summary_Shift_Wise")
+            {
+                string rptFileName = "TransactionalDetails/OverSummaryShiftWise.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string Shift = Request.QueryString["Shift"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+
+                string departmentID = Request.QueryString["Department"].ToString();
+                if (Shift == "All")
+                {
+                    Shift = "0";
+                }
+                string Operator = Request.QueryString["Operator"].ToString();
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@FromDate", sqlStartDateTime);
+                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Shift_id", Shift);
+                rd.SetParameterValue("@Department", departmentID);
+            }
             else if (reportName == "DepartmentWiseReport")
             {
                 string rptFileName = "DepartmentWiseReport.rpt";
