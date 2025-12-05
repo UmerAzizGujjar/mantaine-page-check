@@ -69,7 +69,9 @@
                         debugger;
                         var res = '<a href="#" onclick="EditOPDRefund(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
-                        var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                        var Del = '<a href="#" class="delListBtn" ' + 'onclick="cancelRefund(' + full.Refund_ID + ')" ' +
+                            'style="border-radius: 4px; margin-left: 4px; color: white; background-color: red; padding: 5px 8px; text-decoration: none;">' +
+                            '<i class="fa fa-trash"></i></a>';
 
                         var result;
                         result = res + Del;
@@ -107,6 +109,70 @@
             window.open("OPD_Refund.aspx?RefundID=" + RefundID);
         }
 
+
+        function cancelRefund(RefundID) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to cancel this OPD Refund?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "OPD_Refund_List.aspx/CancelRefund",
+                        data: JSON.stringify({ RefundID: RefundID }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            var resultText = response.d;
+                            if (resultText && resultText.startsWith("Error")) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Failed!',
+                                    text: resultText,
+                                    timer: 2500,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Canceled!',
+                                    text: 'The OPD Refund has been canceled.',
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                                $('#tblOPDRefund').DataTable().ajax.reload();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'AJAX call failed. Check console.',
+                                timer: 2000
+                            });
+                            console.error("Cancel Refund error:", error, xhr.responseText);
+                        }
+                    });
+                }
+            });
+        }
 
     </script>
 
