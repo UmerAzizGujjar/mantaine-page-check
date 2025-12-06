@@ -731,7 +731,7 @@
                         var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
                         var endTime = $('#ctl00_MainContent_txtETime').val();
                         var ddlShift = $("#ctl00_MainContent_ddlShift option:selected").text();
-
+                        //var ddlShift = $("#ctl00_MainContent_ddlShift").val(); // ✅ CORRECT
                         // Combine date + time into single strings (as your backend expects)
                         var startDateTime = startDate + ' ' + startTime;
                         var endDateTime = endDate + ' ' + endTime;
