@@ -216,6 +216,8 @@ namespace PMS
                     Time_Row.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = true;
+                    lboperator.Visible = false;
+                    ddloprators.Visible = false;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     object valusetss = from d in db.aspnet_Users
                                       select new { d.UserName, d.UserId };
