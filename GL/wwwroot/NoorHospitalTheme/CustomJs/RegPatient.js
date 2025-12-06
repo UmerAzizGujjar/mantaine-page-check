@@ -107,6 +107,17 @@ $(document).ready(function () {
         });
     });
 
+    const defaults = {
+        '#ddlCountry': { value: '01', text: 'Pakistan' },
+        '#ddlstate': { value: '01', text: 'Punjab' },
+        '#txtcity': { value: '0001', text: 'Lahore' }
+    };
+
+    $.each(defaults, function (id, data) {
+        const $el = $(id);
+        $el.html(`<option value="${data.value}" selected>${data.text}</option>`);
+    });
+
 });
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;
