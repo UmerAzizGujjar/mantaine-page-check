@@ -184,59 +184,27 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
 
+                    //lbShift.Visible = true;
+                    //ddlShift.Visible = true;
+                    //DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
+                    //ddlShift.DataSource = shift;
+                    //ddlShift.DataValueField = "Shift_ID";
+                    //ddlShift.DataTextField = "Shift_Name";
+                    //ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
+                    //ddlShift.DataBind();
+                    lboperator.Visible = false;
+                    ddloprators.Visible = false;
+
                     lbShift.Visible = true;
                     ddlShift.Visible = true;
-                    DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
-                    ddlShift.DataSource = shift;
-                    ddlShift.DataValueField = "Shift_ID";
-                    ddlShift.DataTextField = "Shift_Name";
-                    ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
-                    ddlShift.DataBind();
+                    ddlShift.Items.Clear();
+                    ddlShift.Items.Add(new ListItem("All", "0"));
+                    ddlShift.Items.Add(new ListItem("Morning", "2"));
+                    ddlShift.Items.Add(new ListItem("Evening", "3"));
+                    ddlShift.Items.Add(new ListItem("Night", "4"));
 
                 }
-                //else if (this.PageTitle == "Over_Summary_Shift_Wise")
-                //{
-                //    string x = "Over Summary Shift Wise Report";
-                //    Master.Label2.Text = x;
-                //    Master.GetMenuName();
-                //    tr1MedicalSubsidy.Visible = false;
-                //    dpROw.Visible = true;
-                //    trDoctor.Visible = false;                  
-                //    tr_Summary.Visible = false;      // changed
-                //    lblMultiSelect.Visible = false;
-                //    lblPatientType.Text = "Operators";
-                //    object valusets;
-                //    valusets = DBClass.GetValueSet("Patient Main Category");
-                //    ddlDepartments.DataSource = valusets;
-                //    ddlDepartments.DataTextField = "DataValue_Description";
-                //    ddlDepartments.DataValueField = "DataValue_Name";
-                //    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                //    ddlDepartments.DataBind();    
-                //    DateDiv.Visible = true;
-                //    Time_Row.Visible = true;
-                //    op_PanelCompany.Visible = false;
-                //    optRw.Visible = true;
-                //    lboperator.Visible = false;
-                //    ddloprators.Visible = false;
-                //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                //    object valusetss = from d in db.aspnet_Users
-                //                      select new { d.UserName, d.UserId };
-                //    ddlPatientType.DataSource = valusetss;
-                //    ddlPatientType.DataTextField = "UserName";
-                //    ddlPatientType.DataValueField = "UserId";
-                //    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                //    ddlPatientType.DataBind();
-
-                //    lbShift.Visible = true;
-                //    ddlShift.Visible = true;
-                //    DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
-                //    ddlShift.DataSource = shift;
-                //    ddlShift.DataValueField = "Shift_ID";
-                //    ddlShift.DataTextField = "Shift_Name";
-                //    ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
-                //    ddlShift.DataBind();
-
-                //}
+              
                 else if (this.PageTitle == "Over_Summary_Shift_Wise")
                 {
                     string x = "Over Summary Shift Wise Report";
