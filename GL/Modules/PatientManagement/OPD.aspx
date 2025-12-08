@@ -1198,7 +1198,7 @@
                     <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardFront" onclick="getcardAmount()" value="Front Card" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="divcardback">
-                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="getcardAmount()" value="Back Card" />
+                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="PrintPatientBackCard()" value="Back Card" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                     <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
