@@ -1182,9 +1182,10 @@ function SavePatient() {
                     htmlContainer: 'swal-big-text'
                 }
             });
-            var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
-            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_slip&Title=OPD Patient Print &OPD_ID=" + patientID;
-            window.open(url, '_blank');
+            var url1 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
+            var url2 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_slip&Title=OPD Patient Print &OPD_ID=" + patientID;
+            window.open(url1, '_blank');
+            window.open(url2, '_blank');
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
