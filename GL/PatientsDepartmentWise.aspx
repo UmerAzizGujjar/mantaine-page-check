@@ -713,7 +713,7 @@
                         var endDateTime = endDate + ' ' + endTime;
 
                         var url = 'ReportViewer.aspx?ReportName=OPD_Department_Wise_Report' +
-                            '&ReportTitle=OPD Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
                        //     '&Summary=' + summary +
