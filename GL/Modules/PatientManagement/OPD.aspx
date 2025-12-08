@@ -1402,7 +1402,7 @@
                             </div>
                         </div>
                     </fieldset>
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="scrollable-table-container">
                         <table class="table table-hover table-striped table-bordered" id="tblResult">
                             <thead>
                                 <tr>
