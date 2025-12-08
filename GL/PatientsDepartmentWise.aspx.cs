@@ -155,12 +155,11 @@ namespace PMS
                 }
                 else if (this.PageTitle == "OPD_Department_Wise_Report")
                 {
-                    string x = "OPD Department Wise Report";
+                    string x = "Department Wise Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
-                    trDoctor.Visible = false;                  
                     tr_Summary.Visible = false;      // changed
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
@@ -202,6 +201,16 @@ namespace PMS
                     ddlShift.Items.Add(new ListItem("Morning", "2"));
                     ddlShift.Items.Add(new ListItem("Evening", "3"));
                     ddlShift.Items.Add(new ListItem("Night", "4"));
+
+                    trDoctor.Visible = true;
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
 
                 }
               
@@ -4330,7 +4339,7 @@ namespace PMS
 
                 if (PageTitle == "Patients_Receipts")
                 {
-                    string x = "Patient Receipt";
+                    string x = "Patient Department & Type Wise";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     object valusets;

@@ -552,6 +552,8 @@ namespace PMS
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
                 //string Shift = Request.QueryString["Shift"].ToString();
 
+                string doctorID = Request.QueryString["DoctorID"].ToString();
+
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -584,9 +586,7 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Operator);
                 //rd.SetParameterValue("Shift", Shift);
                 rd.SetParameterValue("@Shift_id", shiftId);
-
-
-
+                rd.SetParameterValue("@DoctorID", doctorID);
                 rd.SetParameterValue("@Department", departmentID);
             }
             else if (reportName == "Over_Summary_Shift_Wise")

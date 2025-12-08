@@ -718,6 +718,7 @@
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
                        //     '&Summary=' + summary +
                             '&Shift=' + encodeURIComponent(ddlShift) +
+                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() +
                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
                             '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
 
