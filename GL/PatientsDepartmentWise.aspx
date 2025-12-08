@@ -713,11 +713,12 @@
                         var endDateTime = endDate + ' ' + endTime;
 
                         var url = 'ReportViewer.aspx?ReportName=OPD_Department_Wise_Report' +
-                            '&ReportTitle=OPD Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
                        //     '&Summary=' + summary +
                             '&Shift=' + encodeURIComponent(ddlShift) +
+                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() +
                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
                             '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
 
@@ -732,7 +733,6 @@
                         var endTime = $('#ctl00_MainContent_txtETime').val();
                         var ddlShift = $("#ctl00_MainContent_ddlShift option:selected").text();
 
-                        // Combine date + time into single strings (as your backend expects)
                         var startDateTime = startDate + ' ' + startTime;
                         var endDateTime = endDate + ' ' + endTime;
 
