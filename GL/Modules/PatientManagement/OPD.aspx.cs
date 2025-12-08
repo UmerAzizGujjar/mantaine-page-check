@@ -216,7 +216,8 @@ namespace PMS.Modules.PatientManagement
                                     emp.end_day,
                                     emp.Timings_In,
                                     emp.Timings_Out,
-                                    emp.Patient_Type
+                                    emp.Patient_Type,
+                                    emp.Off_Days_Names
                                 }).FirstOrDefault();
 
                 if (employee == null)
@@ -236,7 +237,8 @@ namespace PMS.Modules.PatientManagement
                     end_day = employee.end_day?.ToString("yyyy-MM-dd"),
                     Timings_In = employee.Timings_In?.ToString(@"hh\:mm"),
                     Timings_Out = employee.Timings_Out?.ToString(@"hh\:mm"),
-                    Patient_Type = employee.Patient_Type?.ToString()
+                    Patient_Type = employee.Patient_Type?.ToString(),
+                    offDays = employee.Off_Days_Names?.ToString()
                 };
 
                 return new JavaScriptSerializer().Serialize(result);

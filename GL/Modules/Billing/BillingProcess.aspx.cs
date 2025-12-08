@@ -52,6 +52,34 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
+        [WebMethod]
+        public static string PendingPatients()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query =
+                from ltd in db.Lab_Test_Details
+                join lt in db.Laboratory_Tests
+                    on ltd.Lab_Test_ID equals lt.Lab_Test_ID
+                join r in db.Reg_patients
+                    on ltd.Actual_Patient_ID equals r.pat_id
+                where (ltd.IsBilled ?? false) == false
+                      && lt.Transaction_Type != "Front Desk"
+                select new
+                {
+                    r.mr_no_sequence,
+                    r.Full_Name,
+                    r.Father_Name,
+                    r.Age_years,
+                    ltd.IsBilled,
+                    lt.Created_Time,
+                    ltd.Actual_Patient_ID
+                };
+                var result = query.Distinct().ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
 
         [WebMethod]
         public static string GetGLAccounts()

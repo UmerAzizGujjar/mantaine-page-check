@@ -800,6 +800,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    debugger;
                     var blockInfo = JSON.parse(response.d);
 
                     if (blockInfo && blockInfo.error) {
@@ -807,8 +808,39 @@
                         callback(false);
                         return;
                     }
+                    if (blockInfo.offDays && blockInfo.offDays !== "" && blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+                        debugger;
+                        let offDays = blockInfo.offDays.toLowerCase().split(',').map(x => x.trim());
+                        let today = new Date();
+                        let todayDay = today.toLocaleString("en-US", { weekday: 'short' }).toLowerCase();
+                        todayDay = todayDay.substring(0, 3);
+                        if (offDays.includes(todayDay)) {
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Doctor Off-Day',
+                                text: 'This Category is Blocked by the Admin.',
+                                timer: 2500,
+                                showConfirmButton: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                            $('#txtfees').val("0");
+                            $('#txtactualfee').val("0");
+                            $('#txtdiscount').val("");
+                            $('#ddldoctor').val("");
+
+                            callback(true);
+                            return;
+                        }
+                    }
 
                     if (blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+
                         const now = new Date();
 
                         const parseLocalDate = (str) => {
@@ -845,7 +877,8 @@
                             $('#txtactualfee').val("0");
                             $('#txtdiscount').val("");
                             $('#ddldoctor').val("");
-                            callback(true); 
+
+                            callback(true);
                             return;
                         }
                     }
@@ -858,6 +891,75 @@
                 }
             });
         }
+
+
+        //function checkDoctorBlockStatus(Doc, selectedPatientType, callback) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "OPD.aspx/GetDoctorBlockInfo",
+        //        data: JSON.stringify({ Doc: Doc }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            debugger;
+        //            var blockInfo = JSON.parse(response.d);
+
+        //            if (blockInfo && blockInfo.error) {
+        //                console.error("Block info error:", blockInfo.error);
+        //                callback(false);
+        //                return;
+        //            }
+
+        //            if (blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+        //                const now = new Date();
+
+        //                const parseLocalDate = (str) => {
+        //                    const [y, m, d] = str.split('-').map(Number);
+        //                    return new Date(y, m - 1, d);
+        //                };
+
+        //                const stDate = parseLocalDate(blockInfo.st_day);
+        //                const endDate = parseLocalDate(blockInfo.end_day);
+
+        //                const [startHour, startMin] = (blockInfo.Timings_In || "00:00").split(':').map(Number);
+        //                const [endHour, endMin] = (blockInfo.Timings_Out || "23:59").split(':').map(Number);
+
+        //                stDate.setHours(startHour, startMin, 0, 0);
+        //                endDate.setHours(endHour, endMin, 0, 0);
+
+        //                const isWithinWindow = now >= stDate && now <= endDate;
+
+        //                if (isWithinWindow) {
+        //                    Swal.fire({
+        //                        icon: 'warning',
+        //                        title: 'Access Denied',
+        //                        text: 'This category is blocked by the admin.',
+        //                        timer: 2500,
+        //                        showConfirmButton: false,
+        //                        customClass: {
+        //                            popup: 'swal-big-popup',
+        //                            title: 'swal-big-title',
+        //                            htmlContainer: 'swal-big-text'
+        //                        }
+        //                    });
+
+        //                    $('#txtfees').val("0");
+        //                    $('#txtactualfee').val("0");
+        //                    $('#txtdiscount').val("");
+        //                    $('#ddldoctor').val("");
+        //                    callback(true); 
+        //                    return;
+        //                }
+        //            }
+
+        //            callback(false);
+        //        },
+        //        error: function (xhr, status, error) {
+        //            console.error("Failed to fetch block info:", error);
+        //            callback(false);
+        //        }
+        //    });
+        //}
 
     </script>
 
