@@ -6026,7 +6026,7 @@
                         </div>
 
 
-                        <div class="table-responsive previewTable">
+                        <div class="table-responsive previewTable" style="overflow:auto;" >
                             <table class="table table-bordered table-custom" id="tblPendingPatients">
                                 <thead id="ihead">
                                     <tr>
