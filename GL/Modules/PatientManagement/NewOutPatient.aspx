@@ -227,6 +227,8 @@
                 AppendFinalDiagnosisHistory();
                 AppendComplaintsHistory();
                 updateHistoryTable();
+                LoadLabResultrpt();
+                LoadServices();
 
                 $('.exam-row input[type="checkbox"]').each(function () {
                     var param = this.id.split('_chk').pop();
@@ -729,7 +731,110 @@
                 alert("Error populating form data. Please check console for details.");
             }
         }
+        function InsertLabResult() {
+            debugger;
 
+            var ResultrptVal = $('#ctl00_MainContent_ddlLabResult').find('option:selected').val();
+            var ResultrptName = $('#ctl00_MainContent_ddlLabResult').find('option:selected').text();
+            if (ResultrptVal != "0") {
+
+                var currentDate = new Date();
+                var formattedDates = $.datepicker.formatDate('dd M yy', currentDate);
+
+                var rows = '';
+                rows += '<tr>' +
+                    '<td><input type="hidden" name="txtLabResultrpt" value="' + ResultrptVal + '"> ' + ResultrptName + '</td>' +
+                    '<td><input type="text" name="txtResultName" style="width: 80px !important;"></td>' +
+                    '<td><input type="text" class="datepicker" name="txtResulDate" style="width: 85px !important;" value="' + formattedDates + '"></td>' +
+                    '<td><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td>' +
+                    '</tr>';
+                $('#tblResultrpt tbody').append(rows);
+                $('#tblResultrpt .datepicker').datepicker({ dateFormat: 'dd M yy' });
+
+                // Show the table div
+                $('#dvtblResultrpt').show();
+
+                $('#ctl00_MainContent_ddlLabResult').val("0");
+            }
+        }
+
+        function SaveLabResult() {
+            var table = $('#tblResultrpt');
+            var tblResultrpt = [];
+
+            table.find('tbody tr').each(function (key, value) {
+                var resultDate = $(value).find('td input[name=txtResulDate]').val();
+                var resultObj = {
+                    'Result_ID': $(value).find('td input[name=txtLabResultrpt]').val(),
+                    'Result_Name': $(value).find('td input[name=txtResultName]').val()
+                };
+
+                if (resultDate !== "") {
+                    resultObj.Result_Date = resultDate;
+                }
+
+                tblResultrpt.push(resultObj);
+            });
+
+            var btnsave = $('#btnSave').val();
+            var PatID = $('#<%= hdfPatient_ID.ClientID%>').val();
+    var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+    if (OutPatID == '(New)' || OutPatID == '')
+        OutPatID = 0;
+
+    var ResulttrptDetail = { Pat: PatID, OutPatientID: OutPatID, Resulttrpt: tblResultrpt };
+
+    PageMethods.SaveLabResultrpt(btnsave, JSON.stringify(ResulttrptDetail), function (response) { });
+}
+
+function LoadLabResultrpt() {
+            PageMethods.LoadLabResultrptDetail($('#<%= txtOut_Patient_ID.ClientID%>').val(), function (res) {
+                var Medicines = JSON.parse(res);
+                var rows = '';
+
+                $.each(Medicines, function (key, value) {
+                    var dateObj;
+
+                    // ✅ Handle when ReslutDate is empty, null or undefined
+                    if (!value.ReslutDate || value.ReslutDate === "") {
+                        dateObj = new Date(); // current date
+                    } else if (value.ReslutDate.includes("/Date(")) {
+                        // Handle /Date(1234567890)/ format
+                        var timestamp = parseInt(value.ReslutDate.replace("/Date(", "").replace(")/", ""));
+                        dateObj = new Date(timestamp);
+                    } else {
+                        dateObj = new Date(value.ReslutDate);
+                    }
+                    var formattedDates = !isNaN(dateObj.getTime())
+                        ? $.datepicker.formatDate('dd M yy', dateObj)
+                        : $.datepicker.formatDate('dd M yy', new Date());
+
+                    rows += '<tr>' +
+                        '<td><input type="hidden" name="txtLabResultrpt" value="' + value.Lab_Resultrpt_ID + '"> ' + value.Lab_Resultrpt + '</td>' +
+                        '<td><input type="text" name="txtResultName" style="width: 80px !important;" value="' + value.Lab_Resultrpt_Name + '"></td>' +
+                        '<td><input type="text" class="datepicker" name="txtResulDate" style="width: 85px ! important;" value="' + formattedDates + '"></td>' +
+                        '<td><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td>' +
+                        '</tr>';
+                });
+
+                $('#tblResultrpt tbody').append(rows);
+                $('#tblResultrpt .datepicker').datepicker({ dateFormat: 'dd M yy' });
+
+                // Show table if there are records
+                if (Medicines.length > 0) {
+                    $('#dvtblResultrpt').show();
+                }
+            });
+        }
+
+        function deleteTest(anchorTag) {
+            var row = $(anchorTag).closest('tr');
+            row.remove();
+
+            if ($('#tblResultrpt tbody tr').length === 0) {
+                $('#dvtblResultrpt').hide();
+            }
+        }
         // Helper functions for loading indicators and messages
         function showLoading() {
             // Add your loading indicator here
@@ -3136,7 +3241,61 @@
             // Check the checkbox in all services list
             $('#Servicechk_' + itemCode).prop('checked', true);
         }
+        function LoadServices() {
+            var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
 
+            if (!OutPatID || OutPatID == '(New)' || OutPatID == '' || OutPatID == "0") {
+                return;
+            }
+
+            PageMethods.LoadServicesDetail(OutPatID, function (res) {
+                if (!res) return;
+
+                var Services = JSON.parse(res);
+
+                if (Services.length === 0) return;
+
+                var rows = '';
+
+                $.each(Services, function (key, value) {
+                    var dateObj;
+                    var datetime, datetimeValue;
+
+                    // Handle when CreatedDate is empty, null or undefined
+                    if (!value.CreatedDate || value.CreatedDate === "") {
+                        dateObj = new Date();
+                    } else if (value.CreatedDate.includes("/Date(")) {
+                        var timestamp = parseInt(value.CreatedDate.replace("/Date(", "").replace(")/", ""));
+                        dateObj = new Date(timestamp);
+                    } else {
+                        dateObj = new Date(value.CreatedDate);
+                    }
+
+                    // Format display date
+                    var formattedDate = !isNaN(dateObj.getTime())
+                        ? $.datepicker.formatDate('dd/mm/yy', dateObj) + ' ' + dateObj.toLocaleTimeString('en-US')
+                        : new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString('en-US');
+
+                    datetime = formattedDate;
+                    datetimeValue = dateObj.toISOString();
+
+                    rows += '<tr>' +
+                        '<td style="display:none"><input type="hidden" name="serviceDate" value="' + datetimeValue + '">' + datetime + '</td>' +
+                        '<td><input type="hidden" name="serviceItemCode" value="' + value.Service_ItemId + '">' + value.Services_Procedure_ItemName + '</td>' +
+                        '<td>' +
+                        '<a href="javascript:void(0)" onclick="deleteService(this, \'' + value.Service_ItemId + '\')"><i class="fa fa-times"></i></a>' +
+                        '</td>' +
+                        '</tr>';
+                });
+
+                $('#tblServices tbody').html(rows);
+
+                // Show table div if there are records
+                if (Services.length > 0) {
+                    $('#dvtblServices').slideDown();
+                }
+            });
+        }
         // Remove service from table
         function Remove_ServiceRow(itemCode) {
             var row = $('#tblServices tbody').find('input[name="serviceItemCode"][value="' + itemCode + '"]').closest('tr');
@@ -3564,7 +3723,7 @@
            );
        }
         function SaveMedicines() {
-            SaveComplaintsTab(); SavePrimaryDiagnosisTab(); SaveFinalDiagnosisTab(); SaveServices();
+            SaveComplaintsTab(); SavePrimaryDiagnosisTab(); SaveFinalDiagnosisTab(); SaveServices(); SaveLabResult();
             debugger;
             var table = $('#tblMedicines');
             var MedicinesList = [];
@@ -5425,8 +5584,13 @@
                                                 </div>
                                             </div>
                                              <div style="display: flex; align-items: center; width: 100%">
-     <asp:Label Style="width: 200px;" ID="Label36" runat="server" Text="Refered To"></asp:Label>
+     <asp:Label Style="width: 200px;" ID="Label36" runat="server" Text="Verbal Consent"></asp:Label>
      <asp:DropDownList ID="ddlVerbalConsent"  Width="80%" runat="server" AppendDataBoundItems="true" TabIndex="21"></asp:DropDownList>
+ </div>
+                                             <div style="display: flex; align-items: center; width: 100%">
+     <asp:Label Style="width: 200px;" ID="Label37" runat="server" Text="Lab Result"></asp:Label>
+     <asp:DropDownList ID="ddlLabResult" Width="80%" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+     <input id="btnlabrpt" class="btn-primry" type="button" value="Add" onclick="InsertLabResult()"  />
  </div>
 
 
@@ -5802,6 +5966,27 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Lab Result Table (Initially Hidden) -->
+<div class="col-lg-6" id="dvtblResultrpt" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h4><i class="fa fa-flask"></i>Lab Results</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblResultrpt">
+                <thead>
+                    <tr style="position: sticky; top: 0px; z-index: 10;">
+                        <th>Lab Result</th>
+                        <th>Result Name</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
                                 <!-- Protos Panel -->
                                 <div class="col-lg-4" id="dvtblProto" style="display: none">
                                     <div class="dashboard-card">
