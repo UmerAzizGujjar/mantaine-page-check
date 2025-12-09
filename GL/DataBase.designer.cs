@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Uat")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "AsSiraat")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -904,11 +904,6 @@ namespace PMS
         partial void UpdateIn_Patient_Medicine(In_Patient_Medicine instance);
         partial void DeleteIn_Patient_Medicine(In_Patient_Medicine instance);
         #endregion
-        public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
-        {
-            OnCreated();
-        }
 
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
@@ -4922,6 +4917,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
             return ((ISingleResult<Sp_GetLast24Hours_MedicinesResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPD_AsSiraat")]
+        public ISingleResult<SpApprove_OPD_AsSiraatResult> SpApprove_OPD_AsSiraat([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Category", DbType = "NVarChar(150)")] string pat_Category, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, pat_Category, user_id);
+            return ((ISingleResult<SpApprove_OPD_AsSiraatResult>)(result.ReturnValue));
         }
     }
 
@@ -203838,6 +203840,32 @@ namespace PMS
                 if ((this._Transaction_Type != value))
                 {
                     this._Transaction_Type = value;
+                }
+            }
+        }
+    }
+
+    public partial class SpApprove_OPD_AsSiraatResult
+    {
+
+        private string _Message;
+
+        public SpApprove_OPD_AsSiraatResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
                 }
             }
         }
