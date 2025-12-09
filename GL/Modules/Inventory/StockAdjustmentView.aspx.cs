@@ -36,7 +36,12 @@ namespace PMS.Inventory
                                           Qty = ISA.Qty,
                                           //Voucher_No = DBClass.getField("select Voucher_No from GL_Vouchers where Voucher_ID =" + ISA.Voucher_ID),
                                           Status = ISA.Status,
-                                      };
+                                          Created_By = _dbContext.aspnet_Users.Where(u => u.UserId == ISA.Created_By).Select(u => u.UserName).FirstOrDefault() ?? "",
+                                          Creation_Time = ISA.Creation_Time,
+                                          Updated_By = _dbContext.aspnet_Users.Where(u => u.UserId == ISA.Updated_By).Select(u => u.UserName).FirstOrDefault() ?? "",
+                                          Update_Time = ISA.Update_Time
+
+                                          };
 
                     var FilteredCount = StoreAdjustment.Count();
                     switch (sortColumn)
