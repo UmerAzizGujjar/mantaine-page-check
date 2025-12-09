@@ -138,11 +138,26 @@ namespace PMS.Modules.PatientManagement
         public static string approvepatient(string pat_id, string Pat_Category)
         {
             var user_id = AppConfig.UserID;
-            DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
-            return (new JavaScriptSerializer()).Serialize(Details);
-        }
+            var company_name = AppConfig.Company_Name;
 
+            using (var db = new DataBaseDataContext()) // 👈 best practice: dispose context
+            {
+                object Details;
+
+                if (company_name == "As-Siraat Serving Humanity")
+                {
+                    // Call client-specific SP
+                    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
+                }
+                else
+                {
+                    // Default for other clients (e.g., Noor Hospital, KDC Lab, etc.)
+                    Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
+                }
+
+                return new JavaScriptSerializer().Serialize(Details);
+            }
+        }
         [WebMethod]
         public static string ModePresentation()
         {
