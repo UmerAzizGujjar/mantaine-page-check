@@ -5,6 +5,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             LoadPage();
+            GetMainDepartments();
+            GetGroup();
+            GroupDepartment();
         });
 
         function ShowReport(Test_ID) {
@@ -16,11 +19,25 @@
             $('#tblresult').DataTable({
                 "processing": true,
                 "serverSide": true,
-                   "dom": 'lBfrtip',
+                "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'TestDefination.aspx'; } }, 'copy', 'excel', 'pdf'],
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'TestDefination.aspx';
+                        }
+                    },
+                    'copy', 'excel', 'pdf'
+                ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
+                    // ✅ Get current filter values from dropdowns
+                    var mainDept = $('#main-departments').val() || '';
+                    var groupCat = $('#Group_Category').val() || '';
+                    var groupDept = $('#Group_department').val() || '';
+
                     $.ajax({
                         type: "POST",
                         url: "TestDefinationList.aspx/ViewList",
@@ -30,7 +47,10 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            mainDepartmentId: mainDept,
+                            groupCategoryId: groupCat,
+                            groupDepartmentId: groupDept
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -43,30 +63,28 @@
                             });
                         },
                         error: function (xhr, status, error) {
+                            console.error("AJAX Error:", error);
                             console.log(xhr.responseText);
                         }
                     });
                 },
                 "columns": [
-                    { "data": "Test_ID", "name": "Test_ID", visible: false, "width": "0%" },
+                    { "data": "Test_ID", "name": "Test_ID", "visible": false, "width": "0%" },
                     { "data": "Test_Name", "name": "Test_Name", "orderable": true },
-                    { "data": "Main_Department", "name": "Main_Department", "orderable": false },
-                    { "data": "Group_Category", "name": "Group_Category", "orderable": false },
-                    { "data": "Group_Department", "name": "Group_Department", "orderable": false },
+                    { "data": "Main_Department", "name": "Main_Department", "orderable": true },
+                    { "data": "Group_Category", "name": "Group_Category", "orderable": true },
+                    { "data": "Group_Department", "name": "Group_Department", "orderable": true },
                     { "data": "Unit", "name": "Unit", "orderable": false },
                     { "data": "Active", "name": "Active", "orderable": false },
                     {
-                        render: function (data, type, full) {
-                            debugger;
-                            var res = '<a href="TestDefination.aspx?id=' + full.Test_ID + '" class="editListBtn" style="border-radius: 4px; margin-right: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
-
-                            var Delete = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Test_ID + '" onclick="DeleteTest(this)"><i class="fa fa-trash"></i></a>';
-
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="ShowReport(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            var result;
-                            result = res + Delete + print;
-                            return result;
-                        }, "width": "13%", "orderable": false
+                        "render": function (data, type, full) {
+                            var res = '<a href="TestDefination.aspx?id=' + full.Test_ID + '" class="editListBtn" style="border-radius: 4px; margin-right: 4px; padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                            var Delete = '<a class="delListBtn" style="border-radius: 4px; margin-left: 4px; color: white; padding: 5px 8px;" href="#" data-id="' + full.Test_ID + '" onclick="DeleteTest(this)"><i class="fa fa-trash"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px; margin-left: 4px; color: white; padding: 5px 8px;" href="#" onclick="ShowReport(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            return res + Delete + print;
+                        },
+                        "width": "13%",
+                        "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -93,7 +111,33 @@
             });
         }
         
-
+        function GetMainDepartments(d) {
+            var options = '<option value="">Select Department</option>';
+            PageMethods.GetMainDepartments(function (departments) {
+                $.each(JSON.parse(departments), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" ' + (d == value.DataValue_Name ? 'selected' : '') + ' >' + value.DataValue_Description + '</option>';
+                });
+                $('#main-departments').html(options);
+            });
+        }
+        function GetGroup(d) {
+            var options = '<option value="">Select Group Catagory</option>';
+            PageMethods.GetTestGroups(function (departments) {
+                $.each(JSON.parse(departments), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" ' + (d == value.DataValue_Name ? 'selected' : '') + ' >' + value.DataValue_Description + '</option>';
+                });
+                $('#Group_Category').html(options);
+            });
+        }
+        function GroupDepartment(d) {
+            var options = '<option value="">Select Group Department</option>';
+            PageMethods.GroupDepartment(function (departments) {
+                $.each(JSON.parse(departments), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" ' + (d == value.DataValue_Name ? 'selected' : '') + ' >' + value.DataValue_Description + '</option>';
+                });
+                $('#Group_department').html(options);
+            });
+        }
         
         function viewTestRateList() {
             debugger;
@@ -119,7 +163,13 @@
             }
             
         }
-     
+        function FilterTestsDetail() {
+            var table = $('#tblresult').DataTable();
+            // Use ajax.reload() with custom params
+            table.ajax.reload(function (json) {
+                // optional callback after reload
+            }, false); // false = keep current paging
+        }
 
         function changeActiveStatus(row) {
             debugger;
@@ -140,7 +190,21 @@
         <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom: 1%;">
             <input type="button" class="btn btn-gray" id="btnViewRateList"  value="View Rate List" onclick="viewTestRateList()" />
         </div>
-        
+          <div class="col-md-2 col-lg-2 col-sm-6">
+      <select id="main-departments" onchange="FilterTestsDetail()" >
+          <option value="">Select Department</option>
+      </select>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-6">
+      <select id="Group_Category" onchange="FilterTestsDetail()" >
+          <option value="">Select Group</option>
+      </select>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-6">
+      <select id="Group_department" onchange="FilterTestsDetail()" >
+          <option value="">Group Department</option>
+      </select>
+  </div>
     </div>
     <div id="PatientDetail" style="width: 100%">
         <contenttemplate>

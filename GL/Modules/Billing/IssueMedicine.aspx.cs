@@ -86,7 +86,7 @@ namespace PMS
                 DateTime last24Hours = DateTime.Now.AddHours(-24);
                 var OPD_NO = (from opd in db.Patients                                
                                  where opd.Reg_PatId == pat_id
-                                    && opd.Created_Time >= last24Hours
+                                    
 
                               select new
                                  {
