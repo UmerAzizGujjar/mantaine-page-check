@@ -275,6 +275,29 @@ namespace PMS
             }
             return result;
         }
+        [WebMethod]
+        public static string GetOutPatientIDByOPDNo(string opdNo)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                // Single query with join
+                var outPatientID = (from p in db.Patients
+                                    join op in db.Out_Patients on p.Patient_No equals op.Patient_ID
+                                    where p.Opd_No.ToString() == opdNo
+                                    orderby op.Out_Patient_ID descending
+                                    select op.Out_Patient_ID)
+                                   .FirstOrDefault();
+
+                return   outPatientID.ToString() ;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetOutPatientIDByOPDNo Error: {ex.Message}");
+                return "0";
+            }
+        }
         public class BatchStock
         {
             public string BatchNum { get; set; }
