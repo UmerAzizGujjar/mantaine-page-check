@@ -6016,21 +6016,7 @@
                 <div class="modal-body">
                     <div id="QueueList">
                         <div class="row" style="margin-bottom: 15px">
-                            <div class="col-lg-3">
-                                <select class="" id="ddlPatientDepartment" onchange="fillPendingPatientsList();" runat="server"></select>
-                            </div>
-                            <div id="divFilterClinic" class="col-lg-3" style="display: none">
-                                <select class="select2-enable" id="ddlFilterClinic" onchange="fillPendingPatientsList();" runat="server"></select>
-                            </div>
-                            <div class="col-lg-1">
-                                <input type="checkbox" id="isPrivate" />
-                            </div>
-                            <div class="col-lg-2">
-    <label>Private</label>
-</div>
-                            <div id="divdocname" class="col-lg-3" style="display: none">
-                                <select class="select2-enable" id="ddldocname" onchange="fillPendingPatientsList();" runat="server"></select>
-                            </div>
+                           
                             <div class="col-lg-2 text-end">
                                 <a onclick="fillPendingPatientsList()">
                                     <i class="fa fa-refresh fa-2x"></i>
