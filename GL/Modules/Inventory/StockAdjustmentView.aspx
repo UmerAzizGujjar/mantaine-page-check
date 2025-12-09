@@ -80,6 +80,29 @@
                         { "data": "Qty", "orderable": false },
                         { "data": "Rate", "orderable": false },
                         { "data": "Status", "orderable": false },
+                        { "data": "Created_By", "orderable": false },
+                        {
+                            "data": "Creation_Time",
+                            "render": function (data, type, full) {
+                                var date = moment(full.Creation_Time).format('D-MMM-YYYY');
+                                return date;
+                            }, "orderable": false
+                        },
+                        { "data": "Updated_By", "orderable": false },
+                        {
+                            "data": "Update_Time",
+                            "render": function (data, type, full) {
+
+                                if (!full.Update_Time || full.Update_Time === "" || full.Update_Time === null) {
+                                    return ""; 
+                                }
+
+                                var date = moment(full.Update_Time).format('D-MMM-YYYY');
+                                return date;
+                            },
+                            "orderable": false
+                        },
+
                         {
                             "data": null,
                             "render": function (data, type, full) {
@@ -140,6 +163,10 @@
                     <th>QTY</th>
                     <th>Rate</th>
                     <th>Status</th>
+                    <th>Created By</th>
+                    <th>Creation Date</th>
+                    <th>Update By</th>
+                    <th>Update Time</th>
                     <th>Action</th>
                 </tr>
             </thead>
