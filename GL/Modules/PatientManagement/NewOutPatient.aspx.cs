@@ -1130,6 +1130,8 @@ namespace PMS.Modules.PatientManagement
                         ProvisionalDiagnosis = qry.ProvisionalDiagnosis ?? "",
                         FinalDiagnosis = qry.Final_Diagnosis ?? "",
                         FinalRecommendation = qry.Final_Rec ?? "",
+                        hdnStatus = qry.Status ?? "",
+                        hdnVoucher_id = qry.Voucher_Id ?? 0,
                         Advice = qry.Advice ?? "",
                         ReferToHospital = qry.Refer_To_Hospital ?? "",
                         Designation = qry.Designation ?? "",

@@ -2430,7 +2430,7 @@
 
 
                         <div class="table-responsive previewTable">
-                            <table class="table table-bordered table-custom" id="tblPendingPatients">
+                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow:auto;">
                                 <thead id="ihead">
                                     <tr>
                                         <th>MR No</th>

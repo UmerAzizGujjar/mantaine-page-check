@@ -691,6 +691,9 @@
                 setValue('ctl00_MainContent_txtInputBox1', data.InputBox1);
 
                 setValue('ctl00_MainContent_txtRemarksHistory', data.RemarksHistory);
+                //Voucher
+                setValue('ctl00_MainContent_hdnVoucher_id', data.hdnVoucher_id);
+                setValue('ctl00_MainContent_hdnStatus', data.hdnStatus);
 
                 // Hidden Fields
                 setValue('ctl00_MainContent_hdfdhischarge', data.Discharge);
@@ -731,6 +734,20 @@
             </div>
         `);
         }
+
+        function PrintVoucher() {
+            debugger;
+            var id =  '<%=Request.QueryString["ID"]%>';
+               var locationInfo = window.location;
+               var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPDShare';
+               if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                   var urlInfo = window.location.href.split('/');
+                   var ip = urlInfo[2];
+                   var foldername = urlInfo[3];
+                   url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPDShare';
+               }
+               window.open(url, '_blank');
+           }
 
         function hideLoading() {
             const overlay = document.querySelector('.modern-loading-overlay');
@@ -3277,6 +3294,7 @@
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
             var Administration = $('#ctl00_MainContent_ddlIssuance_Of').val();
             var doc_id_hdn = $('#ctl00_MainContent_hdndoctors_id').val();
+            var Voucher_id = $('#ctl00_MainContent_hdnVoucher_id').val();
             if (Administration == 0)
                 Administration = "";
             var Out_Patient_ID = $('#ctl00_MainContent_txtOut_Patient_ID').val();
@@ -4062,6 +4080,8 @@
                         <input id="btnSave" type="button" class="btn btn-primry" value="Save" onclick="SaveMedicines()" />
 
                         <input type="button" class="btn btn-primry" value="Prescription" name="name" onclick="PrintoutPatient();" />
+
+                        <input type="button" class="btn btn-primry" value="Voucher" name="Voucher" id="Voucher" onclick="PrintVoucher();" />
                         <input type="button" class="btn btn-primry" value="List View" name="name" onclick="window.location = 'OutPatientsView.aspx'" />
                     </div>
                 </div>
@@ -4147,6 +4167,8 @@
                                                 <div class="col-md-5 col-sm-6">
                                                     <asp:Label ID="Doctor" CssClass="labels" runat="server" Text="Doctor:"></asp:Label>
                                                     <input type="hidden" id="hdndoctors_id" runat="server" />
+                                                    <input type="hidden" id="hdnStatus" runat="server" />
+                                                    <input type="hidden" id="hdnVoucher_id" runat="server" />
                                                 </div>
                                                 <div class="col-md-7 col-sm-6">
                                                     <asp:Label ID="lblDoctor" runat="server"></asp:Label>
@@ -4672,79 +4694,79 @@
                                             </div>
                                         </div>
                                         <div id="subTab004" class="subtabs" style="display: none">
-    <div class="exam-container" style="width: 100%;">
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label25" runat="server" Text="P/A"></asp:Label>
-                <asp:TextBox ID="txtPA_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label26" runat="server" Text="P/S"></asp:Label>
-                <asp:TextBox ID="txtPS_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label27" runat="server" Text="Uterus"></asp:Label>
-                <asp:TextBox ID="txtUterus_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label28" runat="server" Text="FX"></asp:Label>
-                <asp:TextBox ID="txtFX_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-    </div>
-</div>
+                                            <div class="exam-container" style="width: 100%;">
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label25" runat="server" Text="P/A"></asp:Label>
+                                                        <asp:TextBox ID="txtPA_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label26" runat="server" Text="P/S"></asp:Label>
+                                                        <asp:TextBox ID="txtPS_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label27" runat="server" Text="Uterus"></asp:Label>
+                                                        <asp:TextBox ID="txtUterus_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label28" runat="server" Text="FX"></asp:Label>
+                                                        <asp:TextBox ID="txtFX_Gynae" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div id="subTab005" class="subtabs" style="display: none">
-    <div class="exam-container" style="width: 100%;">
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label23" runat="server" Text="P/S"></asp:Label>
-                <asp:TextBox ID="txtPS_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label24" runat="server" Text="P/V"></asp:Label>
-                <asp:TextBox ID="txtPV_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label29" runat="server" Text="SFH"></asp:Label>
-                <asp:TextBox ID="txtSFH_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label30" runat="server" Text="LIE"></asp:Label>
-                <asp:TextBox ID="txtLIE_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label31" runat="server" Text="Presentation"></asp:Label>
-                <asp:TextBox ID="txtPresentation_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label32" runat="server" Text="FHR"></asp:Label>
-                <asp:TextBox ID="txtFHR_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-        <div class="Systematic-Exam-Row">
-            <div style="display: flex; align-items: center; width: 100%">
-                <asp:Label Style="width: 75%;" ID="Label33" runat="server" Text="Engagement"></asp:Label>
-                <asp:TextBox ID="txtEngagement_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
-            </div>
-        </div>
-    </div>
-</div>
+                                            <div class="exam-container" style="width: 100%;">
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label23" runat="server" Text="P/S"></asp:Label>
+                                                        <asp:TextBox ID="txtPS_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label24" runat="server" Text="P/V"></asp:Label>
+                                                        <asp:TextBox ID="txtPV_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label29" runat="server" Text="SFH"></asp:Label>
+                                                        <asp:TextBox ID="txtSFH_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label30" runat="server" Text="LIE"></asp:Label>
+                                                        <asp:TextBox ID="txtLIE_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label31" runat="server" Text="Presentation"></asp:Label>
+                                                        <asp:TextBox ID="txtPresentation_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label32" runat="server" Text="FHR"></asp:Label>
+                                                        <asp:TextBox ID="txtFHR_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                                <div class="Systematic-Exam-Row">
+                                                    <div style="display: flex; align-items: center; width: 100%">
+                                                        <asp:Label Style="width: 75%;" ID="Label33" runat="server" Text="Engagement"></asp:Label>
+                                                        <asp:TextBox ID="txtEngagement_Obs" TextMode="MultiLine" Rows="3" Width="100%" runat="server" CssClass="systematic-textbox"></asp:TextBox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div id="subTab003" class="subtabs">
                                         </div>
                                     </div>
@@ -4832,9 +4854,9 @@
                                         <div id="allFinalDiagnosis"></div>
                                     </div>
                                     <div class="tabs" id="tab09" style="display: none">
-                                         <div style="display: flex; justify-content: flex-end;">
-     <input type="button" class="btn btn-primry" value="Previous History" onclick="ShowPreviousHistory()" />
-  </div>
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <input type="button" class="btn btn-primry" value="Previous History" onclick="ShowPreviousHistory()" />
+                                        </div>
                                         <div style="display:none" id="InvestigationPreviousHistory">
                                         </div>
                                         <div class="row">
