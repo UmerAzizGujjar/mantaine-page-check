@@ -151,6 +151,18 @@
             width:123px !important;
         }
 
+        .hide-id-column {
+        display: none !important;
+        }
+
+        .hide-id-column {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
     </style>
     <script type="text/javascript">
         function Addrow() {
@@ -159,7 +171,7 @@
             var rowlength = tblItemDescription.rows.length;
             rows += '<tr>' +
                 '<td style="display:none;">' + rowlength + '</td>' +
-                '<td ><input type=text class="form-control" id="AcId' + rowlength + '" name="AcId" style="font-size: 10px !important;height:20px!important;"  value=' + rowlength + ' readonly=readonly /></td>' +
+                '<td><input type=text class="form-control" id="AcId' + rowlength + '" name="AcId" style="font-size: 10px !important;height:20px!important;"  value=' + rowlength + ' readonly=readonly /></td>' +
                 '<td><input type=text class="form-control" id="AccountCategoryName' + rowlength + '" name="AccountCategoryName" style="font-size: 10px !important;height:20px!important;"  /></td>' +
                 '<td><select class="form-control" id="txtAccountCode' + rowlength + '" name="txtAccountCode" style="font-size: 10px !important;height:10px!important;"></select></td>' +
                 '<td><select class="form-control" id="txtConsumptionAccount' + rowlength + '" name="txtConsumptionAccount" style="font-size: 10px !important;height:10px!important;"></select></td>' +
@@ -167,7 +179,7 @@
                 '<td><select class="form-control" id="txtCgsAccount' + rowlength + '" name="txtCgsAccount" style="font-size: 10px !important;height:10px!important;"></select></td>' +
                 '<td><select class="form-control" id="txtworkProgress' + rowlength + '" name="txtworkProgress" style="font-size: 10px !important;height:10px!important;"></select></td>' +
                 '<td><select class="form-control" id="txtCapitalConsumption' + rowlength + '" name="txtCapitalConsumption" style="font-size: 10px !important;height:10px!important;"></select></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>'
+                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a></td>' +
             '</tr>';
             $('#tblItemDescriptionDetail').append(rows);
             loadItemList(rowlength);
@@ -266,7 +278,7 @@
                 $.each(data, function (key, value) {
                     rows += '<tr>' +
                         '<td ><input type=text class="form-control" id="AccountId' + (key + 1) + '" name="AccountId" style="font-size: 10px !important;height:20px!important;"  value=' + data[key].Account_Category_Id + ' readonly=readonly /></td>' +
-                        '<td><input type=text class="form-control" id="Id' + (key + 1) + '" name="Id" style="font-size: 10px !important;height:20px!important;"  value=' + (key + 1) + ' readonly=readonly /></td>' +
+                        '<td class="hide-id-column"><input type=text class="form-control" id="Id' + (key + 1) + '" name="Id" style="font-size: 10px !important;height:20px!important;"  value=' + (key + 1) + ' readonly=readonly /></td>' +
                         '<td><input type=text class="form-control" id="AccountCategoryName' + (key + 1) + '" name="AccountCategoryName" style="font-size: 10px !important;height:20px!important;"  value="' + value.CategoryName + '" readonly=readonly /></td>' +
                         '<td><select class="form-control" id="txtAccountCode' + (key + 1) + '" name="txtAccountCode" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
                         '<td><select class="form-control" id="txtConsumptionAccount' + (key + 1) + '" name="txtConsumptionAccount" style="font-size: 10px !important;height:10px!important;" readonly=readonly ></select></td>' +
@@ -342,7 +354,7 @@
             <thead >
                 <tr>
                     <th style="text-align: center; font-size: 10px;" >Account Category Id</th>
-                    <th style="text-align: center; font-size: 10px;">Id</th>
+                    <th class="hide-id-column" style="text-align: center; font-size: 10px;display:none">Id</th>
                     <th style="text-align: center; font-size: 10px;">Category Name</th>
                     <th style="text-align: center; font-size: 10px;">Asset Account</th>
                     <th style="text-align: center;">Consumption Account</th>

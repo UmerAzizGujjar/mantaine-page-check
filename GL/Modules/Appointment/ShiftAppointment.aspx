@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ShiftAppointment.aspx.cs" Inherits="PMS.ShiftAppointment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+
     <script type="text/javascript">
         $(document).ready(function () {
             loaddoctor();
@@ -17,17 +18,17 @@
             var date = '<%= DateTime.Now%>';
             $("#txt_shiftdate").datepicker({
                 dateFormat: 'MM d,yy',
-                minDate: 0 
+                minDate: 0 // Setting minDate to 0 means only future dates are allowed
             }).attr('readonly', 'readonly');
 
             $("#txt_dateto").datepicker({
                 dateFormat: 'MM d,yy',
-                minDate: 0 
+                minDate: 0 // Setting minDate to 0 means only future dates are allowed
             }).attr('readonly', 'readonly');
 
             $("#txt_datefrom").datepicker({
                 dateFormat: 'MM d,yy',
-                minDate: 0 
+                minDate: 0 // Setting minDate to 0 means only future dates are allowed
             }).attr('readonly', 'readonly');
 
             var checkeditmode_startdate = '<%= Request.QueryString["stDate"]%>';
@@ -55,11 +56,12 @@
 
             $('#btnSearch').click(function () {
                 getpage();
-
+                //loadappt(appID);
 
             });
             $('#btnshiftApt').on('click', function () {
                 debugger;
+                /*var ShiftDate = $('#txt_shiftdate').val();*/
 
                 $.each($('#table_res tbody tr'), function (key, value) {
                     debugger;
@@ -73,7 +75,7 @@
                             debugger;
                             var data = response;
                             if (data == "Success") {
-
+                                // alert("Bill has been approved successfully");
 
                             }
 
@@ -124,7 +126,7 @@
             else {
                 endDate = endDate;
             }
-
+            // date and status search both
 
             var doc_id = $('#chk_Doc').find('option:selected').val();
 
@@ -138,20 +140,20 @@
 
             }
 
-
+            //Append data from data base table
             PageMethods.getlist(stDate, endDate, doc_id, function (data) {
                 debugger;
                 if (data.length === 0) {
-
+                    // Empty the tbody of the table with id "table_res"
                     $("#table_res tbody").empty();
                     return false;
                 }
                 else {
                     debugger;
                     abc = false;
-
+                    //var table;
                     var Priority = '';
-
+                    //table = $('#tblRes').table();
                     var length = $("#table_res tr:gt(0)").length;
                     debugger;
                     if (data != '') {
@@ -173,7 +175,7 @@
                         $('#t_body').html(rows);
 
                         $('#table_res tbody:eq(1) tr').each(function (key, value) {
-
+                            // debugger;
                             var Status = $(this).find('td:eq(6)').text();
 
                             if (Status == "Visited") {

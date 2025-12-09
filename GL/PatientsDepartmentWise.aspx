@@ -713,7 +713,31 @@
                         var endDateTime = endDate + ' ' + endTime;
 
                         var url = 'ReportViewer.aspx?ReportName=OPD_Department_Wise_Report' +
-                            '&ReportTitle=OPD Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) +
+                       //     '&Summary=' + summary +
+                            '&Shift=' + encodeURIComponent(ddlShift) +
+                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() +
+                            '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Over_Summary_Shift_Wise") {
+                        debugger;
+                     //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+                        var ddlShift = $("#ctl00_MainContent_ddlShift option:selected").text();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=Over_Summary_Shift_Wise' +
+                            '&ReportTitle=Over Summary Shift Wise Report from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +
                        //     '&Summary=' + summary +

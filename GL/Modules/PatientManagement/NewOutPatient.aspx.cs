@@ -501,6 +501,7 @@ namespace PMS.Modules.PatientManagement
 
                     if (data.Doctor_ID != null) OPD.Doctor_ID = data.Doctor_ID;
                     if (data.Designation != null) OPD.Designation = data.Designation;
+                    if (data.FollowUp_Time != null) OPD.Follow_Up_Time = data.FollowUp_Time;
                     if (data.Final_Rec != null) OPD.Final_Rec = data.Final_Rec;
                     if (data.FinalDiagnosis != null) OPD.Final_Diagnosis = data.FinalDiagnosis;
                     if (data.Administration != null) OPD.Administration = data.Administration.ToString();
@@ -1241,6 +1242,8 @@ namespace PMS.Modules.PatientManagement
                         ProvisionalDiagnosis = qry.ProvisionalDiagnosis ?? "",
                         FinalDiagnosis = qry.Final_Diagnosis ?? "",
                         FinalRecommendation = qry.Final_Rec ?? "",
+                        hdnStatus = qry.Status ?? "",
+                        hdnVoucher_id = qry.Voucher_Id ?? 0,
                         Advice = qry.Advice ?? "",
                         ReferToHospital = qry.Refer_To_Hospital ?? "",
                         Designation = qry.Designation ?? "",
@@ -1261,6 +1264,7 @@ namespace PMS.Modules.PatientManagement
                         // Dropdowns
                         IssuanceOf = qry.Administration ?? "",
                         FollowUp = qry.Follow_Up ?? "",
+                        FollowUpWeek = qry.Follow_Up_Time ?? "",
                         Proto = qry.Proto ?? "",
                         PatientMainCategory = qry.Reffer_To ?? "",
 
@@ -1778,6 +1782,7 @@ on d.Doctor_Id equals hr.Emp_ID
                          };
             return (new JavaScriptSerializer().Serialize(Routes));
         }
+
         [WebMethod]
         public static string FillFrequencyDropDown()
         {
@@ -1847,7 +1852,7 @@ on d.Doctor_Id equals hr.Emp_ID
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                IQueryable<INV_Item> query = db.INV_Items.Where(d => d.IsPharmacyItem == true);
+                IQueryable<INV_Item> query = db.INV_Items.Where(d => d.Pharmacy_Item == true);
 
                 // Only apply the search filter if searchString is not empty
                 if (!string.IsNullOrEmpty(searchString))
@@ -1858,7 +1863,7 @@ on d.Doctor_Id equals hr.Emp_ID
                 var pharmacyItems = query.OrderByDescending(d => d.Item_ID)
                                        .Select(d => new
                                        {
-                                           d.Item_Code,
+                                           Item_Code = d.Item_ID,
                                            Description = d.Description
                                        }).Take(10)
                                        .ToList();
@@ -2267,6 +2272,7 @@ on d.Doctor_Id equals hr.Emp_ID
             // Tab12 - Follow Up
             public string Doctor_ID { get; set; }
             public string Designation { get; set; }
+            public string FollowUp_Time { get; set; }
             public string Issuance_Of { get; set; }
             public string Follow_Up { get; set; }
             public string FollowNoDate { get; set; }
@@ -2533,6 +2539,13 @@ on d.Doctor_Id equals hr.Emp_ID
             ddlFOllowUp.DataValueField = "DataValue_Name";
             ddlFOllowUp.Items.Add(new ListItem("Please Select", "0"));
             ddlFOllowUp.DataBind();
+
+            valueset = DBClass.GetValueSet("Follow Up Time");
+            ddlFOllowUpWeeks.DataSource = valueset;
+            ddlFOllowUpWeeks.DataTextField = "DataValue_Description";
+            ddlFOllowUpWeeks.DataValueField = "DataValue_Name";
+            ddlFOllowUpWeeks.Items.Add(new ListItem("Please Select", "0"));
+            ddlFOllowUpWeeks.DataBind();
 
             valueset = DBClass.GetValueSet("Proto");
             ddlProto.DataSource = valueset;

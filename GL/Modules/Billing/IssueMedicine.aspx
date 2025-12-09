@@ -1879,6 +1879,36 @@
                 }
             });
         }
+        function openQueue() {
+            debugger;
+            fillPendingPatientsLists();
+            $('#queueModal').modal('show');
+        }
+
+        function fillPendingPatientsLists() {
+            PageMethods.PendingPatients(function (data) {
+                debugger;
+                var parsedData = JSON.parse(data);
+                var rows = '';
+                $.each(parsedData, function (key, value) {
+                    debugger;
+                    var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
+                    var retdate = moment(TrnsDate).format('LLLL');
+                    var status = '';
+                    rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=hideModel(' + value.pat_id + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
+                });
+                debugger;
+                $('#tblPendingPatients tbody').html(rows);
+                $(".se-pre-con").fadeOut("slow");
+
+            }, function (exec) { })
+        }
+
+        function hideModel(pat_id) {
+            $('#queueModal').modal('hide');
+            getOPDandIPDNO(pat_id)
+
+        }
         function OnSuccess(data) {
             debugger;
             if (data.d !== '') {
@@ -2273,8 +2303,11 @@
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
                     <label id="lblHold">Hold</label>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 margin">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                     <input type="button" class="btn-primry" value="Queue" id ="Queue" onclick="openQueue()" />
                 </div>
             </div>
 
@@ -2379,7 +2412,52 @@
         </div>
     </div>
 
+    <%--Patient Que Start--%>
+    <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="QueueList">
+                        <div class="row" style="margin-bottom: 15px">
+                       
+                            <div class="col-lg-2 text-end">
+                                <a onclick="fillPendingPatientsList()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
 
+                        </div>
+
+
+                        <div class="table-responsive previewTable">
+                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow:auto;">
+                                <thead id="ihead">
+                                    <tr>
+                                        <th>MR No</th>
+                                        <th>Patient Name</th>
+                                        <th style="width: 173px;">Created Time</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ibody">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%--Patient Que Ends--%>
     <!-- Modal Sale Return -->
     <div id="SaleReturnModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg" role="document">

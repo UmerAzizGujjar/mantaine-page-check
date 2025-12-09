@@ -155,12 +155,11 @@ namespace PMS
                 }
                 else if (this.PageTitle == "OPD_Department_Wise_Report")
                 {
-                    string x = "OPD Department Wise Report";
+                    string x = "Department Wise Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
-                    trDoctor.Visible = false;                  
                     tr_Summary.Visible = false;      // changed
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
@@ -174,7 +173,7 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     op_PanelCompany.Visible = false;
-                    optRw.Visible = false;
+                    optRw.Visible = true;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     object valusetss = from d in db.aspnet_Users
                                       select new { d.UserName, d.UserId };
@@ -184,18 +183,78 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
 
+                    //lbShift.Visible = true;
+                    //ddlShift.Visible = true;
+                    //DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
+                    //ddlShift.DataSource = shift;
+                    //ddlShift.DataValueField = "Shift_ID";
+                    //ddlShift.DataTextField = "Shift_Name";
+                    //ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
+                    //ddlShift.DataBind();
+                    lboperator.Visible = false;
+                    ddloprators.Visible = false;
+
                     lbShift.Visible = true;
                     ddlShift.Visible = true;
-                    DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
-                    ddlShift.DataSource = shift;
-                    ddlShift.DataValueField = "Shift_ID";
-                    ddlShift.DataTextField = "Shift_Name";
-                    ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
-                    ddlShift.DataBind();
+                    ddlShift.Items.Clear();
+                    ddlShift.Items.Add(new ListItem("All", "0"));
+                    ddlShift.Items.Add(new ListItem("Morning", "2"));
+                    ddlShift.Items.Add(new ListItem("Evening", "3"));
+                    ddlShift.Items.Add(new ListItem("Night", "4"));
 
+                    trDoctor.Visible = true;
 
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
 
+                }
+              
+                else if (this.PageTitle == "Over_Summary_Shift_Wise")
+                {
+                    string x = "Over Summary Shift Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Text = "Operators";
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Main Category");
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = true;
+                    lboperator.Visible = false;
+                    ddloprators.Visible = false;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                       select new { d.UserName, d.UserId };
+                    ddlPatientType.DataSource = valusetss;
+                    ddlPatientType.DataTextField = "UserName";
+                    ddlPatientType.DataValueField = "UserId";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
 
+                    // 👇 Replace HR_Shifts with static shift options
+                    lbShift.Visible = true;
+                    ddlShift.Visible = true;
+                    ddlShift.Items.Clear();
+                    ddlShift.Items.Add(new ListItem("All", "0"));
+                    ddlShift.Items.Add(new ListItem("Morning", "2"));
+                    ddlShift.Items.Add(new ListItem("Evening", "3"));
+                    ddlShift.Items.Add(new ListItem("Night", "4"));
                 }
 
                 if (this.PageTitle == "DepartmentWiseReport")
@@ -4280,7 +4339,7 @@ namespace PMS
 
                 if (PageTitle == "Patients_Receipts")
                 {
-                    string x = "Patient Receipt";
+                    string x = "Patient Department & Type Wise";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     object valusets;

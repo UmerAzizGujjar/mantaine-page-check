@@ -5079,6 +5079,32 @@
                 }
 
             }
+
+            function openQueue() {
+                debugger;
+                fillPendingPatientsLists();
+                $('#queueModal').modal('show');
+            }
+            function fillPendingPatientsLists() {
+                PageMethods.PendingPatients(function (data) {
+                    debugger;
+                    var parsedData = JSON.parse(data);
+                    var rows = '';
+                    $.each(parsedData, function (key, value) {
+                        debugger;
+                        var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
+                        var retdate = moment(TrnsDate).format('LLLL');
+                        var status = '';                       
+                        rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=AddPatientDetail(' + value.Actual_Patient_ID + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
+                    });
+                    debugger;
+                    $('#tblPendingPatients tbody').html(rows);
+
+
+                    $(".se-pre-con").fadeOut("slow");
+
+                }, function (exec) { })
+            }
             function fillmartial() {
                 var options = '<option value="0">Please Select</option>';
                 PageMethods.GetMartailStatus(function (data) {
@@ -5476,6 +5502,9 @@
        <div class="row">
            <div class="col-md-2 text-end">
             <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />
+        </div>
+           <div class="col-md-2 text-end">
+               <input type="button" class="btn-primry" value="Queue" onclick="openQueue()" />
         </div>
        </div>
 
@@ -5979,6 +6008,54 @@
             </div>
 
         </div>
+
+    <%--Patient Que Start--%>
+    <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="QueueList">
+                        <div class="row" style="margin-bottom: 15px">
+                           
+                            <div class="col-lg-2 text-end">
+                                <a onclick="fillPendingPatientsList()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                        <div class="table-responsive previewTable" style="overflow:auto;" >
+                            <table class="table table-bordered table-custom" id="tblPendingPatients">
+                                <thead id="ihead">
+                                    <tr>
+                                        <th>MR No</th>
+                                        <th>Patient Name</th>
+                                        <th>Age</th>
+                                        <th style="width: 173px;">Created Time</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ibody">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%--Patient Que Ends--%>
         <%--patient modal here--%>
 
           <div id="PatientModel" class="modal fade-in" role="dialog">

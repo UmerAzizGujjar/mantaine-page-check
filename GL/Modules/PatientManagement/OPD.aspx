@@ -800,6 +800,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    debugger;
                     var blockInfo = JSON.parse(response.d);
 
                     if (blockInfo && blockInfo.error) {
@@ -807,8 +808,39 @@
                         callback(false);
                         return;
                     }
+                    if (blockInfo.offDays && blockInfo.offDays !== "" && blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+                        debugger;
+                        let offDays = blockInfo.offDays.toLowerCase().split(',').map(x => x.trim());
+                        let today = new Date();
+                        let todayDay = today.toLocaleString("en-US", { weekday: 'short' }).toLowerCase();
+                        todayDay = todayDay.substring(0, 3);
+                        if (offDays.includes(todayDay)) {
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Doctor Off-Day',
+                                text: 'This Category is Blocked by the Admin.',
+                                timer: 2500,
+                                showConfirmButton: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                            $('#txtfees').val("0");
+                            $('#txtactualfee').val("0");
+                            $('#txtdiscount').val("");
+                            $('#ddldoctor').val("");
+
+                            callback(true);
+                            return;
+                        }
+                    }
 
                     if (blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+
                         const now = new Date();
 
                         const parseLocalDate = (str) => {
@@ -845,7 +877,8 @@
                             $('#txtactualfee').val("0");
                             $('#txtdiscount').val("");
                             $('#ddldoctor').val("");
-                            callback(true); 
+
+                            callback(true);
                             return;
                         }
                     }
@@ -858,6 +891,77 @@
                 }
             });
         }
+
+
+        //function checkDoctorBlockStatus(Doc, selectedPatientType, callback) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "OPD.aspx/GetDoctorBlockInfo",
+        //        data: JSON.stringify({ Doc: Doc }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            debugger;
+        //            var blockInfo = JSON.parse(response.d);
+
+        //            if (blockInfo && blockInfo.error) {
+        //                console.error("Block info error:", blockInfo.error);
+        //                callback(false);
+        //                return;
+        //            }
+
+        //            if (blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+        //                const now = new Date();
+
+        //                const parseLocalDate = (str) => {
+        //                    const [y, m, d] = str.split('-').map(Number);
+        //                    return new Date(y, m - 1, d);
+        //                };
+
+        //                const stDate = parseLocalDate(blockInfo.st_day);
+        //                const endDate = parseLocalDate(blockInfo.end_day);
+
+        //                const [startHour, startMin] = (blockInfo.Timings_In || "00:00").split(':').map(Number);
+        //                const [endHour, endMin] = (blockInfo.Timings_Out || "23:59").split(':').map(Number);
+
+        //                stDate.setHours(startHour, startMin, 0, 0);
+        //                endDate.setHours(endHour, endMin, 0, 0);
+
+        //                const isWithinWindow = now >= stDate && now <= endDate;
+
+        //                if (isWithinWindow) {
+        //                    Swal.fire({
+        //                        icon: 'warning',
+        //                        title: 'Access Denied',
+        //                        text: 'This category is blocked by the admin.',
+        //                        timer: 2500,
+        //                        showConfirmButton: false,
+        //                        customClass: {
+        //                            popup: 'swal-big-popup',
+        //                            title: 'swal-big-title',
+        //                            htmlContainer: 'swal-big-text'
+        //                        }
+        //                    });
+
+        //                    $('#txtfees').val("0");
+        //                    $('#txtactualfee').val("0");
+        //                    $('#txtdiscount').val("");
+        //                    $('#ddldoctor').val("");
+        //                    callback(true); 
+        //                    return;
+        //                }
+        //            }
+
+        //            callback(false);
+        //        },
+        //        error: function (xhr, status, error) {
+        //            console.error("Failed to fetch block info:", error);
+        //            callback(false);
+        //        }
+        //    });
+        //}
+
+
 
     </script>
 
@@ -972,6 +1076,20 @@
                     <div>
                         <div style="font-weight:700; font-size:1.5rem;">Emergency Refer Patient</div>
                         <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Refer patient to emergency</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+            <div id="btnsearchReferlist" role="button" tabindex="0"
+                onclick="openReferPatientModal()"
+                onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
+                class="d-flex flex-column justify-content-center align-items-start">
+                <div class="d-flex align-items-center">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Refer Patient Icon" width="48" height="48" style="margin-right: 10px;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 1.5rem;">Refer Patient</div>
+                        <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Refer an existing patient</div>
                     </div>
                 </div>
             </div>
@@ -1198,7 +1316,7 @@
                     <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardFront" onclick="getcardAmount()" value="Front Card" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="divcardback">
-                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="getcardAmount()" value="Back Card" />
+                    <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="PrintPatientBackCard()" value="Back Card" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                     <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
@@ -1402,7 +1520,7 @@
                             </div>
                         </div>
                     </fieldset>
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="scrollable-table-container">
                         <table class="table table-hover table-striped table-bordered" id="tblResult">
                             <thead>
                                 <tr>
@@ -1463,4 +1581,41 @@
           </div>
       </div>
   </div>
+
+         <div id="SearchReferPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <fieldset class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <h5>Search Your Patients:</h5>
+                            <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
+                        <thead>
+                            <tr>
+                                <th style="display: none;">Patient ID</th>
+                                <th>MR No</th>
+                                <th>Patient Name</th>
+                                <th>Father Name</th>
+                                <th>CNIC</th>
+                                <th>Contact No</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ReferPatientsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </asp:Content>

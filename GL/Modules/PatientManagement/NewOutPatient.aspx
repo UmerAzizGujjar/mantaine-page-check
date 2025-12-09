@@ -334,7 +334,7 @@
                     }
                 }
             });
-            $('#<%= ddlDoctorName.ClientID %>, #<%= ddlIssuance_Of.ClientID %>, #<%= ddlFOllowUp.ClientID %>').change(function () {
+            $('#<%= ddlDoctorName.ClientID %>, #<%= ddlIssuance_Of.ClientID %>, #<%= ddlFOllowUpWeeks.ClientID %>, #<%= ddlFOllowUp.ClientID %>').change(function () {
                 updateFollowUpTable();
             });
             $('#<%= FollowNoDate.ClientID %>').on('change blur', function () {
@@ -696,6 +696,7 @@
                 // Dropdowns
                 setDropdownValue('ctl00_MainContent_ddlIssuance_Of', data.IssuanceOf);
                 setDropdownValue('ctl00_MainContent_ddlFOllowUp', data.FollowUp);
+                setDropdownValue('ctl00_MainContent_ddlFOllowUpWeeks', data.FollowUpWeek);
 
                 setDropdownValue('ctl00_MainContent_ddlVerbalConsent', data.Verbal_Consent);
                 setDropdownValue('ctl00_MainContent_ddlPatient_Main_Category', data.PatientMainCategory);
@@ -710,6 +711,9 @@
                 setValue('ctl00_MainContent_txtInputBox1', data.InputBox1);
 
                 setValue('ctl00_MainContent_txtRemarksHistory', data.RemarksHistory);
+                //Voucher
+                setValue('ctl00_MainContent_hdnVoucher_id', data.hdnVoucher_id);
+                setValue('ctl00_MainContent_hdnStatus', data.hdnStatus);
 
                 // Hidden Fields
                 setValue('ctl00_MainContent_hdfdhischarge', data.Discharge);
@@ -750,6 +754,20 @@
             </div>
         `);
         }
+
+        function PrintVoucher() {
+            debugger;
+            var id =  '<%=Request.QueryString["ID"]%>';
+               var locationInfo = window.location;
+               var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPDShare';
+               if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                   var urlInfo = window.location.href.split('/');
+                   var ip = urlInfo[2];
+                   var foldername = urlInfo[3];
+                   url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=OPDShare';
+               }
+               window.open(url, '_blank');
+           }
 
         function hideLoading() {
             const overlay = document.querySelector('.modern-loading-overlay');
@@ -2851,6 +2869,7 @@
         }
         function Add_MediceneRow(serialNo, testName) {
             // Get all values from the dynamic form
+            debugger;
             var medicineName = testName;
             var dose = $('#mediceneDose_' + serialNo).val();
             var doseText = $('#mediceneDose_' + serialNo).find('option:selected').text().trim();
@@ -2864,6 +2883,7 @@
             var otherInstruction = $('#otherinstructions_' + serialNo).val();
             var otherInstructionText = $('#otherinstructions_' + serialNo).find('option:selected').text().trim();
             var specialInstructions = $('#specialinstructions_' + serialNo).val();
+            var ItemCode = $('#ItemCode' + serialNo).val();
 
             // Get current datetime
             var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
@@ -2897,6 +2917,7 @@
                 existingRow.find('td').eq(6).html(dosageFromText + '<input type="hidden" class="field-value" value="' + dosageFrom + '">');
                 existingRow.find('td').eq(7).html(doseText + '<input type="hidden" class="field-value" value="' + dose + '">');
                 existingRow.find('td').eq(8).html(otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '">');
+                existingRow.find('td').eq(9).html(ItemCode + '<input type="hidden" class="field-value" value="' + ItemCode + '">');
             } else {
                 // Create new row - using your exact string concatenation style
                 var row = '<tr>' +
@@ -2909,12 +2930,12 @@
                     '<td>' + dosageFromText + '<input type="hidden" class="field-value" value="' + dosageFrom + '"></td>' +
                     '<td>' + doseText + '<input type="hidden" class="field-value" value="' + dose + '"></td>' +
                     '<td>' + otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '"></td>' +
+                    '<td style="display:none;"><input type="hidden" id="ItemCode" name="ItemCode" value="' + serialNo + '" /></td>' +
                     '<td>' +
                     '<a href="#" onclick="editMedicine(this)">Edit</a> | ' +
                     '<a href="#" onclick="deleteMedicine(this)"><i class="fa fa-times"></i></a>' +
-                    '<input type="hidden" name="uurowid" value="' + serialNo + '" />' +
                     '</td>' +
-                    '<td style="display:none;"></td>' +
+                   
                     '</tr>';
 
                 // Append to table
@@ -3220,7 +3241,9 @@
             var admission = $('#<%= ddlIssuance_Of.ClientID %> option:selected').text();
             var admissionId = $('#<%= ddlIssuance_Of.ClientID %>').val();
             var followUp = $('#<%= ddlFOllowUp.ClientID %> option:selected').text();
+            var followUpTime = $('#<%= ddlFOllowUpWeeks.ClientID %> option:selected').text();
             var followUpId = $('#<%= ddlFOllowUp.ClientID %>').val();
+            var followUpTimeId = $('#<%= ddlFOllowUpWeeks.ClientID %>').val();
             var followUpDate = $('#<%= FollowNoDate.ClientID %>').val();
 
             // Only proceed if at least one field has a value
@@ -3254,6 +3277,7 @@
                         $('<td>').text(designation || ''),
                         $('<td>').text(admission || '').attr('data-id', admissionId || ''),
                         $('<td>').text(followUp || '').attr('data-id', followUpId || ''),
+                        $('<td>').text(followUpTime || '').attr('data-id', followUpTimeId || ''),
                         $('<td>').text(followUpDate || '')
                     );
 
@@ -3548,7 +3572,7 @@
                 var date = '<%= DateTime.Now%>'
                 MedicinesList.push({
                     'Medicine_Date': $(value).find('td input[name=testDate]').val(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
-                    'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
+                    'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $(value).find('td input[name=ItemCode]').val(),
                 });
 
             });
@@ -3659,10 +3683,12 @@
             });
         }
         function saveAllRecord() {
+            debugger;
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
             var Administration = $('#ctl00_MainContent_ddlIssuance_Of').val();
             var doc_id_hdn = $('#ctl00_MainContent_hdndoctors_id').val();
+            var Voucher_id = $('#ctl00_MainContent_hdnVoucher_id').val();
             if (Administration == 0)
                 Administration = "";
             var Out_Patient_ID = $('#ctl00_MainContent_txtOut_Patient_ID').val();
@@ -3750,6 +3776,7 @@
                 Designation: safeGetValue('#ctl00_MainContent_txtDesignation'),
                 Issuance_Of: safeGetValue('#ctl00_MainContent_ddlIssuance_Of'),
                 Follow_Up: safeGetValue('#ctl00_MainContent_ddlFOllowUp'),
+                FollowUp_Time: safeGetValue('#ctl00_MainContent_ddlFOllowUpWeeks'),
                 FollowNoDate: safeGetValue('#ctl00_MainContent_FollowNoDate'),
 
                 // Tab13 - Disposal
@@ -4380,12 +4407,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item no-submenu" id="05" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/refer.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Refer To</span>
-                    </div>
-                </div>
+              
 
                 <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
                     <div class="menu-title">
@@ -4440,7 +4462,12 @@
                         <span>Disposal</span>
                     </div>
                 </div>
-
+                <div class="menu-item no-submenu" id="05" onclick="navigateAction(this)">
+                    <div class="menu-title">
+                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/refer.png" alt="Profile Picture" class="sidebarIcon" />
+                        <span>Refer To</span>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -4464,6 +4491,8 @@
                         <input id="btnSave" type="button" class="btn btn-primry" value="Save" onclick="SaveMedicines()" />
 
                         <input type="button" class="btn btn-primry" value="Prescription" name="name" onclick="PrintoutPatient();" />
+
+                        <input type="button" class="btn btn-primry" value="Voucher" name="Voucher" id="Voucher" onclick="PrintVoucher();" />
                         <input type="button" class="btn btn-primry" value="List View" name="name" onclick="window.location = 'OutPatientsView.aspx'" />
                     </div>
                 </div>
@@ -4549,6 +4578,8 @@
                                                 <div class="col-md-5 col-sm-6">
                                                     <asp:Label ID="Doctor" CssClass="labels" runat="server" Text="Doctor:"></asp:Label>
                                                     <input type="hidden" id="hdndoctors_id" runat="server" />
+                                                    <input type="hidden" id="hdnStatus" runat="server" />
+                                                    <input type="hidden" id="hdnVoucher_id" runat="server" />
                                                 </div>
                                                 <div class="col-md-7 col-sm-6">
                                                     <asp:Label ID="lblDoctor" runat="server"></asp:Label>
@@ -5237,7 +5268,7 @@
                                         <div style="display: flex; justify-content: flex-end;">
                                             <input type="button" class="btn btn-primry" value="Previous History" onclick="ShowPreviousHistory()" />
                                         </div>
-                                        <div style="display: none" id="InvestigationPreviousHistory">
+                                        <div style="display:none" id="InvestigationPreviousHistory">
                                         </div>
                                         <div class="row">
                                             <div class="col-md-7 col-sm-12">
@@ -5340,6 +5371,16 @@
                                             <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
                                                 <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUp" runat="server" Text="Follow Up <span class='RedStar'>*</span>"></asp:Label>
                                                 <asp:DropDownList ID="ddlFOllowUp" runat="server"
+                                                    Style="height: 32px;"
+                                                    CssClass="form-control"
+                                                    AppendDataBoundItems="true">
+                                                </asp:DropDownList>
+                                            </div>
+
+                                            <!-- Follow Up -->
+                                            <div class="FollowUp-Row" style="display: flex; align-items: center; margin-bottom: 12px;">
+                                                <asp:Label Style="width: 200px; text-align: left; margin-right: 15px;" ID="LblFollowUpWeek" runat="server" Text="Follow Up Time <span class='RedStar'>*</span>"></asp:Label>
+                                                <asp:DropDownList ID="ddlFOllowUpWeeks" runat="server"
                                                     Style="height: 32px;"
                                                     CssClass="form-control"
                                                     AppendDataBoundItems="true">
@@ -5734,6 +5775,7 @@
                                                         <th>Designation</th>
                                                         <th>Admission</th>
                                                         <th>Follow Up</th>
+                                                        <th>Follow Up Time</th>
                                                         <th>Date</th>
                                                     </tr>
                                                 </thead>

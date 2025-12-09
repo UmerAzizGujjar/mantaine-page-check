@@ -16,6 +16,31 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string CancelRefund(int RefundID)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var OPDRefund = db.OPD_Refunds.FirstOrDefault(b => b.Refund_ID == RefundID);
+                    if (OPDRefund == null)
+                        return "Error: OPD not found.";
+
+                    OPDRefund.isCancelled = true;
+                    OPDRefund.CancelledBy = AppConfig.UserID;
+                    OPDRefund.CancelledTime = DateTime.Now;
+                    db.SubmitChanges();
+
+                    return "Refund canceled successfully.";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
+        [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
             try
@@ -27,7 +52,7 @@ namespace PMS.Modules.PatientManagement
                     var Total_Refunds = _dbContext.OPD_Refunds.Count();
                     var Refunds = from R in _dbContext.OPD_Refunds
                                   join reg in _dbContext.Reg_patients on R.Reg_PatId equals reg.pat_id
-                                  where
+                                  where (R.isCancelled == false || R.isCancelled == null) &&
                                        ((reg.Full_Name.ToString().Contains(searchValue) || R.Refund_Amount.ToString().Contains(searchValue) || R.OPD_No.ToString().Contains(searchValue)))
                                   select new
                                   {

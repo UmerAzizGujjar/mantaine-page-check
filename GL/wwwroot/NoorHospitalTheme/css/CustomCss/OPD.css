@@ -123,3 +123,25 @@
     font-size: 20px;
     margin-left: 15px;
 }
+
+
+
+#scrollable-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+}
+
+    #scrollable-table-container thead th {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 10;
+        border-top: 1px solid #dee2e6;
+    }
+
+    #scrollable-table-container .table {
+        margin-bottom: 0;
+    }

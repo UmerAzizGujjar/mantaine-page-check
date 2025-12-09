@@ -131,6 +131,10 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Patients where Patient_ID = " + transID).ToString();
                     }
+                    else if (transType == "OPDShare")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Out_Patient where Out_Patient_ID = " + transID).ToString();
+                    }
                     else if (transType == "ADV")
                     {
                         var rawVoucherId = DBClass.getField("select Voucher_ID from Advance_Payment where Advance_ID = " + transID);
@@ -550,7 +554,9 @@ namespace PMS
 
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
-                string Shift = Request.QueryString["Shift"].ToString();
+                //string Shift = Request.QueryString["Shift"].ToString();
+
+                string doctorID = Request.QueryString["DoctorID"].ToString();
 
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
@@ -560,6 +566,18 @@ namespace PMS
                 {
                     departmentID = "All";
                 }
+
+                string shiftText = Request.QueryString["Shift"]?.ToString() ?? "All";
+
+                // Convert the text to the correct integer ID
+                string shiftId = "0"; // Default for "All"
+                if (shiftText == "Morning")
+                    shiftId = "2";
+                else if (shiftText == "Evening")
+                    shiftId = "3";
+                else if (shiftText == "Night")
+                    shiftId = "4";
+
                 string Operator = Request.QueryString["Operator"].ToString();
                 reportPath += rptFileName;
                 rd.Load(reportPath);
@@ -570,7 +588,49 @@ namespace PMS
                 rd.SetParameterValue("@FromDate", sqlStartDateTime);
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
                 rd.SetParameterValue("@Operator", Operator);
-                rd.SetParameterValue("Shift", Shift);
+                //rd.SetParameterValue("Shift", Shift);
+                rd.SetParameterValue("@Shift_id", shiftId);
+                rd.SetParameterValue("@DoctorID", doctorID);
+                rd.SetParameterValue("@Department", departmentID);
+            }
+            else if (reportName == "Over_Summary_Shift_Wise")
+            {
+                string rptFileName = "TransactionalDetails/OverSummaryShiftWise.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+
+                string departmentID = Request.QueryString["Department"].ToString();
+                //string Shift = Request.QueryString["Shift"].ToString();
+                //if (Shift == "All")
+                //{
+                //    Shift = "0";
+                //}
+                string shiftText = Request.QueryString["Shift"]?.ToString() ?? "All";
+
+                // Convert the text to the correct integer ID
+                string shiftId = "0"; // Default for "All"
+                if (shiftText == "Morning")
+                    shiftId = "2";
+                else if (shiftText == "Evening")
+                    shiftId = "3";
+                else if (shiftText == "Night")
+                    shiftId = "4";
+                // If it's "All" or anything else, keep it as "0"
+                string Operator = Request.QueryString["Operator"].ToString();
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@FromDate", sqlStartDateTime);
+                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Shift_id", shiftId);
                 rd.SetParameterValue("@Department", departmentID);
             }
             else if (reportName == "DepartmentWiseReport")

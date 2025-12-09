@@ -211,6 +211,20 @@ namespace PMS
         }
        
         [WebMethod]
+        public static string PendingPatients()
+        {
+            string result;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.Sp_GetLast24Hours_Medicines().ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+
+            }
+            return result;
+        }
+       
+        [WebMethod]
         public static string Preview(string search)
         {
             string result;
