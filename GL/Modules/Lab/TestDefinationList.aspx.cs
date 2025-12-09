@@ -17,49 +17,148 @@ namespace PMS
         {
 
         }
+        [WebMethod]
+        public static string GetMainDepartments()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dep = from dv in db.DataValues
+                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                      where vs.ValueSet_Name == "Main Test Departments"
+                      select new { dv.DataValue_Name, dv.DataValue_Description };
 
+            return (new JavaScriptSerializer()).Serialize(dep);
+        }
+        [WebMethod]
+        public static string GetTestGroups()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dep = from dv in db.DataValues
+                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                      where vs.ValueSet_Name == "Test Groups"
+                      select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            return (new JavaScriptSerializer()).Serialize(dep);
+        }
+        [WebMethod]
+        public static string GroupDepartment()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dep = from dv in db.DataValues
+                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                      where vs.ValueSet_Name == "Test Departments"
+                      select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            return (new JavaScriptSerializer()).Serialize(dep);
+        }
+        [WebMethod]
+        public static string GetGroupDepartments()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dep = from dv in db.DataValues
+                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                      where vs.ValueSet_Name == "Test Departments"
+                      select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            return (new JavaScriptSerializer()).Serialize(dep);
+        }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(
+    int draw,
+    int start,
+    int length,
+    string sortColumn,
+    string sortColumnDirection,
+    string searchValue,
+    string mainDepartmentId,   // NEW
+    string groupCategoryId,    // NEW
+    string groupDepartmentId   // NEW
+)
         {
             try
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    string userId = HttpContext.Current.Session["UserId"].ToString();
+                    string userId = HttpContext.Current.Session["UserId"]?.ToString();
 
-                    var Total_Labtest = _dbContext.Lab_Tests.Count();
-                    var Labtest = from t in _dbContext.Lab_Tests
-                                    where ( t.Test_Name.Contains(searchValue) || _dbContext.GetDataValueName("Test Groups", t.Group_Category).Contains(searchValue) || _dbContext.GetDataValueName("Main Test Departments", t.Main_Department).Contains(searchValue) || _dbContext.GetDataValueName("Test Departments", t.Group_Department).Contains(searchValue) ||
-                                     _dbContext.GetDataValueName("Test Units", t.Unit).Contains(searchValue))
-                                    select new
-                                    {
-                                        Test_ID = t.Test_ID,
-                                        Test_Name = t.Test_Name,
-                                        Group_Category = _dbContext.GetDataValueName("Test Groups", t.Group_Category) ?? string.Empty,
-                                        Group_Department = _dbContext.GetDataValueName("Test Departments", t.Group_Department),
-                                        Main_Department = _dbContext.GetDataValueName("Main Test Departments", t.Main_Department),
-                                        Unit = _dbContext.GetDataValueName("Test Units", t.Unit),
-                                        Active =  t.Active,
-                                    };
+                    var baseQuery = _dbContext.Lab_Tests.AsQueryable();
 
-                    var FilteredCount = Labtest.Count();
+                    // Apply search filter (existing)
+                    if (!string.IsNullOrWhiteSpace(searchValue))
+                    {
+                        searchValue = searchValue.Trim();
+                        baseQuery = baseQuery.Where(t =>
+                            t.Test_Name.Contains(searchValue) ||
+                            _dbContext.GetDataValueName("Test Groups", t.Group_Category).Contains(searchValue) ||
+                            _dbContext.GetDataValueName("Main Test Departments", t.Main_Department).Contains(searchValue) ||
+                            _dbContext.GetDataValueName("Test Departments", t.Group_Department).Contains(searchValue) ||
+                            _dbContext.GetDataValueName("Test Units", t.Unit).Contains(searchValue)
+                        );
+                    }
+
+                    // ✅ NEW: Apply department/category filters
+                    if (!string.IsNullOrWhiteSpace(mainDepartmentId))
+                        baseQuery = baseQuery.Where(t => t.Main_Department == mainDepartmentId);
+
+                    if (!string.IsNullOrWhiteSpace(groupCategoryId))
+                        baseQuery = baseQuery.Where(t => t.Group_Category == groupCategoryId);
+
+                    if (!string.IsNullOrWhiteSpace(groupDepartmentId))
+                        baseQuery = baseQuery.Where(t => t.Group_Department == groupDepartmentId);
+
+                    // Total counts BEFORE pagination (for recordsTotal & recordsFiltered)
+                    var Total_Labtest = _dbContext.Lab_Tests.Count(); // total in DB (unfiltered)
+                    var FilteredCount = baseQuery.Count(); // after filters
+
+                    // Projection — keep this clean and match property names
+                    var Labtest = baseQuery.Select(t => new
+                    {
+                        Test_ID = t.Test_ID,
+                        Test_Name = t.Test_Name,
+                        Group_Category = _dbContext.GetDataValueName("Test Groups", t.Group_Category) ?? string.Empty,
+                        Group_Department = _dbContext.GetDataValueName("Test Departments", t.Group_Department) ?? string.Empty,
+                        Main_Department = _dbContext.GetDataValueName("Main Test Departments", t.Main_Department) ?? string.Empty,
+                        Unit = _dbContext.GetDataValueName("Test Units", t.Unit) ?? string.Empty,
+                        Active = t.Active
+                    });
+
+                    // Sorting
                     switch (sortColumn)
                     {
                         case "Test_Name":
-                            Labtest = sortColumnDirection == "asc" ? Labtest.OrderBy(a => a.Test_Name) : Labtest.OrderByDescending(a => a.Test_Name);
+                            Labtest = sortColumnDirection == "asc"
+                                ? Labtest.OrderBy(a => a.Test_Name)
+                                : Labtest.OrderByDescending(a => a.Test_Name);
+                            break;
+                        case "Main_Department":
+                            Labtest = sortColumnDirection == "asc"
+                                ? Labtest.OrderBy(a => a.Main_Department)
+                                : Labtest.OrderByDescending(a => a.Main_Department);
+                            break;
+                        case "Group_Category":
+                            Labtest = sortColumnDirection == "asc"
+                                ? Labtest.OrderBy(a => a.Group_Category)
+                                : Labtest.OrderByDescending(a => a.Group_Category);
+                            break;
+                        case "Group_Department":
+                            Labtest = sortColumnDirection == "asc"
+                                ? Labtest.OrderBy(a => a.Group_Department)
+                                : Labtest.OrderByDescending(a => a.Group_Department);
                             break;
                         default:
                             Labtest = Labtest.OrderByDescending(a => a.Test_ID);
                             break;
                     }
 
-
                     var LabTestList = Labtest.Skip(start).Take(length).ToList();
 
-
-                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Labtest, data = LabTestList };
-                    return jsonData;
+                    return new
+                    {
+                        draw,
+                        recordsTotal = Total_Labtest,
+                        recordsFiltered = FilteredCount,
+                        data = LabTestList
+                    };
                 }
             }
             catch (Exception ex)
