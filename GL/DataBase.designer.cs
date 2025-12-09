@@ -904,7 +904,12 @@ namespace PMS
         partial void UpdateIn_Patient_Medicine(In_Patient_Medicine instance);
         partial void DeleteIn_Patient_Medicine(In_Patient_Medicine instance);
         #endregion
-
+        public DataBaseDataContext() :
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+        {
+            OnCreated();
+        }
+ 
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
