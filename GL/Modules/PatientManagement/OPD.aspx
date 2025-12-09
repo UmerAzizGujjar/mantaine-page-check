@@ -961,6 +961,8 @@
         //    });
         //}
 
+
+
     </script>
 
 </asp:Content>
@@ -1074,6 +1076,20 @@
                     <div>
                         <div style="font-weight:700; font-size:1.5rem;">Emergency Refer Patient</div>
                         <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Refer patient to emergency</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+            <div id="btnsearchReferlist" role="button" tabindex="0"
+                onclick="openReferPatientModal()"
+                onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
+                class="d-flex flex-column justify-content-center align-items-start">
+                <div class="d-flex align-items-center">
+                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Refer Patient Icon" width="48" height="48" style="margin-right: 10px;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 1.5rem;">Refer Patient</div>
+                        <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Refer an existing patient</div>
                     </div>
                 </div>
             </div>
@@ -1565,4 +1581,41 @@
           </div>
       </div>
   </div>
+
+         <div id="SearchReferPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <fieldset class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <h5>Search Your Patients:</h5>
+                            <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
+                        <thead>
+                            <tr>
+                                <th style="display: none;">Patient ID</th>
+                                <th>MR No</th>
+                                <th>Patient Name</th>
+                                <th>Father Name</th>
+                                <th>CNIC</th>
+                                <th>Contact No</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ReferPatientsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </asp:Content>

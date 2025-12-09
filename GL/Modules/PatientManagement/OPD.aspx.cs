@@ -11,6 +11,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using PMS.Modules.Dashboards;
+using static PMS.WebForm9;
 
 namespace PMS.Modules.PatientManagement
 {
@@ -286,6 +287,75 @@ namespace PMS.Modules.PatientManagement
                 data = new JavaScriptSerializer().Serialize(result);
             }
             return data;
+        }
+
+        [WebMethod]
+        public static List<PatientsResultRFf> SearchPatients_Rff(string SearchString)
+        {
+            string SearchSql = "";
+
+            if (string.IsNullOrWhiteSpace(SearchString))
+            {
+                SearchSql = @"
+            SELECT TOP 10 
+                rg.pat_id,
+                ISNULL(rg.mr_no_sequence, '') AS Patient_No,
+                ISNULL(rg.Full_Name, '') AS Full_Name,
+                ISNULL(p.NIC, '') AS NIC,
+                rg.Mobile1 AS ContactNo,
+                ISNULL(rg.Father_Name, '') AS Father_Name,
+                ISNULL(op.Out_Patient_ID, '') AS OPDID 
+            FROM reg_patient rg 
+            INNER JOIN patients p ON rg.pat_id = p.Reg_PatId 
+            INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID 
+            WHERE op.reffer_doc != 0 
+              AND ISNULL(p.isCancel, 0) != 1";
+            }
+            else
+            {
+                string safeSearch = SearchString.Trim().Replace("'", "''");
+
+                SearchSql = $@"
+            SELECT TOP 10 
+                rg.pat_id,
+                ISNULL(rg.mr_no_sequence, '') AS Patient_No,
+                ISNULL(rg.Full_Name, '') AS Full_Name,
+                ISNULL(p.NIC, '') AS NIC,
+                rg.Mobile1 AS ContactNo,
+                ISNULL(rg.Father_Name, '') AS Father_Name,
+                ISNULL(op.Out_Patient_ID, '') AS OPDID 
+            FROM reg_patient rg 
+            INNER JOIN patients p ON rg.pat_id = p.Reg_PatId 
+            INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID 
+            WHERE rg.Patient_No <> 0 
+              AND rg.Patient_No IS NOT NULL 
+              AND ISNULL(rg.isCancel, 0) != 1 
+              AND (
+                  LTRIM(RTRIM(rg.patient_no)) LIKE '%{safeSearch}%' 
+                  OR LTRIM(RTRIM(rg.full_name)) LIKE '%{safeSearch}%' 
+                  OR LTRIM(RTRIM(rg.mobile1)) LIKE '%{safeSearch}%' 
+                  OR LTRIM(RTRIM(rg.nic)) LIKE '%{safeSearch}%'
+              )
+            ORDER BY pat_id DESC";
+            }
+
+            DataTable dt = DBClass.getDataTable(SearchSql);
+            List<PatientsResultRFf> rff_list = new List<PatientsResultRFf>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                rff_list.Add(new PatientsResultRFf
+                {
+                    Reg_Patient_ID = dr["pat_id"]?.ToString() ?? "",
+                    Patient_No = dr["Patient_No"]?.ToString() ?? "",
+                    Full_Name = dr["Full_Name"]?.ToString() ?? "",
+                    NIC = dr["NIC"]?.ToString() ?? "",
+                    Mobile1 = dr["ContactNo"]?.ToString() ?? "", 
+                    Father_Name = dr["Father_Name"]?.ToString() ?? "",
+                    OPDID = dr["OPDID"]?.ToString() ?? ""
+                });
+            }
+            return rff_list;
         }
 
         [WebMethod]
