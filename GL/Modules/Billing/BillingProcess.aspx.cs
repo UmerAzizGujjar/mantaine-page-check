@@ -1138,6 +1138,8 @@ namespace PMS
             newBill.Bank_Account = data.Bank_Account;
             newBill.Bank_Cash = data.Bank_Cash;
             newBill.Main_Department = data.Main_Department;
+            newBill.Bill_Department = data.BillDepartment;
+            newBill.Bill_Category = data.BillCategory;
             newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
 
             // Handle In-Patient logic
