@@ -186,6 +186,22 @@
                         }, "orderable": false
                     },
                     { "data": "Vendor_Name", "orderable": false },
+                    { "data": "CreatedBy", "orderable": false },   // ← NEW
+                    {
+                        "data": "Creation_Date",
+                        "render": function (data, type, full) {
+                            return full.Creation_Date ? moment(full.Creation_Date).format('D-MMM-YYYY') : '';
+                        },
+                        "orderable": false
+                    },  // ← NEW
+                    { "data": "Updated_By", "orderable": false },  // ← NEW
+                    {
+                        "data": "Update_Date",
+                        "render": function (data, type, full) {
+                            return full.Update_Date ? moment(full.Update_Date).format('D-MMM-YYYY') : '';
+                        },
+                        "orderable": false
+                    },
                     { "data": "Remarks", "orderable": false },
                     { "data": "Status", "orderable": false },
                     {
@@ -374,7 +390,11 @@
                     <th>GRN Num</th>
                     <th>IGP Num</th>
                     <th>Approval Date</th>
-                    <th>Vendor Name</th>                              
+                    <th>Vendor Name</th>
+                     <th>Created By</th>
+                     <th>Created Date</th>
+                     <th>Updated By</th>
+                     <th>Updated Date</th>
                     <th>Remarks</th>
                     <th>Status</th>
                     <th>Actions</th>

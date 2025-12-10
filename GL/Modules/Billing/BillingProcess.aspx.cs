@@ -498,6 +498,23 @@ namespace PMS
 
             return (new JavaScriptSerializer().Serialize(Dis));
         }
+        [WebMethod]
+        public static string GetSubdepartments()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var Dis = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Patient Main Category"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
+        }
 
         //changes for opd
         [WebMethod]
@@ -1121,6 +1138,8 @@ namespace PMS
             newBill.Bank_Account = data.Bank_Account;
             newBill.Bank_Cash = data.Bank_Cash;
             newBill.Main_Department = data.Main_Department;
+            newBill.Bill_Department = data.BillDepartment;
+            newBill.Bill_Category = data.BillCategory;
             newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
 
             // Handle In-Patient logic
@@ -2286,6 +2305,8 @@ namespace PMS
             public int Opd_id { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
+            public string BillDepartment { get; set; }
+            public string BillCategory { get; set; }
             public string bomTotalValue { get; set; }
             public string PackageType { get; set; }
             public string Casher { get; set; }
@@ -2413,15 +2434,17 @@ namespace PMS
                             data.Voucher_ID,
                             data.In_Patient_ID,
                             data.Referred_By,
+                            data.Bill_Category,
+                            data.Bill_Department,
+                            Bill_Department_text = db.GetDataValueName("Patient Main Category", data.Bill_Department),
+                            Bill_Category_text = db.GetDataValueName("Mode Of Registration", data.Bill_Category),
                             Patient_Discount_Type = (from tbl in db.In_Patients
                                                      where tbl.In_Patient_ID == data.In_Patient_ID
 
                                                      orderby tbl.Created_Time descending
                                                      select db.GetDataValueName("Patient Type", tbl.Patient_Discount_Type)).FirstOrDefault(),
 
-                            //Reffer_By_Doc = (from tbl in db.HR_Employees
-                            //                         where tbl.Emp_ID == Convert.ToInt32(data.Referred_By)
-                            //                         select tbl.Emp_Name).FirstOrDefault()
+                           
                         };
             //var Header = db.Ar_Billings.Where(bm => bm.Bill_ID == Bill_ID);
             return (new JavaScriptSerializer()).Serialize(query);

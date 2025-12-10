@@ -824,7 +824,7 @@
                                  <td><input type="text" id="txtnetamount" name="txtnetamount" readonly value="${netAmount}" /></td>
                                  <td><input type="text" id="Txtdocshare" name="Txtdocshare" onchange="hosp_doc(this);" value="${docShare}" /></td>
                                  <td><input type="text" id="Txthocshare" name="Txthocshare" value="${hosShare}" readonly /></td>
-                                 <td><a href="#" class="btn-primry delete-row-services" style="border-radius: 50%; display: inline-block; width: 27px; height: 24px; text-align: center"><i class="fa fa-trash" style="color: white;"></i></a></td>
+                                 <td><a href="#" class="btn-primry delete-row-services" style="border-radius: 50%; display: inline-block; text-align: center"><i class="fa fa-trash" style="color: white;"></i></a></td>
                                  </tr>`;
                     $('#tblResult_services tbody').append(newRow);
                     newRowsAdded = true;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMS.Inventory;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -36,6 +37,8 @@ namespace PMS
                                    Store_Issue_Id = SI.Store_Issue_Id,
                                    Store_Issue_No = SI.Store_Issue_No,
                                    Created_Time = SI.Created_Time,
+                                   Update_Time = SI.Update_Time,
+                                   Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == SI.Updated_By).Select(x => x.UserName).FirstOrDefault(),
                                    Department = _dbContext.GetDataValueName("Department", SI.Department_Id),
                                    WareHouse = _dbContext.GetDataValueName("Ware House", SI.Organization_Id),
                                    RequestNo = (from gmm in _dbContext.MaterialIssueRequests where gmm.MaterialRequest_Id == (from gm in _dbContext.Store_Issue_Details where gm.Store_Issue_Id == SI.Store_Issue_Id select gm.MIR_Id).FirstOrDefault() select gmm.Request_No).FirstOrDefault(),

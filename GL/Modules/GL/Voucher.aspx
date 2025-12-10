@@ -48,6 +48,7 @@
             $('#lblreference').hide();
             FillCostCenter();
             FillDepartment();
+            FillVendors();
         <% if (Request.QueryString["VID"] != null)
         { %>
             var VID = '<%= Request.QueryString["VID"]%>'
@@ -154,6 +155,9 @@
                 setTimeout(function () {
                     $('#ddl_brnch').val(data.Branch_DDL).trigger('change');
                 }, 1000);
+                setTimeout(function () {
+                    $('#ddlVendor').val(data.Vendor_ID).trigger('change');
+                }, 1000);
                 $('#txt_vcher_type').val(data.Voucher_Type);
                 $('#txt_date').val(txtdate);
                 $('#txt_Ptn').val(data.Pay_To_Name);
@@ -176,6 +180,17 @@
                 function (error) {
                     alert(error.get_message());
                 })
+        }
+        function FillVendors() {
+            PageMethods.getVendorDDLlist(function (Tests) {
+                debugger
+                optionsVen = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionsVen += '<option value="' + value.Vendor_ID + '" >' + value.Vendor_Name + '</option>';
+                });
+                $('#ddlVendor').html(optionsVen);
+                $('#ddlVendor').select2();
+            });
         }
         function LoadVoucherDetail(VID) {
             PageMethods.LoadVoucherChild(VID, function (resp) {
@@ -492,6 +507,7 @@
             var totaldebit = $('#txt_debit').val();
             var totalcredit = $('#txt_credit').val();
             var difference = $('#txt_diff').val();
+            var vendorID = $('#ddlVendor').val();
             if (difference > 0 || difference < 0) {
                 Swal.fire({
                     icon: 'error',
@@ -530,7 +546,7 @@
                 });
             });
             debugger;
-            var AllItemDetail = { 'Item_list': Item_list, 'editmode_voucherID': editmode_voucherID, 'voucherno': voucherno, 'type': type, 'txtdate': txtdate, 'txtptn': txtptn, 'descriptionmaster': descriptionmaster, 'refnum': refnum, 'totaldebit': totaldebit, 'totalcredit': totalcredit, 'status': status };
+            var AllItemDetail = { 'Item_list': Item_list, 'editmode_voucherID': editmode_voucherID, 'voucherno': voucherno, 'type': type, 'txtdate': txtdate, 'txtptn': txtptn, 'descriptionmaster': descriptionmaster, 'refnum': refnum, 'totaldebit': totaldebit, 'totalcredit': totalcredit, 'status': status, 'vendorID': vendorID };
             PageMethods.Savealldata(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
                 if (res == "Period closed for this month. You cannot add or edit Voucher.") {
@@ -561,7 +577,8 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
+                sendFile(res);
+           
                 var getype = '<% =Request.QueryString["VoucherType"] %>';
                 window.location.href = "Voucher.aspx?VoucherType=" + getype + "&VID=" + res;
             });
@@ -643,6 +660,29 @@
             $('#txt_creditamount').val(creditvalue);
             calculatedifference();
         }
+        function sendFile(ID) {
+            debugger;
+            var fileInput = $('#ChoseVoucherfile')[0];
+            if (fileInput.files.length > 0) {
+                debugger;
+                var data = new FormData();
+                data.append('file', $('#ChoseVoucherfile')[0].files[0]);
+                data.append('ID', ID);
+                $.ajax({
+                    type: 'post',
+                    url: '/../upload/UploadVoucherFiles.ashx',
+                    data: data,
+                    success: function (status) {
+
+                    },
+                    processData: false,
+                    contentType: false,
+                    error: function () {
+                        alert(" something went wrong!");
+                    }
+                });
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -684,10 +724,21 @@
                 </div>
             </div>
             <div class="row mt-3" style="margin-top:16px">
-                <div class="col-lg-12">
+                 <div class="col-lg-4 col-md-4 col-sm-4">
+                       <label>Vendor Name</label>
+                      <select id="ddlVendor" class="form-control form-control-sm">
+                          <option value="0">Please Select</option>
+                      </select>
+                 </div>
+                <div class="col-lg-5 col-md-5 col-sm-5">
                     <label>Description</label>
                     <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
                 </div>
+                <div class="col-lg-3">
+                     <label id="lb_Attachments" class="w115 fleft">Attachments</label>
+                     <input id="ChoseVoucherfile" type="file" name="ChoseVoucherfile" />
+                     <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+                 </div>
             </div>
         </div>
 
