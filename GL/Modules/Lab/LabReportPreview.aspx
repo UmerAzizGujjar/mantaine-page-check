@@ -404,6 +404,7 @@
                 var tbl = $("#tblgroupTestlist tbody tr");
 
                 $.each(tbl, function (key, val) {
+                    debugger
                     var testDetailId = $(val).find('td:eq(0)').text().trim();
                     if (testDetailId != null && testDetailId !== "" && testDetailId > 0) {
                         test_list.push({ 'TestDID': testDetailId });
@@ -422,16 +423,22 @@
                 //});
                 //For Single Tests
                 var testID = $('#hdtestdetailid').val();
-                if (testID != null && testID > 0) {
-                    test_list.push({ 'TestDID': testID });
+                //if (testID != null && testID > 0) {
+                //    test_list.push({ 'TestDID': testID });
+                //}
+                if (testID && testID > 0) {
+                    var exists = test_list.some(x => x.TestDID == testID);
+                    if (!exists) {
+                        test_list.push({ 'TestDID': testID });
+                    }
                 }
                 var Lab_ID = 0;
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
                 if (test_list.length > 0) {
+                    let singleTest = [test_list[0]];
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
-
-                        //alert(response)
-                        ApproveedLab();
+                        debugger;
+                        ApproveLab(singleTest);
                         $("[id$='_btnRefresh']").trigger('click');
                         $('#myModal').modal('hide');
                         $("#myModal tbody").empty();
@@ -674,62 +681,64 @@
                 alert(cval);
             });
             // Approve Test Result
-            $('#btnApprove').click(function () {
-                localStorage.isSaved = 1;
-                $('#mTestName')
-                $('#mTestGroup')
-                var department = $('#mTestDepartment').val();
-                var maindepartment = $('#mMainDepartment').val();
-                var status = $('#mStatus').val();
-                var testvalue = $('#mTestValue').val();
-                if (typeof testvalue === "undefined") testvalue = 0;
-                var template = $('#mTestTemplate').val();
-                if (typeof template === "undefined") template = 0;
-                //  var template = CKEDITOR.instances.mTestTemplate.getData();;
+            //$('#btnApprove').click(function () {
+            //    debugger;
+            //    localStorage.isSaved = 1;
+            //    $('#mTestName')
+            //    $('#mTestGroup')
+            //    var department = $('#mTestDepartment').val();
+            //    var maindepartment = $('#mMainDepartment').val();
+            //    var status = $('#mStatus').val();
+            //    var testvalue = $('#mTestValue').val();
+            //    if (typeof testvalue === "undefined") testvalue = 0;
+            //    var template = $('#mTestTemplate').val();
+            //    if (typeof template === "undefined") template = 0;
+            //    //  var template = CKEDITOR.instances.mTestTemplate.getData();;
 
-                var diagnosis = $('#mTestDiagnosis').val();
-                var notes = $('#mTestNotes').val();
-                var mTestID = $('#mTestID').val();
-                var testID = $('#testDetailID').val();
-                if (mTestID == "0") {
-                    var table = $('#tblCatValues');
-                    var test_list = [];
-                    table.find('tr').each(function (key, value) {
-                        test_list.push({ 'TestDID': $(value).find('td input[name= labtestDID]').val(), 'Value': $(value).find('td input[name=txtValue]').val() });
-                    });
-                    var Lab_ID = $("#hdnLab_Test_ID").val();
-                    var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
-                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
-                        $('#myModal').modal('hide');
-                        ApproveedLab();
-                        $('#result' + GroupCatID + '').text("View Result");
-                    });
-                }
-                else {
+            //    var diagnosis = $('#mTestDiagnosis').val();
+            //    var notes = $('#mTestNotes').val();
+            //    var mTestID = $('#mTestID').val();
+            //    var testID = $('#testDetailID').val();
+            //    if (mTestID == "0") {
+            //        var table = $('#tblCatValues');
+            //        var test_list = [];
+            //        table.find('tr').each(function (key, value) {
+            //            test_list.push({ 'TestDID': $(value).find('td input[name= labtestDID]').val(), 'Value': $(value).find('td input[name=txtValue]').val() });
+            //        });
+            //        var Lab_ID = $("#hdnLab_Test_ID").val();
+            //        var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+            //        PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
+            //            $('#myModal').modal('hide');
+            //          //  ApproveLab();
+            //            $('#result' + GroupCatID + '').text("View Result");
+            //        });
+            //    }
+            //    else {
 
-
-                    var data = JSON.stringify({ TestDetailID: testID, TestValue: testvalue, Template: template, Diagnosis: diagnosis, Notes: notes, });
-                    $.ajax({
-                        type: "POST",
-                        url: "LabTestResult.aspx/ApproveTestDetail",
-                        data: data,
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (data) {
-                            ApproveedLab();
-                            //$('#mTestValue').val('');
-                            $('#mTestDiagnosis').val('');
-                            $('#mTestNotes').val('');
-                            $('#myModal').modal('hide');
-                            var id = $("#hdnLab_Test_ID").val();
-                            $('#result' + id + '').text("Conducted");
-                        },
-                        failure: function (response) {
-                            alert(response.d);
-                        }
-                    });
-                }
-            });
+            //        debugger;
+            //        var data = JSON.stringify({ TestDetailID: testID, TestValue: testvalue, Template: template, Diagnosis: diagnosis, Notes: notes, });
+            //        $.ajax({
+            //            type: "POST",
+            //            url: "LabTestResult.aspx/ApproveTestDetail",
+            //            data: data,
+            //            contentType: "application/json; charset=utf-8",
+            //            dataType: "json",
+            //            success: function (data) {
+            //                debugger;
+            //                //ApproveLab();
+            //                //$('#mTestValue').val('');
+            //                $('#mTestDiagnosis').val('');
+            //                $('#mTestNotes').val('');
+            //                $('#myModal').modal('hide');
+            //                var id = $("#hdnLab_Test_ID").val();
+            //                $('#result' + id + '').text("Conducted");
+            //            },
+            //            failure: function (response) {
+            //                alert(response.d);
+            //            }
+            //        });
+            //    }
+            //});
 
         
             FillGrowthType();
@@ -738,10 +747,10 @@
             GetTestDepartment();
         });
 
-        function ApproveedLab() {
+        function ApproveLab(singleTest) {
             debugger;
-            var BillId = '<% =Request.QueryString["Bill_ID"] %>';
-            PageMethods.approve_Bill(BillId, function (Tests) {
+            var labtestID = singleTest;
+            PageMethods.approve_LabShare(labtestID, function (Tests) {
                 debugger
                 var message = JSON.parse(Tests);
                 if (message[0].Message != null || message[0].Message != "") {

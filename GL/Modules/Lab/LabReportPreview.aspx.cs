@@ -355,6 +355,16 @@ namespace PMS
             }
             return "Not Successfull";
         }
+
+        [WebMethod]
+        public static string approve_LabShare(string labtestID)
+        {
+            var user_id = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.SpApproveBillingProcess(Convert.ToInt32(labtestID), user_id);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+
         [WebMethod]
         public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails)
         {

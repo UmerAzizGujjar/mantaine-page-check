@@ -1446,9 +1446,12 @@
                     dataType: "json",
                     success: function (response) {
                         let parsedData = JSON.parse(response.d);
+                        let labTests = parsedData.LabTests;
+                        let groupTests = parsedData.GroupTests;
+                        let allTests = labTests.concat(groupTests);
                         let rows = '';
                         debugger
-                        $.each(parsedData, function (key, item) {
+                        $.each(allTests, function (key, item) {
                             rows += `<tr>
                                     <td><input type="checkbox" class="select-row"></td>
                                     <td style="display:none;"><input type="hidden" name="txtestid" class="txtestid" readonly value="${item.Test_ID}" ></td>
