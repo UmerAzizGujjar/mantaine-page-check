@@ -16,6 +16,18 @@
 
             });
         }
+        function FillAdvancetaxtype() {
+            debugger;
+            var options = '<option value="0">0</option>';
+            PageMethods.getAdvanceTaxType(function (Tests) {
+                debugger
+                $.each(JSON.parse(Tests), function (key, value) {
+                    debugger;
+                    options += '<option value="' + value.Advance_Tax_ID + '" >' + value.Advance_Tax_Perc + '</option>';
+                });
+                $('.ddlAdvanceTax').html(options);
+            });
+        }
         var selectedOptions = '';
         var fedcounter = 1;
         var taxcounter = 1;
@@ -149,6 +161,7 @@
                     '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()"  style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + length + '" name="txtDisAmount"  ></input></td>' +
                     '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="duplicate ddlSTAX" ><option value="0">0</option></select></td>' +
                     '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly"  id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+                    '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
                     //'<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
                     //'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
                     '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option>' + optionsList + '</select></td>' +
@@ -171,6 +184,15 @@
                     options += '<option value="' + value.Sales_Tax_ID + '">' + value.Sales_Tax_Perc + '</option>';
                 });
                 $('#ddlSTAX' + rowId).html(options);
+            });
+        }
+        function populateAdvanceTaxddl(rowId) {
+            PageMethods.getAdvanceTaxType(function (response) {
+                var options = '<option value="0">0</option>';
+                $.each(JSON.parse(response), function (key, value) {
+                    options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+                });
+                $('#ddlAdvanceTax' + rowId).html(options);
             });
         }
         function httpGet(theUrl) {
@@ -249,6 +271,7 @@
 
             setTimeout(function () {
                 FillStaxtype();
+                FillAdvancetaxtype();
             }, 3000);
 
             <% if (Request.QueryString["PO_ID"] != null)
@@ -447,6 +470,7 @@
                         '<td><select id="ddlSTAX' + (key + 1) + '" name="ddlSTAX" class="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"></select></td>' +
                         '<td style="padding-top: 7px!important;"><input type="hidden" style="padding-top: 7px!important;text-align:right!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="' + value.SalTax_Amount + '"  id="txtSalAmount' + (key + 1) + '" name="txtSalAmount" ></input></td>' +
                         '<td style="display:none;"><select id="ddlFed' + (key + 1) + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + optionFed + '</select></td>' +
+                        '<td><select id="ddlAdvanceTax' + (key + 1) + '" name="ddlAdvanceTax" class="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;">' +
                         '<td style="padding-top: 7px!important;display:none;"><input type="hidden" value="' + value.Fed_Percentage + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"  id="txtFedAmount' + (key + 1) + '" name="txtFedAmount" style="text-align:right ;width:59px !important;font-size:9px;height:20px;"></input>' + value.Fed_Percentage + '</td>' +
                         '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + value.Amount + '" readonly="readonly"  id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount"></input></td>' +
                         '<td><input type="text" name="txtddate" id="txtddate' + (key + 1) + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
@@ -459,6 +483,7 @@
                     $.each(selectedOptions, function (key, value) {
                         debugger;
                         $('#ddlSTAX' + (key + 1)).val(value.SalTax_Id).trigger('change');
+                        $('#ddlAdvanceTax' + (key + 1)).val(value.AdvanceTax_ID).trigger('change');
                         $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
                         calcTotal();
                     });
@@ -635,15 +660,7 @@
 
             }
         }
-        function populateAdvanceTaxddl(rowId) {
-            PageMethods.getAdvanceTaxType(function (response) {
-                var options = '<option value="0">0</option>';
-                $.each(JSON.parse(response), function (key, value) {
-                    options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
-                });
-                $('#ddlAdvanceTax' + rowId).html(options);
-            });
-        }
+        
         function CulculateAmonut() {
             debugger;
             var amtwithdis = 0;
@@ -760,17 +777,27 @@
                 } else {
                     STpercent = 0;
                 }
+                var selectedAdvTax = $($(value).find('td select[name=ddlAdvanceTax] :selected')[0]).text();
+                if (selectedAdvTax) {
+                    AdvPercent = parseFloat(selectedAdvTax) || 0;
+                } else {
+                    AdvPercent = 0;
+                }
+                AdvAmount = parseFloat((AdvPercent / 100) * (amountExclusiveTaxes - DiscAmount));
+                $($(value).find('td input[name=txtAdvanceTaxAmount]')[0]).val(AdvAmount.toFixed(2));
                 STAmount = parseFloat((STpercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 $($(value).find('td input[name=txtSalAmount]')[0]).val(STAmount.toFixed(2));
                 netAmount = parseFloat(amountExclusiveTaxes + STAmount - DiscAmount);
                 $($(value).find('td input[name=txtTotalAmount]')[0]).val(netAmount.toFixed(2));
                 totamount += netAmount;
                 totalstamount += STAmount;
+                totalAdvAmount += AdvAmount;
                 TotalDiscAmount += DiscAmount;
                 totalfinalamount = totamount;
             });
             $('#txtSub_Total').val(subtotal.toFixed(2));
             $('#txtst_amou').val(totalstamount.toFixed(2));
+            $('#txtAdv_amou').val(totalAdvAmount.toFixed(2));
             var freightTotal = parseFloat($('#ctl00_MainContent_Freight').val()) || 0;
             var totalFinalAmt = totalfinalamount + freightTotal;
             $('#ctl00_MainContent_Net_Amount').val(totalFinalAmt.toFixed(2));
@@ -1019,7 +1046,8 @@
                     }
                     else {
                         Item_list.push({
-                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(),
+                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(),
+                            'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val() ,'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(),
 
                         });
                     }

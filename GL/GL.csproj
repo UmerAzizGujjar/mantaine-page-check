@@ -234,6 +234,7 @@
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
     <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
+    <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
     <Content Include="Modules\Dashboards\LabSection.aspx" />
@@ -25885,6 +25886,13 @@
     <Compile Include="Modules\Dashboards\CEODashBorad.aspx.designer.cs">
       <DependentUpon>CEODashBorad.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Dashboards\DashPatientsCount.aspx.cs">
+      <DependentUpon>DashPatientsCount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\DashPatientsCount.aspx.designer.cs">
+      <DependentUpon>DashPatientsCount.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Dashboards\EMR.aspx.cs">
       <DependentUpon>EMR.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -28427,7 +28435,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IGPFileImages\" />
-    <Folder Include="obj\Release\Package\PackageTmp\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Reports\Billings\" />
     <Folder Include="Reports\InventoryModules\" />

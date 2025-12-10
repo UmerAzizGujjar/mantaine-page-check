@@ -44,20 +44,23 @@ namespace PMS.AP
             }
 
         }
-        //[WebMethod]
-        //public static string getAdvanceTaxType()
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var query = (from a in db.Advance_Taxes
-        //                 where a.Active == true
-        //                 select new
-        //                 {
-        //                     a.Advance_Tax_ID,
-        //                     a.Advance_Tax_Perc,
-        //                 }).ToList();
+        [WebMethod]
+        public static string getAdvanceTaxType()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from a in db.Advance_Taxes
+                         where a.Active == true
+                         select new
+                         {
+                             a.Advance_Tax_ID,
+                             a.Advance_Tax_Perc,
+                         }).ToList();
 
-        //    return (new JavaScriptSerializer()).Serialize(query);
-        //}
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+
+        
+
         [WebMethod]
         public static string GetWareHouseCondition()
         {
