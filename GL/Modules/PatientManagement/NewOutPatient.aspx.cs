@@ -1,6 +1,7 @@
 ﻿using CrystalDecisions.CrystalReports.ViewerObjectModel;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -11,6 +12,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.MobileControls.Adapters;
 using System.Web.UI.WebControls;
 using Telerik.Web;
 using static PMS.WebForm11;
@@ -71,6 +73,67 @@ namespace PMS.Modules.PatientManagement
             DataBaseDataContext db = new DataBaseDataContext();
             var Details = db.SpApprove_OPDShare(Convert.ToInt32(pat_id), user_id);
             return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        public class LabResultrpt
+        {
+            public int OutPatientID { get; set; }
+            public int Pat { get; set; }
+            public List<LabResultrptDetaild> Resulttrpt { get; set; }
+        }
+        public class LabResultrptDetaild
+        {
+            public DateTime Result_Date { get; set; }
+            public string Result_ID { get; set; }
+            public string Result_Name { get; set; }
+        }
+        [WebMethod]
+        public static string SaveLabResultrpt(string btnsave, string ResulttrptDetail)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var LabResulttrptDetail = js.Deserialize<LabResultrpt>(ResulttrptDetail);
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                /********************Deleting Previous 0 Value Saved Rows.***********************************/
+                if (btnsave == "Update")
+                {
+                    List<Lab_Resultrpt> InPatient_Lab_Resultrpt = db.Lab_Resultrpts.Where(i => i.Out_Patient_ID == LabResulttrptDetail.OutPatientID).ToList();
+                    db.Lab_Resultrpts.DeleteAllOnSubmit(InPatient_Lab_Resultrpt);
+                    db.SubmitChanges();
+                }
+                foreach (var test in LabResulttrptDetail.Resulttrpt)
+                {
+                    Lab_Resultrpt oInPatient_Lab_Resultrpt = new PMS.Lab_Resultrpt();
+                    oInPatient_Lab_Resultrpt.Out_Patient_ID = LabResulttrptDetail.OutPatientID;
+                    oInPatient_Lab_Resultrpt.Patient_ID = LabResulttrptDetail.Pat;
+                    oInPatient_Lab_Resultrpt.Lab_Resultrpt_ID = test.Result_ID.ToString();
+                    oInPatient_Lab_Resultrpt.Date = DateTime.Now;
+                    oInPatient_Lab_Resultrpt.Lab_Resultrpt_Name = test.Result_Name;
+                    oInPatient_Lab_Resultrpt.ReslutDate = test.Result_Date;
+                    oInPatient_Lab_Resultrpt.Transaction_Type = "OutPatient";
+                    db.Lab_Resultrpts.InsertOnSubmit(oInPatient_Lab_Resultrpt);
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string LoadLabResultrptDetail(int PatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var inPatmedicineList = (from pm in db.Lab_Resultrpts
+                                         join op in db.Out_Patients
+                                         on pm.Out_Patient_ID equals op.Out_Patient_ID
+                                         where op.Out_Patient_ID == PatientID
+                                         select new { pm.Lab_Resultrpt_ID, Lab_Resultrpt = db.GetDataValueName("Lab Result", pm.Lab_Resultrpt_ID), pm.Lab_Resultrpt_Name, pm.ReslutDate }).ToList();
+                return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+            }
+            return "";
         }
         [WebMethod]
         public static string SaveRecord(PatientVisitData data)
@@ -463,7 +526,21 @@ namespace PMS.Modules.PatientManagement
                     if (data.Mucculor != null) OPD.Mucculor = data.Mucculor;
                     if (data.ObstetricHistory != null) OPD.ObstetricHistory = data.ObstetricHistory;
                     if (data.txtRemarksHistory != null) OPD.txtRemarksHistory = data.txtRemarksHistory;
-                     OPD.chkJVP = data.chkJVP;
+                    // Gynecology Findings
+                    if (data.PA_Gynae != null) OPD.PA_Gynae = data.PA_Gynae;
+                    if (data.PS_Gynae != null) OPD.PS_Gynae = data.PS_Gynae;
+                    if (data.Uterus_Gynae != null) OPD.Uterus = data.Uterus_Gynae;
+                    if (data.FX_Gynae != null) OPD.FX = data.FX_Gynae;
+
+                    // Obstetrics Findings
+                    if (data.PS_Obs != null) OPD.PS_Obs = data.PS_Obs;
+                    if (data.PV_Obs != null) OPD.PV_Obs = data.PV_Obs;
+                    if (data.SFH_Obs != null) OPD.SFH = data.SFH_Obs;
+                    if (data.LIE_Obs != null) OPD.LIE = data.LIE_Obs;
+                    if (data.Presentation_Obs != null) OPD.Presentation = data.Presentation_Obs;
+                    if (data.FHR_Obs != null) OPD.FHR = data.FHR_Obs;
+                    if (data.Engagement_Obs != null) OPD.Engagement = data.Engagement_Obs;
+                    OPD.chkJVP = data.chkJVP;
                       OPD.chkPallor = data.chkPallor;
                       OPD.chkaganoris = data.chkaganoris;
                     OPD.chkunconceed = data.chkunconceed;
@@ -494,6 +571,7 @@ namespace PMS.Modules.PatientManagement
                     if (data.Proto != null) OPD.Proto = data.Proto.ToString();
                     if (data.Advice != null) OPD.Advice = data.Advice;
                     if (data.Birth_History != null) OPD.Birth_History = data.Birth_History;
+                    if (data.Verbal_Consent != null) OPD.Verbal_Consent = data.Verbal_Consent;
 
                     // Handle referral logic only if Reffer_To is provided
                     if (!string.IsNullOrEmpty(data.Reffer_To))
@@ -551,7 +629,38 @@ namespace PMS.Modules.PatientManagement
                 return $"Error: {ex.Message}";
             }
         }
+        [WebMethod]
+        public static string LoadServicesDetail(string outPatientId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(outPatientId) || outPatientId == "0" || outPatientId == "(New)")
+                {
+                    return "[]";
+                }
 
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                var services = db.InPatientServices
+                    .Where(s => s.Ou_Patient_Id == outPatientId && s.PatientType == "OutPatient")
+                    .OrderBy(s => s.CreatedDate)
+                    .Select(s => new
+                    {
+                        Service_ItemId = s.Service_ItemId,
+                        Services_Procedure_ItemName = s.Services_Procedure_ItemName,
+                        CreatedDate = s.CreatedDate
+                    })
+                    .ToList();
+
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                return js.Serialize(services);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"LoadServicesDetail Error: {ex.Message}");
+                return "[]";
+            }
+        }
         private static void UpdateRelatedRecords(DataBaseDataContext db, int outPatientId)
         {
             // Update medicines
@@ -561,6 +670,21 @@ namespace PMS.Modules.PatientManagement
             foreach (var med in medicines)
             {
                 med.Patient_ID = outPatientId;
+            }
+            // Update medicines
+            var services = db.InPatientServices
+                .Where(p => p.Ou_Patient_Id == "0" && p.PatientType == "OutPatient")
+                .ToList();
+            foreach (var ser in services)
+            {
+                ser.Ou_Patient_Id = outPatientId.ToString();
+            }
+            var rpts = db.Lab_Resultrpts
+                .Where(p => p.Out_Patient_ID.ToString() == "0" && p.Transaction_Type == "OutPatient")
+                .ToList();
+            foreach (var ser in services)
+            {
+                ser.Ou_Patient_Id = outPatientId.ToString();
             }
 
             // Update eye details
@@ -617,6 +741,93 @@ namespace PMS.Modules.PatientManagement
             }
 
             db.SubmitChanges();
+        }
+        // DTOs
+        public class ServiceDetailsDTO
+        {
+            public int Pat { get; set; }
+            public int PatientID { get; set; }
+            public List<ServiceItemDTO> ServiceList { get; set; }
+        }
+
+        public class ServiceItemDTO
+        {
+            public string Service_ItemId { get; set; }
+            public string Services_Procedure_ItemName { get; set; }
+            public string CreatedDate { get; set; }
+        }
+
+        // WebMethod
+        [WebMethod]
+        public static string SaveServices(string ServiceDetails)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                // Deserialize JSON to DTO
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                ServiceDetailsDTO serviceData = js.Deserialize<ServiceDetailsDTO>(ServiceDetails);
+
+                if (serviceData == null || serviceData.ServiceList == null || serviceData.ServiceList.Count == 0)
+                {
+                    return "No services to save";
+                }
+
+                int patientId = serviceData.Pat;
+                int outPatientId = serviceData.PatientID;
+
+           
+
+                foreach (var service in serviceData.ServiceList)
+                {
+                    // Validate service item
+                    if (string.IsNullOrEmpty(service.Service_ItemId))
+                        continue;
+
+                    // Get item details and amount from INV_Items
+                    var itemDetails = db.INV_Items
+                        .Where(i => i.Item_Code == service.Service_ItemId)
+                        .Select(i => new
+                        {
+                            i.Item_Code,
+                            i.Description,
+                            i.Sale_Rate
+                        })
+                        .FirstOrDefault();
+
+                    if (itemDetails == null)
+                        continue;
+
+                    // Create new service entity
+                    InPatientService newService = new InPatientService
+                    {
+                        Service_ItemId = itemDetails.Item_Code,
+                        Services_Procedure_ItemName = itemDetails.Description,
+                        ServiceAmount = itemDetails.Sale_Rate ?? 0,
+                        PatientId = patientId,
+                        Ou_Patient_Id = outPatientId.ToString(),
+                        ServiceType = "Service",
+                        PatientType = "OutPatient",
+                        CreatedDate = DateTime.Now,
+                        UserName = Convert.ToString(AppConfig.UserID),
+                        isbilled = false,
+                        In_Patient_Id = null,
+                        EmergencyId = null
+                    };
+
+                    db.InPatientServices.InsertOnSubmit(newService);
+                }
+
+                db.SubmitChanges();
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                // Log error for debugging
+                System.Diagnostics.Debug.WriteLine($"SaveServices Error: {ex.Message}");
+                return $"Error: {ex.Message}";
+            }
         }
         [WebMethod]
         public static string SaveMedicines(string MedicineDetails)
@@ -1136,6 +1347,19 @@ namespace PMS.Modules.PatientManagement
                         ReferToHospital = qry.Refer_To_Hospital ?? "",
                         Designation = qry.Designation ?? "",
                         referDoc = qry.reffer_doc ?? 0,
+                        PA_Gynae = qry.PA_Gynae ?? "",
+                        PS_Gynae = qry.PS_Gynae ?? "",
+                        Uterus_Gynae = qry.Uterus ?? "",
+                        FX_Gynae = qry.FX ?? "",
+
+                        PS_Obs = qry.PS_Obs ?? "",
+                        PV_Obs = qry.PV_Obs ?? "",
+                        SFH_Obs = qry.SFH ?? "",
+                        LIE_Obs = qry.LIE ?? "",
+                        Presentation_Obs = qry.Presentation ?? "",
+                        FHR_Obs = qry.FHR ?? "",
+                        Engagement_Obs = qry.Engagement ?? "",
+                        Verbal_Consent = qry.Verbal_Consent ?? "",
 
                         // Dropdowns
                         IssuanceOf = qry.Administration ?? "",
@@ -1367,7 +1591,7 @@ namespace PMS.Modules.PatientManagement
             public string Follow;
             public string Patient_type;
             public string dotorname;
-
+ 
         }
         [WebMethod]
         public static string Getdoctors()
@@ -1540,7 +1764,109 @@ on d.Doctor_Id equals hr.Emp_ID
 
             return (new JavaScriptSerializer().Serialize(dpt));
         }
+        [WebMethod]
+        public static string GetServices(string searchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                IQueryable<INV_Item> query = db.INV_Items.Where(d => d.Services == true);
 
+                // Only apply the search filter if searchString is not empty
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    query = query.Where(d => d.Description.Contains(searchString));
+                }
+
+                var serviceItems = query.OrderByDescending(d => d.Item_ID)
+                                     .Select(d => new
+                                     {
+                                         d.Item_Code,
+                                         Description = d.Description
+                                     }).Take(50)
+                                     .ToList();
+
+                return (new JavaScriptSerializer().Serialize(serviceItems));
+            }
+        }
+
+        [WebMethod]
+        public static string GetPreviousServices(string patientID)
+        {
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            // Get previous services for the patient - adjust table name as per your schema
+            var previousServices = from srv in db.InPatientServices  // or whatever your service history table is called
+                                   join item in db.INV_Items on srv.Service_ItemId equals item.Item_Code
+                                   where srv.PatientId.ToString() == patientID.ToString()
+                                   && item.Services == true && srv.PatientId != null
+                                   group new { srv, item } by new
+                                   {
+                                       item.Item_Code,
+                                       item.Description
+                                   } into g
+                                   select new
+                                   {
+                                       Item_Code = g.Key.Item_Code,
+                                       Description = g.Key.Description,
+                                       LastUsed = g.Max(x => x.srv.CreatedDate)
+                                   };
+
+            var serviceList = previousServices
+                             .OrderByDescending(s => s.LastUsed)
+                             .Take(50)  // Limit to last 50 unique services
+                             .Select(s => new
+                             {
+                                 Item_Code = s.Item_Code,
+                                 Description = s.Description
+                             })
+                             .ToList();
+
+            return (new JavaScriptSerializer()).Serialize(serviceList);
+        }
+        [WebMethod]
+        public static string GetPreviousMedicines(string patientID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+          
+        
+
+             var relevantPatientIds = db.Out_Patients
+                .Where(op => op.Reg_PatId.ToString() == patientID)
+                .Select(op => op.Out_Patient_ID)
+                .ToList();
+
+         
+
+             var previousMedicines = from med in db.In_Patient_Medicines  
+                                    join item in db.INV_Items on med.Item_Code equals item.Item_Code
+                                     where med.Patient_ID != null && relevantPatientIds.Contains(med.Patient_ID.Value)
+                                           && item.IsPharmacyItem == true
+                                    group new { med, item } by new
+                                    {
+                                        item.Item_Code,
+                                        item.Description
+                                    } into g
+                                    select new
+                                    {
+                                        Item_Code = g.Key.Item_Code,
+                                        Description = g.Key.Description,
+                                        LastPrescribed = g.Max(x => x.med.Medicine_Date)
+                                    };
+
+            var medicineList = previousMedicines
+                              .OrderByDescending(m => m.LastPrescribed)
+                              .Take(50)  // Limit to last 50 unique medicines
+                              .Select(m => new
+                              {
+                                  Item_Code = m.Item_Code,
+                                  Description = m.Description
+                              })
+                              .ToList();
+
+            return (new JavaScriptSerializer()).Serialize(medicineList);
+        }
         [WebMethod]
         public static string FillRoutesDropDown()
         {
@@ -1772,6 +2098,40 @@ on d.Doctor_Id equals hr.Emp_ID
 
             }
         }
+
+        [WebMethod]
+        public static string GetPreviousDiagnosticTests(string patientID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            // Get previous diagnostic tests for the patient
+            var previousTests = from dtd in db.Lab_Test_Details  // Adjust table name as per your schema
+                                join dt in db.Lab_Tests on dtd.Test_ID equals dt.Test_ID
+                                where dtd.Patient_ID.ToString() == patientID
+                                && dt.Active == true && dt.Main_Department != "001"
+                                group new { dtd, dt } by new { dt.Test_ID, dt.Test_Name, dt.Main_Department } into g
+                                select new
+                                {
+                                    Test_ID = g.Key.Test_ID,
+                                    Test_Name = g.Key.Test_Name,
+                                    Main_Department = g.Key.Main_Department,
+                                    LastTestDate = g.Max(x => x.dtd.Date)
+                                };
+
+            List<dynamic> listOfTests = new List<dynamic>();
+
+            foreach (var test in previousTests.OrderByDescending(t => t.LastTestDate))
+            {
+                listOfTests.Add(new
+                {
+                    Test_ID = test.Test_ID.ToString(),
+                    Test_Name = test.Test_Name,
+                    Main_Department = test.Main_Department
+                });
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTests);
+        }
         [WebMethod]
         public static string GetPreviousLabTests(string patientID)
         {
@@ -1781,7 +2141,7 @@ on d.Doctor_Id equals hr.Emp_ID
             var previousTests = from ltd in db.Lab_Test_Details
                                 join lt in db.Lab_Tests on ltd.Test_ID equals lt.Test_ID
                                 where ltd.Patient_ID.ToString() == patientID
-                                && lt.Active == true
+                                && (lt.Active == true) && (lt.Main_Department == "001")
                                 group new { ltd, lt } by new { lt.Test_ID, lt.Test_Name, lt.Group_Category } into g
                                 select new
                                 {
@@ -1992,6 +2352,17 @@ on d.Doctor_Id equals hr.Emp_ID
             public string Local { get; set; }
             public string Provisional_Diagnosis { get; set; }
             public string txtRemarksHistory { get; set; }
+            public string PA_Gynae { get; set; }
+            public string PS_Gynae { get; set; }
+            public string Uterus_Gynae { get; set; }
+            public string FX_Gynae { get; set; }
+            public string PS_Obs { get; set; }
+            public string PV_Obs { get; set; }
+            public string SFH_Obs { get; set; }
+            public string LIE_Obs { get; set; }
+            public string Presentation_Obs { get; set; }
+            public string FHR_Obs { get; set; }
+            public string Engagement_Obs { get; set; }
 
             // Tab05 - Referral
             public string Reffer_To { get; set; }
@@ -2011,6 +2382,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string Advice { get; set; }
             public string Final_Rec { get; set; }
             public string Proto { get; set; }
+            public string Verbal_Consent { get; set; }
 
             // Common Fields
             public int Patient_ID { get; set; }
@@ -2282,19 +2654,33 @@ on d.Doctor_Id equals hr.Emp_ID
             ddlProto.Items.Add(new ListItem("Please Select", "0"));
             ddlProto.DataBind();
 
+            valueset = DBClass.GetValueSet("Lab Result");
+            ddlLabResult.DataSource = valueset;
+            ddlLabResult.DataTextField = "DataValue_Description";
+            ddlLabResult.DataValueField = "DataValue_Name";
+            ddlLabResult.Items.Add(new ListItem("Select", "0"));
+            ddlLabResult.DataBind();
+
             valueset = DBClass.GetValueSet("Laundary From To");
             ddlIssuance_Of.DataSource = valueset;
             ddlIssuance_Of.DataTextField = "DataValue_Description";
             ddlIssuance_Of.DataValueField = "DataValue_Name";
             ddlIssuance_Of.Items.Add(new ListItem("Please Select", "0"));
             ddlIssuance_Of.DataBind();
-
+            
             valueset = DBClass.GetValueSet("Patient Main Category");
             ddlPatient_Main_Category.DataSource = valueset;
             ddlPatient_Main_Category.DataTextField = "DataValue_Description";
             ddlPatient_Main_Category.DataValueField = "DataValue_Name";
             ddlPatient_Main_Category.Items.Add(new ListItem("Please Select", "0"));
             ddlPatient_Main_Category.DataBind();
+
+            valueset = DBClass.GetValueSet("Verbal Consent");
+            ddlVerbalConsent.DataSource = valueset;
+            ddlVerbalConsent.DataTextField = "DataValue_Description";
+            ddlVerbalConsent.DataValueField = "DataValue_Name";
+            ddlVerbalConsent.Items.Add(new ListItem("Please Select", "0"));
+            ddlVerbalConsent.DataBind();
         }
 
             [WebMethod]

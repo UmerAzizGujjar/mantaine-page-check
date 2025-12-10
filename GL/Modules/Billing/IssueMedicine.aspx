@@ -1009,11 +1009,39 @@
             });
         }
         debugger;
-        function Print_Prescription(selectedValue) {
-            debugger;
-            var id = selectedValue;
-            var url = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
-            window.open(url, '_blanks');
+         
+        function Print_Prescription() {
+            var PatNo = $('#ddlPatient_No option:selected').text();
+            var parts = PatNo.split('-');
+            var number = parts[1];
+            var opdNo = number;
+
+            var url = 'IssueMedicine.aspx/GetOutPatientIDByOPDNo';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ opdNo: opdNo }),
+
+                success: function (response) {
+                    // response.d is the standard wrapper for ASP.NET WebMethods
+                    var outPatientID = response.d;
+
+                    if (outPatientID && outPatientID !== "0" && outPatientID !== "null") {
+                        var reportUrl = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + outPatientID;
+                        window.open(reportUrl, '_blank');
+                    } else {
+                        alert('Out Patient ID not found');
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    console.error('Error getting Out Patient ID:', error);
+                    alert('Error: Could not retrieve Out Patient ID. Status: ' + status);
+                }
+            });
         }
         function OnHoldBill() {
             var CheckVisting = $('#chkHold:checked').val();
@@ -1344,7 +1372,12 @@
             var finalbalance = parseFloat(TotalAmount) - parseFloat(txtLineDisc) - parseFloat(txtDisAmt).toFixed(2) - parseFloat(flatdisc);
             $('#txtBalances').val((finalbalance).toFixed());
         }
-
+        function Print_Prescription(selectedValue) {
+            debugger;
+            var id = selectedValue;
+            var url = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
+            window.open(url, '_blanks');
+        }
         function AssignValue(ControlID, value) {
             if (ControlID.value == '')
                 ControlID.value = value;
@@ -1403,6 +1436,7 @@
             debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
             $('#txtBalances').val(TotAmount);
+
             var discper = $('#txtDisPer').val();
             var FlatDisc = $('#txtFlatDisc').val();
             if (FlatDisc == "") {
@@ -2223,13 +2257,18 @@
                 </div>
             </div>
                       <div class="row mb-3">
-                          <div class="col-sm-12 col-md-4 col-lg-3">
+                          <div class="col-sm-12 col-md-4 col-lg-2">
                               <label>Patient NO</label>
                               <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
                                   <option></option>
                               </select>
 
                           </div>
+                          <div class="col-sm-12 col-md-4 col-lg-1">
+     <label>   </label>
+    <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print"/>
+
+</div>
               <div class="col-sm-12 col-md-4 col-lg-3">
                   <label id="LblPatientType">Patient Type</label>
                   <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="IITH_Uat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="AsSiraat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -1431,17 +1431,6 @@
       <Column Name="Days_Years_Months" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="EmergencyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Lab_Resultrpt" Member="Lab_Resultrpts">
-    <Type Name="Lab_Resultrpt">
-      <Column Name="Lab_Result_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Lab_Resultrpt_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Lab_Resultrpt_Name" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="EmergencyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
@@ -6664,6 +6653,54 @@
       <Association Name="Reg_patient_OPD_Refund" Member="Reg_patient" ThisKey="pat_id" OtherKey="pat_id" Type="Reg_patient" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.In_Patient_Medicines" Member="In_Patient_Medicines">
+    <Type Name="In_Patient_Medicine">
+      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Medicine_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Frequency" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Recomended_Dosage" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Oral" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Injections" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AttendingParamedical_Staff" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="chkDiccharge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Nurse_Name" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Dosage_From" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Dosage_Qty" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Other_Instruction" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="EmergencyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Assigned" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Regular" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="STAT" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="PRN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Start_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Stop_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="High_Risk_Drug" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Max_PRN_Dose" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Nurse_Name_Nurse_Note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="isBuild" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Lab_Resultrpt" Member="Lab_Resultrpts">
+    <Type Name="Lab_Resultrpt">
+      <Column Name="Lab_Result_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Lab_Resultrpt_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Lab_Resultrpt_Name" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="EmergencyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Transaction_Type" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="ReslutDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Out_Patient" Member="Out_Patients">
     <Type Name="Out_Patient">
       <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7030,44 +7067,11 @@
       <Column Name="spo2" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="discharge_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Proto" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Verbal_Consent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Status" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="Follow_Up_Time" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.In_Patient_Medicines" Member="In_Patient_Medicines">
-    <Type Name="In_Patient_Medicine">
-      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Medicine_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Frequency" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="Recomended_Dosage" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Oral" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Injections" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="AttendingParamedical_Staff" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="chkDiccharge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Nurse_Name" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Dosage_From" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Dosage_Qty" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Other_Instruction" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="EmergencyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Assigned" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Regular" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="STAT" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="PRN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Start_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Stop_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="High_Risk_Drug" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Max_PRN_Dose" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Username" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Nurse_Name_Nurse_Note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="isBuild" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -10399,6 +10403,25 @@
       <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.Sp_GetLast24Hours_Medicines" Method="Sp_GetLast24Hours_Medicines">
+    <ElementType Name="Sp_GetLast24Hours_MedicinesResult">
+      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApprove_OPD_AsSiraat" Method="SpApprove_OPD_AsSiraat">
+    <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="Pat_Category" Parameter="pat_Category" Type="System.String" DbType="NVarChar(150)" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApprove_OPD_AsSiraatResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.sp_FillOutPatientForm" Method="sp_FillOutPatientForm">
     <Parameter Name="Patient_Id" Parameter="patient_Id" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_FillOutPatientFormResult">
@@ -10766,6 +10789,7 @@
       <Column Name="spo2" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="discharge_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Proto" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Verbal_Consent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Status" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
@@ -10778,17 +10802,6 @@
       <Column Name="Gender" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="Patient_ID1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Reg_PatId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.Sp_GetLast24Hours_Medicines" Method="Sp_GetLast24Hours_Medicines">
-    <ElementType Name="Sp_GetLast24Hours_MedicinesResult">
-      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

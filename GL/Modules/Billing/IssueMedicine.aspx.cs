@@ -86,7 +86,7 @@ namespace PMS
                 DateTime last24Hours = DateTime.Now.AddHours(-24);
                 var OPD_NO = (from opd in db.Patients                                
                                  where opd.Reg_PatId == pat_id
-                                    && opd.Created_Time >= last24Hours
+                                    
 
                               select new
                                  {
@@ -274,6 +274,29 @@ namespace PMS
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
+        }
+        [WebMethod]
+        public static string GetOutPatientIDByOPDNo(string opdNo)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                // Single query with join
+                var outPatientID = (from p in db.Patients
+                                    join op in db.Out_Patients on p.Patient_No equals op.Patient_ID
+                                    where p.Opd_No.ToString() == opdNo
+                                    orderby op.Out_Patient_ID descending
+                                    select op.Out_Patient_ID)
+                                   .FirstOrDefault();
+
+                return   outPatientID.ToString() ;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetOutPatientIDByOPDNo Error: {ex.Message}");
+                return "0";
+            }
         }
         public class BatchStock
         {

@@ -218,7 +218,7 @@
             if (id != "") {
                 $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
                 loadPatientFormData(id);
-                
+
                 $('#btnSave').val("Update");
                 AppendSymtompsHistory();
                 Appendtestintable();
@@ -227,6 +227,8 @@
                 AppendFinalDiagnosisHistory();
                 AppendComplaintsHistory();
                 updateHistoryTable();
+                LoadLabResultrpt();
+                LoadServices();
 
                 $('.exam-row input[type="checkbox"]').each(function () {
                     var param = this.id.split('_chk').pop();
@@ -250,7 +252,7 @@
             filldoc();
             loaddoctor();
             FillMainTestDepartment();
-            
+
             FillLabTests('');
             fillComplaints("");
             fillPrimaryDiagnosis("");
@@ -275,6 +277,11 @@
                 const searchTerm = $(this).val().trim();
                 fillComplaints(searchTerm);
             });
+            $('#tabServiceSearch').on('input', function () {
+                const searchTerm = $(this).val().trim();
+                FillServices(searchTerm);
+            });
+            FillServices('');
             $('#tab07Search').on('input', function () {
                 const searchTerm = $(this).val().trim();
                 fillPrimaryDiagnosis(searchTerm);
@@ -300,32 +307,32 @@
                 LoadTestByDepartment(searchTerm);
             });
             $('#ctl00_MainContent_ddlPatientDepartment').on("change", function () {
-                 var selectedText = $(this).find('option:selected').text();
+                var selectedText = $(this).find('option:selected').text();
 
-                 if (selectedText === 'Filter Clinic') {
-                     $('#divFilterClinic').slideDown();
+                if (selectedText === 'Filter Clinic') {
+                    $('#divFilterClinic').slideDown();
                 }
                 else {
-                     $('#divFilterClinic').slideUp();
+                    $('#divFilterClinic').slideUp();
                 }
 
-                 fillPendingPatientsList();
+                fillPendingPatientsList();
             });
             $('#isPrivate').on('change', function () {
                 if ($(this).is(':checked')) {
-                    $('#divdocname').slideDown();  
-                    $('#divFilterClinic').slideUp();  
+                    $('#divdocname').slideDown();
+                    $('#divFilterClinic').slideUp();
                 } else {
-                    $('#divdocname').slideUp();  
+                    $('#divdocname').slideUp();
 
                     var selectedText = $('#ctl00_MainContent_ddlPatientDepartment').find('option:selected').text();
 
                     if (selectedText === 'Filter Clinic') {
-                        
-                        $('#divFilterClinic').slideDown(); 
+
+                        $('#divFilterClinic').slideDown();
                     } else {
-                       
-                        $('#divFilterClinic').slideUp();  
+
+                        $('#divFilterClinic').slideUp();
                     }
                 }
             });
@@ -673,12 +680,27 @@
                 setValue('ctl00_MainContent_txtAdvice', data.Advice);
                 setValue('ctl00_MainContent_txtRefer_To_Hospital', data.ReferToHospital);
                 setValue('ctl00_MainContent_txtDesignation', data.Designation);
+                // Gynecology Findings
+                setValue('ctl00_MainContent_txtPA_Gynae', data.PA_Gynae);
+                setValue('ctl00_MainContent_txtPS_Gynae', data.PS_Gynae);
+                setValue('ctl00_MainContent_txtUterus_Gynae', data.Uterus_Gynae);
+                setValue('ctl00_MainContent_txtFX_Gynae', data.FX_Gynae);
+
+                // Obstetrics Findings
+                setValue('ctl00_MainContent_txtPS_Obs', data.PS_Obs);
+                setValue('ctl00_MainContent_txtPV_Obs', data.PV_Obs);
+                setValue('ctl00_MainContent_txtSFH_Obs', data.SFH_Obs);
+                setValue('ctl00_MainContent_txtLIE_Obs', data.LIE_Obs);
+                setValue('ctl00_MainContent_txtPresentation_Obs', data.Presentation_Obs);
+                setValue('ctl00_MainContent_txtFHR_Obs', data.FHR_Obs);
+                setValue('ctl00_MainContent_txtEngagement_Obs', data.Engagement_Obs);
 
                 // Dropdowns
                 setDropdownValue('ctl00_MainContent_ddlIssuance_Of', data.IssuanceOf);
                 setDropdownValue('ctl00_MainContent_ddlFOllowUp', data.FollowUp);
                 setDropdownValue('ctl00_MainContent_ddlFOllowUpWeeks', data.FollowUpWeek);
 
+                setDropdownValue('ctl00_MainContent_ddlVerbalConsent', data.Verbal_Consent);
                 setDropdownValue('ctl00_MainContent_ddlPatient_Main_Category', data.PatientMainCategory);
                 setValue('ctl00_MainContent_txtRefferNote', data.ReferNote);
 
@@ -709,7 +731,110 @@
                 alert("Error populating form data. Please check console for details.");
             }
         }
+        function InsertLabResult() {
+            debugger;
 
+            var ResultrptVal = $('#ctl00_MainContent_ddlLabResult').find('option:selected').val();
+            var ResultrptName = $('#ctl00_MainContent_ddlLabResult').find('option:selected').text();
+            if (ResultrptVal != "0") {
+
+                var currentDate = new Date();
+                var formattedDates = $.datepicker.formatDate('dd M yy', currentDate);
+
+                var rows = '';
+                rows += '<tr>' +
+                    '<td><input type="hidden" name="txtLabResultrpt" value="' + ResultrptVal + '"> ' + ResultrptName + '</td>' +
+                    '<td><input type="text" name="txtResultName" style="width: 80px !important;"></td>' +
+                    '<td><input type="text" class="datepicker" name="txtResulDate" style="width: 85px !important;" value="' + formattedDates + '"></td>' +
+                    '<td><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td>' +
+                    '</tr>';
+                $('#tblResultrpt tbody').append(rows);
+                $('#tblResultrpt .datepicker').datepicker({ dateFormat: 'dd M yy' });
+
+                // Show the table div
+                $('#dvtblResultrpt').show();
+
+                $('#ctl00_MainContent_ddlLabResult').val("0");
+            }
+        }
+
+        function SaveLabResult() {
+            var table = $('#tblResultrpt');
+            var tblResultrpt = [];
+
+            table.find('tbody tr').each(function (key, value) {
+                var resultDate = $(value).find('td input[name=txtResulDate]').val();
+                var resultObj = {
+                    'Result_ID': $(value).find('td input[name=txtLabResultrpt]').val(),
+                    'Result_Name': $(value).find('td input[name=txtResultName]').val()
+                };
+
+                if (resultDate !== "") {
+                    resultObj.Result_Date = resultDate;
+                }
+
+                tblResultrpt.push(resultObj);
+            });
+
+            var btnsave = $('#btnSave').val();
+            var PatID = $('#<%= hdfPatient_ID.ClientID%>').val();
+    var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+    if (OutPatID == '(New)' || OutPatID == '')
+        OutPatID = 0;
+
+    var ResulttrptDetail = { Pat: PatID, OutPatientID: OutPatID, Resulttrpt: tblResultrpt };
+
+    PageMethods.SaveLabResultrpt(btnsave, JSON.stringify(ResulttrptDetail), function (response) { });
+}
+
+function LoadLabResultrpt() {
+            PageMethods.LoadLabResultrptDetail($('#<%= txtOut_Patient_ID.ClientID%>').val(), function (res) {
+                var Medicines = JSON.parse(res);
+                var rows = '';
+
+                $.each(Medicines, function (key, value) {
+                    var dateObj;
+
+                    // ✅ Handle when ReslutDate is empty, null or undefined
+                    if (!value.ReslutDate || value.ReslutDate === "") {
+                        dateObj = new Date(); // current date
+                    } else if (value.ReslutDate.includes("/Date(")) {
+                        // Handle /Date(1234567890)/ format
+                        var timestamp = parseInt(value.ReslutDate.replace("/Date(", "").replace(")/", ""));
+                        dateObj = new Date(timestamp);
+                    } else {
+                        dateObj = new Date(value.ReslutDate);
+                    }
+                    var formattedDates = !isNaN(dateObj.getTime())
+                        ? $.datepicker.formatDate('dd M yy', dateObj)
+                        : $.datepicker.formatDate('dd M yy', new Date());
+
+                    rows += '<tr>' +
+                        '<td><input type="hidden" name="txtLabResultrpt" value="' + value.Lab_Resultrpt_ID + '"> ' + value.Lab_Resultrpt + '</td>' +
+                        '<td><input type="text" name="txtResultName" style="width: 80px !important;" value="' + value.Lab_Resultrpt_Name + '"></td>' +
+                        '<td><input type="text" class="datepicker" name="txtResulDate" style="width: 85px ! important;" value="' + formattedDates + '"></td>' +
+                        '<td><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td>' +
+                        '</tr>';
+                });
+
+                $('#tblResultrpt tbody').append(rows);
+                $('#tblResultrpt .datepicker').datepicker({ dateFormat: 'dd M yy' });
+
+                // Show table if there are records
+                if (Medicines.length > 0) {
+                    $('#dvtblResultrpt').show();
+                }
+            });
+        }
+
+        function deleteTest(anchorTag) {
+            var row = $(anchorTag).closest('tr');
+            row.remove();
+
+            if ($('#tblResultrpt tbody tr').length === 0) {
+                $('#dvtblResultrpt').hide();
+            }
+        }
         // Helper functions for loading indicators and messages
         function showLoading() {
             // Add your loading indicator here
@@ -846,6 +971,9 @@
                         $("#<%= hdfPatient_ID.ClientID %>").val(PatientID);
                         $("#<%= hdfReg_ID.ClientID %>").val(regPatID);
                         FillPreviousLabTests();
+                        FillPreviousMedicines();
+                        FillPreviousServices();
+                        FillPreviousDiagnosticTests();
                         $('#queueModal').modal('hide');
                     }
                 },
@@ -978,13 +1106,13 @@
             });
         }
         function makeSelectsSelect2() {
-             const selector = '.select2-enable';
+            const selector = '.select2-enable';
 
-             const $elements = $(selector);
+            const $elements = $(selector);
 
             if ($elements.length > 0) {
                 $elements.select2();
-            } 
+            }
         }
         function fillPendingPatientsList() {
 
@@ -1276,8 +1404,27 @@
                 });
             }
         }
+
         function ShowPreviousHistory() {
             const $divPreviousHistory = $('#InvestigationPreviousHistory');
+
+            if ($divPreviousHistory.is(':visible')) {
+                $divPreviousHistory.slideUp();
+            } else {
+                $divPreviousHistory.slideDown();
+            }
+        }
+        function ShowMedicenePreviousHistory() {
+            const $divPreviousHistory = $('#MedicenePreviousHistory');
+
+            if ($divPreviousHistory.is(':visible')) {
+                $divPreviousHistory.slideUp();
+            } else {
+                $divPreviousHistory.slideDown();
+            }
+        }
+        function ShowDiagnosticsPreviousHistory() {
+            const $divPreviousHistory = $('#DiagnosticsPreviousHistory');
 
             if ($divPreviousHistory.is(':visible')) {
                 $divPreviousHistory.slideUp();
@@ -1946,7 +2093,7 @@
         });
         function FillPreviousLabTests() {
             debugger;
-            var patientID = $("#<%= hdfReg_ID.ClientID %>").val();; // Get patient ID from the heheid input
+            var patientID = $("#<%= hdfReg_ID.ClientID %>").val();
 
             if (!patientID || patientID === '') {
                 $('#InvestigationPreviousHistory').html('<div style="padding: 10px; color: #999;">No patient selected</div>');
@@ -1954,6 +2101,10 @@
             }
 
             var html = '';
+
+
+
+            html += '<div id="previousTestsList">';
 
             PageMethods.GetPreviousLabTests(patientID, function (Tests) {
                 var testData = JSON.parse(Tests);
@@ -1967,10 +2118,12 @@
                     html += '<div class="labtest-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
                         'onclick="ShowLabTestDetails(\'' + value.SerialNo + '\', \'' + value.TestName + '\')">' +
                         '<div style="display: flex; align-items: center;">' +
-                        '<input type="hidden" id="PrevLabTestchk_' + value.SerialNo + '" ' +
+                        '<input type="checkbox" id="PrevLabTestchk_' + value.SerialNo + '" ' +
+                        'data-testid="' + value.TestID + '" ' +
+                        'data-testname="' + value.TestName + '" ' +
                         'value="' + value.SerialNo + '" ' +
                         'class="prev-labtest_checkbox" ' +
-                        'onclick="this.checked ? Add_LabTestRow(\'' + value.SerialNo + '\', \'' + value.TestName + '\') : Remove_LabTestRow(\'' + value.SerialNo + '\')" />' +
+                        'onclick="event.stopPropagation(); this.checked ?  Add_LabTestRow(\'' + value.SerialNo + '\', \'' + value.TestName + '\') : Remove_LabTestRow(\'' + value.SerialNo + '\')" />' +
                         '<label class="labtest-label" for="PrevLabTestchk_' + value.SerialNo + '" style="margin-left: 8px; font-size: 14px; color: #333; cursor: pointer;">' + value.TestName + '</label>' +
                         '</div>' +
                         '<button type="button" class="labtest-dropdown-btn" ' +
@@ -1981,12 +2134,66 @@
                         '</div>';
                 });
 
+                html += '</div>';
                 $('#InvestigationPreviousHistory').html(html);
             }, function (error) {
                 console.error('Error loading previous lab tests:', error);
                 $('#InvestigationPreviousHistory').html('<div style="padding: 10px; color: #d9534f;">Error loading previous tests</div>');
             });
         }
+        function FillPreviousDiagnosticTests() {
+            debugger;
+            var patientID = $("#<%= hdfReg_ID.ClientID %>").val();
+
+            if (!patientID || patientID === '') {
+                $('#DiagnosticsPreviousHistory').html('<div style="padding: 10px; color: #999;">No patient selected</div>');
+                return;
+            }
+
+            var html = '';
+
+
+
+            html += '<div id="previousDiagnosticTestsList">';
+
+            PageMethods.GetPreviousDiagnosticTests(patientID, function (Tests) {
+                var testData = JSON.parse(Tests);
+
+                if (testData.length === 0) {
+                    $('#DiagnosticsPreviousHistory').html('<div style="padding: 10px; color: #999;">No previous diagnostic tests found</div>');
+                    return;
+                }
+
+                $.each(testData, function (key, value) {
+                    html += '<div class="diagnosticTest-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
+                        'onclick="ShowDiagnosticTestDetails(\'' + value.Test_ID + '\', \'' + value.Test_Name + '\', \'' + value.Main_Department + '\')">' +
+                        '<div style="display: flex; align-items: center;">' +
+                        '<input type="checkbox" id="PrevDiagnosticTestchk_' + value.Test_ID + '" ' +
+                        'data-testid="' + value.Test_ID + '" ' +
+                        'data-testname="' + value.Test_Name + '" ' +
+                        'data-maindept="' + value.Main_Department + '" ' +
+                        'value="' + value.Test_ID + '" ' +
+                        'class="prev-diagnostictest_checkbox" ' +
+                        'onclick="event.stopPropagation(); this.checked ?  Add_DiagnosticTestRow(\'' + value.Test_ID + '\', \'' + value.Test_Name + '\') : Remove_DiagnosticTestRow(\'' + value.Test_ID + '\')" />' +
+                        '<label class="diagnostictest-label" for="PrevDiagnosticTestchk_' + value.Test_ID + '" style="margin-left: 8px; font-size: 14px; color: #333; cursor: pointer;">' + value.Test_Name + '</label>' +
+                        '</div>' +
+                        '<button type="button" class="diagnostictest-dropdown-btn" ' +
+                        'onclick="event.stopPropagation(); ShowDiagnosticTestDetails(\'' + value.Test_ID + '\', \'' + value.Test_Name + '\', \'' + value.Main_Department + '\')" ' +
+                        'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
+                        '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
+                        '</button>' +
+                        '</div>';
+                });
+
+                html += '</div>';
+                $('#DiagnosticsPreviousHistory').html(html);
+            }, function (error) {
+                console.error('Error loading previous diagnostic tests:', error);
+                $('#DiagnosticsPreviousHistory').html('<div style="padding: 10px; color: #d9534f;">Error loading previous tests</div>');
+            });
+        }
+
+
         function FillLabTests(searchValue) {
             debugger;
             var html = '';
@@ -2473,7 +2680,61 @@
                 $('#dvtblDiagnostictest').slideUp();
             }
         }
+        function FillPreviousMedicines() {
+            debugger;
+            var patientID = $("#<%= hdfReg_ID.ClientID %>").val();
 
+            if (!patientID || patientID === '') {
+                $('#MedicenePreviousHistory').html('<div style="padding: 10px; color: #999;">No patient selected</div>');
+                return;
+            }
+
+            var html = '';
+
+            
+
+            html += '<div id="previousMedicinesList">';
+
+            PageMethods.GetPreviousMedicines(patientID, function (Medicines) {
+                var medicineData = JSON.parse(Medicines);
+
+                if (medicineData.length === 0) {
+                    $('#MedicenePreviousHistory').html('<div style="padding: 10px; color: #999;">No previous medicines found</div>');
+                    return;
+                }
+
+                $.each(medicineData, function (key, value) {
+                    html += '<div class="Medicene-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
+                        'onclick="ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')">' +
+                        '<div style="display: flex; align-items: center;">' +
+                        '<input type="checkbox" id="PrevMedicinechk_' + value.Item_Code + '" ' +
+                        'data-itemcode="' + value.Item_Code + '" ' +
+                        'data-description="' + value.Description.replace(/'/g, "&#39;") + '" ' +
+                        'value="' + value.Item_Code + '" ' +
+                        'class="prev-medicine_checkbox" ' +
+                        'onclick="event.stopPropagation(); this.checked ? ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\') : RemovePreviousMedicineSelection(\'' + value.Item_Code + '\')" />' +
+                        '<label class="Medicene-label" for="PrevMedicinechk_' + value.Item_Code + '" ' +
+                        'style="margin-left: 8px; font-size: 14px; color: #333; cursor: pointer;">' +
+                        value.Description +
+                        '</label>' +
+                        '</div>' +
+                        '<button type="button" class="Medicene-dropdown-btn" ' +
+                        'onclick="event.stopPropagation(); ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')" ' +
+                        'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
+                        '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
+                        '</button>' +
+                        '</div>';
+                });
+
+                html += '</div>';
+                $('#MedicenePreviousHistory').html(html);
+            }, function (error) {
+                console.error('Error loading previous medicines:', error);
+                $('#MedicenePreviousHistory').html('<div style="padding: 10px; color: #d9534f;">Error loading previous medicines</div>');
+            });
+        }
+
+      
         function FillMedicene(searchValue) {
             var html = '';
             $.ajax({
@@ -2901,6 +3162,235 @@
                 $('#dvtblMedicines').slideDown();
             })
         }
+        // Fill all services with search
+        function FillServices(searchValue) {
+            var html = '';
+            $.ajax({
+                url: 'NewOutPatient.aspx/GetServices',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchValue || '' }),
+                success: function (response) {
+                    try {
+                        var serviceItems = JSON.parse(response.d);
+                        if (serviceItems.length === 0) {
+                            html = '<div style="padding: 10px; color: #666; font-style: italic;">No services found</div>';
+                        } else {
+                            $.each(serviceItems, function (key, value) {
+                                // Check if service is already added
+                                var isChecked = $('#tblServices tbody').find('input[name="serviceItemCode"][value="' + value.Item_Code + '"]').length > 0;
+
+                                html += '<div class="service-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee;">' +
+                                    '<div style="display: flex; align-items: center;">' +
+                                    '<input type="checkbox" id="Servicechk_' + value.Item_Code + '" ' +
+                                    'data-itemcode="' + value.Item_Code + '" ' +
+                                    'data-description="' + value.Description.replace(/'/g, "&#39;") + '" ' +
+                                    'class="service-checkbox" ' +
+                                    (isChecked ? 'checked' : '') + ' ' +
+                                    'onchange="this.checked ? Add_ServiceRow(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\') : Remove_ServiceRow(\'' + value.Item_Code + '\')" ' +
+                                    'style="margin-right: 8px; cursor: pointer;">' +
+                                    '<label for="Servicechk_' + value.Item_Code + '" ' +
+                                    'style="margin: 0; font-size: 14px; color: #333; cursor: pointer;">' +
+                                    value.Description +
+                                    '</label>' +
+                                    '</div>' +
+                                    '</div>';
+                            });
+                        }
+                        $('#allServices').html(html);
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                        $('#allServices').html('<div style="padding: 10px; color: red;">Error loading services</div>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                    $('#allServices').html('<div style="padding: 10px; color: red;">Error loading services</div>');
+                }
+            });
+        }
+
+        // Add service to table
+        function Add_ServiceRow(itemCode, serviceName) {
+            // Get current datetime
+            var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
+            var datetimeValue = '<%= DateTime.Now%>';
+
+            // Check if service already exists
+            var existingRow = $('#tblServices tbody').find('input[name="serviceItemCode"][value="' + itemCode + '"]').closest('tr');
+
+            if (existingRow.length > 0) {
+                // Service already exists, just update the date
+                existingRow.find('td').eq(0).html('<input type="hidden" name="serviceDate" value="' + datetimeValue + '">' + datetime);
+                return;
+            }
+
+            // Create new row
+            var row = '<tr>' +
+                '<td style="display:none"><input type="hidden" name="serviceDate" value="' + datetimeValue + '">' + datetime + '</td>' +
+                '<td><input type="hidden" name="serviceItemCode" value="' + itemCode + '">' + serviceName + '</td>' +
+                '<td>' +
+                '<a href="javascript:void(0)" onclick="deleteService(this, \'' + itemCode + '\')"><i class="fa fa-times"></i></a>' +
+                '</td>' +
+                '</tr>';
+
+            // Append to table
+            $('#tblServices tbody').append(row);
+            $('#dvtblServices').slideDown();
+
+            // Check the checkbox in all services list
+            $('#Servicechk_' + itemCode).prop('checked', true);
+        }
+        function LoadServices() {
+            var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+
+            if (!OutPatID || OutPatID == '(New)' || OutPatID == '' || OutPatID == "0") {
+                return;
+            }
+
+            PageMethods.LoadServicesDetail(OutPatID, function (res) {
+                if (!res) return;
+
+                var Services = JSON.parse(res);
+
+                if (Services.length === 0) return;
+
+                var rows = '';
+
+                $.each(Services, function (key, value) {
+                    var dateObj;
+                    var datetime, datetimeValue;
+
+                    // Handle when CreatedDate is empty, null or undefined
+                    if (!value.CreatedDate || value.CreatedDate === "") {
+                        dateObj = new Date();
+                    } else if (value.CreatedDate.includes("/Date(")) {
+                        var timestamp = parseInt(value.CreatedDate.replace("/Date(", "").replace(")/", ""));
+                        dateObj = new Date(timestamp);
+                    } else {
+                        dateObj = new Date(value.CreatedDate);
+                    }
+
+                    // Format display date
+                    var formattedDate = !isNaN(dateObj.getTime())
+                        ? $.datepicker.formatDate('dd/mm/yy', dateObj) + ' ' + dateObj.toLocaleTimeString('en-US')
+                        : new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString('en-US');
+
+                    datetime = formattedDate;
+                    datetimeValue = dateObj.toISOString();
+
+                    rows += '<tr>' +
+                        '<td style="display:none"><input type="hidden" name="serviceDate" value="' + datetimeValue + '">' + datetime + '</td>' +
+                        '<td><input type="hidden" name="serviceItemCode" value="' + value.Service_ItemId + '">' + value.Services_Procedure_ItemName + '</td>' +
+                        '<td>' +
+                        '<a href="javascript:void(0)" onclick="deleteService(this, \'' + value.Service_ItemId + '\')"><i class="fa fa-times"></i></a>' +
+                        '</td>' +
+                        '</tr>';
+                });
+
+                $('#tblServices tbody').html(rows);
+
+                // Show table div if there are records
+                if (Services.length > 0) {
+                    $('#dvtblServices').slideDown();
+                }
+            });
+        }
+        // Remove service from table
+        function Remove_ServiceRow(itemCode) {
+            var row = $('#tblServices tbody').find('input[name="serviceItemCode"][value="' + itemCode + '"]').closest('tr');
+            row.remove();
+
+            // Uncheck the checkbox
+            $('#Servicechk_' + itemCode).prop('checked', false);
+
+            // Hide table if no rows left
+            if ($('#tblServices tbody tr').length === 0) {
+                $('#dvtblServices').slideUp();
+            }
+        }
+
+        // Delete service (called from table)
+        function deleteService(anchorTag, itemCode) {
+            var row = $(anchorTag).closest('tr');
+            row.remove();
+
+            // Uncheck the checkbox in all services list
+            $('#Servicechk_' + itemCode).prop('checked', false);
+
+            // Uncheck in previous history if exists
+            $('#PrevServicechk_' + itemCode).prop('checked', false);
+
+            // Hide table if no rows left
+            if ($('#tblServices tbody tr').length === 0) {
+                $('#dvtblServices').slideUp();
+            }
+        }
+
+        // Toggle Previous History
+        function ToggleServicePreviousHistory() {
+            if ($('#ServicePreviousHistory').is(':visible')) {
+                $('#ServicePreviousHistory').slideUp();
+            } else {
+                $('#ServicePreviousHistory').slideDown();
+               
+            }
+        }
+
+        // Fill previous services
+        function FillPreviousServices() {
+            debugger;
+            var patientID = $("#<%= hdfReg_ID.ClientID %>").val();
+
+            if (!patientID || patientID === '') {
+                $('#ServicePreviousHistory').html('<div style="padding: 10px; color: #999;">No patient selected</div>');
+                return;
+            }
+
+            var html = '';
+
+
+            html += '<div id="previousServicesList" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">';
+
+            PageMethods.GetPreviousServices(patientID, function (Services) {
+                var serviceData = JSON.parse(Services);
+
+                if (serviceData.length === 0) {
+                    $('#ServicePreviousHistory').html('<div style="padding: 10px; color: #999;">No previous services found</div>');
+                    return;
+                }
+
+                $.each(serviceData, function (key, value) {
+                    // Check if service is already added
+                    var isChecked = $('#tblServices tbody').find('input[name="serviceItemCode"][value="' + value.Item_Code + '"]').length > 0;
+
+                    html += '<div class="service-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee;">' +
+                        '<div style="display: flex; align-items: center;">' +
+                        '<input type="checkbox" id="PrevServicechk_' + value.Item_Code + '" ' +
+                        'data-itemcode="' + value.Item_Code + '" ' +
+                        'data-description="' + value.Description.replace(/'/g, "&#39;") + '" ' +
+                        'class="prev-service_checkbox" ' +
+                        (isChecked ? 'checked' : '') + ' ' +
+                        'onchange="this.checked ? Add_ServiceRow(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\') : Remove_ServiceRow(\'' + value.Item_Code + '\')" ' +
+                        'style="margin-right: 8px; cursor: pointer;">' +
+                        '<label for="PrevServicechk_' + value.Item_Code + '" ' +
+                        'style="margin: 0; font-size: 14px; color: #333; cursor: pointer;">' +
+                        value.Description +
+                        '</label>' +
+                        '</div>' +
+                        '</div>';
+                });
+
+                html += '</div>';
+                $('#ServicePreviousHistory').html(html);
+            }, function (error) {
+                console.error('Error loading previous services:', error);
+                $('#ServicePreviousHistory').html('<div style="padding: 10px; color: #d9534f;">Error loading previous services</div>');
+            });
+        }
+
+    
+
 
         function updateFollowUpTable() {
             // Get values from form inputs
@@ -3169,8 +3659,71 @@
             });
 
         }
+        function SaveServices() {
+            debugger;
+            var table = $('#tblServices');
+            var ServicesList = [];
+
+            table.find('tbody tr').each(function (key, value) {
+                var itemCode = $(value).find('input[name="serviceItemCode"]').val();
+                var serviceName = $($(value).find('td')[1]).text();
+
+                ServicesList.push({
+                    'Service_ItemId': itemCode,
+                    'Services_Procedure_ItemName': serviceName,
+                    'CreatedDate': $(value).find('input[name="serviceDate"]').val()
+                });
+            });
+
+            var PatID = $('#<%= hdfReg_ID.ClientID%>').val();
+           var OutPatID = $('#<%= txtOut_Patient_ID.ClientID%>').val();
+
+           if (OutPatID == '(New)' || OutPatID == '' || OutPatID == "0")
+               OutPatID = 0;
+
+           var ServiceDetails = {
+               Pat: PatID,
+               PatientID: OutPatID,
+               ServiceList: ServicesList
+           };
+
+           console.log('Saving services:', ServiceDetails);
+
+           PageMethods.SaveServices(JSON.stringify(ServiceDetails),
+               function (response) {
+                   // Parse response if using enhanced DTO
+                   try {
+                       var result = JSON.parse(response);
+
+                       if (result.Success) {
+                           console.log(result.Message);
+                           alert('Services saved successfully: ' + result.ServicesSaved + ' service(s)');
+
+                           if (result.Errors && result.Errors.length > 0) {
+                               console.warn('Errors encountered:', result.Errors);
+                           }
+                       } else {
+                           console.error('Save failed:', result.Message);
+                           alert('Error saving services: ' + result.Message);
+                       }
+                   } catch (e) {
+                       // Simple string response
+                       console.log('Response:', response);
+                       if (response === 'Success') {
+                           alert('Services saved successfully!');
+                       } else {
+                           alert(response);
+                       }
+                   }
+               },
+               function (error) {
+                   console.error('Error calling SaveServices:', error);
+                   alert('Error saving services: ' + error.get_message());
+               }
+           );
+       }
         function SaveMedicines() {
-            SaveComplaintsTab(); SavePrimaryDiagnosisTab(); SaveFinalDiagnosisTab();
+            SaveComplaintsTab(); SavePrimaryDiagnosisTab(); SaveFinalDiagnosisTab(); SaveServices(); SaveLabResult();
             debugger;
             var table = $('#tblMedicines');
             var MedicinesList = [];
@@ -3360,6 +3913,17 @@
                 Local: safeGetValue('#ctl00_MainContent_txtLocal'),
                 Provisional_Diagnosis: safeGetValue('#ctl00_MainContent_txtProvisionalDiagnosis'),
                 txtRemarksHistory: safeGetValue('#ctl00_MainContent_txtRemarksHistory'),
+                PA_Gynae: safeGetValue('#ctl00_MainContent_txtPA_Gynae'),
+                PS_Gynae: safeGetValue('#ctl00_MainContent_txtPS_Gynae'),
+                Uterus_Gynae: safeGetValue('#ctl00_MainContent_txtUterus_Gynae'),
+                FX_Gynae: safeGetValue('#ctl00_MainContent_txtFX_Gynae'),
+                PS_Obs: safeGetValue('#ctl00_MainContent_txtPS_Obs'),
+                PV_Obs: safeGetValue('#ctl00_MainContent_txtPV_Obs'),
+                SFH_Obs: safeGetValue('#ctl00_MainContent_txtSFH_Obs'),
+                LIE_Obs: safeGetValue('#ctl00_MainContent_txtLIE_Obs'),
+                Presentation_Obs: safeGetValue('#ctl00_MainContent_txtPresentation_Obs'),
+                FHR_Obs: safeGetValue('#ctl00_MainContent_txtFHR_Obs'),
+                Engagement_Obs: safeGetValue('#ctl00_MainContent_txtEngagement_Obs'),
 
                 // Tab05 - Referral
                 Reffer_To: safeGetValue('#ctl00_MainContent_ddlPatient_Main_Category'),
@@ -3379,6 +3943,7 @@
                 Advice: safeGetValue('#ctl00_MainContent_txtAdvice'),
                 Final_Rec: safeGetValue("#ctl00_MainContent_Final_Rec"),
                 Proto: safeGetValue('#ctl00_MainContent_ddlProto'),
+                Verbal_Consent: safeGetValue('#ctl00_MainContent_ddlVerbalConsent'),
 
                 // Common Fields - ensure these are proper data types
                 Patient_ID: parseInt(Patient_ID) || 0,
@@ -3806,8 +4371,8 @@
                                 <input type="checkbox" id="isPrivate" />
                             </div>
                             <div class="col-lg-2">
-    <label>Private</label>
-</div>
+                                <label>Private</label>
+                            </div>
                             <div id="divdocname" class="col-lg-3" style="display: none">
                                 <select class="select2-enable" id="ddldocname" onchange="fillPendingPatientsList();" runat="server"></select>
                             </div>
@@ -4037,7 +4602,12 @@
                         <span>Medication</span>
                     </div>
                 </div>
-
+                   <div class="menu-item no-submenu" id="14" onclick="navigateAction(this)">
+       <div class="menu-title">
+           <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medication.png" alt="Profile Picture" class="sidebarIcon">
+           <span>Services/Procedures</span>
+       </div>
+   </div>
                 <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
                     <div class="menu-title">
                         <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/followup.png" alt="Profile Picture" class="sidebarIcon">
@@ -4463,7 +5033,7 @@
                                                     <option value="001">General Physical</option>
                                                     <option value="002">Systematic</option>
                                                     <option value="004">Gynae</option>
-                                                     <option value="005">OBS</option>
+                                                    <option value="005">OBS</option>
                                                     <option value="003">Special</option>
                                                 </select>
                                             </div>
@@ -4870,7 +5440,11 @@
                                         <div id="allLabTests"></div>
                                     </div>
                                     <div class="tabs" id="tab10" style="display: none">
-
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <input type="button" class="btn btn-primry" value="Previous History" onclick="ShowDiagnosticsPreviousHistory()" />
+                                        </div>
+                                        <div style="display: none" id="DiagnosticsPreviousHistory">
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-5 col-sm-12">
                                                 <div class="big-select2">
@@ -4890,6 +5464,11 @@
                                             <input style="margin-left: 5px" type="button" class="btn btn-primry" value="All Meds" onclick="ShowAllMedicenesDiv()" />
                                         </div>
                                         <div id="tab11_01" class="tab11subtab">
+                                            <div style="display: flex; justify-content: flex-end;">
+                                                <input type="button" class="btn btn-primry" value="Previous History" onclick="ShowMedicenePreviousHistory()" />
+                                            </div>
+                                            <div style="display: none" id="MedicenePreviousHistory">
+                                            </div>
                                             <div class="row editMed">
                                                 <div class="col-md-7 col-sm-12">
                                                     <input type="text" class="form-control mb-2" id="tab11_01Search" placeholder="Search..." />
@@ -5004,12 +5583,41 @@
                                                     <asp:TextBox ID="Final_Rec" TextMode="MultiLine" Rows="3" Width="100%" runat="server" TabIndex="5"></asp:TextBox>
                                                 </div>
                                             </div>
+                                             <div style="display: flex; align-items: center; width: 100%">
+     <asp:Label Style="width: 200px;" ID="Label36" runat="server" Text="Verbal Consent"></asp:Label>
+     <asp:DropDownList ID="ddlVerbalConsent"  Width="80%" runat="server" AppendDataBoundItems="true" TabIndex="21"></asp:DropDownList>
+ </div>
+                                             <div style="display: flex; align-items: center; width: 100%">
+     <asp:Label Style="width: 200px;" ID="Label37" runat="server" Text="Lab Result"></asp:Label>
+     <asp:DropDownList ID="ddlLabResult" Width="80%" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+     <input id="btnlabrpt" class="btn-primry" type="button" value="Add" onclick="InsertLabResult()"  />
+ </div>
 
 
                                         </div>
                                         <h4 style="margin-top: 20px" class="btn btn-primry">Protos:</h4>
                                         <asp:DropDownList ID="ddlProto" CssClass="dropdownBackgroud" Width="50%" runat="server" onchange="AddProto();" AppendDataBoundItems="true"></asp:DropDownList>
                                     </div>
+                                    <div class="tabs" id="tab14" style="display: none">
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <input type="button" class="btn btn-primry" value="Previous History" onclick="ToggleServicePreviousHistory()" />
+                                        </div>
+                                        <div style="display: none" id="ServicePreviousHistory">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-7 col-sm-12">
+                                                <input type="text" class="form-control mb-2" id="tabServiceSearch" placeholder="Search..." />
+                                            </div>
+                                            <div class="col-md-5 col-sm-12">
+                                            </div>
+
+                                        </div>
+                                        <div id="allServices"></div>
+
+                                    </div>
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -5109,7 +5717,25 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="col-lg-4" id="dvtblServices" style="display: none">
+                                    <div class="dashboard-card">
+                                        <div class="card-header">
+                                            <h4><i class="fa fa-procedures"></i>Services / Procedures</h4>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table modern-table" id="tblServices">
+                                                <thead>
+                                                    <tr style="position: sticky; top: 0px; z-index: 10;">
+                                                        <th style="display: none">Date</th>
+                                                        <th>Service Name</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- Refer Panel -->
                                 <div class="col-lg-3" id="divtblRefer" style="display: none">
                                     <div class="dashboard-card">
@@ -5340,6 +5966,27 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Lab Result Table (Initially Hidden) -->
+<div class="col-lg-6" id="dvtblResultrpt" style="display: none">
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h4><i class="fa fa-flask"></i>Lab Results</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table modern-table" id="tblResultrpt">
+                <thead>
+                    <tr style="position: sticky; top: 0px; z-index: 10;">
+                        <th>Lab Result</th>
+                        <th>Result Name</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
                                 <!-- Protos Panel -->
                                 <div class="col-lg-4" id="dvtblProto" style="display: none">
                                     <div class="dashboard-card">

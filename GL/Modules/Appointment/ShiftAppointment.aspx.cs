@@ -107,7 +107,7 @@ namespace PMS
             {
                 var doctor = (from emp in db.HR_Employees
 
-                              where emp.Resign_Date == null && emp.IsDoctor == true            
+                              where emp.Resign_Date == null && emp.IsDoctor == true
                               select new { emp.Emp_ID, emp.Emp_Name }).ToList();
                 return (new JavaScriptSerializer()).Serialize(doctor);
             }
