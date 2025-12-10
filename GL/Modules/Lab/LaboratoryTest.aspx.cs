@@ -409,6 +409,10 @@ namespace PMS
                                 on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                 join lbTDdef in db.Lab_Tests
                                 on lbtD.Test_ID equals lbTDdef.Test_ID
+                                join abd in db.Ar_Billing_Details 
+                                on lbtD.Bill_Details_ID equals abd.Bill_Details_ID
+                                join ab in db.Ar_Billings on abd.Bill_ID equals ab.Bill_ID
+                                join r in db.Reg_patients on ab.Patient_ID equals r.pat_id
                                 where lbtM.Patient_ID == Convert.ToInt32(id)
                                 select new
                                 {
@@ -433,7 +437,9 @@ namespace PMS
                                     lbtD.Rotation_ID,
                                     lbtD.L_R_Rotation_ID,
                                     lbtD.Bill_Details_ID,
-                                    Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                               Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay                                                               Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+                                    r.mr_no_sequence,
+                                    ab.Bill_No,
+                                    Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay                                                               Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
                                 }
                 ).ToList();
             return (new JavaScriptSerializer()).Serialize(testDetailst);

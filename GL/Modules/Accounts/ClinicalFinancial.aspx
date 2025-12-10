@@ -8,6 +8,7 @@
         $(document).ready(function () {
             OPDloadSavedRows();
             DiagnosticloadSavedRows();
+            DiagnosticShareloadSavedRows();
             SpecialServicesloadSavedRows();
             EMERGENCYloadSavedRows();
             SERVICEloadSavedRows();
@@ -27,6 +28,7 @@
             let allData = [];
             let categoryNamesOPD = new Set();
             let categoryNamesDiagnostic = new Set();
+            let categoryNamesDiagnosticShare = new Set();
             let categoryNamesEMERGENCY = new Set();
             let categoryNamesSERVICE = new Set();
             let categoryNamesPHARMACY = new Set();
@@ -35,6 +37,7 @@
             let duplicateFound = false;
             let rowsOPD = $('#tableOPD .data-row');
             let rowsDiagnostic = $('#tableDiagnostic .data-row');
+            let rowsDiagnosticShare = $('#tableDiagnosticShare .data-row');
             let rowsSpecialService = $('#tableSpecialServices .data-row');
             let rowsProcedure = $('#tableProcedure .data-row');
             let rowsEMERGENCY = $('#tableEMERGENCY .data-row');
@@ -42,7 +45,7 @@
             let rowsPHARMACY = $('#tablePHARMACY .data-row');
 
             // Check if any rows exist
-            if (rowsOPD.length === 0 && rowsDiagnostic.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && rowsPHARMACY.length === 0) {
+            if (rowsOPD.length === 0 && rowsDiagnostic.length === 0 && rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && rowsPHARMACY.length === 0) {
                 isEmptyFound = true;
             }
 
@@ -90,6 +93,28 @@
                     categoryNamesDiagnostic.add(rowDataDiagnostic.categoryname);
                 }
                 allData.push(rowDataDiagnostic);
+            });
+            rowsDiagnosticShare.each(function () {
+                let row = $(this);
+                let rowDataDiagnosticShare = {
+
+                    financialdepartment: row.find('.financialDepartmentDiagnosticShare').val(),
+                    categoryname: row.find('.categorynameDiagnosticShare').val(),
+                    cashinhand: row.find('.cashinhandDiagnosticShare').val(),
+                    discount: row.find('.discountDiagnosticShare').val(),
+                    revenue: row.find('.revenueDiagnosticShare').val()
+                };
+                // Check if any value is empty
+                if (rowDataDiagnosticShare.categoryname == 0 || rowDataDiagnosticShare.cashinhand == 0 ) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesDiagnosticShare.has(rowDataDiagnosticShare.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesDiagnosticShare.add(rowDataDiagnosticShare.categoryname);
+                }
+                allData.push(rowDataDiagnosticShare);
             });
             rowsSpecialService.each(function () {
                 let row = $(this);
@@ -378,6 +403,69 @@
                                     $('.financialDepartmentDiagnostic option[value="002"]').prop('selected', true);
 
                                     $('#tableDiagnostic tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+
+        function DiagnosticShareloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsDiagnosticShare",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getMainTestDepartments(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+                                <tr class="data-row">
+                                    <td style="display: none">
+                                        <input type="hidden" class="financialDepartmentDiagnosticShare" value="${item.financialdepartment}"/>
+                                    </td>
+                                    <td>
+                                        <select class="categorynameDiagnosticShare select2select" style="background-color: white; height:32px;" disabled>
+                                            ${setSelected(categoryOptions, item.categoryname)}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="cashinhandDiagnosticShare select2select" style="background-color: white;" disabled>
+                                            ${setSelected(optionsVen, item.cashinhand)}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="discountDiagnosticShare select2select" style="background-color: white;" disabled>
+                                            ${setSelected(optionsVen, item.discount)}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="revenueDiagnosticShare select2select" style="background-color: white;" disabled>
+                                            ${setSelected(optionsVen, item.revenue)}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="removeRow(this)">
+                                            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                        </a>
+                                        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                        </a>
+                                    </td>
+                                </tr>`;
+
+                                    $('.financialDepartmentDiagnosticShare option[value="008"]').prop('selected', true);
+
+                                    $('#tableDiagnosticShare tbody').append(row);
                                 });
 
                                 $('.select2select').select2(); // reinit after DOM update
@@ -760,6 +848,51 @@
                         $('#tableOPD tbody').append(newRow);
                         $('.financialDepartmentOPD option[value="001"]').prop('selected', true);
                         $('.select2select').select2(); // initialize Select2
+                    });
+                });
+            });
+        }
+        function addNewRowDiagnosticShare() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getMainTestDepartments(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                         <input type = "hidden" class="financialDepartmentDiagnosticShare" value = "008">                   
+                    <td>
+                        <select class="categorynameDiagnosticShare select2select" style="background-color: white; height:32px;">
+                            ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="cashinhandDiagnosticShare select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="discountDiagnosticShare select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenueDiagnosticShare select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
+
+                    </td>
+                </tr>
+            `;
+                        $('#tableDiagnosticShare tbody').append(newRow);
+                        $('.financialDepartmentDiagnosticShare option[value="008"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                  
+
                     });
                 });
             });
@@ -1149,6 +1282,7 @@
             <li ><a href="#Tab-5">Pharmacy</a></li>
             <li><a href="#Tab-6">SpecialServices</a></li>
             <li><a href="#Tab-7">Procedure</a></li>
+            <li><a href="#Tab-8">Diagnostic Share</a></li>
 
         </ul>
 
@@ -1199,6 +1333,32 @@
                     </tr>
                 </thead>
                 <tbody id="tbodyDiagnostic">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="Tab-8">
+            <div class="row">
+
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrowDiagnosticShare" onclick="addNewRowDiagnosticShare()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
+                    </a>
+                </div>
+            </div>
+            <table id="tableDiagnosticShare" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+                <thead id="theadDiagnosticShare">
+                    <tr>
+                        <th style="display: none">Financial Department  </th>
+                        <th style="width: 16%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 25%;">Discount              </th>
+                        <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 9%;">Action                </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyDiagnosticShare">
                 </tbody>
             </table>
         </div>
