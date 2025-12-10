@@ -234,6 +234,7 @@
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
     <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
+    <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
     <Content Include="Modules\Dashboards\LabSection.aspx" />
@@ -241,6 +242,7 @@
     <Content Include="Modules\Dashboards\PharmacySection.aspx" />
     <Content Include="Modules\Dashboards\PurchaseSection.aspx" />
     <Content Include="Modules\Dashboards\ShortCuts.aspx" />
+    <Content Include="Modules\Inventory\AdvanceTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\BOM.aspx" />
     <Content Include="Modules\Inventory\BOM_View.aspx" />
     <Content Include="Modules\Inventory\PharmacyView.aspx" />
@@ -3788,6 +3790,7 @@
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.min.js" />
     <Content Include="upload\UploadEmergency.ashx" />
+    <Content Include="upload\UploadVoucherFiles.ashx" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -25881,6 +25884,13 @@
     <Compile Include="Modules\Dashboards\CEODashBorad.aspx.designer.cs">
       <DependentUpon>CEODashBorad.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Dashboards\DashPatientsCount.aspx.cs">
+      <DependentUpon>DashPatientsCount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\DashPatientsCount.aspx.designer.cs">
+      <DependentUpon>DashPatientsCount.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Dashboards\EMR.aspx.cs">
       <DependentUpon>EMR.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -25929,6 +25939,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\ShortCuts.aspx.designer.cs">
       <DependentUpon>ShortCuts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\AdvanceTaxDefinition.aspx.cs">
+      <DependentUpon>AdvanceTaxDefinition.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\AdvanceTaxDefinition.aspx.designer.cs">
+      <DependentUpon>AdvanceTaxDefinition.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Inventory\BOM.aspx.cs">
       <DependentUpon>BOM.aspx</DependentUpon>
@@ -28265,6 +28282,9 @@
     </Compile>
     <Compile Include="Modules\Others\VehicleView.aspx.designer.cs">
       <DependentUpon>VehicleView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\UploadVoucherFiles.ashx.cs">
+      <DependentUpon>UploadVoucherFiles.ashx</DependentUpon>
     </Compile>
     <Compile Include="upload\VouchersUpload.aspx.cs">
       <DependentUpon>VouchersUpload.aspx</DependentUpon>

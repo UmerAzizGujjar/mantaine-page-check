@@ -2434,15 +2434,17 @@ namespace PMS
                             data.Voucher_ID,
                             data.In_Patient_ID,
                             data.Referred_By,
+                            data.Bill_Category,
+                            data.Bill_Department,
+                            Bill_Department_text = db.GetDataValueName("Patient Main Category", data.Bill_Department),
+                            Bill_Category_text = db.GetDataValueName("Mode Of Registration", data.Bill_Category),
                             Patient_Discount_Type = (from tbl in db.In_Patients
                                                      where tbl.In_Patient_ID == data.In_Patient_ID
 
                                                      orderby tbl.Created_Time descending
                                                      select db.GetDataValueName("Patient Type", tbl.Patient_Discount_Type)).FirstOrDefault(),
 
-                            //Reffer_By_Doc = (from tbl in db.HR_Employees
-                            //                         where tbl.Emp_ID == Convert.ToInt32(data.Referred_By)
-                            //                         select tbl.Emp_Name).FirstOrDefault()
+                           
                         };
             //var Header = db.Ar_Billings.Where(bm => bm.Bill_ID == Bill_ID);
             return (new JavaScriptSerializer()).Serialize(query);

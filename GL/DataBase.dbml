@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="AsSiraat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NoorHospital_uat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3197,36 +3197,6 @@
       <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="GL_Account_GL_Account" Member="GL_Account2" ThisKey="Account_ID" OtherKey="Account_ID" Type="GL_Account" Cardinality="One" />
       <Association Name="GL_Account_GL_Account" Member="GL_Account1" ThisKey="Account_ID" OtherKey="Account_ID" Type="GL_Account" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.GL_Vouchers" Member="GL_Vouchers">
-    <Type Name="GL_Voucher">
-      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Voucher_No" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Voucher_Date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="Voucher_Type" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Voucher_Status" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Closing" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Period_ID" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Branch" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Pay_To_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Ref_Num" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Total_Debit" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Total_Credit" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Deleted_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Doc_No" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Test_Defination_Detail_Rates" Member="Test_Defination_Detail_Rates">
@@ -7051,11 +7021,8 @@
       <Column Name="pharmacy_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Casher" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Opd_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Approved_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="approve_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Main_Department" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="line_disc" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Main_Department" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="Previous_Balance" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="Previous_Paid" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="Total_Doctor_Share" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
@@ -7072,10 +7039,56 @@
       <Column Name="checked_by" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IsAssign_Doctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Pharma_trans_Type" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="CGS_Procedure_BOM" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Bill_Department" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Bill_Category" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Advance_Tax" Member="Advance_Taxes">
+    <Type Name="Advance_Tax">
+      <Column Name="Advance_Tax_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Advance_Tax_Perc" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Tax_Type" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Account_ID_Payable" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description_Payable" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Account_Code_Recvable" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description_Recvable" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="S_W_H_Tax" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GL_Vouchers" Member="GL_Vouchers">
+    <Type Name="GL_Voucher">
+      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Voucher_No" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Voucher_Date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Voucher_Type" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Voucher_Status" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Creation_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Closing" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Period_ID" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Branch" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Pay_To_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Ref_Num" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Total_Debit" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Total_Credit" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Deleted_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Doc_No" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -10806,6 +10819,32 @@
       <Column Name="Gender" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="Patient_ID1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Reg_PatId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Patients_Count" Method="sp_Patients_Count">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_Patients_CountResult">
+      <Column Name="Total_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+      <Column Name="Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Repeated_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+      <Column Name="Non_Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Non_Repeated_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.PatientsCount_DepartmentWise" Method="PatientsCount_DepartmentWise">
+    <Parameter Name="DepId" Parameter="depId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="PatientsCount_DepartmentWiseResult">
+      <Column Name="Patient_Main_Category" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="Total_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
+      <Column Name="Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Repeated_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
+      <Column Name="Non_Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="New_Patient_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

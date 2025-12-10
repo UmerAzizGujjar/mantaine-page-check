@@ -12,7 +12,8 @@
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
             GetWareHouseCondition();
-   
+
+            $("#CreatedByRow").hide();
            
                 $('#txtItem').tokenInput(function () {
                     if (warehouseCond == '01') {
@@ -82,6 +83,7 @@
                 LoadPurchaseRequistionMaster(id);
                 LoadPurchaseRequistionDetail(id);
                 $("#btnsave").val('Update');
+                $("#CreatedByRow").show();
             }
             setTimeout(function () {
                 var status = $('#txt_Status').val();
@@ -197,6 +199,8 @@
                     }).remove();
                 }
             });
+
+            
         });
 
         function appendGIRROW(anchor) {
@@ -881,12 +885,29 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    debugger;
                     var parse = JSON.parse(response.d);
                     $('#txtPr_Num').val(parse.PR_Num);
                     $('#txt_Status').val(parse.Status);
                     $('#txtRef_Num').val(parse.Ref_Num);
                     var datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(parse.PR_Date.substring(6, 19))))
                     $('#txtPR_Date').val(datetime);
+                    $('#txtCreatedBy').val(parse.Created_By);
+                    $('#txtUpatedBy').val(parse.UpdatedBy);
+
+                    var Createdtime = moment(parseInt(parse.Creation_Date.substring(6, 19))).format('DD-MMM-YYYY h:mm A');
+
+                    $('#txtCreatedTime').val(Createdtime);
+
+                    if (parse.Update_Date == null || parse.Update_Date == undefined) {
+
+                        $('#txtUpatedTime').val('');
+                    }
+                    else {
+                        var Updatedtime = moment(parseInt(parse.Update_Date.substring(6, 19))).format('DD-MMM-YYYY h:mm A');
+                        $('#txtUpatedTime').val(Updatedtime);
+                    }
+
                     setTimeout(function () {
                         $('#ddlPriority').val(parse.Priority).trigger('change');
                         $('#ddldept').val(parse.Department).trigger('change');
@@ -1174,6 +1195,24 @@
                 <label class="col-form-label">Attachment</label>
                 <input type="file" id="chosePrfile" name="chosePrfile" />
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+            </div>
+        </div>
+        <div class="row" id="CreatedByRow">
+            <div class="col-lg-2 col-md-3 col-sm-3">
+                <label id="lblCreatedBy">Created By</label>
+                <input id="txtCreatedBy" type="text" class="form-control" readonly="readonly" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-3">
+                <label id="lblCreatedTime">Created Date</label>
+                <input id="txtCreatedTime" type="text" class="form-control" readonly="readonly" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-3">
+                <label id="lblUpatedBy">Updated By</label>
+                <input id="txtUpatedBy" type="text" class="form-control" readonly="readonly" />
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-3">
+                <label id="lblUpatedTime">Updated Date</label>
+                <input id="txtUpatedTime" type="text" class="form-control" readonly="readonly" />
             </div>
         </div>
         <div class="row">

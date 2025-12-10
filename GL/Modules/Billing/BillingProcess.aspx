@@ -1174,6 +1174,21 @@
                     $('#txtOver_and_Above').val(data[0].Over_and_Above);
                     $('#txtcashinhand').val(data[0].Cash_In_Hand);
                     $('#txtbankcash').val(data[0].Bank_Cash);
+                    debugger;
+                    $('#BillDepartment').html(
+                        $('<option>', {
+                            value: data[0].Bill_Department,
+                            text: data[0].Bill_Department_text
+                        })
+                    );
+                    $('#BillDepartment').attr('disabled', true);
+                    $('#BillCategory').html(
+                        $('<option>', {
+                            value: data[0].Bill_Category,
+                            text: data[0].Bill_Category_text
+                        })
+                    );
+                    $('#BillCategory').attr('disabled', true);
                     var status = data[0].Status;
                     if (status === 'Approved') {
                         $('#btnPrintVoucher').show();
@@ -1207,9 +1222,14 @@
                         IPDDiscount = data[0].Patient_Discount_Type;
                         $('#lblPatientDiscountType').text(data[0].Patient_Discount_Type);
                     }
+
+
+
+
                     FillTokenInputForMRNo();
                     LoadBillDetails(Bill_ID);
                     LoadDoctorShare(Bill_ID);
+
                     $('#ddlReffered_By').val(data[0].Referred_By).trigger('change');
                 },
                     function (error) {
