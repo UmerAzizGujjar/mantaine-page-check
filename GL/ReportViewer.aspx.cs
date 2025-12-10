@@ -613,6 +613,44 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
                 rd.SetParameterValue("@DoctorID", doctorID);
             }
+            else if (reportName == "Counsltant_Day_Wise_report")
+            {
+                string rptFileName = "TransactionalDetails/rptCounsltant_Day_Wise_report.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string doctorID = Request.QueryString["DoctorID"].ToString();
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startdate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
+                rd.SetParameterValue("@DoctorID", doctorID);
+            }
+            else if (reportName == "Department_Wise_Statistics")
+            {
+                string rptFileName = "TransactionalDetails/rptDepartmentWiseStatics.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@FromDate", sqlStartDateTime);
+                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+            }
             else if (reportName == "Over_Summary_Shift_Wise")
             {
                 string rptFileName = "TransactionalDetails/OverSummaryShiftWise.rpt";

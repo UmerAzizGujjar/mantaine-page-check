@@ -724,6 +724,60 @@
 
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "Consultant_Wise_Statistics") {
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=Consultant_Wise_Statistics' +
+                            '&ReportTitle=Consultant Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) +
+                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val();
+                      
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Counsltant_Day_Wise_report") {
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=Consultant_Wise_Statistics' +
+                            '&ReportTitle=Consultant Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) +
+                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val();
+                      
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Department_Wise_Statistics") {
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=Department_Wise_Statistics' +
+                            '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime);
+        
+                        window.open(url, '_blank');
+                    }
+
                     else if (rptTitle == "DoctorWiseUltrasoundReport") {
                         debugger;
                      //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
