@@ -911,8 +911,8 @@ namespace PMS
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
+
         }
- 
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4940,6 +4940,20 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), patient_Id);
             return ((ISingleResult<sp_FillOutPatientFormResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Patients_Count")]
+        public ISingleResult<sp_Patients_CountResult> sp_Patients_Count([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
+            return ((ISingleResult<sp_Patients_CountResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.PatientsCount_DepartmentWise")]
+        public ISingleResult<PatientsCount_DepartmentWiseResult> PatientsCount_DepartmentWise([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "DepId", DbType = "VarChar(100)")] string depId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), depId, startDate, endDate);
+            return ((ISingleResult<PatientsCount_DepartmentWiseResult>)(result.ReturnValue));
         }
     }
 
@@ -204298,6 +204312,256 @@ namespace PMS
                 if ((this._Reg_PatId1 != value))
                 {
                     this._Reg_PatId1 = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_Patients_CountResult
+    {
+
+        private System.Nullable<int> _Total_Patients;
+
+        private System.Nullable<decimal> _Total_Receipt_Amount;
+
+        private System.Nullable<int> _Repeated_Patients;
+
+        private System.Nullable<decimal> _Repeated_Receipt_Amount;
+
+        private System.Nullable<int> _Non_Repeated_Patients;
+
+        private System.Nullable<decimal> _Non_Repeated_Receipt_Amount;
+
+        public sp_Patients_CountResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Patients", DbType = "Int")]
+        public System.Nullable<int> Total_Patients
+        {
+            get
+            {
+                return this._Total_Patients;
+            }
+            set
+            {
+                if ((this._Total_Patients != value))
+                {
+                    this._Total_Patients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Receipt_Amount", DbType = "Decimal(38,6)")]
+        public System.Nullable<decimal> Total_Receipt_Amount
+        {
+            get
+            {
+                return this._Total_Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Total_Receipt_Amount != value))
+                {
+                    this._Total_Receipt_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Repeated_Patients", DbType = "Int")]
+        public System.Nullable<int> Repeated_Patients
+        {
+            get
+            {
+                return this._Repeated_Patients;
+            }
+            set
+            {
+                if ((this._Repeated_Patients != value))
+                {
+                    this._Repeated_Patients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Repeated_Receipt_Amount", DbType = "Decimal(38,6)")]
+        public System.Nullable<decimal> Repeated_Receipt_Amount
+        {
+            get
+            {
+                return this._Repeated_Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Repeated_Receipt_Amount != value))
+                {
+                    this._Repeated_Receipt_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Non_Repeated_Patients", DbType = "Int")]
+        public System.Nullable<int> Non_Repeated_Patients
+        {
+            get
+            {
+                return this._Non_Repeated_Patients;
+            }
+            set
+            {
+                if ((this._Non_Repeated_Patients != value))
+                {
+                    this._Non_Repeated_Patients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Non_Repeated_Receipt_Amount", DbType = "Decimal(38,6)")]
+        public System.Nullable<decimal> Non_Repeated_Receipt_Amount
+        {
+            get
+            {
+                return this._Non_Repeated_Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Non_Repeated_Receipt_Amount != value))
+                {
+                    this._Non_Repeated_Receipt_Amount = value;
+                }
+            }
+        }
+    }
+
+    public partial class PatientsCount_DepartmentWiseResult
+    {
+
+        private string _Patient_Main_Category;
+
+        private System.Nullable<int> _Total_Patients;
+
+        private decimal _Total_Receipt_Amount;
+
+        private System.Nullable<int> _Repeated_Patients;
+
+        private decimal _Repeated_Receipt_Amount;
+
+        private System.Nullable<int> _Non_Repeated_Patients;
+
+        private decimal _New_Patient_Receipt_Amount;
+
+        public PatientsCount_DepartmentWiseResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Main_Category", DbType = "VarChar(30)")]
+        public string Patient_Main_Category
+        {
+            get
+            {
+                return this._Patient_Main_Category;
+            }
+            set
+            {
+                if ((this._Patient_Main_Category != value))
+                {
+                    this._Patient_Main_Category = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Patients", DbType = "Int")]
+        public System.Nullable<int> Total_Patients
+        {
+            get
+            {
+                return this._Total_Patients;
+            }
+            set
+            {
+                if ((this._Total_Patients != value))
+                {
+                    this._Total_Patients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
+        public decimal Total_Receipt_Amount
+        {
+            get
+            {
+                return this._Total_Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Total_Receipt_Amount != value))
+                {
+                    this._Total_Receipt_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Repeated_Patients", DbType = "Int")]
+        public System.Nullable<int> Repeated_Patients
+        {
+            get
+            {
+                return this._Repeated_Patients;
+            }
+            set
+            {
+                if ((this._Repeated_Patients != value))
+                {
+                    this._Repeated_Patients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Repeated_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
+        public decimal Repeated_Receipt_Amount
+        {
+            get
+            {
+                return this._Repeated_Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Repeated_Receipt_Amount != value))
+                {
+                    this._Repeated_Receipt_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Non_Repeated_Patients", DbType = "Int")]
+        public System.Nullable<int> Non_Repeated_Patients
+        {
+            get
+            {
+                return this._Non_Repeated_Patients;
+            }
+            set
+            {
+                if ((this._Non_Repeated_Patients != value))
+                {
+                    this._Non_Repeated_Patients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_New_Patient_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
+        public decimal New_Patient_Receipt_Amount
+        {
+            get
+            {
+                return this._New_Patient_Receipt_Amount;
+            }
+            set
+            {
+                if ((this._New_Patient_Receipt_Amount != value))
+                {
+                    this._New_Patient_Receipt_Amount = value;
                 }
             }
         }

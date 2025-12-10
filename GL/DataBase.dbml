@@ -10819,4 +10819,30 @@
       <Column Name="Reg_PatId1" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_Patients_Count" Method="sp_Patients_Count">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_Patients_CountResult">
+      <Column Name="Total_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+      <Column Name="Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Repeated_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+      <Column Name="Non_Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Non_Repeated_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.PatientsCount_DepartmentWise" Method="PatientsCount_DepartmentWise">
+    <Parameter Name="DepId" Parameter="depId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="PatientsCount_DepartmentWiseResult">
+      <Column Name="Patient_Main_Category" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="Total_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
+      <Column Name="Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Repeated_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
+      <Column Name="Non_Repeated_Patients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="New_Patient_Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
 </Database>
