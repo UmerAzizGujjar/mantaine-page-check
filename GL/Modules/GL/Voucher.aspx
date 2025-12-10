@@ -643,6 +643,29 @@
             $('#txt_creditamount').val(creditvalue);
             calculatedifference();
         }
+        function sendFile(ID) {
+            debugger;
+            var fileInput = $('#ChoseVoucherfile')[0];
+            if (fileInput.files.length > 0) {
+                debugger;
+                var data = new FormData();
+                data.append('file', $('#ChoseVoucherfile')[0].files[0]);
+                data.append('ID', ID);
+                $.ajax({
+                    type: 'post',
+                    url: '../UploadVoucherFiles.ashx',
+                    data: data,
+                    success: function (status) {
+
+                    },
+                    processData: false,
+                    contentType: false,
+                    error: function () {
+                        alert(" something went wrong!");
+                    }
+                });
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -684,10 +707,21 @@
                 </div>
             </div>
             <div class="row mt-3" style="margin-top:16px">
-                <div class="col-lg-12">
+                 <div class="col-lg-4 col-md-4 col-sm-4">
+                       <label>Vendor Name</label>
+                      <select id="ddlVendor" class="form-control form-control-sm">
+                          <option value="0">Please Select</option>
+                      </select>
+                 </div>
+                <div class="col-lg-5 col-md-5 col-sm-5">
                     <label>Description</label>
                     <textarea class="form-control" id="txt_descrip_master" rows="1" cols="20"></textarea>
                 </div>
+                <div class="col-lg-3">
+                     <label id="lb_Attachments" class="w115 fleft">Attachments</label>
+                     <input id="ChoseVoucherfile" type="file" name="ChoseVoucherfile" />
+                     <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+                 </div>
             </div>
         </div>
 

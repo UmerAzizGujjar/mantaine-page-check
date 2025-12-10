@@ -14,7 +14,21 @@ namespace PMS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            HyperLink1.Visible = false;
+            if (!IsPostBack)
+            {
+                if (Request.QueryString["VID"] != null)
+                {
+                    DataBaseDataContext db = new DataBaseDataContext();
+                    var getID = Request.QueryString["VID"];
+                    var gettype = (from a in db.GL_Vouchers where a.Voucher_ID == Convert.ToInt32(getID) select a.File_Path).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(gettype))
+                    {
+                        HyperLink1.NavigateUrl = gettype;
+                        HyperLink1.Visible = true;
+                    }
+                }
+            }
         }
         private class ddlListItems
         {
