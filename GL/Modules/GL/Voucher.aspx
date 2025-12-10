@@ -48,6 +48,7 @@
             $('#lblreference').hide();
             FillCostCenter();
             FillDepartment();
+            FillVendors();
         <% if (Request.QueryString["VID"] != null)
         { %>
             var VID = '<%= Request.QueryString["VID"]%>'
@@ -154,6 +155,9 @@
                 setTimeout(function () {
                     $('#ddl_brnch').val(data.Branch_DDL).trigger('change');
                 }, 1000);
+                setTimeout(function () {
+                    $('#ddlVendor').val(data.Vendor_ID).trigger('change');
+                }, 1000);
                 $('#txt_vcher_type').val(data.Voucher_Type);
                 $('#txt_date').val(txtdate);
                 $('#txt_Ptn').val(data.Pay_To_Name);
@@ -176,6 +180,17 @@
                 function (error) {
                     alert(error.get_message());
                 })
+        }
+        function FillVendors() {
+            PageMethods.getVendorDDLlist(function (Tests) {
+                debugger
+                optionsVen = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionsVen += '<option value="' + value.Vendor_ID + '" >' + value.Vendor_Name + '</option>';
+                });
+                $('#ddlVendor').html(optionsVen);
+                $('#ddlVendor').select2();
+            });
         }
         function LoadVoucherDetail(VID) {
             PageMethods.LoadVoucherChild(VID, function (resp) {
@@ -492,6 +507,7 @@
             var totaldebit = $('#txt_debit').val();
             var totalcredit = $('#txt_credit').val();
             var difference = $('#txt_diff').val();
+            var vendorID = $('#ddlVendor').val();
             if (difference > 0 || difference < 0) {
                 Swal.fire({
                     icon: 'error',
@@ -530,7 +546,7 @@
                 });
             });
             debugger;
-            var AllItemDetail = { 'Item_list': Item_list, 'editmode_voucherID': editmode_voucherID, 'voucherno': voucherno, 'type': type, 'txtdate': txtdate, 'txtptn': txtptn, 'descriptionmaster': descriptionmaster, 'refnum': refnum, 'totaldebit': totaldebit, 'totalcredit': totalcredit, 'status': status };
+            var AllItemDetail = { 'Item_list': Item_list, 'editmode_voucherID': editmode_voucherID, 'voucherno': voucherno, 'type': type, 'txtdate': txtdate, 'txtptn': txtptn, 'descriptionmaster': descriptionmaster, 'refnum': refnum, 'totaldebit': totaldebit, 'totalcredit': totalcredit, 'status': status, 'vendorID': vendorID };
             PageMethods.Savealldata(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
                 if (res == "Period closed for this month. You cannot add or edit Voucher.") {
@@ -561,7 +577,8 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
+                sendFile(res);
+           
                 var getype = '<% =Request.QueryString["VoucherType"] %>';
                 window.location.href = "Voucher.aspx?VoucherType=" + getype + "&VID=" + res;
             });
@@ -653,7 +670,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../UploadVoucherFiles.ashx',
+                    url: '/../upload/UploadVoucherFiles.ashx',
                     data: data,
                     success: function (status) {
 

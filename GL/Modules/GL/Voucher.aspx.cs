@@ -174,6 +174,7 @@ namespace PMS
                     lstItem.Voucher_Status = record.status;
                     lstItem.Ref_Num = record.refnum;
                     lstItem.Pay_To_Name = record.txtptn;
+                    lstItem.Vendor_ID = record.vendorID;
                     lstItem.Total_Credit = Convert.ToDecimal(record.totalcredit);
                     lstItem.Total_Debit = Convert.ToDecimal(record.totaldebit);
                     lstItem.Updated_By = AppConfig.UserID;
@@ -195,6 +196,7 @@ namespace PMS
                     gv.Voucher_Status = record.status;
                     gv.Ref_Num = record.refnum;
                     gv.Pay_To_Name = record.txtptn;
+                    gv.Vendor_ID = record.vendorID;
                     gv.Total_Credit = Convert.ToDecimal(record.totalcredit);
                     gv.Total_Debit = Convert.ToDecimal(record.totaldebit);
                     gv.Created_By = AppConfig.UserID;
@@ -282,6 +284,20 @@ namespace PMS
             }
             return voucherId.ToString();
         }
+        [WebMethod]
+        public static string getVendorDDLlist()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            AP_Vendor obj = new AP_Vendor();
+            var listItems = (from a in db.AP_Vendors
+                             where a.IsActive == true
+                             select new
+                             {
+                                 a.Vendor_ID,
+                                 a.Vendor_Name,
+                             }).ToList();
+            return (new JavaScriptSerializer()).Serialize(listItems);
+        }
         public class MasterList
         {
             public string editmode_voucherID { get; set; }
@@ -294,6 +310,7 @@ namespace PMS
             public string refnum { get; set; }
             public string totaldebit { get; set; }
             public string totalcredit { get; set; }
+            public int vendorID { get; set; }
             public List<DetailList> Item_List { get; set; }
         }
         public class DetailList
