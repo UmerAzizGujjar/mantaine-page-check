@@ -170,6 +170,7 @@ namespace PMS.AP
                               m.Disclaimer,
                               m.Status,
                               m.Total_ST_Amount,
+                              m.Total_Adv_Amt,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == m.Vendor_ID).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
@@ -197,12 +198,15 @@ namespace PMS.AP
                                d.Discount_Amount,
                                d.Discount_Percentage,
                                d.SalTax_Amount,
+                               d.AdvanceTax_Amount,
+                               m.Total_Adv_Amt,
                                d.Fed_Percentage,
                                d.Delivery_Date,
                                d.SalTax_Id,
                                d.FedPercent_Id,
                                d.PRDetailId,
                                d.CS_Ven_No,
+                               d.AdvanceTax_ID,
                                pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId)
                            }).ToList();
 
@@ -351,6 +355,7 @@ namespace PMS.AP
         {
             public string transtype { get; set; }
             public string txtst_amou { get; set; }
+            public string Adv_amount { get; set; }
             public string PO_ID { get; set; }
             public string txtcsmasterid { get; set; }
             public string Purchase_No { get; set; }
@@ -378,6 +383,8 @@ namespace PMS.AP
         {
             public string ItemCode { get; set; }
             public string ItemName { get; set; }
+
+            public string AdvanceTax_Amount { get; set; }
             public string Unit { get; set; }
             public string BatchNo { get; set; }
             public string ExpireDate { get; set; }
@@ -390,6 +397,7 @@ namespace PMS.AP
             public string SalTax_Amount { get; set; }
             public string FedPercentId { get; set; }
             public string SalTax_Id { get; set; }
+            public string AdvanceTax_ID { get; set; }
             public string Fed_Percentage { get; set; }
             public int PRDetailId { get; set; }
 
@@ -432,6 +440,10 @@ namespace PMS.AP
                     if (record.txtst_amou != "")
                     {
                         existingItem.Total_ST_Amount = Convert.ToDecimal(record.txtst_amou);
+                    }
+                    if (record.Adv_amount != "")
+                    {
+                        existingItem.Total_Adv_Amt = Convert.ToDecimal(record.Adv_amount);
                     }
                     if (record.DiscountAmount != "")
                     {
@@ -483,6 +495,10 @@ namespace PMS.AP
                 if (record.txtst_amou != "")
                 {
                     PO.Total_ST_Amount = Convert.ToDecimal(record.txtst_amou);
+                }
+                if (record.Adv_amount != "")
+                {
+                    PO.Total_Adv_Amt = Convert.ToDecimal(record.Adv_amount);
                 }
                 PO.PO_Date = Convert.ToDateTime(record.Purchase_Date);
                 PO.Due_Date = Convert.ToDateTime(record.Due_Date);

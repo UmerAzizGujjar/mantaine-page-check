@@ -162,8 +162,7 @@
                     '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="duplicate ddlSTAX" ><option value="0">0</option></select></td>' +
                     '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly"  id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
                     '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
-                    //'<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
-                    //'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
+                    '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
                     '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option>' + optionsList + '</select></td>' +
                     '<td style="padding-top: 7px!important;display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;  id="txtFedAmount' + length + '" name="txtFedAmount" style="width:50px !important;"></input></td>' +
                     '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
@@ -171,7 +170,9 @@
                     '<td  style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>');
 
                 populateTaxddl(length);
+                populateAdvanceTaxddl(length);
                 CulculateAmonutWithQty(length);
+                
                 length++;
                 $('input[name="txtddate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
                 calcTotal();
@@ -186,13 +187,16 @@
                 $('#ddlSTAX' + rowId).html(options);
             });
         }
-        function populateAdvanceTaxddl(rowId) {
+        function populateAdvanceTaxddl(rowId, callback) {
             PageMethods.getAdvanceTaxType(function (response) {
                 var options = '<option value="0">0</option>';
                 $.each(JSON.parse(response), function (key, value) {
                     options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
                 });
                 $('#ddlAdvanceTax' + rowId).html(options);
+                if (typeof callback === 'function') {
+                    callback(); 
+                }
             });
         }
         function httpGet(theUrl) {
@@ -410,6 +414,7 @@
                 $('#txtst_amou').val(data.Total_ST_Amount);
                 $('#ctl00_MainContent_txtStatus').val(data.Status);
                 LoadPOItemDetail(PO_ID);
+                $('#txtAdv_amou').val(data.Total_Adv_Amt);
             },
                 function (error) {
                     alert(error.get_message());
@@ -471,6 +476,10 @@
                         '<td style="padding-top: 7px!important;"><input type="hidden" style="padding-top: 7px!important;text-align:right!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="' + value.SalTax_Amount + '"  id="txtSalAmount' + (key + 1) + '" name="txtSalAmount" ></input></td>' +
                         '<td style="display:none;"><select id="ddlFed' + (key + 1) + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + optionFed + '</select></td>' +
                         '<td><select id="ddlAdvanceTax' + (key + 1) + '" name="ddlAdvanceTax" class="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;">' +
+                        '<option value="0">0</option>' +
+                        '</select></td>' +
+                        '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" ' +
+                        'value="' + value.AdvanceTax_Amount + '" id="txtAdvanceTaxAmount' + (key + 1) + '" name="txtAdvanceTaxAmount"></td>' +
                         '<td style="padding-top: 7px!important;display:none;"><input type="hidden" value="' + value.Fed_Percentage + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"  id="txtFedAmount' + (key + 1) + '" name="txtFedAmount" style="text-align:right ;width:59px !important;font-size:9px;height:20px;"></input>' + value.Fed_Percentage + '</td>' +
                         '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + value.Amount + '" readonly="readonly"  id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount"></input></td>' +
                         '<td><input type="text" name="txtddate" id="txtddate' + (key + 1) + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
@@ -486,6 +495,11 @@
                         $('#ddlAdvanceTax' + (key + 1)).val(value.AdvanceTax_ID).trigger('change');
                         $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
                         calcTotal();
+                    });
+                }, 4500);
+                setTimeout(function () {
+                    $.each(selectedOptions, function (key, value) {
+                        $('#txtAdvanceTaxAmount' + (key + 1)).val(value.AdvanceTax_Amount);
                     });
                 }, 4500);
                 var count = $('#tblItemDescription tr').length - 1;
@@ -753,25 +767,26 @@
             var subtotal = 0;
             var totalfinalamount = 0;
             var amountExclusiveTaxes = 0;
-
+            var totalAdvAmount = 0;
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 debugger;
                 var DiscAmount = parseFloat($($(value).find('td input[name=txtDisAmount]')[0]).val()) || 0;
+                if (DiscAmount < 0) {
+                    DiscAmount = 0;
+                    $($(value).find('td input[name=txtDisAmount]')[0]).val(DiscAmount);
+                }
                 var discpercent = 0;
                 var Rate = parseFloat($($(value).find('td input[name=txtRate]')[0]).val()) || 0;
                 var Qty = parseFloat($($(value).find('td input[name=txtQty]')[0]).val()) || 0;
-
                 if (Qty > 0 && Rate > 0) {
                     amountExclusiveTaxes = Qty * Rate;
                 }
-
                 if (amountExclusiveTaxes > 0) {
                     discpercent = parseFloat((DiscAmount / amountExclusiveTaxes) * 100).toFixed(2);
                 }
-
                 $($(value).find('td input[name=txtDisPer]')[0]).val(discpercent);
                 subtotal += amountExclusiveTaxes;
-                var selectedSTAX = $($(value).find('td select[name=ddlSTAX] :selected')[0]).val();
+                var selectedSTAX = $($(value).find('td select[name=ddlSTAX] :selected')[0]).text();
                 if (selectedSTAX) {
                     STpercent = parseFloat(selectedSTAX) || 0;
                 } else {
@@ -787,16 +802,18 @@
                 $($(value).find('td input[name=txtAdvanceTaxAmount]')[0]).val(AdvAmount.toFixed(2));
                 STAmount = parseFloat((STpercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 $($(value).find('td input[name=txtSalAmount]')[0]).val(STAmount.toFixed(2));
-                netAmount = parseFloat(amountExclusiveTaxes + STAmount - DiscAmount);
+                netAmount = parseFloat(amountExclusiveTaxes + STAmount + AdvAmount - DiscAmount);
                 $($(value).find('td input[name=txtTotalAmount]')[0]).val(netAmount.toFixed(2));
                 totamount += netAmount;
                 totalstamount += STAmount;
                 totalAdvAmount += AdvAmount;
                 TotalDiscAmount += DiscAmount;
                 totalfinalamount = totamount;
+
             });
             $('#txtSub_Total').val(subtotal.toFixed(2));
-            $('#txtst_amou').val(totalstamount.toFixed(2));
+            //$('#txtst_amou').val(totalstamount.toFixed(2));
+            $('#txtst_amou').val((totalstamount + totalAdvAmount).toFixed(2));
             $('#txtAdv_amou').val(totalAdvAmount.toFixed(2));
             var freightTotal = parseFloat($('#ctl00_MainContent_Freight').val()) || 0;
             var totalFinalAmt = totalfinalamount + freightTotal;
@@ -1033,6 +1050,7 @@
                 var transtype = $('#txttranstype').val();
                 var txtcsmasterid = $('#txtcsmasterid').val();
                 var txtst_amou = $('#txtst_amou').val();
+                var Adv_amount = $('#txtAdv_amou').val();
                 var Item_list = [];
                 debugger;
                 if (Purchase_No == "(New)" || Purchase_No == "")
@@ -1046,8 +1064,7 @@
                     }
                     else {
                         Item_list.push({
-                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(),
-                            'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val() ,'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(),
+                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(),
 
                         });
                     }
@@ -1071,7 +1088,7 @@
                     return false;
                 }
                 else {
-                    var AllItemDetail = { 'txtst_amou': txtst_amou, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse };
+                    var AllItemDetail = { 'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse };
                     PageMethods.SavePurchaseItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         sendFile(res);
