@@ -724,6 +724,24 @@
 
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "DoctorWiseUltrasoundReport") {
+                        debugger;
+                     //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+                        // Combine date + time into single strings (as your backend expects)
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+                        var url = 'ReportViewer.aspx?ReportName=DoctorWiseUltrasoundReport' +
+                            '&ReportTitle=Department Wise Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) +
+                            '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val();
+
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "Over_Summary_Shift_Wise") {
                         debugger;
                      //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
@@ -744,6 +762,19 @@
                             '&Shift=' + encodeURIComponent(ddlShift) +
                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
                             '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "ActiveItems") {
+                        debugger;
+                        var status = $('#ctl00_MainContent_ddlStatus').val();
+                        var itemFilter = $('#ctl00_MainContent_ddlItemFilter').val();
+
+
+                        var url = 'ReportViewer.aspx?ReportName=ActiveItems' +
+                            '&ReportTitle=Active Inventory Items Report from ' +
+                            '&Status=' + status +
+                            '&ItemFilter=' + itemFilter;
 
                         window.open(url, '_blank');
                     }
@@ -1070,7 +1101,7 @@
                         var url = 'ReportViewer.aspx?ReportName=DeptWisePatients&ReportTitle=Department Wise and Patient Wise Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Shift=' + ddlShift  + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + allPatientRecord + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blanks');
                     }
-                 
+                         
                     else if (rptTitle == "AllCash_Report") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=AllCashReport&ReportTitle=All Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
@@ -1337,6 +1368,26 @@
                 </div>
             </div>
         </div>
+        <div class="row mb-3" id="trStatus" runat="server" visible="false">
+    <div class="col-lg-3 col-md-4 col-sm-12">
+        <asp:Label ID="lblStatus" Text="Status" runat="server"></asp:Label>
+        <asp:DropDownList style="width:205px !important;" runat="server" ID="ddlStatus" AppendDataBoundItems="true">
+            <asp:ListItem Text="Both" Value="0"></asp:ListItem>
+            <asp:ListItem Text="Active" Value="1"></asp:ListItem>
+            <asp:ListItem Text="Inactive" Value="2"></asp:ListItem>
+        </asp:DropDownList>
+    </div>
+
+    <div class="col-lg-3 col-md-4 col-sm-12" id="trItemFilter" runat="server" visible="false">
+        <asp:Label ID="lblItemFilter" Text="Item Filter" runat="server"></asp:Label>
+        <asp:DropDownList style="width:205px !important;" runat="server" ID="ddlItemFilter" AppendDataBoundItems="true">
+            <asp:ListItem Text="Both" Value="0"></asp:ListItem>
+            <asp:ListItem Text="Pharmacy" Value="1"></asp:ListItem>
+            <asp:ListItem Text="Hospital" Value="2"></asp:ListItem>
+        </asp:DropDownList>
+    </div>
+</div>
+
         <div class="row mb-3">
             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_Summary" runat="server" visible="false">
                 <div class="form-check" style="display: inline-flex; width: 26px;">
