@@ -409,6 +409,10 @@ namespace PMS
                                 on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                 join lbTDdef in db.Lab_Tests
                                 on lbtD.Test_ID equals lbTDdef.Test_ID
+                                join abd in db.Ar_Billing_Details 
+                                on lbtD.Bill_Details_ID equals abd.Bill_Details_ID
+                                join ab in db.Ar_Billings on abd.Bill_ID equals ab.Bill_ID
+                                join r in db.Reg_patients on ab.Patient_ID equals r.pat_id
                                 where lbtM.Patient_ID == Convert.ToInt32(id)
                                 select new
                                 {
@@ -433,7 +437,9 @@ namespace PMS
                                     lbtD.Rotation_ID,
                                     lbtD.L_R_Rotation_ID,
                                     lbtD.Bill_Details_ID,
-                                    Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                               Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay                                                               Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+                                    r.mr_no_sequence,
+                                    ab.Bill_No,
+                                    Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay                                                               Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
                                 }
                 ).ToList();
             return (new JavaScriptSerializer()).Serialize(testDetailst);
@@ -727,13 +733,13 @@ namespace PMS
         [WebMethod]
         public static string AllPendingLabTestDetail(string DeptID)
         {
-
+            //int Patient_ID = DBClass.GetMRNOBy_PatientID(Convert.ToInt32(MRno));
             DataBaseDataContext db = new DataBaseDataContext();
             JavaScriptSerializer serl = new JavaScriptSerializer();
             DateTime startDate = System.DateTime.Now.AddMonths(-2);
             var Month = startDate.Month;
             DateTime endData = System.DateTime.Now.Date;
-
+            //DateTime dtTrailDate = new DateTime(2019, 12, 31);
             serl.MaxJsonLength = 2147483647;
 
 
@@ -838,100 +844,145 @@ namespace PMS
               ).ToList();
             */
             #endregion
+            //************ Load Front Desk Test with out Sample **************
+            //#region 'Comment Test of of with out sample '
+            //var testDetails_Billing_Without_Sample = (from lbtM in db.Laboratory_Tests
+            //                           join lbtD in db.Lab_Test_Details
+            //                           on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+            //                           join blng in db.Ar_Billings
+            //                           on lbtM.Patient_ID equals blng.Bill_ID
+            //                           join lbTDdef in db.Ar_Billing_Details
+            //                           on lbtD.Lab_Test_Detail_ID equals lbTDdef.ParentTrans_ID
+            //                           join paat in db.Patients
+            //                           on blng.Patient_ID equals paat.Patient_ID
+
+            //                            join labt in db.Lab_Tests
+            //                            on lbTDdef.Item_ID equals labt.Test_ID
+
+            //                           //join sd in db.Sample_Details
+            //                           //on lbTDdef.Bill_Details_ID equals sd.Bill_Detail_ID
+
+            //                           where 
+            //                           lbtM.Transaction_Type == "Front Desk" && lbtD.Recieved_ID == null
+            //                           && labt.Qty == 0
+            //                           && (blng.Bill_Date.Value.Date >= startDate && blng.Bill_Date <= endData)
+
+            //                           select new
+            //                           {
+            //                               lbtD.IsBilled,
+            //                               lbtD.Lab_Test_Detail_ID,
+            //                               lbtD.Date,
+            //                               lbtD.Remark,
+            //                               lbtD.Catagory_ID,
+            //                               lbtM.Lab_Test_ID,
+            //                               lbtD.Test_ID,
+            //                               lbtD.Recieved_ID,
+            //                               lbtM.Parent_Transaction_Type,
+            //                               lbtM.Parent_Transaction_Type_ID,
+            //                               blng.Bill_ID,
+            //                               lbtM.Transaction_Type,
+            //                               Doctor_ID = 0,
+            //                               lbTDdef.Category_ID,
+            //                               lbTDdef.Item_Name,
+
+            //                               chkPackages = "0",
+            //                               paat.Patient_No,
+            //                               paat.Entry_Date,
+            //                               paat.Created_Time,
+            //                               blng.Patient_ID,
+            //                               paat.Full_Name,
+            //                               Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
+            //                               Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select lbTDdef.Category_ID).FirstOrDefault(),
+            //                               DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                               Departments", t.Main_Department)).FirstOrDefault(),
+            //                               Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
+            //                               GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", lbTDdef.Category_ID)).FirstOrDefault(),
+            //                               Group_Name = db.GetDataValueName("Test Groups", lbTDdef.Category_ID),
+            //                               Rotation_ID = lbtD.Rotation_ID,
+            //                               Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                    Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+            //                               lbtD.Special_Tests,
+            //                               lbtD.Area_Of_Interest,
+            //                               haveSample = (from s in db.Sample_Details where s.Bill_Detail_ID == lbTDdef.Bill_Details_ID select s).Count() == 0 ? false : true,
+            //                               lbTDdef.Bill_Details_ID
+            //                           }
+            // ).ToList();
+            //#endregion
+            //************ Load Front Desk Test with sample **************
+            //var testDetails_Billing_Sample = (from lbtM in db.Laboratory_Tests
+            //                                  join lbtD in db.Lab_Test_Details
+            //                                  on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+            //                                  join blng in db.Ar_Billings
+            //                                  on lbtM.Patient_ID equals blng.Bill_ID
+            //                                  join lbTDdef in db.Ar_Billing_Details
+            //                                  on lbtD.Lab_Test_Detail_ID equals lbTDdef.ParentTrans_ID
+            //                                  join paat in db.Patients
+            //                                  on blng.Patient_ID equals paat.Patient_ID
+
+            //                                  join sd in db.Sample_Details
+            //                                  on lbTDdef.Bill_Details_ID equals sd.Bill_Detail_ID
+
+            //                                  //join labt in db.Lab_Tests
+            //                                  //on lbTDdef.Item_ID equals labt.Test_ID
+
+            //                                  where lbtM.Transaction_Type == "Front Desk" && lbtD.Recieved_ID == null && sd.Sample_Collected == true
+            //                          //blng.Bill_Date.Value.Date >= dtTrailDate.Date
+            //                          //&& lbTDdef.Test_Main_Department == "001"
+            //                          //&& labt.Qty == 1
+            //                          && (blng.Bill_Date >= startDate)
 
 
+            var testDetails_Billing_Sample = (from pat in db.Reg_patients
+                                              join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+                                              join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+                                              join lbtD in db.Lab_Test_Details on bill_details.ParentTrans_ID equals lbtD.Lab_Test_Detail_ID
+                                              join lbtM in db.Laboratory_Tests on lbtD.Lab_Test_ID equals lbtM.Lab_Test_ID
+                                              join sd in db.Sample_Details on bill_details.Bill_Details_ID equals sd.Bill_Detail_ID
+                                              where lbtM.Transaction_Type == "Front Desk" && lbtD.Recieved_ID == null && sd.Sample_Collected == true && (bill.isCancel == false || bill.isCancel == null)
+                                                && (bill.Bill_Date >= startDate)
+                                              orderby bill.Bill_Date descending
 
-                            var testDetails_Billing_Sample = (
-                            from pat in db.Reg_patients
-                            join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
-                            join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
-                            from lbtD in (
-                            from d in db.Lab_Test_Details
-                            where bill_details.Bill_Details_ID == d.BillDetailID
-                             || bill_details.ParentTrans_ID == d.Lab_Test_Detail_ID
-                            orderby
-                              (bill_details.Bill_Details_ID == d.BillDetailID ? 1 : 2),
-                              d.Lab_Test_Detail_ID
-                            select d
-                            ).Take(1).DefaultIfEmpty()
 
-                            join lbtM in db.Laboratory_Tests on lbtD.Lab_Test_ID equals lbtM.Lab_Test_ID
-                            join sd in db.Sample_Details on bill_details.Bill_Details_ID equals sd.Bill_Detail_ID
+                                              select new
+                                              {
+                                                  bill.Bill_No,
+                                                  lbtD.IsBilled,
+                                                  lbtD.Lab_Test_Detail_ID,
+                                                  lbtD.Date,
+                                                  lbtD.Remark,
+                                                  lbtD.Catagory_ID,
+                                                  lbtM.Lab_Test_ID,
+                                                  lbtD.Test_ID,
+                                                  lbtD.Recieved_ID,
+                                                  lbtM.Parent_Transaction_Type,
+                                                  lbtM.Parent_Transaction_Type_ID,
+                                                  bill.Bill_ID,
+                                                  lbtM.Transaction_Type,
+                                                  Doctor_ID = 0,
+                                                  bill_details.Category_ID,
+                                                  bill_details.Item_Name,
 
-                            where (
-                            bill_details.ParentTrans_Name == "Front Desk" ||
-                            bill_details.ParentTrans_Name == "OutPatient" ||
-                            bill_details.ParentTrans_Name == "EmergencyPatient" ||
-                            bill_details.ParentTrans_Name == "InPatient" ||
-                            bill_details.ParentTrans_Name == ""
-                            )
-                            && lbtD.Recieved_ID == null
-                            && sd.Sample_Collected == true
-                            && bill.Bill_Date >= startDate
+                                                  chkPackages = "0",
+                                                  pat.Patient_No,
+                                                  pat.Created_time,
 
-                            let sortOrder =
-                            bill_details.ParentTrans_Name == "EmergencyPatient" ? 1 :
-                            bill_details.ParentTrans_Name == "OutPatient" ? 2 :
-                            bill_details.ParentTrans_Name == "InPatient" ? 3 :
-                            bill_details.ParentTrans_Name == "Front Desk" ? 4 : 5
-
-                            orderby sortOrder, bill.Bill_Date descending
-
-                            select new
-                            {
-                                bill.Bill_No,
-                                lbtD.IsBilled,
-                                lbtD.Lab_Test_Detail_ID,
-                                lbtD.Date,
-                                lbtD.Remark,
-                                lbtD.Catagory_ID,
-                                lbtM.Lab_Test_ID,
-                                lbtD.Test_ID,
-                                lbtD.Recieved_ID,
-                                lbtM.Parent_Transaction_Type,
-                                lbtM.Parent_Transaction_Type_ID,
-                                bill.Bill_ID,
-                                Transaction_Type = (bill_details.ParentTrans_Name == null || bill_details.ParentTrans_Name == "")
-                                             ? "Front Desk" : bill_details.ParentTrans_Name,
-                                bill_details.ParentTrans_Name,
-                                Doctor_ID = 0,
-                                bill_details.Category_ID,
-                                bill_details.Item_Name,
-                                chkPackages = "0",
-                                pat.Patient_No,
-                                pat.Created_time,
-                                pat.pat_id,
-                                pat.Full_Name,
-                                sd.Remarks,
-                                Test_Name = (from t in db.Lab_Tests
-                                             where t.Test_ID == lbtD.Test_ID
-                                             select t.Test_Name).FirstOrDefault(),
-                                Group_Department = bill_details.Category_ID,
-                                DepartmentName = db.GetDataValueName("Main Test Departments",
-                                              (from t in db.Lab_Tests
-                                               where t.Test_ID == lbtD.Test_ID
-                                               select t.Main_Department).FirstOrDefault()),
-                                Department_ID = (from t in db.Lab_Tests
-                                                 where t.Test_ID == lbtD.Test_ID
-                                                 select t.Main_Department).FirstOrDefault(),
-                                GroupName = db.GetDataValueName("Test Groups", bill_details.Category_ID),
-                                Group_Name = db.GetDataValueName("Test Groups", bill_details.Category_ID),
-                                Rotation_ID = lbtD.Rotation_ID,
-                                Rotation = (db.GetDataValueName("Main Test Departments",
-                                      (from t in db.Lab_Tests
-                                       where t.Test_ID == lbtD.Test_ID
-                                       select t.Main_Department).FirstOrDefault()) == "X-Ray")
-                               ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID)
-                               : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
-                                lbtD.Special_Tests,
-                                lbtD.Area_Of_Interest,
-                                haveSample = db.Sample_Details.Any(s => s.Bill_Detail_ID == bill_details.Bill_Details_ID),
-                                bill_details.Bill_Details_ID
-                            }
-                            ).ToList();
-
+                                                  pat.pat_id,
+                                                  pat.Full_Name,
+                                                  sd.Remarks,
+                                                  Test_Name = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Test_Name).FirstOrDefault(),
+                                                  Group_Department = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select bill_details.Category_ID).FirstOrDefault(),
+                                                  DepartmentName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                               Departments", t.Main_Department)).FirstOrDefault(),
+                                                  Department_ID = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select t.Main_Department).FirstOrDefault(),
+                                                  GroupName = (from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Test Groups", bill_details.Category_ID)).FirstOrDefault(),
+                                                  Group_Name = db.GetDataValueName("Test Groups", bill_details.Category_ID),
+                                                  Rotation_ID = lbtD.Rotation_ID,
+                                                  Rotation = ((from t in db.Lab_Tests where t.Test_ID == lbtD.Test_ID select db.GetDataValueName("Main Test                                                    Departments", t.Main_Department)).FirstOrDefault()) == "X-Ray" ? db.GetDataValueName("Test XRay Rotations", lbtD.Rotation_ID) : db.GetDataValueName("Test CT Scan Rotations", lbtD.Rotation_ID),
+                                                  lbtD.Special_Tests,
+                                                  lbtD.Area_Of_Interest,
+                                                  haveSample = (from s in db.Sample_Details where s.Bill_Detail_ID == bill_details.Bill_Details_ID select s).Count() == 0 ? false : true,
+                                                  bill_details.Bill_Details_ID
+                                              }
+               ).ToList();
             List<PendingLabTestClass> list = new List<PendingLabTestClass>();
-
+            //****** OutPatients************
 
             #region 'Comment Area of Loading IPD and OPD TEst don't Delete This Region'
             /*
@@ -1045,7 +1096,46 @@ namespace PMS
             }
             */
             #endregion
-
+            //****** Front Desk with out sample************
+            //foreach (var item in testDetails_Billing_Without_Sample)
+            //{
+            //    PendingLabTestClass obj = new PendingLabTestClass();
+            //    if (item.IsBilled != null)
+            //        obj.IsBilled = (bool)item.IsBilled;
+            //    obj.Lab_Test_Detail_ID = item.Lab_Test_Detail_ID.ToString();
+            //    obj.Date = Convert.ToDateTime(item.Date).ToString();
+            //    obj.Catagory_ID = item.Catagory_ID;
+            //    obj.Test_ID = item.Test_ID;
+            //    obj.Lab_Test_ID = Convert.ToInt32(item.Lab_Test_ID).ToString();
+            //    obj.Recieved_ID = item.Recieved_ID;
+            //    obj.Parent_Transaction_Type = item.Parent_Transaction_Type;
+            //    obj.Parent_Transaction_Type_ID = item.Parent_Transaction_Type_ID.ToString();
+            //    obj.Bill_ID = item.Bill_ID.ToString();
+            //    obj.Transaction_Type = item.Transaction_Type;
+            //    obj.Doctor_ID = "0";
+            //    obj.Patient_No = (Int32)item.Patient_No;
+            //    obj.Patient_ID = item.Patient_ID.ToString();
+            //    obj.Name = item.Full_Name;
+            //    obj.chkPackages = "0";
+            //    obj.Test_Name = item.Test_Name;
+            //    obj.Group_Department = item.Group_Department;
+            //    obj.Group_Category = item.Category_ID;
+            //    obj.Bill_Details_ID = item.Bill_Details_ID;
+            //    obj.DepartmentName = item.DepartmentName;
+            //    obj.Department_ID = item.Department_ID;
+            //    obj.GroupName = item.Item_Name;
+            //    obj.Entry_Date = item.Created_Time.ToString();
+            //    if (item.Recieved_ID != null)
+            //        obj.Recieved_ID = item.Recieved_ID;
+            //    else
+            //        obj.Recieved_ID = "0";
+            //    obj.Rotation = "";
+            //    obj.Special_Tests = "";
+            //    obj.Area_Of_Interest = "";
+            //    if (obj.Department_ID == "001" || obj.Department_ID == null)
+            //        list.Add(obj);
+            //}
+            //****** Front Desk with sample************
             foreach (var item in testDetails_Billing_Sample)
             {
                 PendingLabTestClass obj = new PendingLabTestClass();
@@ -1086,7 +1176,57 @@ namespace PMS
                 if (obj.Department_ID == "001" || obj.Department_ID == null || obj.Department_ID == "005")
                     list.Add(obj);
             }
-
+            //List<PendingLabTestClass> AlltestListRefined = new List<PendingLabTestClass>();
+            //AlltestListRefined = list;
+            ////// Getting All Investigation Tests Group Categories
+            //var NoOfTestsCateWise = (from lbtsts in db.Lab_Tests
+            //                         where lbtsts.Group_Category != "" && lbtsts.Group_Category != null
+            //                         group lbtsts by lbtsts.Group_Category into g
+            //                         select new
+            //                         {
+            //                          CategoryID = g.Key,
+            //                          Category = db.GetDataValueName("Test Groups", g.Key),
+            //                          testsCount = g.Count(),
+            //                           MainDepartment = (from tbl in db.Lab_Tests
+            //                                             where tbl.Group_Category == g.Key
+            //                                             select new { DepartmentName = (db.GetDataValueName("Main Test Departments", tbl.Main_Department)                                                                 == null ? "" : db.GetDataValueName("Main Test Departments", tbl.Main_Department)) }
+            //                                               ).FirstOrDefault().DepartmentName.ToString()
+            //                         }
+            //                         ).ToList();
+            // foreach (var item in NoOfTestsCateWise)
+            // {
+            //     var Patient_ID = testDetails_Billing.Where(t => t.Group_Category == item.CategoryID).Select(t => t.Patient_ID).Distinct().ToList();
+            //      foreach (var itemyy in Patient_ID)
+            // {
+            //     var Bill_ID = testDetails_Billing.Where(t => t.Group_Category == item.CategoryID && t.Patient_ID == itemyy).Select(t => t.Bill_ID).Distinct                ().ToList();
+            //     foreach (var bill in Bill_ID)
+            // {
+            //int CatewisetestsCount = testDetails_Billing.Where(t => t.Group_Category == item.CategoryID && t.Patient_ID ==itemyy && t.Bill_ID==bill).Count();
+            //     if (CatewisetestsCount == item.testsCount)
+            //     {
+            //         var Receive = (testDetails_Billing.Where(t => t.Group_Category == item.CategoryID && t.Patient_ID == itemyy && t.Bill_ID == bill).Select                                 (t => t.Recieved_ID).FirstOrDefault());
+            //         if (Receive == null)
+            //             Receive = "0";
+            //         AlltestListRefined.RemoveAll(t => t.Group_Category == item.CategoryID && t.Patient_ID == itemyy.ToString());
+            //         AlltestListRefined.Add(new PendingLabTestClass()
+            //         {
+            //             GroupName = item.Category,
+            //             Test_ID = 0,
+            //             Catagory_ID = item.CategoryID,
+            //             Transaction_Type = "Front Desk",
+            //             IsBilled = true,
+            //             Patient_No = (int)(from i in db.Patients where i.Patient_ID == itemyy select i.Patient_No).FirstOrDefault(),
+            //             Patient_ID = itemyy.ToString(),
+            //             Name = (from i in db.Patients where i.Patient_ID == itemyy select i.Full_Name).FirstOrDefault(),
+            //             Lab_Test_ID = (testDetails_Billing.Where(r => r.Group_Category == item.CategoryID && r.Patient_ID == itemyy && r.Bill_ID==bill ).Select(r                        => r.Lab_Test_ID).FirstOrDefault()).ToString(),
+            //             Recieved_ID = Receive,
+            //             Doctor_ID = "",
+            //             chkPackages="0",
+            //         });
+            //     }
+            // }
+            // }
+            // }
             return serl.Serialize(list);
         }
 

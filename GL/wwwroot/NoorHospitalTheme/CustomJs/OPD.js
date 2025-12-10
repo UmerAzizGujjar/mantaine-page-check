@@ -24,6 +24,11 @@ $(document).ready(function () {
         $("#SearchEmergencyPatients").modal('show');
         FillEmergencyPatientsList();
     });
+
+    $('#txtReferEmergencySearch').off('input').on('input', function () {
+        FillReferPatientsList();
+    });
+
     $("#txtSearch").keypress(function (event) {
         debugger;
         var SearchString = $('#txtSearch').val();
@@ -1532,4 +1537,70 @@ function AddEmergencyPatientDetail(reg_id) {
 
 }
 
+
+
+
+function openReferPatientModal() {
+    $('#SearchReferPatients').modal('show');
+    FillReferPatientsList();
+}
+
+function FillReferPatientsList() {
+    var search = $('#txtReferEmergencySearch').val().trim();
+    $('#ReferPatientsBody').empty();
+    PageMethods.SearchPatients_Rff(search, OnFilterReferPatients, OnFailReferPatients);
+}
+
+function OnFilterReferPatients(data) {
+    var tbody = $('#ReferPatientsBody');
+    tbody.empty();
+
+    if (!data || data.length === 0) {
+        tbody.append('<tr><td colspan="7" class="text-center">No patients found.</td></tr>');
+        return;
+    }
+
+    $.each(data, function (i, pat) {
+        var row = '<tr>' +
+            '<td style="display:none;">' + pat.Reg_Patient_ID + '</td>' +
+            '<td>' + pat.Patient_No + '</td>' +
+            '<td>' + pat.Full_Name + '</td>' +
+            '<td>' + pat.Father_Name + '</td>' +
+            '<td>' + pat.NIC + '</td>' +
+            '<td>' + pat.Mobile1 + '</td>' +
+            '<td>' +
+            '<a class="tooltips" style="color:#438eb9; font-size:16px; display:flex; justify-content:center;" ' +
+            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\')">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '<span class="tooltiptxt">Select</span>' +
+            '</a>' +
+            '</td>' +
+            '</tr>';
+        tbody.append(row);
+    });
+}
+
+function OnFailReferPatients(error) {
+    console.error("Refer patient search failed:", error);
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to load referred patients.',
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+$('#txtReferEmergencySearch').off('input').on('input', function () {
+    FillReferPatientsList();
+});
+
+function AddReferPatientDetail(reg_id) {
+    try {
+        var isAdd = true;
+        window.location.href = "OPD.aspx?Reffered_id=" + reg_id + "&isAdd=" + isAdd;
+    } catch (err) {
+        alert(err.message);
+    }
+}
 

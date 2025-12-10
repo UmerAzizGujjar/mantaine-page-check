@@ -431,6 +431,7 @@
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
                         //alert(response)
+                        ApproveedLab();
                         $("[id$='_btnRefresh']").trigger('click');
                         $('#myModal').modal('hide');
                         $("#myModal tbody").empty();
@@ -700,7 +701,7 @@
                     var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
                         $('#myModal').modal('hide');
-
+                        ApproveedLab();
                         $('#result' + GroupCatID + '').text("View Result");
                     });
                 }
@@ -715,7 +716,7 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (data) {
-
+                            ApproveedLab();
                             //$('#mTestValue').val('');
                             $('#mTestDiagnosis').val('');
                             $('#mTestNotes').val('');
@@ -736,6 +737,31 @@
             FillGrowthInfo();
             GetTestDepartment();
         });
+
+        function ApproveedLab() {
+            debugger;
+            var BillId = '<% =Request.QueryString["Bill_ID"] %>';
+            PageMethods.approve_Bill(BillId, function (Tests) {
+                debugger
+                var message = JSON.parse(Tests);
+                if (message[0].Message != null || message[0].Message != "") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: message[0].Message,
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    //alert(message[0].Message);
+                    //location.reload();
+                }
+            });
+        }
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
             PageMethods.FillTestDepartment(function (data) {

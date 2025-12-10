@@ -52,6 +52,39 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
+        [WebMethod]
+        public static string PendingPatients()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                DateTime last24Hours = DateTime.Now.AddHours(-24);
+
+                var query =
+                    from ltd in db.Lab_Test_Details
+                    join lt in db.Laboratory_Tests
+                        on ltd.Lab_Test_ID equals lt.Lab_Test_ID
+                    join r in db.Reg_patients
+                        on ltd.Actual_Patient_ID equals r.pat_id
+                    where (ltd.IsBilled ?? false) == false
+                          && lt.Transaction_Type != "Front Desk"
+                          && lt.Created_Time >= last24Hours   // 🟢 Only last 24 hours
+                    select new
+                    {
+                        r.mr_no_sequence,
+                        r.Full_Name,
+                        r.Father_Name,
+                        r.Age_years,
+                        ltd.IsBilled,
+                        lt.Created_Time,
+                        ltd.Actual_Patient_ID
+                    };
+
+                var result = query.Distinct().ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
 
         [WebMethod]
         public static string GetGLAccounts()
@@ -457,6 +490,23 @@ namespace PMS
                        join v in db.ValueSets
                        on d.ValueSet_ID equals v.ValueSet_ID
                        where v.ValueSet_Name == "Mode Of Registration"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
+        }
+        [WebMethod]
+        public static string GetSubdepartments()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var Dis = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Patient Main Category"
                        select new
                        {
                            d.DataValue_Name,
@@ -1088,6 +1138,8 @@ namespace PMS
             newBill.Bank_Account = data.Bank_Account;
             newBill.Bank_Cash = data.Bank_Cash;
             newBill.Main_Department = data.Main_Department;
+            newBill.Bill_Department = data.BillDepartment;
+            newBill.Bill_Category = data.BillCategory;
             newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
 
             // Handle In-Patient logic
@@ -2253,6 +2305,8 @@ namespace PMS
             public int Opd_id { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
+            public string BillDepartment { get; set; }
+            public string BillCategory { get; set; }
             public string bomTotalValue { get; set; }
             public string PackageType { get; set; }
             public string Casher { get; set; }

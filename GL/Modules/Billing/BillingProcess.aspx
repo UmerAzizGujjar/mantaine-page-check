@@ -1062,6 +1062,30 @@
                     $('#txtMaindepartment').attr('disabled', true);
                 });
             }
+            function LoadBillDepartment() {
+                //var options = ''
+                PageMethods.GetSubdepartments(function (data) {
+                    var options = '<option value="0" >Please Select</option>';
+                    $.each(JSON.parse(data), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    });
+                    $('#BillDepartment').html(options);
+                    $('#BillDepartment').select2();
+                    //$('#BillDepartment').attr('disabled', true);
+                });
+            }
+            function LoadBillPatCategory() {
+                //var options = ''
+                PageMethods.GetMainDepartment(function (data) {
+                    var options = '<option value="0" >Please Select</option>';
+                    $.each(JSON.parse(data), function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                    });
+                    $('#BillCategory').html(options);
+                    $('#BillCategory').select2();
+                    //$('#BillDepartment').attr('disabled', true);
+                });
+            }
 
             function Share_Doctor() {
                 var doctorShareList = document.getElementById('Doctor_Share_Table');
@@ -1327,6 +1351,8 @@
                         debugger;
                         var PackageType = $('#hdn_pkgtype').val();
                         var PackageName = $('#hdn_pkgname').val();
+                        var BillDepartment = $('#BillDepartment').val();
+                        var BillCategory = $('#BillCategory').val();
                         var bomTotalValue = $('#bomTotalValue').val();
                         if (bomTotalValue == undefined || bomTotalValue == null || bomTotalValue == "") {
                             bomTotalValue=0.00
@@ -1496,7 +1522,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -5079,6 +5105,32 @@
                 }
 
             }
+
+            function openQueue() {
+                debugger;
+                fillPendingPatientsLists();
+                $('#queueModal').modal('show');
+            }
+            function fillPendingPatientsLists() {
+                PageMethods.PendingPatients(function (data) {
+                    debugger;
+                    var parsedData = JSON.parse(data);
+                    var rows = '';
+                    $.each(parsedData, function (key, value) {
+                        debugger;
+                        var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
+                        var retdate = moment(TrnsDate).format('LLLL');
+                        var status = '';                       
+                        rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=AddPatientDetail(' + value.Actual_Patient_ID + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
+                    });
+                    debugger;
+                    $('#tblPendingPatients tbody').html(rows);
+
+
+                    $(".se-pre-con").fadeOut("slow");
+
+                }, function (exec) { })
+            }
             function fillmartial() {
                 var options = '<option value="0">Please Select</option>';
                 PageMethods.GetMartailStatus(function (data) {
@@ -5418,6 +5470,8 @@
                 FillMainTestDepartment();
                 FillChargePolicy();
                 LoadMainDepartment();
+                LoadBillDepartment();
+                LoadBillPatCategory();
                 fillCashInHand();
                 AllowReceipeRights();
                 AllowRateEdit();
@@ -5476,6 +5530,9 @@
        <div class="row">
            <div class="col-md-2 text-end">
             <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />
+        </div>
+           <div class="col-md-2 text-end">
+               <input type="button" class="btn-primry" value="Queue" onclick="openQueue()" />
         </div>
        </div>
 
@@ -5663,10 +5720,20 @@
     </div>
     
         <div class="row">
-              <div class="col-md-6">
+              <div class="col-lg-3 col-md-3">
             <label for="txtRemarks">Remarks:</label>
                   <input type="text" id="txtRemarks" />
         </div>
+              <div class="col-lg-2">
+                  <label>Bill Department</label>
+                  <select id="BillDepartment">
+                   
+                  </select>
+              </div>
+              <div class="col-lg-2">
+                  <label>Bill Category</label>
+                  <select id="BillCategory" ></select>
+              </div>
                 <div class="col-lg-2">
                     <label>Package Type</label>
                     <input id="PackageType" type="text" readonly="readonly" />
@@ -5979,6 +6046,54 @@
             </div>
 
         </div>
+
+    <%--Patient Que Start--%>
+    <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="QueueList">
+                        <div class="row" style="margin-bottom: 15px">
+                           
+                            <div class="col-lg-2 text-end">
+                                <a onclick="fillPendingPatientsList()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                        <div class="table-responsive previewTable" style="overflow:auto;" >
+                            <table class="table table-bordered table-custom" id="tblPendingPatients">
+                                <thead id="ihead">
+                                    <tr>
+                                        <th>MR No</th>
+                                        <th>Patient Name</th>
+                                        <th>Age</th>
+                                        <th style="width: 173px;">Created Time</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ibody">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%--Patient Que Ends--%>
         <%--patient modal here--%>
 
           <div id="PatientModel" class="modal fade-in" role="dialog">
