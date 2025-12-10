@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infragistics.Documents.Reports.Report;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -135,6 +136,11 @@ namespace PMS.Inventory
                                       Approved_Date = GRN.Approved_Date,
                                       Vendor_Name = _dbContext.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(GRN.VendorId)).Select(po => po.Vendor_Name).FirstOrDefault().ToString(),
                                       Status = GRN.Status,
+                                      Creation_Date = GRN.Creation_Date,
+                                      Update_Date = GRN.Update_Date,
+                                      CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                      Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Updated_By).Select(x => x.UserName).FirstOrDefault(),
+                                     
                                       po_Number = _dbContext.GetPONumberagainstGRNID(GRN.GRN_ID),
                                       Igp_Number = _dbContext.GetIGPNumberagainstGRNID(GRN.GRN_ID),
                                   };

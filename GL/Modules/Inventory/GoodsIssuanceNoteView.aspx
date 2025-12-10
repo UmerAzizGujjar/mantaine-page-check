@@ -81,6 +81,14 @@
                     { "data": "WareHouse", "orderable": false },
                     { "data": "Requester", "orderable": false },
                     { "data": "Issuer", "orderable": false },
+                    { "data": "Updated_By", "orderable": false },  // ← NEW
+                    {
+                        "data": "Update_Time",
+                        "render": function (data, type, full) {
+                            return full.Update_Time ? moment(full.Update_Time).format('D-MMM-YYYY') : '';
+                        },
+                        "orderable": false
+                    },
                     { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
@@ -143,6 +151,8 @@
                     <th>WareHouse</th>
                     <th>Request BY</th>
                     <th>Issue BY</th>
+                    <th>Updated By</th>
+                    <th>Updated Time</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>

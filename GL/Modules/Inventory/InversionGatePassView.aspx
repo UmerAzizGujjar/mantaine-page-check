@@ -164,12 +164,19 @@
 
 
         function LoadPage() {
-            var table =  $("#tblResult").DataTable({
+            var table = $("#tblResult").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'InversionGatePass.aspx'; } }, 'copy', 'excel', 'pdf'],
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () { window.location = 'InversionGatePass.aspx'; }
+                    },
+                    'copy', 'excel', 'pdf'
+                ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -194,68 +201,77 @@
                             });
                         },
                         error: function (xhr, status, error) {
+                            console.error("AJAX Error:", error);
                             console.log(xhr.responseText);
                         }
                     });
                 },
                 "columns": [
                     { "data": "Igp_Id", "visible": false },
-                    { "data": "Igp_num", "name": "Igp_num","orderable": true },
+                    { "data": "Igp_num", "name": "Igp_num", "orderable": true },
                     {
                         "data": "Igp_date",
                         "render": function (data, type, full) {
-                            var date = full.Igp_date;
-                            date = moment(date).format(' D-MMM-YYYY');
-                            return date;
-                        }, "orderable": false
+                            return full.Igp_date ? moment(full.Igp_date).format('D-MMM-YYYY') : '';
+                        },
+                        "orderable": false
                     },
                     { "data": "VendorName", "orderable": false },
                     { "data": "PONum", "name": "PONum", "orderable": true },
                     { "data": "Remarks", "orderable": false },
+                    { "data": "VehicleNum", "orderable": false },  // ← NEW
+                    { "data": "CreatedBy", "orderable": false },   // ← NEW
+                    {
+                        "data": "Creation_Date",
+                        "render": function (data, type, full) {
+                            return full.Creation_Date ? moment(full.Creation_Date).format('D-MMM-YYYY') : '';
+                        },
+                        "orderable": false
+                    },  // ← NEW
+                    { "data": "Updated_By", "orderable": false },  // ← NEW
+                    {
+                        "data": "Update_Date",
+                        "render": function (data, type, full) {
+                            return full.Update_Date ? moment(full.Update_Date).format('D-MMM-YYYY') : '';
+                        },
+                        "orderable": false
+                    },  // ← NEW
                     { "data": "Status", "orderable": false },
                     { "data": "Inspec_Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             var inspecstatus = full.Inspec_Status != null ? full.Inspec_Status : "";
-                            var btnAutoGRNVisible = 'style="display:none;"';                          
+                            var btnAutoGRNVisible = 'style="display:none;"';
                             if (inspecstatus === "Approved") {
-                                console.log("Inspection Status :" + inspecstatus);
-                                console.log("IsAuto :" + full.IsAuto);
                                 if (full.IsAuto != "True") {
                                     btnAutoGRNVisible = '';
                                 }
                             }
 
-                            var res = '<a  href="#" onclick="Edit(' + full.Igp_Id + ')" class="editListBtn" style="border-radius: 4px;padding: 4px 11px 4px 11px;"><i class="fa fa-pencil"></i></a> <a class="editListBtn" href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px;padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
+                            var res = '<a href="#" onclick="Edit(' + full.Igp_Id + ')" class="editListBtn" style="border-radius: 4px;padding: 4px 11px 4px 11px;"><i class="fa fa-pencil"></i></a> ' +
+                                '<a class="editListBtn" href="#" onclick="AutoGRN(' + full.Igp_Id + ')" ' + btnAutoGRNVisible + ' style="border-radius: 4px;padding: 4px 11px 4px 11px;" name="btnAutoGRN" id="btnAutoGRN' + full.Igp_Id + '">Auto GRN</a>';
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintInwardGatePassDetail(' + full.Igp_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            var result;
-                            result = res + print;
-                            return result;
-
-                         }, "width": "15%", "orderable": false
+                            return res + print;
+                        },
+                        "width": "15%",
+                        "orderable": false
                     },
                     {
                         "render": function (data, type, full) {
-                            var inspecstatus = full.Inspec_Status != null ? full.Inspec_Status : "";    
+                            var inspecstatus = full.Inspec_Status != null ? full.Inspec_Status : "";
                             var viewGRNVisible = 'style="display:none;"';
-
-                            if (inspecstatus === "Approved") {
-                                console.log("Inspection Status :" + inspecstatus);
-                                console.log("IsAuto :" + full.IsAuto);
-                                if (full.IsAuto == "True") {
-                                    viewGRNVisible = '';
-                                }
-                            }                           
-                            var grnbtn = '<a class="editListBtn href="#" id="viewgrn' + full.Igp_Id + '" ' + viewGRNVisible + ' onclick="EditGRN(' + full.Grn_ID + ')" style="border-radius: 4px;padding: 4px 11px 4px 11px;"><i class="fa fa-pencil"></i></a>';
-
-                            return grnbtn;
-                        }, "orderable": false
+                            if (inspecstatus === "Approved" && full.IsAuto == "True") {
+                                viewGRNVisible = '';
+                            }
+                            return '<a class="editListBtn" href="#" id="viewgrn' + full.Igp_Id + '" ' + viewGRNVisible + ' onclick="EditGRN(' + full.Grn_ID + ')" style="border-radius: 4px;padding: 4px 11px 4px 11px;"><i class="fa fa-pencil"></i></a>';
+                        },
+                        "orderable": false
                     }
                 ],
-                     "rowCallback": function (row, data, index) {                  
+                "rowCallback": function (row, data, index) {
                     if (data.Status === "Created") {
-                        $(row).css('background-color', 'white'); 
+                        $(row).css('background-color', 'white');
                     } else if (data.Status === "Approved") {
                         $(row).css('background-color', '#ABEBC6');
                     } else if (data.Status === "Cancelled") {
@@ -284,16 +300,21 @@
                     }
                 }
             });
+
+            // Child row (detail) click handler — unchanged
             $('#tblResult tbody').on('click', 'tr', function () {
                 var row = table.row(this);
                 var data = row.data();
                 if (!data) return;
+
                 var id = data.Igp_Id;
+
                 if (row.child.isShown()) {
                     row.child.hide();
                     $(this).removeClass('shown');
                     return;
                 }
+
                 row.child('<div class="child-loading">Loading...</div>').show();
                 $(this).addClass('shown');
 
@@ -306,67 +327,73 @@
                     success: function (resp) {
                         var d = resp.d;
                         var html = `
-              <div class="child-container">                            
-                  <div class="col-sm-4 col-md-4 col-lg-3 child-col-left">
-                      <h5>Master Information</h5>
-                      <p><b>Invoice #:</b> ${d.Master.Number}</p>
-                      <p><b>Date:</b> ${moment(d.Master.Date).format("DD-MMM-YYYY")}</p>
-                      <p><b>Vendor:</b> ${d.Master.VendorName}</p>
-                      <p><b>Status:</b> ${d.Master.Status}</p>
-                      <p><b>Remarks:</b> ${d.Master.Remarks}</p>
-                  </div>                           
-                  <div class="col-sm-9 col-md-4 col-lg-9">
-                      <h5>Invoice Details</h5>
-                       <div class="table-wrapper">
-                      <table class="child-table" id="detailTable_${id}">
-                          <thead>
-                              <tr>
-                                  <th>Item Code</th>
-                                  <th>Item</th>
-                                  <th>PO Qty</th>
-                                  <th>Blnc Qty</th>
-                                  <th>IGP Qty</th>
-                                  <th>Inspec Qty</th>
-                              </tr>
-                          </thead>
-                          <tbody></tbody>
-                      </table>   
-                      </div>
-                      <h5 class="mt-3">Audit Information</h5>
-                      <table class="child-table" id="otherTable_${id}">
-                          <thead>
-                              <tr>
-                                  <th>Type</th>
-                                  <th>Number</th>
-                                  <th>Date</th>
-                                  <th>Status</th>
-                                  <th>View</th>
-                              </tr>
-                          </thead>
-                          <tbody></tbody>
-                      </table>                           
-                  </div>                            
-              </div>`;
+                    <div class="child-container">                            
+                        <div class="col-sm-4 col-md-4 col-lg-3 child-col-left">
+                            <h5>Master Information</h5>
+                            <p><b>Invoice #:</b> ${d.Master.Number}</p>
+                            <p><b>Date:</b> ${d.Master.Date ? moment(d.Master.Date).format("DD-MMM-YYYY") : ''}</p>
+                            <p><b>Vendor:</b> ${d.Master.VendorName}</p>
+                            <p><b>Status:</b> ${d.Master.Status}</p>
+                            <p><b>Remarks:</b> ${d.Master.Remarks || ''}</p>
+                        </div>                           
+                        <div class="col-sm-9 col-md-4 col-lg-9">
+                            <h5>Invoice Details</h5>
+                            <div class="table-wrapper">
+                                <table class="child-table" id="detailTable_${id}">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Code</th>
+                                            <th>Item</th>
+                                            <th>PO Qty</th>
+                                            <th>Blnc Qty</th>
+                                            <th>IGP Qty</th>
+                                            <th>Inspec Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>   
+                            </div>
+                            <h5 class="mt-3">Audit Information</h5>
+                            <table class="child-table" id="otherTable_${id}">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Number</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>                           
+                        </div>                            
+                    </div>`;
 
                         row.child(html).show();
-                        $.each(d.Detail, function (i, item) {
+
+                        // Populate detail table
+                        $.each(d.Detail || [], function (i, item) {
                             $("#detailTable_" + id + " tbody").append(`
-                <tr>
-                    <td>${item.Item_Code}</td>
-                    <td>${item.Description}</td>
-                    <td>${item.POQty}</td>
-                    <td>${item.BlncQty}</td>
-                    <td>${item.IGPQty}</td>
-                    <td>${item.InspecQty}</td>
-                </tr>
-               `);
+                        <tr>
+                            <td>${item.Item_Code || ''}</td>
+                            <td>${item.Description || ''}</td>
+                            <td>${item.POQty || 0}</td>
+                            <td>${item.BlncQty || 0}</td>
+                            <td>${item.IGPQty || 0}</td>
+                            <td>${item.InspecQty || 0}</td>
+                        </tr>
+                    `);
                         });
+
                         LoadAuditInfo(id);
+                    },
+                    error: function (xhr, status, err) {
+                        row.child('<div class="text-danger">Failed to load details.</div>').show();
+                        console.error("Detail load error:", err);
                     }
                 });
-
             });
-        } 
+        }
         function LoadAuditInfo(id) {
 
             $.ajax({
@@ -431,6 +458,11 @@
                     <th>Vendor Name</th>
                     <th>PO #</th>
                     <th>Remarks</th>
+                    <th>Vehicle #</th>
+                    <th>Created By</th>
+                    <th>Created Date</th>
+                    <th>Updated By</th>
+                    <th>Updated Date</th>
                     <th>Status</th>
                     <th>Inspec</th>
                     <th>Actions</th>

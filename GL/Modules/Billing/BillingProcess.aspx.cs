@@ -498,6 +498,23 @@ namespace PMS
 
             return (new JavaScriptSerializer().Serialize(Dis));
         }
+        [WebMethod]
+        public static string GetSubdepartments()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var Dis = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Patient Main Category"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
+        }
 
         //changes for opd
         [WebMethod]
@@ -2286,6 +2303,8 @@ namespace PMS
             public int Opd_id { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
+            public string BillDepartment { get; set; }
+            public string BillCategory { get; set; }
             public string bomTotalValue { get; set; }
             public string PackageType { get; set; }
             public string Casher { get; set; }
