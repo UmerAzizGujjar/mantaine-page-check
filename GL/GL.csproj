@@ -3789,6 +3789,9 @@
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.min.js" />
     <Content Include="upload\UploadEmergency.ashx" />
+    <Content Include="obj\Release\Package\PackageTmp\DataBase.dbml.layout">
+      <DependentUpon>DataBase.dbml</DependentUpon>
+    </Content>
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -28424,6 +28427,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IGPFileImages\" />
+    <Folder Include="obj\Release\Package\PackageTmp\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Reports\Billings\" />
     <Folder Include="Reports\InventoryModules\" />
