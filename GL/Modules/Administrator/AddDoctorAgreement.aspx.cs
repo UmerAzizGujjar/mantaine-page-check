@@ -478,12 +478,11 @@ namespace PMS.Inventory
         [WebMethod]
         public static string LoadLabTests()
         {
-            string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = (from data in db.Lab_Tests
                              where data.Main_Department == "001"
-                             && data.Active == true
+                                   && data.Active == true
                              orderby data.Test_ID descending
                              select new
                              {
@@ -492,10 +491,29 @@ namespace PMS.Inventory
                                  data.Test_ID,
                                  data.Main_Department
                              }).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+
+                var GroupTest = (from data in db.DataValues
+                                 where data.ValueSet_ID == 70
+                                       && data.Division == "001"
+                                 select new
+                                 {
+                                     Test_Name = data.DataValue_Description,
+                                     Rate = data.Segment1,
+                                     Test_ID = data.DataValue_ID,
+                                     Main_Department = data.Division
+                                 }).ToList();
+
+                // Return both in one JSON object
+                var result = new
+                {
+                    LabTests = query,
+                    GroupTests = GroupTest
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
             }
-            return result;
         }
+
         [WebMethod]
         public static string Load_MRI()
         {

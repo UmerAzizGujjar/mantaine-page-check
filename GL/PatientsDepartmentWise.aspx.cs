@@ -40,28 +40,11 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
-                else if (PageTitle == "CONSULTANT_Wise_Statistics")
-                {
-                    optRw.Visible = false;
-                    tr_Summary.Visible = false;
-                    ddlDepartments.Visible = false;
-                    ddlDoctor.Visible = true;
-                    trDoctor.Visible = true;
-                    tr_Export.Visible = false;
-                    lbservieType.Visible = false;
-                    ddlReportType.Visible = false;
-                    dpROw.Visible = false;
-                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
-                    ddlDoctor.DataSource = dt;
-                    ddlDoctor.DataValueField = "Emp_ID";
-                    ddlDoctor.DataTextField = "Emp_Name";
-                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
-                    ddlDoctor.DataBind();
-
-                }
                 else if (PageTitle == "Counsltant_Day_Wise_report")
                 {
                     optRw.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
                     tr_Summary.Visible = false;
                     ddlDepartments.Visible = false;
                     ddlDoctor.Visible = true;
@@ -213,6 +196,104 @@ namespace PMS
                     lblMultiSelect.Visible = false;
 
                 }
+                else if (this.PageTitle == "Consultant_Wise_Statistics")
+                {
+                    string x = "Consultant Wise Statistics";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    tr_Summary.Visible = false;      // changed
+                    lblMultiSelect.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+     
+
+                    trDoctor.Visible = true;
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
+
+                }
+                else if (this.PageTitle == "Counsltant_Day_Wise_report")
+                {
+                    string x = "Consultant Day Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    tr_Summary.Visible = false;      // changed
+                    lblMultiSelect.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+     
+
+                    trDoctor.Visible = true;
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
+
+                }
+                else if (this.PageTitle == "Department_Wise_Statistics")
+                {
+                    string x = "Department Wise Statistics";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    tr_Summary.Visible = false;      // changed
+                    lblMultiSelect.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+ 
+
+                }
+
+                else if (this.PageTitle == "DoctorWiseUltrasoundReport")
+                {
+                    string x = "Radiology Statistics Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    tr_Summary.Visible = false;      // changed
+                    lblMultiSelect.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+                    
+                    lboperator.Visible = false;
+                    ddloprators.Visible = false;
+
+    
+                    trDoctor.Visible = true;
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
+
+                }
               
                 else if (this.PageTitle == "Over_Summary_Shift_Wise")
                 {
@@ -255,6 +336,26 @@ namespace PMS
                     ddlShift.Items.Add(new ListItem("Morning", "2"));
                     ddlShift.Items.Add(new ListItem("Evening", "3"));
                     ddlShift.Items.Add(new ListItem("Night", "4"));
+                }
+                else if (this.PageTitle == "ActiveItems")
+                {
+                    string x = "Active Inventory Items Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Text = "Operators";
+                    DateDiv.Visible = false;
+                    Time_Row.Visible = false;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+                    lboperator.Visible = false;
+                    ddloprators.Visible = false;
+                    trStatus.Visible = true;
+                    trItemFilter.Visible = true;
                 }
 
                 if (this.PageTitle == "DepartmentWiseReport")

@@ -3790,6 +3790,7 @@
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.min.js" />
     <Content Include="upload\UploadEmergency.ashx" />
+    <Content Include="upload\UploadVoucherFiles.ashx" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -28281,6 +28282,9 @@
     </Compile>
     <Compile Include="Modules\Others\VehicleView.aspx.designer.cs">
       <DependentUpon>VehicleView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\UploadVoucherFiles.ashx.cs">
+      <DependentUpon>UploadVoucherFiles.ashx</DependentUpon>
     </Compile>
     <Compile Include="upload\VouchersUpload.aspx.cs">
       <DependentUpon>VouchersUpload.aspx</DependentUpon>
