@@ -627,7 +627,7 @@ namespace PMS.Inventory
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = (from data in db.INV_Items
-                             where data.Item_Type == "002"
+                             where data.Services == true
                              orderby data.Item_ID descending
                              select new
                              {
