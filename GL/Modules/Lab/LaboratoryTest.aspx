@@ -380,12 +380,12 @@
                             value.mainDepartmentName = "";
                         if (value.Is_Result == true) {
                             result = "View Result";
-                            rows += '<tr><td><input type="hidden" name="testID" value="' + value.Lab_Test_Detail_ID + '" />' + CDate + '</td><td>' + RDate + '</td><td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' + value.mainDepartmentName + ',' + value.Test_Name + ',' + value.Rotation + ',' + value.L_R_Rotation_ID + '</td><td>' + value.Test_Collected_By + '</td><td><a href="javascript:void(0)"onclick="EditData(' + value.Lab_Test_Detail_ID + ')" id="result" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + result + '</a></td></tr>';
+                            rows += '<tr><td><input type="hidden" name="testID" value="' + value.Lab_Test_Detail_ID + '" />' + CDate + '</td><td>' + RDate + '</td><td><input type="hidden" name="Bill_No" value="' + value.Bill_No + '" />' + value.Bill_No + '</td><td><input type="hidden" name="Patid" value="' + value.mr_no_sequence + '" />' + value.mr_no_sequence + '</td><td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' + value.mainDepartmentName + ',' + value.Test_Name + ',' + value.Rotation + ',' + value.L_R_Rotation_ID + '</td><td>' + value.Test_Collected_By + '</td><td><a href="javascript:void(0)"onclick="EditData(' + value.Lab_Test_Detail_ID + ')" id="result" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + result + '</a></td></tr>';
                         }
                         else {
 
                             result = "Waiting"
-                            rows += '<tr><td><input type="hidden" name="testID" value="' + value.Lab_Test_Detail_ID + '" />' + CDate + '</td><td>' + RDate + '</td><td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' + value.mainDepartmentName + ',' + value.Test_Name + ',' + value.Rotation + ',' + value.L_R_Rotation_ID + '</td><td>' + value.Test_Collected_By + '</td><td>' + result + '</td></tr>';
+                            rows += '<tr><td><input type="hidden" name="testID" value="' + value.Lab_Test_Detail_ID + '" />' + CDate + '</td><td>' + RDate + '</td><td><input type="hidden" name="Bill_No" value="' + value.Bill_No + '" />' + value.Bill_No + '</td><td><input type="hidden" name="Patid" value="' + value.mr_no_sequence + '" />' + value.mr_no_sequence + '</td><td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' + value.mainDepartmentName + ',' + value.Test_Name + ',' + value.Rotation + ',' + value.L_R_Rotation_ID + '</td><td>' + value.Test_Collected_By + '</td><td>' + result + '</td></tr>';
                         }
                     });
                     $('#tblHistoryTests tbody tr').remove();
@@ -1754,9 +1754,7 @@
                    </div>
                 <div class="row">
                       <div class="table-responsive" style="width: 100%; overflow: scroll; height: 300px;">
-                <table style="margin-left: -3px; margin-top: 5px;">
-                    <tr>
-                        <td>                     
+                
                                <table class="table" id="tblHistoryTests">
                                     <thead>
                                         <tr>
@@ -1769,6 +1767,8 @@
                                         <tr>
                                             <th>Test Collected Date</th>
                                             <th>Test Ready Date</th>
+                                            <th>Bill No</th>
+                                            <th>Mr NO</th>
                                             <th style="width: 563px">Test Name</th>
                                             <th>Test Collected By</th>
                                             <th>Result</th>
@@ -1777,10 +1777,7 @@
                                     <tbody id="testbody">
                                     </tbody>
                                 </table>
-                          
-                        </td>
-                    </tr>
-                </table>
+
                     </div>
                 </div>
                  
