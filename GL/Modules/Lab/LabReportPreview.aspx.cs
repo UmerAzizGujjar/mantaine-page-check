@@ -361,7 +361,7 @@ namespace PMS
         {
             var user_id = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.SpApproveBillingProcess(Convert.ToInt32(labtestID), user_id);
+            var Details = db.SpApproveLabShare(Convert.ToInt32(labtestID), user_id);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 

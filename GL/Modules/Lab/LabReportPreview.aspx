@@ -435,7 +435,7 @@
                 var Lab_ID = 0;
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
                 if (test_list.length > 0) {
-                    let singleTest = [test_list[0]];
+                    let singleTest = test_list[0].TestDID;
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
                         debugger;
                         ApproveLab(singleTest);

@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "NoorHospital_uat")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Uat")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -912,6 +912,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4953,6 +4954,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), depId, startDate, endDate);
             return ((ISingleResult<PatientsCount_DepartmentWiseResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApproveLabShare")]
+        public ISingleResult<SpApproveLabShareResult> SpApproveLabShare([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> lab_Test_Detail_Id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), lab_Test_Detail_Id, user_id);
+            return ((ISingleResult<SpApproveLabShareResult>)(result.ReturnValue));
         }
     }
 
@@ -204609,6 +204617,50 @@ namespace PMS
                 if ((this._New_Patient_Receipt_Amount != value))
                 {
                     this._New_Patient_Receipt_Amount = value;
+                }
+            }
+        }
+    }
+
+    public partial class SpApproveLabShareResult
+    {
+
+        private string _Message;
+
+        private System.Nullable<long> _VoucherID;
+
+        public SpApproveLabShareResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(29) NOT NULL", CanBeNull = false)]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VoucherID", DbType = "BigInt")]
+        public System.Nullable<long> VoucherID
+        {
+            get
+            {
+                return this._VoucherID;
+            }
+            set
+            {
+                if ((this._VoucherID != value))
+                {
+                    this._VoucherID = value;
                 }
             }
         }
