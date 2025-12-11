@@ -237,6 +237,7 @@
     <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
+    <Content Include="Modules\Dashboards\Inventory_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\LabSection.aspx" />
     <Content Include="Modules\Dashboards\NewEMR.aspx" />
     <Content Include="Modules\Dashboards\PharmacySection.aspx" />
@@ -25905,6 +25906,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\InventorySection.aspx.designer.cs">
       <DependentUpon>InventorySection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Inventory_Dashboard.aspx.cs">
+      <DependentUpon>Inventory_Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Inventory_Dashboard.aspx.designer.cs">
+      <DependentUpon>Inventory_Dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\LabSection.aspx.cs">
       <DependentUpon>LabSection.aspx</DependentUpon>
