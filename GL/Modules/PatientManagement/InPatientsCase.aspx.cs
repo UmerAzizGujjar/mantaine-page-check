@@ -1231,9 +1231,13 @@ namespace PMS
 
                     //**********************Discharge Tab **********************//
                     ddlDischarge_By.SelectedValue = qry.Discharge_By;
-                   // ddlDischarge_Type.SelectedValue = qry.Discharge_Type;
+                    ddlDischarge_Type.SelectedValue = qry.Discharge_Type;
                     txtProcedure_Operation.Text = qry.Procedure_Operation;
-                   // DischargeRequest.Text = qry.Discharge_Request;
+                     //qry.Discharge_Request;
+                    if (qry.Discharge_Request == true)
+                    {
+                        DischargeRequest.Value = "true";
+                    }
                     txtMedication.Text = qry.Diagonosis;
                     txtBilling.Text = qry.Procedure_Detail;
                     txtPrevention_Precaution.Text = qry.Prevention_Precaution;

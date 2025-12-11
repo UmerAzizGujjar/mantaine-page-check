@@ -2206,7 +2206,7 @@
             var Doctor_Notes = toHtml('#ctl00_MainContent_txtDoctoNotes');
             var ID = '<%= Request.QueryString["ID"]%>';
             debugger;
-            var Discharge_Request = $("#DischargeRequest").val()
+            var Discharge_Request = $("#ctl00_MainContent_DischargeRequest").val()
             var ddlDischarge_Type = $('#ctl00_MainContent_ddlDischarge_Type').val();
             if (Discharge_Request == 'false') {
                 Discharge_Request = false
@@ -9535,7 +9535,7 @@
                                                      </div>
                                                      <div class="col-lg-2 col-md-3 col-sm-12">
                                                          <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
-                                                         <input type="hidden" runat="server" id="DischargeRequest" value='false'>
+                                                         <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
                                                      </div>
                                                  </div>
                                              </div>
