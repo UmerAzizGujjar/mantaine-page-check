@@ -294,6 +294,7 @@
                         '<td style="display:none">' + Test[i].Stax + '</td>' +
                         '<td style="display:none">' + parseFloat(Test[i].sTaxAmount).toFixed() + '</td>' +
                         '<td style="display:none">' + Test[i].AdvigpagainstPo + '</td>' +
+                        '<td style="display:none">' + parseFloat(Test[i].Total_Adv_Amt || 0).toFixed(2) + '</td>' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                     global = rows;
@@ -370,6 +371,7 @@
             var stax = $($(row).find('td')[22]).text();
             var staxAmt = $($(row).find('td')[23]).text();
             var AdvigpagainstPo = $($(row).find('td')[25]).text();
+            var TotalAdvAmt = $($(row).find('td')[26]).text();
             var length = $("#tblItemDescription tr:gt(0)").length;
             if (length > 0) {
                 length = length + 1;
@@ -415,6 +417,7 @@
                 '<td class="headcol2_4"><input type="hidden" id="txtdiscamt' + length + '" name="txtdiscamt" value="' + parseFloat(DiscAmt).toFixed(2) + '"/>' + parseFloat(DiscAmt).toFixed(2) + '</td>' +
                 '<td class="headcol2_5"><select style="width: 90px !important;margin-top:-6px;" disabled onchange="CulculateAmonut()" id="Staxddl' + length + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select>' + '</td>' +
                 '<td class="headcol2_6"><input type="text" readonly="readonly" id="staxamou' + length + '" name="staxamou" value="' + parseFloat(staxAmt).toFixed(2) + '" /></td>' +
+                '<td class="headcol2_9">' + parseFloat(TotalAdvAmt || 0).toFixed(2) + '</td>' +
                 '<td class="headcol2_7">' + Value + '</td>' +
                 '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + parseFloat(TotalAmount).toFixed(2) + '" name="txtTotalAmount" value="' + parseFloat(TotalAmount).toFixed(2) + '"/>' + parseFloat(TotalAmount).toFixed(2) + '</td>' +
                 '<td style="display:none"><input type="hidden" id="txtGRNId' + length + '" name="txtGRNId" value="' + GRNId + '"/></td>' +
@@ -1091,6 +1094,7 @@
                                         <th>Disc Amnt</th>
                                         <th>S.Tax%</th>
                                         <th>S.Tax Amnt</th>
+                                        <th>Total Advance</th>
                                         <th>Value</th>
                                         <th>Total Amnt</th>
                                         <th>Action</th>
