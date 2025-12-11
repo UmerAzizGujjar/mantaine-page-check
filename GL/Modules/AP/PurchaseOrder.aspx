@@ -1420,6 +1420,9 @@
                 <div class="col-lg-12 col-md-8 col-sm-12">
                     <asp:TextBox runat="server" ID="Net_Amount" ReadOnly="true" SkinID="UserDefineWidth" Style="text-align: right;" />
                 </div>
+                <div>
+                    <asp:TextBox ID="txtAdv_amou"  runat="server"  ClientIDMode="Static"  Style="display: none;" ReadOnly="true" />
+                </div>
             </div>
 
         </div>
