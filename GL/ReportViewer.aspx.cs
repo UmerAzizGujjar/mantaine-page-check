@@ -609,13 +609,13 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("@FromDate", sqlStartDateTime);
-                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@startdate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
                 rd.SetParameterValue("@DoctorID", doctorID);
             }
-            else if (reportName == "Counsltant_Day_Wise_report")
+            else if (reportName == "Consultant_Day_Wise_report")
             {
-                string rptFileName = "TransactionalDetails/rptCounsltant_Day_Wise_report.rpt";
+                string rptFileName = "TransactionalDetails/rptConsltant_Day_Wise_report.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
@@ -648,8 +648,8 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("@FromDate", sqlStartDateTime);
-                rd.SetParameterValue("@ToDate", sqlEndDateTime);
+                rd.SetParameterValue("@startdate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
             }
             else if (reportName == "Over_Summary_Shift_Wise")
             {
@@ -767,9 +767,9 @@ namespace PMS
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("@FromDate", StartDateTime);
-                rd.SetParameterValue("@ToDate", EndDateTime);
-                rd.SetParameterValue("@DoctorID", doctorID);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("@Doctor_Id", doctorID);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }

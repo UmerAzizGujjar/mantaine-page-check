@@ -560,8 +560,13 @@ namespace PMS.AP
                 {
                     ltd.SalTax_Amount = Convert.ToDecimal(POitem.SalTax_Amount);
                 }
+                if (POitem.AdvanceTax_Amount != "")
+                {
+                    ltd.AdvanceTax_Amount = Convert.ToDecimal(POitem.AdvanceTax_Amount);
+                }
                 ltd.FedPercent_Id = POitem.FedPercentId;
                 ltd.SalTax_Id = Convert.ToInt32(POitem.SalTax_Id);
+                ltd.AdvanceTax_ID = Convert.ToInt32(POitem.AdvanceTax_ID);
                 ltd.PRDetailId = Convert.ToInt32(POitem.PRDetailId);
                 ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(POitem.ItemCode)));
                 db.AP_Purchase_Order_Items.InsertOnSubmit(ltd);
