@@ -1775,7 +1775,10 @@ namespace PMS
             }
             else if (reportName == "RadiologyReport")
             {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 string rptFileName = "LabRadiology/rptRadiologyReport.rpt";
+
                 
                 reportPath += rptFileName;
                 rd.Load(reportPath);
@@ -1801,8 +1804,55 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
 
             }
+            else if (reportName == "Physiotherapy_Cash_Collection")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "LabRadiology/rptPhysiotherapyCashCollection.rpt";
+                
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "Cardiology_Cash_Collection")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "LabRadiology/rptCardiologyCashCollection.rpt";
+                
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                string testName = Request.QueryString["TestName"] ?? "All";
+
+                // string testID = Request.QueryString["TestID"] ?? "All"; // Default to "All" if not provided
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                //string department = Request.QueryString["Department"].ToString();
+                //if (department == "" || department == "null")
+                //{
+                //    department = "All";
+                //}
+
+                rd.SetParameterValue("@LabTest", testName);
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+
             else if (reportName == "Lab_Test_Wise_Summary")
             {
                 string rptFileName = "TransactionalDetails/rptLabTestWiseDetailCollection _Summary.rpt";

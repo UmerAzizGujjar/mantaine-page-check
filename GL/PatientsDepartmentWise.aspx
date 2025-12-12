@@ -5,7 +5,25 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+
     <script type="text/javascript">
+        function FillCardioTests() {
+
+            var dpt = $('#ctl00_MainContent_ddlDepartments').val();
+
+            var options = '<option value="0">All</option>';
+            PageMethods.GetCardioTests(function (data) {
+                var testsData = JSON.parse(data);
+                debugger;
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.SerialNo + '" >' + value.TestName + '</option>';
+                });
+                $('#ctl00_MainContent_ddlDepartments').html(options);
+                //$('#ddlDepartments').select2();
+
+            });
+            return options;
+        }
         function loaddoctor() {
             debugger;
             var dpt = $('#ctl00_MainContent_ddlDepartments').val();
@@ -980,6 +998,18 @@
                     else if (rptTitle == "TimeAndMotion") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=TimeAndMotion&ReportTitle=Time and Motion Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Physiotherapy_Cash_Collection") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Physiotherapy_Cash_Collection&ReportTitle=Physiotherapy Cash Collection Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Cardiology_Cash_Collection") {
+                        debugger;
+                        var selectedName = $("#<%= ddlDepartments.ClientID %>").val();
+                        //var selectedTestID = $("#<%= ddlDepartments.ClientID %>").val();
+                        var url = 'ReportViewer.aspx?ReportName=Cardiology_Cash_Collection&ReportTitle=Cardiology Cash Collection Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&TestName=' + encodeURIComponent(selectedName); // ← Sending NAME //'&TestID=' + encodeURIComponent(selectedTes;  //  //  // '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0");
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "PCR") {

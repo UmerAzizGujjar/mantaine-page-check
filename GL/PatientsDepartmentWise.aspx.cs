@@ -2156,6 +2156,145 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
+                if (this.PageTitle == "Physiotherapy_Cash_Collection")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                }
+
+                //if (this.PageTitle == "Cardiology_Cash_Collection")
+                //{
+                //    tr_Summary.Visible = false;
+                //    tr1MedicalSubsidy.Visible = false;
+                //    lblMainDepartment.Visible = false;
+                //    lblDepartment.Visible = true;
+                //    ddlDepartments.Visible = true;
+                //    lblPatientType.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    ddlPatientType.Visible = false;
+                //    optRw.Visible = false;
+                //    trDoctor.Visible = false;
+                //    AllowPatientRecord = false;
+                //    lblMainDepartment.Visible = false;
+                //    lblMedical.Visible = false;
+                //    DateDiv.Visible = true;
+                //    Time_Row.Visible = true;
+                //    SetDepartent();
+
+                //    //ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "001" });
+                //    //ddlDepartments.Visible = true;
+                //    //DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                //    //GetCardioTests();
+
+
+                //    // Configure the label and dropdown
+                //    lblDepartment.Visible = true;
+                //    lblDepartment.Text = "Test Name";
+                //    ddlDepartments.Visible = true;
+                //    ddlDepartments.Items.Clear();
+
+                //    // --- CRITICAL PART: Load the cardiology tests here on the server-side ---
+                //    // Populate "All" option
+                //    ddlDepartments.Items.Add(new ListItem("All", "All"));
+
+                //    // Get and populate cardiology tests (Main_Department = "004")
+                //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                //    var cardioTests = from t in db.Lab_Tests
+                //                      where t.Main_Department == "004" && t.Active == true
+                //                      select new { t.Test_ID, t.Test_Name };
+
+                //    foreach (var test in cardioTests)
+                //    {
+                //        ddlDepartments.Items.Add(new ListItem(test.Test_Name, test.Test_ID.ToString()));
+                //    }
+                //    ddlDepartments.DataBind();
+                //}
+                else if (this.PageTitle == "Cardiology_Cash_Collection")
+                {
+                    string x = "Cardiology Cash Collection";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    // Show needed controls
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Export.Visible = true;
+                    dpROw.Visible = true;
+
+                    // Hide irrelevant controls
+                    tr_Summary.Visible = false;
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+
+                    // Configure dropdown
+                    lblDepartment.Visible = true;
+                    lblDepartment.Text = "Test / Group";
+                    ddlDepartments.Visible = true;
+                    ddlDepartments.Items.Clear();
+
+                    // Get Cardiology Tests (Main_Department = '004')
+                    DataTable tests = DBClass.getDataTable(@"
+        SELECT Test_ID, Test_Name 
+        FROM Lab_Tests 
+        WHERE Main_Department = '004' AND Active = 1
+    ");
+
+                    // Get Group Categories (ValueSet_ID = 70, Division = '004')
+                    DataTable groups = DBClass.getDataTable(@"
+        SELECT DataValue_Name, DataValue_Description 
+        FROM DataValues 
+        WHERE ValueSet_ID = 70 AND Division = '004'
+    ");
+
+                    // Combine
+                    DataTable combined = new DataTable();
+                    combined.Columns.Add("Value", typeof(string));   // ← This will store the NAME
+                    combined.Columns.Add("Text", typeof(string));    // ← This is what user sees
+
+                    // Add "All"
+                    combined.Rows.Add("All", "All");
+
+                    // Add Group Categories → use DataValue_Description as VALUE
+                    foreach (DataRow row in groups.Rows)
+                    {
+                        string groupName = row["DataValue_Description"].ToString();
+                        combined.Rows.Add(groupName, groupName); // Value = Text = Name
+                    }
+
+                    // Add Individual Tests → use Test_Name as VALUE
+                    foreach (DataRow row in tests.Rows)
+                    {
+                        string testName = row["Test_Name"].ToString();
+                        combined.Rows.Add(testName, testName);
+                    }
+
+                    ddlDepartments.DataSource = combined;
+                    ddlDepartments.DataTextField = "Text";   // What user sees
+                    ddlDepartments.DataValueField = "Value"; // What gets sent (now the NAME)
+                    ddlDepartments.DataBind();
+                }
+
                 if (this.PageTitle == "RadiologyReport")
                 {
 
@@ -5028,6 +5167,46 @@ namespace PMS
             ddlInvForm.DataValueField = "DataValue_Name";
             ddlInvForm.Items.Add(new ListItem() { Text = "All", Value = "All" });
             ddlInvForm.DataBind();
+        }
+        [WebMethod]
+        public static string GetCardioTests()
+        {
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var tests = from t in db.Lab_Tests
+                        where t.Main_Department == "004" && t.Active == true
+                        select new { t.Test_ID, Test_Name = t.Test_Name, t.Group_Category };
+            List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
+            int counter = 1;
+            foreach (var test in tests)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name.ToString() + (test.Group_Category != string.Empty ? " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") : string.Empty);
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            var GroupCategories = from dv in db.DataValues
+                                  join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                  where vs.ValueSet_Name == "Test Groups" && dv.Division == "004"
+                                  select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            foreach (var category in GroupCategories)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = category.DataValue_Name.ToString();
+                obj.TestName = category.DataValue_Description.ToString();
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = true;
+                obj.CategoryID = category.DataValue_Name;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTest);
         }
         [WebMethod]
         public static string LoadFormNo(string inv_form)
