@@ -1676,36 +1676,7 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Patient_Type", PatType);
             }
-            //else if (reportName == "Operator_Wise_Billing_Report")
-            //{
-            //    string rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report.rpt";
-
-            //    reportPath += rptFileName;
-            //    rd.Load(reportPath);
-
-            //    string stDate = Request.QueryString["sDate"].ToString();
-            //    string stTime = Request.QueryString["STime"].ToString();
-            //    string endDate = Request.QueryString["eDate"].ToString();
-            //    string endTime = Request.QueryString["ETime"].ToString();
-            //    string Operator = Request.QueryString["Operator"].ToString();
-            //    string PatType = Request.QueryString["Patient_Type"].ToString();
-
-            //    string parameterStDate = string.Empty;
-            //    string parameterEndDate = string.Empty;
-
-            //    this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-            //    this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
-            //    rd.SetParameterValue("@Department", Request.QueryString["Department"]);
-            //    rd.SetParameterValue("@stDate", parameterStDate);
-            //    rd.SetParameterValue("@endDate", parameterEndDate);
-            //    rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
-            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-            //    rd.SetParameterValue("Title", "Operator Wise Billing");
-            //    rd.SetParameterValue("@Operator", Operator);
-            //    rd.SetParameterValue("@Patient_Type", PatType);
-            //}
-
-
+          
             else if (reportName == "HospitalServices")
             {
                 string rptFileName = "TransactionalDetails/rptHospital_Services_Detail.rpt";
@@ -1785,7 +1756,7 @@ namespace PMS
 
                 string endDate = Request.QueryString["eDate"].ToString();
                 string endTime = Request.QueryString["ETime"].ToString();
-                string TestName = Request.QueryString["testName"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();       // test name
                 string parameterStDate = string.Empty;
                 string parameterEndDate = string.Empty;
                 this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
@@ -1800,6 +1771,36 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", "Lab Cash Collection");
                 rd.SetParameterValue("PatientType", PatType);
+
+            }
+            else if (reportName == "RadiologyReport")
+            {
+                string rptFileName = "LabRadiology/rptRadiologyReport.rpt";
+                
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string Operator = Request.QueryString["Operator"].ToString();
+                string TestName = Request.QueryString["testName"].ToString();
+                string MainDepartment = Request.QueryString["MainDepartment"].ToString();
+                string PatType = Request.QueryString["Patient_Type"].ToString();
+                //if (TestName == "All")
+                //{
+                //    TestName = "0";
+                //}
+                rd.SetParameterValue("@LabTest", TestName);
+
+                rd.SetParameterValue("@RadiologyDept", MainDepartment);
+                rd.SetParameterValue("@Operator", Operator);
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Patient_Type", PatType);
 
             }
             else if (reportName == "Lab_Test_Wise_Summary")
@@ -1937,7 +1938,7 @@ namespace PMS
                 }
             }
             else if (reportName == "Discharge_Detail")
-            {
+            {                                       // pat type 
 
                 string operatorID = "0";
                 string rptFileName = "GeneralPatientsReport/rptDischarge_Detail.rpt";
