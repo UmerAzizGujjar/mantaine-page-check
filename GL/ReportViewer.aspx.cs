@@ -595,7 +595,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@FromDate", sqlStartDateTime);
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
-                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Operator", Operator);         // operator
                 //rd.SetParameterValue("Shift", Shift);
                 rd.SetParameterValue("@Shift_id", shiftId);
                 rd.SetParameterValue("@DoctorID", doctorID);
@@ -1855,6 +1855,48 @@ namespace PMS
                 rd.SetParameterValue("@LabTest", testName);
 
                 rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "Item_Wise_Margin_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Pharmacy/rptItemWiseMarginReport.rpt";
+                string ItemID = Request.QueryString["ItemID"].ToString();
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+          
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                rd.SetParameterValue("@itemId", ItemID);
+                rd.SetParameterValue("@warehouseId", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@startDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "Item_Wise_Purchase_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Pharmacy/rptItemWiseDetailReport.rpt";
+                string ItemID = Request.QueryString["ItemID"].ToString();
+
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+          
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                rd.SetParameterValue("@itemId", ItemID);
+                rd.SetParameterValue("@warehouseId", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@startDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);

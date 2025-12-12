@@ -1005,6 +1005,16 @@
                         var url = 'ReportViewer.aspx?ReportName=Physiotherapy_Cash_Collection&ReportTitle=Physiotherapy Cash Collection Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "Item_Wise_Margin_Report") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Item_Wise_Margin_Report&ReportTitle=Item Wise Margin Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Item_Wise_Purchase_Report") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Item_Wise_Purchase_Report&ReportTitle=Item Wise Purchase Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "Cardiology_Cash_Collection") {
                         debugger;
                         var selectedName = $("#<%= ddlDepartments.ClientID %>").val();

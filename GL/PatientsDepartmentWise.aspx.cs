@@ -2177,54 +2177,89 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
+                if (this.PageTitle == "Item_Wise_Margin_Report")
+                {
 
-                //if (this.PageTitle == "Cardiology_Cash_Collection")
-                //{
-                //    tr_Summary.Visible = false;
-                //    tr1MedicalSubsidy.Visible = false;
-                //    lblMainDepartment.Visible = false;
-                //    lblDepartment.Visible = true;
-                //    ddlDepartments.Visible = true;
-                //    lblPatientType.Visible = false;
-                //    lblMultiSelect.Visible = false;
-                //    ddlPatientType.Visible = false;
-                //    optRw.Visible = false;
-                //    trDoctor.Visible = false;
-                //    AllowPatientRecord = false;
-                //    lblMainDepartment.Visible = false;
-                //    lblMedical.Visible = false;
-                //    DateDiv.Visible = true;
-                //    Time_Row.Visible = true;
-                //    SetDepartent();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
 
-                //    //ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "001" });
-                //    //ddlDepartments.Visible = true;
-                //    //DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                //    //GetCardioTests();
+                    trSearch1.Visible = true;
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
 
 
-                //    // Configure the label and dropdown
-                //    lblDepartment.Visible = true;
-                //    lblDepartment.Text = "Test Name";
-                //    ddlDepartments.Visible = true;
-                //    ddlDepartments.Items.Clear();
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
 
-                //    // --- CRITICAL PART: Load the cardiology tests here on the server-side ---
-                //    // Populate "All" option
-                //    ddlDepartments.Items.Add(new ListItem("All", "All"));
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
 
-                //    // Get and populate cardiology tests (Main_Department = "004")
-                //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                //    var cardioTests = from t in db.Lab_Tests
-                //                      where t.Main_Department == "004" && t.Active == true
-                //                      select new { t.Test_ID, t.Test_Name };
 
-                //    foreach (var test in cardioTests)
-                //    {
-                //        ddlDepartments.Items.Add(new ListItem(test.Test_Name, test.Test_ID.ToString()));
-                //    }
-                //    ddlDepartments.DataBind();
-                //}
+                }
+                if (this.PageTitle == "Item_Wise_Purchase_Report")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                    trSearch1.Visible = true;
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+
+                }
+
                 else if (this.PageTitle == "Cardiology_Cash_Collection")
                 {
                     string x = "Cardiology Cash Collection";
