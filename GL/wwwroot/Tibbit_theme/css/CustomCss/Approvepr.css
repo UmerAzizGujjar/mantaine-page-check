@@ -1,0 +1,113 @@
+﻿.custom-gridview {
+    table-layout: fixed;
+    word-wrap: break-word;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-gridview {
+    background-color: #EFA63E;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.gridview-header {
+    color: White !important;
+    background-color: #EFA63E !important;
+    font-size: 14px !important;
+}
+
+.custom-gridview th, .custom-gridview td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.custom-gridview tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.custom-gridview tr:hover {
+    background-color: #ddd;
+}
+
+.custom-gridview .actions-column {
+    width: 100px;
+    text-align: center;
+}
+
+.custom-gridview a {
+    color: #308667;
+    text-decoration: none;
+}
+
+    .custom-gridview a:hover {
+        text-decoration: underline;
+    }
+
+.remarks-label {
+    display: block;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.pagination-container {
+    text-align: center;
+    padding: 0px;
+}
+
+    .pagination-container table {
+        margin: auto;
+    }
+
+    .pagination-container td {
+        padding: 4px 0px;
+    }
+
+    .pagination-container a,
+    .pagination-container span {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 0 5px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background-color: #f8f8f8;
+        color: #333;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .pagination-container a:hover {
+            background-color: #EFA63E;
+            color: white;
+        }
+
+    .pagination-container span {
+        background-color: #EFA63E;
+        color: white;
+        font-weight: bold;
+        border: 1px solid #EFA63E;
+    }
+
+.gridview-style tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.pagination-container .aspNetDisabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.header-center-align {
+    text-align: center !important;
+}
+
+#chkSelect {
+    text-align: center;
+}

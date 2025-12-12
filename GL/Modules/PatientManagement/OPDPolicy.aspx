@@ -928,6 +928,20 @@
                                         <div class="field-desc">Free patinets options</div>
                                     </div>
                                 </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="RefferedBy" name="rights[]" value="RefferedBy" />
+                                    <div>
+                                        <label for="RefferedBy">Reffered By</label>
+                                        <div class="field-desc">Reffered Patient Opd</div>
+                                    </div>
+                                </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="EmerRefferedBy" name="rights[]" value="EmerRefferedBy" />
+                                    <div>
+                                        <label for="EmerRefferedBy">ER:Reffered By</label>
+                                        <div class="field-desc">Reffered Patient Emergency</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

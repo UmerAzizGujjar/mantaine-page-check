@@ -10892,4 +10892,20 @@
       <Column Name="Total_Adv_Amt" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetPurchaseOrderChart" Method="GetPurchaseOrderChart">
+    <ElementType Name="GetPurchaseOrderChartResult">
+      <Column Name="MonthYear" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="MonthName" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="TotalPOs" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_GetGRNChart" Method="SP_GetGRNChart">
+    <ElementType Name="SP_GetGRNChartResult">
+      <Column Name="MonthYear" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="MonthName" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="TotalGRNs" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

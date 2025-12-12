@@ -911,6 +911,7 @@ namespace PMS
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
+
         }
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
@@ -4974,6 +4975,20 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), vendorId);
             return ((ISingleResult<sp_GetGRNDetailByVendorIdResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetPurchaseOrderChart")]
+        public ISingleResult<GetPurchaseOrderChartResult> GetPurchaseOrderChart()
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+            return ((ISingleResult<GetPurchaseOrderChartResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SP_GetGRNChart")]
+        public ISingleResult<SP_GetGRNChartResult> SP_GetGRNChart()
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+            return ((ISingleResult<SP_GetGRNChartResult>)(result.ReturnValue));
         }
     }
 
@@ -205242,6 +205257,166 @@ namespace PMS
                 if ((this._Total_Adv_Amt != value))
                 {
                     this._Total_Adv_Amt = value;
+                }
+            }
+        }
+    }
+
+    public partial class GetPurchaseOrderChartResult
+    {
+
+        private string _MonthYear;
+
+        private string _MonthName;
+
+        private System.Nullable<int> _TotalPOs;
+
+        private System.Nullable<decimal> _TotalAmount;
+
+        public GetPurchaseOrderChartResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MonthYear", DbType = "NVarChar(4000)")]
+        public string MonthYear
+        {
+            get
+            {
+                return this._MonthYear;
+            }
+            set
+            {
+                if ((this._MonthYear != value))
+                {
+                    this._MonthYear = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MonthName", DbType = "NVarChar(4000)")]
+        public string MonthName
+        {
+            get
+            {
+                return this._MonthName;
+            }
+            set
+            {
+                if ((this._MonthName != value))
+                {
+                    this._MonthName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPOs", DbType = "Int")]
+        public System.Nullable<int> TotalPOs
+        {
+            get
+            {
+                return this._TotalPOs;
+            }
+            set
+            {
+                if ((this._TotalPOs != value))
+                {
+                    this._TotalPOs = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> TotalAmount
+        {
+            get
+            {
+                return this._TotalAmount;
+            }
+            set
+            {
+                if ((this._TotalAmount != value))
+                {
+                    this._TotalAmount = value;
+                }
+            }
+        }
+    }
+
+    public partial class SP_GetGRNChartResult
+    {
+
+        private string _MonthYear;
+
+        private string _MonthName;
+
+        private System.Nullable<int> _TotalGRNs;
+
+        private System.Nullable<decimal> _TotalAmount;
+
+        public SP_GetGRNChartResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MonthYear", DbType = "NVarChar(4000)")]
+        public string MonthYear
+        {
+            get
+            {
+                return this._MonthYear;
+            }
+            set
+            {
+                if ((this._MonthYear != value))
+                {
+                    this._MonthYear = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MonthName", DbType = "NVarChar(4000)")]
+        public string MonthName
+        {
+            get
+            {
+                return this._MonthName;
+            }
+            set
+            {
+                if ((this._MonthName != value))
+                {
+                    this._MonthName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalGRNs", DbType = "Int")]
+        public System.Nullable<int> TotalGRNs
+        {
+            get
+            {
+                return this._TotalGRNs;
+            }
+            set
+            {
+                if ((this._TotalGRNs != value))
+                {
+                    this._TotalGRNs = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalAmount", DbType = "Decimal(38,2)")]
+        public System.Nullable<decimal> TotalAmount
+        {
+            get
+            {
+                return this._TotalAmount;
+            }
+            set
+            {
+                if ((this._TotalAmount != value))
+                {
+                    this._TotalAmount = value;
                 }
             }
         }
