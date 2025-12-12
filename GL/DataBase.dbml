@@ -10896,4 +10896,22 @@
       <Column Name="CountValue" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_OPD_Utilization" Method="sp_OPD_Utilization">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_OPD_UtilizationResult">
+      <Column Name="Total_patients_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Revenu" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_OPD_Utilization_Departmentwise" Method="sp_OPD_Utilization_Departmentwise">
+    <Parameter Name="DepId" Parameter="depId" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_OPD_Utilization_DepartmentwiseResult">
+      <Column Name="Total_patients_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Revenu" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_Main_Category" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

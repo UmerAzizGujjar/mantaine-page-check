@@ -1,755 +1,385 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inventory_ProcurementDashboard.aspx.cs" Inherits="PMS.Modules.Dashboards.Inventory_ProcurementDashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     
-         <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"  type="text/javascript"></script>
 
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
-    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js" type="text/javascript"></script>
+
+    <style type="text/css">
     
-     <style type="text/css">
-      span {
-          font-size: 13px;
-      }
 
-      .card {
-          background-color: #fff;
-          border-radius: 10px;
-          border: none;
-          position: relative;
-          margin-bottom: 30px;
-          box-shadow: 0 0.46875rem 2.1875rem rgba(90,97,105,0.1), 0 0.9375rem 1.40625rem rgba(90,97,105,0.1), 0 0.25rem 0.53125rem rgba(90,97,105,0.12), 0 0.125rem 0.1875rem rgba(90,97,105,0.1);
-      }
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
 
-      .l-bg-cherry {
-          background: linear-gradient(to right, #493240, #ae9ba6) !important;
-          color: #fff;
-      }    
-      .l-bg-cherry-N {
-          background: linear-gradient(to right, #bb0975db, #705565d1) !important;
-          color: #fff;
-      }
+        .dashboard-header h1 {
+            color: #e67e22;
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin: 0;
+        }
 
-      .l-bg-lun {
-          background: linear-gradient(to right, #2da77c, #a1c7c0) !important;
-          color: #fff;
-      }
+        .dashboard-header p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+        }
 
-      .l-bg-ten {
-          background: linear-gradient(to right, #373b44, #43cddd) !important;
-          color: #fff;
-      }
+        .date-controls {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
 
-      .l-bg-room {
-          background: linear-gradient(to right, #373b44, rgb(0 0 0 / 44%));
-          color: #fff;
-      }
+        .date-controls label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: block;
+        }
 
-      .l-bg-blue-dark {
-          background: linear-gradient(to right, #373b44, #4286f4) !important;
-          color: #fff;
-      }
+        .date-controls input {
+            width: 100%;
+            max-width: 200px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
 
-      .l-bg-green-dark {
-          background: linear-gradient(to right, #3d1919, #d83240) !important;
-          color: #fff;
-      }
+        .btn-search {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-      .l-bg-orange-dark {
-          background: linear-gradient(to right, #61513d, #439cfff2) !important;
-          color: #fff;
-      }
+        .btn-search:hover {
+            background: #0056b3;
+        }
 
-      .l-bg-yellow {
-          background: linear-gradient(to right, #ec3131, #e6711d) !important;
-          color: #fff;
-      }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 10px;
+        }
 
-      .l-bg-purple {
-          background: linear-gradient(to right, #493240, #4bb97b) !important;
-          color: #fff;
-      }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-      .card .card-statistic-3 .card-icon-large .fas, .card .card-statistic-3 .card-icon-large .far, .card .card-statistic-3 .card-icon-large .fab, .card .card-statistic-3 .card-icon-large .fal {
-          font-size: 110px;
-      }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
 
-      .card .card-statistic-3 .card-icon {
-          text-align: center;
-          line-height: 50px;
-          margin-left: 15px;
-          color: #000;
-          position: absolute;
-          right: -5px;
-          top: 20px;
-          opacity: 0.1;
-      }
+        .card-header {
+            padding: 12px 16px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-      .l-bg-cyan {
-          background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
-          color: #fff;
-      }
+        .card-body {
+            padding: 16px;
+            flex-grow: 1;
+        }
 
-      .l-bg-green {
-          background: linear-gradient(135deg, #23bdb8 0%, #43e794 100%) !important;
-          color: #fff;
-      }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.95rem;
+        }
 
-      .l-bg-orange {
-          background: linear-gradient(to right, #f9900e, #ffba56) !important;
-          color: #fff;
-      }
+        .stat-item:last-child {
+            border-bottom: none;
+        }
 
-      .l-bg-cyan {
-          background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
-          color: #fff;
-      }
+        .stat-label {
+            font-weight: 500;
+            color: #555;
+        }
 
-      .progress-bar {
-          display: none;
-      }
+        .stat-value {
+            font-weight: 600;
+            color: #222;
+            min-width: 40px;
+            text-align: right;
+        }
 
-      .progress {
-          display: none;
-      }
-  </style>
+        .status-created { color: #ffc107; }
+        .status-approved { color: #28a745; }
+        .status-cancelled { color: #dc3545; }
+        .status-total { color: #343a40; font-weight: 700; }
+
+        .card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .card-link:hover {
+            opacity: 0.9;
+        }
+
+        /* Color Themes */
+        .bg-pr { background: linear-gradient(135deg, #6f42c1, #9b59b6); }
+        .bg-po { background: linear-gradient(135deg, #007bff, #4b7bec); }
+        .bg-cs { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .bg-igp { background: linear-gradient(135deg, #00cec9, #81ecec); }
+        .bg-grn { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .bg-gir { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .bg-gin { background: linear-gradient(135deg, #f39c12, #e67e22); }
+
+        @media (max-width: 768px) {
+            .date-controls {
+                flex-direction: column;
+            }
+            .date-controls > div {
+                width: 100%;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+
 
     <script type="text/javascript">
-
         $(document).ready(function () {
+            var today = moment().format('LL');
+            $("#txtsdate, #txtedate").datepicker({
+                dateFormat: 'MM d, yy',
+                maxDate: 0
+            }).val(today);
 
-            var date = '<%= DateTime.Now%>';
-            $("#txtsdate").datepicker({
-                dateFormat: 'MM d,yy',
-
-            }).attr('readonly', 'readonly');
-
-            $("#txtedate").datepicker({
-                dateFormat: 'MM d,yy',
-
-            }).attr('readonly', 'readonly');
-
-            date = moment(date).format('LL');
-            $("#txtsdate").val(date);
-            $("#txtedate").val(date);
-
-            LoadInventoryDashboard(date, date);
-
+            LoadInventoryDashboard(today, today);
         });
 
         function search() {
-            var dt = $('#txtsdate').val();
-            var dts = $('#txtedate').val();
-            LoadInventoryDashboard(dt, dts)
+            var sDate = $('#txtsdate').val().trim();
+            var eDate = $('#txtedate').val().trim();
+            if (!sDate || !eDate) {
+                alert('Please select both start and end dates.');
+                return;
+            }
+            LoadInventoryDashboard(sDate, eDate);
         }
 
         function LoadInventoryDashboard(startDate, endDate) {
-            debugger;
-            var txt_sdate = startDate;
-            var txt_edate = endDate;
-            async: false;
             $.ajax({
-                async: false,
                 type: "POST",
                 url: "Inventory_ProcurementDashboard.aspx/LaodDashBoard",
-                data: JSON.stringify({
-                    'txt_sdate': txt_sdate,
-                    'txt_edate': txt_edate,
-                }),
+                data: JSON.stringify({ txt_sdate: startDate, txt_edate: endDate }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+                beforeSend: function () {
+                    $('.stat-value').text('…');
+                },
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    var map = {};
+                    data.forEach(item => map[item.Category] = item.CountValue || 0);
 
-                success: function (data) {
-                    debugger;
+                    // Update values
+                    $('#total_GIR').text(map['Total_GIR'] || 0);
+                    $('#created_GIR').text(map['Total_GIR_Created'] || 0);
+                    $('#approved_GIR').text(map['Total_GIR_Approved'] || 0);
+                    $('#cancelled_GIR').text(map['Total_GIR_Cancelled'] || 0);
 
-                    var data = JSON.parse(data.d);
+                    $('#total_GIN').text(map['Total_GIN'] || 0);
+                    $('#created_GIN').text(map['Total_GIN_Created'] || 0);
+                    $('#approved_GIN').text(map['Total_GIN_Approved'] || 0);
+                    $('#cancelled_GIN').text(map['Total_GIN_Cancelled'] || 0);
 
-                    debugger;
-                    for (var i = 0; i < data.length; i++) {
-                        debugger;
-                        var Category = data[i].Category;
-                        if (Category == "Total_PR") {
-                            $('#total_PR').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_PR_Created") {
-                            $('#total_PR_Created').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_PR_Approved") {
-                            $('#total_PR_Approved').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_PR_Cancelled") {
-                            $('#total_PR_Cancelled').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_PO") {
-                            $('#total_PO').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_PO_Created") {
-                            $('#total_PO_Created').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_PO_Approved") {
-                            $('#total_PO_Approved').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_PO_Cancelled") {
-                            $('#total_PO_Cancelled').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_CS") {
-                            $('#total_CS').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_CS_Created") {
-                            $('#total_CS_Created').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_CS_Approved") {
-                            $('#total_CS_Approved').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_CS_Cancelled") {
-                            $('#total_CS_Cancelled').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_IGP") {
-                            $('#total_IGP').text(data[i].CountValue);
-                        }
+                    $('#total_PR').text(map['Total_PR'] || 0);
+                    $('#created_PR').text(map['Total_PR_Created'] || 0);
+                    $('#approved_PR').text(map['Total_PR_Approved'] || 0);
+                    $('#cancelled_PR').text(map['Total_PR_Cancelled'] || 0);
 
-                        if (Category == "Total_Created_IGP") {
-                            $('#total_IGP_Created').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_Approved_IGP") {
-                            $('#total_IGP_Approved').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_Cancelled_IGP") {
-                            $('#total_IGP_Cancelled').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GRN") {
-                            $('#total_GRN').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GRN_Created") {
-                            $('#total_GRN_Created').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GRN_Approved") {
-                            $('#total_GRN_Approved').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GRN_Cancelled") {
-                            $('#total_GRN_Cancelled').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIR") {
-                            $('#total_GIR').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIR_Created") {
-                            $('#total_GIR_Created').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIR_Approved") {
-                            $('#total_GIR_Approved').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIR_Cancelled") {
-                            $('#total_GIR_Cancelled').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIN") {
-                            $('#total_GIN').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIN_Created") {
-                            $('#total_GIN_Created').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIN_Approved") {
-                            $('#total_GIN_Approved').text(data[i].CountValue);
-                        }
-                        if (Category == "Total_GIN_Cancelled") {
-                            $('#total_GIN_Cancelled').text(data[i].CountValue);
-                        }
+                    $('#total_CS').text(map['Total_CS'] || 0);
+                    $('#created_CS').text(map['Total_CS_Created'] || 0);
+                    $('#approved_CS').text(map['Total_CS_Approved'] || 0);
+                    $('#cancelled_CS').text(map['Total_CS_Cancelled'] || 0);
 
-                    }
+                    $('#total_PO').text(map['Total_PO'] || 0);
+                    $('#created_PO').text(map['Total_PO_Created'] || 0);
+                    $('#approved_PO').text(map['Total_PO_Approved'] || 0);
+                    $('#cancelled_PO').text(map['Total_PO_Cancelled'] || 0);
 
+                    $('#total_IGP').text(map['Total_IGP'] || 0);
+                    $('#created_IGP').text(map['Total_Created_IGP'] || 0);
+                    $('#approved_IGP').text(map['Total_Approved_IGP'] || 0);
+                    $('#cancelled_IGP').text(map['Total_Cancelled_IGP'] || 0);
+
+                    $('#total_GRN').text(map['Total_GRN'] || 0);
+                    $('#created_GRN').text(map['Total_GRN_Created'] || 0);
+                    $('#approved_GRN').text(map['Total_GRN_Approved'] || 0);
+                    $('#cancelled_GRN').text(map['Total_GRN_Cancelled'] || 0);
+                },
+                error: function () {
+                    alert('Failed to load dashboard data.');
                 }
             });
         }
 
-        function GotoGIRList() {
-            window.location = "Inventory/GoodsIssuanceRequestView.aspx"
+        function gotoPage(page) {
+            var urls = {
+                'PR': 'AP/PurchaseRequistionView.aspx',
+                'PO': 'AP/PurchaseOrderView.aspx',
+                'CS': 'AP/PurchaseRequistionView.aspx',
+                'IGP': 'Inventory/InversionGatePassView.aspx',
+                'GRN': 'Inventory/GRNView.aspx',
+                'GIR': 'Inventory/GoodsIssuanceRequestView.aspx',
+                'GIN': 'Inventory/GoodsIssuanceNoteView.aspx'
+            };
+            window.location = urls[page];
         }
-        function GotoGINList() {
-            window.location = "Inventory/GoodsIssuanceNoteView.aspx"
-        }
-        function GotoPRList() {
-            window.location = "AP/PurchaseRequistionView.aspx"
-        }
-        function GotoPOList() {
-            window.location = "AP/PurchaseOrderView.aspx"
-        }
-        function GotoCSList() {
-            window.location = "AP/PurchaseRequistionView.aspx"
-        }
-        function GotoIGPList() {
-            window.location = "Inventory/InversionGatePassView.aspx"
-        }
-        function GotoGRNList() {
-            window.location = "Inventory/GRNView.aspx"
-        }
-
     </script>
-
-
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-        <div class="row" style="justify-content: center;">
-        <h1 class="card-title mb-0 font-weight-bold ml-5 p-3">Inventory & Procurement Dashboard</h1>
+    <div class="dashboard-header">
+        <h1><i class="fas fa-box-open me-2"></i> Inventory & Procurement Dashboard</h1>
+        <p>Track purchase lifecycle from requisition to goods receipt</p>
     </div>
-    <hr />
-    <br />
-    <br />
-        <div class="row">
 
-        <div class="col-lg-3">
-            <label>
-                Start Date:
-            </label>
+    <div class="date-controls">
+        <div>
+            <label>Start Date</label>
             <input type="text" id="txtsdate" />
         </div>
-
-        <div class="col-lg-3">
-            <label>
-                End Date:
-            </label>
+        <div>
+            <label>End Date</label>
             <input type="text" id="txtedate" />
         </div>
-        <div class="col-lg-2">
-
-            <input type="button" id="serach" value="Search" onclick="search()" />
-        </div>
+      <input type="button" class="btn btn-primry" value="Search" onclick="search(); return false;" />
     </div>
-     <br />
-     <br />
-     <br />
-    <div class="container-fluid">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card l-bg-orange-dark" style="height: 230px; width: 240px;">
-                        <div class="card-statistic-3 p-4">
-                            <div class="card-icon card-icon-large"><i class="fas fa-solid fa-registered" style="margin-right: 20px; margin-top: 70px;"></i></div>
-                            <div class="mb-4">
-                                <h3 class="card-title mb-0 font-weight-bold">GIR</h3>
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGIRList()">Total GIR</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIR"></span>
-                                </div>
 
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGIRList()">Created</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIR_Created"></span>
-                                </div>
+    <div class="card-grid">
 
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGIRList()">Approved</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIR_Approved"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGIRList()">Cancelled</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIR_Cancelled"></span>
-                                </div>
-
-                            </div>
-
-                            <div class="progress mt-5 " data-height="8" style="height: 8px;">
-                                <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-                    <div class="card l-bg-yellow" style="height: 230px; width: 240px;">
-                        <div class="card-statistic-3 p-4">
-                            <div class="card-icon card-icon-large"><i class="fas fa-store" style="margin-right: 20px; margin-top: 70px;"></i></div>
-                            <div class="mb-4">
-                                <h3 class="card-title mb-0 font-weight-bold">GIN</h3>
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGINList()">Total GIN</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIN"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGINList()">Created</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIN_Created"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGINList()">Approved</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIN_Approved"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGINList()">Cancelled</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GIN_Cancelled"></span>
-                                </div>
-
-                            </div>
-                            <div class="progress mt-5 " data-height="8" style="height: 8px;">
-                                <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-xl-3 col-lg-6">
-
-                    <div class="card l-bg-cherry" style="height: 230px; width: 240px;">
-
-                        <div class="card-statistic-3 p-4">
-
-                            <div class="card-icon card-icon-large"><i class="fas fa-clipboard" style="margin-right: 20px; margin-top: 70px;"></i>
-<%--                               <i class="fa-thin fa-clipboard-question"></i>   --%>
-                            </div>
-                            <div class="mb-4">
-                                <h3 class="card-title mb-0 font-weight-bold">Purchase Requisition</h3>
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoPRList()">Total PR</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PR"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoPRList()">Created</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PR_Created"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="GotoPRList()">Approved</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PR_Approved"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="GotoPRList()">Cancelled</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PR_Cancelled"></span>
-                                </div>
-
-                            </div>
-                            <div class="progress mt-5" data-height="8" style="height: 8px;">
-                                <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-
-                    <div class="card l-bg-cherry-N" style="height: 230px; width: 240px;">
-
-                        <div class="card-statistic-3 p-4">
-
-                            <div class="card-icon card-icon-large"><i class="fas fa-clipboard-list" style="margin-right: 20px; margin-top: 70px;"></i></div>
-                            <div class="mb-4">
-                                <h3 class="card-title mb-0 font-weight-bold">Comparative Statement</h3>
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoCSList()">Total CS</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_CS"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoCSList()">Created</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_CS_Created"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="GotoCSList()">Approved</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_CS_Approved"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="GotoCSList()">Cancelled</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_CS_Cancelled"></span>
-                                </div>
-
-                            </div>
-                            <div class="progress mt-5" data-height="8" style="height: 8px;">
-                                <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+        <!-- GIR -->
+        <div class="stat-card" onclick="gotoPage('GIR')">
+            <div class="card-header bg-gir">
+                <i class="fas fa-file-invoice"></i> Goods Issuance Request (GIR)
             </div>
-            <div class="row">
-
-                <div class="col-xl-3 col-lg-6">
-
-                    <div class="card l-bg-lun" style="height: 230px; width: 240px;">
-                        <div class="card-statistic-3 p-4">
-
-                            <div class="card-icon card-icon-large">
-                                <i class="fas fa-solid fa-boxes" style="margin-right: 20px; margin-top: 70px;"></i>
-
-                            </div>
-                            <div class="mb-4">
-                                <h3 class="card-title mb-0 font-weight-bold">Purchase Orders</h3>
-                            </div>
-
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoPOList();">Total PO</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PO"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoPOList();">Created</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PO_Created"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="GotoPOList()">Approved</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PO_Approved"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="GotoPOList()">Cancelled</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_PO_Cancelled"></span>
-                                </div>
-
-                            </div>
-                            <div class="progress mt-5 " data-height="8" style="height: 8px;">
-                                <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-
-                    <div class="card l-bg-blue-dark" style="height: 230px; width: 240px;">
-
-                        <div class="card-statistic-3 p-4">
-
-                            <div class="card-icon card-icon-large"><i class="fas fa-box-check" style="margin-right: 20px; margin-top: 70px;"></i></div>
-                            <div class="mb-4">
-                                <h3 class="card-title mb-0 font-weight-bold">IGP</h3>
-                            </div>
-
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoIGPList()">Total IGP</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_IGP"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoIGPList()">Created</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_IGP_Created"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoIGPList()">Approved</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_IGP_Approved"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoIGPList()">Cancelled</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_IGP_Cancelled"></span>
-                                </div>
-
-                            </div>
-                            <div class="progress mt-5 " data-height="8" style="height: 8px;">
-                                <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6">
-
-                    <div class="card l-bg-green-dark" style="height: 230px; width: 240px;">
-
-                        <div class="card-statistic-3 p-4">
-
-                            <div class="card-icon card-icon-large"><i class="fas fa-regular fa-clipboard-list-check" style="margin-right: 20px; margin-top: 70px;"></i></div>
-                            <div class="mb-4">
-                                <h3 class="card-title mb-0 font-weight-bold">GRN</h3>
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGRNList()">Total GRN</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GRN"></span>
-                                </div>
-
-                            </div>
-
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGRNList()">Created</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GRN_Created"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGRNList()">Approved</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GRN_Approved"></span>
-                                </div>
-
-                            </div>
-                            <div class="row align-items-center mb-2 d-flex">
-                                <div class="col-8">
-                                    <h3 class="d-flex align-items-center mb-0">
-                                        <a style="text-decoration: none; cursor: pointer;" onclick="GotoGRNList()">Cancelled</a>
-                                    </h3>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span id="total_GRN_Cancelled"></span>
-                                </div>
-
-                            </div>
-                            <div class="progress mt-5 " data-height="8" style="height: 8px;">
-                                <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
+            <div class="card-body">
+                <div class="stat-item"><span class="stat-label">Total</span><span id="total_GIR" class="stat-value status-total">0</span></div>
+                <div class="stat-item"><span class="stat-label">Created</span><span id="created_GIR" class="stat-value status-created">0</span></div>
+                <div class="stat-item"><span class="stat-label">Approved</span><span id="approved_GIR" class="stat-value status-approved">0</span></div>
+                <div class="stat-item"><span class="stat-label">Cancelled</span><span id="cancelled_GIR" class="stat-value status-cancelled">0</span></div>
             </div>
-
         </div>
+
+        <!-- GIN -->
+        <div class="stat-card" onclick="gotoPage('GIN')">
+            <div class="card-header bg-gin">
+                <i class="fas fa-truck-moving"></i> Goods Issuance Note (GIN)
+            </div>
+            <div class="card-body">
+                <div class="stat-item"><span class="stat-label">Total</span><span id="total_GIN" class="stat-value status-total">0</span></div>
+                <div class="stat-item"><span class="stat-label">Created</span><span id="created_GIN" class="stat-value status-created">0</span></div>
+                <div class="stat-item"><span class="stat-label">Approved</span><span id="approved_GIN" class="stat-value status-approved">0</span></div>
+                <div class="stat-item"><span class="stat-label">Cancelled</span><span id="cancelled_GIN" class="stat-value status-cancelled">0</span></div>
+            </div>
+        </div>
+
+        <!-- PR -->
+        <div class="stat-card" onclick="gotoPage('PR')">
+            <div class="card-header bg-pr">
+                <i class="fas fa-list-check"></i> Purchase Requisition (PR)
+            </div>
+            <div class="card-body">
+                <div class="stat-item"><span class="stat-label">Total</span><span id="total_PR" class="stat-value status-total">0</span></div>
+                <div class="stat-item"><span class="stat-label">Created</span><span id="created_PR" class="stat-value status-created">0</span></div>
+                <div class="stat-item"><span class="stat-label">Approved</span><span id="approved_PR" class="stat-value status-approved">0</span></div>
+                <div class="stat-item"><span class="stat-label">Cancelled</span><span id="cancelled_PR" class="stat-value status-cancelled">0</span></div>
+            </div>
+        </div>
+
+        <!-- CS -->
+        <div class="stat-card" onclick="gotoPage('CS')">
+            <div class="card-header bg-cs">
+                <i class="fas fa-scale-balanced"></i> Comparative Statement (CS)
+            </div>
+            <div class="card-body">
+                <div class="stat-item"><span class="stat-label">Total</span><span id="total_CS" class="stat-value status-total">0</span></div>
+                <div class="stat-item"><span class="stat-label">Created</span><span id="created_CS" class="stat-value status-created">0</span></div>
+                <div class="stat-item"><span class="stat-label">Approved</span><span id="approved_CS" class="stat-value status-approved">0</span></div>
+                <div class="stat-item"><span class="stat-label">Cancelled</span><span id="cancelled_CS" class="stat-value status-cancelled">0</span></div>
+            </div>
+        </div>
+
+        <!-- PO -->
+        <div class="stat-card" onclick="gotoPage('PO')">
+            <div class="card-header bg-po">
+                <i class="fas fa-file-contract"></i> Purchase Order (PO)
+            </div>
+            <div class="card-body">
+                <div class="stat-item"><span class="stat-label">Total</span><span id="total_PO" class="stat-value status-total">0</span></div>
+                <div class="stat-item"><span class="stat-label">Created</span><span id="created_PO" class="stat-value status-created">0</span></div>
+                <div class="stat-item"><span class="stat-label">Approved</span><span id="approved_PO" class="stat-value status-approved">0</span></div>
+                <div class="stat-item"><span class="stat-label">Cancelled</span><span id="cancelled_PO" class="stat-value status-cancelled">0</span></div>
+            </div>
+        </div>
+
+        <!-- IGP -->
+        <div class="stat-card" onclick="gotoPage('IGP')">
+            <div class="card-header bg-igp">
+                <i class="fas fa-truck-ramp-box"></i> Inward Gate Pass (IGP)
+            </div>
+            <div class="card-body">
+                <div class="stat-item"><span class="stat-label">Total</span><span id="total_IGP" class="stat-value status-total">0</span></div>
+                <div class="stat-item"><span class="stat-label">Created</span><span id="created_IGP" class="stat-value status-created">0</span></div>
+                <div class="stat-item"><span class="stat-label">Approved</span><span id="approved_IGP" class="stat-value status-approved">0</span></div>
+                <div class="stat-item"><span class="stat-label">Cancelled</span><span id="cancelled_IGP" class="stat-value status-cancelled">0</span></div>
+            </div>
+        </div>
+
+        <!-- GRN -->
+        <div class="stat-card" onclick="gotoPage('GRN')">
+            <div class="card-header bg-grn">
+                <i class="fas fa-warehouse"></i> Goods Receipt Note (GRN)
+            </div>
+            <div class="card-body">
+                <div class="stat-item"><span class="stat-label">Total</span><span id="total_GRN" class="stat-value status-total">0</span></div>
+                <div class="stat-item"><span class="stat-label">Created</span><span id="created_GRN" class="stat-value status-created">0</span></div>
+                <div class="stat-item"><span class="stat-label">Approved</span><span id="approved_GRN" class="stat-value status-approved">0</span></div>
+                <div class="stat-item"><span class="stat-label">Cancelled</span><span id="cancelled_GRN" class="stat-value status-cancelled">0</span></div>
+            </div>
+        </div>
+
     </div>
 
 </asp:Content>
