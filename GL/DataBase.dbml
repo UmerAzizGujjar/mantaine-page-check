@@ -10888,4 +10888,12 @@
       <Column Name="Rate1" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetInventoryCounts" Method="GetInventoryCounts">
+    <Parameter Name="startdate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="enddate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="GetInventoryCountsResult">
+      <Column Name="Category" Type="System.String" DbType="VarChar(19) NOT NULL" CanBeNull="false" />
+      <Column Name="CountValue" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

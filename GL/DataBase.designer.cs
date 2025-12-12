@@ -909,7 +909,6 @@ namespace PMS
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4978,6 +4977,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invId);
             return ((ISingleResult<sp_LoadPurchaseDetailInvoiceResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetInventoryCounts")]
+        public ISingleResult<GetInventoryCountsResult> GetInventoryCounts([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(100)")] string startdate, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(100)")] string enddate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startdate, enddate);
+            return ((ISingleResult<GetInventoryCountsResult>)(result.ReturnValue));
         }
     }
 
@@ -204960,6 +204966,50 @@ namespace PMS
                 if ((this._Rate1 != value))
                 {
                     this._Rate1 = value;
+                }
+            }
+        }
+    }
+
+    public partial class GetInventoryCountsResult
+    {
+
+        private string _Category;
+
+        private System.Nullable<int> _CountValue;
+
+        public GetInventoryCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "VarChar(19) NOT NULL", CanBeNull = false)]
+        public string Category
+        {
+            get
+            {
+                return this._Category;
+            }
+            set
+            {
+                if ((this._Category != value))
+                {
+                    this._Category = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CountValue", DbType = "Int")]
+        public System.Nullable<int> CountValue
+        {
+            get
+            {
+                return this._CountValue;
+            }
+            set
+            {
+                if ((this._CountValue != value))
+                {
+                    this._CountValue = value;
                 }
             }
         }
