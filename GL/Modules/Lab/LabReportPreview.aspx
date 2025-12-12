@@ -771,6 +771,41 @@
                 }
             });
         }
+        function PrintVoucher() {
+            debugger;
+            test_list = [];
+            var tbl = $("#tblgroupTestlist tbody tr");
+            $.each(tbl, function (key, val) {
+                debugger;
+                var name = $(val).find('input[name="testDepartment"]').attr('name');
+                if (name == "testDepartment") {
+                }
+                else {
+                    var Ids = $(val).find('td:eq(0)').text();
+                    //$(val).find('td[id=testDetailID]').text();
+                    if (Ids != null && Ids > 0 && Ids != "") {
+                        test_list.push({ 'TestDID': Ids });
+                    }
+                }
+            });
+            //For Single Tests
+            var testID = $('#hdtestdetailid').val();
+            if (testID != null && testID > 0) {
+                test_list.push({ 'TestDID': testID });
+            }
+            let id = test_list[0].TestDID;
+
+          
+                    var locationInfo = window.location;
+            var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Lab Share Voucher&TransID=' + id + '&TransType=LabShare';
+                    if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                        var urlInfo = window.location.href.split('/');
+                        var ip = urlInfo[2];
+                        var foldername = urlInfo[3];
+                        url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Lab Share Voucher&TransID=' + id + '&TransType=LabShare';
+                    }
+                    window.open(url, '_blank');
+                }
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
             PageMethods.FillTestDepartment(function (data) {
@@ -2742,6 +2777,9 @@
                         </div>
                     <div class="col-lg-2 col-md-6 col-sm-12">
                 <input type="button" id="btnReject" class="btn btn-primry" name="btnReject" value="Reject"  />
+                        </div>
+                    <div class="col-lg-2 col-md-6 col-sm-12">
+                <input type="button" id="btnVoucher" class="btn btn-primry" name="btnVoucher" value="Voucher" onclick="PrintVoucher()"  />
                         </div>
                 <asp:Button ID="buttonimageuploadNotes" runat="server" OnClick="buttonimageuploadNotes_Click" Text=" " Style="display: none;" />
                 <asp:Button ID="btnRefresh" runat="server" OnClick="btnRefresh_Click" Style="display: none" />

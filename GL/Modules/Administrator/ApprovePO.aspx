@@ -1,268 +1,218 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovePO.aspx.cs" Inherits="PMS.ApprovePO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
-    <script type="text/javascript">  
+    <style type="text/css">
+        .custom-gridview {
+            table-layout: fixed;
+            word-wrap: break-word;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .custom-gridview .gridview-header {
+                background-color: #449777;
+                color: white;
+                font-weight: bold;
+                padding: 10px;
+                align-items: center;
+                text-align: center;
+            }
+
+            .custom-gridview th, .custom-gridview td {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 8px;
+/*                border: 1px solid #ddd;*/
+            }
+
+            .custom-gridview tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .custom-gridview tr:hover {
+/*                background-color: #ddd;*/
+            }
+
+            .custom-gridview .actions-column {
+                width: 100px;
+                text-align: center;
+            }
+
+            .custom-gridview a {
+                color: #308667;
+                text-decoration: none;
+            }
+
+                .custom-gridview a:hover {
+                    text-decoration: none;
+                }
+
+        .remarks-label {
+            display: block;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+      .pager-style {
+      text-align: center;
+      margin-top: 15px;
+  }
+
+      .pager-style table {
+          margin: auto;
+      }
+
+      .pager-style td {
+          padding: 5px 0px;
+          font-size: 16px;
+      }
+
+      .pager-style a,
+      .pager-style span {
+          display: inline-block;
+          padding: 8px 12px;
+          margin: 0 5px;
+/*          border-radius: 5px;*/
+/*          border: 1px solid #ddd;*/
+          background-color: #f8f8f8;
+          color: #333;
+          font-size: 14px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+      }
+
+          .pager-style a:hover {
+              background-color: #449777;
+              color: white;
+          }
+
+      .pager-style span {
+          background-color: #449777;
+          color: white;
+          font-weight: bold;
+/*          border: 1px solid #449777;*/
+      }
+
+
+    </style>
+    <script type="text/javascript">        
         $(document).ready(function () {
-            $('#checkAll').on('change', function () {
-                $('.rowCheck').prop('checked', this.checked);
-            });
-            LoadPage();
-            CheckUserRights();
+            debugger
+            $('#txt_search').keyup(function (e) {
+                debugger
+                var searchText = $('#txt_search').val().toLowerCase();
+                var tbl = document.getElementById('ctl00_MainContent_GridView1');
+                debugger
+                for (var i = 1; i < tbl.rows.length; i++) {
+                    var row = tbl.rows[i];
+                    var ponum = row.cells[1].innerText.toLowerCase();
+                    var podate = row.cells[2].innerText.toLowerCase();
+                    var remarks = row.cells[4].innerText.toLowerCase();
+                    var status = row.cells[5].innerText.toLowerCase();
+                    var department = row.cells[8].innerText.toLowerCase();
 
-
-        });
-        function editOpen(id) {
-            window.open("/Modules/AP/PurchaseOrder.aspx?PO_ID=" + id, "_blank");
-
-        }
-        function CheckUserRights() {
-            $.ajax({
-                type: "POST",
-                url: "ApprovePO.aspx/CheckUserRights",  // Update to match your page name
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    if (response.d === false) {
-
-                        $('#btnApproveHide').hide();
-
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX error:", error);
-                }
-            });
-        }
-        function ApproveSelectedIds() {
-            var selectedIds = [];
-
-            $('#tblResult input[type="checkbox"].rowCheck:checked').each(function () {
-                var id = $(this).data('id');
-                selectedIds.push(id);
-            });
-            console.log(selectedIds);
-            if (selectedIds.length === 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please select at least one row',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                
-                return;
-            }
-
-            // Send to backend via AJAX
-            $.ajax({
-                type: "POST",
-                url: "ApprovePO.aspx/ApproveSelectedPOs", // Update this
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({ POIds: selectedIds }),
-                success: function (response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Data saved successfully.',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                 },
-                error: function (xhr, status, error) {
-                    alert("Error: " + error);
-                }
-            });
-            setTimeout(function () {
-                location.reload();
-            }, 2500);
-        }
-        function RejectSelectedIds() {
-            var selectedIds = [];
-
-            $('#tblResult input[type="checkbox"].rowCheck:checked').each(function () {
-                var id = $(this).data('id');
-                selectedIds.push(id);
-            });
-
-            if (selectedIds.length === 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please select at least one row',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                 return;
-            }
-
-            // Send to backend via AJAX
-            $.ajax({
-                type: "POST",
-                url: "ApprovePO.aspx/RejectSelectedPOs", // Update this
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({ POIds: selectedIds }),
-                success: function (response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Data saved successfully.',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                 },
-                error: function (xhr, status, error) {
-                    alert("Error: " + error);
-                }
-            });
-            setTimeout(function () {
-                location.reload();
-            }, 2500);
-        }
-        function LoadPage() {
-            $("#tblResult").DataTable({
-                "processing": true,
-                "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": [
-                    {
-                        text: 'Reject PRs',
-                        className: 'dt-button buttons-copy buttons-html5',
-                        action: function () {
-                            RejectSelectedIds();
-                        }
-                    },
-                    {
-                        text: 'Approve PRs',
-                        className: 'dt-button buttons-copy buttons-html5',
-                        attr: {
-                            id: 'btnApproveHide'
-                        },
-                        action: function () {
-                            ApproveSelectedIds();
-                        }
-                    },
-                    'copy', 'excel', 'pdf',
-                ],
-                "filter": true,
-                "ajax": function (data, callback, settings) {
-                    $.ajax({
-                        type: "POST",
-                        url: "ApprovePO.aspx/ViewList",
-                        data: JSON.stringify({
-                            draw: data.draw,
-                            start: data.start,
-                            length: data.length,
-                            sortColumn: data.columns[data.order[0].column].name,
-                            sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
-                            callback({
-                                draw: response.d.draw,
-                                recordsTotal: response.d.recordsTotal,
-                                recordsFiltered: response.d.recordsFiltered,
-                                data: response.d.data
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                        }
-                    });
-                },
-                "columns": [
-                    {
-                        render: function (data, type, full, meta) {
-                            var checkboxId = 'chkSelect_' + full.POID;
-                            return '<span style="display:inline-block;width:30px;">' +
-                                '<input id="' + checkboxId + '" type="checkbox" class="rowCheck" data-id="' + full.POID + '">' +
-                                '</span>';
-                        }, "width": "2%", "orderable": false
-                    },
-                    { "data": "POID", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "PONO", "name": "mr_no_sequence", "width": "8%", "orderable": true },
-                    { "data": "PODATE", "name": "Opd_No", "width": "5%", "orderable": false },
-                    { "data": "CREATOR", "width": "13%", "orderable": false },
-                    { "data": "DEPARTMENT", "visible": false, "width": "10%", "orderable": false },
-                    { "data": "REMARKS", "width": "10%", "orderable": false },
-                    { "data": "STATUS", "width": "10%", "orderable": false },
-                    { "data": "APPROVEBY", "width": "10%", "orderable": false },
-                    {
-                        render: function (data, type, full) {
-                            return '<a href="#" onclick="editOpen(' + full.POID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
-                        }, "width": "7%", "orderable": false
-                    }
-                ],
-                "initComplete": function (settings, json) {
-                    var lengthContainer = document.querySelector('#tblResult_length');
-                    var lengthDropdown = document.querySelector('#tblResult_length select');
-                    var label = document.querySelector('#tblResult_length label');
-
-                    if (lengthDropdown && label && lengthContainer) {
-                        var labelText = document.createElement('span');
-                        labelText.textContent = 'Show entries ';
-                        labelText.style.marginTop = '10px';
-                        labelText.style.display = 'inline-block';
-
-                        lengthDropdown.style.width = '60px';
-                        label.innerHTML = '';
-                        label.style.display = 'inline-flex';
-                        label.style.marginTop = '17px';
-                        label.appendChild(labelText);
-                        label.appendChild(lengthDropdown);
+                    if (searchText.trim() === '' ||
+                        ponum.includes(searchText) ||
+                        podate.includes(searchText) ||
+                        remarks.includes(searchText) ||
+                        status.includes(searchText) ||
+                        department.includes(searchText)
+                    ) {
+                        row.style.display = '';
                     } else {
-                        console.log("Length dropdown, label, or container not found");
+                        row.style.display = 'none';
                     }
                 }
-
             });
-        }
+        });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+     <div class="row">
+     <div class="col-lg-8">
+         <div class="col-lg-2">
 
-    <div class="table-container col-lg-12 col-md-12 col-sm-10">
-        <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
-            <thead id="ihead">
-                <tr>
-                    <th><span style="display:inline-block;width:30px;"><input id="checkAll" type="checkbox"/></span></th>
-                    <th style="display: none;">Company ID</th>
-                    <th>PO No.</th>
-                    <th>PO Date</th>
-                    <th>Creator</th>
-                    <th style="display: none;">Department</th>
-                    <th>Remarks</th>
-                    <th>Status</th>
-                    <th>Approve By</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="ibody">
-            </tbody>
-        </table>
-    </div>
+            <input type="text" id="txt_search"  name="txt_search" placeholder="Search..." />
+         </div>
+         <div class="col-lg-2">
+               <asp:Button ID="btnApprove" class="btn btn-primry" Text="Approve Selected PO" runat="server" SkinID="btnAutoWidth" OnClick="btnApprove_Click" />
+           
+         </div>
+         <div class="col-lg-2">
+              <asp:Button ID="btnCancel" class="btn btn-primry" Text="Reject Selected PO" runat="server" SkinID="btnAutoWidth" OnClick="btnCancel_Click" />
 
+
+         </div>
+     </div>
+ </div>
+
+
+
+    
+   <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"
+    AllowPaging="True" PageSize="10"
+    CssClass="custom-gridview"
+    PagerStyle-CssClass="pagination-container"
+    PagerSettings-Mode="Numeric"
+    OnPageIndexChanging="GridView1_PageIndexChanging">
+        <PagerSettings Mode="NumericFirstLast" NextPageText="Next »" PreviousPageText="« Previous"
+            FirstPageText="« First" LastPageText="Last »" />
+
+       <PagerStyle HorizontalAlign="Right" CssClass="pager-style" />
+        <Columns>
+            <asp:TemplateField HeaderStyle-Width="30px">
+                <ItemTemplate>
+                    <asp:CheckBox ID="chkSelect" Text="" runat="server" Width="30px" />
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="PO ID" Visible="False">
+                <ItemTemplate>
+                    <asp:Label ID="lblPO_ID" runat="server" Text='<%# Bind("PO_ID") %>'></asp:Label>
+                </ItemTemplate>
+                <EditItemTemplate>
+                    <asp:TextBox ID="txtPO_ID" runat="server" Text='<%# Bind("PO_ID") %>'></asp:TextBox>
+                </EditItemTemplate>
+            </asp:TemplateField>
+            <asp:BoundField DataField="PO_No" HeaderText="PO No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px" />
+            <asp:BoundField DataField="PO_Date" HeaderText="PO Date" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:d}" ItemStyle-Width="100px" />
+            <asp:BoundField DataField="Creator" HeaderText="Creator" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="120px" />
+            <asp:TemplateField HeaderText="Remarks">
+                <ItemTemplate>
+                    <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("Remarks") %>' CssClass="remarks-label"></asp:Label>
+                </ItemTemplate>
+                <ItemStyle Width="550px" />
+            </asp:TemplateField>
+            <asp:BoundField DataField="Status" HeaderText="Status" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
+            <asp:BoundField DataField="Approve_By" HeaderText="Approve By" ItemStyle-Width="180px" />
+            <asp:TemplateField>
+                <HeaderTemplate>
+                    <div style="width: 100px; text-align: center;">
+                        Actions
+               
+                    </div>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# "./AP/PurchaseOrder.aspx?PO_ID="+ Eval("PO_ID")%>' Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
+                </ItemTemplate>
+                <HeaderStyle CssClass="header-center-align" />
+            </asp:TemplateField>
+            <asp:BoundField DataField="Department" HeaderText="Department" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="150px" />
+            <asp:BoundField DataField="TotalPRAmount" HeaderText="TotalPRAmt" HeaderStyle-Width="100px" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
+            <asp:BoundField DataField="TotalBudget" HeaderText="TotalBudget" HeaderStyle-Width="100px" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
+            <asp:BoundField DataField="RemainingAmount" HeaderText="Balance" HeaderStyle-Width="100px" Visible="False" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px" />
+            <asp:TemplateField HeaderText="RemainingAmount" Visible="False">
+                <ItemTemplate>
+                    <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Bind("RemainingAmount") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+        </Columns>
+        <PagerSettings Mode="NumericFirstLast" FirstPageText="First" LastPageText="Last" />
+        <PagerStyle HorizontalAlign="Right" CssClass="pager-style" />
+        <HeaderStyle BackColor="#449777" ForeColor="White" Font-Size="14px" />
+        <RowStyle CssClass="gridview-row" />
+        <AlternatingRowStyle CssClass="gridview-alt-row" />
+    </asp:GridView>
+    <br />
+  
+   
 </asp:Content>
