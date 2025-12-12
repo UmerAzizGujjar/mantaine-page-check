@@ -460,8 +460,18 @@
                 }, 500);
             }
             function PrintVoucher() {
-                window.open('/ReportViewer.aspx?ReportName=GLVoucherEntry&ReportTitle=SALE INVOICE VOUCHER' + '&Voucher_ID=346897');
+                debugger;
+                var id = '<%=Request.QueryString["Bill_ID"]%>';
+            var locationInfo = window.location;
+                var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
+            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
             }
+            window.open(url, '_blank');
+        }
             function PrintHospital() {
                 window.open('/ReportViewer.aspx?ReportName=PrintHospital&ReportTitle=Hospital Print' + '&Bill_ID=' + '<%= Request.QueryString["Bill_ID"]%>');
             }
@@ -6009,11 +6019,11 @@
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />
                     </div>
-                                        <div class="col-lg-2">
+                     <div class="col-lg-2">
                         <input type="button" class="btn btn-primry"  style="width: 110px; display: none;" value="Approve" id="btnApprove"   onclick="ApproveBill()" />
                     </div>
                     <div class="col-lg-2">
-                        <input type="button" style="width: 110px; display: none;" value="Print Voucher" onclick="PrintVoucher();" />
+                        <input type="button" style="width: 110px; display: none;" id="btnPrintVoucher" class="btn btn-primry" value="Print Voucher" onclick="PrintVoucher();" />
                         <input type="button" style="width: 110px; display: none;" value="Hospital Print" onclick="PrintHospital();" />
                         <input type="button" style="width: 110px; display: none;" value="Consult Print" onclick="PrintConsultant();" />
                         <input type="button" style="width: 110px; display: none;" value="Patient Copy" name="name" onclick="BackToPrintPatient();" style="width: 100px;" />

@@ -107,6 +107,14 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Store_Issue where Store_Issue_Id = " + transID).ToString();
                     }
+                    else if (transType == "LabShare")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from lab_test_Detail where lab_test_Detail_Id = " + transID).ToString();
+                    }
+                    else if (transType == "BIJV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Ar_Billings where Bill_Id = " + transID).ToString();
+                    }
                     else if (transType == "MIN")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Manual_Invoice where ManualInvoiceId = " + transID).ToString();
