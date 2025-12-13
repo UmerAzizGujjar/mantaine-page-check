@@ -2339,7 +2339,7 @@ namespace PMS
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
                     ddlPatientType.Visible = false;
-                    optRw.Visible = false;
+                    optRw.Visible = true;
                     trDoctor.Visible = false;
                     AllowPatientRecord = false;
                     lblMainDepartment.Visible = false;
@@ -2408,6 +2408,9 @@ namespace PMS
                     ddloprators.Visible = true;
                     lblDepartment.Visible = false;
                     ddlDepartments.Visible = false;
+
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
 
 
                 }
