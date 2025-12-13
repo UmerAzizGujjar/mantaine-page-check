@@ -196,6 +196,117 @@ namespace PMS
                     lblMultiSelect.Visible = false;
 
                 }
+                //else if (this.PageTitle == "OPD_Department_Wise_Report")
+                //{
+                //    string x = "Department Wise Report";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    tr1MedicalSubsidy.Visible = false;
+                //    dpROw.Visible = true;
+                //    tr_Summary.Visible = false;      // changed
+                //    lblMultiSelect.Visible = false;
+                //    lblPatientType.Text = "Operators";
+                       
+                //    DateDiv.Visible = true;
+                //    Time_Row.Visible = true;
+                //    op_PanelCompany.Visible = false;
+                //    optRw.Visible = true;
+                //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                //    object valusetss = from d in db.aspnet_Users
+                //                      select new { d.UserName, d.UserId };
+                //    ddlPatientType.DataSource = valusetss;
+                //    ddlPatientType.DataTextField = "UserName";
+                //    ddlPatientType.DataValueField = "UserId";
+                //    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //    ddlPatientType.DataBind();
+
+                //    //lbShift.Visible = true;
+                //    //ddlShift.Visible = true;
+                //    //DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
+                //    //ddlShift.DataSource = shift;
+                //    //ddlShift.DataValueField = "Shift_ID";
+                //    //ddlShift.DataTextField = "Shift_Name";
+                //    //ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
+                //    //ddlShift.DataBind();
+                //    lboperator.Visible = false;
+                //    ddloprators.Visible = false;
+
+                //    lbShift.Visible = true;
+                //    ddlShift.Visible = true;
+                //    ddlShift.Items.Clear();
+                //    ddlShift.Items.Add(new ListItem("All", "0"));
+                //    ddlShift.Items.Add(new ListItem("Morning", "2"));
+                //    ddlShift.Items.Add(new ListItem("Evening", "3"));
+                //    ddlShift.Items.Add(new ListItem("Night", "4"));
+
+                //    trDoctor.Visible = true;
+
+                //    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                //    ddlDoctor.DataSource = dt;
+                //    ddlDoctor.DataValueField = "Emp_ID";
+                //    ddlDoctor.DataTextField = "Emp_Name";
+                //    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                //    ddlDoctor.DataBind();
+                //    lblMultiSelect.Visible = false;
+
+                //}
+                if (PageTitle == "PCRS")
+                {
+
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr1MedicalSubsidy.Visible = true;
+                    dpROw.Visible = true;
+                    ddlDepartments.Visible = true;
+                    lblDepartment.Visible = true;
+                    lblDepartment.Text = "Company";
+                    ddlMedicalSubsidy.Visible = false;
+                    lblMedical.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    MainDeptDiv.Visible = true;
+                    lblPatientType.Visible = false;
+                    lblPatientType.Text = "Patient Type";
+                    ddlDoctor.Visible = false;
+                    ddlPatientType.Visible = false;
+                    ddlReportType.Visible = false;
+                    ddlMainDepartment.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Item Name";
+                    object valusets;
+                    DataBaseDataContext dbd = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in dbd.INV_Items
+                               where d.IsPharmacyItem == true
+                               select new { d.Item_Code, d.Description };
+                    ddlMainDepartment.DataSource = valusets;
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.DataTextField = "Description";
+                    ddlMainDepartment.DataValueField = "Item_Code";
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+                    object valusets1;
+                    DataBaseDataContext dd = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets1 = (from p in dd.DataValues where p.ValueSet_ID == 7 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets1;
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+
+                    optRw.Visible = true;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from pu in db.Pharmacy_Users
+                               select new { pu.UserName, pu.UserID };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                }
                 else if (this.PageTitle == "Consultant_Wise_Statistics")
                 {
                     string x = "Consultant Wise Statistics";
@@ -958,33 +1069,33 @@ namespace PMS
                     lbservieType.Visible = false;
                 }
                 //Pharmacy Cash Report Summary
-                if (PageTitle == "PCRS")
-                {
-                    string x = "Pharmacy Cash Report Summary";
-                    Master.Label2.Text = x;
-                    Master.GetMenuName();
-                    DateDiv.Visible = true;
-                    Time_Row.Visible = true;
-                    tr1MedicalSubsidy.Visible = true;
-                    dpROw.Visible = false;
-                    ddlDepartments.Visible = false;
-                    lblDepartment.Visible = false;
-                    ddlMedicalSubsidy.Visible = false;
-                    lblMedical.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlShift.Visible = false;
-                    lbShift.Visible = false;
-                    tr_Export.Visible = false;
-                    trDoctor.Visible = false;
-                    tr_Summary.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblPatientType.Text = "Patient Type";
-                    ddlDoctor.Visible = false;
-                    ddlPatientType.Visible = false;
-                    op_FilterClinic.Visible = false;
-                    ddlReportType.Visible = false;
-                    lbservieType.Visible = false;
-                }
+                //if (PageTitle == "PCRS")
+                //{
+                //    string x = "Pharmacy Cash Report Summary";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    DateDiv.Visible = true;
+                //    Time_Row.Visible = true;
+                //    tr1MedicalSubsidy.Visible = true;
+                //    dpROw.Visible = false;
+                //    ddlDepartments.Visible = false;
+                //    lblDepartment.Visible = false;
+                //    ddlMedicalSubsidy.Visible = false;
+                //    lblMedical.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    ddlShift.Visible = false;
+                //    lbShift.Visible = false;
+                //    tr_Export.Visible = false;
+                //    trDoctor.Visible = false;
+                //    tr_Summary.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    lblPatientType.Text = "Patient Type";
+                //    ddlDoctor.Visible = false;
+                //    ddlPatientType.Visible = false;
+                //    op_FilterClinic.Visible = false;
+                //    ddlReportType.Visible = false;
+                //    lbservieType.Visible = false;
+                //}
                 //Doctor wise Sale Cash Report
                 if (this.PageTitle == "DoctorMS")
                 {
@@ -2156,6 +2267,30 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
+                if (this.PageTitle == "Pharmacy_Customer_Report")
+                {
+                    string x = "Customer Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                }
                 if (this.PageTitle == "Physiotherapy_Cash_Collection")
                 {
 
@@ -2401,6 +2536,97 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
 
+
+                    lblMainDepartment.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                     lboperator.Visible = true;
+                    ddloprators.Visible = true;
+                    lblDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+
+                }
+                if (this.PageTitle == "Sale_Return_Report")
+                {
+                    string x = "Sale Return Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                    object valusets;
+              
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+                    lblMainDepartment.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                     lboperator.Visible = true;
+                    ddloprators.Visible = true;
+                    lblDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+
+                }
+                if (this.PageTitle == "Sale_Report_Summary")
+                {
+
+                    string x = "Sale Report Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                    object valusets;
+              
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
 
                     lblMainDepartment.Visible = true;
                     ddlMainDepartment.Visible = true;
