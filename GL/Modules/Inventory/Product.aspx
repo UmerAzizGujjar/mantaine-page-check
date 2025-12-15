@@ -4,6 +4,8 @@
     <script type="text/javascript">
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
+           
+
             $("#lblProcedure_Time").hide();
             $("#Procedure_Time").hide();
             var dropdowns = [
@@ -29,7 +31,7 @@
                     fillDropdown($element, item.method);
                 });
             });
-
+            GetDiscountItem();
             if (id != "") {
                 LoadItemInventory(id);
 
@@ -425,6 +427,31 @@
             }
         }
 
+        function GetDiscountItem() {
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/GetDiscountSysParams",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    debugger;
+                    var data = JSON.parse(msg.d);
+                    if (data == '001') {
+                        $(".DiscountBlock").show();
+                    }
+                    else {
+                        $(".DiscountBlock").hide();
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in getWardAndBed: ", error);
+                }
+            });
+
+
+        }
         function Saveitem() {
             if (validateSave()) {
                 debugger;
@@ -490,6 +517,7 @@
                 var DepartmentId = $('#ddldepartment').val();
                 var SehatCardRate = $('#txtSehatCardRate').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
+                var Discount_Block = $('#Discount_Block').prop('checked');
                 var Id = 0;
                 var batchList = [];
                 var PatientTypeList = [];
@@ -574,6 +602,7 @@
                         "DepartmentId": DepartmentId,
                         "IsHospital": isHospitalchk,
                         "SehatCardRate": SehatCardRate,
+                        "Discount_Block": Discount_Block,
                         "batchList": batchList,
                         "PatientTypeList": PatientTypeList,
                     }),
@@ -794,6 +823,9 @@
                     }
                     if (parse.Finished_Product == 1) {
                         $("#Finished_Product").prop('checked', true);
+                    }
+                    if (parse.Discount_Block == 1) {
+                        $("#Discount_Block").prop('checked', true);
                     }
                     if (parse.Consumable == 1) {
                         $("#Consumable").prop('checked', true);
@@ -1246,6 +1278,9 @@
                     <td style="width: 21px;">
                         <input type="checkbox" id="Refregrator" name="Refregrator" /></td>
                     <td style="width: 84px;">Refregrator</td>
+                    <td style="width: 21px;" class="DiscountBlock">
+                        <input type="checkbox" id="Discount_Block" name="Discount_Block" /></td>
+                    <td class="DiscountBlock" style="width: 84px;">Discount Block</td>
                 </tr>
                 <tr>
                     <td style="width: 21px;">

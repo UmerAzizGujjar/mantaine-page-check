@@ -112,6 +112,40 @@
         })(jQuery);
         var btnVal = '';
         localStorage.IsDischarge = 0;
+
+        $(document).on('keyup', '.select2-search__field', function () {
+            var searchString = $(this).val();
+
+            var options;
+            $.ajax({
+                url: 'InPatientsCase.aspx/getpharmacyitems',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchString }),
+                success: function (response) {
+                    var options = '';
+                    try {
+                        var pharmacyItems = JSON.parse(response.d);
+                        $.each(pharmacyItems, function (key, value) {
+                            options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                        });
+                        $('#txtPharmacyItem').append(options).trigger('change');
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+
+        $(document).on('keydown', '.select2-search__field', function (event) {
+            if (event.keyCode === 13) {
+                $('#txtPharmacyItem').select2('close');
+            }
+        });
+
         $(document).ready(function () {
             debugger;
             $("#tabs").tabs();
@@ -4887,11 +4921,8 @@
                 $.each(JSON.parse(Medicine), function (key, value) {
                     options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
                 });
-
                 $('#txtPharmacyItem').html(options);
                 $('#txtPharmacyItem').select2();
-
-
             });
         }
         var checkRepeateRecord = false;
