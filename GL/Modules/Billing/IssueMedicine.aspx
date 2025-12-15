@@ -28,7 +28,7 @@
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
-                SearchPop();
+                GetPharmacyUser();
                 $('#txtuserCode').focus();
             }
             else if (event.altKey && event.code === 'KeyR') {
@@ -1602,6 +1602,139 @@
             }
         }
 
+        function SaveDataWithoutUser() {
+            debugger;
+            $('#SaveVal').attr('disabled', true);
+            var userC = $('#txtuserCode').val();
+            var userP = $('#txtpass').val();
+            var userCode;
+            var UserPass;
+            var UserId=0
+           
+               
+                    debugger;
+                    var Bill_ID = '';
+                    Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
+             if (Bill_ID == '')
+                 Bill_ID = 0
+             var Patient_ID = $('#hdPatientID').val();
+             if (Patient_ID == "" || Patient_ID == '') {
+                 Patient_ID = "";
+             }
+             var CustomerName = $('#CustomerName').val();
+             var TransType = $("#txtTransType").val();
+             var ReferBy = $('#ddlDoctor').val();
+             var Dept = $('#ddlDepartment').val();
+             var totalPayable = $('#txtTotalPayable').val();
+             var DiscPercent = $('#txtDisPer').val();
+             var DiscAmnt = $('#txtDisAmt').val();
+             var flatdisc = $('#txtFlatDisc').val();
+             if (flatdisc == "" || flatdisc == "visionplus") {
+                 flatdisc = 0;
+             }
+             var AmntReceived = $('#txtAmountReceived').val();
+             var BalanceAmount = $('#txtBalances').val();
+             if (BalanceAmount == "") {
+                 BalanceAmount = 0;
+             }
+             var linediscount = $('#txtLineDisc').val();
+             var Rbtn = $('input[name="rbtn"]:checked').val();
+             var patId = out_Patient_Id;
+             var invNumber = $("#Inv_No").val();
+             var Save_list = [];
+             var hasInvalidStock = false;
+             var Save_list = [];
+
+             $.each($('#tblDetails tbody tr'), function (key, value) {
+                 debugger;
+                 var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
+                 var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
+                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
+                 var Stock = $($(value).find('td input[name=txtStock]')[0]).val();
+                 var Amount = $($(value).find('td input[name=txtSalerate]')[0]).val();
+                 var DiscPer = $($(value).find('td input[name=DisPer]')[0]).val();
+                 var DiscAmount = $($(value).find('td input[name=DisAmount]')[0]).val();
+                 var batchno = $($(value).find('td input[name=BatchNo]')[0]).val();
+                 var expdate = $($(value).find('td input[name=exp_date]')[0]).val();
+                 var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
+                 var CGSAmount = CGSRate * Qty;
+                 if (batchno == null) {
+                     batchno = '';
+                 }
+
+                 if (parseFloat(Stock) <= 0 && parseFloat(Qty) > 0) {
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'Error!',
+                         text: 'Quantity must be greater than zero.',
+                         showConfirmButton: false,
+                         timer: 2000,
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
+                         }
+                     });
+
+
+                     hasInvalidStock = true;
+                     return false;
+                 }
+                 var NetAmount = $($(value).find('td')[11]).text();
+                 Save_list.push({
+                     Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount,
+                 });
+             });
+             debugger;
+             if (hasInvalidStock) {
+                 return;
+             }
+             debugger;
+             var Parameters = {
+                 "Bill_ID": Bill_ID,
+                 "Patient_ID": Patient_ID,
+                 "CustomerName": CustomerName,
+                 "TransType": TransType,
+                 "ReferBy": ReferBy,
+                 "Dept": Dept,
+                 "totalPayable": totalPayable,
+                 "DiscPercent": DiscPercent,
+                 "DiscAmnt": DiscAmnt,
+                 "flatdisc": flatdisc,
+                 "AmntReceived": AmntReceived,
+                 "BalanceAmount": BalanceAmount,
+                 "linediscount": linediscount,
+                 "Save_list": Save_list,
+                 "invNumber": invNumber
+             };
+             if (patId == undefined) {
+                 debugger;
+                 patId = 0;
+             }
+             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
+                 debugger;
+                 var btnSave = $('#btnSave').val();
+                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
+                     window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                 }
+                 Swal.fire({
+                     icon: 'success',
+                     title: 'Success!',
+                     text: 'Data Saved Successfully',
+                     showConfirmButton: false,
+                     timer: 2500,
+                     customClass: {
+                         popup: 'swal-big-popup',
+                         title: 'swal-big-title',
+                         htmlContainer: 'swal-big-text'
+                     }
+                 });
+
+                 window.location.href = 'IssueMedicine.aspx';
+             });
+         
+        }
+
         function SaveData() {
             debugger;
             $('#SaveVal').attr('disabled', true);
@@ -2198,6 +2331,31 @@
                 }
             });
         }
+        function GetPharmacyUser() {
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/GetUserFromSysParams",
+                data: JSON.stringify({ }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    debugger;
+                    var data = JSON.parse(msg.d);
+                    if (data == '001') {
+                        SearchPop()
+                    }
+                    else {
+                        SaveDataWithoutUser()
+                    }
+                    
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in getWardAndBed: ", error);
+                }
+            });
+
+
+        }
         function SearchPop() {
             debugger;
             $('#SearchModel').modal({
@@ -2310,7 +2468,7 @@
                     <input type="checkbox" tabindex="9" id="chkprint" />
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-2" style="margin-top: 2%">
-                    <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="SearchPop()" />
+                    <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
                 </div>
             </div>
 
