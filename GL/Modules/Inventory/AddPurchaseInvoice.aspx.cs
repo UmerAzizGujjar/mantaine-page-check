@@ -286,6 +286,9 @@ namespace PMS.Inventory
                 ltd.DiscPer = Convert.ToDecimal(Invoiceitem.DiscPer);
                 ltd.DiscAmt = Convert.ToDecimal(Invoiceitem.DiscAmt);
                 ltd.Adv_Po_ID = Invoiceitem.AdvigpagainstPo;
+                ltd.AdvTax_Id = string.IsNullOrEmpty(Invoiceitem.AdvTaxId) ? 0 : Convert.ToInt32(Invoiceitem.AdvTaxId);
+                ltd.AdvTax_Amount = string.IsNullOrEmpty(Invoiceitem.AdvTaxAmount) ? 0 : Convert.ToDecimal(Invoiceitem.AdvTaxAmount);
+                ltd.AdvTotalAmount = string.IsNullOrEmpty(Invoiceitem.AdvTotalAmount) ? 0 : Convert.ToDecimal(Invoiceitem.AdvTotalAmount);
                 db.Purchase_Invoice_Details.InsertOnSubmit(ltd);
                 db.SubmitChanges();
             }
@@ -347,7 +350,7 @@ namespace PMS.Inventory
                     db.SubmitChanges();
                 }
             }
-        
+
             return int.Parse(InvoiceId);
         }
         [WebMethod]
@@ -431,6 +434,9 @@ namespace PMS.Inventory
         {
             public string ItemId { get; set; }
             public string GRNId { get; set; }
+            public string AdvTaxId { get; set; }
+            public string AdvTaxAmount { get; set; }
+            public string AdvTotalAmount { get; set; }
             public string GRNDetailId { get; set; }
             public string PurchAseInvoiceId { get; set; }
             public string Rate { get; set; }

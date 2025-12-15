@@ -184,6 +184,20 @@ $(document).ready(function () {
     get_totalpatient();
     FillUserAccount();
 
+    const defaults = {
+        '#ddlCountry': { value: '01', text: 'Pakistan' },
+        '#ddl_Province': { value: '01', text: 'Punjab' },
+        '#txtcity': { value: '0001', text: 'Lahore' }
+    };
+
+    $.each(defaults, function (id, data) {
+        const $el = $(id);
+        $el.html(`<option value="${data.value}" selected>${data.text}</option>`);
+        if ($el.hasClass('select2-hidden-accessible')) {
+            $el.trigger('change');
+        }
+    });
+
 });
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;

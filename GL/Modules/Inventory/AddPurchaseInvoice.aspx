@@ -294,7 +294,8 @@
                         '<td style="display:none">' + Test[i].Stax + '</td>' +
                         '<td style="display:none">' + parseFloat(Test[i].sTaxAmount).toFixed() + '</td>' +
                         '<td style="display:none">' + Test[i].AdvigpagainstPo + '</td>' +
-                        '<td style="display:none">' + parseFloat(Test[i].Total_Adv_Amt || 0).toFixed(2) + '</td>' +
+                        '<td style="display:none">' + parseFloat(Test[i].AdvTaxAmount || 0).toFixed(2) + '</td>' +
+                        '<td style="display:none">' + (Test[i].AdvTaxId || 0) + '</td>' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                     global = rows;
@@ -364,14 +365,17 @@
             var RecQty = $($(row).find('td')[13]).text();
             var Qty = $($(row).find('td')[14]).text();
             var Rate = $($(row).find('td')[15]).text();
+            var AdvTotalAmount = parseFloat(Rate) * parseFloat(Qty);
             var Value = $($(row).find('td')[16]).text();
             var TotalAmount = $($(row).find('td')[17]).text();
             var DiscPer = $($(row).find('td')[20]).text();
             var DiscAmt = $($(row).find('td')[21]).text();
             var stax = $($(row).find('td')[22]).text();
             var staxAmt = $($(row).find('td')[23]).text();
-            var AdvigpagainstPo = $($(row).find('td')[25]).text();
-            var TotalAdvAmt = $($(row).find('td')[26]).text();
+            var AdvigpagainstPo = $($(row).find('td')[24]).text();
+            var TotalAdvAmt = $($(row).find('td')[25]).text();
+            var AdvTaxId = $($(row).find('td')[26]).text();
+
             var length = $("#tblItemDescription tr:gt(0)").length;
             if (length > 0) {
                 length = length + 1;
@@ -424,6 +428,9 @@
                 '<td style="display:none"><input type="hidden" id="txtGRNDetailId' + length + '" name="txtGRNDetailId" value="' + GRNDetailId + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtItemId' + length + '" name="txtItemId" value="' + ItemId + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="AdvigpagainstPo' + length + '" name="AdvigpagainstPo" value="' + AdvigpagainstPo + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="AdvTaxAmount' + length + '" name="AdvTaxAmount" value="' + (TotalAdvAmt || 0) + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="AdvTaxId' + length + '" name="AdvTaxId" value="' + (AdvTaxId || 0) + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="AdvTotalAmount' + length + '" name="AdvTotalAmount" value="' + AdvTotalAmount.toFixed(2) + '"/></td>' +
                 '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                 '</tr>'
             debugger;
@@ -578,12 +585,16 @@
                         '<td class="headcol2_4"><input type="hidden" id="txtdiscamt' + (key + 1) + '" name="txtdiscamt" value="' + parseFloat(value.DiscAmt).toFixed(2) + '"/>' + parseFloat(value.DiscAmt).toFixed(2) + '</td>' +
                         '<td class="headcol2_5"><select style="position: relative;top:-6px;width: 90px !important;" disabled onchange="CulculateAmonut()" id="Staxddl' + (key + 1) + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select>' + '</td>' +
                         '<td class="headcol2_6"><input type="hidden" id="staxamou' + (key + 1) + '" name="staxamou" value="' + value.Stax_Perc + '"/>' + value.Stax_Perc + '</td>' +
-                        '<td class="headcol2_7">' + Value + '</td>' +
+                        '<td class="headcol2_adv_tax">' + parseFloat(value.AdvTax_Amount || 0).toFixed(2) + '</td>' + 
+                        '<td class="headcol2_7">' + Value + '</td>' +                     
                         '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount" value="' + parseFloat(value.Amount).toFixed() + '"/>' + parseFloat(value.Amount).toFixed() + '</td>' +
                         '<td style="display:none"><input type="hidden" id="txtGRNId' + (key + 1) + '" name="txtGRNId" value="' + value.GRN_ID + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtGRNDetailId' + (key + 1) + '" name="txtGRNDetailId" value="' + value.GRN_detail_Id + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtItemId' + (key + 1) + '" name="txtItemId" value="' + value.ItemId + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="AdvigpagainstPo' + (key + 1) + '" name="AdvigpagainstPo" value="' + value.Adv_Po_ID + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="AdvTaxId" value="' + (value.AdvTax_ID || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="AdvTaxAmount" value="' + (value.AdvTax_Amount || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="AdvTotalAmount" value="' + (value.AdvanceTotalAmount || 0) + '"/></td>' +
                         '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                         '</tr>'
                     length++;
@@ -642,9 +653,9 @@
                 amountwithdiscount = (Amount - DisAmt);
                 STAmount = (STpercent / 100) * amountwithdiscount;
                 NetAmount = amountwithdiscount + STAmount;
-                tbl.rows[i].cells[15].innerText = STAmount.toFixed();
-                tbl.rows[i].cells[16].innerText = amountwithdiscount.toFixed();
-                tbl.rows[i].cells[17].innerText = NetAmount.toFixed();
+               tbl.rows[i].cells[15].innerText = STAmount.toFixed();  
+               tbl.rows[i].cells[17].innerText = amountwithdiscount.toFixed();
+               tbl.rows[i].cells[18].innerText = NetAmount.toFixed(); 
                 calculateadvance(tbl.rows[i]);
             }
         }
@@ -683,9 +694,12 @@
                     var amount = $(value).find('.headcol2_7').text();
                     var staxperc = $(value).find('.headcol2_6').text();
                     var disamt = $(value).find('.headcol2_4').text();
+                    var AdvTaxAmount = $(value).find('.headcol2_9').text();
+                    var AdvTotalAmount = $(value).find('td input[name=AdvTotalAmount]').val() || '0';
                     debugger;
                     Item_list.push({
-                        'ItemId': $(value).find('td input[name=txtItemId]').val(), 'GRNId': $(value).find('td input[name=txtGRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'TotalAmount': totalamt, 'staxid': $(value).find('td select[name=Staxddl]').val(), 'staxperc': staxperc, 'DiscPer': $(value).find('td input[name=txtdiscper]').val(), 'DiscAmt': disamt, 'Amount': amount, 'AdvigpagainstPo': AdvigpagainstPo
+                        'ItemId': $(value).find('td input[name=txtItemId]').val(), 'GRNId': $(value).find('td input[name=txtGRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'TotalAmount': totalamt, 'staxid': $(value).find('td select[name=Staxddl]').val(), 'staxperc': staxperc, 'DiscPer': $(value).find('td input[name=txtdiscper]').val(), 'DiscAmt': disamt, 'Amount': amount, 'AdvigpagainstPo': AdvigpagainstPo, 'AdvTaxId': $(value).find('td input[name=AdvTaxId]').val() || '0',
+                        'AdvTaxAmount': $(value).find('td input[name=AdvTaxAmount]').val() || '0', 'AdvTotalAmount': $(value).find('td input[name=AdvTotalAmount]').val() || '0'
                     });
                 });
                 table2.find('tr').each(function (key, value) {

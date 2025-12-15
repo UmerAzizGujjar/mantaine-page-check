@@ -105,7 +105,9 @@
             "Field_FollowUP": "follow_up",
             "Field_freeCheck": "Free_Check",
             "field_Services": "Services",
-            "field_Clinic": "FilterClinic"
+            "field_Clinic": "FilterClinic",
+            "RefferdBy": "RefferedBy",
+            "EmerRefferedBy": "EmerRefferedBy",
         };
 
         function loadPermissions(callback) {
@@ -1065,7 +1067,7 @@
         </div>
 
         <!-- Card 4 -->
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="EmerRefferedBy">
             <div id="btnsearchEmergencylist" role="button" tabindex="0"
                  onclick="/* add emergency refer function here, e.g. referToEmergency() */"
                  onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
@@ -1080,7 +1082,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+        <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="RefferdBy">
             <div id="btnsearchReferlist" role="button" tabindex="0"
                 onclick="openReferPatientModal()"
                 onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
