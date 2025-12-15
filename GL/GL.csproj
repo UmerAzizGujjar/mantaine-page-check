@@ -235,6 +235,7 @@
     <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
     <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
+    <Content Include="Modules\Dashboards\DashPatientsCountertoClinic.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
     <Content Include="Modules\Dashboards\OPD_Utilization_Dashboard.aspx" />
@@ -25901,6 +25902,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\DashPatientsCount.aspx.designer.cs">
       <DependentUpon>DashPatientsCount.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\DashPatientsCountertoClinic.aspx.cs">
+      <DependentUpon>DashPatientsCountertoClinic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\DashPatientsCountertoClinic.aspx.designer.cs">
+      <DependentUpon>DashPatientsCountertoClinic.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\EMR.aspx.cs">
       <DependentUpon>EMR.aspx</DependentUpon>

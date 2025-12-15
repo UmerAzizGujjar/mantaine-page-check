@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="IssueMedicine.aspx.cs" Inherits="PMS.IssueMedicine" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Pharmacy.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/ASsiratTheme/css/CustomCss/Pharmacy.css" rel="stylesheet" />
+    <link href="../../wwwroot/ASsiratTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
 
     <script type="text/javascript">
@@ -179,11 +179,11 @@
                         callback(data);
                     };
                     $(document).ready(function () {
-                        debugger;                      
+                        debugger;
                         $("#medName").select2({
                             ajax: {},
                             dataAdapter: CustomData,
-                  
+
                         });
                     });
                 })
@@ -407,7 +407,7 @@
             $('#saleReturnTableBody').empty();
             $('#ddlInvoiceNumber').val(0).trigger('change');
             $('#ddlSaleReturnItems').val(0).trigger('change');
-         
+
         }
         function CalculateSaleReturnAdj() {
             debugger;
@@ -422,7 +422,7 @@
             $('#txtSaleReturnTotal').val(net.toFixed());
             debugger;
         }
-       
+
         function AddSaleReturnInvoiceDetails(invNo) {
             debugger
             var BillId = invNo;
@@ -552,7 +552,7 @@
                 }
             }
         }
-       
+
 
         function updateReturnStock(anchors) {
             debugger;
@@ -811,7 +811,7 @@
             });
             return proceed;
         }
-       
+
         function SearchReturnPop() {
             debugger;
             $('#SearchReturnModel').modal({
@@ -868,7 +868,7 @@
                         var Total = $('#txtSaleReturnTotal').val() || 0;
                         var table = $('#saleReturnTableBody');
                         var Item_list = [];
-                        var isValid = true; 
+                        var isValid = true;
                         table.find('tr').each(function () {
                             var itemID = $(this).find('input[name="txtRItemID"]').val() || 0;
                             var billDetailsID = $(this).find('input[name="txtRBill_Details_ID"]').val() || 0;
@@ -897,9 +897,9 @@
                                     }
                                 });
 
-                                isValid = false; 
+                                isValid = false;
                                 $('#btnSaveSaleReturn').attr('disabled', false);
-                                return false; 
+                                return false;
                             }
                             Item_list.push({
                                 'ItemID': itemID,
@@ -910,7 +910,7 @@
                                 'DisPer': disPer,
                                 'DisAmt': disAmt,
                                 'NetAmt': netAmt,
-                                'Batch_No': Batch_No,                           
+                                'Batch_No': Batch_No,
                                 'CGSAmount': CGSAmount
                             });
                         });
@@ -1009,39 +1009,11 @@
             });
         }
         debugger;
-         
-        function Print_Prescription() {
-            var PatNo = $('#ddlPatient_No option:selected').text();
-            var parts = PatNo.split('-');
-            var number = parts[1];
-            var opdNo = number;
-
-            var url = 'IssueMedicine.aspx/GetOutPatientIDByOPDNo';
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ opdNo: opdNo }),
-
-                success: function (response) {
-                    // response.d is the standard wrapper for ASP.NET WebMethods
-                    var outPatientID = response.d;
-
-                    if (outPatientID && outPatientID !== "0" && outPatientID !== "null") {
-                        var reportUrl = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + outPatientID;
-                        window.open(reportUrl, '_blank');
-                    } else {
-                        alert('Out Patient ID not found');
-                    }
-                },
-
-                error: function (xhr, status, error) {
-                    console.error('Error getting Out Patient ID:', error);
-                    alert('Error: Could not retrieve Out Patient ID. Status: ' + status);
-                }
-            });
+        function Print_Prescription(selectedValue) {
+            debugger;
+            var id = selectedValue;
+            var url = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
+            window.open(url, '_blanks');
         }
         function OnHoldBill() {
             var CheckVisting = $('#chkHold:checked').val();
@@ -1372,12 +1344,7 @@
             var finalbalance = parseFloat(TotalAmount) - parseFloat(txtLineDisc) - parseFloat(txtDisAmt).toFixed(2) - parseFloat(flatdisc);
             $('#txtBalances').val((finalbalance).toFixed());
         }
-        function Print_Prescription(selectedValue) {
-            debugger;
-            var id = selectedValue;
-            var url = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
-            window.open(url, '_blanks');
-        }
+
         function AssignValue(ControlID, value) {
             if (ControlID.value == '')
                 ControlID.value = value;
@@ -1436,7 +1403,6 @@
             debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
             $('#txtBalances').val(TotAmount);
-
             var discper = $('#txtDisPer').val();
             var FlatDisc = $('#txtFlatDisc').val();
             if (FlatDisc == "") {
@@ -1444,7 +1410,7 @@
             }
             var ReceivedAmount = $('#txtAmountReceived').val();
             $('#txtLineDisc').val(TotalDiscountAmount.toFixed(2));
-            var discfinalAmnt = $('#txtLineDisc').val()||0;
+            var discfinalAmnt = $('#txtLineDisc').val() || 0;
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
             $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
         }
@@ -1469,7 +1435,7 @@
                             alert(error.get_message());
                         });
                     }                    else {                        AddnonBatchItems();
-                    }                });            
+                    }                });
             }
         }
         function AddnonBatchItems() {            debugger;            var itemId = $('#medName').val();            var rowIndex = parseInt($('#tblDetails tbody tr').length);            let rows;            var expdate = '';            // Check if the item with the same batch number already exists            var itemExists = false;            $('#tblDetails tbody tr').each(function () {                var existingItemId = $(this).find('input[name="ItemID"]').val();            });            $.ajax({                type: "post",                url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",                data: JSON.stringify({                    "itemId": itemId                }),                dataType: 'JSON',                contentType: "application/json; charset=utf-8",                async: false,                success: function (msg) {                    var length = $("#tblDetails tr:gt(0)").length;                    $('#Table_1 tr:gt(0)').remove();                    var data = JSON.parse(msg.d);                    debugger;                    var Uomqty = data[0].UOM_Qty;                    if (Uomqty == null) {                        Uomqty = 0;                    } else {                        Uomqty = data[0].UOM_Qty;                    }                    var date = data[0].ExpiryDate                    date = moment(date).format('D-MMM-YYYY');                    debugger;                    rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +                        '<td><input type="number" name="txtQty" value="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="width: 75px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +                        '<td style="text-align:Right;"></td>' +                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
@@ -1511,7 +1477,7 @@
 
                 return;
             }
-            
+
             $.ajax({
                 type: "post",
                 url: "IssueMedicine.aspx/MedicineDetail",
@@ -1536,7 +1502,7 @@
                     }
                     var date = data[0].ExpiryDate
                     date = moment(date).format('D-MMM-YYYY');
-                    console.log(data[0].Item_ID,data[0].BatchNum);
+                    console.log(data[0].Item_ID, data[0].BatchNum);
                     debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
@@ -1563,8 +1529,8 @@
                         '<td style="text-align:Right;"></td>' +
                         '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
-                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
+                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
+                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
@@ -1831,7 +1797,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                            
+
 
                             hasInvalidStock = true;
                             return false;
@@ -1927,7 +1893,7 @@
                         getOPDID(pat_id);
                         getIPDID(pat_id);
                         getOPDandIPDNO(pat_id)
-                      
+
                     } catch (err) {
                         alert(err.message);
                     }
@@ -1946,18 +1912,18 @@
                 dataType: "json",
                 success: function (response) {
                     debugger;
-                    var opdId = response.d; 
+                    var opdId = response.d;
 
                     if (opdId && opdId !== "") {
-                       
+
                         //getitem_code(opdId);
                         $("#txtTransType").val('OPD Patient');
-                      
+
                     }
                     else {
-                        console.log("❌ No active OPD visit for Pat_id:", pat_id);
+                        console.log("? No active OPD visit for Pat_id:", pat_id);
 
-                        
+
                     }
                 },
                 error: function (xhr, status, error) {
@@ -2046,36 +2012,6 @@
                 }
             });
         }
-        function openQueue() {
-            debugger;
-            fillPendingPatientsLists();
-            $('#queueModal').modal('show');
-        }
-
-        function fillPendingPatientsLists() {
-            PageMethods.PendingPatients(function (data) {
-                debugger;
-                var parsedData = JSON.parse(data);
-                var rows = '';
-                $.each(parsedData, function (key, value) {
-                    debugger;
-                    var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
-                    var status = '';
-                    rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=hideModel(' + value.pat_id + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
-                });
-                debugger;
-                $('#tblPendingPatients tbody').html(rows);
-                $(".se-pre-con").fadeOut("slow");
-
-            }, function (exec) { })
-        }
-
-        function hideModel(pat_id) {
-            $('#queueModal').modal('hide');
-            getOPDandIPDNO(pat_id)
-
-        }
         function OnSuccess(data) {
             debugger;
             if (data.d !== '') {
@@ -2101,7 +2037,7 @@
             var PatNo = $('#ddlPatient_No option:selected').text();
             var parts = PatNo.split('-');
             var prefix = parts[0];
-            var number = parts[1];   
+            var number = parts[1];
 
 
             var Pat_Id = pat_Id
@@ -2145,11 +2081,11 @@
                         $.each(data, function (key, value) {
                             debugger;
                             itemIds.push(value);
-                           
+
                         });
                     }
                 });
-                
+
             }
             AddMedicineDetailFormOPD(itemIds)
         }
@@ -2209,7 +2145,7 @@
                             SaleRate = 0;
                         } else {
                             SaleRate = data[0].Sale_Rate;
-                        } 
+                        }
                         var date = data[0].ExpiryDate
                         date = moment(date).format('D-MMM-YYYY');
                         debugger;
@@ -2235,7 +2171,7 @@
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
 
-                            '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' + 
+                            '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
                             '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
@@ -2243,7 +2179,7 @@
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';
 
-                        $('#tblDetails #tblbody').append(rows);      
+                        $('#tblDetails #tblbody').append(rows);
                         debugger;
                         PageMethods.GetBatchNumbers(itemId, function (data) {
                             debugger;
@@ -2415,18 +2351,13 @@
                 </div>
             </div>
                       <div class="row mb-3">
-                          <div class="col-sm-12 col-md-4 col-lg-2">
+                          <div class="col-sm-12 col-md-4 col-lg-3">
                               <label>Patient NO</label>
                               <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
                                   <option></option>
                               </select>
 
                           </div>
-                          <div class="col-sm-12 col-md-4 col-lg-1">
-     <label>   </label>
-    <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print"/>
-
-</div>
               <div class="col-sm-12 col-md-4 col-lg-3">
                   <label id="LblPatientType">Patient Type</label>
                   <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
@@ -2500,11 +2431,8 @@
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
                     <label id="lblHold">Hold</label>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6 margin">
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                     <input type="button" class="btn-primry" value="Queue" id ="Queue" onclick="openQueue()" />
                 </div>
             </div>
 
@@ -2609,52 +2537,7 @@
         </div>
     </div>
 
-    <%--Patient Que Start--%>
-    <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div id="QueueList">
-                        <div class="row" style="margin-bottom: 15px">
-                       
-                            <div class="col-lg-2 text-end">
-                                <a onclick="fillPendingPatientsList()">
-                                    <i class="fa fa-refresh fa-2x"></i>
-                                </a>
-                            </div>
 
-                        </div>
-
-
-                        <div class="table-responsive previewTable">
-                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow:auto;">
-                                <thead id="ihead">
-                                    <tr>
-                                        <th>MR No</th>
-                                        <th>Patient Name</th>
-                                        <th style="width: 173px;">Created Time</th>
-                                        <th>Select</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ibody">
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <%--Patient Que Ends--%>
     <!-- Modal Sale Return -->
     <div id="SaleReturnModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -2768,3 +2651,4 @@
     </div>
 
 </asp:Content>
+
