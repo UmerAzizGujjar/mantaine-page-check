@@ -2156,6 +2156,10 @@
                             SaleRate = data[0].Sale_Rate;
                         }
                         var date = data[0].ExpiryDate
+                        var discountBlock = data[0].Discount_Block;
+                        var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
+
+                        var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
                         date = moment(date).format('D-MMM-YYYY');
                         debugger;
                         rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" > ' + data[0].Item_ID + '</td>' +
@@ -2173,9 +2177,9 @@
 
                             '<td style="text-align: right;" ><input type="hidden" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" >' + SaleRate + '</td>' +
 
-                            '<td><input type="number" name="DisPer" value="0" min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
+                            '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr +' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
 
-                            '<td><input type="text" readonly name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
+                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr +' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
 
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
@@ -2298,8 +2302,6 @@
                     console.error("Error in getWardAndBed: ", error);
                 }
             });
-
-
         }
         function SearchPop() {
             debugger;

@@ -310,7 +310,7 @@ namespace PMS.Inventory
     string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
     string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
     string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue,
-    string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate,
+    string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate,string Discount_Block,
     List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
         {
             string Id = "";
@@ -386,6 +386,7 @@ namespace PMS.Inventory
                     obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal sehatRate) ? sehatRate : 0;
                     obj.Created_By = AppConfig.UserID;
                     obj.Created_Time = DateTime.Now;
+                    obj.Discount_Block = Convert.ToBoolean(Discount_Block);
 
                     bool itemExists = db.INV_Items.Any(x => x.Item_Code == obj.Item_Code);
                     if (itemExists)
@@ -606,6 +607,7 @@ namespace PMS.Inventory
                                      obj.OTProcedure,
                                      obj.issehatCard_item,
                                      obj.sehatCard_Rate,
+                                     obj.Discount_Block,
                                  }).FirstOrDefault();
 
 
@@ -613,6 +615,18 @@ namespace PMS.Inventory
                 }
             }
             return result;
+        }
+        [WebMethod]
+        public static string GetDiscountSysParams()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var Discount_Detail = (from prms in db.sys_Parms
+                                  where prms.Name == "Block Discount"
+                                  select prms.Code
+                ).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(Discount_Detail);
         }
         [WebMethod]
         public static string getAccountCategory()
