@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -682,8 +683,8 @@ namespace PMS
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(query);
         }
-
-        [WebMethod]
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static string loadData(string userC)
         {
             string result = string.Empty;

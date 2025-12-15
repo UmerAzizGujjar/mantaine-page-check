@@ -5513,11 +5513,17 @@ namespace PMS
                 ltd.Patient_ID = Convert.ToInt32(record.PatientID);
                 ltd.Date = Convert.ToDateTime(test.Date);
                 ltd.Doctor = test.Doctor.ToString();
+                var reg_id = (from rg in db.Reg_patients
+                              join p in db.In_Patients on rg.pat_id equals p.Patient_ID
+                              where p.In_Patient_ID == int.Parse(record.PatientID)
+                              orderby p.Reg_PatId descending
+                              select p.Patient_ID).FirstOrDefault();
                 ltd.Special_Tests = test.Special_Tests;
                 ltd.Rotation_ID = test.RotationID;
                 ltd.Catagory_ID = test.Catagory_ID;
                 ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
                 ltd.Dept_ID = test.Dept_ID;
+                ltd.Actual_Patient_ID = reg_id;
                 ltd.Area_Of_Interest = test.Area_Of_Interest;
                 ltd.Discharge = false;
                 ltd.Test_ID = Convert.ToInt32(test.TestID);

@@ -60,7 +60,7 @@ namespace PMS
                 DateTime last24Hours = DateTime.Now.AddHours(-24);
 
                 var query =
-                    from ltd in db.Lab_Test_Details
+                    (from ltd in db.Lab_Test_Details
                     join lt in db.Laboratory_Tests
                         on ltd.Lab_Test_ID equals lt.Lab_Test_ID
                     join r in db.Reg_patients
@@ -77,10 +77,28 @@ namespace PMS
                         ltd.IsBilled,
                         lt.Created_Time,
                         ltd.Actual_Patient_ID
-                    };
+                    }).Distinct().ToList();
 
-                var result = query.Distinct().ToList();
 
+                var ipd = (from ip in db.In_Patients 
+                           join r in db.Reg_patients 
+                           on ip.Patient_ID equals r.pat_id
+                           where ip.Discharge_Request == true && (ip.ispackagebilling == null || ip.ispackagebilling == false) select new
+                           {
+                               r.mr_no_sequence,
+                               r.Full_Name,
+                               r.Father_Name,
+                               r.Age_years,
+                               IsBilled = ip.Discharge_Request,
+                               ip.Created_Time,
+                               Actual_Patient_ID = ip.Patient_ID
+                           }).ToList();
+
+                var result = new
+                {
+                    query = query,
+                    ipd = ipd
+                };
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
@@ -1149,12 +1167,13 @@ namespace PMS
             if (ipdid != "There is no row at position 0.")
             {
                 newBill.In_Patient_ID = Convert.ToInt32(ipdid);
-                var Discharge = (from ipd in db.In_Patients
+                var Ipd = (from ipd in db.In_Patients
                                  where ipd.In_Patient_ID == Convert.ToInt32(ipdid)
                                  orderby ipd.Created_Time descending
-                                 select ipd.Discharge
+                                 select ipd
                                 ).FirstOrDefault();
-                if (Discharge == true)
+                Ipd.ispackagebilling = true;
+                if (Ipd.Discharge == true)
                 {
                     newBill.Package_Type = data.PackageType;
                     newBill.Package_Name = data.PackageName;
@@ -1184,6 +1203,7 @@ namespace PMS
                         newBill.Share_Type = null;
                     }
                 }
+                Ipd.ispackagebilling = true;               
             }
             else
             {
@@ -2490,6 +2510,45 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string LoadAllBillDetails(int in_pat)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = (from d in db.Ar_Billing_Details
+                           join m in db.Ar_Billings
+                            on d.Bill_ID equals m.Bill_ID
+                           where m.In_Patient_ID == in_pat
+                           select new
+                           {
+                               d.Amount,
+                               d.Batch_No,
+                               d.Bill_Details_ID,
+                               d.Bill_ID,
+                               d.Category_ID,
+                               d.Discount_Amount,
+                               d.Discount_Percentage,
+                               d.Expiry_Date,
+                               d.Item_ID,
+                               d.Item_Name,
+                               d.Net_Amount,
+                               d.Item_Type,
+                               d.ParentTrans_ID,
+                               d.Test_Main_Department,
+                               d.ParentTrans_Name,
+                               d.ParentTrans_Type,
+                               d.Qty,
+                               d.Remarks,
+                               d.Doctor_Share,
+                               d.Hospital_Share,
+                               d.Doctor_id,
+                               d.RecommendedByDoctor,
+                               m.Referred_By
+                           }).ToList();
+
+
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+
+        [WebMethod]
         public static string GetDocAgreementValues(string doc_id, string test_id, string item_id, string item_name, string Aggreement_Type)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -2686,7 +2745,6 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(PackagesDetails);
         }
         [System.Web.Services.WebMethod]
-
         public static PatientDetail GetPatientDetails(string PatientID)
         {
             int pat_id = 0;
@@ -2724,7 +2782,7 @@ namespace PMS
 
 
             var OPD = (from tbl in db.Out_Patients
-                       where tbl.Patient_ID == pat_id
+                       where tbl.Reg_PatId == int.Parse(PatientID)
 
                        orderby tbl.Created_Time descending
                        select tbl).FirstOrDefault();
@@ -2738,10 +2796,37 @@ namespace PMS
 
             if (pat != null)
             {
+               var patient = (from tbl in db.Patients join opd in db.Out_Patients
+                              on tbl.Patient_ID equals opd.Patient_ID
+                              where tbl.Reg_PatId == pat.pat_id
+                              && (opd.Discharge == false || opd.Discharge == null)
+                              orderby tbl.Patient_ID descending
+                       select tbl).FirstOrDefault();
+
+
+                var inpat = (from tbl in db.In_Patients
+                             where tbl.Patient_ID == Convert.ToInt32(PatientID)
+                             && (tbl.Discharge == null || tbl.Discharge == false)
+                             orderby tbl.Created_Time descending
+                             select tbl).FirstOrDefault();
+
+                var Emer_Pat = (from tbl in db.Emergency_Patients
+                             where tbl.Patient_ID == Convert.ToInt32(PatientID)
+                             && (tbl.Discharge == null || tbl.Discharge == false)
+                                orderby tbl.Created_Time descending
+                             select tbl).FirstOrDefault();
+
+                var DiscountAssignedPatient = (from tbl in db.Discount_Assigned_Patients
+                                             where tbl.Patient_Id == Convert.ToInt32( PatientID) && (tbl.IsDischarge == null || tbl.IsDischarge == false)
+                                             orderby tbl.Discount_Assigned_Patient_Id descending
+                                             select tbl).FirstOrDefault();
+
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
                 pt.Age = pat.Age_years.ToString();
-
+                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+                pt.Address = pat.Permanent_Address;
+                pt.Mobile = pat.Mobile1;
                 if (pat.Created_time.HasValue)
                 {
                     pt.Entry_Date = pat.Created_time.ToString();
@@ -2750,97 +2835,52 @@ namespace PMS
                 {
                     pt.Entry_Date = pat.Created_time.ToString();
                 }
-                pt.opdid = DBClass.getField("select Out_Patient_ID from Out_Patient where Reg_PatId =" + pat_id);
-                // pt.opd_id = DBClass.getField("Select Patient_ID from Patients where Reg_PatId = " + pat_id + "order by Created_Time desc" );
-                if (query.Count > 0 && walkin == false)
+                if (inpat != null)
                 {
-                    pt.pat_id = DBClass.getField("select Patient_ID from In_Patient where Patient_ID =" + pat_id);
-                }
-                else
-                {
-                    pt.pat_id = DBClass.getField("select Reg_PatId from Out_Patient where Reg_PatId =" + pat_id);
-                }
-                pt.Patient_Type = db.GetDataValueName("Patient Type", DBClass.getField("select Patient_Type from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
-                pt.Patient_Type_id = DBClass.getField("select Patient_Type from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc");
-                pt.IsDisountAvailable = DBClass.getField("select Discount_Assigned_Patient_Id from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
-                pt.DiscountPercFromMaster = DBClass.getField("select Discount_Percentage from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
-
-
-                // Fetch active inpatient ID (not discharged)
-                var inpat_id = DBClass.getField(
-                    "select top 1 In_Patient_ID from In_Patient " +
-                    "where Patient_ID = " + PatientID +
-                    " and isNull(Discharge,0) = 0 " +
-                    "order by In_Patient_ID desc"
-                );
-
-                // Get latest discharge status
-                pt.checkdischarge = DBClass.getField(
-                    "select top 1 isnull(Discharge,0) from In_Patient " +
-                    "where Patient_Id = " + PatientID +
-                    " order by Created_Time desc"
-                );
-
-                // Get Admission_Date (format: 2025-08-30 17:37:41.000)
-                // Get Discharge_On from the most recent admission (latest In_Patient_ID)
-                pt.Discharge_On = DBClass.getField(
-                    "SELECT TOP 1 Discharge_On " +
-                    "FROM In_Patient " +
-                    "WHERE Patient_ID = " + PatientID + " " +
-                    "ORDER BY In_Patient_ID DESC"
-                )?.ToString() ?? "";
-                var ipdAcc = DBClass.getField(
-                    "SELECT TOP 1 isNull(ispackagebilling,0) " +
-                    "FROM In_Patient " +
-                    "WHERE Patient_ID = " + PatientID + " " +
-                    "ORDER BY In_Patient_ID DESC"
-                )?.ToString() ?? "";
-                // Flag: was discharge done today?
-                bool isdischargetoday = false;
-
-                if (!string.IsNullOrEmpty(pt.Discharge_On))
-                {
-                    if (DateTime.TryParse(pt.Discharge_On, out DateTime dischargedate))
+                    if (inpat.Discharge == null || inpat.Discharge == false)
                     {
-                        if (dischargedate.Date == DateTime.Today)
-                        {
-                            isdischargetoday = true;
-                        }
+                        var Ward = (from tbl in db.Ward_Definitions
+                                    where tbl.Ward_ID == inpat.Ward_ID
+                                    select tbl.Ward_Type).FirstOrDefault();
+                        pt.Patient_Type = db.GetDataValueName("Patient Type", inpat.Patient_Discount_Type);
+                        pt.Patient_Type_id = inpat.Patient_Discount_Type;
+
+                        pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);
+                        pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
+                        pt.Ward_Name = Ward;
+                        pt.Admission_Date = Convert.ToString(inpat.Admission_Date);
+                        pt.Discharge_On = Convert.ToString(inpat.Admission_Date);
+                        pt.Bed_No = Convert.ToString(inpat.Bed_No);
+                        pt.Department = db.GetDataValueName("Patient Main Category", inpat.Department);
+                        pt.MainDepartment = "03";
+                        pt.Package_Type = inpat.Package_Type_Id;
+                        pt.Package_Name = inpat.Package_Name_Id;
+                        pt.pkg_name = inpat.packagae_type;
+                        pt.pkg_type = inpat.packagae_type;
+                        pt.Request_Discharge = Convert.ToBoolean(inpat.Discharge_Request);
+                        pt.In_Patient_ID = Convert.ToString(inpat.In_Patient_ID);
+
                     }
                 }
-                pt.Package_Type = DBClass.getField("SELECT TOP 1 Package_type_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
-
-                pt.Package_Name = DBClass.getField("SELECT TOP 1 Package_Name_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
-                pt.pkg_namefordetails = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
-
-                pt.pkg_typefordetails = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
-                // Main condition: if NOT discharged OR discharged TODAY → show package data
-                if (pt.checkdischarge == "false" || pt.checkdischarge == "0" || ipdAcc == "1"|| ipdAcc == "true")
+                else if (Emer_Pat != null)
                 {
-                    // Patient is either still admitted OR was discharged today
-                    pt.pkg_name = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
-
-                    pt.pkg_type = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
-
-
-
-                    pt.In_Patient_Type = DBClass.getField("SELECT TOP 1 Patient_Discount_Type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
-
-
-
-                    pt.MainDepartment = "03";
+                 if (Emer_Pat.Discharge == null || Emer_Pat.Discharge == false)
+                    {
+                        var Ward = (from tbl in db.Ward_Definitions
+                                    where tbl.Ward_ID == Emer_Pat.Ward_ID
+                                    select tbl.Ward_Type).FirstOrDefault();
+                        pt.Ward_Name = Ward;
+                        pt.Admission_Date = Convert.ToString(Emer_Pat.Admission_Date);
+                        pt.Discharge_On = Convert.ToString(Emer_Pat.Discharge_On);
+                        pt.Bed_No = Convert.ToString(Emer_Pat.Bed_No);
+                        pt.MainDepartment = "02";
+                        pt.Department = "";
+                    } 
                 }
-                else
+                else if (patient != null)
                 {
-                    // Patient was discharged on a previous day (not today)
-                    pt.Department = db.GetDataValueName("Patient Main Category",
-                        DBClass.getField("SELECT TOP 1 Patient_Main_Category FROM Patients WHERE Reg_PatId = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "");
-
-                    if (pt.IsDisountAvailable.Contains("position"))
-                        pt.IsDisountAvailable = "false";
-
-                    pt.Address = pat.Permanent_Address;
-                    pt.Mobile = pat.Mobile1;
+                    pt.Patient_Type = db.GetDataValueName("Patient Type", patient.Patient_Type);
+                    pt.Patient_Type_id = patient.Patient_Type;
                     pt.Admission_Date = "";
                     pt.Discharge_On = "";
                     pt.Ward_Name = "";
@@ -2848,65 +2888,24 @@ namespace PMS
                     pt.Room_Name = "";
                     pt.MainDepartment = "01";
                 }
-
-
-
-                var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by Emergency_ID desc");
-                var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 1 order by In_Patient_ID desc");
-                var ipd_ids = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by In_Patient_ID desc");
-                if (ipd_ids != "There is no row at position 0.")
+                else
                 {
-                    pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_ids);
-                    pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_ids);
-                    pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_ids);
-                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_ids + "order by Created_Time desc"));
-                    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_ids);
-                    pt.MainDepartment = "03";
+                    pt.Admission_Date = "";
+                    pt.Discharge_On = "";
+                    pt.Ward_Name = "";
+                    pt.Bed_No = "";
+                    pt.Room_Name = "";
+                    pt.MainDepartment = "01";
+                }
+                if (DiscountAssignedPatient != null)
+                {
+                    pt.IsDisountAvailable = "True";
+                }
+                else
+                {
+                    pt.IsDisountAvailable = "fasle";
                 }
 
-                else if (ipd_id != "There is no row at position 0." )
-                {
-                    pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where  In_Patient_ID =" + ipd_id);
-                    pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + ipd_id);
-                    pt.Balance = DBClass.getField("select sum(Previous_Balance) from Ar_Billings where  In_Patient_ID =" + ipd_id);
-                    pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
-                    pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
-                    pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_id);
-                    pt.pkg_name = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
-
-                    pt.pkg_type = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
-
-
-                }
-
-                else if (Emergency_Id != "There is no row at position 0.")
-                {
-                    pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.Bed_No = DBClass.getField("Select Bed_No from Emergency_Patient ipd where ipd.Emergency_ID =" + Emergency_Id);
-                    pt.MainDepartment = "02";
-                    pt.Department = "";
-                }
-
-                var inpatient_ids = DBClass.getField(
-                    "select top 1 In_Patient_ID from In_Patient " +
-                    "where Patient_ID = " + PatientID +
-                    " and isNull(Discharge,0) = 0 " +
-                    "order by In_Patient_ID desc"
-                );
-                if (inpatient_ids != null || inpatient_ids != "" || inpatient_ids != "There is no row at position 0.")
-                {
-                    string type  = DBClass.getField("SELECT TOP 1 Patient_Discount_Type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
-                    pt.In_Patient_Type = db.GetDataValueName("Patient Type", type);
-                }
-       
-             
-
-                pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 var Patientno = pat.Patient_No.ToString();
                 var count = (db.Patients.Where(v => v.Patient_No == Convert.ToInt32(Patientno)).ToList());
                 pt.Follow = count.Count.ToString();
@@ -2918,6 +2917,237 @@ namespace PMS
             else
                 return pt;
         }
+        //[System.Web.Services.WebMethod]
+
+        //public static PatientDetail GetPatientDetails(string PatientID)
+        //{
+        //    int pat_id = 0;
+        //    bool isExist_ipd = false;
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+        //    var walkin = (from tbl in db.Reg_patients
+        //                  where tbl.pat_id == int.Parse(PatientID)
+        //                  orderby tbl.Created_time descending
+        //                  select tbl.walkin).FirstOrDefault();
+        //    var query = (from data in db.In_Patients.Where(x => x.Patient_ID == Convert.ToInt32(PatientID) && x.Discharge == false) select data.Patient_ID).ToList();
+        //    if (query.Count > 0 && walkin == false)
+        //    {
+        //        pat_id = DBClass.GetPat_ID_By_PatientID_reg(Convert.ToInt32(PatientID));
+        //    }
+        //    else
+        //    {
+        //        pat_id = DBClass.GetPat_ID_By_PatientID_reg(Convert.ToInt32(PatientID));
+        //    }
+
+        //    int Patien_No = DBClass.GetMRNOBy_PatientID_reg(Convert.ToInt32(PatientID));
+        //    PatientDetail pt = new PatientDetail();
+
+        //    Reg_patient pat = new Reg_patient();
+
+        //    pat = (from tbl in db.Reg_patients
+        //           where tbl.Patient_No == Patien_No
+        //           orderby tbl.Created_time descending
+        //           select tbl).FirstOrDefault();
+
+        //    var isPatient = (from tbl in db.In_Patients
+        //                     where tbl.Patient_ID == int.Parse(PatientID)
+
+        //                     orderby tbl.Created_Time descending
+        //                     select tbl).FirstOrDefault();
+
+
+        //    var OPD = (from tbl in db.Out_Patients
+        //               where tbl.Patient_ID == pat_id
+
+        //               orderby tbl.Created_Time descending
+        //               select tbl).FirstOrDefault();
+
+        //    if (OPD != null)
+        //    {
+
+
+        //    }
+
+
+        //    if (pat != null)
+        //    {
+        //        pt.Name = pat.Full_Name;
+        //        pt.Gender = pat.Gender;
+        //        pt.Age = pat.Age_years.ToString();
+
+        //        if (pat.Created_time.HasValue)
+        //        {
+        //            pt.Entry_Date = pat.Created_time.ToString();
+        //        }
+        //        else
+        //        {
+        //            pt.Entry_Date = pat.Created_time.ToString();
+        //        }
+        //        pt.opdid = DBClass.getField("select Out_Patient_ID from Out_Patient where Reg_PatId =" + pat_id);
+        //        // pt.opd_id = DBClass.getField("Select Patient_ID from Patients where Reg_PatId = " + pat_id + "order by Created_Time desc" );
+        //        if (query.Count > 0 && walkin == false)
+        //        {
+        //            pt.pat_id = DBClass.getField("select Patient_ID from In_Patient where Patient_ID =" + pat_id);
+        //        }
+        //        else
+        //        {
+        //            pt.pat_id = DBClass.getField("select Reg_PatId from Out_Patient where Reg_PatId =" + pat_id);
+        //        }
+        //        pt.Patient_Type = db.GetDataValueName("Patient Type", DBClass.getField("select Patient_Type from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc"));
+        //        pt.Patient_Type_id = DBClass.getField("select Patient_Type from Patients where  Reg_PatId =" + PatientID + "order by Created_Time desc");
+        //        pt.IsDisountAvailable = DBClass.getField("select Discount_Assigned_Patient_Id from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
+        //        pt.DiscountPercFromMaster = DBClass.getField("select Discount_Percentage from Discount_Assigned_Patient where ISNULL(IsDischarge,'0')=0 and Patient_Id =" + PatientID);
+
+
+        //        // Fetch active inpatient ID (not discharged)
+        //        var inpat_id = DBClass.getField(
+        //            "select top 1 In_Patient_ID from In_Patient " +
+        //            "where Patient_ID = " + PatientID +
+        //            " and isNull(Discharge,0) = 0 " +
+        //            "order by In_Patient_ID desc"
+        //        );
+
+        //        // Get latest discharge status
+        //        pt.checkdischarge = DBClass.getField(
+        //            "select top 1 isnull(Discharge,0) from In_Patient " +
+        //            "where Patient_Id = " + PatientID +
+        //            " order by Created_Time desc"
+        //        );
+
+        //        // Get Admission_Date (format: 2025-08-30 17:37:41.000)
+        //        // Get Discharge_On from the most recent admission (latest In_Patient_ID)
+        //        pt.Discharge_On = DBClass.getField(
+        //            "SELECT TOP 1 Discharge_On " +
+        //            "FROM In_Patient " +
+        //            "WHERE Patient_ID = " + PatientID + " " +
+        //            "ORDER BY In_Patient_ID DESC"
+        //        )?.ToString() ?? "";
+        //        var ipdAcc = DBClass.getField(
+        //            "SELECT TOP 1 isNull(ispackagebilling,0) " +
+        //            "FROM In_Patient " +
+        //            "WHERE Patient_ID = " + PatientID + " " +
+        //            "ORDER BY In_Patient_ID DESC"
+        //        )?.ToString() ?? "";
+        //        // Flag: was discharge done today?
+        //        bool isdischargetoday = false;
+
+        //        if (!string.IsNullOrEmpty(pt.Discharge_On))
+        //        {
+        //            if (DateTime.TryParse(pt.Discharge_On, out DateTime dischargedate))
+        //            {
+        //                if (dischargedate.Date == DateTime.Today)
+        //                {
+        //                    isdischargetoday = true;
+        //                }
+        //            }
+        //        }
+        //        pt.Package_Type = DBClass.getField("SELECT TOP 1 Package_type_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+        //        pt.Package_Name = DBClass.getField("SELECT TOP 1 Package_Name_id FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+        //        pt.pkg_namefordetails = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+        //        pt.pkg_typefordetails = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+        //        // Main condition: if NOT discharged OR discharged TODAY → show package data
+        //        if (pt.checkdischarge == "false" || pt.checkdischarge == "0" || ipdAcc == "1"|| ipdAcc == "true")
+        //        {
+        //            // Patient is either still admitted OR was discharged today
+        //            pt.pkg_name = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+
+        //            pt.pkg_type = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+
+
+
+        //            pt.In_Patient_Type = DBClass.getField("SELECT TOP 1 Patient_Discount_Type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+
+
+
+        //            pt.MainDepartment = "03";
+        //        }
+        //        else
+        //        {
+        //            // Patient was discharged on a previous day (not today)
+        //            pt.Department = db.GetDataValueName("Patient Main Category",
+        //                DBClass.getField("SELECT TOP 1 Patient_Main_Category FROM Patients WHERE Reg_PatId = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "");
+
+        //            if (pt.IsDisountAvailable.Contains("position"))
+        //                pt.IsDisountAvailable = "false";
+
+        //            pt.Address = pat.Permanent_Address;
+        //            pt.Mobile = pat.Mobile1;
+        //            pt.Admission_Date = "";
+        //            pt.Discharge_On = "";
+        //            pt.Ward_Name = "";
+        //            pt.Bed_No = "";
+        //            pt.Room_Name = "";
+        //            pt.MainDepartment = "01";
+        //        }
+
+
+
+        //        var Emergency_Id = DBClass.getField("select Emergency_ID from Emergency_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by Emergency_ID desc");
+        //        var ipd_id = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 1 order by In_Patient_ID desc");
+        //        var ipd_ids = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + PatientID + "and isNull(Discharge,0) = 0 order by In_Patient_ID desc");
+        //        if (ipd_ids != "There is no row at position 0.")
+        //        {
+        //            pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_ids);
+        //            pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_ids);
+        //            pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_ids);
+        //            pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_ids + "order by Created_Time desc"));
+        //            pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_ids);
+        //            pt.MainDepartment = "03";
+        //        }
+
+        //        else if (ipd_id != "There is no row at position 0." )
+        //        {
+        //            pt.PreviousTotalAmount = DBClass.getField("select sum(Net_Amount) from Ar_Billings where  In_Patient_ID =" + ipd_id);
+        //            pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + ipd_id);
+        //            pt.Balance = DBClass.getField("select sum(Previous_Balance) from Ar_Billings where  In_Patient_ID =" + ipd_id);
+        //            pt.Ward_Name = DBClass.getField("Select Ward_Type from In_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.In_Patient_ID =" + ipd_id);
+        //            pt.Admission_Date = DBClass.getField("Select Admission_Date from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
+        //            pt.Discharge_On = DBClass.getField("Select Discharge_On from In_Patient ipd  where ipd.In_Patient_ID =" + ipd_id);
+        //            pt.Bed_No = DBClass.getField("Select Bed_No from In_Patient ipd where ipd.In_Patient_ID =" + ipd_id);
+        //            pt.Department = db.GetDataValueName("Patient Main Category", DBClass.getField("select Department from In_Patient where  In_Patient_ID =" + ipd_id + "order by Created_Time desc"));
+        //            pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + ipd_id);
+        //            pt.pkg_name = DBClass.getField("SELECT TOP 1 packagae_name FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+
+        //            pt.pkg_type = DBClass.getField("SELECT TOP 1 packagae_type FROM In_Patient WHERE Patient_Id = " + PatientID + " AND Discharge = 1 ORDER BY Created_Time DESC")?.ToString() ?? "";
+
+
+        //        }
+
+        //        else if (Emergency_Id != "There is no row at position 0.")
+        //        {
+        //            pt.Ward_Name = DBClass.getField("Select Ward_Type from Emergency_Patient ipd join Ward_Definition wd on ipd.Ward_ID = wd.Ward_ID where ipd.Emergency_ID =" + Emergency_Id);
+        //            pt.Admission_Date = DBClass.getField("Select Admission_Date from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
+        //            pt.Discharge_On = DBClass.getField("Select Discharge_On from Emergency_Patient ipd  where ipd.Emergency_ID =" + Emergency_Id);
+        //            pt.Bed_No = DBClass.getField("Select Bed_No from Emergency_Patient ipd where ipd.Emergency_ID =" + Emergency_Id);
+        //            pt.MainDepartment = "02";
+        //            pt.Department = "";
+        //        }
+
+        //        var inpatient_ids = DBClass.getField(
+        //            "select top 1 In_Patient_ID from In_Patient " +
+        //            "where Patient_ID = " + PatientID +
+        //            " and isNull(Discharge,0) = 0 " +
+        //            "order by In_Patient_ID desc"
+        //        );
+        //        if (inpatient_ids != null || inpatient_ids != "" || inpatient_ids != "There is no row at position 0.")
+        //        {
+        //            string type  = DBClass.getField("SELECT TOP 1 Patient_Discount_Type FROM In_Patient WHERE Patient_Id = " + PatientID + " ORDER BY Created_Time DESC")?.ToString() ?? "";
+        //            pt.In_Patient_Type = db.GetDataValueName("Patient Type", type);
+        //        }
+       
+             
+
+        //        pt.Gender = db.GetDataValueName("Gender", pat.Gender);
+        //        var Patientno = pat.Patient_No.ToString();
+        //        var count = (db.Patients.Where(v => v.Patient_No == Convert.ToInt32(Patientno)).ToList());
+        //        pt.Follow = count.Count.ToString();
+
+
+
+        //        return pt;
+        //    }
+        //    else
+        //        return pt;
+        //}
 
         [WebMethod]
         public static string loadbillbypatient_id(int pat_id)
@@ -3035,12 +3265,15 @@ namespace PMS
             public string Room_No;
             public bool Discharge { get; set; }
             public bool isInpatient { get; set; }
+            public bool Request_Discharge { get; set; }
 
             public string Previous_inpatient { get; set; }
             public string OPD_Panel_ID { get; set; }
             public string MainDepartment { get; set; }
             public string opdid { get; set; }
             public string pat_id { get; set; }
+            public string In_Patient_ID { get; set; }
+
             public string Department { get; set; }
 
             public string Admission_Date { get; set; }
@@ -3112,12 +3345,12 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(query);
         }
         [WebMethod]
-        public static string GetPackageDetails(int PackType, int packname)
+        public static string GetPackageDetails(string PackType, int packname)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             List<TestPackageDetials> listOfTest = new List<TestPackageDetials>();
 
-            if (PackType == 01)
+            if (PackType == "01")
             {
                 var doc_pack = (from m in db.DoctorPackages
                                 join d in db.Doctor_Packages_Detail_Rates
@@ -3144,7 +3377,7 @@ namespace PMS
                                 }).ToList();
                 return (new JavaScriptSerializer()).Serialize(doc_pack);
             }
-            else if (PackType == 02)
+            else if (PackType == "02")
             {
                 var Dep_pack = (from m in db.DepartmentPackages
                                 join d in db.Department_Packages_Detail_Rates
@@ -3171,7 +3404,7 @@ namespace PMS
                                 }).ToList();
                 return (new JavaScriptSerializer()).Serialize(Dep_pack);
             }
-            else if (PackType == 03)
+            else if (PackType == "03")
             {
                 var Panel_pack = (from m in db.PanelPackages
                                   join d in db.Panel_Packages_Detail_Rates
