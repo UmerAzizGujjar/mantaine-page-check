@@ -46,7 +46,6 @@
         #h1 {
             font-weight: 600;
             position: relative;
-            /*margin-left: 38%;*/
             font-size: 37px;
             font-family: revert;
             color: #438eb9;
@@ -165,8 +164,6 @@
         <div class="row" style="text-align :center;">
         <h1 id="h1">Time Slab of Patient in OPD</h1>
     </div>
-    <br />
-
     <div class="row">
     <div class="col-lg-12 ">
         <div class="col-md-4" style="margin-left:200px !important;">
@@ -175,9 +172,7 @@
                     <h3 id="Dpt" style="padding: 5px;">Total Patients</h3>
                     <i class="fas fa-thin  fa-sack-dollar" style="position: relative; float: right; margin-top: -25px; margin-right: 1px; font-size: 18px;"></i>
                 </div>
-
-           <div class="card-body">
-          
+           <div class="card-body">         
                   <div class="col-12" style="text-align:center; font-size:15px !important;">
                         <span id="totalPatients">0</span>
                     </div>
@@ -205,8 +200,6 @@
 
     </div>
 </div>
-
-    <br />
      <br />
     <div class="row">
         <div class="col-lg-2">

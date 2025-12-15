@@ -307,6 +307,63 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
                 }
+                if (PageTitle == "PCRS")
+                {
+
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr1MedicalSubsidy.Visible = true;
+                    dpROw.Visible = true;
+                    ddlDepartments.Visible = true;
+                    lblDepartment.Visible = true;
+                    lblDepartment.Text = "Company";
+                    ddlMedicalSubsidy.Visible = false;
+                    lblMedical.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    MainDeptDiv.Visible = true;
+                    lblPatientType.Visible = false;
+                    lblPatientType.Text = "Patient Type";
+                    ddlDoctor.Visible = false;
+                    ddlPatientType.Visible = false;
+                    ddlReportType.Visible = false;
+                    ddlMainDepartment.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Item Name";
+                    object valusets;
+                    DataBaseDataContext dbd = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in dbd.INV_Items
+                               where d.IsPharmacyItem == true
+                               select new { d.Item_Code, d.Description };
+                    ddlMainDepartment.DataSource = valusets;
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.DataTextField = "Description";
+                    ddlMainDepartment.DataValueField = "Item_Code";
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+                    object valusets1;
+                    DataBaseDataContext dd = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets1 = (from p in dd.DataValues where p.ValueSet_ID == 7 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets1;
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+
+                    optRw.Visible = true;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from pu in db.Pharmacy_Users
+                               select new { pu.UserName, pu.UserID };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                }
                 else if (this.PageTitle == "Consultant_Wise_Statistics")
                 {
                     string x = "Consultant Wise Statistics";
@@ -2548,6 +2605,44 @@ namespace PMS
                     lbShift.Visible = false;
 
 
+                }
+                else if (this.PageTitle == "AnalysisReport")
+                {
+                    dpROw.Visible = true;
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMedical.Visible = false;
+                    ddlMedicalSubsidy.Visible = false;
+                    Time_Row.Visible = true;
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
+                    ddlPatientType.DataBind();
+                    optRw.Visible = true;
+                    lblDepartment.Text = "Test Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    ddlDepartments.Visible = true;
+                    ddlDepartments.Visible = true;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    tr_Summary.Visible = false;
+
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    GetLabTestsForAnalysis();
                 }
                 if (this.PageTitle == "Sale_Return_Report")
                 {
@@ -5555,6 +5650,46 @@ namespace PMS
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
+        }
+        [WebMethod]
+        public static string GetLabTestsForAnalysis()
+        {
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var tests = from t in db.Lab_Tests
+                        where (t.Main_Department == "001" || t.Main_Department == "002" || t.Main_Department == "003") && t.Active == true
+                        select new { t.Test_ID, Test_Name = t.Test_Name, t.Group_Category };
+            List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
+            int counter = 1;
+            foreach (var test in tests)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name.ToString() + (test.Group_Category != string.Empty ? " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") : string.Empty);
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            var GroupCategories = from dv in db.DataValues
+                                  join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                  where vs.ValueSet_Name == "Test Groups" && (dv.Division == "001" || dv.Division == "002" || dv.Division == "003")
+                                  select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            foreach (var category in GroupCategories)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = category.DataValue_Name.ToString();
+                obj.TestName = category.DataValue_Description.ToString();
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = true;
+                obj.CategoryID = category.DataValue_Name;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTest);
         }
         [WebMethod]
         public static string GetLabTests()
