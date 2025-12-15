@@ -1502,7 +1502,11 @@
                     }
                     var date = data[0].ExpiryDate
                     date = moment(date).format('D-MMM-YYYY');
-                    console.log(data[0].Item_ID, data[0].BatchNum);
+                    var discountBlock = data[0].Discount_Block;
+                    var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
+
+                    var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
+
                     debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
@@ -1522,9 +1526,9 @@
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
-                        '<td><input type="number" name="DisPer" min="0" value="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
+                        '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
 
-                        '<td><input type="text" readonly name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
+                        '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
                         '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
@@ -1537,6 +1541,11 @@
                     setTimeout(function () {
                         $('#medName').select2('close');
                         $('input[name="txtQty"]').focus().select();
+                        if (isDiscountDisabled) {
+                            $('input[name="DisPer"]:last').val(0);
+                            $('input[name="DisAmount"]:last').val(0);
+                        }
+
                     }, 5);
                     CalculateSummarieDiscountPerWise(rowIndex);
                 }
