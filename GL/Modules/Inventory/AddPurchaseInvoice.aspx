@@ -592,6 +592,9 @@
                         '<td style="display:none"><input type="hidden" id="txtGRNDetailId' + (key + 1) + '" name="txtGRNDetailId" value="' + value.GRN_detail_Id + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtItemId' + (key + 1) + '" name="txtItemId" value="' + value.ItemId + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="AdvigpagainstPo' + (key + 1) + '" name="AdvigpagainstPo" value="' + value.Adv_Po_ID + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="AdvTaxId" value="' + (value.AdvTax_ID || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="AdvTaxAmount" value="' + (value.AdvTax_Amount || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="AdvTotalAmount" value="' + (value.AdvanceTotalAmount || 0) + '"/></td>' +
                         '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                         '</tr>'
                     length++;
