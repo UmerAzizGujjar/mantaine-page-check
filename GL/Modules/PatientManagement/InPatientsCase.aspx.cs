@@ -2448,7 +2448,23 @@ namespace PMS
                          };
             return (new JavaScriptSerializer().Serialize(Routes));
         }
+        [WebMethod]
+        public static string getpharmacyitems(string searchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var pharmacyItems = (from d in db.INV_Items
+                                     where d.IsPharmacyItem == true && d.Description.Contains(searchString)
+                                     orderby d.Item_ID descending
+                                     select new
+                                     {
+                                         d.Item_Code,
+                                         Description = d.Description
+                                     }).Take(20).ToList();
 
+                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+            }
+        }
         [WebMethod]
         public static string FillPharmacyItemDropDown()
         {
@@ -2460,7 +2476,7 @@ namespace PMS
                           {
                               d.Item_Code,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
-                          }).ToList();
+                          }).ToList().Take(20);
 
             return (new JavaScriptSerializer().Serialize(Routes));
         }

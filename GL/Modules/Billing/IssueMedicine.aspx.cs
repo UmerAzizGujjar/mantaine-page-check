@@ -40,7 +40,7 @@ namespace PMS
                                  ip.Bed_No,
                                  Patient_Discount_Type = db.GetDataValueName("Patient Type", ip.Patient_Discount_Type)
                              }).FirstOrDefault();
-            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+            return (new JavaScriptSerializer()).Serialize(itemCodes); 
 
         }
         [WebMethod]
@@ -579,7 +579,18 @@ namespace PMS
             public string PatientID;
 
         }
+        [WebMethod]
+        public static string GetUserFromSysParams()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
 
+            var PharmacyDetail = (from prms in db.sys_Parms
+                                  where prms.Name == "Pharmacy User"
+                                  select prms.Code
+                ).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(PharmacyDetail);
+        }
         [WebMethod]
         public static PatientDetail LoadPatientDetails(string PatientID)
         {

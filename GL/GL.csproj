@@ -232,6 +232,7 @@
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
+    <Content Include="Modules\Dashboards\Biodatadashboard.aspx" />
     <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
     <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
@@ -25881,6 +25882,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\BillingSection.aspx.designer.cs">
       <DependentUpon>BillingSection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Biodatadashboard.aspx.cs">
+      <DependentUpon>Biodatadashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Biodatadashboard.aspx.designer.cs">
+      <DependentUpon>Biodatadashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\CEODashboardNew.aspx.cs">
       <DependentUpon>CEODashboardNew.aspx</DependentUpon>
