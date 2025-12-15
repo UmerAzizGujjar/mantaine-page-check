@@ -1284,6 +1284,32 @@
                         alert(error.get_message());
                     })
             }
+
+
+            debugger;
+            function FetchAllPreviousBill(in_Pat) {
+                debugger;
+                PageMethods.LoadAllBillDetails(in_Pat, function (resp) {
+                    debugger;
+                    var data = (JSON.parse(resp));
+                    var rows = '';
+                    var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
+                    var Description = '';
+                    $.each(data, function (key, value) {
+                        rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td id="btndeletes"> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="' + value.ParentTrans_Name + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Item_Name + '" /> <input type="hidden" name="hdnProcedure" value="" /><input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" /><input type="hidden" name="hdnDisPer" value=' + parseFloat(value.Discount_Percentage.toFixed(6)) + '><input type="hidden" name="hdnDisAmount" value=' + parseFloat(value.Discount_Amount.toFixed(6)) + '><input type="hidden" name="hdnNet_Amount" value=' + parseFloat(value.Net_Amount.toFixed(6)) + '><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.Item_Name + '</td><td>' + value.Remarks + '</td><td><input type="text" name="txtQty" value="' + value.Qty + '" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="' + parseFloat(value.Discount_Percentage.toFixed(2)) + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="' + parseFloat(value.Discount_Amount.toFixed(2)) + '" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + parseFloat(value.Net_Amount.toFixed(0)) + ' </td><td> <input type="text" id = "ds' + key + '" name="Docshare" value="' + parseFloat(value.Doctor_Share.toFixed(0)) + '" style="width: 75px !important;" onkeyup="calculateDoctorShare(' + rowIndex + ')"/> </td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + parseFloat(value.Hospital_Share.toFixed(0)) + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + rowIndex + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)"  class="ddlDoctor" >' + doctors + '</select> <input type="hidden" name="Main_Department" value="' + value.Test_Main_Department + '" /></td></tr>'
+                        
+                        $('#tblDetails tbody').append(rows);
+                        CalculateSummarieDiscountPerWise(rowIndex);
+                        rowIndex++;
+                       
+                    });
+                },
+                    function (error) {
+                        alert(error.get_message());
+                    })
+            }
+
+
             function getOptions() {
             }
             function LoadDoctorShare(Bill_ID) {
@@ -4513,12 +4539,12 @@
                     $('#PackageName').val(Packnames);
                     $('#hdn_PatienttypeId').val(data.d.Patient_Type_id);
                     $('#hdn_InPatienttype').val(data.d.In_Patient_Type);
-                    $('#hdn_pkgtype').val(data.d.pkg_typefordetails);
-                    $('#hdn_pkgname').val(data.d.pkg_namefordetails);
+                    $('#hdn_pkgtype').val(data.d.pkg_type);
+                    $('#hdn_pkgname').val(data.d.pkg_name);
                     var a = data.opdid;
                     debugger;
                     var b = data.pat_id;
-                    pat_id = data.d.pat_id;;
+                    pat_id = data.d.pat_id;
                     PatientID = data.d.opdid;
                     debugger;
                     var Patient_ID = $('#hdfPatient_ID').val();
@@ -4536,8 +4562,9 @@
                     if (packname == "There is no row at position 0.") {
                         packname = "Null";
                     }
-
-
+                    var in_Pat = data.d.In_Patient_ID;
+                    var Request_Discharge = data.d.Request_Discharge;
+                    
                     var id = '<%= Request.QueryString["Bill_ID"]%>';
 
                     if (data.d.Patient_Type == null && data.d.In_Patient_Type == null) {
@@ -4554,9 +4581,10 @@
                     debugger;
 
                     if (id == '') {
-                        if ((PackType != null) && (packname != null)) {
+                        if (Request_Discharge == true) {
                             debugger;
                             AddPackage();
+                            FetchAllPreviousBill(in_Pat);
 
 
                         }
@@ -5145,8 +5173,12 @@
                 PageMethods.PendingPatients(function (data) {
                     debugger;
                     var parsedData = JSON.parse(data);
+                    let query = parsedData.query;
+                    let ipd = parsedData.ipd;
+                    let allPendings = query.concat(ipd);
+
                     var rows = '';
-                    $.each(parsedData, function (key, value) {
+                    $.each(allPendings, function (key, value) {
                         debugger;
                         var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
                         var retdate = moment(TrnsDate).format('LLLL');
