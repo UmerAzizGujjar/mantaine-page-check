@@ -26,10 +26,10 @@ namespace PMS
         {
             if (!Page.IsPostBack)
             {
-                
+
                 AllowPatientRecord = Convert.ToBoolean(DBClass.getField("Select AllPatientRecords from aspnet_Users where UserId='" + AppConfig.UserID + "'"));
                 PageTitle = Request.QueryString["rptTitle"];
-               
+
                 #region Patients
                 if (PageTitle == "Departmentwisestats")
                 {
@@ -112,7 +112,7 @@ namespace PMS
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
-                    trDoctor.Visible = false;                  
+                    trDoctor.Visible = false;
                     tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
@@ -122,14 +122,14 @@ namespace PMS
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";
                     ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                    ddlDepartments.DataBind();    
+                    ddlDepartments.DataBind();
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = false;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     object valusetss = from d in db.aspnet_Users
-                                      select new { d.UserName, d.UserId };
+                                       select new { d.UserName, d.UserId };
                     ddlPatientType.DataSource = valusetss;
                     ddlPatientType.DataTextField = "UserName";
                     ddlPatientType.DataValueField = "UserId";
@@ -152,14 +152,14 @@ namespace PMS
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";
                     ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                    ddlDepartments.DataBind();    
+                    ddlDepartments.DataBind();
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = true;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     object valusetss = from d in db.aspnet_Users
-                                      select new { d.UserName, d.UserId };
+                                       select new { d.UserName, d.UserId };
                     ddlPatientType.DataSource = valusetss;
                     ddlPatientType.DataTextField = "UserName";
                     ddlPatientType.DataValueField = "UserId";
@@ -206,7 +206,7 @@ namespace PMS
                 //    tr_Summary.Visible = false;      // changed
                 //    lblMultiSelect.Visible = false;
                 //    lblPatientType.Text = "Operators";
-                       
+
                 //    DateDiv.Visible = true;
                 //    Time_Row.Visible = true;
                 //    op_PanelCompany.Visible = false;
@@ -377,7 +377,7 @@ namespace PMS
                     Time_Row.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = false;
-     
+
 
                     trDoctor.Visible = true;
 
@@ -403,7 +403,7 @@ namespace PMS
                 //    Time_Row.Visible = true;
                 //    op_PanelCompany.Visible = false;
                 //    optRw.Visible = false;
-     
+
 
                 //    trDoctor.Visible = true;
 
@@ -429,7 +429,7 @@ namespace PMS
                     Time_Row.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = false;
- 
+
 
                 }
 
@@ -446,11 +446,11 @@ namespace PMS
                     Time_Row.Visible = true;
                     op_PanelCompany.Visible = false;
                     optRw.Visible = false;
-                    
+
                     lboperator.Visible = false;
                     ddloprators.Visible = false;
 
-    
+
                     trDoctor.Visible = true;
 
                     DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
@@ -462,7 +462,7 @@ namespace PMS
                     lblMultiSelect.Visible = false;
 
                 }
-              
+
                 else if (this.PageTitle == "Over_Summary_Shift_Wise")
                 {
                     string x = "Over Summary Shift Wise Report";
@@ -538,7 +538,7 @@ namespace PMS
                     //ddlDepartments.Visible = true;
                     lblMainDepartment.Visible = true;
                     lblMainDepartment.Visible = true;
-                    DateDiv.Visible = true; 
+                    DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr1MedicalSubsidy.Visible = true;
                     //dpROw.Visible = true;
@@ -896,7 +896,7 @@ namespace PMS
                     lblMRNo.Visible = true;
                     txtMRNo.Visible = true;
                     ddlDepartments.Visible = false;
-                     lblDepartment.Visible = false;
+                    lblDepartment.Visible = false;
                     lblPatientType.Visible = false;
                     ddlMedicalSubsidy.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -1431,7 +1431,7 @@ namespace PMS
                     ddlTestName.DataValueField = "Test_ID";
                     ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
                     ddlTestName.DataBind();
-                   
+
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Type");
                     ddlPatientType.DataSource = valusets;
@@ -1440,7 +1440,7 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "All" });
                     ddlPatientType.DataBind();
                     SetDepartent();
-                    
+
                 }
                 //else if (this.PageTitle == "RadiologyReport")
                 //{
@@ -1511,7 +1511,7 @@ namespace PMS
                 //    ddlDepartments.Visible = false;
                 //    lbShift.Visible = false;
                 //    ddlShift.Visible = false;
-                    
+
 
                 //}           // latest insert 
                 else if (this.PageTitle == "Lab_Test_Wise_Summary")
@@ -1545,7 +1545,7 @@ namespace PMS
                     ddlTestName.DataValueField = "Test_ID";
                     ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
                     ddlTestName.DataBind();
-                   
+
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Type");
                     ddlPatientType.DataSource = valusets;
@@ -1554,7 +1554,7 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "All" });
                     ddlPatientType.DataBind();
                     SetDepartent();
-                    
+
                 }
                 else if (this.PageTitle == "Lab_Test_Patient_Wise")
                 {
@@ -1589,7 +1589,7 @@ namespace PMS
                     ddlTestName.DataValueField = "Test_ID";
                     ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
                     ddlTestName.DataBind();
-                   
+
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Type");
                     ddlPatientType.DataSource = valusets;
@@ -1598,7 +1598,7 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "All" });
                     ddlPatientType.DataBind();
                     SetDepartent();
-                    
+
                 }
                 else if (this.PageTitle == "PharmacySaleReport")
                 {
@@ -1694,14 +1694,14 @@ namespace PMS
                     ddlwareHouse.DataBind();
                     Stock_Movement.Visible = true;
                     tr_Summary.Visible = false;
-                    
+
                     DataBaseDataContext dbd = new DataBaseDataContext(DBClass.ConnectionString());
                     valuset = (from p in dbd.Account_Categories
-                                select new
-                                {
-                                    p.Account_Category_Id,
-                                    p.CategoryName
-                                }).ToList();
+                               select new
+                               {
+                                   p.Account_Category_Id,
+                                   p.CategoryName
+                               }).ToList();
                     ddlItemCategory.DataSource = valuset;
                     ddlItemCategory.Items.Clear();
                     ddlItemCategory.DataTextField = "CategoryName";
@@ -1727,7 +1727,7 @@ namespace PMS
 
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMultiSelect.Visible = false;
                     lblMedical.Text = "Item Group";
                     tr1MedicalSubsidy.Visible = true;
@@ -1740,7 +1740,7 @@ namespace PMS
                     lblMainDepartment.Text = "Items";
                     ddlMainDepartment.Visible = true;
                     tr_Export.Visible = false;
-                    
+
                     object valusets;
                     DataBaseDataContext dbd = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in dbd.INV_Items
@@ -1775,7 +1775,7 @@ namespace PMS
                     dpROw.Visible = false;
                     Time_Row.Visible = false;
                     tr_Export.Visible = false;
-                    
+
                 }
                 else if (this.PageTitle == "GRN_and_Item_Wise_Report")
                 {
@@ -1794,7 +1794,7 @@ namespace PMS
                     AllowPatientRecord = false;
                     ddlPatientType.Visible = false;
                     tr_Export.Visible = false;
-                    
+
                     object valusets;
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = (from p in dbase.GRN_Masters select new { p.GRN_ID, p.GRN_Num }).ToList();
@@ -1805,7 +1805,7 @@ namespace PMS
                     ddlDepartments.DataBind();
                     ddlMedicalSubsidy.Items.Clear();
                 }
-                
+
                 else if (PageTitle == "SIN_summary")
                 {
                     string x = "SIN Summary Report";
@@ -1829,11 +1829,11 @@ namespace PMS
                     ddlwareHouse.DataBind();
                     DataBaseDataContext dbd = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = (from p in dbd.Account_Categories
-                               select new
-                               {
-                                   p.Account_Category_Id,
-                                   p.CategoryName
-                               }).ToList();
+                                select new
+                                {
+                                    p.Account_Category_Id,
+                                    p.CategoryName
+                                }).ToList();
                     ddlItemCategory.DataSource = valusets;
                     ddlItemCategory.Items.Clear();
                     ddlItemCategory.DataTextField = "CategoryName";
@@ -2227,7 +2227,7 @@ namespace PMS
 
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     valusets = DBClass.GetValueSet("Patient Main Category");
@@ -2251,7 +2251,7 @@ namespace PMS
 
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     valusets = DBClass.GetValueSet("Patient Main Category");
@@ -2596,7 +2596,7 @@ namespace PMS
 
                     lblMainDepartment.Visible = true;
                     ddlMainDepartment.Visible = true;
-                     lboperator.Visible = true;
+                    lboperator.Visible = true;
                     ddloprators.Visible = true;
                     lblDepartment.Visible = false;
                     ddlDepartments.Visible = false;
@@ -2606,26 +2606,77 @@ namespace PMS
 
 
                 }
-                else if (this.PageTitle == "AnalysisReport")
+                if (this.PageTitle == "AnalysisReport")
                 {
-                    dpROw.Visible = true;
+
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
-                    lblMedical.Visible = false;
-                    ddlMedicalSubsidy.Visible = false;
-                    Time_Row.Visible = true;
-                    object valusets;
-                    valusets = DBClass.GetValueSet("Patient Type");
-                    ddlPatientType.DataSource = valusets;
-                    ddlPatientType.DataTextField = "DataValue_Description";
-                    ddlPatientType.DataValueField = "DataValue_Name";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
-                    ddlPatientType.DataBind();
+                    lblMainDepartment.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
                     optRw.Visible = true;
-                    lblDepartment.Text = "Test Name";
-                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    ddlDepartments.Visible = true;
-                    ddlDepartments.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    //DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests where main_department in ('001','002','003')");
+
+                    //trTestResult1.Visible = true;
+                    //ddlTestName.DataSource = Tests;
+                    //ddlTestName.DataTextField = "Test_Name";
+                    //ddlTestName.DataValueField = "Test_Name";
+                    //ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    //ddlTestName.DataBind();
+
+
+
+                    // latest logic for combining tests
+
+                    // Step 1: Get individual lab tests
+                    DataTable Tests = DBClass.getDataTable(@"
+        SELECT Test_ID, Test_Name 
+        FROM Lab_Tests 
+        WHERE main_department IN ('001','002','003')
+    ");
+
+                    // Step 2: Get test group categories (ValueSet_ID = 70, Division in 001-003)
+                    DataTable TestCategories = DBClass.getDataTable(@"
+        SELECT DataValue_Name, DataValue_Description 
+        FROM DataValues 
+        WHERE ValueSet_ID = 70 
+          AND Division IN ('001','002','003')
+    ");
+
+                    // Step 3: Merge categories into the same DataTable
+                    foreach (DataRow dr in TestCategories.Rows)
+                    {
+                        DataRow newdr = Tests.NewRow();
+                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();           // ← Value to pass to backend
+                        newdr["Test_Name"] = dr["DataValue_Description"].ToString(); // ← Display text
+                        Tests.Rows.Add(newdr);
+                    }
+
+                    // Step 4: Bind to dropdown
+                    trTestResult1.Visible = true;
+                    ddlTestName.DataSource = Tests;
+                    ddlTestName.DataTextField = "Test_Name";   // What user sees
+                    ddlTestName.DataValueField = "Test_Name";    // What gets sent (ID or group name)
+                    ddlTestName.Items.Clear();
+                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlTestName.AppendDataBoundItems = true; // Critical!
+                    ddlTestName.DataBind();
+
+                    object valusets;
+                    SetDepartent();
+
+
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
                                select new { d.UserName, d.UserId };
@@ -2634,16 +2685,20 @@ namespace PMS
                     ddloprators.DataValueField = "UserId";
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
+
+
+                    lblMainDepartment.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                    lboperator.Visible = true;
+                    ddloprators.Visible = true;
+                    lblDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
 
-                    tr_Summary.Visible = false;
-
-                    ddlPatientType.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    GetLabTestsForAnalysis();
                 }
+            
                 if (this.PageTitle == "Sale_Return_Report")
                 {
                     string x = "Sale Return Report";
@@ -2667,7 +2722,7 @@ namespace PMS
                     dpROw.Visible = false;
 
                     object valusets;
-              
+
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
                                select new { d.UserName, d.UserId };
@@ -2679,7 +2734,7 @@ namespace PMS
 
                     lblMainDepartment.Visible = true;
                     ddlMainDepartment.Visible = true;
-                     lboperator.Visible = true;
+                    lboperator.Visible = true;
                     ddloprators.Visible = true;
                     lblDepartment.Visible = false;
                     ddlDepartments.Visible = false;
@@ -2713,7 +2768,7 @@ namespace PMS
                     dpROw.Visible = false;
 
                     object valusets;
-              
+
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
                                select new { d.UserName, d.UserId };
@@ -2725,7 +2780,7 @@ namespace PMS
 
                     lblMainDepartment.Visible = true;
                     ddlMainDepartment.Visible = true;
-                     lboperator.Visible = true;
+                    lboperator.Visible = true;
                     ddloprators.Visible = true;
                     lblDepartment.Visible = false;
                     ddlDepartments.Visible = false;
@@ -2875,7 +2930,7 @@ namespace PMS
                     lblPatientType.Visible = false;
                     Time_Row.Visible = true;
                     DateDiv.Visible = true;
-                    Time_Row.Visible = true; 
+                    Time_Row.Visible = true;
                     tr_Summary.Visible = false;
                     AllowPatientRecord = false;
 
@@ -2989,7 +3044,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     dpROw.Visible = false;
                     AllowPatientRecord = false;
                     DateDiv.Visible = false;
@@ -3021,7 +3076,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     trProcedure1.Visible = true;
-                    
+
                     tr_Summary.Visible = false;
                     dpROw.Visible = false;
                     DateDiv.Visible = false;
@@ -3030,7 +3085,7 @@ namespace PMS
                     lbProcedure.Text = "OPD / IPD";
                     lblMedical.Text = "Test Main Departments";
                     ddlMainDepartment.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     tr1MedicalSubsidy.Visible = true;
                     ddlProcedure.Visible = true;
@@ -3061,7 +3116,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     trProcedure1.Visible = true;
-                    
+
                     tr_Summary.Visible = false;
                     dpROw.Visible = false;
                     DateDiv.Visible = false;
@@ -3069,7 +3124,7 @@ namespace PMS
                     lbProcedure.Visible = true;
                     lbProcedure.Text = "OPD / IPD";
                     ddlMainDepartment.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     tr1MedicalSubsidy.Visible = true;
                     ddlProcedure.Visible = true;
@@ -3100,7 +3155,7 @@ namespace PMS
 
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     tr1MedicalSubsidy.Visible = true;
                     lblMedical.Text = "Insurance Companies";
@@ -3136,9 +3191,9 @@ namespace PMS
                     optRw.Visible = false;
                     dpROw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     tr_Summary.Visible = false;
-                    
+
                     AllowPatientRecord = false;
                     lblMainDepartment.Visible = false;
                     tr1MedicalSubsidy.Visible = true;
@@ -3168,7 +3223,7 @@ namespace PMS
                     dpROw.Visible = false;
                     tr_Summary.Visible = false;
                     DateDiv.Visible = false;
-                    Time_Row.Visible = false;                    
+                    Time_Row.Visible = false;
                     AllowPatientRecord = false;
                     tr1ChkOPD.Visible = false;
                     tr1ChkIPD.Visible = false;
@@ -3176,7 +3231,7 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = true;
                     lblMedical.Visible = true;
                     ddlMedicalSubsidy.Visible = true;
-                    
+
                     lblMedical.Text = "Service/Procedure";
                     ddlMedicalSubsidy.Items.Clear();
                     ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "Service", Value = "01" });
@@ -3240,7 +3295,7 @@ namespace PMS
                     ddlPatientType.Visible = false;
 
                     tr_Summary.Visible = false;
-                    
+
                     AllowPatientRecord = false;
 
                     DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests");
@@ -3327,7 +3382,7 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = true;
                     lblMedical.Visible = true;
                     ddlMedicalSubsidy.Visible = true;
-                    
+
                     AllowPatientRecord = false;
 
 
@@ -3432,7 +3487,7 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     tr_Summary.Visible = false;
 
                     lblMainDepartment.Visible = false;
@@ -3472,8 +3527,8 @@ namespace PMS
                     ddlPatientType.DataValueField = "DataValue_Name";
                     ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
                     ddlPatientType.DataBind();
-                  
-                    lblDepartment.Text ="Department";
+
+                    lblDepartment.Text = "Department";
 
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
 
@@ -3487,13 +3542,13 @@ namespace PMS
 
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
-                               select new { d.UserName, d.UserId };               
+                               select new { d.UserName, d.UserId };
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;                  
+                    tr_Export.Visible = false;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Visible = false;
                     tr_Summary.Visible = false;
@@ -3518,8 +3573,8 @@ namespace PMS
                     ddlPatientType.DataValueField = "DataValue_Name";
                     ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
                     ddlPatientType.DataBind();
-                  
-                    lblDepartment.Text ="Department";
+
+                    lblDepartment.Text = "Department";
 
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
 
@@ -3533,13 +3588,13 @@ namespace PMS
 
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in db.aspnet_Users
-                               select new { d.UserName, d.UserId };               
+                               select new { d.UserName, d.UserId };
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr_Summary.Visible = false;
-                    tr_Export.Visible = false;                  
+                    tr_Export.Visible = false;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Visible = false;
                     tr_Summary.Visible = false;
@@ -3564,7 +3619,7 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
                     ddlPatientType.DataBind();
                     optRw.Visible = true;
-                    lblDepartment.Text ="Department";
+                    lblDepartment.Text = "Department";
 
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
 
@@ -3608,7 +3663,7 @@ namespace PMS
 
                     object valusets;
                     optRw.Visible = true;
-                    lblDepartment.Text ="Department";
+                    lblDepartment.Text = "Department";
 
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
 
@@ -3635,7 +3690,7 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Operator_Wise_Billing_Report")
                 {
-//                    string x = "Lab Cash Collection";
+                    //                    string x = "Lab Cash Collection";
                     string x = "Operator Wise Billing";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
@@ -3734,7 +3789,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                     AllowPatientRecord = false;
@@ -3779,7 +3834,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                     AllowPatientRecord = false;
@@ -3899,7 +3954,7 @@ namespace PMS
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     AllowPatientRecord = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -4020,7 +4075,7 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
 
                     if (AllowPatientRecord)
                     {
@@ -4132,7 +4187,7 @@ namespace PMS
                         ddlPatientType.DataBind();
                     }
                     trDoctor.Visible = false;
-                    
+
                     SetDepartent();
 
                 }
@@ -4342,7 +4397,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
@@ -4359,7 +4414,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
@@ -4423,7 +4478,7 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                     DateDiv.Visible = false;
@@ -4451,7 +4506,7 @@ namespace PMS
                     ddlDepartments.Visible = false;
                     lblMainDepartment.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
 
 
@@ -4487,7 +4542,7 @@ namespace PMS
                         ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
                         ddlDepartments.DataBind();
                     }
-                    
+
                     //else if (this.PageTitle == "OPD_Detail_Report")
                     //{
                     //    string x = "OPD Detail Report";
@@ -4540,13 +4595,13 @@ namespace PMS
                     //    }
                     //}
 
-                   
+
                     else if (this.PageTitle == "Discharge_Time_Line_Detail")
                     {
                         tr1MedicalSubsidy.Visible = false;
                         optRw.Visible = false;
                         tr_Summary.Visible = false;
-                        
+
                         AllowPatientRecord = false;
                         ddlDepartments.Visible = true;
 
@@ -4631,7 +4686,7 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
@@ -4645,7 +4700,7 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     SetDepartent();
                     //----update
 
@@ -4683,7 +4738,7 @@ namespace PMS
                     trDoctor.Visible = false;
                     tr1MedicalSubsidy.Visible = true;
                     tr_Summary.Visible = false;
-                    
+
                     AllowPatientRecord = false;
 
                     lblMedical.Text = "Patient Type";
@@ -4717,7 +4772,7 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     ddlPatientType.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                     SetDepartent();
@@ -4733,7 +4788,7 @@ namespace PMS
                     ddlPatientType.Visible = true;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -4768,7 +4823,7 @@ namespace PMS
                     ddlPatientType.Visible = false;   // turned it into false 
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -4803,7 +4858,7 @@ namespace PMS
                     ddlPatientType.Visible = false;   // turned it into false 
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -4838,7 +4893,7 @@ namespace PMS
                     ddlPatientType.Visible = false;   // turned it into false 
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -4873,7 +4928,7 @@ namespace PMS
                     ddlPatientType.Visible = false;   // turned it into false 
                     optRw.Visible = false;
                     trDoctor.Visible = false;
-                    
+
                     lblMainDepartment.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -4955,7 +5010,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
-                    
+
                     Time_Row.Visible = false;
                     dpROw.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -4967,7 +5022,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
-                    
+
                     Time_Row.Visible = false;
                     dpROw.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -5369,7 +5424,7 @@ namespace PMS
                     dpROw.Visible = false;
                     Time_Row.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     //----update
 
                     if (AllowPatientRecord)
@@ -5393,7 +5448,7 @@ namespace PMS
                     dpROw.Visible = false;
                     Time_Row.Visible = false;
                     tr_Summary.Visible = false;
-                    
+
                     //----update
 
                     if (AllowPatientRecord)
@@ -5415,7 +5470,7 @@ namespace PMS
                 {
                     object valusets;
                     //dpROw.Visible = false;
-                    
+
                     dpROw.Visible = true;
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -5470,7 +5525,7 @@ namespace PMS
                 }
                 else
                 {
-                    
+
                 }
             }
         }
@@ -5480,11 +5535,11 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                if(dpt=="All")
+                if (dpt == "All")
                 {
                     var inPatmedicineList = (from emp in db.HR_Employees
 
-                                             where  emp.IsDoctor == true
+                                             where emp.IsDoctor == true
                                              select new { emp.Emp_ID, emp.Emp_Name }).ToList();
                     return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
                 }
@@ -5575,7 +5630,7 @@ namespace PMS
                 if (inv_form == "01")
                 {
                     var GIR_NO = (from gir in db.MaterialIssueRequests
-                                             select new { ID = gir.MaterialRequest_Id, NO = gir.Request_No }).ToList();
+                                  select new { ID = gir.MaterialRequest_Id, NO = gir.Request_No }).ToList();
                     return (new JavaScriptSerializer()).Serialize(GIR_NO);
                 }
                 else if (inv_form == "02")
@@ -5587,7 +5642,7 @@ namespace PMS
                 else if (inv_form == "03")
                 {
                     var PR_NO = (from pr in db.Purchase_Requisitions
-                                  select new { ID = pr.PR_Id, NO = pr.PR_Num }).ToList();
+                                 select new { ID = pr.PR_Id, NO = pr.PR_Num }).ToList();
                     return (new JavaScriptSerializer()).Serialize(PR_NO);
                 }
                 else if (inv_form == "04")
@@ -5599,13 +5654,13 @@ namespace PMS
                 else if (inv_form == "05")
                 {
                     var CS_NO = (from cs in db.CS_Vendor_Masters
-                                  select new { ID = cs.CS_Ven_Master_ID, NO = cs.CS_Ven_No }).ToList();
+                                 select new { ID = cs.CS_Ven_Master_ID, NO = cs.CS_Ven_No }).ToList();
                     return (new JavaScriptSerializer()).Serialize(CS_NO);
                 }
                 else if (inv_form == "06")
                 {
                     var PO_NO = (from po in db.AP_Purchase_Orders
-                                  select new { ID = po.PO_ID, NO = po.PO_No }).ToList();
+                                 select new { ID = po.PO_ID, NO = po.PO_No }).ToList();
                     return (new JavaScriptSerializer()).Serialize(PO_NO);
                 }
                 else if (inv_form == "07")
@@ -5623,7 +5678,7 @@ namespace PMS
                 else if (inv_form == "09")
                 {
                     var Pur_NO = (from pur in db.Purchase_Invoice_Masters
-                                 select new { ID = pur.PurchaseInvoiceId, NO = pur.InvoiceNum }).ToList();
+                                  select new { ID = pur.PurchaseInvoiceId, NO = pur.InvoiceNum }).ToList();
                     return (new JavaScriptSerializer()).Serialize(Pur_NO);
                 }
                 else if (inv_form == "10")
