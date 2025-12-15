@@ -7,6 +7,18 @@
 
 
     <script type="text/javascript">
+        function FillAnalysisTests() {
+            var options = '<option value="All">All</option>';
+            PageMethods.GetLabTestsForAnalysis(function (data) {
+                var testsData = JSON.parse(data);
+                $.each(testsData, function (key, value) {
+                    options += '<option value="' + value.TestID + '">' + value.TestName + '</option>';
+                });
+                $('#ctl00_MainContent_ddlDepartments').html(options);
+                $('#ctl00_MainContent_ddlDepartments').select2(); // Reinitialize select2 if needed
+            });
+        }
+
         function FillCardioTests() {
 
             var dpt = $('#ctl00_MainContent_ddlDepartments').val();
@@ -585,6 +597,10 @@
                         var testname = ((typeof ($("#ctl00_MainContent_ddlTestName").val()) != 'undefined') ? $("#ctl00_MainContent_ddlTestName").val() : "0")
                         var url = 'ReportViewer.aspx?ReportName=RadiologyReport&ReportTitle=Radiology Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MainDepartment=' + main_department + '&testName=' + testname + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "AnalysisReport") {
+                        var url = 'ReportViewer.aspx?ReportName=AnalysisReport&ReportTitle=Analysis Report from ' + $('#ctl00_MainContent_txtsDate').val() + ' to ' + $('#ctl00_MainContent_txteDate').val() + '&sDate=' + $('#ctl00_MainContent_txtsDate').val() + '&eDate=' + $('#ctl00_MainContent_txteDate').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_oprators").val()) != 'undefined') ? $("#ctl00_MainContent_oprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blanks');
                     }
                     else if (rptTitle == "Sale_Return_Report") {
                         debugger;
