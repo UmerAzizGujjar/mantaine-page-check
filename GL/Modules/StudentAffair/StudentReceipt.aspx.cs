@@ -85,6 +85,7 @@ namespace PMS.Modules.StudentAffair
                                   a.Student_Receipt_Date,
                                   a.Remarks,
                                   a.Account_ID,
+                                  Accountid_text = (from acc in db.GL_Accounts where acc.Account_ID == Convert.ToInt32(a.Account_ID) select acc.Account_Name).FirstOrDefault(),
                                   a.Total_Payable,
                                   a.Disc_Perc,
                                   a.Disc_Amount,
@@ -440,7 +441,7 @@ namespace PMS.Modules.StudentAffair
                                   Program = db.GetDataValueName("Admission Category", a.Program),
                                   StuClass = db.GetDataValueName("Student Class", v.Student_Class),
                                   a.Account_id,
-                                  Accountid_text = (from acc in db.hr where acc.Emp_ID == Convert.ToInt32(a.Account_id) select acc.Emp_Name).FirstOrDefault(),
+                                  Accountid_text = (from acc in db.GL_Accounts where acc.Account_ID == Convert.ToInt32(a.Account_id) select acc.Account_Name).FirstOrDefault(),
 
 
 
