@@ -2672,30 +2672,6 @@
       <Column Name="Deleted_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Store_Issue" Member="Store_Issues">
-    <Type Name="Store_Issue">
-      <Column Name="Store_Issue_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Store_Issue_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Company_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Department_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Organization_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Created_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Deleted_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
-      <Column Name="Forward" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Reject" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
-      <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Sys_Inv_OrignatorTempelate_Detail" Member="Sys_Inv_OrignatorTempelate_Details">
     <Type Name="Sys_Inv_OrignatorTempelate_Detail">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7081,6 +7057,31 @@
       <Column Name="Req_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Store_Issue" Member="Store_Issues">
+    <Type Name="Store_Issue">
+      <Column Name="Store_Issue_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Store_Issue_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Company_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Department_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Organization_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Created_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Update_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Deleted_By" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Deleted_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Forward" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reject" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="MR_No" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -10965,6 +10966,18 @@
       <Column Name="DeptName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
       <Column Name="Status" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spLoadBillingInfo" Method="spLoadBillingInfo">
+    <Parameter Name="search" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="spLoadBillingInfoResult">
+      <Column Name="Bill_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Received_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
