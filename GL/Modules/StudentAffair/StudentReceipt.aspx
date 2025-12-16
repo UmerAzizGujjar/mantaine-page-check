@@ -459,6 +459,9 @@
                 $('#lblSession').text(data.Sesion);
                 $('#lblStuClass').text(data.StuClass);
 
+          
+       
+
 
 
                 setTimeout(function () {
@@ -502,18 +505,12 @@
 
 
                 }
-
-
-
-                setTimeout(function () {
-
-                    $('#ddl_bankCash').val(data.Account_ID).trigger('change');
-
-
-                }, 1000);
-
-
-
+                $('#ddl_bankCash').html(
+                    $('<option>', {
+                        value: data.Account_ID,
+                        text: data.Accountid_text
+                    })
+                );
                 $('#txtTotalPayable').val(data.Total_Payable);
                 $('#txtDisPer').val(data.Disc_Perc);
                 $('#txtDisAmt').val(data.Disc_Amount);

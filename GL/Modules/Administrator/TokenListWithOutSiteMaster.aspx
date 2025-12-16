@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TokenListWithOutSiteMaster.aspx.cs" Inherits="PMS.TokenListWithOutSiteMaster" %>
+﻿
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TokenListWithOutSiteMaster.aspx.cs" Inherits="PMS.TokenListWithOutSiteMaster" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -104,7 +105,7 @@
                     });
                     $('#ddldoctor').html(options);
                     $('#ddldoctor').select2();
-                  
+
 
                 },
                 error: function (xhr, status, error) {
@@ -163,14 +164,14 @@
             return options;
         }
         function GetLatestToken() {
-            var patientType = $('#ddlPatientType').val(); 
-            var department = $('#ddldepartment').val(); 
+            var patientType = $('#ddlPatientType').val();
+            var department = $('#ddldepartment').val();
             $.ajax({
                 url: 'TokenList.aspx/LoadTokenPatient',
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ patientType: patientType, department: department}), 
+                data: JSON.stringify({ patientType: patientType, department: department }),
                 success: function (_data) {
                     debugger;
                     _data = JSON.parse(_data.d);
@@ -238,160 +239,5 @@
     </script>
 
 </body>
-<%--  <script type="text/javascript">
-          $(document).ready(function () {
-              debugger;
-              privatecheck();
-              setTimeout(function () {
-                  checkprivateorgeneral();
-              },800)
-             
 
-
-          });
-          debugger;
-          function checkprivateorgeneral() {
-              debugger;
-          
-                  GetLatest_doc_Token();
-                  GetLatestToken();
-          }
-          //var Filter;
-          //var chckfilter;
-          //    function FilterClininc() {
-          //        debugger;
-          //        $.ajax({
-          //            type: "POST",
-          //            url: 'TokenList.aspx/getfilter',
-          //            data: "",
-          //            contentType: "application/json; charset=utf-8",
-          //            dataType: "json",
-          //            async: true,
-          //            success: function (data) {
-          //                debugger;
-          //                Filter = data.d;
-                         
-          //                var parsedData = JSON.parse(Filter);
-                         
-          //                chckfilter = parsedData[0].Id;
-          //            },
-
-
-          //            failure: function () {
-
-          //                alert(bi);
-          //            }
-          //        });
-          //}
-
-          var doc;
-          var doc_check;
-          function getdoctor() {
-                  debugger;
-                  $.ajax({
-                      type: "POST",
-                      url: 'TokenList.aspx/getdoctor',
-                      data: "",
-                      contentType: "application/json; charset=utf-8",
-                      dataType: "json",
-                      async: true,
-                      success: function (data) {
-                          debugger;
-                          doc = data.d;
-                         
-                          var parsedData = JSON.parse(doc);
-                         
-                          doc_check = parsedData[0].Id;
-                      },
-
-
-                      failure: function () {
-
-                          alert(bi);
-                      }
-                  });
-              }
-         
-       
-          function GetLatestToken() {
-              $.ajax({
-                  url: 'TokenList.aspx/LoadTokenPatient',
-                  type: 'post',
-                  contentType: 'application/json;charset=utf-8',
-                  dataType: 'json',
-                  success: function (_data) {
-                      debugger;
-                      _data = JSON.parse(_data.d);
-                      var mdTable = $('#tbloutPatients');
-                      $('#tbl tr:gt(0)').remove();
-                      table = $('#ibody');
-                      var rows = '';
-                      table.empty();
-                      debugger;
-                    
-                      /*$('#Filter_List').text('Filter Clininc')*/
-                   
-                      $.each(_data, function (key, value) {
-                          bill_id = value.Bill_ID;
-                          debugger;
-
-                          var rowColor = ''; 
-
-                          if (value.fc == "001") {
-                              rowColor = 'background: linear-gradient(to Right, #f5c5f6, #e4c1fa);'
-                          } else if (value.fc == "002") {
-                              rowColor = 'background: linear-gradient(to Right, #ff9190,#fdc094 );'
-                          } else if (value.fc == "003") {
-                              rowColor = 'background: linear-gradient(to Right, #7BE495, #CFF4D2);'
-                          }
-
-                          $("#ibody").append('<tr style="' + rowColor + '"><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.tokenNo + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.mr_no_sequence + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Full_Name + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.filter_clinic + '</td></tr>');
-                          length++;
-                    
-                          return true;
-                      });
-
-                  },
-                  error: function () {
-                      alert("Get Error");
-                  }
-              });
-          }
-          setInterval(function () {
-              location.reload(); 
-          }, 180000);
-          
-          var rowColors;
-
-          
-
-          var isprivate;
-          function privatecheck() {
-              debugger;
-              $.ajax({
-                  type: "POST",
-                  url: "TokenList.aspx/isprivate",
-                  data: "",
-                  contentType: "application/json; charset=utf-8",
-                  dataType: "json",
-                  async: true,
-                  success: function (data) {
-                      debugger;
-                      isprivate = data.d;
-
-                  },
-                  failure: function () {
-
-                      alert(bi);
-                  }
-              });
-          }
-
-
-
-
-
-
-
-      </script>--%>
 </html>

@@ -8394,20 +8394,6 @@
     <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
     <Return Type="System.Decimal" />
   </Function>
-  <Function Name="dbo.sp_token_doc_list" Method="sp_token_doc_list">
-    <Parameter Name="doctor" Type="System.String" DbType="NVarChar(50)" />
-    <ElementType Name="sp_token_doc_listResult">
-      <Column Name="Doc_Token" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="filter_clinic" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="doc_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_Student_List" Method="sp_Student_List">
     <Parameter Name="Class" Parameter="class" Type="System.String" DbType="NVarChar(50)" />
     <Parameter Name="Is_Active" Parameter="is_Active" Type="System.Boolean" DbType="Bit" />
@@ -9762,21 +9748,6 @@
       <Column Name="Total_Admitted" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_token_list" Method="sp_token_list">
-    <Parameter Name="Patient_Type" Parameter="patient_Type" Type="System.String" DbType="NVarChar(50)" />
-    <Parameter Name="Department" Parameter="department" Type="System.String" DbType="NVarChar(50)" />
-    <ElementType Name="sp_token_listResult">
-      <Column Name="tokenNo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="filter_clinic" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="filter_clinic1" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.SpApprove_OPD" Method="SpApprove_OPD">
     <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
     <Parameter Name="Pat_Category" Parameter="pat_Category" Type="System.String" DbType="NVarChar(150)" />
@@ -10937,6 +10908,63 @@
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="Discount_Block" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetOpdDischargeList" Method="sp_GetOpdDischargeList">
+    <Parameter Name="search" Type="System.String" DbType="VarChar(500)" />
+    <Parameter Name="filterClinic" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="Doctor_Id" Parameter="doctor_Id" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetOpdDischargeListResult">
+      <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Patient_no" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="Father_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Mobile1" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Patient_Main_Category" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Doc_Name" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Filter_Clinic" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_token_doc_list" Method="sp_token_doc_list">
+    <Parameter Name="userId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="sp_token_doc_listResult">
+      <Column Name="Doc_Token" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="filter_clinic" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="doc_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_token_list" Method="sp_token_list">
+    <ElementType Name="sp_token_listResult">
+      <Column Name="tokenNo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="filter_clinic" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="filter_clinic1" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spLoadopdPatient" Method="spLoadopdPatient">
+    <Parameter Name="pat_type" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="search" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="spLoadopdPatientResult">
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="Pat_type" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="DeptName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
