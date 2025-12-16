@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -302,6 +303,7 @@ namespace PMS.Inventory
             return (new JavaScriptSerializer()).Serialize(details);
         }
         [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static string AddItems(
     string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
     string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth,string basesize, string baseqty, string SalesRate, string PurchRate,
