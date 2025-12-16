@@ -208,6 +208,7 @@
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
     <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
+    <Content Include="Modules\Administrator\Token_List.aspx" />
     <Content Include="Modules\Administrator\API.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciation.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciationPolicy.aspx" />
@@ -25717,6 +25718,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\AddPanel_Packages.aspx.designer.cs">
       <DependentUpon>AddPanel_Packages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\Token_List.aspx.cs">
+      <DependentUpon>Token_List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\Token_List.aspx.designer.cs">
+      <DependentUpon>Token_List.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\API.aspx.cs">
       <DependentUpon>API.aspx</DependentUpon>
