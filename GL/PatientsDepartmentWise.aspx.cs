@@ -2134,11 +2134,12 @@ namespace PMS
                     ddlDepartments.DataBind();
                     lbShift.Visible = false;
                     ddlShift.Visible = false;
+                    lboperator.Text = "Status";
                     ddloprators.Visible = true;
                     ddloprators.Items.Clear();
                     ddloprators.Items.Add(new ListItem() { Text = "All ", Value = "2" });
-                    ddloprators.Items.Add(new ListItem() { Text = "Active", Value = "0" });
-                    ddloprators.Items.Add(new ListItem() { Text = "In Active", Value = "1" });
+                    ddloprators.Items.Add(new ListItem() { Text = "Active", Value = "1" });
+                    ddloprators.Items.Add(new ListItem() { Text = "In Active", Value = "0" });
                     ddloprators.DataBind();
                 }
                 else if (this.PageTitle == "BER")
@@ -2190,6 +2191,74 @@ namespace PMS
                     tr_Export.Visible = false;
                     DateDiv.Visible = true;
                     sttDate.Text = "End Date";
+                    sttDate.Visible = true;
+                    txtStart_Date.Visible = true;
+                    endDate.Visible = false;
+                    txtEnd_Date.Visible = false;
+                    Time_Row.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblDepartment.Text = "Vendor Name";
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in db.AP_Vendors
+                                       where
+                                       sl.IsActive == true
+                                       select new { sl.Vendor_ID, sl.Vendor_Name }).ToList();
+
+                    ddlDepartments.DataSource = serviceList;
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+                }
+                else if (this.PageTitle == "ApAgingDetail")
+                {
+                    string x = "Ap Aging";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    sttDate.Text = "Start Date";
+                    sttDate.Visible = true;
+                    txtStart_Date.Visible = true;
+                    endDate.Visible = false;
+                    txtEnd_Date.Visible = false;
+                    Time_Row.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblDepartment.Text = "Vendor Name";
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in db.AP_Vendors
+                                       where
+                                       sl.IsActive == true
+                                       select new { sl.Vendor_ID, sl.Vendor_Name }).ToList();
+
+                    ddlDepartments.DataSource = serviceList;
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+                }
+                else if (this.PageTitle == "ApAgingSummary")
+                {
+                    string x = "Ap Aging Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    sttDate.Text = "Start Date";
                     sttDate.Visible = true;
                     txtStart_Date.Visible = true;
                     endDate.Visible = false;
