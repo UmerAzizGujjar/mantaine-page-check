@@ -23,7 +23,8 @@
                  $("#btnSave").val('Update');
              }
            
-             if (SI_ID == "") {
+            if (SI_ID == "") {
+                initializeMRNoDropdown();
                  $('#btn_Print').hide();
                  $('#btnVoucher').hide();
              }
@@ -71,6 +72,7 @@
                  var department_id = $('#ddlDepartment').val();
                  var inventory_id = $('#ddlInventoryOrg').val();
                  var store_no = $('#txtStoreissueNo').val();
+                 var MRNo = $('#ddlMRNo').val() || 0;
                  var StoreIssue_id = '0';
                  var SI_ID = '<%= Request.QueryString["SI_ID"]%>';
                  if (SI_ID != "") {
@@ -212,7 +214,7 @@
                      if (checkstock == true) {
                          return false;
                      }
-                     var AllItemDetail = { 'StoreIssue_id': StoreIssue_id, 'Store_Issue_No': store_no, 'comapny_id': comapny_id, 'department_id': department_id, 'inventory_id': inventory_id, 'ItemList': Item_list };
+                     var AllItemDetail = { 'StoreIssue_id': StoreIssue_id, 'Store_Issue_No': store_no, 'MRNo': MRNo, 'comapny_id': comapny_id, 'department_id': department_id, 'inventory_id': inventory_id, 'ItemList': Item_list };
                      var department_id = $('#ddlDepartment').val();
                      var inventory_id = $('#ddlInventoryOrg').val();
                      var length = $("#tblStoreIssueBote tr:gt(0)").length;
@@ -519,6 +521,9 @@
                 $('#txtStatus').val(result[0].Status);
                 setTimeout(function () { $('#ddlInventoryOrg').val(result[0].Organization_Id); }, 2000);
                 setTimeout(function () { $('#ddlDepartment').val(result[0].Department_Id); }, 2000);
+
+                initializeMRNoDropdown(result.query.MR_No);
+                $('#ddlMRNo').val(result.query.MR_No).trigger('change');
             });
         }
         function ExcludeFromPayment(anchor) {
@@ -652,6 +657,40 @@
             });
         }
 
+        function initializeMRNoDropdown(savedMRNo = null) {
+            $('#ddlMRNo').select2({
+                placeholder: "Please Select",
+                allowClear: true,
+                ajax: {
+                    url: "GoodsIssuanceNote.aspx/LoadMRNo",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: function (params) {
+                        return JSON.stringify({
+                            savedMRNo: savedMRNo,
+                            search: params.term || ""
+                        });
+                    },
+                    processResults: function (response) {
+                        const parsedData = JSON.parse(response.d);
+                        return {
+                            results: parsedData.map(item => ({
+                                id: item.mr_no_sequence,
+                                text: item.mr_no_sequence
+                            }))
+                        };
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                }
+            });
+            if (savedMRNo) {
+                const option = new Option(savedMRNo, savedMRNo, true, true);
+                $('#ddlMRNo').append(option).trigger('change');
+            }
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -667,18 +706,23 @@
                 <select id="ddlDepartment" class="form-control">
                 </select>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-2 col-md-6 col-sm-12">
                 <label class="">Warehouse</label>
                 <select id="ddlInventoryOrg" onchange="getMIR();" class="form-control">
                 </select>
             </div>
         
-            <div class="col-lg-3 col-md-4 col-sm-12">
+            <div class="col-lg-2 col-md-4 col-sm-12">
                 <label>GIR#</label>
                 <select id="ddlMIR"  class="form-select"></select>
             </div>
             <div class="col-lg-1 col-md-2 col-sm-6">
                 <input type="button" value="Add" id="btnAdd" class="btn btn-primry" style="margin-top: 20px;" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label class="">MR #</label>
+                <select id="ddlMRNo" class="form-control">
+                </select>
             </div>
             </div>
             <div class="row">
