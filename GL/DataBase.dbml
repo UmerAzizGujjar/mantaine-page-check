@@ -10953,4 +10953,18 @@
       <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.spLoadopdPatient" Method="spLoadopdPatient">
+    <Parameter Name="pat_type" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="search" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="spLoadopdPatientResult">
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Opd_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="Pat_type" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="DeptName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>
