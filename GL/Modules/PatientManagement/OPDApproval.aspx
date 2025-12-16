@@ -137,6 +137,7 @@
    <input type="text"  id="txtsearch" onkeyup ="GetOPDToApproveList()"  />
         </div>
         <div class="col-lg-2 col-md-2 col-sm-4">
+            <label></label>
              <input type="button" value="Approve Selected Patients" class="btn btn-primry" id="btnApproved" />
         </div>
     </div>

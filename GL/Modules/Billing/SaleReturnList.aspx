@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SaleReturnList.aspx.cs" Inherits="PMS.Modules.Billing.SaleReturnList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/css/tablestyle.css" rel="stylesheet" />
-
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {

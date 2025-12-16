@@ -1319,6 +1319,16 @@
                         var url = 'ReportViewer.aspx?ReportName=InvoiceAging&ReportTitle=Invoice Aging Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val();
                         window.open(url, '_blanks');
                     }
+                    if (rptTitle == "ApAgingDetail") {
+
+                        var url = 'ReportViewer.aspx?ReportName=ApAgingDetail&ReportTitle=Ap Aging Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        window.open(url, '_blanks');
+                    }
+                    if (rptTitle == "ApAgingSummary") {
+
+                        var url = 'ReportViewer.aspx?ReportName=ApAgingSummary&ReportTitle=Ap Aging Summary Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        window.open(url, '_blanks');
+                    }
 
                     if (rptTitle == "GOP_Patient_Detail") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
