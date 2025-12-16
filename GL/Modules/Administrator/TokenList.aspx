@@ -4,7 +4,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
-        
+
             GetLatestToken();
 
             $('[id*="Getrow"]').on('click', function () {
@@ -81,22 +81,21 @@
                             $("#ibody").append('<tr style="' + rowColor + '"><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td><input id="Getrow" name="Getrow" class="chckrow" type="checkbox" /></td><td  style="font-size:22px;font-weight:bold;">' + value.tokenNo + '</td><td  style="font-size:22px;font-weight:bold;">' + value.Opd_No + '</td><td  style="font-size:22px;font-weight:bold;">' + value.Full_Name + '</td></tr>');
                             length++;
                             return true;
-                            
+
                         } else if (value.filter_clinic == "002" && value.Id == "002") {
                             rowColor = 'background: linear-gradient(to Right, #ff9190,#fdc094 );';
                             $("#ibody").append('<tr style="' + rowColor + '"><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td><input id="Getrow" name="Getrow" class="chckrow" type="checkbox" /></td><td  style="font-size:22px;font-weight:bold;">' + value.tokenNo + '</td><td  style="font-size:22px;font-weight:bold;">' + value.Opd_No + '</td><td  style="font-size:22px;font-weight:bold;">' + value.Full_Name + '</td></tr>');
                             length++;
                             return true;
                         }
-                        else if (value.filter_clinic == "003" && value.Id == "003")
-                        {
+                        else if (value.filter_clinic == "003" && value.Id == "003") {
                             rowColor = 'background: linear-gradient(to Right, #7BE495, #CFF4D2);';
                             $("#ibody").append('<tr style="' + rowColor + '"><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td><input id="Getrow" name="Getrow" class="chckrow" type="checkbox" /></td><td  style="font-size:22px;font-weight:bold;">' + value.tokenNo + '</td><td  style="font-size:22px;font-weight:bold;">' + value.Opd_No + '</td><td  style="font-size:22px;font-weight:bold;">' + value.Full_Name + '</td></tr>');
                             length++;
                             return true;
                         }
 
-                    
+
                     });
                 },
                 error: function () {
@@ -105,13 +104,13 @@
             });
         }
         setInterval(function () {
-       
+
             location.reload(); // Refresh the page
         }, 10000);
 
 
 
-       
+
 
 
     </script>
