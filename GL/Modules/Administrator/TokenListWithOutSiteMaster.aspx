@@ -1,260 +1,167 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TokenListWithOutSiteMaster.aspx.cs" Inherits="PMS.TokenListWithOutSiteMaster" %>
 
 <!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../wwwroot/Select2/select2.min.css" rel="stylesheet" />
-    <link href="../../wwwroot/css/CustomCss/toggle.css" rel="stylesheet" />
+    <script src="javascripts/jquery.min.js"></script>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="assets/js/bootstrap.min.js"></script>
+  
+    <style type="text/css">
+
+
+            @keyframes blink {
+            0% { opacity: 1; color: orangered; }
+            50% { opacity: 0.5; color: darkslategrey; }
+            100% { opacity: 1; color: rebeccapurple; }
+        }
+
+        .blink {
+            animation: blink 2s infinite;
+        }
+
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .row {
+            margin-right: 0px !important;
+            margin-left:  0px !important;
+        }
+
+        .col-lg-1 {
+            width: 8.33%;
+            float: left;
+        }
+
+        .table-header th {
+            font-size: 3vw; 
+            font-weight: bold;
+        }
+
+        .table > thead > tr {
+            background: linear-gradient(to Right, #00ef8c, #2c3e50) !important;
+            color: white;
+        }
+
+        #tbloutPatients {
+            width: 100%;
+            overflow-x: auto;
+        }
+        #tblprivatepatient {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        #ihead th, #ibody td {
+            font-size: 2vw;
+        }
+    </style>
 </head>
 <body>
-
-    <div class="container my-5">
-        <!-- Toggle Buttons -->
-        <div class="d-flex justify-content-end toggle-btns mb-4">
-            <button id="clinicBtn" class="btn btn-light active">Department</button>
-            <button id="doctorBtn" class="btn btn-light">Doctor</button>
+<div class="container">
+        <form id="form1" runat="server">
+        <div>
+            <h1 style="text-align: center"><span id="Filter_List"></span>Token List</h1>
+            <hr style="font-weight:bold;" />
         </div>
-        <!-- Clinic Table -->
-        <div id="clinicTable">
-            <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                    <label>Patient Category</label>
-                    <select id="ddlPatientType" onchange="GetLatestToken();" class="widths"></select>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                    <label>Department</label>
-                    <select id="ddldepartment" onchange="GetLatestToken();" class="widths"></select>
-                </div>
+   <%--     <div class="row" id="forfilter" style="margin-left: 20px !important;">
+            <div class="col-lg-1" style="width: 74px;">
 
+                <h4>Clinic1</h4>
             </div>
-            <h3 class="text-danger">Department Wise Patients</h3>
-            <table id="tblgnrltoken" class="table table-bordered table-striped">
-                <thead class="table-danger">
-                    <tr>
-                        <th>Token Number</th>
-                        <th>MR Number</th>
-                        <th>Patient Name</th>
+            <div class="col-lg-1" style="background: linear-gradient(to Right, #f5c5f6, #e4c1fa); width: 20px; height: 20px; margin-top: 8px;">
+
+                <span style="width: 20px; height: 20px; display: inline"></span>
+            </div>
+         
+            <div class="col-lg-1" style="width: 74px;">
+
+                <h4>Clinic2</h4>
+            </div>
+
+            <div class="col-lg-1" style="background: linear-gradient(to Right, #ff9190,#fdc094 ); width: 20px; height: 20px; margin-top: 8px;">
+
+                <span style="background-color: yellow; width: 20px; height: 20px; display: inline;"></span>
+            </div>
+           
+            <div class="col-lg-1" style="width: 74px;">
+
+                <h4>Clinic3</h4>
+            </div>
+            <div class="col-lg-1" style="background: linear-gradient(to Right, #7BE495, #CFF4D2); width: 20px; height: 20px; margin-top: 8px;">
+
+                <span style="background-color: yellow; width: 20px; height: 20px; display: inline;"></span>
+            </div>
+        </div>--%>
+          
+            <br />
+            <br />
+
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                  <h3 style="font-weight:bold">General Patients</h3>
+                 <table class="table table-hover table-striped table-bordered" id="tbloutPatients" style="">
+                <thead id="ihead" style="background: linear-gradient(to bottom, #bdc3c7, #2c3e50) !important;">
+                    <tr style="">
+                    
+                        <th style="font-size: 20px; font-weight: bold;text-align: center;">Token No</th>
+                        <%--<th style="font-size: 20px; font-weight: bold;text-align: center;">Mr No</th>--%>
+                        <th style="font-size: 20px; font-weight: bold;text-align: center;">Patient Name</th>
+                        <th style="font-size: 20px; font-weight: bold;text-align: center;">Filter Clinic</th>
+                      
                     </tr>
                 </thead>
                 <tbody id="ibody">
                 </tbody>
             </table>
-        </div>
-        <!-- Doctor Table (Initially Hidden) -->
-        <div id="doctorTable" style="display: none;">
-             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                    <select id="ddldoctor" onchange="GetLatest_doc_Token()" class="widths"></select>
-                </div>
-
             </div>
-            <h3 class="text-danger">Doctor's Patients</h3>
-            <table id="tblprivatepatient" class="table table-bordered table-striped">
-                <thead class="table-danger">
-                    <tr>
-                        <th>Token Number</th>
-                        <th>MR Number</th>
-                        <th>Patient Name</th>
-                        <th>Doctor Name</th>
+           <div class="col-lg-6 col-md-6 col-sm-6">
+                <h3>Private Patients</h3>
+               <table class="table table-hover table-striped table-bordered" id="tblprivatepatient" style="">
+                <thead id="ihead_pvt" style="background: linear-gradient(to bottom, #bdc3c7, #2c3e50) !important;">
+                    <tr style="">
+                    
+                        <th style="font-size: 20px; font-weight: bold;text-align: center;">Token No</th>
+                        <%--<th style="font-size: 20px; font-weight: bold;text-align: center;">Mr No</th>--%>  
+                        <th style="font-size: 20px; font-weight: bold;text-align: center;">Patient Name</th>
+                        <th style="font-size: 20px; font-weight: bold;text-align: center;">Consultant</th>
+                      
                     </tr>
                 </thead>
                 <tbody id="ibody_pvt">
                 </tbody>
             </table>
+           </div>
         </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../../wwwroot/Select2/select2.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            FillPatientType();
-            FillDepartment();
-            GetLatestToken();
-            GetLatest_doc_Token();
-            filldoctor();
-            $('#clinicBtn').click(function () {
-                $('#doctorTable').hide();
-                $('#clinicTable').show();
-                $(this).addClass('active');
-                $('#doctorBtn').removeClass('active');
-            });
+       
 
-            $('#doctorBtn').click(function () {
-                $('#clinicTable').hide();
-                $('#doctorTable').show();
-                $(this).addClass('active');
-                $('#clinicBtn').removeClass('active');
-            });
-        });
-        function filldoctor() {
-            var options = '<option value="0">Please Select</option>';
-
-            $.ajax({
-                url: 'TokenList.aspx/GetDoctor',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                    });
-                    $('#ddldoctor').html(options);
-                    $('#ddldoctor').select2();
-                  
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-
-            return options;
-        }
-        function FillPatientType() {
-            var options = '<option value="0">Please Select</option>';
-
-            $.ajax({
-                url: 'TokenList.aspx/PatientType',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-                    });
-                    $('#ddlPatientType').html(options);
-                    $('#ddlPatientType').select2();
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-
-            return options;
-        }
-        function FillDepartment() {
-            var options = '<option value="0">Please Select</option>';
-
-            $.ajax({
-                url: 'TokenList.aspx/GetDepartment',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-                    });
-                    $('#ddldepartment').html(options);
-                    $('#ddldepartment').select2();
-
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-
-            return options;
-        }
-        function GetLatestToken() {
-            var patientType = $('#ddlPatientType').val(); 
-            var department = $('#ddldepartment').val(); 
-            $.ajax({
-                url: 'TokenList.aspx/LoadTokenPatient',
-                type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({ patientType: patientType, department: department}), 
-                success: function (_data) {
-                    debugger;
-                    _data = JSON.parse(_data.d);
-                    var mdTable = $('#tblgnrltoken');
-                    $('#tbl tr:gt(0)').remove();
-                    table = $('#ibody');
-                    var rows = '';
-                    table.empty();
-                    debugger;
-                    $.each(_data, function (key, value) {
-                        bill_id = value.Bill_ID;
-                        debugger;
-
-                        $("#ibody").append('<tr style=""><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.tokenNo + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.mr_no_sequence + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Full_Name + '</td></tr>');
-                        length++;
-
-                        return true;
-                    });
-
-                },
-                error: function () {
-                    alert("Get Error");
-                }
-            });
-        }
-
-        setInterval(function () {
-            location.reload();
-        }, 180000);
-        function GetLatest_doc_Token() {
-            var doctor = $('#ddldoctor').val();
-            $.ajax({
-                url: 'TokenList.aspx/LoadDocTokenPatient',
-                type: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({ doctor: doctor }),
-                success: function (_data) {
-                    debugger;
-                    _data = JSON.parse(_data.d);
-                    var mdTable = $('#tblprivatepatient');
-                    $('#tbl tr:gt(0)').remove();
-                    table = $('#ibody_pvt');
-                    var rows = '';
-                    table.empty();
-                    debugger;
-                    var isFirstRowAppended = false;
-
-                    $.each(_data, function (key, value) {
-                        $("#ibody_pvt").append('<tr style=""><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Doc_Token + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.mr_no_sequence + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Full_Name + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.doc_name + '</td></tr>');
-                        length++;
-
-                        return true;
-                    });
-                },
-                error: function () {
-                    alert("Get Error");
-                }
-            });
-        }
-
-        setInterval(function () {
-            location.reload();
-        }, 180000);
-    </script>
-
+    </form>
+</div>
 </body>
-<%--  <script type="text/javascript">
+      <script type="text/javascript">
           $(document).ready(function () {
               debugger;
               privatecheck();
               setTimeout(function () {
                   checkprivateorgeneral();
-              },800)
-             
+              }, 800)
+
 
 
           });
           debugger;
           function checkprivateorgeneral() {
               debugger;
-          
-                  GetLatest_doc_Token();
-                  GetLatestToken();
+
+              GetLatest_doc_Token();
+              GetLatestToken();
           }
           //var Filter;
           //var chckfilter;
@@ -270,9 +177,9 @@
           //            success: function (data) {
           //                debugger;
           //                Filter = data.d;
-                         
+
           //                var parsedData = JSON.parse(Filter);
-                         
+
           //                chckfilter = parsedData[0].Id;
           //            },
 
@@ -287,32 +194,32 @@
           var doc;
           var doc_check;
           function getdoctor() {
-                  debugger;
-                  $.ajax({
-                      type: "POST",
-                      url: 'TokenList.aspx/getdoctor',
-                      data: "",
-                      contentType: "application/json; charset=utf-8",
-                      dataType: "json",
-                      async: true,
-                      success: function (data) {
-                          debugger;
-                          doc = data.d;
-                         
-                          var parsedData = JSON.parse(doc);
-                         
-                          doc_check = parsedData[0].Id;
-                      },
+              debugger;
+              $.ajax({
+                  type: "POST",
+                  url: 'TokenList.aspx/getdoctor',
+                  data: "",
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  async: true,
+                  success: function (data) {
+                      debugger;
+                      doc = data.d;
+
+                      var parsedData = JSON.parse(doc);
+
+                      doc_check = parsedData[0].Id;
+                  },
 
 
-                      failure: function () {
+                  failure: function () {
 
-                          alert(bi);
-                      }
-                  });
-              }
-         
-       
+                      alert(bi);
+                  }
+              });
+          }
+
+
           function GetLatestToken() {
               $.ajax({
                   url: 'TokenList.aspx/LoadTokenPatient',
@@ -328,14 +235,14 @@
                       var rows = '';
                       table.empty();
                       debugger;
-                    
+
                       /*$('#Filter_List').text('Filter Clininc')*/
-                   
+
                       $.each(_data, function (key, value) {
                           bill_id = value.Bill_ID;
                           debugger;
 
-                          var rowColor = ''; 
+                          var rowColor = '';
 
                           if (value.fc == "001") {
                               rowColor = 'background: linear-gradient(to Right, #f5c5f6, #e4c1fa);'
@@ -345,9 +252,9 @@
                               rowColor = 'background: linear-gradient(to Right, #7BE495, #CFF4D2);'
                           }
 
-                          $("#ibody").append('<tr style="' + rowColor + '"><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.tokenNo + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.mr_no_sequence + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Full_Name + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.filter_clinic + '</td></tr>');
+                          $("#ibody").append('<tr style="' + rowColor + '"><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.tokenNo + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Full_Name + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.filter_clinic + '</td></tr>');
                           length++;
-                    
+
                           return true;
                       });
 
@@ -358,12 +265,61 @@
               });
           }
           setInterval(function () {
-              location.reload(); 
-          }, 180000);
-          
+              location.reload();
+          }, 15000);
+
           var rowColors;
 
-          
+          function GetLatest_doc_Token() {
+              $.ajax({
+                  url: 'TokenList.aspx/LoadDocTokenPatient',
+                  type: 'post',
+                  contentType: 'application/json;charset=utf-8',
+                  dataType: 'json',
+                  success: function (_data) {
+                      debugger;
+                      _data = JSON.parse(_data.d);
+                      var mdTable = $('#tblprivatepatient');
+                      $('#tbl tr:gt(0)').remove();
+                      table = $('#ibody_pvt');
+                      var rows = '';
+                      table.empty();
+                      debugger;
+
+                      //$('#forfilter').hide();
+
+                      var isFirstRowAppended = false;
+
+                      $.each(_data, function (key, value) {
+                          //var a = value.doc_name;
+                          //$('#Filter_List').html('<span style="font-size:50px;" class="highlight blink">' + a + '</span> Patient List');
+
+                          debugger;
+
+                          var rowColors = '';
+                          if (!isFirstRowAppended) {
+                              rowColors = 'background: linear-gradient(to Right, #f66e6e, white)';
+                              isFirstRowAppended = true;
+                          } else {
+                              rowColors = 'background: linear-gradient(to Right, #7beafd, #e1fdf0)';
+                          }
+
+
+                          $("#ibody_pvt").append('<tr style="' + rowColors + '"><td style="display:none;"><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.Patient_ID + '" /><input id="Bil_id" name="patientid" class="patientid" type="hidden" value="' + value.filter_clinic + '" /></td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Doc_Token + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.Full_Name + '</td><td  style="font-size:25px;font-weight:bold;text-align: center;">' + value.doc_name + '</td></tr>');
+                          length++;
+
+                          return true;
+                      });
+                  },
+                  error: function () {
+                      alert("Get Error");
+                  }
+              });
+          }
+
+          setInterval(function () {
+              location.reload();
+          }, 15000);
 
           var isprivate;
           function privatecheck() {
@@ -393,5 +349,5 @@
 
 
 
-      </script>--%>
+      </script>
 </html>

@@ -4200,13 +4200,6 @@ namespace PMS
             return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemcode, inventory_Org).ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_token_doc_list")]
-        public ISingleResult<sp_token_doc_listResult> sp_token_doc_list([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(50)")] string doctor)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), doctor);
-            return ((ISingleResult<sp_token_doc_listResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Student_List")]
         public ISingleResult<sp_Student_ListResult> sp_Student_List([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Class", DbType = "NVarChar(50)")] string @class, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Is_Active", DbType = "Bit")] System.Nullable<bool> is_Active, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "WholeClass", DbType = "Bit")] System.Nullable<bool> wholeClass, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Program", DbType = "NVarChar(50)")] string program, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Group", DbType = "VarChar(50)")] string group, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Batch", DbType = "VarChar(50)")] string batch)
         {
@@ -4778,13 +4771,6 @@ namespace PMS
             return ((ISingleResult<sp_GetTotalIPDAdmittedResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_token_list")]
-        public ISingleResult<sp_token_listResult> sp_token_list([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_Type", DbType = "NVarChar(50)")] string patient_Type, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Department", DbType = "NVarChar(50)")] string department)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), patient_Type, department);
-            return ((ISingleResult<sp_token_listResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPD")]
         public ISingleResult<SpApprove_OPDResult> SpApprove_OPD([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_Category", DbType = "NVarChar(150)")] string pat_Category, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
         {
@@ -5005,6 +4991,27 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId);
             return ((ISingleResult<spMedicinesDetailsfromopdResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetOpdDischargeList")]
+        public ISingleResult<sp_GetOpdDischargeListResult> sp_GetOpdDischargeList([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(500)")] string search, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(100)")] string filterClinic, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Doctor_Id", DbType = "VarChar(100)")] string doctor_Id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), search, filterClinic, doctor_Id);
+            return ((ISingleResult<sp_GetOpdDischargeListResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_token_doc_list")]
+        public ISingleResult<sp_token_doc_listResult> sp_token_doc_list([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> userId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), userId);
+            return ((ISingleResult<sp_token_doc_listResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_token_list")]
+        public ISingleResult<sp_token_listResult> sp_token_list()
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+            return ((ISingleResult<sp_token_listResult>)(result.ReturnValue));
         }
     }
 
@@ -170402,176 +170409,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_token_doc_listResult
-    {
-
-        private System.Nullable<int> _Doc_Token;
-
-        private string _Full_Name;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private string _filter_clinic;
-
-        private int _Patient_ID;
-
-        private System.Nullable<int> _Opd_No;
-
-        private string _mr_no_sequence;
-
-        private string _Doctor_ID;
-
-        private string _doc_name;
-
-        public sp_token_doc_listResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doc_Token", DbType = "Int")]
-        public System.Nullable<int> Doc_Token
-        {
-            get
-            {
-                return this._Doc_Token;
-            }
-            set
-            {
-                if ((this._Doc_Token != value))
-                {
-                    this._Doc_Token = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(60)")]
-        public string Full_Name
-        {
-            get
-            {
-                return this._Full_Name;
-            }
-            set
-            {
-                if ((this._Full_Name != value))
-                {
-                    this._Full_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this._Created_Time = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_filter_clinic", DbType = "NVarChar(150)")]
-        public string filter_clinic
-        {
-            get
-            {
-                return this._filter_clinic;
-            }
-            set
-            {
-                if ((this._filter_clinic != value))
-                {
-                    this._filter_clinic = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
-        public int Patient_ID
-        {
-            get
-            {
-                return this._Patient_ID;
-            }
-            set
-            {
-                if ((this._Patient_ID != value))
-                {
-                    this._Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Opd_No", DbType = "Int")]
-        public System.Nullable<int> Opd_No
-        {
-            get
-            {
-                return this._Opd_No;
-            }
-            set
-            {
-                if ((this._Opd_No != value))
-                {
-                    this._Opd_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mr_no_sequence", DbType = "NVarChar(50)")]
-        public string mr_no_sequence
-        {
-            get
-            {
-                return this._mr_no_sequence;
-            }
-            set
-            {
-                if ((this._mr_no_sequence != value))
-                {
-                    this._mr_no_sequence = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_ID", DbType = "VarChar(50)")]
-        public string Doctor_ID
-        {
-            get
-            {
-                return this._Doctor_ID;
-            }
-            set
-            {
-                if ((this._Doctor_ID != value))
-                {
-                    this._Doctor_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_name", DbType = "VarChar(50)")]
-        public string doc_name
-        {
-            get
-            {
-                return this._doc_name;
-            }
-            set
-            {
-                if ((this._doc_name != value))
-                {
-                    this._doc_name = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_Student_ListResult
     {
 
@@ -187311,176 +187148,6 @@ namespace PMS
                 if ((this._Total_Admitted != value))
                 {
                     this._Total_Admitted = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_token_listResult
-    {
-
-        private System.Nullable<int> _tokenNo;
-
-        private string _Full_Name;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private string _filter_clinic;
-
-        private string _filter_clinic1;
-
-        private int _Patient_ID;
-
-        private System.Nullable<int> _Opd_No;
-
-        private string _mr_no_sequence;
-
-        private string _Doctor_ID;
-
-        public sp_token_listResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_tokenNo", DbType = "Int")]
-        public System.Nullable<int> tokenNo
-        {
-            get
-            {
-                return this._tokenNo;
-            }
-            set
-            {
-                if ((this._tokenNo != value))
-                {
-                    this._tokenNo = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(60)")]
-        public string Full_Name
-        {
-            get
-            {
-                return this._Full_Name;
-            }
-            set
-            {
-                if ((this._Full_Name != value))
-                {
-                    this._Full_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this._Created_Time = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_filter_clinic", DbType = "VarChar(150)")]
-        public string filter_clinic
-        {
-            get
-            {
-                return this._filter_clinic;
-            }
-            set
-            {
-                if ((this._filter_clinic != value))
-                {
-                    this._filter_clinic = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_filter_clinic1", DbType = "NVarChar(150)")]
-        public string filter_clinic1
-        {
-            get
-            {
-                return this._filter_clinic1;
-            }
-            set
-            {
-                if ((this._filter_clinic1 != value))
-                {
-                    this._filter_clinic1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
-        public int Patient_ID
-        {
-            get
-            {
-                return this._Patient_ID;
-            }
-            set
-            {
-                if ((this._Patient_ID != value))
-                {
-                    this._Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Opd_No", DbType = "Int")]
-        public System.Nullable<int> Opd_No
-        {
-            get
-            {
-                return this._Opd_No;
-            }
-            set
-            {
-                if ((this._Opd_No != value))
-                {
-                    this._Opd_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mr_no_sequence", DbType = "NVarChar(50)")]
-        public string mr_no_sequence
-        {
-            get
-            {
-                return this._mr_no_sequence;
-            }
-            set
-            {
-                if ((this._mr_no_sequence != value))
-                {
-                    this._mr_no_sequence = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_ID", DbType = "VarChar(50)")]
-        public string Doctor_ID
-        {
-            get
-            {
-                return this._Doctor_ID;
-            }
-            set
-            {
-                if ((this._Doctor_ID != value))
-                {
-                    this._Doctor_ID = value;
                 }
             }
         }
@@ -205505,6 +205172,516 @@ namespace PMS
                 if ((this._CGSRate != value))
                 {
                     this._CGSRate = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetOpdDischargeListResult
+    {
+
+        private int _Out_Patient_ID;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private string _Patient_no;
+
+        private string _Full_Name;
+
+        private string _Father_Name;
+
+        private string _Mobile1;
+
+        private string _Patient_Main_Category;
+
+        private string _Doc_Name;
+
+        private string _Filter_Clinic;
+
+        public sp_GetOpdDischargeListResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Out_Patient_ID", DbType = "Int NOT NULL")]
+        public int Out_Patient_ID
+        {
+            get
+            {
+                return this._Out_Patient_ID;
+            }
+            set
+            {
+                if ((this._Out_Patient_ID != value))
+                {
+                    this._Out_Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this._Created_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_no", DbType = "NVarChar(50)")]
+        public string Patient_no
+        {
+            get
+            {
+                return this._Patient_no;
+            }
+            set
+            {
+                if ((this._Patient_no != value))
+                {
+                    this._Patient_no = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(60)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Father_Name", DbType = "VarChar(50)")]
+        public string Father_Name
+        {
+            get
+            {
+                return this._Father_Name;
+            }
+            set
+            {
+                if ((this._Father_Name != value))
+                {
+                    this._Father_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mobile1", DbType = "VarChar(20)")]
+        public string Mobile1
+        {
+            get
+            {
+                return this._Mobile1;
+            }
+            set
+            {
+                if ((this._Mobile1 != value))
+                {
+                    this._Mobile1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Main_Category", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
+        public string Patient_Main_Category
+        {
+            get
+            {
+                return this._Patient_Main_Category;
+            }
+            set
+            {
+                if ((this._Patient_Main_Category != value))
+                {
+                    this._Patient_Main_Category = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doc_Name", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
+        public string Doc_Name
+        {
+            get
+            {
+                return this._Doc_Name;
+            }
+            set
+            {
+                if ((this._Doc_Name != value))
+                {
+                    this._Doc_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Filter_Clinic", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
+        public string Filter_Clinic
+        {
+            get
+            {
+                return this._Filter_Clinic;
+            }
+            set
+            {
+                if ((this._Filter_Clinic != value))
+                {
+                    this._Filter_Clinic = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_token_doc_listResult
+    {
+
+        private System.Nullable<int> _Doc_Token;
+
+        private string _Full_Name;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private string _filter_clinic;
+
+        private int _Patient_ID;
+
+        private System.Nullable<int> _Opd_No;
+
+        private string _mr_no_sequence;
+
+        private string _Doctor_ID;
+
+        private string _doc_name;
+
+        public sp_token_doc_listResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doc_Token", DbType = "Int")]
+        public System.Nullable<int> Doc_Token
+        {
+            get
+            {
+                return this._Doc_Token;
+            }
+            set
+            {
+                if ((this._Doc_Token != value))
+                {
+                    this._Doc_Token = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(60)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this._Created_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_filter_clinic", DbType = "NVarChar(150)")]
+        public string filter_clinic
+        {
+            get
+            {
+                return this._filter_clinic;
+            }
+            set
+            {
+                if ((this._filter_clinic != value))
+                {
+                    this._filter_clinic = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
+        public int Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    this._Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Opd_No", DbType = "Int")]
+        public System.Nullable<int> Opd_No
+        {
+            get
+            {
+                return this._Opd_No;
+            }
+            set
+            {
+                if ((this._Opd_No != value))
+                {
+                    this._Opd_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mr_no_sequence", DbType = "NVarChar(50)")]
+        public string mr_no_sequence
+        {
+            get
+            {
+                return this._mr_no_sequence;
+            }
+            set
+            {
+                if ((this._mr_no_sequence != value))
+                {
+                    this._mr_no_sequence = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_ID", DbType = "VarChar(50)")]
+        public string Doctor_ID
+        {
+            get
+            {
+                return this._Doctor_ID;
+            }
+            set
+            {
+                if ((this._Doctor_ID != value))
+                {
+                    this._Doctor_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_name", DbType = "VarChar(50)")]
+        public string doc_name
+        {
+            get
+            {
+                return this._doc_name;
+            }
+            set
+            {
+                if ((this._doc_name != value))
+                {
+                    this._doc_name = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_token_listResult
+    {
+
+        private System.Nullable<int> _tokenNo;
+
+        private string _Full_Name;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private string _filter_clinic;
+
+        private string _filter_clinic1;
+
+        private int _Patient_ID;
+
+        private System.Nullable<int> _Opd_No;
+
+        private string _mr_no_sequence;
+
+        private string _Doctor_ID;
+
+        public sp_token_listResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_tokenNo", DbType = "Int")]
+        public System.Nullable<int> tokenNo
+        {
+            get
+            {
+                return this._tokenNo;
+            }
+            set
+            {
+                if ((this._tokenNo != value))
+                {
+                    this._tokenNo = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(60)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this._Created_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_filter_clinic", DbType = "VarChar(150)")]
+        public string filter_clinic
+        {
+            get
+            {
+                return this._filter_clinic;
+            }
+            set
+            {
+                if ((this._filter_clinic != value))
+                {
+                    this._filter_clinic = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_filter_clinic1", DbType = "NVarChar(150)")]
+        public string filter_clinic1
+        {
+            get
+            {
+                return this._filter_clinic1;
+            }
+            set
+            {
+                if ((this._filter_clinic1 != value))
+                {
+                    this._filter_clinic1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
+        public int Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    this._Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Opd_No", DbType = "Int")]
+        public System.Nullable<int> Opd_No
+        {
+            get
+            {
+                return this._Opd_No;
+            }
+            set
+            {
+                if ((this._Opd_No != value))
+                {
+                    this._Opd_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mr_no_sequence", DbType = "NVarChar(50)")]
+        public string mr_no_sequence
+        {
+            get
+            {
+                return this._mr_no_sequence;
+            }
+            set
+            {
+                if ((this._mr_no_sequence != value))
+                {
+                    this._mr_no_sequence = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_ID", DbType = "VarChar(50)")]
+        public string Doctor_ID
+        {
+            get
+            {
+                return this._Doctor_ID;
+            }
+            set
+            {
+                if ((this._Doctor_ID != value))
+                {
+                    this._Doctor_ID = value;
                 }
             }
         }
