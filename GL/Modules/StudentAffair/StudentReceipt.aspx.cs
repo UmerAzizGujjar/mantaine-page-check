@@ -439,6 +439,8 @@ namespace PMS.Modules.StudentAffair
                                   a.Sesion,
                                   Program = db.GetDataValueName("Admission Category", a.Program),
                                   StuClass = db.GetDataValueName("Student Class", v.Student_Class),
+                                  a.Account_id,
+                                  Accountid_text = (from acc in db.hr where acc.Emp_ID == Convert.ToInt32(a.Account_id) select acc.Emp_Name).FirstOrDefault(),
 
 
 

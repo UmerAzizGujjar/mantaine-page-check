@@ -143,6 +143,10 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Student_Fee where Fee_id = " + transID).ToString();
                     }
+                    else if (transType == "SRV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Student_Receipt where student_receipt_id = " + transID).ToString();
+                    }
                     else if (transType == "ACV")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Student_Receipt where student_receipt_id = " + transID).ToString();
@@ -1482,6 +1486,7 @@ namespace PMS
             {
                 if (Request.QueryString["Stock"] != null)
                 {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     var stock = Request.QueryString["Stock"];
                     //  string stDate = Request.QueryString["startDate"].ToString();
                     //  string endDate = Request.QueryString["endDate"].ToString();
@@ -1494,6 +1499,7 @@ namespace PMS
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
             }
             else if (reportName == "PharmacySaleReport")
