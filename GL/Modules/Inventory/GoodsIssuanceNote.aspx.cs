@@ -37,6 +37,41 @@ namespace PMS.Inventory
             var result = db.sp_GetMIR(Convert.ToInt32(warehouse));
             return (new JavaScriptSerializer()).Serialize(result);
         }
+
+        [WebMethod]
+        public static string LoadMRNo(string savedMRNo = null, string search = null)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = db.Reg_patients.Where(p => p.iscancel == false);
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.mr_no_sequence.Contains(search));
+            }
+            // Take top 40 results
+            var result = query.OrderBy(p => p.mr_no_sequence)
+                              .Take(40)
+                              .Select(p => new
+                              {
+                                  p.mr_no_sequence
+                              }).ToList();
+            // Include saved MR_No in edit mode, if not already in the list
+            if (!string.IsNullOrEmpty(savedMRNo))
+            {
+                var savedMR = db.Reg_patients
+                                .Where(p => p.mr_no_sequence.Trim() == savedMRNo)
+                                .Select(p => new
+                                {
+                                    p.mr_no_sequence
+                                }).FirstOrDefault();
+
+                if (savedMR != null && !result.Any(x => x.mr_no_sequence == savedMR.mr_no_sequence))
+                {
+                    result.Add(savedMR);
+                }
+            }
+            return new JavaScriptSerializer().Serialize(result);
+        }
+
         [WebMethod]
         public static bool UserEntryRights()
         {
@@ -160,6 +195,7 @@ namespace PMS.Inventory
                 si.Department_Id = record.department_id;
                 si.Created_Time = DateTime.Now;
                 si.Created_by = AppConfig.UserID;
+                si.MR_No = record.MRNo;
                 si.Store_Issue_No = DBClass.GetNewNumber("Store_Issue_No", "Store_Issue", "");
                 si.Status = "Created";
                 si.IsDeleted = false;
@@ -297,7 +333,8 @@ namespace PMS.Inventory
             public string inventory_id { get; set; }
             public string department_id { get; set; }
             public string Store_Issue_No { get; set; }
-            public List<StoreIssueDetail> ItemList { get; set; }
+            public string MRNo { get; set; }
+        public List<StoreIssueDetail> ItemList { get; set; }
         }
         public class StoreIssueDetail
         {

@@ -208,6 +208,7 @@
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
     <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
+    <Content Include="Modules\Administrator\Token_List.aspx" />
     <Content Include="Modules\Administrator\API.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciation.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciationPolicy.aspx" />
@@ -228,10 +229,12 @@
     <Content Include="Modules\Administrator\Shift__Policy_View.aspx" />
     <Content Include="Modules\Administrator\SurveyForm.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
+    <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
+    <Content Include="Modules\Dashboards\Biodatadashboard.aspx" />
     <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
     <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
@@ -330,6 +333,8 @@
     <Content Include="Modules\PatientManagement\OPD.aspx" />
     <Content Include="Modules\PatientManagement\OPDPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDView.aspx" />
+    <Content Include="Modules\PatientManagement\OPDDischarge.aspx" />
+    <Content Include="Modules\PatientManagement\OPDApproval.aspx" />
     <Content Include="Modules\PatientManagement\OPD_Refund.aspx" />
     <Content Include="Modules\PatientManagement\OPD_Refund_List.aspx" />
     <Content Include="Modules\PatientManagement\RegisterPatient.aspx" />
@@ -25714,6 +25719,13 @@
     <Compile Include="Modules\Administrator\AddPanel_Packages.aspx.designer.cs">
       <DependentUpon>AddPanel_Packages.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Administrator\Token_List.aspx.cs">
+      <DependentUpon>Token_List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\Token_List.aspx.designer.cs">
+      <DependentUpon>Token_List.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Administrator\API.aspx.cs">
       <DependentUpon>API.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -25854,6 +25866,13 @@
     <Compile Include="Modules\Appointment\Derma_Appointment.aspx.designer.cs">
       <DependentUpon>Derma_Appointment.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Billing\BillApproval.aspx.cs">
+      <DependentUpon>BillApproval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\BillApproval.aspx.designer.cs">
+      <DependentUpon>BillApproval.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Billing\SaleReturnList.aspx.cs">
       <DependentUpon>SaleReturnList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -25881,6 +25900,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\BillingSection.aspx.designer.cs">
       <DependentUpon>BillingSection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Biodatadashboard.aspx.cs">
+      <DependentUpon>Biodatadashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Biodatadashboard.aspx.designer.cs">
+      <DependentUpon>Biodatadashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\CEODashboardNew.aspx.cs">
       <DependentUpon>CEODashboardNew.aspx</DependentUpon>
@@ -26693,6 +26719,20 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OPDView.aspx.designer.cs">
       <DependentUpon>OPDView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPDDischarge.aspx.cs">
+      <DependentUpon>OPDDischarge.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPDDischarge.aspx.designer.cs">
+      <DependentUpon>OPDDischarge.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPDApproval.aspx.cs">
+      <DependentUpon>OPDApproval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OPDApproval.aspx.designer.cs">
+      <DependentUpon>OPDApproval.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD_Refund.aspx.cs">
       <DependentUpon>OPD_Refund.aspx</DependentUpon>

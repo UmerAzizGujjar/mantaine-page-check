@@ -143,6 +143,10 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Student_Fee where Fee_id = " + transID).ToString();
                     }
+                    else if (transType == "SRV")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Student_Receipt where student_receipt_id = " + transID).ToString();
+                    }
                     else if (transType == "ACV")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Student_Receipt where student_receipt_id = " + transID).ToString();
@@ -1276,6 +1280,9 @@ namespace PMS
             #region Purchase
             else if (reportName == "VPDR")
             {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 string vendorName = Request.QueryString["Vendor"].ToString();
                 string StatusType = Request.QueryString["Status"].ToString();
                 string rptFileName = "Purchase/rptVendorDetails.rpt";
@@ -1285,6 +1292,7 @@ namespace PMS
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@VendorId", vendorName);
                 rd.SetParameterValue("@Active", StatusType);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "InvoiceAging")
             {
@@ -1296,16 +1304,47 @@ namespace PMS
                 rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["sDate"]));
                 rd.SetParameterValue("@VendorId", (Request.QueryString["VendorId"]).ToString());
             }
+            else if (reportName == "ApAgingDetail")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Purchase/rptVendorAging.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["VendorId"]).ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "ApAgingSummary")
+            {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Purchase/rptVendorAgingSummary.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["VendorId"]).ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "VendorLedger")
             {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string rptFileName = "Purchase/rptVendorLedger.rpt";
                 reportPath += rptFileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SummaryInfo.ReportTitle = reportTitle;
-                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
-                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
                 rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "Vendor_Wise_Transaction_Detail")
             {
@@ -1482,6 +1521,7 @@ namespace PMS
             {
                 if (Request.QueryString["Stock"] != null)
                 {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     var stock = Request.QueryString["Stock"];
                     //  string stDate = Request.QueryString["startDate"].ToString();
                     //  string endDate = Request.QueryString["endDate"].ToString();
@@ -1494,6 +1534,7 @@ namespace PMS
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
             }
             else if (reportName == "PharmacySaleReport")
@@ -1770,12 +1811,19 @@ namespace PMS
             #region General Patient Report
             else if (reportName == "TotalPatientRegsreport")
             {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 reportPath += "GeneralPatientsReport/rptPatientRegistration.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", "" + " Total Patients Report From " + Convert.ToDateTime(Request.QueryString["sDate"]).ToString("dd-MMM-yyyy") + " To " + Convert.ToDateTime(Request.QueryString["eDate"]).ToString("dd-MMM-yyyy"));
-                rd.SetParameterValue("@stDate", Convert.ToDateTime(Request.QueryString["sDate"]));
-                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             //Total Patient Report
             else if (reportName == "TotalOpdDischargeReport")
@@ -1868,25 +1916,60 @@ namespace PMS
             }
             else if (reportName == "AnalysisReport")
             {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 string rptFileName = "TransactionalDetails/rptAnalysisReport.rpt";
+
+
                 reportPath += rptFileName;
                 rd.Load(reportPath);
-                string stDate = Request.QueryString["sDate"].ToString();
-                string stTime = Request.QueryString["STime"].ToString();
-                string endDate = Request.QueryString["eDate"].ToString();
-                string endTime = Request.QueryString["ETime"].ToString();
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
                 string Operator = Request.QueryString["Operator"].ToString();
-                string parameterStDate = string.Empty;
-                string parameterEndDate = string.Empty;
-                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
-                rd.SetParameterValue("@LabTest", Request.QueryString["Department"]);
-                rd.SetParameterValue("@stDate", parameterStDate);
-                rd.SetParameterValue("@endDate", parameterEndDate);
-                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                rd.SetParameterValue("Title", "Analysis Report");
+                string TestName = Request.QueryString["testName"].ToString();
+                rd.SetParameterValue("@LabTest", TestName);
+
                 rd.SetParameterValue("@Operator", Operator);
+
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+
             }
+            //else if (reportName == "AnalysisReport")
+            //{
+            //    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+            //    string rptFileName = "TransactionalDetails/rptAnalysisReport.rpt";
+            //    reportPath += rptFileName;
+            //    rd.Load(reportPath);
+            //    string stDate = Request.QueryString["sDate"].ToString();
+            //    string stTime = Request.QueryString["STime"].ToString();
+            //    string endDate = Request.QueryString["eDate"].ToString();
+            //    string endTime = Request.QueryString["ETime"].ToString();
+            //    string TestName = Request.QueryString["Tests"].ToString();
+
+            //    string Operator = Request.QueryString["Operator"].ToString();
+            //    string parameterStDate = string.Empty;
+            //    string parameterEndDate = string.Empty;
+
+            //    this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+            //    this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+
+            //    rd.SetParameterValue("@LabTest", Request.QueryString["Department"]);
+            //    rd.SetParameterValue("@stDate", parameterStDate);
+            //    rd.SetParameterValue("@endDate", parameterEndDate);
+            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //    rd.SetParameterValue("Title", "Analysis Report");
+            //    rd.SetParameterValue("@Operator", Operator);
+            //    rd.SetParameterValue("CompanyLogo", logoPath);
+
+            //}
             else if (reportName == "Sale_Return_Report")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
@@ -2484,6 +2567,8 @@ namespace PMS
             #region Operations
             else if (reportName == "ActivePatientList")
             {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string rptFileName = "Operations/rptActivePatientReport.rpt";
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
@@ -2500,9 +2585,13 @@ namespace PMS
                 rd.SetParameterValue("@DepartmentID", departmentID);
                 rd.SetParameterValue("@patientType", patType);
                 rd.SetParameterValue("@filterClinic", FilterClinic);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "ActivePatientListSummary")
             {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 string rptFileName = "Operations/rptActivePatientReportSummary.rpt";
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
@@ -2521,6 +2610,7 @@ namespace PMS
                 rd.SetParameterValue("@filterClinic", FilterClinic);
                 rd.SetParameterValue("@patientType", patType);
                 rd.SetParameterValue("@DoctorID", Doctor);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "AppointmentList")
             {
@@ -3044,6 +3134,8 @@ namespace PMS
                 if (Request.QueryString["startDate"] != null && Request.QueryString["endDate"] != null
                    && Request.QueryString["Account_ID"] != null)
                 {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                     reportPath += "GeneralLedger/rptLedger.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
@@ -3053,6 +3145,71 @@ namespace PMS
                     rd.SetParameterValue("@account_id", Request.QueryString["Account_ID"]);
                     rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
                     rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+
+                }
+            }
+            else if (reportName == "GeneralLedger")
+            {
+                if (Request.QueryString["startDate"] != null && Request.QueryString["endDate"] != null
+                   && Request.QueryString["Account_ID"] != null) 
+
+                {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    reportPath += "GeneralLedger/rptGeneralLedger.rpt";
+                    rd.Load(reportPath);
+                    rd.SummaryInfo.ReportTitle = reportTitle;
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                    rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
+                    rd.SetParameterValue("@account_id", Request.QueryString["Account_ID"]);
+                    rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
+                    rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+
+                }
+            }
+            else if (reportName == "Ledger1")
+            {
+                if (Request.QueryString["startDate"] != null && Request.QueryString["endDate"] != null
+                   && Request.QueryString["Account_ID"] != null)
+                {
+                    var DeptID = Convert.ToInt32(Request.QueryString["DeptID"]);
+
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                    reportPath += "GeneralLedger/rptLedger1.rpt";
+                    rd.Load(reportPath);
+                    rd.SummaryInfo.ReportTitle = reportTitle;
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                    rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
+                    rd.SetParameterValue("@Dept_id", DeptID);
+                    rd.SetParameterValue("@account_id", Request.QueryString["Account_ID"]);
+                    rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
+                    rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+
+                }
+            }
+            else if (reportName == "GeneralLedger")
+            {
+                if (Request.QueryString["startDate"] != null && Request.QueryString["endDate"] != null
+                   && Request.QueryString["Account_ID"] != null)
+                {
+
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                    reportPath += "GeneralLedger/rptGeneralLedger.rpt";
+                    rd.Load(reportPath);
+                    rd.SummaryInfo.ReportTitle = reportTitle;
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
+                    rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
+                    rd.SetParameterValue("@account_id", Request.QueryString["Account_ID"]);
+                    rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
+                    rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
+                    rd.SetParameterValue("CompanyLogo", logoPath);
 
                 }
             }

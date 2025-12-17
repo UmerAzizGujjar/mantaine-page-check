@@ -1083,6 +1083,7 @@ namespace PMS.Modules.PatientManagement
                         pat.Book_ID = AppConfig.Book_ID;
                         pat.isCancel = false;
                         pat.AppointmentType = data.hdnAppointmentType;
+                        pat.Status = "Created";
 
                         if (!string.IsNullOrEmpty(data.appid))
                         {

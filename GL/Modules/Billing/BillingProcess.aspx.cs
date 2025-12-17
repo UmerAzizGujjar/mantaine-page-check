@@ -2850,7 +2850,7 @@ namespace PMS
                         pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
                         pt.Ward_Name = Ward;
                         pt.Admission_Date = Convert.ToString(inpat.Admission_Date);
-                        pt.Discharge_On = Convert.ToString(inpat.Admission_Date);
+                        pt.Discharge_On = Convert.ToString(inpat.Discharge_On);
                         pt.Bed_No = Convert.ToString(inpat.Bed_No);
                         pt.Department = db.GetDataValueName("Patient Main Category", inpat.Department);
                         pt.MainDepartment = "03";
