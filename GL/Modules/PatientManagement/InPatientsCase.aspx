@@ -2997,7 +2997,7 @@
                                 var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
                                 var Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
                             }
-                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td>' + Stop_Date + '</td> <td>' + value.High_Risk_Drug + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;"></td></tr>';
+                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td><td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;"></td></tr>';
 
                         }
                         else if (value.PRN == true) {
@@ -3566,16 +3566,16 @@
                     'Frequency': $($(value).find('td')[4]).text(),
                     'Oral': $($(value).find('td')[6]).text(),
                     'Injection': $($(value).find('td')[5]).text(),
-                    'AttendingParamedical_Staff': $($(value).find('td')[10]).text(),
+                    'AttendingParamedical_Staff': $($(value).find('td')[9]).text(),
                     'Dosage_From': $($(value).find('td')[3]).text(),
                     'Dosage_Qty': $($(value).find('td')[2]).text(),
-                    'Other_Instruction': $($(value).find('td')[9]).text(),
-                    'Special_Instruction': "",
-                    'ItemCode': $($(value).find('td')[13]).text(),
+                    'Other_Instruction': $($(value).find('td')[8]).text(),
+                    'Special_Instruction': $($(value).find('td')[9]).text(),
+                    'ItemCode': $($(value).find('td')[12]).text(),
                     'Start_Date_Time': $($(value).find('td')[0]).text(),
                     'Stop_Date_Time': $($(value).find('td')[7]).text(),
-                    'High_Risk': $($(value).find('td')[8]).text(),
-                    'User': $($(value).find('td')[11]).text(),
+                    //'High_Risk': $($(value).find('td')[8]).text(),
+                    'User': $($(value).find('td')[10]).text(),
                     'Max_PRN': "",
                     "Regular": true,
                     "STAT": false,
@@ -5180,14 +5180,9 @@
                     $("#txtStopD").datepicker("option", "minDate", dt);
                 }
             });
-
-
-
             $('#txtStartD').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#txtStopD').on('change', function () {
                 debugger;
-
-
             });
             debugger;
 
@@ -5466,7 +5461,7 @@
                 LoadEyeList();
                 LoadSymtomps();
                 LoadLabResultrpt();
-                LoadMedicines();
+                //LoadMedicines();
                 LoadInfusion();
                 LoadDischargeMedicines();
             }
@@ -5755,13 +5750,7 @@
                             otherIns = '';
                         }
 
-
-                        var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td><td> ' + $('#txtInjection').val() + '</td>   <td> ' + $('#Routes').find('option:selected').text() + ' </td><td style="display:none;">' + completeStop + '</td> <td>' + otherIns + '</td><td style= "display:none;"> ' + otherIns + ' </td>' + '<td> ' + $('#AttendingParamedicalStaff').val() + ' </td>' + '<td>' + username + '</td>' + '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
-
-
-
-
-
+                        var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosage').find('option:selected').text() + ' </td><td> ' + $('#txtInjection').val() + '</td>   <td> ' + $('#Routes').find('option:selected').text() + ' </td><td>' + completeStop + '</td> <td>' + otherIns + '</td>' + '<td> ' + $('#AttendingParamedicalStaff').val() + ' </td>' + '<td>' + username + '</td>' + '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
 
 
                         if (localStorage.IsStat == 1) {
@@ -5852,11 +5841,11 @@
                             $(row).find('td')[5].innerText = $('#MedicationModel input[name=txtInjection]').val();
                             $(row).find('td')[6].innerText = $('#MedicationModel select[name=Routes]').find('option:selected').text();
                             $(row).find('td')[7].innerText = completeStop;
-                            $(row).find('td')[8].innerText = rdRiskY;
+                          
 
-                            $(row).find('td')[9].innerText = $('#ddlOther_Instruction').find('option:selected').text();
-                            $(row).find('td')[10].innerText = $('#AttendingParamedicalStaff').val();
-                            $(row).find('td')[13].innerText = $('#txtPharmacyItem').val();
+                            $(row).find('td')[8].innerText = $('#ddlOther_Instruction').find('option:selected').text();
+                            $(row).find('td')[9].innerText = $('#AttendingParamedicalStaff').val();
+                            $(row).find('td')[12].innerText = $('#txtPharmacyItem').val();
 
 
                         }
@@ -7388,11 +7377,11 @@
                                 <tr>
                                     <td>
                                         <input type="button" value="Regular Medicine" id="btnRegularMedicine" class="btn btn-primry" style="width: 15% !important;"/>
-                                           <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
-                                         <input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/>                      
+                                   <%--        <input type="button" value="STAT Medicine" class="btn btn-primry" id="btnSTATMedicine" style="width: 15% !important;"/>
+                                         <input type="button" value="PRN Medicine" class="btn btn-primry" id="btnPRNMedicine" style="width:15% !important;"/> --%>                     
                                          <input type="button" class="btn btn-primry" onclick="PrintMecicationDetail()" value="Regular Print" style="width:15% !important" />
-                                        <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
-                                         <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />
+                                       <%-- <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailPRN()" value="STAT Print"  style="width: 15% !important;"/>
+                                         <input type="button" class="btn btn-primry" onclick="PrintMecicationDetailSTAT()" value="PRN Print" style="width: 15% !important;" />--%>
                                         <h2>Regular Medicine</h2>
                                         <div style="overflow: scroll; height: 280px;">                                       
                                         <table class="table" id="tblMedicinesListRegular">
@@ -7406,7 +7395,7 @@
                                                 <th>Duration </th>
                                                 <th>Route </th>
                                                 <th>Stop Date & Time</th>
-                                                <th>High Risk Drug</th>
+                                                <%--<th>High Risk Drug</th>--%>
                                                 <th>Other Instruction</th>
                                                  <th>Special Instructions </th>
                                                 <th>Username</th>
@@ -7417,7 +7406,7 @@
                                         </tbody>
                                     </table>
                                             </div>
-                                         <h2>STAT Medicine</h2>
+                                        <%-- <h2>STAT Medicine</h2>
                                           <div style="overflow: scroll; height: 280px;">
                                             <table class="table" id="tblMedicinesListSTAT">
                                         <thead>
@@ -7461,7 +7450,7 @@
                                         <tbody>
                                         </tbody>
                                     </table>                                      
-                                        </div>
+                                        </div>--%>
                                     </td>
                                 </tr>
                             </table>
