@@ -1,5 +1,20 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Token_List.aspx.cs" Inherits="PMS.Modules.Administrator.Token_List" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
+        .page-header, #ctl00_sidebar {
+            display: none !important;
+        }
+        #navbar-container{
+            display:none !important;
+        }
+        .loginDisplay{
+            display:none !important;
+        }
+        #tibbitFooter{
+            display:none !important;
+        }
+
+    </style>
       <script type="text/javascript">
           $(document).ready(function () {
               debugger;
