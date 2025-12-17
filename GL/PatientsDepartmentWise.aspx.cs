@@ -727,6 +727,8 @@ namespace PMS
                 //Active Patient List
                 if (this.PageTitle == "APL")
                 {
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = true;
                     SetDepartent();
@@ -762,6 +764,8 @@ namespace PMS
                 //Active Patient List Summary
                 if (this.PageTitle == "APLS")
                 {
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = true;
                     SetDepartent();
@@ -1392,7 +1396,7 @@ namespace PMS
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                     AllowPatientRecord = false;
-                    Time_Row.Visible = false;
+                    Time_Row.Visible = true;
                     DateDiv.Visible = true;
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
