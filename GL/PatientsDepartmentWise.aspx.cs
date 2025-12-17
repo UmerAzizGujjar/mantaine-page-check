@@ -897,6 +897,7 @@ namespace PMS
                 {
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = false;
+                    MRDiv.Visible = true;
                     lblMRNo.Visible = true;
                     txtMRNo.Visible = true;
                     ddlDepartments.Visible = false;
@@ -906,38 +907,40 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     lblMedical.Visible = false;
                     ddlShift.Visible = false;
+
+
                     //lblShift.Visible = false;
 
-                    lblPatientType.Text = "Patient Type";
-                    object valusets;
-                    valusets = DBClass.GetValueSet("Patient Type");
-                    ddlPatientType.DataSource = valusets;
-                    ddlPatientType.DataTextField = "DataValue_Description";
-                    ddlPatientType.DataValueField = "DataValue_Name";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlPatientType.DataBind();
-                    ddlPatientType.Visible = false;
-                    //trDoctors.Visible = false;
-                    //trSummary.Visible = false;
-                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
-                    ddlDoctor.DataSource = dt;
-                    ddlDoctor.DataValueField = "Emp_ID";
-                    ddlDoctor.DataTextField = "Emp_Name";
-                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
-                    ddlDoctor.DataBind();
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
-                    ddlFilterClinic.DataSource = valusets;
-                    ddlFilterClinic.DataTextField = "DataValue_Description";
-                    ddlFilterClinic.DataValueField = "DataValue_Name";
-                    ddlFilterClinic.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlFilterClinic.DataBind();
+                    //lblPatientType.Text = "Patient Type";
+                    //object valusets;
+                    //valusets = DBClass.GetValueSet("Patient Type");
+                    //ddlPatientType.DataSource = valusets;
+                    //ddlPatientType.DataTextField = "DataValue_Description";
+                    //ddlPatientType.DataValueField = "DataValue_Name";
+                    //ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    //ddlPatientType.DataBind();
+                    //ddlPatientType.Visible = false;
+                    ////trDoctors.Visible = false;
+                    ////trSummary.Visible = false;
+                    //DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    //ddlDoctor.DataSource = dt;
+                    //ddlDoctor.DataValueField = "Emp_ID";
+                    //ddlDoctor.DataTextField = "Emp_Name";
+                    //ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    //ddlDoctor.DataBind();
+                    //DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    //valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    //ddlFilterClinic.DataSource = valusets;
+                    //ddlFilterClinic.DataTextField = "DataValue_Description";
+                    //ddlFilterClinic.DataValueField = "DataValue_Name";
+                    //ddlFilterClinic.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    //ddlFilterClinic.DataBind();
                     //opFilterClinic.Visible = false;
                     ddlReportType.Visible = false;
                     //lblservieType.Visible = false;
                 }
 
-                if (this.PageTitle == "SinglePatientLedger")
+                if (this.PageTitle == "SinglePatientLedger1")
                 {
 
 
@@ -947,7 +950,7 @@ namespace PMS
 
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = true;
-                    MRDiv.Visible = false;
+                    MRDiv.Visible = true;
                     lblMRNo.Visible = true;
                     txtMRNo.Visible = true;
                     ddlDepartments.Visible = false;
@@ -961,48 +964,48 @@ namespace PMS
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
                     tr_Export.Visible = false;
-                    lblPatientType.Visible = true;   // added 
-                    lblPatientType.Text = "Patient Type";
-                    object valusets;
+                    //lblPatientType.Visible = true;   // added 
+                    //lblPatientType.Text = "Patient Type";
+                    //object valusets;
 
 
 
-                    valusets = DBClass.GetValueSet("Patient Type");
-                    ddlPatientType.DataSource = valusets;
-                    ddlPatientType.DataTextField = "DataValue_Description";
-                    ddlPatientType.DataValueField = "DataValue_Name";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlPatientType.DataBind();
-                    ddlPatientType.Visible = true;
+                    //valusets = DBClass.GetValueSet("Patient Type");
+                    //ddlPatientType.DataSource = valusets;
+                    //ddlPatientType.DataTextField = "DataValue_Description";
+                    //ddlPatientType.DataValueField = "DataValue_Name";
+                    //ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    //ddlPatientType.DataBind();
+                    //ddlPatientType.Visible = true;
 
 
-                    DataTable dtb = DBClass.getDataTable("SELECT pat_id, full_name, patient_no FROM reg_patient");
-                    ddlPatient.DataSource = dtb;
-                    ddlPatient.DataTextField = "full_name";
-                    ddlPatient.DataValueField = "pat_id";
-                    ddlPatient.DataBind();
+                    //DataTable dtb = DBClass.getDataTable("SELECT pat_id, full_name, patient_no FROM reg_patient");
+                    //ddlPatient.DataSource = dtb;
+                    //ddlPatient.DataTextField = "full_name";
+                    //ddlPatient.DataValueField = "pat_id";
+                    //ddlPatient.DataBind();
 
-                    trDoctor.Visible = false;
-                    tr_Summary.Visible = false;
+                    //trDoctor.Visible = false;
+                    //tr_Summary.Visible = false;
 
 
 
-                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
-                    ddlDoctor.DataSource = dt;
-                    ddlDoctor.DataValueField = "Emp_ID";
-                    ddlDoctor.DataTextField = "Emp_Name";
-                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
-                    ddlDoctor.DataBind();
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
-                    ddlFilterClinic.DataSource = valusets;
-                    ddlFilterClinic.DataTextField = "DataValue_Description";
-                    ddlFilterClinic.DataValueField = "DataValue_Name";
-                    ddlFilterClinic.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlFilterClinic.DataBind();
-                    op_FilterClinic.Visible = false;
-                    ddlReportType.Visible = false;
-                    lbservieType.Visible = false;
+                    //DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    //ddlDoctor.DataSource = dt;
+                    //ddlDoctor.DataValueField = "Emp_ID";
+                    //ddlDoctor.DataTextField = "Emp_Name";
+                    //ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    //ddlDoctor.DataBind();
+                    //DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    //valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    //ddlFilterClinic.DataSource = valusets;
+                    //ddlFilterClinic.DataTextField = "DataValue_Description";
+                    //ddlFilterClinic.DataValueField = "DataValue_Name";
+                    //ddlFilterClinic.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    //ddlFilterClinic.DataBind();
+                    //op_FilterClinic.Visible = false;
+                    //ddlReportType.Visible = false;
+                    //lbservieType.Visible = false;
                 }
                 //Revenue - Department Wise Total Patient
                 if (PageTitle == "RDW")
