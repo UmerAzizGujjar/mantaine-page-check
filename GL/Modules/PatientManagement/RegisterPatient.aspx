@@ -93,7 +93,7 @@
                 <span id="relation-error" class="span_txt" style="display: none;">Please Enter Last Name</span>
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
-                <label for="PrefixAge">Calculate DOB<span style="color: red;">*</span></label>
+                <label for="PrefixAge">DOB<span style="color: red;">*</span></label>
                 <input type="text"  tabindex="6" id="txt_dob" class="form-control" placeholder="Enter Age" onchange="CalculateDateOfBirth();" />
                
             </div>
