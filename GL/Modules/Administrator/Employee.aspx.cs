@@ -114,29 +114,39 @@ namespace PMS
                     panelrate = employee.Panel_Rate,
                     dependent = employee.Dependent,
                     user = employee.userid,
-                    txtEmployeeID = employee.Emp_ID.ToString(),
-                    txtEmployeeCode = employee.Emp_No,
-                    txtEmployee_Name = employee.Emp_Name,
-                    txtdependent = employee.Dependent,
-                    txtdoc_qualification = employee.Doc_qualification,
-                    txtFather_Name = employee.Father_Name,
-                    txtEmployee_Date_of_Birth = employee.DOB.Value.ToString(AppConfig.DateFormat),
-                    ddlDepartment = employee.Department,
+                    txtEmployeeID = employee.Emp_ID,
+                    txtEmployeeCode = employee.Emp_No ?? string.Empty,
+                    txtEmployee_Name = employee.Emp_Name ?? string.Empty,
+                    txtdependent = employee.Dependent ?? string.Empty,
+                    txtdoc_qualification = employee.Doc_qualification ?? string.Empty,
+                    txtFather_Name = employee.Father_Name ?? string.Empty,
+
+                    // Safe handling for nullable DateTime
+                    txtEmployee_Date_of_Birth = employee.DOB?.ToString(AppConfig.DateFormat) ?? string.Empty,
+
+                    ddlDepartment = employee.Department ?? string.Empty,
                     ddlPolicy = employee.Policy_id,
-                    ddlDoctorBuilding = employee.Doctor_Building,
-                    ddlDesignation = employee.Designation,
-                    txtEmployee_Address = employee.Address,
-                    txtEmployee_Phone1 = employee.Home_Phone,
-                    txtEmployee_Phone2 = employee.Mobile,
-                    txtGovt_Hospital = employee.Govt_Hospital,
-                    ddlPatientType = employee.Patient_Type,
+                    ddlDoctorBuilding = employee.Doctor_Building ?? string.Empty,
+                    ddlDesignation = employee.Designation ?? string.Empty,
+                    txtEmployee_Address = employee.Address ?? string.Empty,
+                    txtEmployee_Phone1 = employee.Home_Phone ?? string.Empty,
+                    txtEmployee_Phone2 = employee.Mobile ?? string.Empty,
+                    txtGovt_Hospital = employee.Govt_Hospital ?? string.Empty,
+                    ddlPatientType = employee.Patient_Type ?? string.Empty,
                     ddluser = employee.userid,
-                    txtPatient_Time = employee.Patient_Time.ToString(),
-                    TxtTime_In = TxtTime_In,
-                    TxtTime_Out = TxtTime_Out,
-                    ddlRoom = ddlRoom,
-                    ddlFloor = employee.Floor_No,
-                    Ext_txt = employee.Extension_No,
+
+                    // Safe handling for nullable TimeSpan? or DateTime?
+                    txtPatient_Time = employee.Patient_Time?.ToString() ?? string.Empty,
+
+                    // Ensure TxtTime_In / TxtTime_Out are string inputs — if they come from nullable DateTime/TimeOnly:
+                    TxtTime_In = TxtTime_In ?? string.Empty,
+                    TxtTime_Out = TxtTime_Out ?? string.Empty,
+
+                    ddlRoom = ddlRoom ?? string.Empty, // assuming ddlRoom is string
+                    ddlFloor = employee.Floor_No ?? string.Empty,
+                    Ext_txt = employee.Extension_No ?? string.Empty,
+
+                    // Boolean flags from nullable bools (safe fallback to false)
                     isSun = sun,
                     isMon = mon,
                     isTue = tue,
@@ -144,22 +154,33 @@ namespace PMS
                     isThur = thur,
                     isFri = fri,
                     isSat = sat,
-                    txtEmployee_NTN_No = employee.NTN_No,
-                    txtEmployee_Email = employee.Email,
-                    txtEmployee_DOJ = employee.DOJ.Value.ToString(AppConfig.DateFormat),
+
+                    txtEmployee_NTN_No = employee.NTN_No ?? string.Empty,
+                    txtEmployee_Email = employee.Email ?? string.Empty,
+
+                    // Another critical nullable DateTime — DOJ
+                    txtEmployee_DOJ = employee.DOJ?.ToString(AppConfig.DateFormat) ?? string.Empty,
+
+                    // Start/End dates (nullable)
                     txtStartDate = employee.st_day?.ToString(AppConfig.DateFormat) ?? string.Empty,
                     txtEndDate = employee.end_day?.ToString(AppConfig.DateFormat) ?? string.Empty,
-                    txtDoctorShare = employee.Doctor_Amount.ToString(),
-                    txtHospital_Share = employee.Hospital_Amount.ToString(),
-                    txtEmployee_Resign = txtEmployee_Resign,
-                    txtGrossPay = employee.Gross_Pay.ToString(),
-                    txtRemarks = employee.Remarks,
-                    ChkDoctor = employee.IsDoctor.HasValue ? Convert.ToBoolean(employee.IsDoctor) : false,
-                    ChkVisting = employee.IS_Visting.HasValue ? Convert.ToBoolean(employee.IS_Visting) : false,
-                    ChkEmployee = employee.is_Employee.HasValue ? Convert.ToBoolean(employee.is_Employee) : false,
-                    ChkBlockCategory = employee.Block_category.HasValue ? Convert.ToBoolean(employee.Block_category) : false,
-                    txtConsultant_Charges = employee.Consultant_Charges.ToString(),
-                    btnSave = "Update",
+
+                    // Monetary/numeric values — convert safely
+                    txtDoctorShare = employee.Doctor_Amount?.ToString() ?? "0",
+                    txtHospital_Share = employee.Hospital_Amount?.ToString() ?? "0",
+                    txtEmployee_Resign = txtEmployee_Resign ?? string.Empty, // if it's a string input
+                    txtGrossPay = employee.Gross_Pay?.ToString() ?? "0",
+                    txtRemarks = employee.Remarks ?? string.Empty,
+
+                    // Boolean flags (nullable bool → bool)
+                    ChkDoctor = employee.IsDoctor ?? false,
+                    ChkVisting = employee.IS_Visting ?? false,
+                    ChkEmployee = employee.is_Employee ?? false,
+                    ChkBlockCategory = employee.Block_category ?? false,
+
+                    txtConsultant_Charges = employee.Consultant_Charges?.ToString() ?? "0",
+
+                    btnSave = "Update"
                 };
 
                 data = new JavaScriptSerializer().Serialize(DataFromTable);

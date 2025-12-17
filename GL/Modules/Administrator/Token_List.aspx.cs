@@ -57,7 +57,8 @@ namespace PMS.Modules.Administrator
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var user_id = AppConfig.UserID;
-            bool value = Convert.ToBoolean(DBClass.getField("select isnull(isprivate,0) from User_Branch where User_id ='" + user_id + "'"));
+            string result = DBClass.getField("SELECT ISNULL(isprivate, 0) FROM User_Branch WHERE User_id = '" + user_id + "'");
+            bool value = result == "1" || result.Equals("true", StringComparison.OrdinalIgnoreCase);
             return value;
 
         }

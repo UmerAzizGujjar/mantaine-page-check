@@ -52,7 +52,7 @@
               debugger;
               $.ajax({
                   type: "POST",
-                  url: 'TokenList.aspx/getdoctor',
+                  url: 'Token_List.aspx/getdoctor',
                   data: "",
                   contentType: "application/json; charset=utf-8",
                   dataType: "json",
@@ -77,7 +77,7 @@
 
           function GetLatestToken() {
               $.ajax({
-                  url: 'TokenList.aspx/LoadTokenPatient',
+                  url: 'Token_List.aspx/LoadTokenPatient',
                   type: 'post',
                   contentType: 'application/json;charset=utf-8',
                   dataType: 'json',
@@ -127,7 +127,7 @@
 
           function GetLatest_doc_Token() {
               $.ajax({
-                  url: 'TokenList.aspx/LoadDocTokenPatient',
+                  url: 'Token_List.aspx/LoadDocTokenPatient',
                   type: 'post',
                   contentType: 'application/json;charset=utf-8',
                   dataType: 'json',
@@ -181,7 +181,7 @@
               debugger;
               $.ajax({
                   type: "POST",
-                  url: "TokenList.aspx/isprivate",
+                  url: "Token_List.aspx/isprivate",
                   data: "",
                   contentType: "application/json; charset=utf-8",
                   dataType: "json",
