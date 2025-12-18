@@ -218,25 +218,29 @@
             else if (Category == "02") {
                 var apt_Id = '<%= Request.QueryString["apt_id"] %>'
                 var apdAdd = '<%= Request.QueryString["isAdd_apt"] %>'
-
+                  var OPDID = '<%= Request.QueryString["OPDID"] %>'
+                  $('#fees').show();
+                  $('#department').show();
+                  $('#doctor').show();
+                  $('#pnlcompany').hide();
+                  $('#employee').hide();
+                  $('#refference').hide();
+                  $('#field_Clinic').hide();
+                  $('#discount').show();
+                  $('#empname').hide();
+                  $('#designation').hide();
+                  $('#dependent').hide();
+                  $('#rollno').hide();
+                  $('#class').hide();
+                  $('#section').hide();
+                  $('#emp_id').hide();
                 if (apt_Id != "" && apdAdd == "true") {
-                    $('#fees').show();
-                    $('#department').show();
-                    $('#doctor').show();
-                    $('#pnlcompany').hide();
-                    $('#employee').hide();
-                    $('#refference').hide();
-                    $('#field_Clinic').hide();
-                    $('#discount').show();
-                    $('#empname').hide();
-                    $('#designation').hide();
-                    $('#dependent').hide();
-                    $('#rollno').hide();
-                    $('#class').hide();
-                    $('#section').hide();
-                    $('#emp_id').hide();
+                  
                 }
-                else {
+                else if(OPDID != "") {
+                   
+                }
+                else{
                     LoadDoc();
                 }
 

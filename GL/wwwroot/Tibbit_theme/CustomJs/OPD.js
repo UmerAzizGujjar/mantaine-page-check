@@ -1262,9 +1262,9 @@ function loadDepartment(Doc) {
                         text: data.Department_text
                     })
                 ).attr('disabled', true);
-               
 
-                $('#ddlDepartment').html(options);
+
+                $("#hdn_dep_id").val(data.Department);
 
 
             },
@@ -1350,6 +1350,7 @@ function getpanelRate() {
 }
 
 function loadPatientDetail(OPDID) {
+    debugger;
     $('#btnsave').val('Update');
     $('#btnsave').attr('disabled', true);
     AllowOPdEdit();
@@ -1476,6 +1477,9 @@ function loadPatientDetail(OPDID) {
             if (stat != "Approved") {
                 $('#divapprove').show();
             }
+            //if (data.Patient_Type != "01") {
+            //    $('#field_Clinic').hide();
+            //}
 
         },
         error: function (response) {
