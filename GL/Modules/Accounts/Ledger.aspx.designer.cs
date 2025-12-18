@@ -78,6 +78,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlVendor;
 
         /// <summary>
+        /// vendorTypeDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl vendorTypeDiv;
+
+        /// <summary>
+        /// lblVendorType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblVendorType;
+
+        /// <summary>
+        /// ddlVendorType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlVendorType;
+
+        /// <summary>
         /// stockDiv control.
         /// </summary>
         /// <remarks>

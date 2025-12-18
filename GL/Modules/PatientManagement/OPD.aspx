@@ -6,17 +6,17 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
-      
+
         $(document).ready(function () {
 
-     
+
             loadPermissions(function () {
                 for (var fieldId in fieldPermissionMapping) {
-                    showIfAllowed(fieldId, true); 
+                    showIfAllowed(fieldId, true);
                 }
             });
             DisableCardPrint();
-
+          
             var reg_id = '<%= Request.QueryString["ID"] %>'
             var apt_Id = '<%= Request.QueryString["apt_id"] %>'
             var added = '<%= Request.QueryString["isAdd"] %>'
@@ -35,7 +35,7 @@
             }
             else {
 
-               
+
                 $('#ddlGender').select2();
                 $('#ddlpanel').select2();
                 $('#ddlemployee').select2();
@@ -44,30 +44,30 @@
                 $('#ddlFilterClnic').select2();
                 $('#ddlServices').select2();
             }
-                if (reg_id != "" && added == "true") {
-                    Get_Pat_Info(reg_id);
-               
-                    $('#ddlPatient_Type').attr('disabled', false);
-                    $('#ddlcashier').attr('disabled', true);
-                }
-     
-                if (apt_Id != "" && apdAdd == "true") {
-                    Get_Pat_Info_Apt(reg_id, apt_Id);
-           
-                    $('#ddlPatient_Type').attr('disabled', false);
-                    $('#ddlcashier').attr('disabled', true);
-                }
+            if (reg_id != "" && added == "true") {
+                Get_Pat_Info(reg_id);
+
+                $('#ddlPatient_Type').attr('disabled', false);
+                $('#ddlcashier').attr('disabled', true);
+            }
+
+            if (apt_Id != "" && apdAdd == "true") {
+                Get_Pat_Info_Apt(reg_id, apt_Id);
+
+                $('#ddlPatient_Type').attr('disabled', false);
+                $('#ddlcashier').attr('disabled', true);
+            }
             debugger;
             if (Reffered_id != "" && added == "true") {
                 debugger;
                 $("#hdn_emer_reffered").val(Reffered_id);
                 console.log(Reffered_id);
-                    Get_Pat_Info(Reffered_id);
-                    
-                    $('#ddlPatient_Type').attr('disabled', false);
-                    $('#ddlcashier').attr('disabled', true);
-                }
-            
+                Get_Pat_Info(Reffered_id);
+
+                $('#ddlPatient_Type').attr('disabled', false);
+                $('#ddlcashier').attr('disabled', true);
+            }
+
 
         });
         function DisableCardPrint() {
@@ -119,14 +119,14 @@
                 dataType: "json",
                 success: function (response) {
                     permissions = response.d || {};
-                
+
 
                     if (typeof callback === 'function') {
                         callback();
                     }
                 },
                 error: function (xhr, status, error) {
-               
+
                     alert("Could not load permissions.");
                 }
             });
@@ -135,13 +135,13 @@
         function showIfAllowed(fieldId, conditionToShow) {
             var permissionKey = fieldPermissionMapping[fieldId];
             if (!permissions || $.isEmptyObject(permissions)) {
-              
+
                 return;
             }
 
             if (!permissionKey) {
-               
-                $('#' + fieldId).hide(); 
+
+                $('#' + fieldId).hide();
                 return;
             }
 
@@ -159,13 +159,13 @@
             if (permissionValue === true) {
                 if (conditionToShow) {
                     $('#' + fieldId).show();
-                  
+
                 } else {
                     $('#' + fieldId).hide();
-                   
+
                 }
             } else {
-          
+
                 $('#' + fieldId).hide();
             }
         }
@@ -180,7 +180,7 @@
                 $('.show').show();
                 $('#fees').hide();
                 $('#department').hide();
-                showIfAllowed('field_Clinic', false);  
+                showIfAllowed('field_Clinic', false);
 
                 $('#field_Clinic').hide();
                 $('#doctor').hide();
@@ -201,7 +201,7 @@
             else if (Category == "01") {
                 $('#fees').show();
                 $('#department').show();
-                showIfAllowed('field_Clinic', true); 
+                showIfAllowed('field_Clinic', true);
                 $('#doctor').hide();
                 $('#pnlcompany').hide();
                 $('#employee').hide();
@@ -216,21 +216,31 @@
                 $('#emp_id').hide();
             }
             else if (Category == "02") {
-                $('#fees').show();
-                $('#department').show();
-                $('#doctor').show();
-                $('#pnlcompany').hide();
-                $('#employee').hide();
-                $('#refference').hide();
+                var apt_Id = '<%= Request.QueryString["apt_id"] %>'
+                var apdAdd = '<%= Request.QueryString["isAdd_apt"] %>'
 
-                $('#discount').show();
-                $('#empname').hide();
-                $('#designation').hide();
-                $('#dependent').hide();
-                $('#rollno').hide();
-                $('#class').hide();
-                $('#section').hide();
-                $('#emp_id').hide();
+                if (apt_Id != "" && apdAdd == "true") {
+                    $('#fees').show();
+                    $('#department').show();
+                    $('#doctor').show();
+                    $('#pnlcompany').hide();
+                    $('#employee').hide();
+                    $('#refference').hide();
+                    $('#field_Clinic').hide();
+                    $('#discount').show();
+                    $('#empname').hide();
+                    $('#designation').hide();
+                    $('#dependent').hide();
+                    $('#rollno').hide();
+                    $('#class').hide();
+                    $('#section').hide();
+                    $('#emp_id').hide();
+                }
+                else {
+                    LoadDoc();
+                }
+
+              
             }
             else if (Category == "03") {
                 $('#fees').show();
@@ -384,10 +394,10 @@
                 });
 
             }
-         
-                debugger;
-                PrintPatientCard();
-    
+
+            debugger;
+            PrintPatientCard();
+
 
         }
         //Print
@@ -396,7 +406,7 @@
             var ID = '<%= Request.QueryString["OPDID"]%>';
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
-           // var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + ID;
+            // var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + ID;
             if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
@@ -448,9 +458,9 @@
         function PrintPatientBackCard() {
             $('#ctl00_MainContent_chckPatientCard').attr('disabled', true);
             Patient_ID =  '<%= Request.QueryString["OPDID"]%>';
-                    var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;
-                    window.open(url);
-                }
+            var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;
+            window.open(url);
+        }
 
 
 
@@ -511,6 +521,34 @@
                 });
             }
         }
+        function LoadDoc() {
+           $.ajax({
+                    type: "POST",
+                    url: "OPD.aspx/LoadAllDoctor",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var doctor = JSON.parse(response.d);
+                        var options = '<option value=""> Please Select </option>';
+
+                        $.each(doctor, function (key, value) {
+                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                        });
+
+                        $('#ddldoctor').html(options);
+                 
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            
+        }
+      
         function getGeneralFee() {
             debugger;
 
@@ -523,8 +561,8 @@
                 $('#txtfees').val("0");
                 $('#hdnDocshare').val("0");
                 $('#hdnhospShare').val("0");
-                $('#txtdiscount').val(""); 
-                $('#txtdiscount').attr('disabled', false); 
+                $('#txtdiscount').val("");
+                $('#txtdiscount').attr('disabled', false);
                 return;
             }
 
@@ -559,25 +597,24 @@
                         var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
                         debugger;
                         $('#txtactualfee').val(code);
-                        
-          
+
+
                         if (
                             (type === "04" && type_text === "Employee") ||
                             (type === "05" && type_text === "Student") ||
                             (type === "06" && type_text === "Refer")
-                        )
-                        {
+                        ) {
                             $('#txtdiscount').val(100);
                             $('#txtactualfee').val(code);
-                            $('#txtdiscount').attr('disabled', true); 
-                            $('#txtfees').val(0);                 
+                            $('#txtdiscount').attr('disabled', true);
+                            $('#txtfees').val(0);
                             $('#hdnDocshare').val(dShare);
                             $('#hdnhospShare').val(hShare);
                         }
                         else {
                             debugger;
-                            $('#txtdiscount').val(Discount_Percentage);           
-                            $('#txtdiscount').attr('disabled', false); 
+                            $('#txtdiscount').val(Discount_Percentage);
+                            $('#txtdiscount').attr('disabled', false);
                             $('#txtfees').val(Receipt_fee.toFixed(2));
                             $('#txtactualfee').val(code);
                             $('#hdnDocshare').val(dShare);
@@ -689,7 +726,7 @@
             }
         }
 
-       
+
 
         function loadFee() {
             debugger;
@@ -698,7 +735,7 @@
             var opdid = $('#hdn_opdId').val();
             var selectedPatientType = $('#ddlPatient_Type').val();
             var emer_reffered = $("#hdn_emer_reffered").val();
-
+        
             if (emer_reffered !== "") {
                 $('#txtfees').val("0");
                 return;
@@ -707,9 +744,9 @@
             if (!Doc) return;
             checkDoctorBlockStatus(Doc, selectedPatientType, function (isBlocked) {
                 if (isBlocked) {
-                    return; 
+                    return;
                 }
-
+                
                 if (selectedPatientType == '11') {
                     getspecialfees(Doc);
                 } else {
@@ -950,7 +987,7 @@
         //                    $('#txtactualfee').val("0");
         //                    $('#txtdiscount').val("");
         //                    $('#ddldoctor').val("");
-        //                    callback(true); 
+        //                    callback(true);
         //                    return;
         //                }
         //            }
@@ -972,7 +1009,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
     <!-- Anti-CSRF Token -->
-<input type="hidden" id="hfAntiForgery" runat="server" />
+    <input type="hidden" id="hfAntiForgery" runat="server" />
     <input type="text " id="hdfPatient_ID" style="display: none;" />
     <input type="hidden" id="hdnAppointmentType" />
     <input type="text" id="hdn_aptid" style="display: none;" />
@@ -1014,90 +1051,89 @@
 
 
         <div class="col-lg-9 col-md-9 col-sm-12" style="width: 73%; margin-left: 13px;">
-    <!-- Quick Actions row: four equal, high-contrast cards -->
-    <div class="row">
-        <!-- Card 1 -->
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
-            <div class="quick-actions" id="card-register" role="button" tabindex="0"
-                 onclick="addfunc()"
-                 onkeypress="if(event.key==='Enter'){ addfunc(); }"
-                 class="d-flex flex-column justify-content-center align-items-start"
-                 >
-                <div class="d-flex align-items-center">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="48" height="48" style="margin-right:10px;">
-                    <div>
-                        <div style="font-weight:700; font-size:1.5rem;">Register a new patient</div>
-                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Create a new patient record</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
-            <div id="card-search-appointment" role="button" tabindex="0" onclick="SearchPop_App()" onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
-                 class="d-flex flex-column justify-content-center align-items-start quick-actions">
-                <div class="d-flex align-items-center">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right:10px;">
-                    <div>
-                        <div style="font-weight:700; font-size:1.5rem;">Search in appointment</div>
-                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Find patient appointments</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
-            <div id="btnsearchpatlist" role="button" tabindex="0" onclick="/* add search patient function here, e.g. openPatientSearch() */" onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
-                 class="d-flex flex-column justify-content-center align-items-start quick-actions">
-                <div class="d-flex align-items-center">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right:10px;">
-                    <div>
-                        <div style="font-weight:700; font-size:1.5rem;">Search an existing patient</div>
-                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Lookup patient details</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="EmerRefferedBy">
-            <div id="btnsearchEmergencylist" role="button" tabindex="0" onclick="/* add emergency refer function here, e.g. referToEmergency() */" onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
-                 class="d-flex flex-column justify-content-center align-items-start quick-actions">
-                <div class="d-flex align-items-center">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right:10px;">
-                    <div>
-                        <div style="font-weight:700; font-size:1.5rem;">Emergency Refer Patient</div>
-                        <div style="font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Refer patient to emergency</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="RefferdBy">
-            <div id="btnsearchReferlist" role="button" tabindex="0" onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
-                class="d-flex flex-column justify-content-center align-items-start quick-actions" style="cursor: pointer;">
-                <div class="d-flex align-items-center">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png"
-                        alt="Refer Patient Icon" width="48" height="48" style="margin-right: 10px;">
-                    <div>
-                        <div style="font-weight: 700; font-size: 1.5rem;">Refer Patient</div>
-                        <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            Refer an existing patient
+            <!-- Quick Actions row: four equal, high-contrast cards -->
+            <div class="row">
+                <!-- Card 1 -->
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                    <div class="quick-actions" id="card-register" role="button" tabindex="0"
+                        onclick="addfunc()"
+                        onkeypress="if(event.key==='Enter'){ addfunc(); }"
+                        class="d-flex flex-column justify-content-center align-items-start">
+                        <div class="d-flex align-items-center">
+                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="48" height="48" style="margin-right: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.5rem;">Register a new patient</div>
+                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Create a new patient record</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Card 2 -->
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                    <div id="card-search-appointment" role="button" tabindex="0" onclick="SearchPop_App()" onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
+                        class="d-flex flex-column justify-content-center align-items-start quick-actions">
+                        <div class="d-flex align-items-center">
+                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.5rem;">Search in appointment</div>
+                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Find patient appointments</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                    <div id="btnsearchpatlist" role="button" tabindex="0" onclick="/* add search patient function here, e.g. openPatientSearch() */" onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
+                        class="d-flex flex-column justify-content-center align-items-start quick-actions">
+                        <div class="d-flex align-items-center">
+                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.5rem;">Search an existing patient</div>
+                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Lookup patient details</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="EmerRefferedBy">
+                    <div id="btnsearchEmergencylist" role="button" tabindex="0" onclick="/* add emergency refer function here, e.g. referToEmergency() */" onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
+                        class="d-flex flex-column justify-content-center align-items-start quick-actions">
+                        <div class="d-flex align-items-center">
+                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.5rem;">Emergency Refer Patient</div>
+                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Refer patient to emergency</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="RefferdBy">
+                    <div id="btnsearchReferlist" role="button" tabindex="0" onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
+                        class="d-flex flex-column justify-content-center align-items-start quick-actions" style="cursor: pointer;">
+                        <div class="d-flex align-items-center">
+                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png"
+                                alt="Refer Patient Icon" width="48" height="48" style="margin-right: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.5rem;">Refer Patient</div>
+                                <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    Refer an existing patient
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-    </div>
-</div>
         <div class="col-lg-3 col-md-3 col-sm-4">
             <div class="card3">
                 <span style="font-size: 15px;">Total OPD</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat" class="blink" runat="server"></span>
 
-          
+
 
                 <span style="font-size: 15px;">Recent Visit</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2" class="blink" runat="server"></span>
@@ -1105,7 +1141,7 @@
 
                 <span style="font-size: 15px;">Previous Visit </span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span6" class="blink" runat="server"></span>
-                  </div>
+            </div>
         </div>
     </div>
 
@@ -1155,7 +1191,7 @@
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Martial_Status">
                         <label>Martial Status</label>
                         <select id="ddlmartialstatus" disabled>
-                             <option value="0">Select Status</option>
+                            <option value="0">Select Status</option>
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_age">
@@ -1164,14 +1200,14 @@
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Gender">
                         <label>Gender</label>
-                        <select id="ddlGender" disabled >
-                             <option value="0">Select Gender</option>
+                        <select id="ddlGender" disabled>
+                            <option value="0">Select Gender</option>
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Fee">
                         <label>Fee</label>
                         <input type="text" id="txtfees" readonly="readonly" class="form-control" />
-                        <input type="text" id="txtactualfee" style="display:none;"  class="form-control" />
+                        <input type="text" id="txtactualfee" style="display: none;" class="form-control" />
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
                         <label>Services</label>
@@ -1201,7 +1237,7 @@
                 <!-- Other form elements -->
                 <div class="col-lg-12 col-md-12 col-sm-12" id="department">
                     <label>Department</label>
-                    <select id="ddlDepartment"  class="form-control">
+                    <select id="ddlDepartment" class="form-control">
                         <option value="0">Select Department</option>
                     </select>
                 </div>
@@ -1213,7 +1249,7 @@
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="doctor">
                     <label>Doctor</label>
-                    <select id="ddldoctor"  class="form-control">
+                    <select id="ddldoctor" class="form-control">
                         <option value="0">Select Doctor</option>
                     </select>
                 </div>
@@ -1227,7 +1263,7 @@
                     <label>Employee ID</label>
                     <input type="text" id="txtemployee" class="form-control" />
                 </div>
-                  <div class="col-lg-12 col-md-12 col-sm-12" id="EmployeeName">
+                <div class="col-lg-12 col-md-12 col-sm-12" id="EmployeeName">
                     <label>Employee Name</label>
                     <input type="text" id="empname" class="form-control" />
                 </div>
@@ -1321,7 +1357,7 @@
                     <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-6" id="divvoucher">
-                   <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" />
+                    <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
                     <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" />
@@ -1411,19 +1447,19 @@
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
                             <select id="ddl_status" class="form-control">
-                                  <option value="0">Select Marial</option>
+                                <option value="0">Select Marial</option>
                             </select>
                         </div>
                         <div class="col-lg-2 colmd-4 col-sm-6">
                             <label>Country</label>
                             <select id="ddlCountry" class="form-control">
-                                  <option value="0">Select Country</option>
+                                <option value="0">Select Country</option>
                             </select>
                         </div>
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label>Province</label>
                             <select id="ddl_Province" class="form-control">
-                                  <option value="0">Select Province</option>
+                                <option value="0">Select Province</option>
                             </select>
                         </div>
                     </div>
@@ -1432,13 +1468,13 @@
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
                             <select id="txtcity" class="form-control">
-                                  <option value="0">Select City</option> 
+                                <option value="0">Select City</option>
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txtarea">Area</label>
                             <select id="txtarea" class="form-control">
-                                 <option value="0">Select Area</option>  
+                                <option value="0">Select Area</option>
                             </select>
                         </div>
                         <div class="col-lg-5 col-md-4 col-sm-6">
@@ -1541,77 +1577,77 @@
         </div>
     </div>
 
-      <div id="SearchEmergencyPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-          <div class="modal-content">
-              <div class="modal-body">
-                  <fieldset class="form-group">
-                      <div class="form-row">
-                          <div class="col-md-6">
-                              <h5>Search Your Patients:</h5>
-                              <input type="text" id="txtEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
-                          </div>
-                      </div>
-                  </fieldset>
-                  <div class="table-responsive">
-                      <table class="table table-hover table-striped table-bordered" id="tblEmergencyResult">
-                          <thead>
-                              <tr>
-                                  <th style="display: none;">Patient ID</th>
-                                  <th>MR No</th>
-                                  <th>Patient Name</th>
-                                  <th>Father Name</th>
-                                  <th>CNIC</th>
-                                  <th>Contact No</th>
-                                  <th>Actions</th>
-                              </tr>
-                          </thead>
-                          <tbody id="EmergencyPatientsBody">
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-              </div>
-          </div>
-      </div>
-  </div>
-
-         <div id="SearchReferPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <fieldset class="form-group">
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <h5>Search Your Patients:</h5>
-                            <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+    <div id="SearchEmergencyPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <h5>Search Your Patients:</h5>
+                                <input type="text" id="txtEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                            </div>
                         </div>
+                    </fieldset>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered" id="tblEmergencyResult">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="EmergencyPatientsBody">
+                            </tbody>
+                        </table>
                     </div>
-                </fieldset>
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
-                        <thead>
-                            <tr>
-                                <th style="display: none;">Patient ID</th>
-                                <th>MR No</th>
-                                <th>Patient Name</th>
-                                <th>Father Name</th>
-                                <th>CNIC</th>
-                                <th>Contact No</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ReferPatientsBody">
-                        </tbody>
-                    </table>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div id="SearchReferPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <h5>Search Your Patients:</h5>
+                                <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ReferPatientsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
