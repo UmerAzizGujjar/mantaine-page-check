@@ -11002,4 +11002,8 @@
       <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.getUserName" Method="getUserName" IsComposable="true">
+    <Parameter Name="userID" Type="System.String" DbType="VarChar(200)" />
+    <Return Type="System.String" />
+  </Function>
 </Database>

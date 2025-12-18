@@ -5045,6 +5045,12 @@ namespace PMS
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_Id, userId);
             return ((ISingleResult<sp_ApprovePatientCardFeeResult>)(result.ReturnValue));
         }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.getUserName", IsComposable = true)]
+        public string getUserName([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(200)")] string userID)
+        {
+            return ((string)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), userID).ReturnValue));
+        }
     }
 
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Ar_Customers")]
