@@ -7,6 +7,8 @@
 
         $(document).ready(function () {
             OPDloadSavedRows();
+            OPDShareloadSavedRows();
+            RegloadSavedRows();
             DiagnosticloadSavedRows();
             DiagnosticShareloadSavedRows();
             SpecialServicesloadSavedRows();
@@ -27,6 +29,8 @@
             let isEmptyFound = false;
             let allData = [];
             let categoryNamesOPD = new Set();
+            let categoryNamesOPDShare = new Set();
+            let categoryNamesReg = new Set();
             let categoryNamesDiagnostic = new Set();
             let categoryNamesDiagnosticShare = new Set();
             let categoryNamesEMERGENCY = new Set();
@@ -36,6 +40,8 @@
             let categoryNamesSpecialService = new Set();
             let duplicateFound = false;
             let rowsOPD = $('#tableOPD .data-row');
+            let rowsOPDShare = $('#tableOPDShare .data-row');
+            let rowsReg = $('#tableReg .data-row');
             let rowsDiagnostic = $('#tableDiagnostic .data-row');
             let rowsDiagnosticShare = $('#tableDiagnosticShare .data-row');
             let rowsSpecialService = $('#tableSpecialServices .data-row');
@@ -56,12 +62,12 @@
 
                     financialdepartment: row.find('.financialDepartmentOPD').val(),
                     categoryname: row.find('.categorynameOPD').val(),
-                    cashinhand: null,
+                    cashinhand: row.find('.cashinhandOPD').val(),
                     discount: row.find('.discountOPD').val(),
                     revenue: row.find('.revenueOPD').val()
                 };
                 // Check if any value is empty
-                if (rowDataOPD.categoryname == 0 || rowDataOPD.discount == 0 || rowDataOPD.revenue == 0) {
+                if (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0 || rowDataOPD.revenue == 0) {
                     isEmptyFound = true;
                 }
                 // Check for duplicate categoryname
@@ -71,6 +77,50 @@
                     categoryNamesOPD.add(rowDataOPD.categoryname);
                 }
                 allData.push(rowDataOPD);
+            });
+            rowsOPDShare.each(function () {
+                let row = $(this);
+                let rowDataOPDShare = {
+
+                    financialdepartment: row.find('.financialDepartmentOPDShare').val(),
+                    categoryname: row.find('.categorynameOPDShare').val(),
+                    cashinhand: row.find('.cashinhandOPDShare').val(),
+                    discount: row.find('.discountOPDShare').val(),
+                    revenue: row.find('.revenueOPDShare').val()
+                };
+                // Check if any value is empty
+                if (rowDataOPDShare.categoryname == 0 || rowDataOPDShare.cashinhand == 0 || rowDataOPDShare.revenue == 0) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesOPDShare.has(rowDataOPDShare.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesOPDShare.add(rowDataOPDShare.categoryname);
+                }
+                allData.push(rowDataOPDShare);
+            });
+            rowsReg.each(function () {
+                let row = $(this);
+                let rowDataReg = {
+
+                    financialdepartment: row.find('.financialDepartmentReg').val(),
+                    categoryname: row.find('.categorynameReg').val(),
+                    cashinhand: row.find('.cashinhandReg').val(),
+                    discount: row.find('.discountReg').val(),
+                    revenue: row.find('.revenueReg').val()
+                };
+                // Check if any value is empty
+                if (rowDataReg.categoryname == 0  || rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesReg.has(rowDataReg.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesReg.add(rowDataReg.categoryname);
+                }
+                allData.push(rowDataReg);
             });
             rowsDiagnostic.each(function () {
                 let row = $(this);
@@ -318,6 +368,11 @@
             ${setSelected(categoryOptions, item.categoryname)}
         </select>
     </td>
+                          <td>
+                          <select class="cashinhandOPD select2select" style="background-color: white;" disabled>
+                              ${setSelected(optionsVen, item.cashinhand)}
+                          </select>
+                      </td>
     <td>
         <select class="discountOPD select2select" style="background-color: white;" disabled>
             ${setSelected(optionsVen, item.discount)}
@@ -341,6 +396,132 @@
                                     $('.financialDepartmentOPD option[value="001"]').prop('selected', true);
 
                                     $('#tableOPD tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        function OPDShareloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsOPDShare",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getPatientTypes(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+<tr class="data-row">
+    <td style="display: none">
+
+        <input type="hidden" class="financialDepartmentOPDShare" value="${item.financialdepartment}"/>
+    </td>
+    <td>
+        <select class="categorynameOPDShare select2select" style="background-color: white; height:32px;" disabled>
+            ${setSelected(categoryOptions, item.categoryname)}
+        </select>
+    </td>
+                          <td>
+                          <select class="cashinhandOPDShare select2select" style="background-color: white;" disabled>
+                              ${setSelected(optionsVen, item.cashinhand)}
+                          </select>
+                      </td>
+    <td>
+        <select class="discountOPDShare select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.discount)}
+        </select>
+    </td>
+    <td>
+        <select class="revenueOPDShare select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <a href="#" onclick="removeRow(this)">
+            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        </a>
+        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        </a>
+    </td>
+</tr>`;
+
+                                    $('.financialDepartmentOPDShare option[value="010"]').prop('selected', true);
+
+                                    $('#tableOPDShare tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); // reinit after DOM update
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        function RegloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsReg",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getPatientTypes(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+<tr class="data-row">
+    <td style="display: none">
+
+        <input type="hidden" class="financialDepartmentReg" value="${item.financialdepartment}"/>
+    </td>
+    <td>
+        <select class="categorynameReg select2select" style="background-color: white; height:32px;" disabled>
+            ${setSelected(categoryOptions, item.categoryname)}
+        </select>
+    </td>
+                          <td>
+                          <select class="cashinhandReg select2select" style="background-color: white;" disabled>
+                              ${setSelected(optionsVen, item.cashinhand)}
+                          </select>
+                      </td>
+    <td>
+        <select class="discountReg select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.discount)}
+        </select>
+    </td>
+    <td>
+        <select class="revenueReg select2select" style="background-color: white;" disabled>
+            ${setSelected(optionsVen, item.revenue)}
+        </select>
+    </td>
+    <td>
+        <a href="#" onclick="removeRow(this)">
+            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        </a>
+        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        </a>
+    </td>
+</tr>`;
+
+                                    $('.financialDepartmentReg option[value="009"]').prop('selected', true);
+
+                                    $('#tableReg tbody').append(row);
                                 });
 
                                 $('.select2select').select2(); // reinit after DOM update
@@ -828,6 +1009,11 @@
                         </select>
                     </td>
                     <td>
+    <select class="cashinhandOPD select2select" style="background-color: white;">
+        ${optionsVen}
+    </select>
+</td>
+                    <td>
                         <select class="discountOPD select2select" style="background-color: white;">
                             ${optionsVen}
                         </select>
@@ -850,6 +1036,94 @@
                         $('.select2select').select2(); // initialize Select2
                     });
                 });
+            });
+        }
+        function addNewRowOPDShare() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getPatientTypes(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                         <input type = "hidden" class="financialDepartmentOPDShare" value = "010">                   
+                    <td>
+                        <select class="categorynameOPDShare select2select" style="background-color: white; height:32px;">
+                            ${categoryOptions}
+                        </select>
+                    </td>
+                    <td>
+    <select class="cashinhandOPDShare select2select" style="background-color: white;">
+        ${optionsVen}
+    </select>
+</td>
+                    <td>
+                        <select class="discountOPDShare select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenueOPDShare select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
+
+                    </td>
+                </tr>
+            `;
+                        $('#tableOPDShare tbody').append(newRow);
+                        $('.financialDepartmentOPDShare option[value="010"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                    });
+                });
+            });
+        }
+        function addNewRowReg() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                debugger;
+                getAccounts(function (optionsVen) {
+                    debugger;
+                        let newRow = `
+                <tr class="data-row">
+                    <td style="display: none">
+                         <input type = "hidden" class="financialDepartmentReg" value = "009">                   
+                   
+                     <td>
+                         <select class="categorynameReg" disabled style="background-color: white; height:32px;">
+                             <option value="0">Please Select</option>
+                             <option value="001" selected >Patient Reg</option>
+                         </select>
+                     </td>
+                     <td>
+    <select class="cashinhandReg select2select" style="background-color: white;">
+        ${optionsVen}
+    </select>
+</td>
+                    <td>
+                        <select class="discountReg select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="revenueReg select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="removeRow(this)">
+    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+</a>
+
+                    </td>
+                </tr>
+            `;
+                        $('#tableReg tbody').append(newRow);
+                        $('.financialDepartmentReg option[value="009"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                    });
             });
         }
         function addNewRowDiagnosticShare() {
@@ -1275,12 +1549,14 @@
     <div id="tabs">
 
         <ul>
-            <li style="display:none;"><a href="#Tab-1">OPD</a></li>
+            <li><a href="#Tab-1">OPD</a></li>
+            <li><a href="#Tab-10">OPD Sharing</a></li>
+            <li><a href="#Tab-9">Patient Reg</a></li>
             <li><a href="#Tab-2">Diagnostic</a></li>
             <li style="display:none;"><a href="#Tab-3">Emergency</a></li>
-            <li><a href="#Tab-4">Service</a></li>           
+            <li><a href="#Tab-4">Service</a></li>
+            <li><a href="#Tab-6">SpecialServices</a></li>           
             <li ><a href="#Tab-5">Pharmacy</a></li>
-            <li><a href="#Tab-6">SpecialServices</a></li>
             <li><a href="#Tab-7">Procedure</a></li>
             <li><a href="#Tab-8">Diagnostic Share</a></li>
 
@@ -1301,12 +1577,65 @@
                     <tr>
                         <th style="display: none">Financial Department  </th>
                         <th style="width: 16%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
                         <th style="width: 25%;">Discount              </th>
                         <th style="width: 25%;">Revenue               </th>
                         <th style="width: 9%;">Action                </th>
                     </tr>
                 </thead>
                 <tbody id="tbodyOPD">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="Tab-10">
+            <div class="row">
+
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrowOPDShare" onclick="addNewRowOPDShare()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
+                    </a>
+                </div>
+            </div>
+            <table id="tableOPDShare" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+                <thead id="theadOPDShare">
+                    <tr>
+                        <th style="display: none">Financial Department  </th>
+                        <th style="width: 16%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 25%;">Discount              </th>
+                        <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 9%;">Action                </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyOPDShare">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="Tab-9">
+            <div class="row">
+
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrowReg" onclick="addNewRowReg()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
+                    </a>
+                </div>
+            </div>
+            <table id="tableReg" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+                <thead id="theadReg">
+                    <tr>
+                        <th style="display: none">Financial Department  </th>
+                        <th style="width: 16%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 25%;">Discount              </th>
+                        <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 9%;">Action                </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyReg">
                 </tbody>
             </table>
         </div>

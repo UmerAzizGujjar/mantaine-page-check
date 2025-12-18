@@ -5535,7 +5535,7 @@
                 LoadBillDepartment();
                 LoadBillPatCategory();
                 fillCashInHand();
-                AllowReceipeRights();
+                
                 AllowRateEdit();
                 $('#add-new-testDirect').click(function () {
                 });
@@ -5548,6 +5548,8 @@
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
                 if (id != "") {
                 }
+
+                AllowReceipeRights();
             });  // document.ready ends
 
             var editrights;

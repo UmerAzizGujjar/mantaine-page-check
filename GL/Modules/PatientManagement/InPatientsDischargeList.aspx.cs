@@ -97,6 +97,7 @@ namespace PMS
                                             Father_Name = P.Father_Name,
                                             Department = _dbContext.GetDataValueName("Patient Main Category", opd.Department),
                                             Patient_Type = _dbContext.GetDataValueName("Patient Type", opd.Patient_Discount_Type),
+                                            Discharge_By = Convert.ToString(_dbContext.getUserName(Convert.ToString(opd.Discharge_By))),
                                             Discharge_On = opd.Discharge_On,
                                             AdmitDays = SqlMethods.DateDiffDay(opd.Admission_Date, DateTime.Now)
                                         };

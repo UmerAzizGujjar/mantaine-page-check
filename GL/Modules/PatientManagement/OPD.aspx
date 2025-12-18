@@ -688,6 +688,7 @@
                 $("#hdn_dep_id").val(dept_gnl);
             }
         }
+
        
 
         function loadFee() {
