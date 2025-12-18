@@ -1617,6 +1617,7 @@ function OnFailReferPatients(error) {
         timer: 2000,
         showConfirmButton: false
     });
+
 }
 
 $('#txtReferEmergencySearch').off('input').on('input', function () {
