@@ -119,6 +119,10 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Manual_Invoice where ManualInvoiceId = " + transID).ToString();
                     }
+                    else if (transType == "CardFee")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Reg_patient where Pat_id = " + transID).ToString();
+                    }
                     else if (transType == "Pur")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Purchase_Invoice_Master where PurchaseInvoiceId = " + transID).ToString();

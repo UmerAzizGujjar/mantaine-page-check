@@ -69,7 +69,14 @@ namespace PMS.Modules.PatientManagement
                 return DateTime.TryParseExact(dateStr, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out _);
             }
         }
-
+        [WebMethod]
+        public static string approvepatient(string Pat_Id)
+        {
+            var UserId = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_ApprovePatientCardFee(Convert.ToInt32(Pat_Id), UserId);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
         public class SafePatientData
         {
             public string Name { get; set; }
