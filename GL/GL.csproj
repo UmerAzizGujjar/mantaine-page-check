@@ -253,6 +253,7 @@
     <Content Include="Modules\Inventory\AdvanceTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\BOM.aspx" />
     <Content Include="Modules\Inventory\BOM_View.aspx" />
+    <Content Include="Modules\Inventory\FurtherTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\PharmacyView.aspx" />
     <Content Include="Modules\Inventory\Service.aspx" />
     <Content Include="Modules\Inventory\ServiceView.aspx" />
@@ -26033,6 +26034,13 @@
     </Compile>
     <Compile Include="Modules\Inventory\BOM_View.aspx.designer.cs">
       <DependentUpon>BOM_View.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\FurtherTaxDefinition.aspx.cs">
+      <DependentUpon>FurtherTaxDefinition.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\FurtherTaxDefinition.aspx.designer.cs">
+      <DependentUpon>FurtherTaxDefinition.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Inventory\PharmacyView.aspx.cs">
       <DependentUpon>PharmacyView.aspx</DependentUpon>

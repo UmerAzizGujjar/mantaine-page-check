@@ -1742,6 +1742,9 @@ namespace PMS
             //replica of Lab cash Collection
             else if (reportName == "Operator_Wise_Billing_Report")
             {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 string rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report.rpt";
                 string CheckSummary = Request.QueryString["Summary"].ToString();
                 if (CheckSummary == "true")
@@ -1772,6 +1775,7 @@ namespace PMS
                 rd.SetParameterValue("Title", "Operator Wise Billing");
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
 
             else if (reportName == "HospitalServices")
