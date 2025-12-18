@@ -186,9 +186,11 @@ namespace PMS
                                             mr_no_sequence = P.mr_no_sequence,
                                             Full_Name = P.Full_Name,
                                             Father_Name = P.Father_Name,
+                                          
                                             Department = _dbContext.GetDataValueName("Patient Main Category", IP.Department),
                                             Patient_Type = _dbContext.GetDataValueName("Patient Type", IP.Patient_Discount_Type),
                                             Discharge_ON = IP.Discharge_On,
+                                            Created_by = Convert.ToString(_dbContext.getUserName(Convert.ToString(P.Created_by))),
                                             AdmitDays = SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now)
                                         };
 

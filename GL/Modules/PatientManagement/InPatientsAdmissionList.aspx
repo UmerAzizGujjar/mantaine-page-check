@@ -93,13 +93,14 @@
                     { "data": "Father_Name", "width": "15%", "orderable": false },
                     { "data": "Patient_Type", "name": "Patient_Type", "width": "15%", "orderable": true },
                     { "data": "Department", "name": "Department", "width": "10%", "orderable": true },
-                    {
-                        "data": "Discharge_ON",
-                        "render": function (data, type, full) {
-                            return data ? moment(data).format('DD-MMM-YYYY') : '';
-                        },
-                        "width": "10%", "orderable": false
-                    },
+                    //{
+                    //    "data": "Discharge_ON",
+                    //    "render": function (data, type, full) {
+                    //        return data ? moment(data).format('DD-MMM-YYYY') : '';
+                    //    },
+                    //    "width": "10%", "orderable": false
+                    //},
+                    { "data": "Created_by", "name": "Created_by", "width": "10%", "orderable": true },
                     { "data": "AdmitDays", "name": "AdmitDays", "width": "10%", "orderable": true },
                     {
                         "render": function (data, type, full) {
@@ -261,8 +262,8 @@
                     <th>Patient Name</th> 
                     <th>Father/Husband Name</th> 
                     <th>Patient Category</th> 
-                    <th>Dept.</th>
-                    <th>Discharge Date</th>                             
+                    <th>Dept.</th>                      
+                    <th>Admitted By</th>                             
                     <th>Days Occupied</th>                             
                     <th>Actions</th>
                 </tr>

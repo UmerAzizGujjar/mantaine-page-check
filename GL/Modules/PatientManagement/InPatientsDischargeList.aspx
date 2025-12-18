@@ -89,6 +89,7 @@
                             return date;
                         }, "width": "10%", "orderable": true
                     },
+                    { "data": "Discharge_By", "name": "Discharge_By", "width": "12%", "orderable": true },
                     { "data": "AdmitDays", "name": "AdmitDays", "width": "8%", "orderable": true },
                     
                     {
@@ -171,6 +172,7 @@
                         <th>Patient Category</th>
                         <th>Department.</th>
                         <th>Discharge Date</th>
+                        <th>Discharge By</th>
                         <th>Days Occupied</th>
                         <th>Actions</th>
                     </tr>
