@@ -214,7 +214,24 @@
             }
 
         }
+        var SharingPolicy;
+        function LoadSharingPolicy() {
 
+            $.ajax({
+                type: "POST",
+                url: "LabReportPreview.aspx/GetSharingPolicy",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    SharingPolicy = JSON.parse(response.d);
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
         function UltraSoundTestDetail() {
 
             PageMethods.AllUltraSoundTest(function (data) {
@@ -438,7 +455,11 @@
                     let singleTest = test_list[0].TestDID;
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
                         debugger;
-                        ApproveLab(singleTest);
+                        if (SharingPolicy == '001') {
+                            debugger;
+                            ApproveLab(singleTest);
+                        }
+                        
                         $("[id$='_btnRefresh']").trigger('click');
                         $('#myModal').modal('hide');
                         $("#myModal tbody").empty();
