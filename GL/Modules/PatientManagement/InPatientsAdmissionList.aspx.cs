@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Linq.SqlClient;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.PeerToPeer;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
@@ -14,13 +15,13 @@ namespace PMS
 {
     public partial class InPatientsAdmissionList : System.Web.UI.Page
     {
-
         DataBaseDataContext db = new DataBaseDataContext();
         static string FilePath = "";
+
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
+
         public class Result
         {
             public string Referring_Doctor;
@@ -41,29 +42,76 @@ namespace PMS
             public int allowDelete;
             public int allowEdit;
         }
+        [WebMethod]
+        public static object DischargePatients(List<int> patientIds)
+        {
+            if (patientIds == null || patientIds.Count == 0)
+                return new { success = false, message = "No patients selected." };
+
+            var userId = HttpContext.Current.Session["UserId"]?.ToString();
+            if (string.IsNullOrEmpty(userId))
+                return new { success = false, message = "Session expired. Please log in again." };
+
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    foreach (int inPatId in patientIds)
+                    {
+                        var ip = db.In_Patients.FirstOrDefault(x => x.In_Patient_ID == inPatId);
+                        if (ip == null || ip.Discharge == true) continue; // skip if missing or already discharged
+
+                        // ✅ Discharge patient
+                        ip.Discharge = true;
+                        ip.Discharge_On = DateTime.Now;
+                        ip.Discharge_By = userId;
+
+                        // ✅ Discharge active ward allocations
+                        var wards = db.Ward_Allocations
+                            .Where(w => w.InPatient_ID == inPatId.ToString() && w.IsDischarge == false)
+                            .ToList();
+                        foreach (var w in wards)
+                        {
+                            w.IsDischarge = true;
+                            w.To_TimeDate = DateTime.Now;
+                        }
+
+                        // ✅ Mark discount as discharged
+                        DBClass.executeNonQueryWithoutBegin(
+                            $"UPDATE Discount_Assigned_Patient SET IsDischarge = 1 WHERE Patient_Id = {ip.Patient_ID}");
+                    }
+
+                    db.SubmitChanges();
+                }
+
+                return new { success = true, message = $"{patientIds.Count} patient(s) discharged successfully." };
+            }
+            catch (Exception ex)
+            {
+                return new { success = false, message = "An error occurred. Please try again." };
+            }
+        }
 
         public static string GetQoute()
         {
             return @"""";
         }
+
         [WebMethod]
         public static string DeleteRecord(int InPatientID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
-            // Get Patient ID
             var patID = (int)(from tbl in db.In_Patients
                               where tbl.In_Patient_ID == InPatientID
                               select tbl.Patient_ID).FirstOrDefault();
 
             var ipdid = InPatientID;
 
-            // Check if patient has pending billing
             var patbill = (from tbl in db.Ar_Billings
                            where tbl.Patient_ID == patID && (tbl.isCancel ?? false) == false
                            select tbl).FirstOrDefault();
 
-            // Check discharge status
             var wardcheck = (from tbl in db.Ward_Allocations
                              where tbl.InPatient_ID == Convert.ToString((int)ipdid)
                              orderby tbl.Ward_Allocation_ID descending
@@ -81,7 +129,6 @@ namespace PMS
 
             var user = AppConfig.UserID.ToString();
 
-            // Perform cancellation and deletion if all checks pass
             SqlTransaction tranObj = null;
             SqlConnection con = new SqlConnection(DBClass.ConnectionString());
             con.Open();
@@ -111,8 +158,6 @@ namespace PMS
             }
         }
 
-
-
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
@@ -126,9 +171,14 @@ namespace PMS
                     var IN_Monitoring = from P in _dbContext.Reg_patients
                                         join IP in _dbContext.In_Patients on P.pat_id equals IP.Patient_ID
                                         where IP.Discharge_On == null && (IP.is_cancel ?? false) == false
-                                        &&
-                                         ((IP.In_Patient_ID.ToString().Contains(searchValue) || P.mr_no_sequence.Contains(searchValue) || P.Full_Name.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", IP.Department).Contains(searchValue) || _dbContext.GetDataValueName("Patient Type", IP.Patient_Discount_Type).Contains(searchValue) || SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now)
-                                          .ToString().Contains(searchValue)))
+                                        && (
+                                            IP.In_Patient_ID.ToString().Contains(searchValue) ||
+                                            P.mr_no_sequence.Contains(searchValue) ||
+                                            P.Full_Name.Contains(searchValue) ||
+                                            _dbContext.GetDataValueName("Patient Main Category", IP.Department).Contains(searchValue) ||
+                                            _dbContext.GetDataValueName("Patient Type", IP.Patient_Discount_Type).Contains(searchValue) ||
+                                            SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now).ToString().Contains(searchValue)
+                                        )
                                         select new
                                         {
                                             In_Patient_ID = IP.In_Patient_ID,

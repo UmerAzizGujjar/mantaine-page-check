@@ -6,6 +6,10 @@
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
             LoadPage();
+            $(document).on('change', '#select-all', function () {
+                var checked = $(this).is(':checked');
+                $('.select-row').prop('checked', checked);
+            });
         });
 
 
@@ -25,12 +29,19 @@
                 "buttons": [
                     {
                         text: 'Add',
-                        className: 'dt-button buttons-copy buttons-html5',
+                        className: 'dt-button buttons-copy buttons-html5 btn-primary',
                         action: function () {
                             window.location = 'InPatientsAdmission.aspx';
                         }
                     },
-                    'copy', 'excel', 'pdf',
+                    {
+                        text: 'Discharge',
+                        className: 'dt-button buttons-copy buttons-html5 btn-warning',
+                        action: function () {
+                            dischargeSelected();
+                        }
+                    },
+                    'copy', 'excel', 'pdf'
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
@@ -61,37 +72,44 @@
                     });
                 },
                 "columns": [
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "className": "dt-checkbox",
+                        "render": function (data, type, full) {
+                            return '<input type="checkbox" class="select-row" value="' + full.In_Patient_ID + '" />';
+                        },
+                        "width": "3%"
+                    },
                     { "data": "In_Patient_ID", "visible": false, "width": "0%" },
                     {
                         "data": "Admission_Date", "name": "Admission_Date",
                         "render": function (data, type, full) {
-                            debugger;
-                            var date = full.Admission_Date;
-                            date = moment(date).format('DD-MMM-YYYY');
-                            return date;
-                        }, "width": "10%", "orderable": true 
+                            return moment(full.Admission_Date).format('DD-MMM-YYYY');
+                        }, "width": "10%", "orderable": true
                     },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%", "orderable": true },
                     { "data": "Full_Name", "name": "Full_Name", "width": "12%", "orderable": false },
                     { "data": "Father_Name", "width": "15%", "orderable": false },
                     { "data": "Patient_Type", "name": "Patient_Type", "width": "15%", "orderable": true },
                     { "data": "Department", "name": "Department", "width": "10%", "orderable": true },
-                    { "data": "Discharge_ON", "width": "10%", "orderable": false },
+                    {
+                        "data": "Discharge_ON",
+                        "render": function (data, type, full) {
+                            return data ? moment(data).format('DD-MMM-YYYY') : '';
+                        },
+                        "width": "10%", "orderable": false
+                    },
                     { "data": "AdmitDays", "name": "AdmitDays", "width": "10%", "orderable": true },
                     {
-                        render: function (data, type, full) {
-                            debugger;
-                            var res = '<a href="#" onclick="editOpen(' + full.In_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
-
-                            var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
-
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintSlip(' + full.In_Patient_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
-                            var result;
-                            result = res + Del + print;
-                            return result;
-                        }, "width": "10%", "orderable": false
+                        "render": function (data, type, full) {
+                            var res = '<a href="#" onclick="editOpen(' + full.In_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                            var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;color:white;padding: 5px 8px;" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color:white;padding: 5px 8px;" href="#" onclick="PrintSlip(' + full.In_Patient_ID + ')"><i class="fa fa-print"></i></a>';
+                            return res + Del + print;
+                        },
+                        "width": "12%", "orderable": false
                     }
-
                 ],
                 "createdRow": function (row, data, dataIndex) {
                     if (data.AdmitDays >= 10 && (data.Discharge_ON == null || data.Discharge_ON === "")) {
@@ -154,7 +172,78 @@
             }
         }
 
+        function dischargeSelected() {
+            var selectedIds = $('.select-row:checked').map(function () {
+                return parseInt($(this).val());
+            }).get();
 
+            if (selectedIds.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Selection',
+                    text: 'Please select at least one patient to discharge.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Confirm Discharge',
+                text: `Are you sure you want to discharge ${selectedIds.length} patient(s)?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Discharge',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Discharging patients, please wait.',
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+
+                    PageMethods.DischargePatients(selectedIds,
+                        function (response) {
+                            Swal.close();
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response.message,
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    // ✅ Refresh table
+                                    if ($.fn.DataTable.isDataTable('#tblResult')) {
+                                        $('#tblResult').DataTable().ajax.reload(null, false);
+                                    } else {
+                                        location.reload(); // fallback
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Failed',
+                                    text: response.message,
+                                    confirmButtonText: 'Try Again'
+                                });
+                            }
+                        },
+                        function (error) {
+                            Swal.close();
+                            console.error("Discharge error:", error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops!',
+                                text: 'An unexpected error occurred.',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    );
+                }
+            });
+        }
 
 
     </script>
@@ -163,8 +252,9 @@
     <div id="POdetails" style="margin-top: 15px;">
         <div>
        <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow:scroll; height:auto;">
-             <thead id="ihead">
+            <thead id="ihead">
                 <tr>
+                    <th><input type="checkbox" id="select-all" /></th>
                     <th>In Patient ID</th>
                     <th>Admission Date</th>
                     <th>MR No.</th>
