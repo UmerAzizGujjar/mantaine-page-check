@@ -1034,11 +1034,8 @@
 
         <!-- Card 2 -->
         <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
-            <div id="card-search-appointment" role="button" tabindex="0"
-                 onclick="SearchPop_App()"
-                 onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
-                 class="d-flex flex-column justify-content-center align-items-start"
-                 >
+            <div id="card-search-appointment" role="button" tabindex="0" onclick="SearchPop_App()" onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
+                 class="d-flex flex-column justify-content-center align-items-start quick-actions">
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right:10px;">
                     <div>
@@ -1051,11 +1048,8 @@
 
         <!-- Card 3 -->
         <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
-            <div id="btnsearchpatlist" role="button" tabindex="0"
-                 onclick="/* add search patient function here, e.g. openPatientSearch() */"
-                 onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
-                 class="d-flex flex-column justify-content-center align-items-start"
-                 >
+            <div id="btnsearchpatlist" role="button" tabindex="0" onclick="/* add search patient function here, e.g. openPatientSearch() */" onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
+                 class="d-flex flex-column justify-content-center align-items-start quick-actions">
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right:10px;">
                     <div>
@@ -1068,11 +1062,8 @@
 
         <!-- Card 4 -->
         <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="EmerRefferedBy">
-            <div id="btnsearchEmergencylist" role="button" tabindex="0"
-                 onclick="/* add emergency refer function here, e.g. referToEmergency() */"
-                 onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
-                 class="d-flex flex-column justify-content-center align-items-start"
-                 >
+            <div id="btnsearchEmergencylist" role="button" tabindex="0" onclick="/* add emergency refer function here, e.g. referToEmergency() */" onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
+                 class="d-flex flex-column justify-content-center align-items-start quick-actions">
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right:10px;">
                     <div>
@@ -1083,11 +1074,8 @@
             </div>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="RefferdBy">
-            <div id="btnsearchReferlist" role="button" tabindex="0"
-                onclick="openReferPatientModal()"
-                onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
-                class="d-flex flex-column justify-content-center align-items-start"
-                style="cursor: pointer;">
+            <div id="btnsearchReferlist" role="button" tabindex="0" onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
+                class="d-flex flex-column justify-content-center align-items-start quick-actions" style="cursor: pointer;">
                 <div class="d-flex align-items-center">
                     <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png"
                         alt="Refer Patient Icon" width="48" height="48" style="margin-right: 10px;">
