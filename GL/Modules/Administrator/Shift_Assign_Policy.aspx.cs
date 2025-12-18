@@ -30,6 +30,7 @@ namespace PMS.Modules.Administrator
                 DataBaseDataContext db = new DataBaseDataContext();
 
                 var policies = (from p in db.Policies
+                                where p.Is_Cancel == false
                                 select new PolicyDropdownDTO
                                 {
                                     Policy_ID = p.Policy_ID,

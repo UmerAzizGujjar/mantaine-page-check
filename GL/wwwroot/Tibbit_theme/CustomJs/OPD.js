@@ -145,7 +145,7 @@ $(document).ready(function () {
             }
         }
 
-
+        
     });
 
     $('#txt_mobile').on('focus', function () {
@@ -343,7 +343,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
             );
 
-
+         
             $select.trigger({
                 type: 'select2:select',
                 params: {
