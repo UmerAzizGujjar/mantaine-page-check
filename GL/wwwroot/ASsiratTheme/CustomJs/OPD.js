@@ -6,7 +6,7 @@ $(document).ready(function () {
     $('#divcard').hide();
     $('#divapprove').hide();
     $('#btn-opdprint').hide();
-    $('#divvoucher').hide();
+    /*  $('#divvoucher').hide();*/
     $("#tabs").on('click', 'li', function () {
         debugger;
         var activeTab = $(this).find('a').html();
@@ -28,7 +28,6 @@ $(document).ready(function () {
     $('#txtReferEmergencySearch').off('input').on('input', function () {
         FillReferPatientsList();
     });
-
     $("#txtSearch").keypress(function (event) {
         debugger;
         var SearchString = $('#txtSearch').val();
@@ -976,6 +975,7 @@ function SavePatient() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
+
     var hdnDepartment = $("#hdn_dep_id").val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
@@ -1003,6 +1003,24 @@ function SavePatient() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
+
+
+
+    if (Department == "101" && FilterClinic == "0") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select Filter Clinic.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
+    }
 
     // ✅ CORRECT: Get VALUE of hidden field
     var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
@@ -1538,11 +1556,6 @@ function AddEmergencyPatientDetail(reg_id) {
 
 
 
-
-
-
-
-
 function openReferPatientModal() {
     $('#SearchReferPatients').modal('show');
     FillReferPatientsList();
@@ -1606,3 +1619,4 @@ function AddReferPatientDetail(reg_id) {
         alert(err.message);
     }
 }
+
