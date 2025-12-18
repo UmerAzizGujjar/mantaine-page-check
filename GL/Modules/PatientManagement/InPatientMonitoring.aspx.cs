@@ -179,6 +179,69 @@ namespace PMS
             return "";
         }
         [WebMethod]
+        public static string FillPharmacyItemDropDown()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = (from d in db.INV_Items
+
+                          where d.Pharmacy_Item == true
+                          select new
+                          {
+                              d.Item_Code,
+                              Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
+                          }).ToList().Take(20);
+
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string FillOtherInstruction()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Other Instruction"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             DataValue_Description = d.Segment1,
+
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string FillDosageQty()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Dosage Quantity"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             d.DataValue_Description,
+
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
+        public static string FillDosageDropDown()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Dosage Form"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             d.DataValue_Description,
+
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+        [WebMethod]
         public static string LoadInTakeHistory(int id)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -230,7 +293,7 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-           List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == PatientID && p.Transaction_Type == "InPatientMonitring").OrderByDescending(p=>p.In_Patient_Medicine_ID).ToList();
+                List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == PatientID && p.Transaction_Type == "InPatientMonitring").OrderByDescending(p => p.In_Patient_Medicine_ID).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
             return "";
@@ -526,6 +589,39 @@ namespace PMS
         }
         [WebMethod]
         public static string LoadMedicinesForHistory(int PatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var inPatmedicineList = (from pm in db.In_Patient_Medicines
+                                         join op in db.In_Patients
+                                         on pm.Patient_ID equals op.In_Patient_ID
+                                         where op.Patient_ID == PatientID && pm.Transaction_Type == "InPatient"
+                                         orderby pm.Medicine_Date descending
+                                         select new {
+                                             pm.chkDiccharge, pm.AttendingParamedical_Staff, pm.Frequency, pm.In_Patient_Medicine_ID, pm.Injections, 
+
+                                             pm.Medicine_Date,
+                                             pm.Medicine_Name, 
+                                             pm.Oral, pm.Patient_ID,
+                                             pm.Recomended_Dosage, 
+                                             op.Created_Time, pm.Doctor_ID,
+                                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                             pm.Dosage_From,
+                                             pm.Dosage_Qty,
+                                             pm.Other_Instruction,
+                                             pm.Regular,
+                                             pm.STAT,
+                                             pm.PRN,
+
+                                         }).ToList();
+
+                return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+            }
+            return "";
+        }
+        
+        [WebMethod]
+        public static string LoadMedicinesForHistory1(int PatientID)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
@@ -897,26 +993,235 @@ namespace PMS
         }
         public class MedicineDetails
         {
-            public DateTime Date { get; set; }
+            public DateTime Medicine_Date { get; set; }
             public string Medicine_Name { get; set; }
             public string Recomended_Dosage { get; set; }
+            public string Dosage_From { get; set; }
             public string Oral { get; set; }
             public string Injection { get; set; }
             public string AttendingParamedical_Staff { set; get; }
             public string Frequency { set; get; }
-            public string Doctor_ID { set; get; }
-            public string Nurse_Name { set; get; }
-            public string chkDiccharge { set; get; }
-            public string Type { set; get; }
-            public string Duration { set; get; }
+            public string ItemCode { get; set; }
+            public string Dosage_Qty;
+            public string Other_Instruction;
+            public string Rec_Qty;
+            public string Issue_Qty;
 
-            public string Special_Ins { set; get; }
+            public string Regular;
 
-            public string Dosage_From { set; get; }
+            public string STAT;
 
-            public string Dosage_Qty { set; get; }
+            public string PRN;
 
-            public string Other_Ins { set; get; }
+            public string Start_Date_Time { get; set; }
+
+            public string Stop_Date_Time { get; set; }
+
+            public string High_Risk { get; set; }
+
+            public string Max_PRN { get; set; }
+            public string Nurse_Name { get; set; }
+            public string chkDiccharge { get; set; }
+
+            public string User { get; set; }
+        }
+        [WebMethod]
+        public static string LoadMedicinesForMon(int PatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var inPatmedicine = (from inPatmedicineList in db.In_Patient_Medicines
+                                     where inPatmedicineList.Patient_ID == PatientID && inPatmedicineList.Transaction_Type == "InPatient"
+                                     orderby inPatmedicineList.Medicine_Date descending
+                                     select new
+                                     {
+                                         inPatmedicineList.Doctor_ID,
+                                         inPatmedicineList.Frequency,
+                                         inPatmedicineList.Injections,
+                                         inPatmedicineList.Medicine_Name,
+                                         inPatmedicineList.Medicine_Date,
+                                         inPatmedicineList.Patient_ID,
+                                         inPatmedicineList.In_Patient_Medicine_ID,
+                                         inPatmedicineList.Recomended_Dosage,
+                                         inPatmedicineList.Oral,
+                                         inPatmedicineList.AttendingParamedical_Staff,
+                                         inPatmedicineList.chkDiccharge,
+                                         inPatmedicineList.Dosage_From,
+                                         inPatmedicineList.Dosage_Qty,
+                                         inPatmedicineList.Other_Instruction,
+                                         inPatmedicineList.PRN,
+                                         inPatmedicineList.Regular,
+                                         inPatmedicineList.STAT,
+                                         inPatmedicineList.Rcv_Qty,
+                                         inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Username,
+                                         inPatmedicineList.Max_PRN_Dose,
+                                         inPatmedicineList.Start_Date_Time,
+                                         inPatmedicineList.Stop_Date_Time,
+                                         inPatmedicineList.High_Risk_Drug,
+
+                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+
+                                         userrole = (from u in db.aspnet_Users
+                                                     join ur in db.aspnet_UsersInRoles
+                                                     on u.UserId equals ur.UserId
+                                                     join r in db.aspnet_Roles
+                                                     on ur.RoleId equals r.RoleId
+                                                     where u.UserId == AppConfig.UserID
+                                                     select r.RoleName).FirstOrDefault()
+
+
+
+
+
+                                     }
+                    ).ToList();
+                return (new JavaScriptSerializer()).Serialize(inPatmedicine);
+            }
+        }
+        [WebMethod]
+        public static string LoadMedicinesFormInPat(int PatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var In_pat = (from ip in db.In_Patients
+                              where ip.Patient_ID == PatientID orderby ip.In_Patient_ID descending
+                              select ip.In_Patient_ID ).FirstOrDefault();
+
+                var inPatmedicine = (from inPatmedicineList in db.In_Patient_Medicines
+                                     where inPatmedicineList.Patient_ID == In_pat && inPatmedicineList.Transaction_Type == "InPatient"
+                                     orderby inPatmedicineList.Medicine_Date descending
+                                     select new
+                                     {
+                                         inPatmedicineList.Doctor_ID,
+                                         inPatmedicineList.Frequency,
+                                         inPatmedicineList.Item_Code,
+                                         inPatmedicineList.Injections,
+                                         inPatmedicineList.Medicine_Name,
+                                         inPatmedicineList.Medicine_Date,
+                                         inPatmedicineList.Patient_ID,
+                                         inPatmedicineList.In_Patient_Medicine_ID,
+                                         inPatmedicineList.Recomended_Dosage,
+                                         inPatmedicineList.Oral,
+                                         inPatmedicineList.AttendingParamedical_Staff,
+                                         inPatmedicineList.chkDiccharge,
+                                         inPatmedicineList.Dosage_From,
+                                         inPatmedicineList.Dosage_Qty,
+                                         inPatmedicineList.Other_Instruction,
+                                         inPatmedicineList.PRN,
+                                         inPatmedicineList.Regular,
+                                         inPatmedicineList.STAT,
+                                         inPatmedicineList.Rcv_Qty,
+                                         inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Username,
+                                         inPatmedicineList.Max_PRN_Dose,
+                                         inPatmedicineList.Start_Date_Time,
+                                         inPatmedicineList.Stop_Date_Time,
+                                         inPatmedicineList.High_Risk_Drug,
+
+                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+
+                                         userrole = (from u in db.aspnet_Users
+                                                     join ur in db.aspnet_UsersInRoles
+                                                     on u.UserId equals ur.UserId
+                                                     join r in db.aspnet_Roles
+                                                     on ur.RoleId equals r.RoleId
+                                                     where u.UserId == AppConfig.UserID
+                                                     select r.RoleName).FirstOrDefault()
+
+
+
+
+
+                                     }
+                    ).ToList();
+                return (new JavaScriptSerializer()).Serialize(inPatmedicine);
+            }
+        }
+        [WebMethod]
+        public static string SaveMedicinesforMon(string MedicineDetails)
+        {
+            try
+            {
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var In_pat = (from ip in db.In_Patients
+                                  join ipm in db.InPatient_Monitorings on ip.Patient_ID equals ipm.Patient_ID
+                                  where ipm.InPatient_Mon_ID == MedicineDetail.PatientID
+                                  orderby ip.In_Patient_ID descending
+                                  select ip.In_Patient_ID).FirstOrDefault();
+
+                    /********************Deleting Previous 0 Value Saved Rows.***********************************/
+                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "InPatient" && i.chkDiccharge == false).ToList();
+                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
+                    db.SubmitChanges();
+                    int couterNewRecords = 0;
+                    if (MedicineDetail.PatientID != 0)
+                    {
+                        /*********************Deleting Previous Entry On Every Insert Or Update*************************/
+                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == In_pat && p.Transaction_Type == "InPatient" && (p.chkDiccharge == false || p.chkDiccharge == null)).ToList();
+                        if (inPatmedicineList != null)
+                        {
+                            db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
+                            couterNewRecords++;
+                        }
+                    }
+                    couterNewRecords = 0;
+
+                    /*********************Inserting New Entry On Every Insert Or Update*************************/
+                    foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
+                    {
+                        In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine();
+
+                        var itemid = db.INV_Items.Where(p => p.Item_Code == oIn_Patient_Medicine.ItemCode).Select(p => p.Item_ID).FirstOrDefault();
+
+                        oIn_Patient_Medicine1.Patient_ID = Convert.ToInt32(In_pat);
+                        oIn_Patient_Medicine1.Item_Code = Convert.ToString(itemid);
+                        oIn_Patient_Medicine1.Medicine_Name = oIn_Patient_Medicine.Medicine_Name;
+                        oIn_Patient_Medicine1.Transaction_Type = "InPatient";
+                        oIn_Patient_Medicine1.Medicine_Date = oIn_Patient_Medicine.Medicine_Date;
+                        oIn_Patient_Medicine1.Oral = oIn_Patient_Medicine.Oral;
+                        oIn_Patient_Medicine1.Injections = oIn_Patient_Medicine.Injection;
+                        oIn_Patient_Medicine1.Dosage_From = oIn_Patient_Medicine.Dosage_From;
+                        oIn_Patient_Medicine1.AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff;
+                        oIn_Patient_Medicine1.Frequency = oIn_Patient_Medicine.Frequency;
+                        oIn_Patient_Medicine1.Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty;
+                        oIn_Patient_Medicine1.Rcv_Qty =Convert.ToDecimal( oIn_Patient_Medicine.Rec_Qty);
+                        oIn_Patient_Medicine1.Req_Qty =Convert.ToDecimal( oIn_Patient_Medicine.Issue_Qty);
+                        oIn_Patient_Medicine1.Other_Instruction = oIn_Patient_Medicine.Other_Instruction;
+                        oIn_Patient_Medicine1.Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular);
+                        oIn_Patient_Medicine1.STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT);
+                        oIn_Patient_Medicine1.PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN);
+                        if (oIn_Patient_Medicine.Start_Date_Time == null || oIn_Patient_Medicine.Start_Date_Time == "null" || oIn_Patient_Medicine.Start_Date_Time == "") { }
+                        else
+                        {
+                            oIn_Patient_Medicine1.Start_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Start_Date_Time);
+                        }
+                        if (oIn_Patient_Medicine.Stop_Date_Time == null || oIn_Patient_Medicine.Stop_Date_Time == "null" || oIn_Patient_Medicine.Stop_Date_Time == "") { }
+                        else
+                        {
+                            oIn_Patient_Medicine1.Stop_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Stop_Date_Time);
+                        }
+                        oIn_Patient_Medicine1.Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN;
+                        oIn_Patient_Medicine1.Username = oIn_Patient_Medicine.User;
+                        oIn_Patient_Medicine1.High_Risk_Drug = oIn_Patient_Medicine.High_Risk;
+
+
+
+
+                        db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
+                        couterNewRecords++;
+                    }
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
         }
         [WebMethod]
         public static string SaveMedicines(string MedicineDetails)
@@ -959,21 +1264,21 @@ namespace PMS
                             Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
 
                             Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
-                            Medicine_Date = oIn_Patient_Medicine.Date,
+                            Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
                             Oral = oIn_Patient_Medicine.Oral,
                             Transaction_Type = "InPatientMonitring",
-                            Injections = oIn_Patient_Medicine.Duration,
+                            Injections = oIn_Patient_Medicine.Injection,
                             Recomended_Dosage = oIn_Patient_Medicine.Recomended_Dosage,
-                           
+
                             Frequency = oIn_Patient_Medicine.Frequency,
                             Nurse_Name = oIn_Patient_Medicine.Nurse_Name,
                             Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
                             Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                            Other_Instruction = oIn_Patient_Medicine.Other_Ins,
-                            AttendingParamedical_Staff = oIn_Patient_Medicine.Special_Ins,
-                            Regular = oIn_Patient_Medicine.Type == "REGULAR" ? true : false,
-                            STAT = oIn_Patient_Medicine.Type == "STAT" ? true : false,
-                            PRN = oIn_Patient_Medicine.Type == "PRN" ? true : false,
+                            Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
+                            AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
+                            Regular = oIn_Patient_Medicine.Regular == "REGULAR" ? true : false,
+                            STAT = oIn_Patient_Medicine.STAT == "STAT" ? true : false,
+                            PRN = oIn_Patient_Medicine.PRN == "PRN" ? true : false,
                             chkDiccharge = Convert.ToBoolean(oIn_Patient_Medicine.chkDiccharge),
                         };
                         db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
