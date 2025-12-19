@@ -3181,6 +3181,7 @@ namespace PMS
                         ipser.In_Patient_Id = ServiceDetailList.InPatId;
                         ipser.PatientId = ServiceDetailList.PatId;
                         ipser.EmergencyId = 0;
+                        ipser.Ou_Patient_Id = "0";
                         ipser.PatientType = item.PatientType;
                         ipser.Services_Procedure_ItemName = item.Service_ProcedureName;
                         ipser.Service_ItemId = item.ServiceItemId;

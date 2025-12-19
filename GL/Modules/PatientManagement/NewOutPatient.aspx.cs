@@ -67,6 +67,17 @@ namespace PMS.Modules.PatientManagement
             return new JavaScriptSerializer().Serialize(availableDates);
         }
         [WebMethod]
+        public static string GetSharingPolicy()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "OPD Approval Sharing"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
         public static string approvepatient(string pat_id)
         {
             var user_id = AppConfig.UserID;

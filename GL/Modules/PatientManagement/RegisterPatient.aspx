@@ -16,6 +16,7 @@
          }
          else {
              $('#btnPrint').hide();
+             $('#btnVoucher').hide();
              fillmrno();
            
              $('#ddl_status').select2();
@@ -33,8 +34,20 @@
                        
           });
 
-          
-          
+        
+          function PrintVoucher() {
+              debugger;
+              var id = '<%= Request.QueryString["Reg_id"] %>';
+                      var locationInfo = window.location;
+              var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=CardFee';
+                      if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                          var urlInfo = window.location.href.split('/');
+                          var ip = urlInfo[2];
+                          var foldername = urlInfo[3];
+                          url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=CardFee';
+                      }
+                      window.open(url, '_blank');
+                  }
           //Print
           debugger
           function PrintReceipt() {
@@ -189,6 +202,10 @@
 
                     <div class="col-lg-2 col-md-2 col-sm-3">
                         <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintReceipt()" value="Print" />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-3">
+                        <input type="button" id="btnVoucher" class="btn btn-primry" onclick="PrintVoucher()" value="Voucher" />
                     </div>
                 </div>
             </div>

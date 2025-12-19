@@ -4536,6 +4536,8 @@ namespace PMS
                     {
                         InPatientService ipser = new PMS.InPatientService();
                         ipser.In_Patient_Id = 0;
+                        ipser.Ou_Patient_Id = "0";
+                        ipser.isbilled = false;
                         ipser.PatientId = ServiceDetailList.PatId;
                         ipser.EmergencyId = ServiceDetailList.EmergencyId;
                         ipser.PatientType = item.PatientType;
@@ -5343,6 +5345,7 @@ namespace PMS
                 ltd.Doctor = test.Doctor.ToString();
                 ltd.Special_Tests = test.Special_Tests;
                 ltd.Rotation_ID = test.RotationID;
+                ltd.Actual_Patient_ID = Convert.ToInt32(record.PatientID);
                 ltd.Catagory_ID = test.Catagory_ID;
                 ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
                 ltd.Dept_ID = test.Dept_ID;
