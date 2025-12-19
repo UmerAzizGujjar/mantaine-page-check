@@ -1041,7 +1041,7 @@ namespace PMS
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[1].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[2].Name.ToString());
-                // rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[3].Name.ToString());
+                rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[3].Name.ToString());
             }
             else if (reportName == "Reg_Patient_Print")
             {
@@ -1483,6 +1483,10 @@ namespace PMS
                     rd.Load(reportPath);
                     string stDate = Request.QueryString["startDate"].ToString();
                     string endDate = Request.QueryString["endDate"].ToString();
+                    string vendorType = Request.QueryString["VendorType"];
+
+                    rd.SetParameterValue("@VendorType", vendorType);
+
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@EndDate", endDate);
                     rd.SetParameterValue("@VendorId", Convert.ToInt32(Request.QueryString["VendorId"]));

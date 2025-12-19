@@ -43,6 +43,10 @@
                  <asp:Label ID="lblVendor" runat="server" Text="Vendor" CssClass="form-label"></asp:Label>
                  <asp:DropDownList ID="ddlVendor" runat="server" CssClass="form-control"></asp:DropDownList>
             </div>
+    <div class="col-lg-3 col-md-4 col-sm-12" id="vendorTypeDiv" runat="server" >
+    <asp:Label ID="lblVendorType" runat="server" Text="Vendor Type" CssClass="form-label"></asp:Label>
+    <asp:DropDownList ID="ddlVendorType" runat="server" CssClass="form-control"></asp:DropDownList>
+</div>
 
             <div class="col-lg-3 col-md-4 col-sm-12" id="stockDiv" runat="server">
                  <asp:Label ID="lblStock" runat="server" Text="Stock" CssClass="form-label"></asp:Label>

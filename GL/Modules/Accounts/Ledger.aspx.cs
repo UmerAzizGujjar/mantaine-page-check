@@ -11,13 +11,14 @@ namespace PMS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-         
+
             if (!IsPostBack)
             {
                 switch (Request.QueryString["Type"])
                 {
                     case "VWPOS":
                         vendorDiv.Visible = true;
+                        vendorTypeDiv.Visible = false;
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
                         DateDiv.Visible = false;
@@ -29,13 +30,33 @@ namespace PMS
                         ddlVendor.DataBind();
                         break;
                     case "VWPS":
+
                         vendorDiv.Visible = false;
+                        vendorTypeDiv.Visible = true;
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
                         DateDiv.Visible = true;
+                        vendorTypeDiv.Visible = true;
+                        vendorTypeDiv.Visible = true;
+
+                        System.Data.DataTable dtVendorType = DBClass.getDataTable(@"
+                            SELECT DataValue_Name, DataValue_Description 
+                            FROM dbo.DataValues p 
+                            JOIN dbo.ValueSet v ON p.ValueSet_ID = v.ValueSet_ID 
+                            WHERE v.ValueSet_Description = 'Vendor Type'
+                        ");
+                        ddlVendorType.DataSource = dtVendorType;
+                        ddlVendorType.DataTextField = "DataValue_Description";
+                        ddlVendorType.DataValueField = "DataValue_Name";
+                        ddlVendorType.AppendDataBoundItems = true;
+                        ddlVendorType.Items.Clear();
+                        ddlVendorType.Items.Add(new ListItem("All", "0"));
+
+                        ddlVendorType.DataBind();
                         break;
                     case "VWP":
                         vendorDiv.Visible = false;
+                        vendorTypeDiv.Visible = false;
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
                         DateDiv.Visible = true;
@@ -49,6 +70,7 @@ namespace PMS
                     case "GRNS":
                         vendorDiv.Visible = true;
                         accountDiv.Visible = false;
+                        vendorTypeDiv.Visible = false;
                         stockDiv.Visible = false;
                         string sqlLiUnion = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVendorsss = DBClass.getDataTable(sqlLiUnion + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
@@ -61,6 +83,7 @@ namespace PMS
                     case "IGPS":
                         vendorDiv.Visible = true;
                         accountDiv.Visible = false;
+                        vendorTypeDiv.Visible = false;
                         stockDiv.Visible = false;
                         string sqlLUnin = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVende = DBClass.getDataTable(sqlLUnin + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
@@ -73,6 +96,7 @@ namespace PMS
                     case "SIH":
                         vendorDiv.Visible = false;
                         stockDiv.Visible = true;
+                        vendorTypeDiv.Visible = false;
                         accountDiv.Visible = false;
                         DateDiv.Visible = true;
                         break;
@@ -81,30 +105,34 @@ namespace PMS
                     case "Stock_Consumption_Details":
                         vendorDiv.Visible = false;
                         stockDiv.Visible = true;
+                        vendorTypeDiv.Visible = false;
                         accountDiv.Visible = false;
                         DateDiv.Visible = true;
                         break;
 
                     case "SIHBW":
                         vendorDiv.Visible = false;
+                        vendorTypeDiv.Visible = false;
                         stockDiv.Visible = true;
                         accountDiv.Visible = false;
                         DateDiv.Visible = false;
                         break;
                     case "Ledger":
                         vendorDiv.Visible = true;
+                        vendorTypeDiv.Visible = false;
                         lblVendor.Text = "Department";
                         System.Data.DataTable dtDept = DBClass.getDataTable("Select DataValue_Name,DataValue_Description FROM dbo.DataValues p JOIN dbo.ValueSet v ON p.ValueSet_ID = v.ValueSet_ID WHERE v.ValueSet_Description = 'Department'");
-                        ddlVendor.DataSource = dtDept;
-                        ddlVendor.DataTextField = "DataValue_Description";
-                        ddlVendor.DataValueField = "DataValue_Name";
-                        ddlVendor.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                        ddlVendor.AppendDataBoundItems = true;
-                        ddlVendor.DataBind();
+                        ddlVendorType.DataSource = dtDept;
+                        ddlVendorType.DataTextField = "DataValue_Description";
+                        ddlVendorType.DataValueField = "DataValue_Name";
+                        ddlVendorType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                        ddlVendorType.AppendDataBoundItems = true;
+                        ddlVendorType.DataBind();
                         stockDiv.Visible = false;
                         break;
                     case "GL":
                         accountDiv.Visible = true;
+                        vendorTypeDiv.Visible = false;
                         stockDiv.Visible = false;
                         vendorDiv.Visible = false;
                         break;
@@ -112,6 +140,7 @@ namespace PMS
                     default:
                         accountDiv.Visible = true;
                         stockDiv.Visible = false;
+                        vendorTypeDiv.Visible = false;
                         vendorDiv.Visible = false;
                         break;
                 }
@@ -135,7 +164,7 @@ namespace PMS
                     query = "ReportName=VendorWisePOSummary&ReportTitle=Vendor Wise PO Summary&Vendor_ID=" + ddlVendor.SelectedValue + "";
                     break;
                 case "VWPS":
-                    query = "ReportName=VendorWisePurchaseSummary&ReportTitle=Vendor Wise Purchase Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorId=0";
+                    query = "ReportName=VendorWisePurchaseSummary&ReportTitle=Vendor Wise Purchase Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=0";
                     break;
                 case "IGPS":
                     query = "ReportName=VendorWiseIGPS&ReportTitle=Vendor Wise Inward Gate Pass Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "";
@@ -150,10 +179,10 @@ namespace PMS
                     query = "ReportName=PharmacyStock&ReportTitle=Stock In Hand &Stock=" + ddlStock.SelectedValue + "";
                     break;
                 case "Stock_Consumption_Details":
-                    query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" +  ddlStock.SelectedValue + "";
+                    query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + "";
                     break;
                 case "SIHBW":
-                    query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" +  ddlStock.SelectedValue + "";   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
+                    query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" + ddlStock.SelectedValue + "";   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
                     break;
                 case "Ledger":
                     query = "ReportName=Ledger1&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue;
