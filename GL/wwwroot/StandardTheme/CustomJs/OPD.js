@@ -1252,16 +1252,24 @@ function loadDepartment(Doc) {
             data: JSON.stringify({ Doc: Doc }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function (resp) {
+            success: function (response) {
                 debugger;
-                var data = JSON.parse(resp.d);
-                $('#ddlDepartment').val(data.Department);
-                $('#ddlDepartment').attr('disabled', true);
+                var data = JSON.parse(response.d);
+
+                $('#ddlDepartment').html(
+                    $('<option>', {
+                        value: data.Department,
+                        text: data.Department_text
+                    })
+                ).attr('disabled', true);
+
+
+                $("#hdn_dep_id").val(data.Department);
+
 
             },
-            error: function (response) {
-                alert("Error: " + response.responseText);
-                console.error("AJAX Error: ", response);
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
             }
         });
     }
@@ -1342,6 +1350,7 @@ function getpanelRate() {
 }
 
 function loadPatientDetail(OPDID) {
+    debugger;
     $('#btnsave').val('Update');
     $('#btnsave').attr('disabled', true);
     AllowOPdEdit();
@@ -1468,6 +1477,9 @@ function loadPatientDetail(OPDID) {
             if (stat != "Approved") {
                 $('#divapprove').show();
             }
+            //if (data.Patient_Type != "01") {
+            //    $('#field_Clinic').hide();
+            //}
 
         },
         error: function (response) {
@@ -1605,6 +1617,7 @@ function OnFailReferPatients(error) {
         timer: 2000,
         showConfirmButton: false
     });
+
 }
 
 $('#txtReferEmergencySearch').off('input').on('input', function () {
