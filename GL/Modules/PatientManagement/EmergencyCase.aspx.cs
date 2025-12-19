@@ -5343,6 +5343,7 @@ namespace PMS
                 ltd.Doctor = test.Doctor.ToString();
                 ltd.Special_Tests = test.Special_Tests;
                 ltd.Rotation_ID = test.RotationID;
+                ltd.Actual_Patient_ID = Convert.ToInt32(record.PatientID);
                 ltd.Catagory_ID = test.Catagory_ID;
                 ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
                 ltd.Dept_ID = test.Dept_ID;
