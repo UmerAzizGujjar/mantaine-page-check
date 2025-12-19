@@ -3010,7 +3010,7 @@
             PageMethods.SaveOrthoDetail(btnsave, JSON.stringify(OrthoDetails), function (response) { SaveEmergencyServices(); });
 
         }
-
+        debugger;
         function SaveEmergencyServices() {
 
             var table = $("#tblServices");

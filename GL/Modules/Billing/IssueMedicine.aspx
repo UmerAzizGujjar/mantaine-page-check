@@ -1415,7 +1415,7 @@
             $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
         }
         function getOPDandIPDNO(pat_id) {
-            PageMethods.GetOPDandIPDNO(pat_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                // Process GRN_Details                $.each(parsedData.OPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.IPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                $('#ddlPatient_No').html(options);                $('#ddlPatient_No').select2();
+            PageMethods.GetOPDandIPDNO(pat_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                // Process GRN_Details                $.each(parsedData.OPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.IPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.Emergency_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                $('#ddlPatient_No').html(options);                $('#ddlPatient_No').select2();
             })
         }
         function getbatchfrom_grn() {            debugger;            var Inv_batch = $('#chkbatch').prop("checked");            if (Inv_batch == false) {                $('#batchno').hide();
@@ -2086,6 +2086,30 @@
                         debugger;
                         var data = JSON.parse(msg.d);
                         getWardAndBed(pat_Id)
+                        debugger;
+                        $.each(data, function (key, value) {
+                            debugger;
+                            itemIds.push(value);
+
+                        });
+                    }
+                });
+
+            }
+            if (prefix == 'EMR') {
+                $.ajax({
+                    type: "post",
+                    url: "IssueMedicine.aspx/GetItemCodesEMR",
+                    data: JSON.stringify({
+                        "Pat_Id": Pat_Id,
+                    }),
+                    dataType: 'JSON',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (msg) {
+                        debugger;
+                        var data = JSON.parse(msg.d);
+                       // getWardAndBed(pat_Id)
                         debugger;
                         $.each(data, function (key, value) {
                             debugger;

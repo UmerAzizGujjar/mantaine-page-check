@@ -2,6 +2,17 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <style type="text/css">
+      
+    .cancelled-row {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+    .cancelled-row td {
+        color: white !important;
+    }
+</style>
+    
     <script type="text/javascript">
 
         var year = false;
@@ -64,6 +75,7 @@
                         "September": "09", "October": "10", "November": "11", "December": "12"
                     };
                     getmonth = monthsMap[getmonth] || "01";
+
                     $.ajax({
                         type: "POST",
                         url: "VoucherView.aspx/VoucherViewList",
@@ -122,27 +134,33 @@
                     { "data": "Ref_Num", width: "13%" },
                     { "data": "Remarks", width: "25%" },
                     { "data": "TotalDebtAmt", width: "11%" },
-                    { "data": "Voucher_Status", width: "10%" },
+                    { "data": "Voucher_Status", width: "10%" },  // ← This was missing! (Status column)
                     { "data": "Created_By", width: "10%" },
                     { "data": "Approved_By", width: "10%" },
                     {
                         "render": function (data, type, full) {
                             var actionButtons = `
-       <a href="#" class="editListBtn" onclick="Edit(${full.Voucher_ID})" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>
-       <a class="printListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(${full.Voucher_ID})"><i class="fa fa-print" ></i></a>`;
+<a href="#" class="editListBtn" onclick="Edit(${full.Voucher_ID})" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px;"><i class="fa fa-pencil"></i></a>
+<a class="printListBtn" style="border-radius: 4px; background-color: #28a745; color: white; padding: 5px 8px;" href="#" onclick="PrintReport(${full.Voucher_ID})"><i class="fa fa-print"></i></a>`;
 
                             if (full.Voucher_Status === 'CREATED') {
                                 actionButtons += `
-       <a href="#" class="delListBtn" onclick="deleteConfirm(${full.Voucher_ID})" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-trash-o"></i></a>`;
+<a href="#" class="delListBtn" onclick="deleteConfirm(${full.Voucher_ID})" style="border-radius: 4px; background-color: #dc3545; color: white; padding: 5px 8px;"><i class="fa fa-trash-o"></i></a>`;
                             }
 
-                            /*var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';*/
-                            var result;
-                            result = actionButtons;
-                            return result;;
+                            return actionButtons;
                         }, width: "30%"
                     }
                 ],
+                // ✅ rowCallback is a TOP-LEVEL option — NOT inside columns!
+                "rowCallback": function (row, data, index) {
+                    const status = (data.Voucher_Status || '').trim();
+                    if (status === 'Cancalled') {
+                        $(row).addClass('cancelled-row');
+                    } else {
+                        $(row).removeClass('cancelled-row');
+                    }
+                },
                 "initComplete": function (settings, json) {
                     var lengthContainer = document.querySelector('#example_length');
                     var lengthDropdown = document.querySelector('#example_length select');
@@ -151,7 +169,7 @@
                     if (lengthDropdown && label && lengthContainer) {
                         var labelText = document.createElement('span');
                         labelText.textContent = 'Show entries';
-                        labelText.style.marginLeft = '5px'; 
+                        labelText.style.marginLeft = '5px';
                         labelText.style.marginTop = '10px';
                         labelText.style.display = 'inline-block';
 
@@ -167,7 +185,6 @@
                         console.log("Length dropdown, label, or container not found");
                     }
                 }
-
             });
         }
 
@@ -213,21 +230,21 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8">
-    <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="text" id="txt_date" style="width:100% !important" />
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="text" id="txt_date" style="width: 100% !important" />
+                </div>
+                <div class="col-lg-8-col-md-8 col-sm-8">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-primry" onclick="LoadPageByYear()" value="Year" style="width: 100% !important" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom: 1%">
+                        <input type="button" class="btn btn-primry" onclick="redirecttonew()" value="Add New" style="width: 100% !important;" />
+                    </div>
+                </div>
             </div>
-        <div class="col-lg-8-col-md-8 col-sm-8">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-primry" onclick="LoadPageByYear()" value="Year" style="width:100% !important" />
-            </div>
-        <div class="col-lg-2 col-md-4 col-sm-6" style="margin-bottom: 1%">
-            <input type="button" class="btn btn-primry" onclick="redirecttonew()" value="Add New" style="width:100% !important;" />
         </div>
     </div>
-        </div>
-        </div>
-        </div>
     <div class="table-container">
         <table id="example" class="table table-hover table-bordered">
             <thead>

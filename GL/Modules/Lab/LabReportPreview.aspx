@@ -306,6 +306,7 @@
 
             $("#ddlrptColumns").val(4);
             AllowLabRights();
+            LoadSharingPolicy();
             //UltraSoundTestDetail();
             PageMethods.CheckRadiologylistRights(function (response) {
                 var hasRights = JSON.parse(response); 

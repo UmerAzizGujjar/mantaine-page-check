@@ -324,6 +324,7 @@ function SavePatient() {
             }
 
             var ini_patientID = data.d;
+            Approve(ini_patientID);
             toasterMessage(false, "Success", "Data Saved Successfully");
             window.location.reload();
             var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
@@ -335,6 +336,27 @@ function SavePatient() {
         }
     });
 }
+
+function Approve(pat_id) {
+    PageMethods.approvepatient(pat_id, function (Tests) {
+        debugger
+        var message = JSON.parse(Tests);
+        if (message[0].Message != null || message[0].Message != "") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message[0].Message,
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+            location.reload();
+        }
+    });
 function toasterMessage(isError = false, title, message) {
 
     toastr.options = {

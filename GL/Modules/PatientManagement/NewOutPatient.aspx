@@ -147,6 +147,24 @@
                 }
             });
         }
+        var SharingPolicy;
+        function LoadSharingPolicy() {
+
+            $.ajax({
+                type: "POST",
+                url: "LabReportPreview.aspx/GetSharingPolicy",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    SharingPolicy = JSON.parse(response.d);
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
         function saveSymptomsToDatabase() {
             // Array to store all symptom data
             var symptomsData = [];
@@ -214,6 +232,7 @@
 
             makeSelectsSelect2();
             loaddoctor_byDep();
+            LoadSharingPolicy();
             var id = '<%=Request.QueryString["ID"]%>';
             if (id != "") {
                 $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
@@ -3988,12 +4007,16 @@ function LoadLabResultrpt() {
                             }
                         });
                         debugger;
+                        if (SharingPolicy == '001') {
+
+                        
                         var pat_id = response.d;
                         if (
                             data.Doctor_ID &&
                             (data.pulse_Min !== "" || data.Respiration_Min !== "")
                         ) {
                             ApprovedOPDShare(pat_id);
+                            }
                         }
                         window.location = "NewOutPatient.aspx?ID=" + response.d;
                         $('#btnSave').val("Update");
