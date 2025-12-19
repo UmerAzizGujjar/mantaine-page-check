@@ -6,7 +6,7 @@ $(document).ready(function () {
     $('#divcard').hide();
     $('#divapprove').hide();
     $('#btn-opdprint').hide();
-    $('#divvoucher').hide();
+    /*  $('#divvoucher').hide();*/
     $("#tabs").on('click', 'li', function () {
         debugger;
         var activeTab = $(this).find('a').html();
@@ -28,7 +28,6 @@ $(document).ready(function () {
     $('#txtReferEmergencySearch').off('input').on('input', function () {
         FillReferPatientsList();
     });
-
     $("#txtSearch").keypress(function (event) {
         debugger;
         var SearchString = $('#txtSearch').val();
@@ -183,20 +182,6 @@ $(document).ready(function () {
     FillModePresentation();
     get_totalpatient();
     FillUserAccount();
-
-    const defaults = {
-        '#ddlCountry': { value: '01', text: 'Pakistan' },
-        '#ddl_Province': { value: '01', text: 'Punjab' },
-        '#txtcity': { value: '0001', text: 'Lahore' }
-    };
-
-    $.each(defaults, function (id, data) {
-        const $el = $(id);
-        $el.html(`<option value="${data.value}" selected>${data.text}</option>`);
-        if ($el.hasClass('select2-hidden-accessible')) {
-            $el.trigger('change');
-        }
-    });
 
 });
 function fillDropdown($dropdown, methodName) {
@@ -990,6 +975,7 @@ function SavePatient() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
+
     var hdnDepartment = $("#hdn_dep_id").val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
@@ -1017,6 +1003,24 @@ function SavePatient() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
+
+
+
+    if (Department == "101" && FilterClinic == "0") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please select Filter Clinic.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
+    }
 
     // ✅ CORRECT: Get VALUE of hidden field
     var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
@@ -1201,10 +1205,9 @@ function SavePatient() {
                     htmlContainer: 'swal-big-text'
                 }
             });
-            var url1 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
-            var url2 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_slip&Title=OPD Patient Print &OPD_ID=" + patientID;
-            window.open(url1, '_blank');
-            window.open(url2, '_blank');
+            var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
+            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_slip&Title=OPD Patient Print &OPD_ID=" + patientID;
+            window.open(url, '_blank');
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
@@ -1249,16 +1252,24 @@ function loadDepartment(Doc) {
             data: JSON.stringify({ Doc: Doc }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function (resp) {
+            success: function (response) {
                 debugger;
-                var data = JSON.parse(resp.d);
-                $('#ddlDepartment').val(data.Department);
-                $('#ddlDepartment').attr('disabled', true);
+                var data = JSON.parse(response.d);
+
+                $('#ddlDepartment').html(
+                    $('<option>', {
+                        value: data.Department,
+                        text: data.Department_text
+                    })
+                ).attr('disabled', true);
+
+
+                $("#hdn_dep_id").val(data.Department);
+
 
             },
-            error: function (response) {
-                alert("Error: " + response.responseText);
-                console.error("AJAX Error: ", response);
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
             }
         });
     }
@@ -1339,6 +1350,7 @@ function getpanelRate() {
 }
 
 function loadPatientDetail(OPDID) {
+    debugger;
     $('#btnsave').val('Update');
     $('#btnsave').attr('disabled', true);
     AllowOPdEdit();
@@ -1465,6 +1477,9 @@ function loadPatientDetail(OPDID) {
             if (stat != "Approved") {
                 $('#divapprove').show();
             }
+            //if (data.Patient_Type != "01") {
+            //    $('#field_Clinic').hide();
+            //}
 
         },
         error: function (response) {
@@ -1550,7 +1565,6 @@ function AddEmergencyPatientDetail(reg_id) {
     }
 
 }
-
 
 
 

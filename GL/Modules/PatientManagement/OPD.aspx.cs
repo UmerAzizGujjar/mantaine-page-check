@@ -561,6 +561,35 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string LoadAllDoctor()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var inPatmedicineList = (from emp in db.HR_Employees
+                                         where emp.Resign_Date == null && emp.IsDoctor == true
+                                         select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+            }
+            return "";
+        }
+        //[WebMethod]
+        //public static string LoadDepartmentByDoc(string doc)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var inPatmedicineList = (from emp in db.HR_Employees
+        //                                 where emp.Emp_ID == Convert.ToInt32(doc)
+        //                                 && emp.Resign_Date == null && emp.IsDoctor == true
+        //                                 select new {
+        //                                     emp.Department, 
+        //                                     Department_text = db.GetDataValueName("Patient Main Category" , emp.Department)
+        //                                 }).ToList();
+        //        return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
+        //    }
+        //    return "";
+        //}
+
+        [WebMethod]
         public static string LoadDepartment(string Doc)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -569,7 +598,8 @@ namespace PMS.Modules.PatientManagement
                                   where emp.Emp_ID == Convert.ToInt32(Doc)
                                   select new
                                   {
-                                      Department = emp.Department
+                                      emp.Department,
+                                      Department_text = db.GetDataValueName("Patient Main Category", emp.Department)
                                   }).FirstOrDefault();
                 return (new JavaScriptSerializer()).Serialize(department);
             }
