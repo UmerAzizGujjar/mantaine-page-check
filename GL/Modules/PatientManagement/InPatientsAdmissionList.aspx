@@ -90,8 +90,8 @@
                     },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%", "orderable": true },
                     { "data": "Full_Name", "name": "Full_Name", "width": "12%", "orderable": false },
-                    { "data": "Father_Name", "width": "15%", "orderable": false },
-                    { "data": "Patient_Type", "name": "Patient_Type", "width": "15%", "orderable": true },
+                    { "data": "Father_Name", "width": "10%", "orderable": false },
+                    { "data": "Patient_Type", "name": "Patient_Type", "width": "10%", "orderable": true },
                     { "data": "Department", "name": "Department", "width": "10%", "orderable": true },
                     //{
                     //    "data": "Discharge_ON",
