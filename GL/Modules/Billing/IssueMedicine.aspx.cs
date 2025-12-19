@@ -54,6 +54,16 @@ namespace PMS
 
         }
         [WebMethod]
+        public static string GetItemCodesEMR(int Pat_Id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemCodes = (from  ip in db.In_Patient_Medicines 
+                             where ip.Patient_ID == Pat_Id
+                             select ip.Item_Code).ToList();
+            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+
+        }
+        [WebMethod]
         public static string GetItemCodesOPD(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -105,11 +115,22 @@ namespace PMS
                                                  Patient_No = "IPD-" + ipd.IPD_No,
                                                  Patient_ID = ipd.In_Patient_ID
                                              }).ToList();
+                var Emergency_NO = (from ipd in db.Emergency_Patients
+                              where ipd.Patient_ID == pat_id
+                              && (ipd.Discharge == null || ipd.Discharge == false)
+
+
+                              select new
+                              {
+                                  Patient_No = "EMR-" + ipd.Emergency_No,
+                                  Patient_ID = ipd.Emergency_ID
+                              }).ToList();
 
                 var combinedResult = new
                 {
                     OPD_NO = OPD_NO,
-                    IPD_NO = IPD_NO
+                    IPD_NO = IPD_NO,
+                    Emergency_NO = Emergency_NO
                 };
                 data = new JavaScriptSerializer().Serialize(combinedResult);
             }

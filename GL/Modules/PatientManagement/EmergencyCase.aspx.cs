@@ -4536,6 +4536,8 @@ namespace PMS
                     {
                         InPatientService ipser = new PMS.InPatientService();
                         ipser.In_Patient_Id = 0;
+                        ipser.Ou_Patient_Id = "0";
+                        ipser.isbilled = false;
                         ipser.PatientId = ServiceDetailList.PatId;
                         ipser.EmergencyId = ServiceDetailList.EmergencyId;
                         ipser.PatientType = item.PatientType;
