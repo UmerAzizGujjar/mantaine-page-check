@@ -275,6 +275,23 @@ namespace PMS
                 rd.SetParameterValue("@Ware_House", warehouse);
                 rd.SetParameterValue("@ItemCategory", itemCategory);
             }
+            else if (reportName == "PharmacyStockDetail")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string warehouse = Request.QueryString["WareHouse"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                reportPath += "Pharmacy/rptPharmacyStockDetail.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("@warehouse", warehouse);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "StockBalance")
             {
                 string CurrentUserName = DBClass.getField("select username from aspnet_users where userid='" + AppConfig.UserID + "'").ToString();
@@ -1079,6 +1096,8 @@ namespace PMS
             {
                 if (Request.QueryString["StartDateTime"] != null && Request.QueryString["EndDateTime"] != null)
                 {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                     reportPath += "Pharmacy/rptPharmacyProfitandLoss.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
@@ -1094,6 +1113,7 @@ namespace PMS
                     rd.SetParameterValue("ReportTitle", reportTitle);
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@endDate", newEnddate);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
             }
 
@@ -1451,20 +1471,24 @@ namespace PMS
 
                 if (Request.QueryString["VendorId"] != null)
                 {
+
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                     string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                     reportPath += "Pharmacy/rptSupplierWisePurchase.rpt";
 
                     rd.Load(reportPath);
+                    string vendorType = Request.QueryString["VendorType"];
 
 
                     string stDate = Request.QueryString["startDate"].ToString();
 
                     string endDate = Request.QueryString["endDate"].ToString();
+                    rd.SetParameterValue("@VendorType", vendorType);
 
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@EndDate", endDate);
-
-
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("@VendorId", Convert.ToInt32(Request.QueryString["VendorId"]));
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     // rd.SetParameterValue("Address", companyAddress);
@@ -1474,7 +1498,8 @@ namespace PMS
             {
                 if (Request.QueryString["VendorId"] != null)
                 {
-                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Pharmacy/rptSupplierWisePurchaseSummary.rpt";
                     rd.Load(reportPath);
                     string stDate = Request.QueryString["startDate"].ToString();
@@ -1487,6 +1512,7 @@ namespace PMS
                     rd.SetParameterValue("@EndDate", endDate);
                     rd.SetParameterValue("@VendorId", Convert.ToInt32(Request.QueryString["VendorId"]));
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     // rd.SetParameterValue("Address", companyAddress);
                 }
             }
@@ -1543,6 +1569,9 @@ namespace PMS
             }
             else if (reportName == "PharmacySaleReport")
             {
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
                 string rptFileName = "Pharmacy/rptSaleReport.rpt";
                 //bool CheckSummary = Convert.ToBoolean(Request.QueryString["Summary"]);
                 string CheckSummary = Request.QueryString["Summary"].ToString();
@@ -1566,6 +1595,7 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
             }
             else if (reportName == "MER")

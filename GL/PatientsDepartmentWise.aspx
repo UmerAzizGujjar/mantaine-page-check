@@ -257,6 +257,11 @@
                         var url = 'ReportViewer.aspx?ReportName=StockBalance&ReportTitle=Item Wise Stock Balance Report ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&itemCode=' + ((typeof ($("#txtItemCode").val()) != 'undefined' && $("#txtItemCode").val().toString() != "") ? $("#txtItemCode").val().toString().split('-')[0] : '');
                         window.open(url, '_blanks');
                     }
+                    else if (rptTitle == "STM") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=StockBalance&ReportTitle=Item Wise Stock Balance Report ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&itemCode=' + ((typeof ($("#txtItemCode").val()) != 'undefined' && $("#txtItemCode").val().toString() != "") ? $("#txtItemCode").val().toString().split('-')[0] : '');
+                        window.open(url, '_blanks');
+                    }
                     else if (rptTitle == "IWPOS") {
                         debugger;
                         var oprator = ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0");
@@ -1049,7 +1054,12 @@
                     }
                     else if (rptTitle == "TimeAndMotion") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=TimeAndMotion&ReportTitle=Time and Motion Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                        var url = 'ReportViewer.aspx?ReportName=TimeAndMotion&ReportTitle=Time and Motion Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() ;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "PharmacyStockDetail") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=PharmacyStockDetail&ReportTitle=Pharmacy Stock in Hand Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Pharmacy_Customer_Report") {
