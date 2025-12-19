@@ -210,35 +210,34 @@ function fillmrno() {
 
 
 function CalculateDateOfBirth() {
-  
     var ageValue = $('#txt_dob').val();
-
-   
     var unit = $('#PrefixAge').val();
- 
+
+    if (!ageValue || isNaN(ageValue) || parseInt(ageValue) <= 0) {
+        $('#txtAge_yearss').val('');
+        return;
+    }
+
     var now = moment();
+    var momentUnit = unit === "Year" ? "years" :
+        unit === "Month" ? "months" :
+            unit === "Day" ? "days" : "years";
 
-   
-    var momentUnit = unit.toLowerCase() + 's';  
+    var dob = now.clone().subtract(parseInt(ageValue, 10), momentUnit);
+    var finalDate = dob.format("DD/MM/YYYY");
 
- 
-    if (ageValue && !isNaN(ageValue)) {
-        var calculatedDate = now.subtract(ageValue, momentUnit);
-        var finalDate = calculatedDate.format("DD/MM/YYYY");
- 
+    var $input = $('#txtAge_yearss');
 
-        var $datepicker = $('#txtAge_yearss');
- 
-        $datepicker.datepicker({
+    if (!$input.hasClass('hasDatepicker')) {
+        $input.datepicker({
             changeMonth: true,
             changeYear: true,
-            yearRange: "-100:+0", 
+            yearRange: "-100:+0",
             dateFormat: "dd/mm/yy"
         });
-
-        
-        $datepicker.datepicker('setDate', finalDate);
     }
+
+    $input.datepicker('setDate', dob.toDate());
 }
 
 

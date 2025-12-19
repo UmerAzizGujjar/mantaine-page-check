@@ -6,6 +6,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace PMS.Modules.PatientManagement
 {
@@ -218,7 +219,12 @@ namespace PMS.Modules.PatientManagement
             string PatientID, string martail_status, string Age, string city, string area,
             string city_val, string area_val, string Blood_Group, string State, string Country, string AntiForgeryToken)
         {
-            
+            if (!DateTime.TryParseExact(Date_Of_Birth, "dd/MM/yyyy",
+             CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDOB))
+            {
+                return "ERROR: Invalid Date of Birth format. Use dd/MM/yyyy.";
+            }
+
             if (HttpContext.Current.Session["UserID"] == null)
                 return "ERROR: Unauthorized. Please log in.";
 
@@ -290,16 +296,15 @@ namespace PMS.Modules.PatientManagement
                         pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
                     }
 
-                    // === SAVE SANITIZED VALUES ===
-                    pat.Relation_prefix = RelationType; // Safe (dropdown)
-                    pat.Full_Name = Full_Name;          // ✅ Sanitized
-                    pat.Father_Name = Relation;         // ✅ Sanitized
+                    pat.Relation_prefix = RelationType; 
+                    pat.Full_Name = Full_Name;        
+                    pat.Father_Name = Relation;   
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
-                    pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    //pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                     pat.NIC = CNIC;
-                    pat.Permanent_Address = Address;    // ✅ Sanitized
+                    pat.Permanent_Address = Address;    
                     pat.Martial_Status = martail_status;
                     pat.city = city;
                     pat.area = area;
@@ -308,6 +313,44 @@ namespace PMS.Modules.PatientManagement
                     pat.State = State;
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
+
+                    pat.DOB = parsedDOB;
+                    DateTime dob = pat.DOB.Value.Date;
+                    DateTime today = DateTime.Today;
+
+                    int years = today.Year - dob.Year;
+                    int months = today.Month - dob.Month;
+                    int days = today.Day - dob.Day;
+
+                    if (days < 0)
+                    {
+                        months--;
+                        days += DateTime.DaysInMonth(today.Year, today.Month == 1 ? 12 : today.Month - 1);
+                    }
+                    if (months < 0)
+                    {
+                        years--;
+                        months += 12;
+                    }
+
+                    string formattedAge = "";
+                    if (years > 0)
+                    {
+                        formattedAge = $"{years}Y";
+                        if (months > 0) formattedAge += $" {months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else if (months > 0)
+                    {
+                        formattedAge = $"{months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else
+                    {
+                        formattedAge = $"{days}D";
+                    }
+
+                    pat.Age_years = formattedAge;
 
                     if (isNew)
                         db.Reg_patients.InsertOnSubmit(pat);

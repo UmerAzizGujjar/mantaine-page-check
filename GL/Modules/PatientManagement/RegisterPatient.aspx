@@ -94,16 +94,16 @@
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label for="PrefixAge">DOB<span style="color: red;">*</span></label>
-                <input type="text"  tabindex="6" id="txt_dob" class="form-control" placeholder="Enter Age" onchange="CalculateDateOfBirth();" />
-               
+                <input type="text" tabindex="6" id="txt_dob" class="form-control" placeholder="Enter Age" onchange="CalculateDateOfBirth();" />
+
             </div>
-            <div style="margin-top:6px" class="col-lg-1 col-md-3 col-sm-6">
+            <div style="margin-top: 6px" class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
-                     <select onchange="CalculateDateOfBirth();" id="PrefixAge" tabindex="5" class="form-control">
-         <option value="Year">Year</option>
-         <option value="Month">Month</option>
-         <option value="Day">Day</option>
-     </select>
+                <select onchange="CalculateDateOfBirth();" id="PrefixAge" tabindex="5" class="form-control">
+                    <option value="Year">Year</option>
+                    <option value="Month">Month</option>
+                    <option value="Day">Day</option>
+                </select>
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>

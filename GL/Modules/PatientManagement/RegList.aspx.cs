@@ -46,14 +46,11 @@ namespace PMS
                     var FilteredCount = pat.Count();
                     switch (sortColumn)
                     {
-                        case "Created_time":
-                            pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Created_time) : pat.OrderByDescending(a => a.Created_time);
-                            break;
                         case "Age_years":
                             pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Age_years) : pat.OrderByDescending(a => a.Age_years);
                             break;
-                        case "MRNO":
-                            pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.MRNO) : pat.OrderByDescending(a => a.MRNO);
+                        case "Created_time":
+                            pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Created_time) : pat.OrderByDescending(a => a.Created_time);
                             break;
                         default:
                             pat = pat.OrderByDescending(a => a.Created_time); 

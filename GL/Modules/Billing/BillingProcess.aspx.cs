@@ -434,7 +434,23 @@ namespace PMS
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
-                    pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                    if (string.IsNullOrWhiteSpace(Date_Of_Birth))
+                    {
+                        pat.DOB = null;
+                    }
+                    else
+                    {
+                        if (!DateTime.TryParseExact(
+                            Date_Of_Birth.Trim(),
+                            "dd/MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None,
+                            out DateTime dob))
+                        {
+                            return "ERROR: Date must be in dd/MM/yyyy format (e.g., 19/12/2000).";
+                        }
+                        pat.DOB = dob;
+                    }
                     pat.NIC = CNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
@@ -460,13 +476,67 @@ namespace PMS
                 pat.Gender = Gender;
                 pat.Mobile1 = Mobile;
                 pat.Age_years = Age;
-                pat.DOB = Convert.ToDateTime(Date_Of_Birth);
                 pat.NIC = CNIC;
                 pat.Permanent_Address = Address;
                 pat.Created_time = DateTime.Now;
                 pat.Created_by = AppConfig.UserID;
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
+                if (string.IsNullOrWhiteSpace(Date_Of_Birth))
+                {
+                    pat.DOB = null;
+                    pat.Age_years = null;
+                }
+                else
+                {
+                    if (!DateTime.TryParseExact(
+                        Date_Of_Birth,
+                        "dd/MM/yyyy",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out DateTime dob))
+                    {
+                        return "ERROR: Invalid date format. Use dd/MM/yyyy (e.g., 19/12/2000).";
+                    }
+
+                    pat.DOB = dob;
+                    DateTime today = DateTime.Today;
+                    int years = today.Year - dob.Year;
+                    int months = today.Month - dob.Month;
+                    int days = today.Day - dob.Day;
+
+                    if (days < 0)
+                    {
+                        months--;
+                        int prevMonth = today.Month == 1 ? 12 : today.Month - 1;
+                        int prevYear = today.Month == 1 ? today.Year - 1 : today.Year;
+                        days += DateTime.DaysInMonth(prevYear, prevMonth);
+                    }
+                    if (months < 0)
+                    {
+                        years--;
+                        months += 12;
+                    }
+
+                    string formattedAge = "";
+                    if (years > 0)
+                    {
+                        formattedAge = $"{years}Y";
+                        if (months > 0) formattedAge += $" {months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else if (months > 0)
+                    {
+                        formattedAge = $"{months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else
+                    {
+                        formattedAge = $"{days}D";
+                    }
+
+                    pat.Age_years = formattedAge;
+                }
                 var companyID = AppConfig.Company_ID;
                 var company = (from dt in db.sys_Companies
                                where dt.Company_ID == companyID

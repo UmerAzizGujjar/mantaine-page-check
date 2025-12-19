@@ -4619,7 +4619,7 @@
             $('#saveprintbtn').hide();
             ChangePanel();
             <%}%>
-            FillWardBeds();
+            //FillWardBeds();
             FillWardBedsRefer();
             $('#add-new-Othertest').click(function () {
 
@@ -5361,17 +5361,43 @@
 
         }
         function CalculateDateOfBirth() {
-            debugger;
+            var ageInput = $('#txt_dob').val();
+            var unit = $('#PrefixAge').val();
+
+            var amount = parseInt(ageInput, 10);
+
+            if (isNaN(amount) || amount <= 0 || amount > 1500) {
+                $('#txtAge_yearss').val('');
+                return;
+            }
+
             var now = moment();
-            var year = $('#txt_dob').val();
-            var calcualteDate = now.subtract('years', year);
-            var finalDate = calcualteDate.format("M/D/YYYY");
-            var $datepicker = $('#txtAge_yearss');
-            $datepicker.datepicker();
-            $('#txtAge_yearss').unmask("99/99/9999");
-            $datepicker.datepicker('setDate', finalDate);
-            $('#txtAge_yearss').unmask("99/99/9999");
-            $("#txtAge_yearss").mask("99/99/9999");
+            var dob;
+            if (unit === "Year") {
+                dob = now.clone().subtract(amount, 'years');
+            } else if (unit === "Month") {
+                dob = now.clone().subtract(amount, 'months');
+            } else if (unit === "Day") {
+                dob = now.clone().subtract(amount, 'days');
+            } else {
+                $('#txtAge_yearss').val('');
+                return;
+            }
+
+            var finalDate = dob.format("DD/MM/YYYY");
+
+            var $input = $('#txtAge_yearss');
+            if (!$input.hasClass('hasDatepicker')) {
+                $input.datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+0",
+                    dateFormat: "dd/mm/yy"
+                });
+            }
+
+            $input.datepicker('setDate', dob.toDate());
+            $input.unmask().mask("99/99/9999");
         }
         function loadPackages() {
             debugger;
