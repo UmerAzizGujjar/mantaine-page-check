@@ -19,16 +19,19 @@ namespace PMS
 
         }
         [WebMethod]
-        public static object VoucherViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string vouchertype, string voucheryear)
+        public static object VoucherViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string vouchertype, string voucheryear, string vouchermonth)
         {
             try
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    // Count total vouchers
-                    var totalVouchers = _dbContext.GL_Vouchers.Where(a => a.Voucher_Type == vouchertype).Count();
 
-                    // Query to filter vouchers
+                    var totalVouchers = _dbContext.GL_Vouchers.Where(a => a.Voucher_Type == vouchertype).Count();
+                    int yearFilter = 0;
+                    int monthFilter = 0;
+                    int.TryParse(voucheryear, out yearFilter); 
+                    int.TryParse(vouchermonth, out monthFilter);
+
                     var vouchersQuery = from a in _dbContext.GL_Vouchers
                                         where (a.Voucher_No.ToString().Contains(searchValue)
                                         || a.Remarks.Contains(searchValue)
@@ -37,7 +40,9 @@ namespace PMS
                                         || a.Ref_Num.Contains(searchValue)
                                         || a.Pay_To_Name.Contains(searchValue))
                                         && a.Voucher_Type == vouchertype
-                                        && Convert.ToDateTime(a.Voucher_Date).Year == Convert.ToInt32(voucheryear)
+                                      && (yearFilter == 0 || a.Voucher_Date.Year == yearFilter)
+                                    && (monthFilter == 0 || a.Voucher_Date.Month == monthFilter)
+
                                         select new
                                         {
                                             a.Voucher_ID,
@@ -69,9 +74,10 @@ namespace PMS
                             vouchersQuery = sortColumnDirection == "asc" ? vouchersQuery.OrderBy(v => v.Pay_To_Name) : vouchersQuery.OrderByDescending(v => v.Pay_To_Name);
                             break;
                         default:
-                            vouchersQuery = vouchersQuery.OrderByDescending(v => v.Voucher_No);
+                            vouchersQuery = vouchersQuery.OrderByDescending(v => v.Voucher_Date);
                             break;
                     }
+
                     var voucherList = vouchersQuery.Skip(start).Take(length).ToList();
                     var jsonData = new
                     {
