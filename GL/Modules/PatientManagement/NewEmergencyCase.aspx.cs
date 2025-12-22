@@ -1953,6 +1953,49 @@ namespace PMS.Modules.PatientManagement
             }
             return "";
         }
+        public class PatientsResult
+        {
+            public string Full_Name;
+            public string NIC;
+            public string Reg_Patient_ID;
+            public string Age_years;
+            public string Patient_No;
+            public string Mobile1;
+            public string Father_Name;
+
+        }
+        [WebMethod]
+        public static List<PatientsResult> AddPatient(string SearchString)
+        {
+
+            string SearchSql = "";
+            if (SearchString == "")
+                SearchSql = "SELECT top 10 pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 order by pat_id desc";
+            else
+                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
+
+            DataTable dt = DBClass.getDataTable(SearchSql);
+
+            List<PatientsResult> list = new List<PatientsResult>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                PatientsResult rslt = new PatientsResult()
+                {
+                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : (string)dr[0].ToString(),
+                    Patient_No = dr[1] == DBNull.Value ? "" : (string)dr[1].ToString(),
+                    Full_Name = dr[2] == DBNull.Value ? "" : (string)dr[2],
+                    NIC = dr[3] == DBNull.Value ? "" : (string)dr[3],
+                    Mobile1 = dr[4] == DBNull.Value ? "" : (string)dr[4],
+                    Father_Name = dr[5] == DBNull.Value ? "" : (string)dr[5],
+                };
+                list.Add(rslt);
+                int number;
+                string value = "Hello";
+                bool result = Int32.TryParse(value, out number);
+            }
+            return list;
+        }
         [WebMethod]
         public static Detail GetDetail(string PatientID)
         {
