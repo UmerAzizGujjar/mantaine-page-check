@@ -1655,6 +1655,16 @@
                      hasInvalidStock = true;
                      return false;
                  }
+                 if (Qty <= 0) {
+                     alert('Quantity must be greater than zero.');
+                     hasInvalidStock = true;
+                     return false;
+                 }
+                 if (Stock < Qty) {
+                     alert('Quantity must be less than or equal to stock.');
+                     hasInvalidStock = true;
+                     return false;
+                 }
                  var NetAmount = $($(value).find('td')[11]).text();
                  Save_list.push({
                      Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount,
@@ -1808,6 +1818,16 @@
                             });
 
 
+                            hasInvalidStock = true;
+                            return false;
+                        }
+                        if (Qty <= 0) {
+                            alert('Quantity must be greater than zero.');
+                            hasInvalidStock = true;
+                            return false;
+                        }
+                        if (Stock < Qty) {
+                            alert('Quantity must be less than or equal to stock.');
                             hasInvalidStock = true;
                             return false;
                         }

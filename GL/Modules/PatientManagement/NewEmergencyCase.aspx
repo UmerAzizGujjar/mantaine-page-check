@@ -646,7 +646,7 @@
         }
 
         .menu-item.active .toggle-icon::after {
-            content: "−";
+            content: "-";
         }
 
         .toggle-icon::after {
@@ -749,7 +749,7 @@
         }
 
         .menu-item.active .toggle-icon::after {
-            content: "−";
+            content: "-";
         }
 
         .toggle-icon::after {
@@ -1314,7 +1314,7 @@
             function showError(errorMessage) {
                 searchResults.innerHTML = `
      <div class="no-results" style="color: #ff6b6b;">
-         ⚠️ Error: ${errorMessage}
+         ?? Error: ${errorMessage}
      </div>`;
                 searchResults.classList.add('active');
             }
@@ -1337,25 +1337,25 @@
                 }
             });
 
-            // ✅ Hide results if click happens outside input or results
+            // ? Hide results if click happens outside input or results
             document.addEventListener('click', function (e) {
                 if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
                     hideResults();
                 }
             });
         });
-       
-            function showdeathtab() {
-                debugger;
-                var chck_death = $("#ctl00_MainContent_cb_death").prop('checked')
-                if (chck_death == true) {
-                    $('#12').show();
-                }
-                else {
-                    $('#12').hide();
-                }
+
+        function showdeathtab() {
+            debugger;
+            var chck_death = $("#ctl00_MainContent_cb_death").prop('checked')
+            if (chck_death == true) {
+                $('#12').show();
             }
-       
+            else {
+                $('#12').hide();
+            }
+        }
+
         function ReplaceNullWith_Space(value) {
             return value == null ? '' : value;
         }
@@ -1479,7 +1479,7 @@
                         '<option value="000">Default Symptoms</option>' +
                         '<option value="' + User_ID + '">Your Favourites</option>';
 
-                    // ✅ Loop through 'doctor' not 'data'
+                    // ? Loop through 'doctor' not 'data'
                     $.each(doctor, function (key, value) {
                         options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
                     });
@@ -1722,6 +1722,151 @@
                 monitorField(acc, 'Accumulated', 'tblGCS');
             }
         });
+
+
+
+        function OpenModal() {
+            debugger;
+            $('#PatientsSearchModel').modal({
+                backdrop: 'static'
+            });
+            FillPatientsList();
+            $('#srchpat').text("Search Your Patients:");
+            $('#txtSearch').unmask();
+            $('#ClosePatientsSearchModel').show();
+        }
+
+        function FillPatientsList() {
+            debugger;
+            $('#tblPatientsResult tbody').empty();
+            var SearchString = '';
+            PageMethods.AddPatient(SearchString, OnFilterPatients, OnFailPatients);
+        }
+        function OnFilterPatients(data) {
+
+            ClearPatientResults();
+
+            for (var i = 0; i < data.length; i++) {
+                AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].NIC, data[i].Mobile1, data[i].Father_Name);
+            }
+        }
+
+        function ClearPatientResults() {
+            while (tblPatientsResult.rows.length > 1) {
+                tblPatientsResult.deleteRow(1);
+            }
+        }
+
+        function OnFailPatients(exc) {
+            alert(exc.get_message());
+        }
+
+        function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
+            debugger;
+            tblLength = tblPatientsResult.rows.length;
+            var row = iPatientsBody.insertRow(-1);
+            var cell;
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span spnPatID' + tblLength + '>' + Reg_Patient_ID + '</span>';
+            cell.className = "hide";
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+            cell = row.insertCell(-1);
+            var actions = ''
+            actions += '<a style="color:#438eb9 ;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i></a>&nbsp;|&nbsp;&nbsp;';
+            actions += '<a style="color:#FDC303;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick=EditPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-pencil-square-o"></i></a>';
+            cell.innerHTML = actions;
+        }
+
+        function AddPatientDetail(PatientID) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "NewEmergencyCase.aspx/GetDetail",
+                data: JSON.stringify({ PatientID: PatientID }), // ✅ safer & cleaner
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = response.d;
+                    debugger;
+                    if (data != '') {
+                        var mydate = new Date(Date.parse(data.Entry_Date));
+                        var dateR = mydate.toLocaleDateString();
+                        var name = ReplaceNullWith_Space(data.Name);
+                        var gender = ReplaceNullWith_Space(data.Gender);
+                        var age = ReplaceNullWith_Space(data.Age);
+                        var mobile = ReplaceNullWith_Space(data.Mobile);
+                        var address = ReplaceNullWith_Space(data.Address);
+                        var follow = ReplaceNullWith_Space(data.Follow);
+                        var outID = data.OutPatientID || "0"; // fallback to "0"
+
+                        console.log("OutPatientID:", outID);
+
+                        if (outID && outID !== "0") {
+                            window.location = "NewEmergencyCase.aspx?ID=" + outID;
+                            return; 
+                        }
+
+                        $('#<%= vlblPatients_Name.ClientID %>').text(name);
+                $('#<%= vLbl_Age.ClientID %>').text(gender + " - " + age + " yrs"); // spacing improved
+                $('#<%= vLbl_Adress.ClientID %>').text(address);
+                $('#<%= vLbl_Contact.ClientID %>').text(mobile);
+                $("#<%= hdfReg_ID.ClientID %>").val(Reg_Patient_ID); // ✅ was `regPatID` → should be `Reg_Patient_ID`
+                // FillPreviousLabTests();
+                // FillPreviousMedicines();
+                // FillPreviousServices();
+                // FillPreviousDiagnosticTests();
+                 $('#PatientsSearchModel').modal('hide');
+            }
+        },
+        error: function (xhr, status, error) { // ✅ `failure` → `error` (jQuery uses `error`, not `failure`)
+            console.error("AJAX Error:", status, error);
+        }
+    });
+}
+        function addfunc() {
+            debugger;
+            var maskedValue = $('#txtSearch').val();
+            var unmaskedValue = maskedValue.replace(/_/g, '');
+            var Ph_sNOs = unmaskedValue.length;
+
+
+            if (Ph_sNOs === 13) {
+                $('#addNewbtn').attr("disabled", false);
+                AddNewPatient();
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Complete Mobile Number First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                return;
+            }
+            $('#ClosePatientsSearchModel').click();
+            //fillmrnos();
+            setTimeout(function () {
+                $('#txt_mobile').val(unmaskedValue);
+            }, 100);
+            $('#txt_name').focus();
+        }
+       
         function Get_Doctor_Info() {
 
             var Doctor_Val = document.getElementById('<%= ddl_Department.ClientID%>').value;
@@ -1835,7 +1980,7 @@
 
             var btn = document.createElement('button');
             btn.type = 'button';
-             btn.setAttribute('data-key', key);
+            btn.setAttribute('data-key', key);
             btn.setAttribute('aria-label', 'Remove');
 
             // add font awesome cross icon
@@ -2361,7 +2506,7 @@
                         });
                     } else {
                         $('#tblSymtoms tbody').append(html);
-                        $('#dvtblSymtomps').slideDown(); // 👈 Show the table container
+                        $('#dvtblSymtomps').slideDown(); // ?? Show the table container
                         $('#AddSymptomsByModal').modal('hide'); // Close the modal after adding
                     }
 
@@ -2421,7 +2566,7 @@
                     });
                 } else {
                     $('#tblSymtoms tbody').append(html);
-                    $('#dvtblSymtomps').slideDown(); // 👈 Show the table container
+                    $('#dvtblSymtomps').slideDown(); // ?? Show the table container
                 }
 
                 $('#txtDuration').val("");
@@ -2452,7 +2597,7 @@
             // Remove row
             row.remove();
 
-            // 👇 Hide table if no rows left
+            // ?? Hide table if no rows left
             if ($('#tblSymtoms tbody tr').length === 0) {
                 $('#dvtblSymtomps').slideUp();
             }
@@ -5110,7 +5255,7 @@
                                 id="searchInput"
                                 autocomplete="off"
                                 style="height: 45px; width: 100% !important; padding: 16px 50px 16px 20px !important; border: 1.5px solid #ccc !important; border-radius: 25px !important; background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; color: black !important; font-size: 16px !important; box-shadow: none !important" />
-                            <div class="search-icon">🔍</div>
+                            <div class="search-icon">??</div>
                         </div>
                         <div class="search-results" id="searchResults"></div>
                     </div>
@@ -7001,7 +7146,47 @@
                 </div>
             </div>
         </div>
+        <div id="PatientsSearchModel" data-backdrop="static" class="modal fade-in" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
+                    <fieldset style="padding-top: 20px; padding-left: 14px;">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label id="srchpat">Search Your Patients: </label>
+                            <input type="text" id="txtSearch" style="margin-left: 2px;" autocomplete="off" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <label></label>
+                            <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New" />
+                        </div>
 
+                    </fieldset>
+                    <div style="overflow: scroll; height: 460px; padding: 10px;">
+                        <table class="table table-hover table-striped table-bordered" id="tblPatientsResult" style="overflow: scroll; height: auto;">
+                            <thead id="Thead1">
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="iPatientsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" style="width: 13% !important" id="ClosePatientsSearchModel" class="btn-gray" name="saveENT" value="Close" data-dismiss="modal" />
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
 
@@ -7019,3 +7204,4 @@
 
 
 </asp:Content>
+

@@ -955,6 +955,7 @@ function LoadLabResultrpt() {
             $('#queueModal').modal('show');
         }
         function loadPatient(PatientID, opdNo, regPatID) {
+            debugger;
             $.ajax({
                 type: "POST",
                 url: "NewOutPatient.aspx/GetDetail",

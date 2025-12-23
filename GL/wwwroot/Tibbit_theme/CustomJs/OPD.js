@@ -109,7 +109,7 @@ $(document).ready(function () {
             // Since modal uses native select, bind to 'change', not 'select2:select'
             const changeHandler = function () {
                 loaddata();
-                $(this).prop('disabled', true);
+                //$(this).prop('disabled', true);
             };
             if (!isInsideModal) {
                 $element.off('select2:select').on('select2:select', changeHandler);

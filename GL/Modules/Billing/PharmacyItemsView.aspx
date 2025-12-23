@@ -97,7 +97,7 @@
 
         function editOpen(id) {
             debugger;
-            window.location.href = "../../Modules/Inventory/Items.aspx?ID=" + id + "";
+            window.location.href = "../../Modules/Inventory/Product.aspx?ID=" + id + "";
 
         }
 
