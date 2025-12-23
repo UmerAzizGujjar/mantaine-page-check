@@ -59,7 +59,22 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(query);
         }
 
-        
+        [WebMethod]
+        public static string getFurtherTaxType()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var query = (from a in db.Further_Taxes
+                         where a.Active == true
+                         select new
+                         {
+                             a.Further_Tax_ID,
+                             a.Further_Tax_Perc,
+                         }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(query);
+        }
+
+
 
         [WebMethod]
         public static string GetWareHouseCondition()
@@ -171,6 +186,7 @@ namespace PMS.AP
                               m.Status,
                               m.Total_ST_Amount,
                               m.Total_Adv_Amt,
+                              m.Total_Further_Amt,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == m.Vendor_ID).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
@@ -199,6 +215,9 @@ namespace PMS.AP
                                d.Discount_Percentage,
                                d.SalTax_Amount,
                                d.AdvanceTax_Amount,
+                               d.FurtherTax_Amount,
+                               d.FurtherTax_Percentage,
+                               d.FurtherTax_Id,
                                m.Total_Adv_Amt,
                                d.Fed_Percentage,
                                d.Delivery_Date,
@@ -377,6 +396,7 @@ namespace PMS.AP
             public string ImagePath { get; set; }
             public string POType { get; set; }
             public string WareHouse { get; set; }
+            public string Further_amount { get; set; }
             public List<DetailItemList> ItemList { get; set; }
         }
         public class DetailItemList
@@ -400,6 +420,9 @@ namespace PMS.AP
             public string AdvanceTax_ID { get; set; }
             public string Fed_Percentage { get; set; }
             public int PRDetailId { get; set; }
+            public string FurtherTax_Amount { get; set; }
+            public string FurtherTax_Percentage { get; set; }
+            public int FurtherTax_Id { get; set; }
 
         }
         [WebMethod]
@@ -453,6 +476,11 @@ namespace PMS.AP
                     {
                         existingItem.PO_Amount = Convert.ToDecimal(record.NetAmount);
                     }
+                    if (record.Further_amount != "")
+                    {
+                        existingItem.Total_Further_Amt = Convert.ToDecimal(record.Further_amount);
+                    }
+
                     existingItem.PO_Date = Convert.ToDateTime(record.Purchase_Date);
                     existingItem.Due_Date = Convert.ToDateTime(record.Due_Date);
                     existingItem.PO_No = int.Parse(record.Purchase_No);
@@ -499,6 +527,10 @@ namespace PMS.AP
                 if (record.Adv_amount != "")
                 {
                     PO.Total_Adv_Amt = Convert.ToDecimal(record.Adv_amount);
+                }
+                if (record.Further_amount != "")
+                {
+                    PO.Total_Further_Amt = Convert.ToDecimal(record.Further_amount);
                 }
                 PO.PO_Date = Convert.ToDateTime(record.Purchase_Date);
                 PO.Due_Date = Convert.ToDateTime(record.Due_Date);
@@ -564,6 +596,15 @@ namespace PMS.AP
                 {
                     ltd.AdvanceTax_Amount = Convert.ToDecimal(POitem.AdvanceTax_Amount);
                 }
+                if (POitem.FurtherTax_Amount != "")
+                {
+                    ltd.FurtherTax_Amount = Convert.ToDecimal(POitem.FurtherTax_Amount);
+                }
+                if (POitem.FurtherTax_Percentage != "")
+                {
+                    ltd.FurtherTax_Percentage = Convert.ToDecimal(POitem.FurtherTax_Percentage);
+                }
+                ltd.FurtherTax_Id = Convert.ToInt32(POitem.FurtherTax_Id);
                 ltd.FedPercent_Id = POitem.FedPercentId;
                 ltd.SalTax_Id = Convert.ToInt32(POitem.SalTax_Id);
                 ltd.AdvanceTax_ID = Convert.ToInt32(POitem.AdvanceTax_ID);
