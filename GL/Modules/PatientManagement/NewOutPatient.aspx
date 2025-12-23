@@ -237,7 +237,7 @@
             if (id != "") {
                 $('#<%= txtOut_Patient_ID.ClientID%>').val(id);
                 loadPatientFormData(id);
-
+                loaddoctor(id);
                 $('#btnSave').val("Update");
                 AppendSymtompsHistory();
                 Appendtestintable();
@@ -269,7 +269,7 @@
             fillDepartment();
             fillFilterClinic();
             filldoc();
-            loaddoctor();
+            loadAllDoctor();
             FillMainTestDepartment();
 
             FillLabTests('');
@@ -942,8 +942,15 @@ function LoadLabResultrpt() {
             var reg_ID = $("#<%= hdfReg_ID.ClientID %>").val();
 
             if (reg_ID) {
+                var locationInfo = window.location;
                 var url = "/Modules/Dashboards/NewEMR.aspx?RegID=" + encodeURIComponent(reg_ID);
-                window.open(url, "_blank"); // open in new tab
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/Modules/Dashboards/NewEMR.aspx?RegID=' + encodeURIComponent(reg_ID);
+                }
+                window.open(url, '_blank');
             } else {
                 alert("No RegID found!");
             }
@@ -973,6 +980,7 @@ function LoadLabResultrpt() {
                         var mobile = ReplaceNullWith_Space(data.Mobile);
                         var address = ReplaceNullWith_Space(data.Address);
                         var follow = ReplaceNullWith_Space(data.Follow);
+                        var Mr_No = ReplaceNullWith_Space(data.Mr_No);
                         var outID = data.OutPatientID || "0"; // Use logical OR to provide default
 
                         console.log("OutPatientID:", outID);
@@ -988,6 +996,7 @@ function LoadLabResultrpt() {
                         $('#<%= vLbl_Contact.ClientID %>').text(mobile);
                         $('#<%= lblFollow.ClientID %>').text(follow);
                         $('#<%= Label1.ClientID %>').text(opdNo);
+                        $('#<%= Label200.ClientID %>').text(Mr_No);
                         $("#<%= hdfPatient_ID.ClientID %>").val(PatientID);
                         $("#<%= hdfReg_ID.ClientID %>").val(regPatID);
                         FillPreviousLabTests();
@@ -1111,10 +1120,10 @@ function LoadLabResultrpt() {
                 }
             });
         }
-        function loaddoctor() {
-            PageMethods.LoadDoctor(function (res) {
+        function loadAllDoctor() {
+            PageMethods.loadAllDoc(function (res) {
                 var doctor = JSON.parse(res);
-                var options = '<option value="0" >Please Select </option>';
+                var options = '';
                 var rowsText = '';
 
                 $.each(doctor, function (key, value) {
@@ -1123,6 +1132,22 @@ function LoadLabResultrpt() {
                 });
 
                 $('#ctl00_MainContent_ddlDoctorName').html(options)
+
+            });
+        }
+        function loaddoctor(id) {
+            PageMethods.LoadDoctor(id, function (res) {
+                var doctor = JSON.parse(res);
+                var options = '';
+                var rowsText = '';
+
+                $.each(doctor, function (key, value) {
+
+                    options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                });
+
+                $('#ctl00_MainContent_ddlDoctorName').html(options)
+
             });
         }
         function makeSelectsSelect2() {
@@ -3445,8 +3470,11 @@ function LoadLabResultrpt() {
                 if (followUpId) {
                     existingRow.find('td:eq(3)').text(followUp).attr('data-id', followUpId);
                 }
+                if (followUpTimeId) {
+                    existingRow.find('td:eq(4)').text(followUpTime).attr('data-id', followUpTimeId);
+                }
                 if (followUpDate) {
-                    existingRow.find('td:eq(4)').text(followUpDate);
+                    existingRow.find('td:eq(5)').text(followUpDate);
                 }
             } else {
                 // Create new row only if at least one required field is filled
@@ -4710,6 +4738,15 @@ function LoadLabResultrpt() {
                                                 </div>
                                                 <div class="col-md-7 col-sm-6">
                                                     <asp:Label ID="vlblPatients_Name" CssClass="md" runat="server"></asp:Label>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-5 col-sm-6">
+                                                    <asp:Label ID="lblPatien_No" CssClass="labels" runat="server" Text="MR No:"></asp:Label>
+                                                </div>
+                                                <div class="col-md-7 col-sm-6">
+                                                    <asp:Label ID="Label200" CssClass="md" runat="server"></asp:Label>
                                                 </div>
                                             </div>
 

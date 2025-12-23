@@ -5296,7 +5296,7 @@
                     <div style="display: flex; justify-content: flex-end;">
                         <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn btn-primry" />
                         <input type="button" class="btn btn-primry" value="History" onclick="ShowHistory()" />
-                        <input type="button" class="btn btn-primry" value="Queue" onclick="openQueue()" />
+                        <%--<input type="button" class="btn btn-primry" value="Queue" onclick="openQueue()" />--%>
                         <label class="mybutton2-wrapper">
                             <input type="checkbox" id="DischargeCheckBox" onchange="toggleDischarge(this)" />
                             <span id="DischargeButtonText">Discharge</span>

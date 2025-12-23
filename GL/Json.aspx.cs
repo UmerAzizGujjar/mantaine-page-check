@@ -675,7 +675,7 @@ namespace PMS
                 {
                     string sqlQuery;
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select top 1 pat_id as Pat_id, Patient_No from Reg_patient Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' order by Created_time desc";
+                        sqlQuery = "Select top 1 pat_id as Pat_id, Patient_No,mr_no_sequence from Reg_patient Where mr_no_sequence like '%" + Request.QueryString["q"].ToString() + "%' order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";
 
@@ -684,7 +684,7 @@ namespace PMS
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Pat_id"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + @"""}";
+                        result += @"{""id"":""" + dr["Pat_id"].ToString() + @""",""name"": """ + dr["mr_no_sequence"].ToString() + @"""}";
                     }
                     Response.Write("[" + result + "]");
                 }
