@@ -60,6 +60,24 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label vlblPatients_Name;
 
         /// <summary>
+        /// lblPatien_No control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPatien_No;
+
+        /// <summary>
+        /// Label200 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label200;
+
+        /// <summary>
         /// lblPatien_ID control.
         /// </summary>
         /// <remarks>

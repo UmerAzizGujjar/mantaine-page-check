@@ -173,7 +173,7 @@
         function loaddata() {
             debugger;
             var Category = $('#ddlPatient_Type').val();
-            $('#ddlPatient_Type').attr('disabled', true);
+           // $('#ddlPatient_Type').attr('disabled', true);
             debugger;
             if (Category == "0") {
 

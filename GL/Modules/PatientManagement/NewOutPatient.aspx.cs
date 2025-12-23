@@ -1563,6 +1563,7 @@ namespace PMS.Modules.PatientManagement
             {
                 pt.OutPatientID = OutpatientID ?? "0"; // This replaces null with "0"
                 pt.Name = pat.Full_Name;
+                pt.Mr_No = pat.mr_no_sequence;
                 pt.Gender = pat.Gender;
                 pt.Age = pat.Age_years.ToString();
                 if (pat.Entry_Date.HasValue)
@@ -1602,6 +1603,7 @@ namespace PMS.Modules.PatientManagement
             public string Follow;
             public string Patient_type;
             public string dotorname;
+            public string Mr_No;
  
         }
         [WebMethod]
@@ -2591,13 +2593,25 @@ on d.Doctor_Id equals hr.Emp_ID
 
         }
         [WebMethod]
-        public static string LoadDoctor()
+        public static string loadAllDoc()
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var doctor = (from emp in db.HR_Employees
-
-                              where emp.Resign_Date == null && emp.IsDoctor == true
+                              where emp.IsDoctor == true && emp.userid == Convert.ToString(AppConfig.UserID)
+                              select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                return (new JavaScriptSerializer()).Serialize(doctor);
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string LoadDoctor(int id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var docid = (from opd in db.Out_Patients where opd.Out_Patient_ID == id select opd.Doctor_ID).FirstOrDefault();
+                var doctor = (from emp in db.HR_Employees
+                              where emp.IsDoctor == true && emp.Emp_ID == Convert.ToInt32(docid)
                               select new { emp.Emp_ID, emp.Emp_Name }).ToList();
                 return (new JavaScriptSerializer()).Serialize(doctor);
             }
