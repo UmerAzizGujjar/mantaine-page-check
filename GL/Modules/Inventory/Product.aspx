@@ -935,6 +935,19 @@
             const rateInput = document.getElementById('txtRate');
             const rate = rateInput.value.trim();
 
+            const tbodyCheck = document.getElementById('tbodypatientRateList');
+            if (tbodyCheck) {
+                const rows = tbodyCheck.querySelectorAll('tr');
+                for (let row of rows) {
+                    const patientTypeInput = row.querySelector('input[name="patient_type"]');
+                    if (patientTypeInput && patientTypeInput.value.trim() === selectedText) {
+                        alert(`${selectedText} is already present.`);
+                        return;
+                    }
+                }
+            }
+
+
             if (!selectedValue || selectedValue === "0") {
                 alert("Please select a valid Patient Type.");
                 return;

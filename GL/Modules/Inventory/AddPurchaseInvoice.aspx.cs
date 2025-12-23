@@ -289,6 +289,8 @@ namespace PMS.Inventory
                 ltd.AdvTax_Id = string.IsNullOrEmpty(Invoiceitem.AdvTaxId) ? 0 : Convert.ToInt32(Invoiceitem.AdvTaxId);
                 ltd.AdvTax_Amount = string.IsNullOrEmpty(Invoiceitem.AdvTaxAmount) ? 0 : Convert.ToDecimal(Invoiceitem.AdvTaxAmount);
                 ltd.AdvTotalAmount = string.IsNullOrEmpty(Invoiceitem.AdvTotalAmount) ? 0 : Convert.ToDecimal(Invoiceitem.AdvTotalAmount);
+                ltd.FurtherTax_Id = string.IsNullOrEmpty(Invoiceitem.FurtherTax_Id) ? 0 : Convert.ToInt32(Invoiceitem.FurtherTax_Id);
+                ltd.FurtherTax_Amount = string.IsNullOrEmpty(Invoiceitem.FurtherTax_Amount) ? 0 : Convert.ToDecimal(Invoiceitem.FurtherTax_Amount);
                 db.Purchase_Invoice_Details.InsertOnSubmit(ltd);
                 db.SubmitChanges();
             }
@@ -448,6 +450,8 @@ namespace PMS.Inventory
             public string TotalAmount { get; set; }
             public string Amount { get; set; }
             public int AdvigpagainstPo { get; set; }
+            public string FurtherTax_Id { get; set; }
+            public string FurtherTax_Amount { get; set; }
         }
 
         public class InoiceDetailList2

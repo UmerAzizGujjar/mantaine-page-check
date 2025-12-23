@@ -1014,6 +1014,7 @@
                 const searchTerm = $('#tab01Search').val().trim();
                 fillSymptoms(selectedValue, searchTerm);
             });
+
             $('#departments').change(function () {
                 const selectedValue = $(this).val();
                 const selectedText = $(this).find('option:selected').text();
@@ -1570,16 +1571,17 @@
             var $tbody = $('#tblDischargeDetails tbody');
             var $container = $('#divtblDischargeDetails');
             $tbody.empty();
+            if (dischargeByText) {
+                rows.forEach(function (r) {
+                    var $tr = $('<tr>');
+                    $tr.append($('<td>').text(r.field));
+                    $tr.append($('<td>').text(r.value));
+                    $tbody.append($tr);
+                });
 
-            rows.forEach(function (r) {
-                var $tr = $('<tr>');
-                $tr.append($('<td>').text(r.field));
-                $tr.append($('<td>').text(r.value));
-                $tbody.append($tr);
-            });
-
-            // show/hide container based on presence of any rows (we always have Discharge Date row at least)
-            if (rows.length) $container.slideDown(); else $container.slideUp();
+                // show/hide container based on presence of any rows (we always have Discharge Date row at least)
+                if (rows.length) $container.slideDown(); else $container.slideUp();
+            }
         }
 
         function bindDate() {
@@ -1594,18 +1596,41 @@
             $("#ctl00_MainContent_txtTimeOfDeath").datetimepicker({ datepicker: false, format: 'H:i:s' });
 
         }
+        //function AddDoctorCall() {
+        //    var dept = $("[id$='ddl_Department'] option:selected").text() || '-';
+        //    var doctor = $("[id$='ddlCallToDoctor'] option:selected").text() || '-';
+        //    var mobile = $("[id$='txtMobileNo']").val() || '-';
+        //    var notes = $("[id$='txtCallToDoctor']").val() || '-';
+
+        //    var tbody = $('#tblDoctorCalls tbody');
+        //    var container = $('#divtblDoctorCalls');
+
+        //    // single-row behaviour: clear and show current values
+        //    tbody.empty();
+
+        //    var row = $('<tr>');
+        //    row.append($('<td>').attr('data-label', 'Department').text(dept));
+        //    row.append($('<td>').attr('data-label', 'Doctor').text(doctor));
+        //    row.append($('<td>').attr('data-label', 'Mobile No').text(mobile));
+        //    row.append($('<td>').attr('data-label', 'Doctor Notes').text(notes));
+
+        //    tbody.append(row);
+        //    container.slideDown();
+        //}
         function AddDoctorCall() {
+
+            var deptVal = $("[id$='ddl_Department']").val();
+            var doctorVal = $("[id$='ddlCallToDoctor']").val();
+            if ((!deptVal || deptVal === "0") && (!doctorVal || doctorVal === "0")) {
+                return;
+            }
             var dept = $("[id$='ddl_Department'] option:selected").text() || '-';
             var doctor = $("[id$='ddlCallToDoctor'] option:selected").text() || '-';
             var mobile = $("[id$='txtMobileNo']").val() || '-';
             var notes = $("[id$='txtCallToDoctor']").val() || '-';
-
             var tbody = $('#tblDoctorCalls tbody');
             var container = $('#divtblDoctorCalls');
-
-            // single-row behaviour: clear and show current values
             tbody.empty();
-
             var row = $('<tr>');
             row.append($('<td>').attr('data-label', 'Department').text(dept));
             row.append($('<td>').attr('data-label', 'Doctor').text(doctor));
@@ -1639,25 +1664,27 @@
 
             // single-row behaviour (clear existing and add current)
             tbody.empty();
+            console.log("pulse " + pulse)
+            if (pulse != '-' || temp != '-' || volume != 'Please Select') {
+                var newRow = $('<tr>');
+                newRow.append($('<td>').text(pulse));
+                newRow.append($('<td>').text(bp));
+                newRow.append($('<td>').text(rhythm));
+                newRow.append($('<td>').text(temp));
+                newRow.append($('<td>').text(volume));
+                newRow.append($('<td>').text(resp));
+                newRow.append($('<td>').text(o2sat));
+                newRow.append($('<td>').text(percentage));
+                newRow.append($('<td>').text(liters));
+                newRow.append($('<td>').text(roomAir));
+                newRow.append($('<td>').text(withO2));
+                newRow.append($('<td>').text(others));
+                newRow.append($('<td>').text(received));
+                newRow.append($('<td>').text(instruction));
 
-            var newRow = $('<tr>');
-            newRow.append($('<td>').text(pulse));
-            newRow.append($('<td>').text(bp));
-            newRow.append($('<td>').text(rhythm));
-            newRow.append($('<td>').text(temp));
-            newRow.append($('<td>').text(volume));
-            newRow.append($('<td>').text(resp));
-            newRow.append($('<td>').text(o2sat));
-            newRow.append($('<td>').text(percentage));
-            newRow.append($('<td>').text(liters));
-            newRow.append($('<td>').text(roomAir));
-            newRow.append($('<td>').text(withO2));
-            newRow.append($('<td>').text(others));
-            newRow.append($('<td>').text(received));
-            newRow.append($('<td>').text(instruction));
-
-            tbody.append(newRow);
-            tableContainer.slideDown();
+                tbody.append(newRow);
+                tableContainer.slideDown();
+            }
         }
         document.addEventListener('DOMContentLoaded', function () {
             // delegates and initial wiring kept minimal and simple
@@ -1787,6 +1814,7 @@
         }
 
         function AddPatientDetail(PatientID) {
+           
             debugger;
             $.ajax({
                 type: "POST",
@@ -1806,7 +1834,7 @@
                         var mobile = ReplaceNullWith_Space(data.Mobile);
                         var address = ReplaceNullWith_Space(data.Address);
                         var follow = ReplaceNullWith_Space(data.Follow);
-                        var outID = data.OutPatientID || "0"; // fallback to "0"
+                        var outID = data.EmergencyID || "0"; // fallback to "0"
 
                         console.log("OutPatientID:", outID);
 
@@ -1819,12 +1847,12 @@
                 $('#<%= vLbl_Age.ClientID %>').text(gender + " - " + age + " yrs"); // spacing improved
                 $('#<%= vLbl_Adress.ClientID %>').text(address);
                 $('#<%= vLbl_Contact.ClientID %>').text(mobile);
-                $("#<%= hdfReg_ID.ClientID %>").val(Reg_Patient_ID); // ✅ was `regPatID` → should be `Reg_Patient_ID`
+                $("#<%= hdfReg_ID.ClientID %>").val(data.Reg_Patient_ID); // ✅ was `regPatID` → should be `Reg_Patient_ID`
                 // FillPreviousLabTests();
                 // FillPreviousMedicines();
                 // FillPreviousServices();
                 // FillPreviousDiagnosticTests();
-                 $('#PatientsSearchModel').modal('hide');
+                        $('#PatientsSearchModel').modal('hide');
             }
         },
         error: function (xhr, status, error) { // ✅ `failure` → `error` (jQuery uses `error`, not `failure`)
@@ -2247,20 +2275,21 @@
 
             // Clear existing rows and add a single updated row
             tbody.empty();
+            if (triage != 'Please Select' || doctor != 'Please Select') {
+                var newRow = $('<tr>').html(
+                    '<td>' + triage + '</td>' +
+                    '<td>' + doctor + '</td>' +
+                    '<td>' + ward + '</td>' +
+                    '<td>' + bedNo + '</td>' +
+                    '<td>' + fee + '</td>' +
+                    '<td>' + admissionDate + '</td>'
+                );
 
-            var newRow = $('<tr>').html(
-                '<td>' + triage + '</td>' +
-                '<td>' + doctor + '</td>' +
-                '<td>' + ward + '</td>' +
-                '<td>' + bedNo + '</td>' +
-                '<td>' + fee + '</td>' +
-                '<td>' + admissionDate + '</td>'
-            );
+                tbody.append(newRow);
 
-            tbody.append(newRow);
-
-            // Reveal the container (keeps same behavior as your demo)
-            tableContainer.slideDown();
+                // Reveal the container (keeps same behavior as your demo)
+                tableContainer.slideDown();
+            }
         }
 
 
@@ -4185,26 +4214,27 @@
 
             // clear existing rows and insert one row (same behaviour as your demo)
             tbody.empty();
+            if (pulse != '-' || temp != '-' || volume != 'Please Select') {
+                var newRow = $('<tr>').html(
+                    '<td>' + pulse + '</td>' +
+                    '<td>' + bp + '</td>' +
+                    '<td>' + temp + '</td>' +
+                    '<td>' + resp + '</td>' +
+                    '<td>' + rhythm + '</td>' +
+                    '<td>' + volume + '</td>' +
+                    '<td>' + o2sat + '</td>' +
+                    '<td>' + percentage + '</td>' +
+                    '<td>' + liters + '</td>' +
+                    '<td>' + roomAir + '</td>' +
+                    '<td>' + withO2 + '</td>' +
+                    '<td>' + others + '</td>' +
+                    '<td>' + received + '</td>' +
+                    '<td>' + instruction + '</td>'
+                );
 
-            var newRow = $('<tr>').html(
-                '<td>' + pulse + '</td>' +
-                '<td>' + bp + '</td>' +
-                '<td>' + temp + '</td>' +
-                '<td>' + resp + '</td>' +
-                '<td>' + rhythm + '</td>' +
-                '<td>' + volume + '</td>' +
-                '<td>' + o2sat + '</td>' +
-                '<td>' + percentage + '</td>' +
-                '<td>' + liters + '</td>' +
-                '<td>' + roomAir + '</td>' +
-                '<td>' + withO2 + '</td>' +
-                '<td>' + others + '</td>' +
-                '<td>' + received + '</td>' +
-                '<td>' + instruction + '</td>'
-            );
-
-            tbody.append(newRow);
-            tableContainer.slideDown();
+                tbody.append(newRow);
+                tableContainer.slideDown();
+            }
         }
 
 
@@ -6299,7 +6329,7 @@
                                                 <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
                                                     <div style="display: flex; align-items: center; width: 100%;">
                                                         <asp:Label ID="Label98" runat="server" Text="Receiving Date & Time"></asp:Label>
-                                                        <asp:TextBox ID="txttxtReceiving_DateDesc" runat="server" ReadOnly="true" Style="width: 100%;"></asp:TextBox>
+                                                        <asp:TextBox ID="txttxtReceiving_DateDesc" runat="server" ReadOnly="true"  Style="width: 100%;"></asp:TextBox>
                                                     </div>
                                                 </div>
 

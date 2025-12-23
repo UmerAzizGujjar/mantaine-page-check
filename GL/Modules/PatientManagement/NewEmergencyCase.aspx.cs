@@ -2021,6 +2021,7 @@ namespace PMS.Modules.PatientManagement
                 pt.EmergencyID = EmergencypatientID ?? "0"; // This replaces null with "0"
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
+                pt.Reg_Patient_ID = pat.pat_id;
                 pt.Age = pat.Age_years.ToString();
                 
                 pt.Address = pat.Permanent_Address;
@@ -2037,6 +2038,7 @@ namespace PMS.Modules.PatientManagement
         public class Detail
         {
             public string EmergencyID;
+            public int Reg_Patient_ID;
             public string Name;
             public string Gender;
             public string Age;
