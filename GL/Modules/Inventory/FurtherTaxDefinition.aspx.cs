@@ -50,71 +50,71 @@ namespace PMS.Modules.Inventory
             return (new JavaScriptSerializer()).Serialize(itemsList);
         }
 
-        //[WebMethod]
-        //public static string LoadAccount()
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var list = (from a in db.Further_Taxes
-        //                select new
-        //                {
-        //                    a.Further_Tax_ID,
-        //                    a.Tax_Type,
-        //                    a.Further_Tax_Perc,
-        //                    a.Account_ID_Payable,
-        //                    a.Description_Payable,
-        //                    a.Account_Code_Recvable,
-        //                    a.Description_Recvable,
-        //                    a.S_W_H_Tax,
-        //                    a.Active
-        //                }).ToList();
-        //    return new JavaScriptSerializer().Serialize(list);
-        //}
+        [WebMethod]
+        public static string LoadAccount()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var list = (from a in db.Further_Taxes
+                        select new
+                        {
+                            a.Further_Tax_ID,
+                            a.Tax_Type,
+                            a.Further_Tax_Perc,
+                            a.Account_ID_Payable,
+                            a.Description_Payable,
+                            a.Account_Code_Recvable,
+                            a.Description_Recvable,
+                            a.S_W_H_Tax,
+                            a.Active
+                        }).ToList();
+            return new JavaScriptSerializer().Serialize(list);
+        }
 
-        //[WebMethod]
-        //public static string saveFurtherTax(string btnSave, string AllItemDetail)
-        //{
-        //    JavaScriptSerializer oJS = new JavaScriptSerializer();
-        //    var record = oJS.Deserialize<FurtherTaxModel>(AllItemDetail);
+        [WebMethod]
+        public static string saveFurtherTax(string btnSave, string AllItemDetail)
+        {
+            JavaScriptSerializer oJS = new JavaScriptSerializer();
+            var record = oJS.Deserialize<FurtherTaxModel>(AllItemDetail);
 
-        //    using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
-        //    {
-        //        foreach (var item in record.Furtherlist)
-        //        {
-        //            if (!item.Further_Tax_ID.HasValue)
-        //            {
-        //                var ft = new Further_Tax
-        //                {
-        //                    Tax_Type = item.Tax_Type,
-        //                    Further_Tax_Perc = item.Further_Tax_Perc,
-        //                    Account_ID_Payable = item.Account_ID_Payable,
-        //                    Description_Payable = item.Description_Payable,
-        //                    Account_Code_Recvable = item.Account_Code_Recvable,
-        //                    Description_Recvable = item.Description_Recvable,
-        //                    Active = item.Activechk,
-        //                    S_W_H_Tax = item.STWH
-        //                };
-        //                db.Further_Taxes.InsertOnSubmit(ft);
-        //            }
-        //            else
-        //            {
-        //                var existing = db.Further_Taxes.FirstOrDefault(x => x.Further_Tax_ID == item.Further_Tax_ID.Value);
-        //                if (existing != null)
-        //                {
-        //                    existing.Tax_Type = item.Tax_Type;
-        //                    existing.Further_Tax_Perc = item.Further_Tax_Perc;
-        //                    existing.Account_ID_Payable = item.Account_ID_Payable;
-        //                    existing.Description_Payable = item.Description_Payable;
-        //                    existing.Account_Code_Recvable = item.Account_Code_Recvable;
-        //                    existing.Description_Recvable = item.Description_Recvable;
-        //                    existing.Active = item.Activechk;
-        //                    existing.S_W_H_Tax = item.STWH;
-        //                }
-        //            }
-        //        }
-        //        db.SubmitChanges();
-        //    }
-        //    return "Success";
-        //}
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                foreach (var item in record.Furtherlist)
+                {
+                    if (!item.Further_Tax_ID.HasValue)
+                    {
+                        var ft = new Further_Tax
+                        {
+                            Tax_Type = item.Tax_Type,
+                            Further_Tax_Perc = item.Further_Tax_Perc,
+                            Account_ID_Payable = item.Account_ID_Payable,
+                            Description_Payable = item.Description_Payable,
+                            Account_Code_Recvable = item.Account_Code_Recvable,
+                            Description_Recvable = item.Description_Recvable,
+                            Active = item.Activechk,
+                            S_W_H_Tax = item.STWH
+                        };
+                        db.Further_Taxes.InsertOnSubmit(ft);
+                    }
+                    else
+                    {
+                        var existing = db.Further_Taxes.FirstOrDefault(x => x.Further_Tax_ID == item.Further_Tax_ID.Value);
+                        if (existing != null)
+                        {
+                            existing.Tax_Type = item.Tax_Type;
+                            existing.Further_Tax_Perc = item.Further_Tax_Perc;
+                            existing.Account_ID_Payable = item.Account_ID_Payable;
+                            existing.Description_Payable = item.Description_Payable;
+                            existing.Account_Code_Recvable = item.Account_Code_Recvable;
+                            existing.Description_Recvable = item.Description_Recvable;
+                            existing.Active = item.Activechk;
+                            existing.S_W_H_Tax = item.STWH;
+                        }
+                    }
+                }
+                db.SubmitChanges();
+            }
+            return "Success";
+        }
 
         public class FurtherTaxModel
         {

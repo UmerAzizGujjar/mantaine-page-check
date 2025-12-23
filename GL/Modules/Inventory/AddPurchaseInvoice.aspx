@@ -296,6 +296,8 @@
                         '<td style="display:none">' + Test[i].AdvigpagainstPo + '</td>' +
                         '<td style="display:none">' + parseFloat(Test[i].AdvTaxAmount || 0).toFixed(2) + '</td>' +
                         '<td style="display:none">' + (Test[i].AdvTaxId || 0) + '</td>' +
+                        '<td style="display:none">' + parseFloat(Test[i].FurtherTax_Amount || 0).toFixed(2) + '</td>' +
+                        '<td style="display:none">' + (Test[i].FurtherTax_Id || 0) + '</td>' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                     global = rows;
@@ -375,6 +377,8 @@
             var AdvigpagainstPo = $($(row).find('td')[24]).text();
             var TotalAdvAmt = $($(row).find('td')[25]).text();
             var AdvTaxId = $($(row).find('td')[26]).text();
+            var FurtherTaxAmount = $($(row).find('td')[27]).text();
+            var FurtherTaxId = $($(row).find('td')[28]).text();
 
             var length = $("#tblItemDescription tr:gt(0)").length;
             if (length > 0) {
@@ -422,6 +426,7 @@
                 '<td class="headcol2_5"><select style="width: 90px !important;margin-top:-6px;" disabled onchange="CulculateAmonut()" id="Staxddl' + length + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select>' + '</td>' +
                 '<td class="headcol2_6"><input type="text" readonly="readonly" id="staxamou' + length + '" name="staxamou" value="' + parseFloat(staxAmt).toFixed(2) + '" /></td>' +
                 '<td class="headcol2_9">' + parseFloat(TotalAdvAmt || 0).toFixed(2) + '</td>' +
+                '<td class="headcol2_further_tax">' + parseFloat(FurtherTaxAmount || 0).toFixed(2) + '</td>' +
                 '<td class="headcol2_7">' + Value + '</td>' +
                 '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + parseFloat(TotalAmount).toFixed(2) + '" name="txtTotalAmount" value="' + parseFloat(TotalAmount).toFixed(2) + '"/>' + parseFloat(TotalAmount).toFixed(2) + '</td>' +
                 '<td style="display:none"><input type="hidden" id="txtGRNId' + length + '" name="txtGRNId" value="' + GRNId + '"/></td>' +
@@ -431,6 +436,8 @@
                 '<td style="display:none"><input type="hidden" id="AdvTaxAmount' + length + '" name="AdvTaxAmount" value="' + (TotalAdvAmt || 0) + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="AdvTaxId' + length + '" name="AdvTaxId" value="' + (AdvTaxId || 0) + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="AdvTotalAmount' + length + '" name="AdvTotalAmount" value="' + AdvTotalAmount.toFixed(2) + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="FurtherTaxId' + length + '" name="FurtherTaxId" value="' + (FurtherTaxId || 0) + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="FurtherTaxAmount' + length + '" name="FurtherTaxAmount" value="' + (FurtherTaxAmount || 0) + '"/></td>' +
                 '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                 '</tr>'
             debugger;
@@ -487,7 +494,7 @@
             }
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 debugger;
-                var totamount = $($(value).find('td')[17]).text();
+                var totamount = $($(value).find('td')[18]).text();
                 totalinvamount += parseFloat(totamount);
             });
             $('#tot_inv_amount').val(totalinvamount.toFixed());
@@ -586,6 +593,7 @@
                         '<td class="headcol2_5"><select style="position: relative;top:-6px;width: 90px !important;" disabled onchange="CulculateAmonut()" id="Staxddl' + (key + 1) + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select>' + '</td>' +
                         '<td class="headcol2_6"><input type="hidden" id="staxamou' + (key + 1) + '" name="staxamou" value="' + value.Stax_Perc + '"/>' + value.Stax_Perc + '</td>' +
                         '<td class="headcol2_adv_tax">' + parseFloat(value.AdvTax_Amount || 0).toFixed(2) + '</td>' + 
+                        '<td class="headcol2_further_tax">' + parseFloat(value.FurtherTax_Amount || 0).toFixed(2) + '</td>' +
                         '<td class="headcol2_7">' + Value + '</td>' +                     
                         '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount" value="' + parseFloat(value.Amount).toFixed() + '"/>' + parseFloat(value.Amount).toFixed() + '</td>' +
                         '<td style="display:none"><input type="hidden" id="txtGRNId' + (key + 1) + '" name="txtGRNId" value="' + value.GRN_ID + '"/></td>' +
@@ -595,6 +603,8 @@
                         '<td style="display:none"><input type="hidden" name="AdvTaxId" value="' + (value.AdvTax_ID || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="AdvTaxAmount" value="' + (value.AdvTax_Amount || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="AdvTotalAmount" value="' + (value.AdvanceTotalAmount || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="FurtherTaxId" value="' + (value.FurtherTax_Id || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" name="FurtherTaxAmount" value="' + (value.FurtherTax_Amount || 0) + '"/></td>' +
                         '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                         '</tr>'
                     length++;
@@ -654,8 +664,8 @@
                 STAmount = (STpercent / 100) * amountwithdiscount;
                 NetAmount = amountwithdiscount + STAmount;
                tbl.rows[i].cells[15].innerText = STAmount.toFixed();  
-               tbl.rows[i].cells[17].innerText = amountwithdiscount.toFixed();
-               tbl.rows[i].cells[18].innerText = NetAmount.toFixed(); 
+               tbl.rows[i].cells[18].innerText = amountwithdiscount.toFixed();
+               tbl.rows[i].cells[19].innerText = NetAmount.toFixed(); 
                 calculateadvance(tbl.rows[i]);
             }
         }
@@ -699,7 +709,8 @@
                     debugger;
                     Item_list.push({
                         'ItemId': $(value).find('td input[name=txtItemId]').val(), 'GRNId': $(value).find('td input[name=txtGRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'TotalAmount': totalamt, 'staxid': $(value).find('td select[name=Staxddl]').val(), 'staxperc': staxperc, 'DiscPer': $(value).find('td input[name=txtdiscper]').val(), 'DiscAmt': disamt, 'Amount': amount, 'AdvigpagainstPo': AdvigpagainstPo, 'AdvTaxId': $(value).find('td input[name=AdvTaxId]').val() || '0',
-                        'AdvTaxAmount': $(value).find('td input[name=AdvTaxAmount]').val() || '0', 'AdvTotalAmount': $(value).find('td input[name=AdvTotalAmount]').val() || '0'
+                        'AdvTaxAmount': $(value).find('td input[name=AdvTaxAmount]').val() || '0', 'AdvTotalAmount': $(value).find('td input[name=AdvTotalAmount]').val() || '0',
+                        'FurtherTax_Id': $(value).find('td input[name=FurtherTaxId]').val() || '0', 'FurtherTax_Amount': $(value).find('td input[name=FurtherTaxAmount]').val() || '0'
                     });
                 });
                 table2.find('tr').each(function (key, value) {
@@ -932,7 +943,7 @@
             }
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 debugger;
-                var totamount = $($(value).find('td')[17]).text();
+                var totamount = $($(value).find('td')[18]).text();
                 totalinvamount += parseFloat(totamount);
             });
             $('#tot_inv_amount').val(totalinvamount.toFixed());
@@ -1109,6 +1120,7 @@
                                         <th>S.Tax%</th>
                                         <th>S.Tax Amnt</th>
                                         <th>Total Advance</th>
+                                        <th>Further Tax</th>
                                         <th>Value</th>
                                         <th>Total Amnt</th>
                                         <th>Action</th>
