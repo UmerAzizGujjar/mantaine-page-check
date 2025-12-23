@@ -1005,6 +1005,22 @@ function SavePatient() {
     var FreeCheck = $('#chckfreecheck').prop('checked');
 
 
+    if (discount < 100.0 && Fees == 0.0) {
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Fee Should Not be Zero',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
+    }
 
     if (Department == "101" && FilterClinic == "0") {
         Swal.fire({
@@ -1633,3 +1649,22 @@ function AddReferPatientDetail(reg_id) {
     }
 }
 
+// OPD.js
+function OPD_Print(OPD_ID) {
+    if (!OPD_ID) {
+        console.error("OPD_ID is missing");
+        return;
+    }
+
+    var locationInfo = window.location;
+    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+
+    if (locationInfo.hostname !== "localhost") {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+    }
+
+    window.open(url, '_blank');
+}

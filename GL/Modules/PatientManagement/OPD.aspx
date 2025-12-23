@@ -404,21 +404,7 @@
 
 
         }
-        //Print
-        function OPD_Print() {
-            debugger;    //   OPD_Patient_Print only for Assiraat 
-            var ID = '<%= Request.QueryString["OPDID"]%>';
-            var locationInfo = window.location;
-            var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
-            // var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + ID;
-            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
-                var urlInfo = window.location.href.split('/');
-                var ip = urlInfo[2];
-                var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + ID;
-            }
-            window.open(url, '_blank');
-        }
+ 
 
         function OPD_Form_Print() {
             debugger;
@@ -1355,7 +1341,7 @@
                     <input type="button" name="btnPrintCard" class="btn-primry" id="btnPrintCardBack" onclick="PrintPatientBackCard()" value="Back Card" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
-                    <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print()" />
+                    <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print('<%= Request.QueryString["OPDID"] %>')" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none;">
                     <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />

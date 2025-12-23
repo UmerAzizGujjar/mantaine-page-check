@@ -6,7 +6,7 @@ $(document).ready(function () {
     $('#divcard').hide();
     $('#divapprove').hide();
     $('#btn-opdprint').hide();
-  /*  $('#divvoucher').hide();*/
+    /*  $('#divvoucher').hide();*/
     $("#tabs").on('click', 'li', function () {
         debugger;
         var activeTab = $(this).find('a').html();
@@ -145,7 +145,7 @@ $(document).ready(function () {
             }
         }
 
-        
+
     });
 
     $('#txt_mobile').on('focus', function () {
@@ -343,7 +343,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
             );
 
-         
+
             $select.trigger({
                 type: 'select2:select',
                 params: {
@@ -797,7 +797,7 @@ function AllowOPdEdit() {
 
 debugger;
 function CalculateDateOfBirth() {
-    var Numbers = $('#PrefixAge').val(); 
+    var Numbers = $('#PrefixAge').val();
     var CalDob = $('#txt_dob').val();
 
     if (!CalDob || isNaN(CalDob) || CalDob <= 0) {
@@ -975,7 +975,7 @@ function SavePatient() {
     var Martial_Status = $('#ddlmartialstatus').val();
     var Address = $('#txtAdrress').val();
     var Department = $('#ddlDepartment').val();
-   
+
     var hdnDepartment = $("#hdn_dep_id").val();
     var doctor = $('#ddldoctor').val();
     var employee = $('#txtemployee').val();
@@ -1004,7 +1004,22 @@ function SavePatient() {
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
 
+    if (discount < 100.0 && Fees == 0.0) {
 
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Fee Should Not be Zero',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
+    }
 
     if (Department == "101" && FilterClinic == "0") {
         Swal.fire({
@@ -1021,6 +1036,7 @@ function SavePatient() {
         });
         return;
     }
+
 
     // ✅ CORRECT: Get VALUE of hidden field
     var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
@@ -1206,7 +1222,7 @@ function SavePatient() {
                 }
             });
             var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
-            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_slip&Title=OPD Patient Print &OPD_ID=" + patientID;
+            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
             window.location.href = "OPDView.aspx";
         },
@@ -1255,7 +1271,7 @@ function loadDepartment(Doc) {
             success: function (response) {
                 debugger;
                 var data = JSON.parse(response.d);
-              
+
                 $('#ddlDepartment').html(
                     $('<option>', {
                         value: data.Department,
@@ -1575,7 +1591,7 @@ function openReferPatientModal() {
 
 function FillReferPatientsList() {
     var search = $('#txtReferEmergencySearch').val().trim();
-    $('#ReferPatientsBody').empty(); 
+    $('#ReferPatientsBody').empty();
     PageMethods.SearchPatients_Rff(search, OnFilterReferPatients, OnFailReferPatients);
 }
 
@@ -1597,11 +1613,11 @@ function OnFilterReferPatients(data) {
             '<td>' + pat.NIC + '</td>' +
             '<td>' + pat.Mobile1 + '</td>' +
             '<td>' +
-                '<a class="tooltips" style="color:#438eb9; font-size:16px; display:flex; justify-content:center;" ' +
-                   'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\')">' +
-                    '<i class="fa fa-plus-circle"></i>' +
-                    '<span class="tooltiptxt">Select</span>' +
-                '</a>' +
+            '<a class="tooltips" style="color:#438eb9; font-size:16px; display:flex; justify-content:center;" ' +
+            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\')">' +
+            '<i class="fa fa-plus-circle"></i>' +
+            '<span class="tooltiptxt">Select</span>' +
+            '</a>' +
             '</td>' +
             '</tr>';
         tbody.append(row);
@@ -1632,3 +1648,22 @@ function AddReferPatientDetail(reg_id) {
     }
 }
 
+// OPD.js
+function OPD_Print(OPD_ID) {
+    if (!OPD_ID) {
+        console.error("OPD_ID is missing");
+        return;
+    }
+
+    var locationInfo = window.location;
+    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+
+    if (locationInfo.hostname !== "localhost") {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+    }
+
+    window.open(url, '_blank');
+}

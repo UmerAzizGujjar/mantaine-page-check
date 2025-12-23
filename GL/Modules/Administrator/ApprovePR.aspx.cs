@@ -180,12 +180,12 @@ namespace PMS
                                              where pr.PR_Id == Convert.ToInt32(pr_id.Text)
                                              select (decimal?)prd.EstimateCost).Sum() ?? 0m;
 
-                        if (TotalPRAmount > remainingAmount)
-                        {
-                            string alertMessage = $"Total PR Amount: ({TotalPRAmount}) exceeds the Remaining Amount: ({remainingAmount}).";
-                            ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{alertMessage}');", true);
-                            return;
-                        }
+                        //if (TotalPRAmount > remainingAmount)
+                        //{
+                        //    string alertMessage = $"Total PR Amount: ({TotalPRAmount}) exceeds the Remaining Amount: ({remainingAmount}).";
+                        //    ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{alertMessage}');", true);
+                        //    return;
+                        //}
 
                         var IsFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
                                                 join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
