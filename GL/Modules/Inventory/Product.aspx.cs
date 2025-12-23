@@ -393,7 +393,6 @@ namespace PMS.Inventory
                     bool itemExists = db.INV_Items.Any(x => x.Item_Code == obj.Item_Code);
                     if (itemExists)
                     {
-               
                         var maxCode = DBClass.getField(@"
                     SELECT ISNULL(MAX(CONVERT(INT, 
                         SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
@@ -404,6 +403,42 @@ namespace PMS.Inventory
                     db.INV_Items.InsertOnSubmit(obj);
                     db.SubmitChanges();
                     Id = obj.Item_ID.ToString();
+
+                    if (batchList != null)
+                    {
+                        foreach (var bth in batchList)
+                        {
+                            if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
+
+                            INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                            {
+                                Item_Id = obj.Item_ID,
+                                Batch_Num = bth.ddlBatch,
+                                Item_Sale_Rate = bth.txtBatchRate,
+                                Sehat_card_rate_batch = bth.txtSCRate,
+                                Uom_Qty = bth.txtUom_Qty,
+                            };
+                            db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
+                        }
+                    }
+
+                    if (PatientTypeList != null)
+                    {
+                        foreach (var ptr in PatientTypeList)
+                        {
+                            if (string.IsNullOrEmpty(ptr.pat_type)) continue;
+
+                            INV_Item_PatientWise ratewise = new INV_Item_PatientWise
+                            {
+                                Item_Id = obj.Item_ID,
+                                Patient_Type = ptr.pat_type,
+                                Item_Sale_Rate = ptr.SaleRate,
+                            };
+                            db.INV_Item_PatientWises.InsertOnSubmit(ratewise);
+                        }
+                    }
+
+                    db.SubmitChanges();
                 }
                 else
                 {
@@ -482,15 +517,27 @@ namespace PMS.Inventory
                         {
                             if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
 
-                            INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                            var existingBatch = db.INV_Item_RateBatchWises
+                                .FirstOrDefault(x => x.Item_Id == Convert.ToInt32(ItemId) && x.Batch_Num == bth.ddlBatch);
+
+                            if (existingBatch != null)
                             {
-                                Item_Id = Convert.ToInt32(ItemId),
-                                Batch_Num = bth.ddlBatch,
-                                Item_Sale_Rate = bth.txtBatchRate,
-                                Sehat_card_rate_batch = bth.txtSCRate,
-                                Uom_Qty = bth.txtUom_Qty,
-                            };
-                            db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
+                                existingBatch.Item_Sale_Rate = bth.txtBatchRate;
+                                existingBatch.Sehat_card_rate_batch = bth.txtSCRate;
+                                existingBatch.Uom_Qty = bth.txtUom_Qty;
+                            }
+                            else
+                            {
+                                INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                                {
+                                    Item_Id = Convert.ToInt32(ItemId),
+                                    Batch_Num = bth.ddlBatch,
+                                    Item_Sale_Rate = bth.txtBatchRate,
+                                    Sehat_card_rate_batch = bth.txtSCRate,
+                                    Uom_Qty = bth.txtUom_Qty,
+                                };
+                                db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
+                            }
                         }
                     }
                     if (PatientTypeList != null)
@@ -498,15 +545,23 @@ namespace PMS.Inventory
                         foreach (var ptr in PatientTypeList)
                         {
                             if (string.IsNullOrEmpty(ptr.pat_type)) continue;
+                            var existingPatientRate = db.INV_Item_PatientWises
+                                .FirstOrDefault(x => x.Item_Id == Convert.ToInt32(ItemId) && x.Patient_Type == ptr.pat_type);
 
-                            INV_Item_PatientWise ratewise = new INV_Item_PatientWise
+                            if (existingPatientRate != null)
                             {
-                                Item_Id = Convert.ToInt32(ItemId),
-                                Patient_Type = ptr.pat_type,
-                                Item_Sale_Rate = ptr.SaleRate,
-                              
-                            };
-                            db.INV_Item_PatientWises.InsertOnSubmit(ratewise);
+                                existingPatientRate.Item_Sale_Rate = ptr.SaleRate;
+                            }
+                            else
+                            {
+                                INV_Item_PatientWise ratewise = new INV_Item_PatientWise
+                                {
+                                    Item_Id = Convert.ToInt32(ItemId),
+                                    Patient_Type = ptr.pat_type,
+                                    Item_Sale_Rate = ptr.SaleRate,
+                                };
+                                db.INV_Item_PatientWises.InsertOnSubmit(ratewise);
+                            }
                         }
                     }
 
