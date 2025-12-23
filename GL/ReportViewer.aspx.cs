@@ -3330,6 +3330,18 @@ namespace PMS
                 rd.SetParameterValue("@BillId", Convert.ToInt32(Request.QueryString["Bill_ID"]));
 
             }
+            else if (reportName == "PharmacyReturnSlip")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "PatientManagement/rptPharmacyReturnSlip.rpt";
+                rd.Load(reportPath);
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("@ReturnId", Convert.ToInt32(Request.QueryString["Return_ID"]));
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+            }
             else if (reportName == "BillingBaseReport")
             {
                 reportPath += "PatientManagement/rptBillBasePrintHalf.rpt";
