@@ -236,7 +236,7 @@ namespace PMS
             var pat_ids = (from p in db.Reg_patients join vs in db.Out_Patients on p.pat_id equals vs.Reg_PatId where vs.Reg_PatId == Convert.ToInt32(Pat_id) select vs.Out_Patient_ID).FirstOrDefault();
             var itemCodes = (from op in db.Reg_patients
                              join ip in db.InPatientServices on op.pat_id equals ip.PatientId
-                             where ip.Ou_Patient_Id == Convert.ToString(pat_ids)
+                             where ip.Ou_Patient_Id == Convert.ToString(pat_ids) && ip.PatientType == "OutPatient"
                              && ip.isbilled == false
                              select ip.Service_ItemId).ToList();
 
@@ -638,6 +638,7 @@ namespace PMS
 
                                    DepartmentName = (db.GetDataValueName("Main Test Departments", lbTDdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments", lbTDdef.Main_Department)),
                                    lbTDdef.Group_Category,
+                                   lbTDdef.Main_Department,
                                    GroupName = db.GetDataValueName("Test Groups", lbTDdef.Group_Category),
                                    ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                    ParentTrans_Type = "Test",
@@ -770,9 +771,7 @@ namespace PMS
                                    lbtD.Date,
                                    lbtD.Remark,
                                    lbTDdef.Test_Name,
-
-                                   DepartmentName = (db.GetDataValueName("Main Test Departments", lbTDdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments",
-            lbTDdef.Main_Department)),
+                                   DepartmentName = (db.GetDataValueName("Main Test Departments", lbTDdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments",lbTDdef.Main_Department)),
                                    lbTDdef.Group_Category,
                                    GroupName = db.GetDataValueName("Test Groups", lbTDdef.Group_Category),
                                    ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
@@ -811,7 +810,8 @@ namespace PMS
 
                                              Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
                                              ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
-                                             ParentTrans_Type = "Test Group Category"
+                                             ParentTrans_Type = "Test Group Category",
+                                             lbtD.Dept_ID
                                          }
                 ).ToList();
 
@@ -827,6 +827,7 @@ namespace PMS
                 RecommendedService.Remarks = test.Remark;
                 RecommendedService.ItemType = "Test";
                 RecommendedService.RecommendedByDoctor = true;
+                RecommendedService.MainDepartment = test.Dept_ID;
                 RecommendedService.CategoryID = "0";
                 RecommendedService.Amount = (test.Rate == null) ? 0 : (decimal)test.Rate;
                 listRecommendedTests.Add(RecommendedService);
@@ -844,6 +845,7 @@ namespace PMS
                     RecommendedService.Remarks = group.Remark;
                     RecommendedService.ItemType = "Test";
                     RecommendedService.RecommendedByDoctor = true;
+                    RecommendedService.MainDepartment = group.Dept_ID;
                     RecommendedService.CategoryID = group.Catagory_ID;
                     RecommendedService.Amount = (group.Rate == null) ? 0 : Convert.ToDecimal(group.Rate);
 
@@ -925,7 +927,8 @@ namespace PMS
 
                                              Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
                                              ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
-                                             ParentTrans_Type = "Test Group Category"
+                                             ParentTrans_Type = "Test Group Category",
+                                             lbtD.Dept_ID
                                          }
                 ).ToList();
 
@@ -941,6 +944,7 @@ namespace PMS
                 RecommendedService.Remarks = test.Remark;
                 RecommendedService.ItemType = "Test";
                 RecommendedService.RecommendedByDoctor = true;
+                RecommendedService.MainDepartment = test.Dept_ID;
                 RecommendedService.CategoryID = "0";
                 RecommendedService.Amount = (test.Rate == null) ? 0 : (decimal)test.Rate;
                 listRecommendedTests.Add(RecommendedService);
@@ -958,6 +962,7 @@ namespace PMS
                     RecommendedService.Remarks = group.Remark;
                     RecommendedService.ItemType = "Test";
                     RecommendedService.RecommendedByDoctor = true;
+                    RecommendedService.MainDepartment = group.Dept_ID;
                     RecommendedService.CategoryID = group.Catagory_ID;
                     RecommendedService.Amount = (group.Rate == null) ? 0 : Convert.ToDecimal(group.Rate);
 
@@ -1242,8 +1247,8 @@ namespace PMS
                                  orderby ipd.Created_Time descending
                                  select ipd
                                 ).FirstOrDefault();
-                Ipd.ispackagebilling = true;
-                if (Ipd.Discharge == true)
+                // Ipd.ispackagebilling = true;
+                if (Ipd.Discharge_Request == true)
                 {
                     newBill.Package_Type = data.PackageType;
                     newBill.Package_Name = data.PackageName;
@@ -1272,8 +1277,9 @@ namespace PMS
                     {
                         newBill.Share_Type = null;
                     }
+                    Ipd.Final_Bill = true;
                 }
-                Ipd.ispackagebilling = true;               
+                               
             }
             else
             {
@@ -2642,19 +2648,19 @@ namespace PMS
                                  && dd.item_id.ToString() == item_id
                                  && dd.item_id != 0
                                  && dd.test_id == 0
-                                 && dd.services == "002"
+                                 && dd.services == "001"
                                  && dd.AgrementTypeId == Aggreement_Type
                                  && dd.service_description.Contains(item_name)
                                  select new { dd.services }).FirstOrDefault();
 
-                    if (check != null && check.services == "002")
+                    if (check != null && check.services == "001")
                     {
                         var serv = db.Doctor_Agreements
                                      .Join(db.Doctor_agreement_details,
                                            data => data.Doc_agreemnt_id,
                                            dd => dd.Doc_agreement_id,
                                            (data, dd) => new { dd , data })
-                                     .Where(d => d.dd.services == "002"
+                                     .Where(d => d.dd.services == "001"
                                               && d.dd.AgrementTypeId == Aggreement_Type
                                               && d.dd.isactive == true
                                               && d.dd.item_id.ToString() == item_id

@@ -3696,16 +3696,26 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
                     ddlPatientType.DataBind();
 
-                    lblDepartment.Text = "Department";
+                    lblDepartment.Text = "Radiology Departments";
 
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
 
+                    valusets = (from p in dbase.DataValues
+                                where p.ValueSet_ID == 72
+                                   && (p.DataValue_Name == "002"
+                                    || p.DataValue_Name == "003"
+                                    || p.DataValue_Name == "004"
+                                    || p.DataValue_Name == "006")
+                                select new
+                                {
+                                    p.DataValue_Name,
+                                    p.DataValue_Description
+                                }).ToList();
 
-                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlDepartments.DataSource = valusets;
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";
-                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.Items.Add(new ListItem { Text = "All", Value = "0" });
                     ddlDepartments.DataBind();
 
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
