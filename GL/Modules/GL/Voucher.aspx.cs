@@ -99,6 +99,7 @@ namespace PMS
                               a.Voucher_Date,
                               a.Pay_To_Name,
                               a.Remarks,
+                              a.Vendor_ID,
                               a.Ref_Num,
                               a.Total_Debit,
                               a.Total_Credit,
@@ -218,14 +219,21 @@ namespace PMS
                 foreach (var a in record.Item_List)
                 {
                     DateTime cheqDate;
-                    if (DateTime.TryParseExact(a.txtcheqdate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out cheqDate))
+                      string[] acceptedFormats = {
+                            "MM/dd/yyyy",      // for new saves
+                            "dd MMM yyyy",     // for edits (e.g., "24 Dec 2025")
+                            "dd/MM/yyyy",      // just in case
+                            "yyyy-MM-dd"       // ideal
+                        };
+
+                    if (DateTime.TryParseExact(a.txtcheqdate?.Trim(), acceptedFormats,
+                        CultureInfo.InvariantCulture, DateTimeStyles.None, out cheqDate))
                     {
+                        // Proceed — cheqDate is correctly parsed
                     }
                     else
                     {
-                        string cheqdatemsg = string.Empty;
-                        cheqdatemsg = "cheq Date is not Correct.";
-                        return cheqdatemsg;
+                        return "cheq Date is not in a recognized format (e.g., MM/dd/yyyy or dd MMM yyyy).";
                     }
                     GL_Voucher_Account voc = new GL_Voucher_Account();
                     voc.Voucher_ID = voucherId;
