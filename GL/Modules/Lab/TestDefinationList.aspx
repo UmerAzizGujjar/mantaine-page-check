@@ -141,7 +141,8 @@
         
         function viewTestRateList() {
             debugger;
-            window.open('ReportViewer.aspx?ReportName=TestRateList&ReportTitle=Test Rate List');
+            window.open('../../ReportViewer.aspx?ReportName=TestRateList&ReportTitle=Test Rate List');
+            //window.open('ReportViewer.aspx?ReportName=TestRateList&ReportTitle=Test Rate List');
         }
 
         function viewGroupTest(row) {
