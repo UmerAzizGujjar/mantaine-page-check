@@ -1657,14 +1657,17 @@ function OPD_Print(OPD_ID) {
     }
 
     var locationInfo = window.location;
-    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+    var url1 = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
 
     if (locationInfo.hostname !== "localhost") {
         var urlInfo = window.location.href.split('/');
         var ip = urlInfo[2];
         var foldername = urlInfo[3];
-        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+        url1 = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
     }
 
     window.open(url, '_blank');
+    window.open(url1, '_blank');
 }

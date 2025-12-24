@@ -3322,12 +3322,25 @@ namespace PMS
             }
             else if (reportName == "PharmacySlip")
             {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 reportPath += "PatientManagement/rptPharmacySlip.rpt";
                 rd.Load(reportPath);
                 string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Address", companyAddress);
                 rd.SetParameterValue("@BillId", Convert.ToInt32(Request.QueryString["Bill_ID"]));
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "PharmacyReturnSlip")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "PatientManagement/rptPharmacyReturnSlip.rpt";
+                rd.Load(reportPath);
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("@ReturnId", Convert.ToInt32(Request.QueryString["Return_ID"]));
+                rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
             else if (reportName == "BillingBaseReport")
@@ -4722,11 +4735,13 @@ namespace PMS
             }
             else if (reportName == "TestRateList")
             {
-                reportPath += "rptTestsRateList.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "Billings/rptTestsRateList.rpt";
                 rd.Load(reportPath);
                 string title = Request.QueryString["ReportTitle"].ToString();
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", title);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "ConsolidateMedicalSubsidy")
             {
@@ -6522,11 +6537,16 @@ namespace PMS
 
             else if (reportName == "TestDefination")
             {
-
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var Address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
                 reportPath += "Billings/rptTestDefination.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Test_IDs", Request.QueryString["Test_IDs"]);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", Address);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+
             }
             else if (reportName == "Gastro")
             {
