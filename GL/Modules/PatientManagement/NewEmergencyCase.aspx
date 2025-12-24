@@ -4400,18 +4400,19 @@
             }
             console.log(SymtomsList);
             PageMethods.SaveSymtoms(JSON.stringify(SymtomsList), function (response) {
+                debugger;
                 saveAllRecord();
             });
 
         }
+        debugger;
         function saveAllRecord() {
-            // Helper function to safely get values
+            debugger;
             function safeGetValue(selector) {
                 var el = $(selector);
                 return el.length > 0 ? (el.val() || "") : "";
             }
-
-            // Helper function to safely get text content
+            debugger;
             function safeGetText(selector) {
                 var el = $(selector);
                 return el.length > 0 ? (el.text() || "") : "";
@@ -4436,8 +4437,10 @@
 
 
             var Emergency_ID = safeGetValue("#<%= txtEmergency_Patient_ID.ClientID %>");
-            if (Emergency_ID == "(New)") {
+            if (Emergency_ID === "(New)" || Emergency_ID === "" || Emergency_ID === "0") {
                 Emergency_ID = 0;
+            } else {
+                Emergency_ID = parseInt(Emergency_ID) || 0;
             }
             var Patient_ID = safeGetValue("#<%= hdfReg_ID.ClientID %>");
             var txtAdmission_Date = safeGetValue('#ctl00_MainContent_txtAdmission_Date');
@@ -4694,7 +4697,7 @@
 
             console.log("Data being sent:", data);
 
-            $.ajax({
+            $.ajax({               
                 type: "POST",
                 url: "NewEmergencyCase.aspx/SaveRecord", // Replace with your actual page name
                 data: JSON.stringify({ data: data }),
