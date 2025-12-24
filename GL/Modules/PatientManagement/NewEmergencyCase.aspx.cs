@@ -462,9 +462,29 @@ namespace PMS.Modules.PatientManagement
                     ddl_Department.Items.Add(new ListItem("Please Select", "0"));
                     ddl_Department.DataBind();
 
-                    txtMobileNo.Text = Emergency_Doctor_Notes.DoctorMobile;
-                    ddl_Department.SelectedValue = Emergency_Doctor_Notes.Department;
-                    ddlCallToDoctor.SelectedValue = Emergency_Doctor_Notes.DoctorToCall;
+                    //txtMobileNo.Text = Emergency_Doctor_Notes.DoctorMobile;
+                    //ddl_Department.SelectedValue = Emergency_Doctor_Notes.Department;
+                    //ddlCallToDoctor.SelectedValue = Emergency_Doctor_Notes.DoctorToCall;
+                    if (Emergency_Doctor_Notes != null)
+                    {
+                        txtMobileNo.Text = Emergency_Doctor_Notes.DoctorMobile ?? "";
+                        if (!string.IsNullOrEmpty(Emergency_Doctor_Notes.Department) && ddl_Department.Items.FindByValue(Emergency_Doctor_Notes.Department) != null)
+                        {
+                            ddl_Department.SelectedValue = Emergency_Doctor_Notes.Department;
+                        }
+                        if (!string.IsNullOrEmpty(Emergency_Doctor_Notes.DoctorToCall) && ddlCallToDoctor.Items.FindByValue(Emergency_Doctor_Notes.DoctorToCall) != null)
+                        {
+                            ddlCallToDoctor.SelectedValue = Emergency_Doctor_Notes.DoctorToCall;
+                        }
+                    }
+                    else
+                    {
+                        txtMobileNo.Text = "";
+                        ddl_Department.SelectedIndex = 0;
+                        ddlCallToDoctor.SelectedIndex = 0;
+                    }
+
+
                     ddlDischargeStatus.SelectedValue = qry.Discharge_Status;
                     ddlDischarge_By.SelectedValue = qry.Discharge_By;
                     txtVaccinationHistory.Text = qry.Vaccination_History;

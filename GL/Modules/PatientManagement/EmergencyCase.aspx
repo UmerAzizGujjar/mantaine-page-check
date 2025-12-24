@@ -215,6 +215,7 @@
 
                 }
             }, 1500);
+            LoadCategory();
 
         });
 
@@ -4143,7 +4144,34 @@
                 localStorage.TestForCategoryWiseSelections = options;
             });
         }
+        function LoadCategory() {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/Load_Category",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctor = JSON.parse(response.d);
+                    var options = '<option value=""> Please Select </option>';
 
+                    $.each(doctor, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+
+                    $('#ctl00_MainContent_ddlCategory').html(options);
+                    $('#ctl00_MainContent_ddlCategory').select2();
+
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+
+        }
         function AddBloodTest() {
 
             var test = $('#ddlTestList').find('option:selected').text();
@@ -6517,7 +6545,12 @@
             </div>
         </div>     
         <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-6">
+             <div class="col-lg-1 col-md-4 col-sm-6">
+                  <asp:Label ID="lblcategory" runat="server" Text="PatientCategory"></asp:Label>
+                  <asp:DropDownList ID="ddlCategory" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()" class="form-control"></asp:DropDownList>
+                
+               </div>
+            <div class="col-lg-1 col-md-4 col-sm-6">
              <asp:Label ID="lblfee" runat="server" Text="Admission Fee"></asp:Label>
              <asp:TextBox ID="txtadmissionfee" ReadOnly="true" runat="server" Enabled="true" class="form-control"></asp:TextBox>
                  </div>
@@ -6533,14 +6566,16 @@
                  <asp:TextBox ID="txt_remarks"  runat="server" ></asp:TextBox>
             </div>
              <div class="col-lg-1 col-md-4 col-sm-6"></div>
-            <div class="file-upload-wrapper">
-                <asp:FileUpload ID="file_upload" runat="server" CssClass="form-control form-control-sm" Style="flex: 1; min-width: 120px;" />
-                <asp:HyperLink ID="hlExistingFile" runat="server"
-                    Text="View Attached File"
-                    Target="_blank"
-                    Visible="false"
-                    CssClass="btn btn-sm btn-outline-secondary" />
-            </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                       <div class="file-upload-wrapper">
+                   <asp:FileUpload ID="file_upload" runat="server" CssClass="form-control form-control-sm" Style="flex: 1;" />
+                   <asp:HyperLink ID="hlExistingFile" runat="server"
+                       Text="View Attached File"
+                       Target="_blank"
+                       Visible="false"
+                       CssClass="btn btn-sm btn-outline-secondary" />
+                    </div>
+                </div>
         </div>
         <div class="row">
       <div class="col-lg-9 col-md-12 col-sm-2">
