@@ -231,6 +231,7 @@
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
+    <Content Include="Modules\Billing\Share_Distribution.aspx" />
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
@@ -25881,6 +25882,13 @@
     </Compile>
     <Compile Include="Modules\Billing\SaleReturnList.aspx.designer.cs">
       <DependentUpon>SaleReturnList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\Share_Distribution.aspx.cs">
+      <DependentUpon>Share_Distribution.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\Share_Distribution.aspx.designer.cs">
+      <DependentUpon>Share_Distribution.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\AccountSection.aspx.cs">
       <DependentUpon>AccountSection.aspx</DependentUpon>
