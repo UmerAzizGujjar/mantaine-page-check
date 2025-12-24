@@ -2396,7 +2396,16 @@
                 $('#tblWards tbody').html(rows);
             });
         }
-
+        function LoadFee() {
+            var category = $("#ctl00_MainContent_ddlCategory").val();
+            if (category == "01" || category == "02") {
+                $("#ctl00_MainContent_txtDiscount").val(0);
+            }
+            else {
+                $("#ctl00_MainContent_txtDiscount").val(100);
+                $("#ctl00_MainContent_txtDiscount").atrr('disabled', true);
+            }
+        }
         function ParseDate(dateString) {
             if (dateString && dateString.startsWith("/Date(")) {
                 return new Date(parseInt(dateString.substr(6)));
@@ -6547,7 +6556,7 @@
         <div class="row">
              <div class="col-lg-1 col-md-4 col-sm-6">
                   <asp:Label ID="lblcategory" runat="server" Text="PatientCategory"></asp:Label>
-                  <asp:DropDownList ID="ddlCategory" runat="server" AppendDataBoundItems="true" OnChange="FillWardBeds()" class="form-control"></asp:DropDownList>
+                  <asp:DropDownList ID="ddlCategory" runat="server" AppendDataBoundItems="true" OnChange="LoadFee()" class="form-control"></asp:DropDownList>
                 
                </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
