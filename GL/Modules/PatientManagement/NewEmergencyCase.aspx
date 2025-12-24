@@ -4183,15 +4183,13 @@
     <script id="functions" type="text/javascript">
 
         function ResetForm() {
-            window.location.href = "NewOutPatient.aspx";
+            window.location.href = "NewEmergencyCase.aspx";
         }
 
 
 
-        // Simple AddVitals function matching your style. Load after jQuery and after ASP.NET controls render.
 
         function AddVitals() {
-            // read values (ends-with selectors for ASP.NET rendered ids)
             var pulse = $("[id$='txtRateBeats']").val() || '-';
             var bp = $("[id$='txtBP']").val() || '-';
             var temp = $("[id$='txtTemp']").val() || '-';
@@ -4212,7 +4210,6 @@
             var tbody = $('#tblVitals tbody');
             var tableContainer = $('#divtblVitals');
 
-            // clear existing rows and insert one row (same behaviour as your demo)
             tbody.empty();
             if (pulse != '-' || temp != '-' || volume != 'Please Select') {
                 var newRow = $('<tr>').html(
