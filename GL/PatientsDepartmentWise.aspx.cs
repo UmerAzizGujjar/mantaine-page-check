@@ -2670,9 +2670,9 @@ namespace PMS
                     lblMainDepartment.Text = "Radiology Name";
                     ddlMainDepartment.Visible = true;
                     ddlMainDepartment.Items.Clear();
-                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlMainDepartment.Items.Add(new ListItem() { Text = "Ultrasound", Value = "002" });
-                    ddlMainDepartment.Items.Add(new ListItem() { Text = "X-Ray", Value = "003" });
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "Ultrasound", Value = "Ultrasound" });
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "X-Ray", Value = "X-Ray" });
                     ddlMainDepartment.DataBind();
 
 
