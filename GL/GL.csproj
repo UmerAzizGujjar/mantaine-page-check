@@ -3804,6 +3804,9 @@
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.min.js" />
     <Content Include="upload\UploadEmergency.ashx" />
     <Content Include="upload\UploadVoucherFiles.ashx" />
+    <Content Include="obj\Release\Package\PackageTmp\DataBase.dbml.layout">
+      <DependentUpon>DataBase.dbml</DependentUpon>
+    </Content>
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -25644,6 +25647,11 @@
     <Content Include="wwwroot\Tibbit_theme\Styles\font-awesome\scss\_variables.scss" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataBase1.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataBase.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Accounts\ClinicalFinancial.aspx.cs">
       <DependentUpon>ClinicalFinancial.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
