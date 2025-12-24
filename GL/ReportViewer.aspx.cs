@@ -4735,11 +4735,13 @@ namespace PMS
             }
             else if (reportName == "TestRateList")
             {
-                reportPath += "rptTestsRateList.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "Billings/rptTestsRateList.rpt";
                 rd.Load(reportPath);
                 string title = Request.QueryString["ReportTitle"].ToString();
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", title);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "ConsolidateMedicalSubsidy")
             {
