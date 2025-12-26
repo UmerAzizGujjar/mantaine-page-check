@@ -112,7 +112,7 @@ namespace PMS
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
-                    trDoctor.Visible = false;
+                    trDoctor.Visible = true;
                     tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
@@ -135,6 +135,23 @@ namespace PMS
                     ddlPatientType.DataValueField = "UserId";
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
+
+                    DataBaseDataContext db1 = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in db1.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlFilterClinic.DataSource = valusets;
+                    ddlFilterClinic.DataTextField = "DataValue_Description";
+                    ddlFilterClinic.DataValueField = "DataValue_Name";
+                    ddlFilterClinic.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlFilterClinic.DataBind();
+                    op_FilterClinic.Visible = true;
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+
                 }
                 else if (this.PageTitle == "OPD_Department_Wise_Report")
                 {
@@ -750,6 +767,7 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
                     ddlPatientType.Visible = true;
+
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlFilterClinic.DataSource = valusets;

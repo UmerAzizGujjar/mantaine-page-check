@@ -558,12 +558,17 @@ namespace PMS
                 string rptFileName = "Patients/OPDDetailReport.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
+                string doctorID = Request.QueryString["DoctorID"].ToString();
+
+
                 string CheckSummary = Request.QueryString["Summary"].ToString();
                 if (CheckSummary == "true")
                 {
                     rptFileName = "Patients/OPDDetailReport_Summary.rpt";
                     reportTitle = "OPD Detail Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
                 }
+
+                string FilterClinic = Request.QueryString["FilterClinic"].ToString();
 
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
@@ -587,6 +592,10 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", sqlEndDateTime);
                 rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("@Department", departmentID);
+                rd.SetParameterValue("@filterClinic", FilterClinic);
+                rd.SetParameterValue("@DoctorID", doctorID);
+
+
             }
             else if (reportName == "OPD_Department_Wise_Report")
             {
@@ -1355,6 +1364,23 @@ namespace PMS
                 rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["sDate"]));
                 rd.SetParameterValue("@VendorId", (Request.QueryString["VendorId"]).ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "Vendor_Balance")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var Start_Date = Request.QueryString["startDate"];
+                string RptTitle = Request.QueryString["ReportTitle"];
+
+                if (Start_Date != null)
+                {
+                    reportPath += "Accounts/rptVendorBalance.rpt";
+                    rd.Load(reportPath);
+                    rd.SummaryInfo.ReportTitle = reportTitle;
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("ReportTitle", RptTitle);
+                    rd.SetParameterValue("@sDateTime", Start_Date);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                }
             }
             else if (reportName == "VendorLedger")
             {
