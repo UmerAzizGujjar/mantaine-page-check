@@ -852,7 +852,11 @@
                 STAmount = parseFloat((STpercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 $($(value).find('td input[name=txtSalAmount]')[0]).val(STAmount.toFixed(2));
 
-                var bonusTaxTotal = STAmount + AdvAmount + FurtherAmount;
+                var BonusQty = parseFloat($($(value).find('td input[name=txtBonusQty]')[0]).val()) || 0;
+                var bonusTaxTotal = 0;
+                if (BonusQty > 0) {
+                    bonusTaxTotal = STAmount + AdvAmount + FurtherAmount;
+                }
                 $($(value).find('td input[name=txtBonusAmount]')[0]).val(bonusTaxTotal.toFixed(2));
                 totalBonusTax += bonusTaxTotal;
 
