@@ -69,6 +69,15 @@ namespace PMS
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
                         break;
+                    case "AB":
+                        DateDiv.Visible = true;
+                        levelChekBox.Visible = false;
+                        HideZerroBalance.Visible = true;
+                        AccountInfoDiv.Visible = true;
+                        AccountDiv.Visible = true;
+                        CostCenterDiv.Visible = false;
+                        BindCostCenterDDL();
+                        break;
                     case "PLC":
                         DateDiv.Visible = true;
                         comparisonDateDiv.Visible = true;
@@ -149,6 +158,22 @@ namespace PMS
                         levelChekBox.Visible = false;
                         DateDiv.Visible = true;
                         CostCenterDiv.Visible = true;
+                        BindCostCenterDDL();
+                        break;
+                    case "CBS":
+                        DateDiv.Visible = true;
+                        chkExportPDF.Visible = true;
+                        txtEnd_Date.Visible = true;
+                        AccountInfoDiv.Visible = true;
+                        CostCenterDiv.Visible = false;
+                        BindCostCenterDDL();
+                        break;
+                    case "CB":
+                        DateDiv.Visible = true;
+                        chkExportPDF.Visible = true;
+                        txtEnd_Date.Visible = true;
+                        AccountInfoDiv.Visible = true;
+                        CostCenterDiv.Visible = false;
                         BindCostCenterDDL();
                         break;
                     case "TBB":
@@ -383,6 +408,7 @@ namespace PMS
                 string query = "";
                 string Account_Code = "";
                 string StartAccountCode = "";
+                string Account_Code_for_CashBook = "";
                 string EndAccountCode = "";
                 string Account_Code_Name = "";
 
@@ -495,6 +521,25 @@ namespace PMS
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
                         EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
                         query = "ReportName=BalanceSheetDetail&ReportTitle=Balance Sheet Detail as on " + txtStart_Date.Text + "&startDate=" + txtStart_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "";
+                        break;
+                    case "CB":
+                        rfvAccount.ValidationGroup = "";
+                        rfvAccount.Validate();
+                        if (!rfvAccount.IsValid)
+                            return;
+                        Account_Code_Name = DBClass.getField("select Account_Code + ' - ' + Account_Name as AccountCodeName from gl_accounts where Account_ID=" + txtAccountCodeForCashBook.Text + " ");
+                        Account_Code_for_CashBook = Account_Code_Name.Substring(0, Account_Code_Name.IndexOf(' '));
+                        query = "ReportName=CashBook&ReportTitle=" + Account_Code_Name + " Book Summary from " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Account_Code=" + Account_Code_for_CashBook + "&ExportPDF=" + chkExportPDF.Checked;
+                        break;
+                    case "CBS":
+                        rfvAccount.ValidationGroup = "";
+                        rfvAccount.Validate();
+                        if (!rfvAccount.IsValid)
+                            return;
+                        InserRecordInDailyBook();
+                        Account_Code_Name = DBClass.getField("select Account_Code + ' - ' + Account_Name as AccountCodeName from gl_accounts where Account_ID=" + txtAccountCodeForCashBook.Text + " ");
+                        Account_Code_for_CashBook = Account_Code_Name.Substring(0, Account_Code_Name.IndexOf(' '));
+                        query = "ReportName=CashBookSummary&ReportTitle=" + Account_Code_Name + " Book Summary from " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Account_Code=" + Account_Code_for_CashBook + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "BSC":
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
@@ -650,7 +695,31 @@ namespace PMS
                 }
             }
         }
-
+        private void InserRecordInDailyBook()
+        {
+            SqlTransaction tranObj = null;
+            SqlConnection con = new SqlConnection(DBClass.ConnectionString());
+            con.Open();
+            tranObj = con.BeginTransaction();
+            try
+            {
+                string Account_Name = DBClass.getField("select Account_Name from gl_accounts where Account_ID=" + txtAccountCodeForCashBook.Text + " ");
+                string query = "Delete from rpt_DailyBook;";
+                query += "Insert into rpt_DailyBook(Account_Code,Account_Name,Date,Balance) values(Null,'" + Account_Name + " Opening Balance....','" + txtStart_Date.Text + "',dbo.GetAccountBalance(" + txtAccountCodeForCashBook.Text + ",'" + txtStart_Date.Text + "'))";
+                DBClass.exectueQuery(query, tranObj, con);
+                tranObj.Commit();
+            }
+            catch (Exception ex)
+            {
+                if (tranObj != null)
+                    tranObj.Rollback();
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
         protected void chbAllAccounts_CheckedChanged(object sender, EventArgs e)
         {
             SqlTransaction tranObj = null;

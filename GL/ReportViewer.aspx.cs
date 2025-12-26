@@ -5409,7 +5409,8 @@ namespace PMS
                 if (Request.QueryString["startDate"] != null && Request.QueryString["endDate"] != null
                    && Request.QueryString["Account_Code"] != null)
                 {
-                    reportPath += "rptCashBook.rpt";
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    reportPath += "Accounts/rptCashBook.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
@@ -5418,6 +5419,7 @@ namespace PMS
                     rd.SetParameterValue("@Account_Code", Request.QueryString["Account_Code"]);
                     rd.SetParameterValue("@fromDate", Convert.ToDateTime(Request.QueryString["startDate"]));
                     rd.SetParameterValue("@toDate", Convert.ToDateTime(Request.QueryString["endDate"]));
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
             }
             else if (reportName == "DepartmentConversion")
@@ -5456,7 +5458,8 @@ namespace PMS
                 if (Request.QueryString["startDate"] != null && Request.QueryString["endDate"] != null
                    && Request.QueryString["Account_Code"] != null)
                 {
-                    reportPath += "rptCashBookSummary.rpt";
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    reportPath += "Accounts/rptCashBookSummary.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
@@ -5465,6 +5468,7 @@ namespace PMS
                     rd.SetParameterValue("@Account_Code", Request.QueryString["Account_Code"]);
                     rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["startDate"]));
                     rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["endDate"]));
+                    rd.SetParameterValue("CompanyLogo", logoPath);
 
                 }
             }
@@ -5637,7 +5641,8 @@ namespace PMS
                 if (Request.QueryString["fromDate"] != null && Request.QueryString["stCode"] != null
                      && Request.QueryString["enCode"] != null && Request.QueryString["toDate"] != null)
                 {
-                    reportPath += "rptAccountBalance.rpt";
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    reportPath += "Accounts/rptAccountBalance.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
@@ -5647,6 +5652,7 @@ namespace PMS
                     rd.SetParameterValue("@enCode", Request.QueryString["enCode"]);
                     rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                     rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     if (Request.QueryString["HideZeroBalance"] != null && Convert.ToBoolean(Request.QueryString["HideZeroBalance"]))
                         rd.RecordSelectionFormula = "{@Closeing}<>0.00";
                 }
