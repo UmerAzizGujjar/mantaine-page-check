@@ -187,6 +187,8 @@ namespace PMS.AP
                               m.Total_ST_Amount,
                               m.Total_Adv_Amt,
                               m.Total_Further_Amt,
+                              m.IsManual,
+                              m.IsByDefault,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == m.Vendor_ID).Select(po => po.Vendor_Name),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
@@ -226,6 +228,7 @@ namespace PMS.AP
                                d.PRDetailId,
                                d.CS_Ven_No,
                                d.AdvanceTax_ID,
+                               d.Bonus_Tax,
                                pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId)
                            }).ToList();
 
@@ -397,6 +400,8 @@ namespace PMS.AP
             public string POType { get; set; }
             public string WareHouse { get; set; }
             public string Further_amount { get; set; }
+            public bool IsManual { get; set; }
+            public bool IsByDefault { get; set; }
             public List<DetailItemList> ItemList { get; set; }
         }
         public class DetailItemList
@@ -423,6 +428,8 @@ namespace PMS.AP
             public string FurtherTax_Amount { get; set; }
             public string FurtherTax_Percentage { get; set; }
             public int FurtherTax_Id { get; set; }
+            public string BonusQty { get; set; }
+            public string BonusTax { get; set; }
 
         }
         [WebMethod]
@@ -491,6 +498,8 @@ namespace PMS.AP
                     existingItem.Payment_Terms = record.PaymentTerms;
                     existingItem.Delivery_Terms = record.DeliveryTerms;
                     existingItem.Term_ID = record.Term_ID;
+                    existingItem.IsManual = record.IsManual;
+                    existingItem.IsByDefault = record.IsByDefault;
                     if (record.FreightCharges != "")
                     {
                         existingItem.Frieght_Charges = Convert.ToDecimal(record.FreightCharges);
@@ -547,6 +556,8 @@ namespace PMS.AP
                 PO.Status = "Created";
                 PO.IsClosed = false;
                 PO.IsDeleted = false;
+                PO.IsManual = record.IsManual;
+                PO.IsByDefault = record.IsByDefault;
                 db.AP_Purchase_Orders.InsertOnSubmit(PO);
                 db.SubmitChanges();
                 PoNo = PO.PO_ID.ToString();
@@ -578,6 +589,7 @@ namespace PMS.AP
                 ltd.PO_ID = int.Parse(PoNo);
                 ltd.Unit = POitem.Unit;
                 ltd.Qty = Convert.ToDecimal(POitem.Qty);
+                ltd.Bonus_Qty = !string.IsNullOrEmpty(POitem.BonusQty) ? Convert.ToDecimal(POitem.BonusQty): 0;
                 ltd.Rate = Convert.ToDecimal(POitem.Rate);
                 ltd.Amount = Convert.ToDecimal(POitem.Amount);
                 if (POitem.Fed_Percentage != "")
@@ -603,6 +615,14 @@ namespace PMS.AP
                 if (POitem.FurtherTax_Percentage != "")
                 {
                     ltd.FurtherTax_Percentage = Convert.ToDecimal(POitem.FurtherTax_Percentage);
+                }
+                if (!string.IsNullOrEmpty(POitem.BonusTax))
+                {
+                    ltd.Bonus_Tax = Convert.ToDecimal(POitem.BonusTax);
+                }
+                else
+                {
+                    ltd.Bonus_Tax = 0;
                 }
                 ltd.FurtherTax_Id = Convert.ToInt32(POitem.FurtherTax_Id);
                 ltd.FedPercent_Id = POitem.FedPercentId;
