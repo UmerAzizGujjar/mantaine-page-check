@@ -69,6 +69,15 @@ namespace PMS
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
                         break;
+                    case "AB":
+                        DateDiv.Visible = true;
+                        levelChekBox.Visible = false;
+                        HideZerroBalance.Visible = true;
+                        AccountInfoDiv.Visible = true;
+                        AccountDiv.Visible = true;
+                        CostCenterDiv.Visible = false;
+                        BindCostCenterDDL();
+                        break;
                     case "PLC":
                         DateDiv.Visible = true;
                         comparisonDateDiv.Visible = true;
@@ -98,6 +107,21 @@ namespace PMS
                         chbAllAccounts.Checked = false;
                         if (ViewState["dtAccounts"] == null)
                             CreateDataTable();
+                        break;
+                    case "VB":
+                        phMultiLedger.Visible = false;
+                        DateDiv.Visible = true;
+                        AccountInfoDiv.Visible = false;
+                        AccountDiv.Visible = false;
+                        levelChekBox.Visible = false;
+                        plhAllAcounts.Visible = false;
+                        chbAllAccounts.Visible = false;
+                        plhAllAcounts.Visible = false;
+                        lblSpecificAccount.Visible = false;
+                        txtSpecificAccount.Visible = false;
+                        lblCostCenter.Visible = false;
+                        ddlCostCenter.Visible = false;
+                        chbAllAccounts.Checked = false;
                         break;
                     case "BSA":
                         AccountInfoDiv.Visible = true;
@@ -149,6 +173,22 @@ namespace PMS
                         levelChekBox.Visible = false;
                         DateDiv.Visible = true;
                         CostCenterDiv.Visible = true;
+                        BindCostCenterDDL();
+                        break;
+                    case "CBS":
+                        DateDiv.Visible = true;
+                        chkExportPDF.Visible = true;
+                        txtEnd_Date.Visible = true;
+                        AccountInfoDiv.Visible = true;
+                        CostCenterDiv.Visible = false;
+                        BindCostCenterDDL();
+                        break;
+                    case "CB":
+                        DateDiv.Visible = true;
+                        chkExportPDF.Visible = true;
+                        txtEnd_Date.Visible = true;
+                        AccountInfoDiv.Visible = true;
+                        CostCenterDiv.Visible = false;
                         BindCostCenterDDL();
                         break;
                     case "TBB":
@@ -383,6 +423,7 @@ namespace PMS
                 string query = "";
                 string Account_Code = "";
                 string StartAccountCode = "";
+                //string Account_Code_for_CashBook = "";
                 string EndAccountCode = "";
                 string Account_Code_Name = "";
 
@@ -490,6 +531,9 @@ namespace PMS
                         }
                     case "TC":
                         query = "ReportName=TrailComparison&ReportTitle=Trail Comparison From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
+                        break;
+                    case "VB":
+                        query = "ReportName=Vendor_Balance&ReportTitle=Vendor Balance Report From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text;
                         break;
                     case "BSD":
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
@@ -650,7 +694,31 @@ namespace PMS
                 }
             }
         }
-
+        //private void InserRecordInDailyBook()
+        //{
+        //    SqlTransaction tranObj = null;
+        //    SqlConnection con = new SqlConnection(DBClass.ConnectionString());
+        //    con.Open();
+        //    tranObj = con.BeginTransaction();
+        //    try
+        //    {
+        //        string Account_Name = DBClass.getField("select Account_Name from gl_accounts where Account_ID=");
+        //        string query = "Delete from rpt_DailyBook;";
+        //        query += "Insert into rpt_DailyBook(Account_Code,Account_Name,Date,Balance) values(Null,'" + Account_Name + " Opening Balance....','" + txtStart_Date.Text + "',dbo.GetAccountBalance(" + txtAccountCodeForCashBook.Text + ",'" + txtStart_Date.Text + "'))";
+        //        DBClass.exectueQuery(query, tranObj, con);
+        //        tranObj.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        if (tranObj != null)
+        //            tranObj.Rollback();
+        //        throw ex;
+        //    }
+        //    finally
+        //    {
+        //        con.Close();
+        //    }
+        //}
         protected void chbAllAccounts_CheckedChanged(object sender, EventArgs e)
         {
             SqlTransaction tranObj = null;
