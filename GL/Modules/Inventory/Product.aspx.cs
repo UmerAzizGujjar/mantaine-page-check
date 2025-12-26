@@ -306,21 +306,18 @@ namespace PMS.Inventory
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static string AddItems(
 string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
-string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string basesize, string baseqty,
-string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable,
-string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset,
-string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string Procedure_Time,
-string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator,
-string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem,
-string Procedure, string LensRequired, string BedServices, string LabRequired,
-string PattHistoryRequired, string FitnessCertificate, string OtherServices,
-string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId,
-string IsHospital, string IsService, string SehatSahulat, string SehatCardRate,
-string Discount_Block, List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
+string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string basesize, string baseqty, string SalesRate, string PurchRate,
+string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable,
+string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string Procedure_Time,
+string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
+string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
+string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue,
+string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate, string Discount_Block,
+List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
         {
+            string Id = "";
             DataBaseDataContext db = new DataBaseDataContext();
             INV_Item obj = null;
-            string Id = "";
 
             try
             {
@@ -363,6 +360,7 @@ string Discount_Block, List<BatchNum> batchList, List<PatientTypeList> PatientTy
                     obj.Narcotics = Convert.ToBoolean(Narcotics);
                     obj.Refregrator = Convert.ToBoolean(Refregrator);
                     obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
+                    obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
                     obj.Procedure_Type = ProcedureTypes;
                     obj.Notes = Notes;
                     obj.Base_Unit = basesize;
@@ -378,6 +376,8 @@ string Discount_Block, List<BatchNum> batchList, List<PatientTypeList> PatientTy
                     obj.Other_Services = Convert.ToBoolean(OtherServices);
                     obj.Billing_Required = Convert.ToBoolean(Billing);
                     obj.OTProcedure = Convert.ToBoolean(OTProcedure);
+                    obj.Book_ID = AppConfig.Book_ID;
+                    obj.Company_ID = AppConfig.Company_ID;
                     obj.DepartmentId = DepartmentId;
                     obj.ItemGroupId = ItemGroup;
                     obj.InventoryOrg = Warehouse;
@@ -389,15 +389,62 @@ string Discount_Block, List<BatchNum> batchList, List<PatientTypeList> PatientTy
                     obj.Created_Time = DateTime.Now;
                     obj.Discount_Block = Convert.ToBoolean(Discount_Block);
 
+                    bool itemExists = db.INV_Items.Any(x => x.Item_Code == obj.Item_Code);
+                    if (itemExists)
+                    {
+                        var maxCode = DBClass.getField(@"
+                SELECT ISNULL(MAX(CONVERT(INT, 
+                    SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
+                FROM INV_Items");
+                        obj.Item_Code = maxCode;
+                    }
+
                     db.INV_Items.InsertOnSubmit(obj);
                     db.SubmitChanges();
                     Id = obj.Item_ID.ToString();
+
+                    if (batchList != null)
+                    {
+                        foreach (var bth in batchList)
+                        {
+                            if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
+
+                            INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                            {
+                                Item_Id = obj.Item_ID,
+                                Batch_Num = bth.ddlBatch,
+                                Item_Sale_Rate = bth.txtBatchRate,
+                                Sehat_card_rate_batch = bth.txtSCRate,
+                                Uom_Qty = bth.txtUom_Qty,
+                            };
+                            db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
+                        }
+                    }
+
+                    if (PatientTypeList != null)
+                    {
+                        foreach (var ptr in PatientTypeList)
+                        {
+                            if (string.IsNullOrEmpty(ptr.pat_type)) continue;
+
+                            INV_Item_PatientWise ratewise = new INV_Item_PatientWise
+                            {
+                                Item_Id = obj.Item_ID,
+                                Patient_Type = ptr.pat_type,
+                                Item_Sale_Rate = ptr.SaleRate,
+                            };
+                            db.INV_Item_PatientWises.InsertOnSubmit(ratewise);
+                        }
+                    }
+
+                    db.SubmitChanges();
                 }
                 else
                 {
                     int itemId = Convert.ToInt32(ItemId);
                     obj = db.INV_Items.FirstOrDefault(x => x.Item_ID == itemId);
-                    if (obj == null) return "Error";
+                    if (obj == null)
+                        return "Error";
 
                     obj.Description = Desc;
                     obj.Active = Convert.ToBoolean(Active);
@@ -410,59 +457,149 @@ string Discount_Block, List<BatchNum> batchList, List<PatientTypeList> PatientTy
                     obj.Updated_Time = DateTime.Now;
                     obj.Base_Unit = basesize;
                     obj.Base_Unit_Qty = Convert.ToInt32(baseqty);
+                    obj.Item_Account_category = int.TryParse(FianceIntegration, out int finCat) ? finCat : 0;
+                    obj.UOM_Qty = decimal.TryParse(UomQty, out decimal uomQty) ? uomQty : 0;
+                    obj.Length = decimal.TryParse(Lenght, out decimal length) ? length : 0;
+                    obj.Width = decimal.TryParse(Width, out decimal width) ? width : 0;
+                    obj.Height = decimal.TryParse(Heigth, out decimal height) ? height : 0;
                     obj.Sale_Rate = decimal.TryParse(SalesRate, out decimal saleRate) ? saleRate : 0;
                     obj.Purchase_Rate = decimal.TryParse(PurchRate, out decimal purchRate) ? purchRate : 0;
                     obj.Remarks = Remarks;
+                    obj.locatorAddress = locatorAddress;
+                    obj.Locator = Convert.ToBoolean(Locator);
+                    obj.IsBatch = Convert.ToBoolean(Batch);
+                    obj.Finished_Product = Convert.ToBoolean(FinshProduct);
+                    obj.Consumable = Convert.ToBoolean(Consumable);
+                    obj.Saleable = Convert.ToBoolean(Saleable);
+                    obj.Purchaseable = Convert.ToBoolean(Purchaseable);
+                    obj.IsNonStockItem = Convert.ToBoolean(NonStockItem);
+                    obj.Isfixasset = Convert.ToBoolean(Fixasset);
+                    obj.Mini_Stock = MinimumStock;
+                    obj.Reorder_Stock = ReorderStock;
+                    obj.Max_Stock = MaximumStock;
+                    obj.Procedure_Time = Procedure_Time;
+                    obj.ATC = ATC;
+                    obj.Generic_Name = GenericName;
+                    obj.Controller_Drug = Convert.ToBoolean(ControllerDrug);
+                    obj.Narcotics = Convert.ToBoolean(Narcotics);
+                    obj.Refregrator = Convert.ToBoolean(Refregrator);
+                    obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
+                    obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
+                    obj.Procedure_Type = ProcedureTypes;
+                    obj.Notes = Notes;
+                    obj.LabOR_RadiologyCharges = Convert.ToBoolean(RadioCharges);
+                    obj.Dental_Item = Convert.ToBoolean(DentalItem);
+                    obj.Procedure_Required = Convert.ToBoolean(Procedure);
+                    obj.Lense_Required = Convert.ToBoolean(LensRequired);
+                    obj.Bed_Services = Convert.ToBoolean(BedServices);
+                    obj.Fitness_Certificate = Convert.ToBoolean(FitnessCertificate);
+                    obj.Lab_Required = Convert.ToBoolean(LabRequired);
+                    obj.Pat_History_Required = Convert.ToBoolean(PattHistoryRequired);
+                    obj.Other_Services = Convert.ToBoolean(OtherServices);
+                    obj.Billing_Required = Convert.ToBoolean(Billing);
+                    obj.OTProcedure = Convert.ToBoolean(OTProcedure);
                     obj.DepartmentId = DepartmentId;
                     obj.InventoryOrg = Warehouse;
-                    obj.Discount_Block = Convert.ToBoolean(Discount_Block);
+                    obj.Hospital_Services = Convert.ToBoolean(IsHospital);
+                    obj.Services = Convert.ToBoolean(IsService);
+                    obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
+                    obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal sehatRate) ? sehatRate : 0;
 
-                    var oldPatientRates = db.INV_Item_PatientWises.Where(x => x.Item_Id == itemId);
-                    db.INV_Item_PatientWises.DeleteAllOnSubmit(oldPatientRates);
+                    var pkg = db.Packages_Details.FirstOrDefault(y => y.Item_Code == obj.Item_ID);
+                    if (pkg != null && !string.IsNullOrEmpty(SalesRate))
+                    {
+                        pkg.Price = Convert.ToDecimal(SalesRate);
+                        pkg.Amount = Convert.ToDecimal(SalesRate);
+                    }
 
-                    var oldBatchRates = db.INV_Item_RateBatchWises.Where(x => x.Item_Id == itemId);
-                    db.INV_Item_RateBatchWises.DeleteAllOnSubmit(oldBatchRates);
+                    if (batchList != null)
+                    {
+                        foreach (var bth in batchList)
+                        {
+                            if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
+
+                            var existingBatch = db.INV_Item_RateBatchWises
+                                .FirstOrDefault(x => x.Item_Id == Convert.ToInt32(ItemId) && x.Batch_Num == bth.ddlBatch);
+
+                            if (existingBatch != null)
+                            {
+                                existingBatch.Item_Sale_Rate = bth.txtBatchRate;
+                                existingBatch.Sehat_card_rate_batch = bth.txtSCRate;
+                                existingBatch.Uom_Qty = bth.txtUom_Qty;
+                            }
+                            else
+                            {
+                                INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
+                                {
+                                    Item_Id = Convert.ToInt32(ItemId),
+                                    Batch_Num = bth.ddlBatch,
+                                    Item_Sale_Rate = bth.txtBatchRate,
+                                    Sehat_card_rate_batch = bth.txtSCRate,
+                                    Uom_Qty = bth.txtUom_Qty,
+                                };
+                                db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
+                            }
+                        }
+                    }
+
+                    if (PatientTypeList != null)
+                    {
+                        var submittedRateIds = new List<int>();
+                        foreach (var ptr in PatientTypeList)
+                        {
+                        }
+
+                       
+
+                        var validRateIds = PatientTypeList
+                            .Where(p => p.Item_Rate_Id.HasValue)
+                            .Select(p => p.Item_Rate_Id.Value)
+                            .ToList();
+
+                        var existingRates = db.INV_Item_PatientWises.Where(x => x.Item_Id == itemId);
+                        if (validRateIds.Any())
+                        {
+                            var toDelete = existingRates.Where(x => !validRateIds.Contains(x.Item_Rate_Id)).ToList();
+                            db.INV_Item_PatientWises.DeleteAllOnSubmit(toDelete);
+                        }
+                        else
+                        {
+                            db.INV_Item_PatientWises.DeleteAllOnSubmit(existingRates);
+                        }
+
+                        foreach (var ptr in PatientTypeList)
+                        {
+                            if (string.IsNullOrEmpty(ptr.pat_type)) continue;
+
+                            if (ptr.Item_Rate_Id.HasValue)
+                            {
+                                var existing = db.INV_Item_PatientWises
+                                    .FirstOrDefault(x => x.Item_Rate_Id == ptr.Item_Rate_Id.Value);
+                                if (existing != null)
+                                {
+                                    existing.Item_Sale_Rate = ptr.SaleRate;
+                                }
+                            }
+                            else
+                            {
+                                db.INV_Item_PatientWises.InsertOnSubmit(new INV_Item_PatientWise
+                                {
+                                    Item_Id = itemId,
+                                    Patient_Type = ptr.pat_type,
+                                    Item_Sale_Rate = ptr.SaleRate,
+                                });
+                            }
+                        }
+                    }
 
                     db.SubmitChanges();
                     Id = obj.Item_ID.ToString();
+                    return "Update-" + Id;
                 }
 
-                if (batchList != null)
-                {
-                    foreach (var bth in batchList)
-                    {
-                        if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
-
-                        db.INV_Item_RateBatchWises.InsertOnSubmit(new INV_Item_RateBatchWise
-                        {
-                            Item_Id = obj.Item_ID,
-                            Batch_Num = bth.ddlBatch,
-                            Item_Sale_Rate = bth.txtBatchRate,
-                            Sehat_card_rate_batch = bth.txtSCRate,
-                            Uom_Qty = bth.txtUom_Qty
-                        });
-                    }
-                }
-
-                if (PatientTypeList != null)
-                {
-                    foreach (var ptr in PatientTypeList)
-                    {
-                        if (string.IsNullOrEmpty(ptr.pat_type)) continue;
-
-                        db.INV_Item_PatientWises.InsertOnSubmit(new INV_Item_PatientWise
-                        {
-                            Item_Id = obj.Item_ID,
-                            Patient_Type = ptr.pat_type,
-                            Item_Sale_Rate = ptr.SaleRate
-                        });
-                    }
-                }
-
-                db.SubmitChanges();
-                return (btnValue == "Save" ? "Success-" : "Update-") + Id;
+                return "Success-" + Id;
             }
-            catch
+            catch (Exception ex)
             {
                 return "Error";
             }
@@ -637,6 +774,8 @@ string Discount_Block, List<BatchNum> batchList, List<PatientTypeList> PatientTy
             public string Item_Id { get; set; }
             public string pat_type { get; set; }
             public decimal SaleRate { get; set; }
+
+            public int? Item_Rate_Id { get; set; }
 
         }
     }
