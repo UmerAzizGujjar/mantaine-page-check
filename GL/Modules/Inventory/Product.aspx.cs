@@ -630,9 +630,11 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                                      obj.Item_Category,
                                      Item_Category_Text = db.GetDataValueName("item Category", obj.Item_Category),
                                      obj.Item_Account_category,
-                                     AccountCategory_Text = (from a in db.Account_Categories
-                                                             where a.Account_Category_Id == obj.Item_Account_category
-                                                             select a.CategoryName).FirstOrDefault(),
+                                     AccountCategory_Text = db.Account_Categories
+                                     .Where(a => a.Account_Category_Id == obj.Item_Account_category)
+                                     .Select(a => a.CategoryName)
+                                     .Distinct()  // ← Prevent duplicates
+                                     .FirstOrDefault(),
                                      obj.Financial_Integration,
                                      obj.locatorAddress,
                                      obj.Length,
