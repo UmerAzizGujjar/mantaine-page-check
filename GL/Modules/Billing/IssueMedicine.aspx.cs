@@ -285,6 +285,7 @@ namespace PMS
             }
             return result;
         }
+
         [WebMethod]
         public static string MedicineDetailgetfromOPD(int itemId)
         {
@@ -297,6 +298,7 @@ namespace PMS
             }
             return result;
         }
+     
         [WebMethod]
         public static string GetOutPatientIDByOPDNo(string opdNo)
         {

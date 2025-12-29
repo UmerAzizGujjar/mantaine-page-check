@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="IssueMedicine.aspx.cs" Inherits="PMS.IssueMedicine" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/ASsiratTheme/css/CustomCss/Pharmacy.css" rel="stylesheet" />
-    <link href="../../wwwroot/ASsiratTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Pharmacy.css" rel="stylesheet" />
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
 
     <script type="text/javascript">
@@ -28,6 +28,7 @@
                 event.preventDefault();
                 $('#medName').select2('close');
                 $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
+                //SearchPop();
                 GetPharmacyUser();
                 $('#txtuserCode').focus();
             }
@@ -204,11 +205,11 @@
         }
         debugger
         function loadDoctors() {
-            debugger
+     
             PageMethods.loadDoctors(function (data) {
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(data), function (key, value) {
-                    debugger;
+                 
                     options += '<option value="' + value.Emp_ID + '" >' + value.name + '</option>';
                 });
                 $('#ddlDoctor').html(options);
@@ -220,11 +221,11 @@
         }
         debugger
         function loadDepartment() {
-            debugger
+            
             PageMethods.GetDepartment(function (data) {
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(data), function (key, value) {
-                    debugger
+                  
                     options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                 });
                 $('#ddlDepartment').html(options);
@@ -1009,11 +1010,39 @@
             });
         }
         debugger;
-        function Print_Prescription(selectedValue) {
-            debugger;
-            var id = selectedValue;
-            var url = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
-            window.open(url, '_blanks');
+
+        function Print_Prescription() {
+            var PatNo = $('#ddlPatient_No option:selected').text();
+            var parts = PatNo.split('-');
+            var number = parts[1];
+            var opdNo = number;
+
+            var url = 'IssueMedicine.aspx/GetOutPatientIDByOPDNo';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ opdNo: opdNo }),
+
+                success: function (response) {
+                    // response.d is the standard wrapper for ASP.NET WebMethods
+                    var outPatientID = response.d;
+
+                    if (outPatientID && outPatientID !== "0" && outPatientID !== "null") {
+                        var reportUrl = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + outPatientID;
+                        window.open(reportUrl, '_blank');
+                    } else {
+                        alert('Out Patient ID not found');
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    console.error('Error getting Out Patient ID:', error);
+                    alert('Error: Could not retrieve Out Patient ID. Status: ' + status);
+                }
+            });
         }
         function OnHoldBill() {
             var CheckVisting = $('#chkHold:checked').val();
@@ -1344,7 +1373,12 @@
             var finalbalance = parseFloat(TotalAmount) - parseFloat(txtLineDisc) - parseFloat(txtDisAmt).toFixed(2) - parseFloat(flatdisc);
             $('#txtBalances').val((finalbalance).toFixed());
         }
-
+        //function Print_Prescription(selectedValue) {
+        //    debugger;
+        //    var id = selectedValue;
+        //    var url = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
+        //    window.open(url, '_blanks');
+        //}
         function AssignValue(ControlID, value) {
             if (ControlID.value == '')
                 ControlID.value = value;
@@ -1403,6 +1437,7 @@
             debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
             $('#txtBalances').val(TotAmount);
+
             var discper = $('#txtDisPer').val();
             var FlatDisc = $('#txtFlatDisc').val();
             if (FlatDisc == "") {
@@ -1415,64 +1450,11 @@
             $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
         }
         function getOPDandIPDNO(pat_id) {
-            PageMethods.GetOPDandIPDNO(pat_id, function (data) {
-                var parsedData = JSON.parse(data);
-                var options = '<option value="0" >Please Select</option>';
-
-                // Process GRN_Details
-                $.each(parsedData.OPD_NO, function (key, value) {
-                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
-                });
-
-                // Process Stock_Adjustment_Details
-                $.each(parsedData.IPD_NO, function (key, value) {
-                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
-                });
-
-                // Process Stock_Adjustment_Details
-                $.each(parsedData.Emergency_NO, function (key, value) {
-                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
-                });
-
-                $('#ddlPatient_No').html(options);
-                $('#ddlPatient_No').select2();
+            PageMethods.GetOPDandIPDNO(pat_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                // Process GRN_Details                $.each(parsedData.OPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.IPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.Emergency_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                $('#ddlPatient_No').html(options);                $('#ddlPatient_No').select2();
             })
         }
-        function getbatchfrom_grn() {
-            debugger;
-
-            var Inv_batch = $('#chkbatch').prop("checked");
-
-            if (Inv_batch == false) {
-                $('#batchno').hide();
-                $('#batchno').prop('disabled', true);
-
-                AddnonBatchItems();
-            }
-            else {
-                var med_id = $('#medName').find('option:selected').val();
-
-                PageMethods.GetinvBatch(med_id, function (dataa) {
-                    debugger;
-                    var parsedDataa = JSON.parse(dataa);
-                    console.log(parsedDataa)
-                    if (parsedDataa == true) {
-                        debugger
-                        PageMethods.Getbatch_grn(med_id, function (data) {
-                            var parsedData = JSON.parse(data);
-                            var options = '<option value="0" >Please Select</option>';
-                            debugger;
-                            $.each(parsedData.BatchNos, function (key, value) {
-                                options += '<option value="' + value + '" >' + value + '</option>';
-                            });
-                            //$.each(parsedData.Stock_Adjustment_Details, function (key, value) {
-                            //    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
-                            //});
-
-                            $('#batchno').html(options);
-                            $('#batchno').select2();
-                            var isbatch = $('#chkbatch').prop("checked");
-                            debugger;
+        function getbatchfrom_grn() {            debugger;            var Inv_batch = $('#chkbatch').prop("checked");            if (Inv_batch == false) {                $('#batchno').hide();
+                $('#batchno').prop('disabled', true);                AddnonBatchItems();            }            else {                var med_id = $('#medName').find('option:selected').val();                PageMethods.GetinvBatch(med_id, function (dataa) {                    debugger;                    var parsedDataa = JSON.parse(dataa);                    console.log(parsedDataa)                    if (parsedDataa == true) {                        debugger                        PageMethods.Getbatch_grn(med_id, function (data) {                            var parsedData = JSON.parse(data);                            var options = '<option value="0" >Please Select</option>';                            debugger;                            $.each(parsedData.BatchNos, function (key, value) {                                options += '<option value="' + value + '" >' + value + '</option>';                            });                            //$.each(parsedData.Stock_Adjustment_Details, function (key, value) {                            //    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            //});                            $('#batchno').html(options);                            $('#batchno').select2();                            var isbatch = $('#chkbatch').prop("checked");                            debugger;
                             if (isbatch == true) {
                                 $('#batchno').show();
                                 $('#batchno').prop('disabled', false);
@@ -1487,115 +1469,12 @@
                         }, function (error) {
                             alert(error.get_message());
                         });
-                    }
-                    else {
-                        AddnonBatchItems();
-                    }
-                });
-
+                    }                    else {                        AddnonBatchItems();
+                    }                });
             }
         }
-        function AddnonBatchItems() {
-            debugger;
-            var itemId = $('#medName').val();
-
-            var rowIndex = parseInt($('#tblDetails tbody tr').length);
-            let rows;
-            var expdate = '';
-
-            // Check if the item with the same batch number already exists
-            var itemExists = false;
-            $('#tblDetails tbody tr').each(function () {
-                var existingItemId = $(this).find('input[name="ItemID"]').val();
-
-            });
-
-
-
-            $.ajax({
-                type: "post",
-                url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
-                data: JSON.stringify({
-                    "itemId": itemId
-
-                }),
-                dataType: 'JSON',
-                contentType: "application/json; charset=utf-8",
-                async: false,
-                success: function (msg) {
-                    var length = $("#tblDetails tr:gt(0)").length;
-                    $('#Table_1 tr:gt(0)').remove();
-                    var data = JSON.parse(msg.d);
-                    debugger;
-                    var TotalStock = data[0].Total_Stock;
-                    if (TotalStock == 0) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'This item Have Zero Stock.',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                    }
-                    var Uomqty = data[0].UOM_Qty;
-                    if (Uomqty == null) {
-                        Uomqty = 0;
-                    }
-                    else {
-                        Uomqty = data[0].UOM_Qty;
-                    }
-                    var date = data[0].ExpiryDate
-                    date = moment(date).format('D-MMM-YYYY');
-
-                    debugger;
-                    rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
-
-                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
-
-                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
-
-                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
-
-                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
-
-                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
-
-                        '<td><input type="number" name="txtQty" value="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
-
-                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
-
-                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
-
-                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="width: 75px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
-
-                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
-
-                        '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
-                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
-
-                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
-
-                        '</tr>';
-
-                    $('#tblDetails #tblbody').append(rows);
-
-                    setTimeout(function () {
-                        $('#medName').select2('close');
-                        $('input[name="txtQty"]').focus().select();
-                    }, 5);
-
-                    CalculateSummarieDiscountPerWise(rowIndex);
-                }
-            });
-        }
+        function AddnonBatchItems() {            debugger;            var itemId = $('#medName').val();            var rowIndex = parseInt($('#tblDetails tbody tr').length);            let rows;            var expdate = '';            // Check if the item with the same batch number already exists            var itemExists = false;            $('#tblDetails tbody tr').each(function () {                var existingItemId = $(this).find('input[name="ItemID"]').val();            });            $.ajax({                type: "post",                url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",                data: JSON.stringify({                    "itemId": itemId                }),                dataType: 'JSON',                contentType: "application/json; charset=utf-8",                async: false,                success: function (msg) {                    var length = $("#tblDetails tr:gt(0)").length;                    $('#Table_1 tr:gt(0)').remove();                    var data = JSON.parse(msg.d);                    debugger;                    var Uomqty = data[0].UOM_Qty;                    if (Uomqty == null) {                        Uomqty = 0;                    } else {                        Uomqty = data[0].UOM_Qty;                    }                    var date = data[0].ExpiryDate                    date = moment(date).format('D-MMM-YYYY');                    debugger;                    rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +                        '<td><input type="number" name="txtQty" value="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="width: 75px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +                        '<td style="text-align:Right;"></td>' +                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
+                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +                        '</tr>';                    $('#tblDetails #tblbody').append(rows);                    setTimeout(function () {                        $('#medName').select2('close');                        $('input[name="txtQty"]').focus().select();                    }, 5);                    CalculateSummarieDiscountPerWise(rowIndex);                }            });        }
         debugger;
         function AddMedicineDetail() {
             debugger;
@@ -1660,9 +1539,8 @@
                     date = moment(date).format('D-MMM-YYYY');
                     var discountBlock = data[0].Discount_Block;
                     var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
-
                     var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
-
+                   
                     debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
@@ -1683,7 +1561,6 @@
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
                         '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
-
                         '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
@@ -1697,11 +1574,11 @@
                     setTimeout(function () {
                         $('#medName').select2('close');
                         $('input[name="txtQty"]').focus().select();
+
                         if (isDiscountDisabled) {
                             $('input[name="DisPer"]:last').val(0);
                             $('input[name="DisAmount"]:last').val(0);
                         }
-
                     }, 5);
                     CalculateSummarieDiscountPerWise(rowIndex);
                 }
@@ -1732,7 +1609,6 @@
                 $('#txtBalances').val(ttlpayable.toFixed());
             }
         }
-
         function SaveDataWithoutUser() {
             debugger;
             $('#SaveVal').attr('disabled', true);
@@ -1740,140 +1616,135 @@
             var userP = $('#txtpass').val();
             var userCode;
             var UserPass;
-            var UserId=0
-           
-               
-                    debugger;
-                    var Bill_ID = '';
-                    Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
-             if (Bill_ID == '')
-                 Bill_ID = 0
-             var Patient_ID = $('#hdPatientID').val();
-             if (Patient_ID == "" || Patient_ID == '') {
-                 Patient_ID = "";
-             }
-             var CustomerName = $('#CustomerName').val();
-             var TransType = $("#txtTransType").val();
-             var ReferBy = $('#ddlDoctor').val();
-             var Dept = $('#ddlDepartment').val();
-             var totalPayable = $('#txtTotalPayable').val();
-             var DiscPercent = $('#txtDisPer').val();
-             var DiscAmnt = $('#txtDisAmt').val();
-             var flatdisc = $('#txtFlatDisc').val();
-             if (flatdisc == "" || flatdisc == "visionplus") {
-                 flatdisc = 0;
-             }
-             var AmntReceived = $('#txtAmountReceived').val();
-             var BalanceAmount = $('#txtBalances').val();
-             if (BalanceAmount == "") {
-                 BalanceAmount = 0;
-             }
-             var linediscount = $('#txtLineDisc').val();
-             var Rbtn = $('input[name="rbtn"]:checked').val();
-             var patId = out_Patient_Id;
-             var invNumber = $("#Inv_No").val();
-             var Save_list = [];
-             var hasInvalidStock = false;
-             var Save_list = [];
-
-             $.each($('#tblDetails tbody tr'), function (key, value) {
-                 debugger;
-                 var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
-                 var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
-                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
-                 var Stock = $($(value).find('td input[name=txtStock]')[0]).val();
-                 var Amount = $($(value).find('td input[name=txtSalerate]')[0]).val();
-                 var DiscPer = $($(value).find('td input[name=DisPer]')[0]).val();
-                 var DiscAmount = $($(value).find('td input[name=DisAmount]')[0]).val();
-                 var batchno = $($(value).find('td input[name=BatchNo]')[0]).val();
-                 var expdate = $($(value).find('td input[name=exp_date]')[0]).val();
-                 var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
-                 var CGSAmount = CGSRate * Qty;
-                 if (batchno == null) {
-                     batchno = '';
-                 }
-
-                 if (parseFloat(Stock) <= 0 && parseFloat(Qty) > 0) {
-                     Swal.fire({
-                         icon: 'error',
-                         title: 'Error!',
-                         text: 'Quantity must be greater than zero.',
-                         showConfirmButton: false,
-                         timer: 2000,
-                         customClass: {
-                             popup: 'swal-big-popup',
-                             title: 'swal-big-title',
-                             htmlContainer: 'swal-big-text'
-                         }
-                     });
+            var UserId = 0
 
 
-                     hasInvalidStock = true;
-                     return false;
-                 }
-                 if (Qty <= 0) {
-                     alert('Quantity must be greater than zero.');
-                     hasInvalidStock = true;
-                     return false;
-                 }
-                 if (Stock < Qty) {
-                     alert('Quantity must be less than or equal to stock.');
-                     hasInvalidStock = true;
-                     return false;
-                 }
-                 var NetAmount = $($(value).find('td')[11]).text();
-                 Save_list.push({
-                     Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount,
-                 });
-             });
-             debugger;
-             if (hasInvalidStock) {
-                 return;
-             }
-             debugger;
-             var Parameters = {
-                 "Bill_ID": Bill_ID,
-                 "Patient_ID": Patient_ID,
-                 "CustomerName": CustomerName,
-                 "TransType": TransType,
-                 "ReferBy": ReferBy,
-                 "Dept": Dept,
-                 "totalPayable": totalPayable,
-                 "DiscPercent": DiscPercent,
-                 "DiscAmnt": DiscAmnt,
-                 "flatdisc": flatdisc,
-                 "AmntReceived": AmntReceived,
-                 "BalanceAmount": BalanceAmount,
-                 "linediscount": linediscount,
-                 "Save_list": Save_list,
-                 "invNumber": invNumber
-             };
-             if (patId == undefined) {
-                 debugger;
-                 patId = 0;
-             }
-             PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
-                 debugger;
-                 var btnSave = $('#btnSave').val();
-                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                     window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
-                 }
-                 Swal.fire({
-                     icon: 'success',
-                     title: 'Success!',
-                     text: 'Data Saved Successfully',
-                     showConfirmButton: false,
-                     timer: 2500,
-                     customClass: {
-                         popup: 'swal-big-popup',
-                         title: 'swal-big-title',
-                         htmlContainer: 'swal-big-text'
-                     }
-                 });
+            debugger;
+            var Bill_ID = '';
+            Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
+            if (Bill_ID == '')
+                Bill_ID = 0
+            var Patient_ID = $('#hdPatientID').val();
+            if (Patient_ID == "" || Patient_ID == '') {
+                Patient_ID = "";
+            }
+            var CustomerName = $('#CustomerName').val();
+            var TransType = $("#txtTransType").val();
+            var ReferBy = $('#ddlDoctor').val();
+            var Dept = $('#ddlDepartment').val();
+            var totalPayable = $('#txtTotalPayable').val();
+            var DiscPercent = $('#txtDisPer').val();
+            var DiscAmnt = $('#txtDisAmt').val();
+            var flatdisc = $('#txtFlatDisc').val();
+            if (flatdisc == "" || flatdisc == "visionplus") {
+                flatdisc = 0;
+            }
+            var AmntReceived = $('#txtAmountReceived').val();
+            var BalanceAmount = $('#txtBalances').val();
+            if (BalanceAmount == "") {
+                BalanceAmount = 0;
+            }
+            var linediscount = $('#txtLineDisc').val();
+            var Rbtn = $('input[name="rbtn"]:checked').val();
+            var patId = out_Patient_Id;
+            var invNumber = $("#Inv_No").val();
+            var Save_list = [];
+            var hasInvalidStock = false;
+            var Save_list = [];
+            $.each($('#tblDetails tbody tr'), function (key, value) {
+                debugger;
+                var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
+                var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
+                var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
+                var Stock = $($(value).find('td input[name=txtStock]')[0]).val();
+                var Amount = $($(value).find('td input[name=txtSalerate]')[0]).val();
+                var DiscPer = $($(value).find('td input[name=DisPer]')[0]).val();
+                var DiscAmount = $($(value).find('td input[name=DisAmount]')[0]).val();
+                var batchno = $($(value).find('td input[name=BatchNo]')[0]).val();
+                var expdate = $($(value).find('td input[name=exp_date]')[0]).val();
+                var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
+                var CGSAmount = CGSRate * Qty;
+                if (batchno == null) {
+                    batchno = '';
+                }
+                if (parseFloat(Stock) <= 0 && parseFloat(Qty) > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Quantity must be greater than zero.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    hasInvalidStock = true;
+                    return false;
+                }
+                if (Qty <= 0) {
+                    alert('Quantity must be greater than zero.');
+                    hasInvalidStock = true;
+                    return false;
+                }
+                if (Stock < Qty) {
+                    alert('Quantity must be less than or equal to stock.');
+                    hasInvalidStock = true;
+                    return false;
+                }
+                var NetAmount = $($(value).find('td')[11]).text();
+                Save_list.push({
+                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount,
+                });
+            });
+            debugger;
+            if (hasInvalidStock) {
+                return;
+            }
+            debugger;
+            var Parameters = {
+                "Bill_ID": Bill_ID,
+                "Patient_ID": Patient_ID,
+                "CustomerName": CustomerName,
+                "TransType": TransType,
+                "ReferBy": ReferBy,
+                "Dept": Dept,
+                "totalPayable": totalPayable,
+                "DiscPercent": DiscPercent,
+                "DiscAmnt": DiscAmnt,
+                "flatdisc": flatdisc,
+                "AmntReceived": AmntReceived,
+                "BalanceAmount": BalanceAmount,
+                "linediscount": linediscount,
+                "Save_list": Save_list,
+                "invNumber": invNumber
+            };
+            if (patId == undefined) {
+                debugger;
+                patId = 0;
+            }
+            PageMethods.SaveRecord(JSON.stringify(Parameters), Rbtn, UserId, patId, function (res) {
+                debugger;
+                var btnSave = $('#btnSave').val();
+                if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
+                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Saved Successfully',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                window.location.href = 'IssueMedicine.aspx';
+            });
 
-                 window.location.href = 'IssueMedicine.aspx';
-             });
-         
         }
 
         function SaveData() {
@@ -1972,8 +1843,6 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-
-
                             hasInvalidStock = true;
                             return false;
                         }
@@ -1984,6 +1853,7 @@
                         }
                         if (Stock < Qty) {
                             alert('Quantity must be less than or equal to stock.');
+
                             hasInvalidStock = true;
                             return false;
                         }
@@ -2106,7 +1976,7 @@
 
                     }
                     else {
-                        console.log("? No active OPD visit for Pat_id:", pat_id);
+                        console.log("❌ No active OPD visit for Pat_id:", pat_id);
 
 
                     }
@@ -2114,6 +1984,29 @@
                 error: function (xhr, status, error) {
                     console.error("AJAX Error:", error);
                     alert("Failed to check OPD status.");
+                }
+            });
+        }
+        function GetPharmacyUser() {
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/GetUserFromSysParams",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    debugger;
+                    var data = JSON.parse(msg.d);
+                    if (data == '001') {
+                        SearchPop()
+                    }
+                    else {
+                        SaveDataWithoutUser()
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error in getWardAndBed: ", error);
                 }
             });
         }
@@ -2196,6 +2089,36 @@
                     alert(response.d);
                 }
             });
+        }
+        function openQueue() {
+            debugger;
+            fillPendingPatientsLists();
+            $('#queueModal').modal('show');
+        }
+
+        function fillPendingPatientsLists() {
+            PageMethods.PendingPatients(function (data) {
+                debugger;
+                var parsedData = JSON.parse(data);
+                var rows = '';
+                $.each(parsedData, function (key, value) {
+                    debugger;
+                    var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
+                    var retdate = moment(TrnsDate).format('LLLL');
+                    var status = '';
+                    rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=hideModel(' + value.pat_id + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
+                });
+                debugger;
+                $('#tblPendingPatients tbody').html(rows);
+                $(".se-pre-con").fadeOut("slow");
+
+            }, function (exec) { })
+        }
+
+        function hideModel(pat_id) {
+            $('#queueModal').modal('hide');
+            getOPDandIPDNO(pat_id)
+
         }
         function OnSuccess(data) {
             debugger;
@@ -2285,7 +2208,7 @@
                     success: function (msg) {
                         debugger;
                         var data = JSON.parse(msg.d);
-                       // getWardAndBed(pat_Id)
+                        // getWardAndBed(pat_Id)
                         debugger;
                         $.each(data, function (key, value) {
                             debugger;
@@ -2322,6 +2245,7 @@
         }
 
         debugger;
+        debugger;
         function AddMedicineDetailFormOPD(itemIds) {
             debugger;
             itemIds.forEach(function (itemCode) {
@@ -2342,6 +2266,7 @@
                         var length = $("#tblDetails tr:gt(0)").length;
                         $('#Table_1 tr:gt(0)').remove();
                         var data = JSON.parse(msg.d);
+                        
                         debugger;
                         var Uomqty = data[0].UOM_Qty;
                         if (Uomqty == null) {
@@ -2362,7 +2287,8 @@
                         var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
                         date = moment(date).format('D-MMM-YYYY');
                         debugger;
-                        rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" > ' + data[0].Item_ID + '</td>' +
+                        rows =
+                            '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" > ' + data[0].Item_ID + '</td>' +
                             '<td> ' + (rowIndex + 1) + '</td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" > ' + data[0].Item_Code + '</td>' +
                             '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
@@ -2377,9 +2303,9 @@
 
                             '<td style="text-align: right;" ><input type="hidden" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" >' + SaleRate + '</td>' +
 
-                            '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr +' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
+                            '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
 
-                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr +' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
+                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
 
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
@@ -2392,8 +2318,10 @@
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';
 
-                        $('#tblDetails #tblbody').append(rows);
-                        debugger;
+
+                            
+                        $('#tblDetails tbody').append(rows);
+                    
                         PageMethods.GetBatchNumbers(itemId, function (data) {
                             debugger;
                             var parsedData = JSON.parse(data);
@@ -2480,29 +2408,6 @@
                 }
             });
         }
-        function GetPharmacyUser() {
-            $.ajax({
-                type: "POST",
-                url: "IssueMedicine.aspx/GetUserFromSysParams",
-                data: JSON.stringify({ }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    debugger;
-                    var data = JSON.parse(msg.d);
-                    if (data == '001') {
-                        SearchPop()
-                    }
-                    else {
-                        SaveDataWithoutUser()
-                    }
-                    
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error in getWardAndBed: ", error);
-                }
-            });
-        }
         function SearchPop() {
             debugger;
             $('#SearchModel').modal({
@@ -2562,13 +2467,18 @@
                 </div>
             </div>
                       <div class="row mb-3">
-                          <div class="col-sm-12 col-md-4 col-lg-3">
+                          <div class="col-sm-12 col-md-4 col-lg-2">
                               <label>Patient NO</label>
                               <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
                                   <option></option>
                               </select>
 
                           </div>
+                          <div class="col-sm-12 col-md-4 col-lg-1">
+     <label>   </label>
+    <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print"/>
+
+</div>
               <div class="col-sm-12 col-md-4 col-lg-3">
                   <label id="LblPatientType">Patient Type</label>
                   <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
@@ -2642,8 +2552,11 @@
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
                     <label id="lblHold">Hold</label>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 margin">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                     <input type="button" class="btn-primry" value="Queue" id ="Queue" onclick="openQueue()" />
                 </div>
             </div>
 
@@ -2748,7 +2661,52 @@
         </div>
     </div>
 
+    <%--Patient Que Start--%>
+    <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="QueueList">
+                        <div class="row" style="margin-bottom: 15px">
+                       
+                            <div class="col-lg-2 text-end">
+                                <a onclick="fillPendingPatientsList()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
 
+                        </div>
+
+
+                        <div class="table-responsive previewTable">
+                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow:auto;">
+                                <thead id="ihead">
+                                    <tr>
+                                        <th>MR No</th>
+                                        <th>Patient Name</th>
+                                        <th style="width: 173px;">Created Time</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ibody">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%--Patient Que Ends--%>
     <!-- Modal Sale Return -->
     <div id="SaleReturnModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -2862,4 +2820,3 @@
     </div>
 
 </asp:Content>
-
